@@ -1,0 +1,154 @@
+/*
+ * The generator's "Like these" row: one fixed height whatever is picked, so
+ * adding or removing a reference never moves the composer or the board.
+ * Chips scroll sideways instead of wrapping.
+ */
+.scrolls .scroll-references {
+  flex-basis: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 48px;
+  min-width: 0;
+  padding: 0 16px;
+  border-top: 1px solid var(--border);
+  background: var(--sunken);
+}
+.scroll-references__label {
+  flex: none;
+  color: var(--muted);
+  font-size: 12px;
+}
+.scroll-references__chips {
+  display: flex;
+  flex: 1 1 auto;
+  gap: 6px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  overflow-x: auto;
+  list-style: none;
+  scrollbar-width: thin;
+}
+.scroll-references__chips > li {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 6px;
+  max-width: 220px;
+  height: 32px;
+  padding: 0 2px 0 3px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  font-size: 12px;
+}
+.scroll-references__chips img {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+.scroll-references__chips span {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.scroll-references__chips button {
+  flex: none;
+  min-width: 28px;
+  min-height: 28px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+.scrolls .scroll-references__chips > .scroll-references__empty {
+  border-color: transparent;
+  background: transparent;
+  color: var(--muted);
+}
+.scroll-references > label {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+}
+@media (max-width: 600px) {
+  .scrolls .scroll-references {
+    padding: 0 8px;
+  }
+  .scroll-references__label,
+  .scrolls .scroll-references__chips > .scroll-references__empty {
+    display: none;
+  }
+  .scroll-references__add {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+}
+.scroll-prompt-preview {
+  flex-basis: 100%;
+  padding: 0 16px 12px;
+  background: var(--sunken);
+  font-size: 12px;
+}
+.scroll-prompt-preview > summary {
+  color: var(--muted);
+  cursor: pointer;
+}
+.scroll-prompt-preview pre,
+.scroll-prompt-preview p {
+  max-height: 180px;
+  margin: 8px 0 0;
+  overflow: auto;
+  white-space: pre-wrap;
+  color: var(--muted);
+}
+.scroll-reference-pairs {
+  display: grid;
+  gap: 8px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.scroll-reference-pairs li {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: 10px;
+  align-items: start;
+}
+.scroll-reference-pairs img {
+  width: 72px;
+  aspect-ratio: 4 / 3;
+  border-radius: 4px;
+  object-fit: cover;
+}
+.scroll-reference-pairs p {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  max-height: 96px;
+  overflow: auto;
+  white-space: pre-wrap;
+}
+/* The hint swaps between the price and a refusal; both fit its reserved lines. */
+.scrolls .scroll-composer > .scroll-hint {
+  min-height: calc(11px * 1.5 * 2);
+}
+@media (max-width: 600px) {
+  .scrolls .scroll-composer > .scroll-hint {
+    min-height: calc(11px * 1.5 * 4);
+  }
+}
+.scroll-unconfirmed {
+  flex-basis: 100%;
+  margin: 0;
+  padding: 0 16px 8px;
+  background: var(--sunken);
+  font-size: 12px;
+}

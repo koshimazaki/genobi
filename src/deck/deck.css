@@ -1,0 +1,219 @@
+/* The Genobi deck: a footer terminal that opens upward over the page, so
+   opening it never moves the studio's hero, composer or gallery. */
+.genobi-deck {
+  position: fixed;
+  right: var(--space-16);
+  bottom: var(--space-16);
+  /* Above World Builder's docked panels (50, 60 while focused); below the
+     overlays that must cover it: Regenerate's popover and the narrow asset
+     rail (66), the voice setup (70) and anchored popovers (120). */
+  z-index: 65;
+  width: min(560px, calc(100vw - 2 * var(--space-16)));
+  font-family: var(--mono);
+  font-size: var(--text-small-8);
+  font-weight: 400;
+  letter-spacing: normal;
+  white-space: normal;
+  color: var(--soft);
+  pointer-events: none;
+}
+.genobi-deck > * {
+  pointer-events: auto;
+}
+.deck-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  width: 100%;
+  min-height: 32px;
+  padding: var(--space-5) var(--space-10);
+  border: 1px solid var(--line, rgba(255, 255, 255, 0.12));
+  border-radius: var(--space-6);
+  background: var(--status-bg, rgba(14, 16, 18, 0.92));
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+}
+.genobi-deck.is-open .deck-bar {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+.deck-bar .cli-spinner {
+  color: var(--accent);
+}
+.deck-title {
+  color: var(--accent);
+  letter-spacing: 0.12em;
+}
+.deck-now {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.deck-toggle {
+  color: var(--muted);
+}
+.deck-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--space-12);
+}
+.deck-development {
+  color: var(--readout);
+  background: transparent;
+  border: 0;
+  padding: var(--space-6) 0;
+  font: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.deck-external-update {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.deck-external-update span {
+  color: var(--readout);
+}
+.deck-body {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--space-10);
+  max-height: min(42vh, 260px);
+  padding: var(--space-10);
+  border: 1px solid var(--line, rgba(255, 255, 255, 0.12));
+  border-bottom: none;
+  border-radius: var(--space-6) var(--space-6) 0 0;
+  background: var(--status-bg, rgba(14, 16, 18, 0.92));
+  backdrop-filter: blur(8px);
+}
+.deck-vis {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+/* The screen is a still black box: only its characters react. Nothing
+   changes its background or moves it on hover, press or focus, including
+   the studio shell's pressed-button nudge (`.genobi-shell button:active`),
+   which this selector outranks. Keyboard focus keeps the outline. */
+.genobi-deck .deck-vis button.deck-art,
+.genobi-deck
+  .deck-vis
+  button.deck-art:is(:hover, :active, :focus, :focus-visible) {
+  display: block;
+  padding: 6px;
+  border: 0;
+  border-radius: var(--space-6);
+  color: inherit;
+  background: var(--status-bg, rgba(14, 16, 18, 0.92));
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  transform: none;
+  translate: none;
+  scale: none;
+  rotate: none;
+  transition: none;
+}
+.genobi-deck .deck-vis button.deck-art:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.deck-vis-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+.deck-vis-actions button {
+  min-height: 28px;
+}
+.deck-game-status,
+.deck-game-targets {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.deck-game-status output {
+  color: var(--accent);
+}
+.deck-game-targets button {
+  min-height: 28px;
+  padding: 3px 6px;
+}
+.deck-game-targets button:nth-child(1) {
+  color: #f27d9c;
+}
+.deck-game-targets button:nth-child(2) {
+  color: #72d9eb;
+}
+.deck-game-targets button:nth-child(3) {
+  color: #c4df79;
+}
+.deck-game-targets button:disabled {
+  opacity: 0.35;
+}
+.ascii-screen {
+  margin: 0;
+  font: inherit;
+  line-height: 1.05;
+  letter-spacing: 0;
+  white-space: pre;
+}
+.deck-mode {
+  align-self: flex-start;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--muted);
+  font: inherit;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+}
+.deck-mode:hover,
+.deck-mode:focus-visible {
+  color: var(--accent);
+}
+/* The body's height bounds the log, which scrolls inside it; the whole
+   session log no longer fits the eight lines the MVP showed. */
+.deck-log {
+  min-width: 0;
+  max-height: calc(min(42vh, 260px) - 2 * var(--space-10));
+  overflow-y: auto;
+}
+.deck-line {
+  margin: 0 0 var(--space-3);
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+.deck-line.is-now,
+.deck-line.is-head {
+  color: var(--accent);
+}
+.deck-line.is-summary {
+  color: var(--text, inherit);
+}
+.deck-line.is-quiet {
+  color: var(--muted);
+}
+@media (max-width: 640px) {
+  /* Phones stack the visualiser above the log and scroll the two together. */
+  .deck-body {
+    grid-template-columns: minmax(0, 1fr);
+    overflow-y: auto;
+  }
+  .deck-log {
+    max-height: none;
+  }
+  .deck-vis {
+    align-items: center;
+  }
+  .deck-vis button {
+    min-height: 36px;
+  }
+}

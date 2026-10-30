@@ -1,0 +1,494 @@
+/* The original studio's 56px header and camera footprint, shared by the shell. */
+.genobi-shell {
+  padding: 0 48px 24px;
+}
+.genobi-shell > .genobi-host .topbar {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 18px;
+  height: 56px;
+  min-height: 56px;
+  padding: 0;
+  border-bottom: 1px solid var(--border);
+}
+.genobi-shell .wordmark {
+  gap: 8px;
+  white-space: nowrap;
+}
+.genobi-shell .brand-mark {
+  width: 24px;
+  height: 24px;
+}
+.genobi-shell .brand-beta {
+  margin: 2px 0 0 2px;
+  font-size: 9px;
+}
+.topbar-navigation {
+  min-width: 0;
+}
+.genobi-shell .genobi-modebar {
+  padding: 0;
+  gap: 5px;
+}
+.genobi-shell .genobi-presets {
+  padding: 3px;
+  gap: 2px;
+  border-radius: 9px;
+  width: fit-content;
+  flex-wrap: nowrap;
+}
+.genobi-shell .genobi-presets button {
+  padding: 7px 9px;
+  gap: 6px;
+  min-height: 32px;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 16px;
+  white-space: nowrap;
+}
+.genobi-shell .genobi-presets svg {
+  width: 14px;
+  height: 14px;
+  flex: none;
+}
+.genobi-shell .genobi-config-button {
+  width: 32px;
+  height: 32px;
+  border-radius: 7px;
+}
+.genobi-shell .topbar-right {
+  gap: 12px;
+}
+.genobi-shell .connection-group {
+  position: relative;
+  gap: 0;
+}
+.genobi-shell .source-link {
+  position: absolute;
+  top: calc(100% + 3px);
+  right: 0;
+  left: auto;
+  width: max-content;
+  display: flex;
+  gap: 4px;
+  white-space: nowrap;
+  font-size: 7px;
+}
+.genobi-shell .connection-button {
+  padding: 7px 10px;
+}
+.genobi-shell .genobi-grid {
+  gap: 8px;
+  margin-top: 8px;
+}
+.genobi-shell .genobi-panel {
+  border-radius: 8px;
+  box-shadow: none;
+}
+.genobi-shell .genobi-panel-heading {
+  padding: 7px 12px;
+}
+.genobi-shell .genobi-panel-heading > span {
+  display: none;
+}
+.genobi-preset-item {
+  min-width: max-content;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+/* Keep Ninja's gear in the same row and immediately beside its preset. */
+.genobi-shell .genobi-presets .genobi-config-button {
+  flex: 0 0 32px;
+  align-self: center;
+  justify-content: center;
+  padding: 0;
+}
+/* Camera has its own real media/composer/gallery frames, as in the original. */
+[data-preset="camera"] .genobi-grid {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "preview" "composer" "gallery";
+  margin-top: 0;
+  gap: 8px;
+}
+[data-preset="camera"] .genobi-panel {
+  border: 0;
+  background: transparent;
+  overflow: visible;
+}
+[data-preset="camera"] .genobi-panel-heading {
+  display: none;
+}
+[data-preset="camera"] :is(.genobi-panel-preview, .genobi-panel-composer) {
+  width: min(100%, clamp(52.875rem, 50vw, 86rem));
+  margin-inline: auto;
+}
+[data-preset="camera"] .genobi-panel-gallery {
+  width: min(100%, clamp(68.5rem, 82vw, 126rem));
+  margin-inline: auto;
+}
+[data-preset="camera"] .genobi-panel-content .composer {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-panel);
+}
+[data-preset="camera"] .genobi-panel-content .gallery {
+  padding: 0;
+  margin-top: 6px;
+}
+[data-preset="camera"] .genobi-panel-content .studio-foot {
+  padding: 6px 0;
+}
+[data-preset="camera"] .genobi-panel-content .featured {
+  overflow: visible;
+}
+/* Shared small insets; authored prompts and expanded tools can still grow. */
+.genobi-shell .genobi-panel-content .dir-heading {
+  padding: 8px 12px;
+  gap: 12px;
+}
+.genobi-shell .dir-heading .dir-eyebrow {
+  display: none;
+}
+.genobi-shell .genobi-panel-content .dir-heading h1 {
+  font-size: 15px;
+  margin: 0;
+}
+.genobi-shell .genobi-panel-content .dir-remix {
+  padding: 12px;
+}
+.genobi-shell .genobi-panel-content .dir-remix h2 {
+  font-size: 17px;
+  margin: 0;
+}
+.genobi-shell .dir-remix-heading .dir-eyebrow {
+  display: none;
+}
+.genobi-shell .dir-remix > p {
+  font-size: 12px;
+  margin: 8px 0;
+  line-height: 1.45;
+}
+.genobi-shell .dir-remix h3 {
+  margin: 12px 0 8px;
+  font-size: 13px;
+}
+.genobi-shell .dir-remix label {
+  gap: 5px;
+  margin: 8px 0;
+}
+.genobi-shell .dir-remix :is(input, select, textarea) {
+  padding: 7px;
+}
+.genobi-shell .dir-remix button {
+  min-height: 30px;
+}
+.genobi-shell .dir-remix .dir-media-slot {
+  padding: 8px;
+  margin: 0;
+}
+.genobi-shell .dir-media-slot :is(span, small) {
+  font-size: 11px;
+}
+.genobi-shell .dir-media-slot small {
+  display: none;
+}
+.genobi-shell .dir-caption-colors {
+  gap: 5px;
+}
+.genobi-shell .dir-caption-colors button {
+  min-height: 28px;
+}
+.genobi-shell .dir-advanced-hint {
+  font-size: 11px;
+  padding-top: 8px;
+}
+.genobi-shell .genobi-panel-content .dir-assets {
+  padding: 10px 12px;
+}
+.genobi-shell .dir-assets-launch {
+  margin: 0;
+  gap: 6px;
+}
+.genobi-shell .dir-assets-launch span {
+  display: none;
+}
+.genobi-shell .genobi-asset-purpose {
+  margin: 8px 12px;
+  line-height: 1.4;
+}
+.genobi-shell .genobi-project-assets {
+  padding: 0 12px 12px;
+  gap: 6px;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+}
+.genobi-shell .genobi-panel-content .dir-stage {
+  padding: 8px;
+}
+.genobi-shell .genobi-panel-content .dir-simple-play {
+  padding: 8px 8px 0;
+}
+.genobi-shell .genobi-panel-stage:not([data-sized]) .dir-stage canvas {
+  width: 100% !important;
+  height: clamp(160px, 32dvh, 320px) !important;
+  max-height: none !important;
+  aspect-ratio: auto !important;
+  object-fit: contain;
+}
+.genobi-shell .genobi-panel-content .dir-template-card video {
+  max-height: 100px;
+  object-fit: cover;
+}
+.genobi-shell .genobi-panel-prompt .project-prompt {
+  padding: 8px;
+  border: 0;
+  background: transparent;
+}
+.genobi-shell .project-prompt-heading > span {
+  display: none;
+}
+.genobi-shell .project-prompt-heading h3 {
+  font-size: 13px;
+}
+.genobi-shell .genobi-panel-prompt .project-prompt > textarea {
+  min-height: 90px;
+  margin: 6px 0;
+  padding: 0;
+}
+.genobi-shell .prompt-reference-actions {
+  margin-top: 6px;
+}
+.genobi-shell .genobi-panel-prompt .project-prompt .prompt-brief-hint {
+  font-size: 10px;
+  line-height: 1.4;
+  margin-top: 8px;
+}
+.genobi-shell .genobi-panel-content .wb-app {
+  padding: 8px;
+  min-height: 0;
+}
+.genobi-shell .wb-viewport {
+  height: min(56dvh, 520px);
+  min-height: 260px;
+}
+.genobi-shell .wb-canvas-fit {
+  width: min(100%, calc(min(56dvh, 520px) * var(--wb-aspect)));
+}
+.genobi-shell .genobi-panel-content .dual-editor {
+  padding: 12px;
+}
+.genobi-shell .de-heading {
+  padding: 0 0 10px;
+}
+.genobi-shell .de-heading h1 {
+  font-size: 20px;
+  margin: 4px 0;
+}
+.genobi-shell .de-heading p {
+  font-size: 12px;
+}
+.genobi-shell .de-view {
+  height: clamp(190px, 32dvh, 340px);
+}
+[data-preset="editor"] .dir-timeline {
+  max-height: 240px;
+}
+/* Keep configuration readable; the saved Ninja canvas remains unobstructed. */
+.genobi-shell .genobi-ninja-controls {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
+.genobi-shell .genobi-picker {
+  padding: 10px 12px;
+  gap: 5px;
+}
+.genobi-shell .genobi-picker label {
+  padding: 6px 9px;
+  font-size: 11px;
+}
+.genobi-shell .genobi-layout-toolbar {
+  padding: 10px 12px;
+}
+.genobi-shell .genobi-layout-toolbar p {
+  margin-bottom: 8px;
+}
+@media (max-width: 1200px) {
+  .genobi-shell {
+    padding-inline: 24px;
+  }
+  .genobi-shell > .genobi-host .topbar {
+    gap: 12px;
+  }
+  .genobi-shell .genobi-presets button {
+    padding-inline: 7px;
+    font-size: 11px;
+  }
+  .genobi-shell .local-label {
+    display: none;
+  }
+}
+@media (max-width: 1300px) {
+  .genobi-shell > .genobi-host .topbar {
+    height: auto;
+    grid-template-columns: minmax(0, 1fr) auto;
+    row-gap: 8px;
+    padding: 10px 0 8px;
+  }
+  .topbar-navigation {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+  .genobi-shell .topbar-right {
+    grid-column: 2;
+    grid-row: 1;
+  }
+}
+@media (max-width: 700px) {
+  .genobi-shell {
+    padding-inline: 10px;
+  }
+  .genobi-shell .genobi-modebar {
+    align-items: stretch;
+  }
+  .genobi-shell .genobi-presets {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 3px;
+  }
+  .genobi-shell .genobi-preset-item {
+    flex: 1 0 22%;
+  }
+  .genobi-shell .genobi-presets button {
+    flex: 1 0 auto;
+    justify-content: center;
+    padding: 8px 6px;
+    min-height: 40px;
+    white-space: normal;
+  }
+  .genobi-shell .genobi-config-button {
+    height: auto;
+    min-height: 40px;
+  }
+  .genobi-shell .source-link {
+    display: none;
+  }
+  .genobi-shell .brand-beta {
+    display: inline;
+  }
+  .genobi-shell .topbar-right {
+    gap: 8px;
+  }
+  .genobi-shell .genobi-panel-content .dir-heading {
+    padding: 10px;
+  }
+  .genobi-shell .dir-file-actions button {
+    min-height: 36px;
+  }
+  .genobi-shell .dir-remix button {
+    min-height: 40px;
+  }
+  .genobi-shell .genobi-panel-content .wb-app,
+  .genobi-shell .genobi-panel-content .dual-editor {
+    padding: 8px;
+  }
+}
+
+.genobi-shell .dir-remix-heading > div {
+  display: none;
+}
+.genobi-shell .dir-remix-heading {
+  justify-content: flex-end;
+}
+.genobi-shell .dir-remix-heading + p,
+.genobi-shell .dir-advanced-hint {
+  display: none;
+}
+.genobi-shell .dir-export-step > h3 {
+  display: none;
+}
+.genobi-shell[data-preset="director"]
+  .genobi-panel-stage:not([data-sized])
+  .dir-stage
+  canvas {
+  height: clamp(160px, 28dvh, 260px) !important;
+}
+.genobi-shell .genobi-panel-prompt .project-prompt-heading {
+  display: none;
+}
+
+.genobi-shell[data-preset="editor"]
+  .genobi-panel-stage:not([data-sized])
+  .dir-stage
+  canvas {
+  height: clamp(140px, 20dvh, 200px) !important;
+}
+@media (min-width: 701px) {
+  [data-preset="editor"] .dir-timeline {
+    max-height: min(240px, 27dvh);
+  }
+}
+.genobi-shell:not([data-preset="ninja"])
+  :is(
+    .genobi-panel-stage,
+    .genobi-panel-world,
+    .genobi-panel-dual,
+    .genobi-panel-gallery
+  )
+  > .genobi-panel-heading {
+  display: none;
+}
+.genobi-shell .dir-saved-videos:not([open]) {
+  padding: 6px 12px;
+  font-size: 11px;
+}
+@media (max-width: 700px) {
+  .genobi-shell .genobi-presets button,
+  .genobi-shell .dir-remix button {
+    min-height: 44px;
+  }
+}
+@media (max-width: 420px) {
+  .genobi-shell .brand-beta {
+    display: none;
+  }
+}
+
+.genobi-shell .de-workspace:not(.de-workspace--assets) > .de-sidebar-shell {
+  max-height: 0;
+  visibility: hidden;
+}
+.genobi-shell .de-controls {
+  padding: 12px 14px 8px;
+}
+.genobi-shell .de-controls .de-readouts {
+  margin-bottom: 10px;
+}
+.genobi-shell .de-export {
+  padding: 9px 12px;
+}
+.genobi-shell .de-panel-head {
+  height: 56px;
+  padding: 10px 14px;
+}
+.genobi-shell .de-notice {
+  margin: 8px 0 12px;
+}
+.genobi-shell .de-tray {
+  padding-top: 12px;
+}
+
+.genobi-shell .de-heading h1 {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.genobi-shell .de-heading h1 > span {
+  margin-left: 0;
+}
+.genobi-shell .de-heading h1 > .de-heading-purpose {
+  font-family: inherit;
+  font-size: 12px;
+  color: var(--soft);
+}

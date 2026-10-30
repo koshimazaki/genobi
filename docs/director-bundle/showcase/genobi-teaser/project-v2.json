@@ -1,0 +1,3329 @@
+{
+  "schemaVersion": "director.bundle.v1",
+  "id": "genobi-teaser-v2",
+  "name": "Genobi teaser · v2",
+  "revision": 1,
+  "composition": {
+    "fps": 24,
+    "durationFrames": 2869,
+    "width": 1920,
+    "height": 1080,
+    "colorSpace": "srgb",
+    "alpha": "straight",
+    "background": "#0c0e0c",
+    "bpm": 135,
+    "beatsPerBar": 4
+  },
+  "assets": {
+    "ui-gallery": {
+      "kind": "video",
+      "use": "production",
+      "origin": "uploaded",
+      "durationSeconds": 12,
+      "file": {
+        "path": "media/ui-gallery.mp4",
+        "sha256": "af7e5bbe731d36bee5ee6d7fbc426b501bc0a75387144e9e826d2498b57a30ac"
+      }
+    },
+    "ui-camera": {
+      "kind": "video",
+      "use": "production",
+      "origin": "uploaded",
+      "durationSeconds": 13.625,
+      "file": {
+        "path": "media/ui-camera.mp4",
+        "sha256": "36fb3792096aee15561e88d60b59b67bce63f73570e84c4a530cfcb5bfecf2fa"
+      }
+    },
+    "ui-camera-control": {
+      "kind": "video",
+      "use": "production",
+      "origin": "uploaded",
+      "durationSeconds": 11,
+      "file": {
+        "path": "media/ui-camera-control.mp4",
+        "sha256": "6219e3e7370596ba7b7defb2603edc462fc3145478c908a8de8de207a8789ab8"
+      }
+    },
+    "ui-director": {
+      "kind": "video",
+      "use": "production",
+      "origin": "uploaded",
+      "durationSeconds": 10.167,
+      "file": {
+        "path": "media/ui-director.mp4",
+        "sha256": "49a34c910723d4078d1294ad480a12d6da9b98d774464fca61577c8ef8e5504a"
+      }
+    },
+    "ui-comfy": {
+      "kind": "video",
+      "use": "production",
+      "origin": "uploaded",
+      "durationSeconds": 10,
+      "file": {
+        "path": "media/ui-comfy.mp4",
+        "sha256": "7f2e8d433ecae0a5895b73166b4a168f4f49ec5cb979af64bf04c5df155f5908"
+      }
+    },
+    "ui-editor": {
+      "kind": "video",
+      "use": "production",
+      "origin": "uploaded",
+      "durationSeconds": 15,
+      "file": {
+        "path": "media/ui-editor.mp4",
+        "sha256": "bab8be13afc1060f8e2a43e9022664606c48906c94d99324fa21c9a3b69002b5"
+      }
+    },
+    "ui-directions": {
+      "kind": "video",
+      "use": "production",
+      "origin": "uploaded",
+      "durationSeconds": 10.208,
+      "file": {
+        "path": "media/ui-directions.mp4",
+        "sha256": "749c557e61d87079b87841be7cb007125d1dbfd2bbeb5c87392fe98a154d67d4"
+      }
+    },
+    "ui-world": {
+      "kind": "video",
+      "use": "production",
+      "origin": "uploaded",
+      "durationSeconds": 14,
+      "file": {
+        "path": "media/ui-world.mp4",
+        "sha256": "02454c537c5204f67b04a905cb943e6996df75ecb67a1b16acf48adaa9c827be"
+      }
+    },
+    "ui-swords": {
+      "kind": "video",
+      "use": "production",
+      "origin": "uploaded",
+      "durationSeconds": 8.625,
+      "file": {
+        "path": "media/ui-swords.mp4",
+        "sha256": "2c0a4f7c58120514c96101e9274af77810d6cc4d0cf34e482c220415db1490db"
+      }
+    },
+    "ui-scrolls": {
+      "kind": "video",
+      "use": "production",
+      "origin": "uploaded",
+      "durationSeconds": 9.167,
+      "file": {
+        "path": "media/ui-scrolls.mp4",
+        "sha256": "c725051a87da6b94799b2c3efea0c259cfd358b5ef2b3b3927ad8c76b8050503"
+      }
+    },
+    "ui-agent": {
+      "kind": "video",
+      "use": "production",
+      "origin": "uploaded",
+      "durationSeconds": 8.292,
+      "file": {
+        "path": "media/ui-agent.mp4",
+        "sha256": "ff7df96b632841b7353ea61d977f955c56537b7db27cea07007b9f7a2cb4ca47"
+      }
+    },
+    "ui-licences": {
+      "kind": "video",
+      "use": "production",
+      "origin": "uploaded",
+      "durationSeconds": 9.083,
+      "file": {
+        "path": "media/ui-licences.mp4",
+        "sha256": "9a78ef2375f5b2f9c91a2d56734ba6972329f1647eb5b71fa7be433437eac756"
+      }
+    },
+    "ui-save": {
+      "kind": "video",
+      "use": "production",
+      "origin": "uploaded",
+      "durationSeconds": 9,
+      "file": {
+        "path": "media/ui-save.mp4",
+        "sha256": "e02ee1b3a945b6cb4666d1a208533cde9b370ace771888310c131b7067c0d21b"
+      }
+    },
+    "character": {
+      "kind": "video",
+      "use": "production",
+      "origin": "uploaded",
+      "durationSeconds": 20.041,
+      "file": {
+        "path": "media/character-piece.mp4",
+        "sha256": "de616cc3445016308249d1a920faac5266c4e1620fd39899627879aaecf40f5a"
+      }
+    },
+    "product": {
+      "kind": "video",
+      "use": "production",
+      "origin": "uploaded",
+      "durationSeconds": 20.041,
+      "file": {
+        "path": "media/product-video.mp4",
+        "sha256": "8ae2081069ef36790b3e1f1fa12e8c3aef584047e2965fd6180e3be168887e8a"
+      }
+    },
+    "audio-visual": {
+      "kind": "video",
+      "use": "production",
+      "origin": "uploaded",
+      "durationSeconds": 29.041,
+      "file": {
+        "path": "media/audio-visual.mp4",
+        "sha256": "ca483856a4ee42fd7bd4612a8b8e39bb2403e0fa5140ad708b4e36ca99b11eb0"
+      }
+    },
+    "dimensions": {
+      "kind": "video",
+      "use": "production",
+      "origin": "uploaded",
+      "durationSeconds": 23.145,
+      "file": {
+        "path": "media/dimensions-mix.mp4",
+        "sha256": "48dcd3a2bcedb01436fce6c8ab658bf1afdb4d0135b2f551c284818262fe2408"
+      }
+    },
+    "signal": {
+      "kind": "video",
+      "use": "production",
+      "origin": "uploaded",
+      "durationSeconds": 24,
+      "file": {
+        "path": "media/signal-taste-reel.mp4",
+        "sha256": "8fd2a54090abd7cf714d225a0b5621fc46bc469389214041e48b2c15f8af939c"
+      }
+    },
+    "library-01": {
+      "kind": "video",
+      "use": "production",
+      "origin": "uploaded",
+      "durationSeconds": 10.041,
+      "file": {
+        "path": "media/library-01.mp4",
+        "sha256": "2dd783e0441743ada2ca70e661d9bc4e12113ee79c4abf0e8defac37c5e48ed2"
+      }
+    },
+    "library-03": {
+      "kind": "video",
+      "use": "production",
+      "origin": "uploaded",
+      "durationSeconds": 10.041,
+      "file": {
+        "path": "media/library-03.mp4",
+        "sha256": "ca6215f1067adb2d1acdf3e2ba6498e9540c94d8d29b4bc5cca02219fc9b42ab"
+      }
+    },
+    "mix-01": {
+      "kind": "video",
+      "use": "production",
+      "origin": "uploaded",
+      "durationSeconds": 13.5,
+      "file": {
+        "path": "media/mix-01.mp4",
+        "sha256": "e7c7afc43122bc5b3947c0651f8c77f9edd38f6684b7ea81c8ef2b95617a1ad7"
+      }
+    },
+    "mix-02": {
+      "kind": "video",
+      "use": "production",
+      "origin": "uploaded",
+      "durationSeconds": 13.5,
+      "file": {
+        "path": "media/mix-02.mp4",
+        "sha256": "b749a9b1ede414a9be563d0d9bcd188296a2e97ec688a105b48c1312a2fda4f4"
+      }
+    },
+    "mix-03": {
+      "kind": "video",
+      "use": "production",
+      "origin": "uploaded",
+      "durationSeconds": 13.5,
+      "file": {
+        "path": "media/mix-03.mp4",
+        "sha256": "d4bbda0fc4f75bf243827c4b50767d240b8c3cb4c6e9b85bf8d52223a9d6fcf9"
+      }
+    },
+    "teaser-track": {
+      "kind": "audio",
+      "use": "production",
+      "origin": "uploaded",
+      "durationSeconds": 119.59,
+      "file": {
+        "path": "media/teaser-track.mp3",
+        "sha256": "a791e2178613926c2d374c747e80cab9cf591af0f4925e7bac3462eeb6e8b90b"
+      }
+    }
+  },
+  "modules": {
+    "end-card": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/mix-end-card.mjs",
+        "sha256": "de103235d40ca2c883ea05dcff48920b7acf5e74e0252fa9b7ffe7c7b22aa12c"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "eyebrow",
+          "title",
+          "subtitle",
+          "credit1",
+          "credit2",
+          "font",
+          "color",
+          "accent",
+          "steps",
+          "done",
+          "duration"
+        ],
+        "properties": {
+          "eyebrow": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 32,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 24,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "subtitle": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 36,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "credit1": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 50,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "credit2": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 50,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "font": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120,
+            "pattern": "^[A-Za-z0-9 ,\"'-]+$"
+          },
+          "color": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "accent": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "steps": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 160,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "done": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 40,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "duration": { "type": "number", "minimum": 1, "maximum": 8 }
+        }
+      }
+    },
+    "gen-title": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/teaser-gen-title.mjs",
+        "sha256": "adbe6034b8c9be483935439e016d0dc8d93b6e0d396d693a3be867fa2a273606"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "text",
+          "line",
+          "font",
+          "size",
+          "color",
+          "muted",
+          "accent",
+          "x",
+          "y",
+          "duration",
+          "mode",
+          "steps",
+          "done",
+          "fadeAt",
+          "plate"
+        ],
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 28,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "line": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 480,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "font": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120,
+            "pattern": "^[A-Za-z0-9 ,\"'-]+$"
+          },
+          "size": { "type": "number", "minimum": 24, "maximum": 220 },
+          "color": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "muted": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "accent": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "x": { "type": "number", "minimum": 0, "maximum": 1 },
+          "y": { "type": "number", "minimum": 0, "maximum": 1 },
+          "duration": { "type": "number", "minimum": 0.8, "maximum": 8 },
+          "mode": { "type": "string", "enum": ["trace", "trace-texts"] },
+          "steps": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 160,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "done": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 40,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "fadeAt": { "type": "number", "minimum": 0, "maximum": 60 },
+          "plate": { "type": "number", "minimum": 0, "maximum": 1 }
+        }
+      }
+    },
+    "gen-image": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/teaser-gen-image.mjs",
+        "sha256": "e53de680444d386c9e626f576d71656c818db8f6967af01413863f39a225bd93"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "still",
+          "matte",
+          "accent",
+          "inset",
+          "duration",
+          "mode",
+          "steps",
+          "done",
+          "fadeAt"
+        ],
+        "properties": {
+          "still": {
+            "type": "string",
+            "maxLength": 120,
+            "pattern": "^/media/[a-z0-9][a-z0-9/_-]*\\.(jpg|png|webp)$"
+          },
+          "matte": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "accent": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "inset": { "type": "number", "minimum": 0, "maximum": 0.3 },
+          "duration": { "type": "number", "minimum": 0.8, "maximum": 8 },
+          "mode": { "type": "string", "enum": ["trace", "trace-texts"] },
+          "steps": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 160,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "done": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 40,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "fadeAt": { "type": "number", "minimum": 0, "maximum": 60 }
+        }
+      }
+    },
+    "paper-shader": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/teaser-paper.mjs",
+        "sha256": "5f6d70ad74a416ef164968e05e87b1270c97354dd20d6b141197c955d3e7aff2"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "shader",
+          "colors",
+          "back",
+          "backAlpha",
+          "speed",
+          "scale",
+          "intensity",
+          "seed",
+          "fadeAt"
+        ],
+        "properties": {
+          "shader": {
+            "type": "string",
+            "enum": [
+              "dithering",
+              "mesh-gradient",
+              "dot-orbit",
+              "god-rays",
+              "swirl",
+              "voronoi"
+            ]
+          },
+          "colors": {
+            "type": "string",
+            "minLength": 7,
+            "maxLength": 79,
+            "pattern": "^#[0-9a-fA-F]{6}(,#[0-9a-fA-F]{6}){0,9}$"
+          },
+          "back": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "backAlpha": { "type": "number", "minimum": 0, "maximum": 1 },
+          "speed": { "type": "number", "minimum": 0, "maximum": 4 },
+          "scale": { "type": "number", "minimum": 0.1, "maximum": 4 },
+          "intensity": { "type": "number", "minimum": 0, "maximum": 1 },
+          "seed": { "type": "number", "minimum": 0, "maximum": 1000 },
+          "fadeAt": { "type": "number", "minimum": 0, "maximum": 60 }
+        }
+      }
+    },
+    "space-hud": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/teaser-space.mjs",
+        "sha256": "33f3c5d049a6ef1de996ff7a63da347b39ca092c16ace5ef4ddafcf8fe29855e"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "still",
+          "color",
+          "label",
+          "credit",
+          "targets",
+          "interval",
+          "dim",
+          "fadeAt"
+        ],
+        "properties": {
+          "still": {
+            "type": "string",
+            "maxLength": 120,
+            "pattern": "^/media/[a-z0-9][a-z0-9/_-]*\\.(jpg|png|webp)$"
+          },
+          "color": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "label": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 32,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "credit": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 40,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "targets": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 200,
+            "pattern": "^[0-9., /]*$"
+          },
+          "interval": { "type": "number", "minimum": 0.05, "maximum": 2 },
+          "dim": { "type": "number", "minimum": 0, "maximum": 1 },
+          "fadeAt": { "type": "number", "minimum": 0, "maximum": 60 }
+        }
+      }
+    },
+    "ui-cursor": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/teaser-cursor.mjs",
+        "sha256": "6077050ef15a65a2d7a74a5b25dd6ee0bab476b6bac4b09965a541760722aed5"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "clicks",
+          "fill",
+          "outline",
+          "color",
+          "size",
+          "view"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 600,
+            "pattern": "^[0-9.:, /]+$"
+          },
+          "clicks": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 200,
+            "pattern": "^[0-9. /]*$"
+          },
+          "fill": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "outline": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "color": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "size": { "type": "number", "minimum": 0.5, "maximum": 3 },
+          "view": {
+            "type": "string",
+            "maxLength": 160,
+            "pattern": "^$|^[0-9]+,[0-9]+,[0-9]+,[0-9]+(;[0-9.]+,-?[0-9.]+,-?[0-9.]+){3}$"
+          }
+        }
+      }
+    },
+    "ui-focus": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/teaser-focus.mjs",
+        "sha256": "904b427c4360cf1acd891efe34c602472a828e736102ea35c274cb0a33013b3e"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "x",
+          "y",
+          "w",
+          "h",
+          "label",
+          "color",
+          "dim",
+          "draw",
+          "fadeAt",
+          "view"
+        ],
+        "properties": {
+          "x": { "type": "number", "minimum": 0, "maximum": 1 },
+          "y": { "type": "number", "minimum": 0, "maximum": 1 },
+          "w": { "type": "number", "minimum": 0, "maximum": 1 },
+          "h": { "type": "number", "minimum": 0, "maximum": 1 },
+          "label": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 40,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "color": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "dim": { "type": "number", "minimum": 0, "maximum": 1 },
+          "draw": { "type": "number", "minimum": 0.1, "maximum": 4 },
+          "fadeAt": { "type": "number", "minimum": 0, "maximum": 60 },
+          "view": {
+            "type": "string",
+            "maxLength": 160,
+            "pattern": "^$|^[0-9]+,[0-9]+,[0-9]+,[0-9]+(;[0-9.]+,-?[0-9.]+,-?[0-9.]+){3}$"
+          }
+        }
+      }
+    },
+    "gen-status": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/teaser-gen-status.mjs",
+        "sha256": "c2b228effed009182d72c62630ec8a39234d517e350e61216f50b4f935b189b2"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "label",
+          "done",
+          "variant",
+          "color",
+          "x",
+          "y",
+          "scale",
+          "doneAt",
+          "fadeAt"
+        ],
+        "properties": {
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 48,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "done": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 48,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "variant": {
+            "type": "string",
+            "enum": ["scan", "twinkle", "orbit", "pulse"]
+          },
+          "color": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "x": { "type": "number", "minimum": 0, "maximum": 1 },
+          "y": { "type": "number", "minimum": 0, "maximum": 1 },
+          "scale": { "type": "number", "minimum": 0.5, "maximum": 3 },
+          "doneAt": { "type": "number", "minimum": 0, "maximum": 60 },
+          "fadeAt": { "type": "number", "minimum": 0, "maximum": 60 }
+        }
+      }
+    },
+    "kinetic": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/mix-kinetic.mjs",
+        "sha256": "5352245651b8f5d1b2bb194326eead422ba7afe0c03bac6576b69d6ba4a9a50e"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "text",
+          "font",
+          "weight",
+          "color",
+          "accent",
+          "bpm",
+          "size",
+          "beats"
+        ],
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "font": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120,
+            "pattern": "^[A-Za-z0-9 ,\"'-]+$"
+          },
+          "weight": { "type": "integer", "minimum": 100, "maximum": 900 },
+          "color": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "accent": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "bpm": { "type": "number", "minimum": 20, "maximum": 300 },
+          "size": { "type": "number", "minimum": 8, "maximum": 240 },
+          "beats": { "type": "number", "minimum": 0.25, "maximum": 32 }
+        }
+      }
+    },
+    "hud": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/mix-hud.mjs",
+        "sha256": "623ccbbb6058884a5687b7d84b5e3c57cbcba11859ccb8642c6831c6957d4e2e"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["color", "accent", "bpm", "text", "credit", "seconds"],
+        "properties": {
+          "color": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "accent": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "bpm": { "type": "number", "minimum": 20, "maximum": 300 },
+          "text": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 60,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "credit": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 60,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "seconds": { "type": "number", "minimum": 1, "maximum": 120 }
+        }
+      }
+    },
+    "slice-glitch": {
+      "engine": "threejs",
+      "engineVersion": "0.180.0",
+      "mode": "filter",
+      "file": {
+        "path": "graphics/mix-slice-glitch.mjs",
+        "sha256": "f1e5a045aae8ae9bc1b7691cd939c783cd078864c9ca7f945f85a17d7ccbb588"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["amount", "slices", "seed", "duration"],
+        "properties": {
+          "amount": { "type": "number", "minimum": 0, "maximum": 1 },
+          "slices": { "type": "integer", "minimum": 2, "maximum": 64 },
+          "seed": { "type": "integer", "minimum": 0, "maximum": 9999 },
+          "duration": { "type": "number", "minimum": 0.02, "maximum": 2 }
+        }
+      }
+    }
+  },
+  "layers": [
+    {
+      "id": "track",
+      "name": "Track · Trailer-Genobi",
+      "kind": "audio",
+      "assetId": "teaser-track",
+      "sourceStartFrame": 0,
+      "gain": 1,
+      "startFrame": 0,
+      "durationFrames": 2869,
+      "locked": false
+    },
+    {
+      "kind": "video",
+      "assetId": "character",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.33,
+      "rotationDegrees": 0,
+      "id": "shot-01",
+      "name": "01 Forest guardian · first look",
+      "sourceStartFrame": 0,
+      "startFrame": 213,
+      "durationFrames": 86,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "kind": "video",
+      "assetId": "product",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.33,
+      "rotationDegrees": 0,
+      "id": "shot-02",
+      "name": "02 Toy creatures",
+      "sourceStartFrame": 48,
+      "startFrame": 299,
+      "durationFrames": 42,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "kind": "video",
+      "assetId": "audio-visual",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.317,
+      "rotationDegrees": 0,
+      "id": "shot-03",
+      "name": "03 Neon bloom · close",
+      "sourceStartFrame": 7,
+      "startFrame": 341,
+      "durationFrames": 43,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-gallery",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "id": "shot-04",
+      "name": "04 Gallery · the generations",
+      "sourceStartFrame": 5,
+      "startFrame": 384,
+      "durationFrames": 21,
+      "position": { "x": 0, "y": 0 },
+      "motion": { "scaleTo": 1.4, "xTo": -322.56, "yTo": 75.6, "opacityTo": 1 }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-gallery",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.4,
+      "rotationDegrees": 0,
+      "id": "shot-04-hold",
+      "name": "04 Gallery · the generations · hold",
+      "sourceStartFrame": 26,
+      "startFrame": 405,
+      "durationFrames": 64,
+      "position": { "x": -322.56, "y": 75.6 },
+      "motion": {
+        "scaleTo": 1.5103,
+        "xTo": -347.9,
+        "yTo": 81.54,
+        "opacityTo": 1
+      }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-camera",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "id": "shot-05",
+      "name": "05 Camera · model families",
+      "sourceStartFrame": 5,
+      "startFrame": 469,
+      "durationFrames": 22,
+      "position": { "x": 0, "y": 0 },
+      "motion": { "scaleTo": 2.3, "xTo": 883.2, "yTo": -702, "opacityTo": 1 }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-camera",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 2.3,
+      "rotationDegrees": 0,
+      "id": "shot-05-hold",
+      "name": "05 Camera · model families · hold",
+      "sourceStartFrame": 27,
+      "startFrame": 491,
+      "durationFrames": 64,
+      "position": { "x": 883.2, "y": -702 },
+      "motion": {
+        "scaleTo": 2.4811,
+        "xTo": 952.7,
+        "yTo": -799.85,
+        "opacityTo": 1
+      }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-camera",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "id": "shot-06",
+      "name": "06 Camera · the prompt",
+      "sourceStartFrame": 163,
+      "startFrame": 555,
+      "durationFrames": 21,
+      "position": { "x": 0, "y": 0 },
+      "motion": { "scaleTo": 2, "xTo": 384, "yTo": 172.8, "opacityTo": 1 }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-camera",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 2,
+      "rotationDegrees": 0,
+      "id": "shot-06-hold",
+      "name": "06 Camera · the prompt · hold",
+      "sourceStartFrame": 184,
+      "startFrame": 576,
+      "durationFrames": 64,
+      "position": { "x": 384, "y": 172.8 },
+      "motion": {
+        "scaleTo": 2.1575,
+        "xTo": 414.14,
+        "yTo": 186.41,
+        "opacityTo": 1
+      }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-camera-control",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "id": "shot-07",
+      "name": "07 Camera · camera controls",
+      "sourceStartFrame": 46,
+      "startFrame": 640,
+      "durationFrames": 21,
+      "position": { "x": 0, "y": 0 },
+      "motion": { "scaleTo": 1.6, "xTo": 245.76, "yTo": 138.24, "opacityTo": 1 }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-camera-control",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.6,
+      "rotationDegrees": 0,
+      "id": "shot-07-hold",
+      "name": "07 Camera · camera controls · hold",
+      "sourceStartFrame": 67,
+      "startFrame": 661,
+      "durationFrames": 43,
+      "position": { "x": 245.76, "y": 138.24 },
+      "motion": {
+        "scaleTo": 1.684,
+        "xTo": 258.62,
+        "yTo": 145.48,
+        "opacityTo": 1
+      }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-camera",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "id": "shot-08",
+      "name": "08 Camera · the quote",
+      "sourceStartFrame": 233,
+      "startFrame": 704,
+      "durationFrames": 21,
+      "position": { "x": 0, "y": 0 },
+      "motion": {
+        "scaleTo": 2.4,
+        "xTo": -1013.76,
+        "yTo": 103.68,
+        "opacityTo": 1
+      }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-camera",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 2.4,
+      "rotationDegrees": 0,
+      "id": "shot-08-hold",
+      "name": "08 Camera · the quote · hold",
+      "sourceStartFrame": 254,
+      "startFrame": 725,
+      "durationFrames": 43,
+      "position": { "x": -1013.76, "y": 103.68 },
+      "motion": {
+        "scaleTo": 2.526,
+        "xTo": -1066.94,
+        "yTo": 109.08,
+        "opacityTo": 1
+      }
+    },
+    {
+      "kind": "video",
+      "assetId": "library-01",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.023,
+      "rotationDegrees": 0,
+      "id": "shot-09",
+      "name": "09 Motorbike · the shot",
+      "sourceStartFrame": 0,
+      "startFrame": 768,
+      "durationFrames": 43,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-director",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "id": "shot-10",
+      "name": "10 Director · the mix plays",
+      "sourceStartFrame": 5,
+      "startFrame": 811,
+      "durationFrames": 21,
+      "position": { "x": 0, "y": 0 },
+      "motion": { "scaleTo": 2, "xTo": 960, "yTo": 367.2, "opacityTo": 1 }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-director",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 2,
+      "rotationDegrees": 0,
+      "id": "shot-10-hold",
+      "name": "10 Director · the mix plays · hold",
+      "sourceStartFrame": 26,
+      "startFrame": 832,
+      "durationFrames": 32,
+      "position": { "x": 960, "y": 367.2 },
+      "motion": {
+        "scaleTo": 2.0775,
+        "xTo": 1034.3,
+        "yTo": 381.46,
+        "opacityTo": 1
+      }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-comfy",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 2.8,
+      "rotationDegrees": 0,
+      "id": "shot-11",
+      "name": "11 ComfyUI · the World Builder node, live",
+      "sourceStartFrame": 0,
+      "startFrame": 864,
+      "durationFrames": 11,
+      "position": { "x": 1193.47, "y": -18.14 },
+      "motion": {
+        "scaleTo": 2.8,
+        "xTo": 1193.47,
+        "yTo": -18.14,
+        "opacityTo": 1
+      }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-comfy",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 2.8,
+      "rotationDegrees": 0,
+      "id": "shot-11-hold",
+      "name": "11 ComfyUI · the World Builder node, live · hold",
+      "sourceStartFrame": 11,
+      "startFrame": 875,
+      "durationFrames": 42,
+      "position": { "x": 1193.47, "y": -18.14 },
+      "motion": {
+        "scaleTo": 2.9435,
+        "xTo": 1254.72,
+        "yTo": -19.12,
+        "opacityTo": 1
+      }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-comfy",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 2.8,
+      "rotationDegrees": 0,
+      "id": "shot-12",
+      "name": "12 ComfyUI · out to the Genobi graph",
+      "sourceStartFrame": 53,
+      "startFrame": 917,
+      "durationFrames": 32,
+      "position": { "x": 1193.47, "y": -18.14 },
+      "motion": { "scaleTo": 1, "xTo": 0, "yTo": 0, "opacityTo": 1 }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-comfy",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "id": "shot-12-hold",
+      "name": "12 ComfyUI · out to the Genobi graph · hold",
+      "sourceStartFrame": 85,
+      "startFrame": 949,
+      "durationFrames": 32,
+      "position": { "x": 0, "y": 0 },
+      "motion": { "scaleTo": 1.0258, "xTo": 0, "yTo": 0, "opacityTo": 1 }
+    },
+    {
+      "kind": "video",
+      "assetId": "mix-03",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.7777777777777777,
+      "rotationDegrees": 0,
+      "id": "shot-13",
+      "name": "13 Nocthorn · drop",
+      "sourceStartFrame": 7,
+      "startFrame": 981,
+      "durationFrames": 22,
+      "position": { "x": 0, "y": 100 }
+    },
+    {
+      "kind": "video",
+      "assetId": "mix-01",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.7777777777777777,
+      "rotationDegrees": 0,
+      "id": "shot-14",
+      "name": "14 Mirebloom · splash",
+      "sourceStartFrame": 24,
+      "startFrame": 1003,
+      "durationFrames": 21,
+      "position": { "x": 0, "y": 153.33 }
+    },
+    {
+      "kind": "video",
+      "assetId": "product",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.33,
+      "rotationDegrees": 0,
+      "id": "shot-15",
+      "name": "15 Toy creatures · glass",
+      "sourceStartFrame": 370,
+      "startFrame": 1024,
+      "durationFrames": 43,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-editor",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "id": "shot-16",
+      "name": "16 Editor · layers are recipes",
+      "sourceStartFrame": 120,
+      "startFrame": 1067,
+      "durationFrames": 21,
+      "position": { "x": 0, "y": 0 },
+      "motion": {
+        "scaleTo": 1.8,
+        "xTo": -414.72,
+        "yTo": -233.28,
+        "opacityTo": 1
+      }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-editor",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.8,
+      "rotationDegrees": 0,
+      "id": "shot-16-hold",
+      "name": "16 Editor · layers are recipes · hold",
+      "sourceStartFrame": 141,
+      "startFrame": 1088,
+      "durationFrames": 64,
+      "position": { "x": -414.72, "y": -233.28 },
+      "motion": {
+        "scaleTo": 1.9418,
+        "xTo": -447.36,
+        "yTo": -251.64,
+        "opacityTo": 1
+      }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-directions",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "id": "shot-17",
+      "name": "17 Editor · shot and lens",
+      "sourceStartFrame": 14,
+      "startFrame": 1152,
+      "durationFrames": 21,
+      "position": { "x": 0, "y": 0 },
+      "motion": { "scaleTo": 2.2, "xTo": 929.28, "yTo": -118.8, "opacityTo": 1 }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-directions",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 2.2,
+      "rotationDegrees": 0,
+      "id": "shot-17-hold",
+      "name": "17 Editor · shot and lens · hold",
+      "sourceStartFrame": 35,
+      "startFrame": 1173,
+      "durationFrames": 64,
+      "position": { "x": 929.28, "y": -118.8 },
+      "motion": {
+        "scaleTo": 2.3733,
+        "xTo": 1002.43,
+        "yTo": -128.2,
+        "opacityTo": 1
+      }
+    },
+    {
+      "kind": "video",
+      "assetId": "dimensions",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "id": "shot-18",
+      "name": "18 The Dimensions mix · rendered",
+      "sourceStartFrame": 302,
+      "startFrame": 1237,
+      "durationFrames": 86,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-directions",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "id": "shot-19",
+      "name": "19 Editor · send to Genobi",
+      "sourceStartFrame": 120,
+      "startFrame": 1323,
+      "durationFrames": 21,
+      "position": { "x": 0, "y": 0 },
+      "motion": { "scaleTo": 2, "xTo": -960, "yTo": 108, "opacityTo": 1 }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-directions",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 2,
+      "rotationDegrees": 0,
+      "id": "shot-19-hold",
+      "name": "19 Editor · send to Genobi · hold",
+      "sourceStartFrame": 141,
+      "startFrame": 1344,
+      "durationFrames": 64,
+      "position": { "x": -960, "y": 108 },
+      "motion": {
+        "scaleTo": 2.1575,
+        "xTo": -1077.12,
+        "yTo": 116.53,
+        "opacityTo": 1
+      }
+    },
+    {
+      "kind": "video",
+      "assetId": "character",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.33,
+      "rotationDegrees": 0,
+      "id": "shot-20",
+      "name": "20 Forest guardian · fire",
+      "sourceStartFrame": 250,
+      "startFrame": 1408,
+      "durationFrames": 43,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "kind": "video",
+      "assetId": "character",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.33,
+      "rotationDegrees": 0,
+      "id": "shot-21",
+      "name": "21 Forest guardian · close",
+      "sourceStartFrame": 384,
+      "startFrame": 1451,
+      "durationFrames": 42,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-world",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "id": "shot-22",
+      "name": "22 3D · orbit the set",
+      "sourceStartFrame": 5,
+      "startFrame": 1493,
+      "durationFrames": 22,
+      "position": { "x": 0, "y": 0 },
+      "motion": {
+        "scaleTo": 1.35,
+        "xTo": 207.36,
+        "yTo": 116.64,
+        "opacityTo": 1
+      }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-world",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.35,
+      "rotationDegrees": 0,
+      "id": "shot-22-hold",
+      "name": "22 3D · orbit the set · hold",
+      "sourceStartFrame": 27,
+      "startFrame": 1515,
+      "durationFrames": 64,
+      "position": { "x": 207.36, "y": 116.64 },
+      "motion": {
+        "scaleTo": 1.4563,
+        "xTo": 223.68,
+        "yTo": 125.82,
+        "opacityTo": 1
+      }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-world",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "id": "shot-23",
+      "name": "23 3D · build tools",
+      "sourceStartFrame": 91,
+      "startFrame": 1579,
+      "durationFrames": 21,
+      "position": { "x": 0, "y": 0 },
+      "motion": { "scaleTo": 1.5, "xTo": 480, "yTo": 81, "opacityTo": 1 }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-world",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.5,
+      "rotationDegrees": 0,
+      "id": "shot-23-hold",
+      "name": "23 3D · build tools · hold",
+      "sourceStartFrame": 112,
+      "startFrame": 1600,
+      "durationFrames": 64,
+      "position": { "x": 480, "y": 81 },
+      "motion": {
+        "scaleTo": 1.6181,
+        "xTo": 593.47,
+        "yTo": 87.37,
+        "opacityTo": 1
+      }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-agent",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "id": "shot-24",
+      "name": "24 Genobi · the brief",
+      "sourceStartFrame": 5,
+      "startFrame": 1664,
+      "durationFrames": 21,
+      "position": { "x": 0, "y": 0 },
+      "motion": { "scaleTo": 2.1, "xTo": 1056, "yTo": 453.6, "opacityTo": 1 }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-agent",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 2.1,
+      "rotationDegrees": 0,
+      "id": "shot-24-hold",
+      "name": "24 Genobi · the brief · hold",
+      "sourceStartFrame": 26,
+      "startFrame": 1685,
+      "durationFrames": 64,
+      "position": { "x": 1056, "y": 453.6 },
+      "motion": {
+        "scaleTo": 2.2654,
+        "xTo": 1214.78,
+        "yTo": 489.35,
+        "opacityTo": 1
+      }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-agent",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "id": "shot-25",
+      "name": "25 Genobi · ready to start",
+      "sourceStartFrame": 90,
+      "startFrame": 1749,
+      "durationFrames": 22,
+      "position": { "x": 0, "y": 0 },
+      "motion": { "scaleTo": 2.3, "xTo": 1248, "yTo": 298.08, "opacityTo": 1 }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-agent",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 2.3,
+      "rotationDegrees": 0,
+      "id": "shot-25-hold",
+      "name": "25 Genobi · ready to start · hold",
+      "sourceStartFrame": 112,
+      "startFrame": 1771,
+      "durationFrames": 64,
+      "position": { "x": 1248, "y": 298.08 },
+      "motion": {
+        "scaleTo": 2.4811,
+        "xTo": 1421.95,
+        "yTo": 321.52,
+        "opacityTo": 1
+      }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-licences",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "id": "shot-26",
+      "name": "26 Taste · models and licences",
+      "sourceStartFrame": 72,
+      "startFrame": 2048,
+      "durationFrames": 21,
+      "position": { "x": 0, "y": 0 },
+      "motion": { "scaleTo": 1.5, "xTo": 230.4, "yTo": 81, "opacityTo": 1 }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-licences",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.5,
+      "rotationDegrees": 0,
+      "id": "shot-26-hold",
+      "name": "26 Taste · models and licences · hold",
+      "sourceStartFrame": 93,
+      "startFrame": 2069,
+      "durationFrames": 64,
+      "position": { "x": 230.4, "y": 81 },
+      "motion": {
+        "scaleTo": 1.6181,
+        "xTo": 248.64,
+        "yTo": 87.37,
+        "opacityTo": 1
+      }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-camera",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "id": "shot-27",
+      "name": "27 Camera · the open upscale",
+      "sourceStartFrame": 14,
+      "startFrame": 2133,
+      "durationFrames": 22,
+      "position": { "x": 0, "y": 0 },
+      "motion": { "scaleTo": 2.3, "xTo": 883.2, "yTo": -702, "opacityTo": 1 }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-camera",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 2.3,
+      "rotationDegrees": 0,
+      "id": "shot-27-hold",
+      "name": "27 Camera · the open upscale · hold",
+      "sourceStartFrame": 36,
+      "startFrame": 2155,
+      "durationFrames": 42,
+      "position": { "x": 883.2, "y": -702 },
+      "motion": {
+        "scaleTo": 2.4179,
+        "xTo": 928.51,
+        "yTo": -765.61,
+        "opacityTo": 1
+      }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-camera",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "id": "shot-28",
+      "name": "28 Camera · FLUX through the API",
+      "sourceStartFrame": 137,
+      "startFrame": 2197,
+      "durationFrames": 22,
+      "position": { "x": 0, "y": 0 },
+      "motion": { "scaleTo": 2.4, "xTo": 1059.84, "yTo": -756, "opacityTo": 1 }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-camera",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 2.4,
+      "rotationDegrees": 0,
+      "id": "shot-28-hold",
+      "name": "28 Camera · FLUX through the API · hold",
+      "sourceStartFrame": 159,
+      "startFrame": 2219,
+      "durationFrames": 21,
+      "position": { "x": 1059.84, "y": -756 },
+      "motion": {
+        "scaleTo": 2.46,
+        "xTo": 1086.34,
+        "yTo": -788.4,
+        "opacityTo": 1
+      }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-save",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "id": "shot-29",
+      "name": "29 Editor · save the project",
+      "sourceStartFrame": 24,
+      "startFrame": 2240,
+      "durationFrames": 21,
+      "position": { "x": 0, "y": 0 },
+      "motion": { "scaleTo": 2, "xTo": -960, "yTo": -108, "opacityTo": 1 }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-save",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 2,
+      "rotationDegrees": 0,
+      "id": "shot-29-hold",
+      "name": "29 Editor · save the project · hold",
+      "sourceStartFrame": 45,
+      "startFrame": 2261,
+      "durationFrames": 43,
+      "position": { "x": -960, "y": -108 },
+      "motion": {
+        "scaleTo": 2.105,
+        "xTo": -1060.8,
+        "yTo": -113.72,
+        "opacityTo": 1
+      }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-save",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "id": "shot-30",
+      "name": "30 Director · reuse the flow",
+      "sourceStartFrame": 89,
+      "startFrame": 2304,
+      "durationFrames": 21,
+      "position": { "x": 0, "y": 0 },
+      "motion": { "scaleTo": 1.3, "xTo": 0, "yTo": -140.4, "opacityTo": 1 }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-save",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.3,
+      "rotationDegrees": 0,
+      "id": "shot-30-hold",
+      "name": "30 Director · reuse the flow · hold",
+      "sourceStartFrame": 110,
+      "startFrame": 2325,
+      "durationFrames": 64,
+      "position": { "x": 0, "y": -140.4 },
+      "motion": { "scaleTo": 1.4024, "xTo": 0, "yTo": -151.42, "opacityTo": 1 }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-swords",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "id": "shot-31",
+      "name": "31 Dual Swords · A and B",
+      "sourceStartFrame": 7,
+      "startFrame": 2389,
+      "durationFrames": 22,
+      "position": { "x": 0, "y": 0 },
+      "motion": { "scaleTo": 1.6, "xTo": 245.76, "yTo": 172.8, "opacityTo": 1 }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-swords",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.6,
+      "rotationDegrees": 0,
+      "id": "shot-31-hold",
+      "name": "31 Dual Swords · A and B · hold",
+      "sourceStartFrame": 29,
+      "startFrame": 2411,
+      "durationFrames": 21,
+      "position": { "x": 245.76, "y": 172.8 },
+      "motion": { "scaleTo": 1.64, "xTo": 251.9, "yTo": 177.12, "opacityTo": 1 }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-scrolls",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "id": "shot-32",
+      "name": "32 Scrolls · the storyboard",
+      "sourceStartFrame": 120,
+      "startFrame": 2432,
+      "durationFrames": 21,
+      "position": { "x": 0, "y": 0 },
+      "motion": { "scaleTo": 2.3, "xTo": 662.4, "yTo": -702, "opacityTo": 1 }
+    },
+    {
+      "kind": "video",
+      "assetId": "ui-scrolls",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 2.3,
+      "rotationDegrees": 0,
+      "id": "shot-32-hold",
+      "name": "32 Scrolls · the storyboard · hold",
+      "sourceStartFrame": 141,
+      "startFrame": 2453,
+      "durationFrames": 22,
+      "position": { "x": 662.4, "y": -702 },
+      "motion": {
+        "scaleTo": 2.3604,
+        "xTo": 679.87,
+        "yTo": -734.62,
+        "opacityTo": 1
+      }
+    },
+    {
+      "kind": "video",
+      "assetId": "mix-02",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.7777777777777777,
+      "rotationDegrees": 0,
+      "id": "shot-33",
+      "name": "33 Duneward · eyes ignite",
+      "sourceStartFrame": 31,
+      "startFrame": 2475,
+      "durationFrames": 42,
+      "position": { "x": 0, "y": 260 }
+    },
+    {
+      "kind": "video",
+      "assetId": "mix-03",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.7777777777777777,
+      "rotationDegrees": 0,
+      "id": "shot-34",
+      "name": "34 Montage 01",
+      "sourceStartFrame": 96,
+      "startFrame": 2517,
+      "durationFrames": 22,
+      "position": { "x": 0, "y": 206.67 }
+    },
+    {
+      "kind": "video",
+      "assetId": "product",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.33,
+      "rotationDegrees": 0,
+      "id": "shot-35",
+      "name": "35 Montage 02",
+      "sourceStartFrame": 72,
+      "startFrame": 2539,
+      "durationFrames": 21,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "kind": "video",
+      "assetId": "audio-visual",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.317,
+      "rotationDegrees": 0,
+      "id": "shot-36",
+      "name": "36 Montage 03",
+      "sourceStartFrame": 216,
+      "startFrame": 2560,
+      "durationFrames": 21,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "kind": "video",
+      "assetId": "character",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.33,
+      "rotationDegrees": 0,
+      "id": "shot-37",
+      "name": "37 Montage 04",
+      "sourceStartFrame": 336,
+      "startFrame": 2581,
+      "durationFrames": 22,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "kind": "video",
+      "assetId": "mix-02",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.7777777777777777,
+      "rotationDegrees": 0,
+      "id": "shot-38",
+      "name": "38 Montage 05",
+      "sourceStartFrame": 192,
+      "startFrame": 2603,
+      "durationFrames": 21,
+      "position": { "x": 0, "y": 126.67 }
+    },
+    {
+      "kind": "video",
+      "assetId": "library-03",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.023,
+      "rotationDegrees": 0,
+      "id": "shot-39",
+      "name": "39 Montage 06",
+      "sourceStartFrame": 48,
+      "startFrame": 2624,
+      "durationFrames": 21,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "kind": "video",
+      "assetId": "mix-01",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.7777777777777777,
+      "rotationDegrees": 0,
+      "id": "shot-40",
+      "name": "40 Montage 07",
+      "sourceStartFrame": 190,
+      "startFrame": 2645,
+      "durationFrames": 22,
+      "position": { "x": 0, "y": 153.33 }
+    },
+    {
+      "kind": "video",
+      "assetId": "product",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.33,
+      "rotationDegrees": 0,
+      "id": "shot-41",
+      "name": "41 Montage 08",
+      "sourceStartFrame": 288,
+      "startFrame": 2667,
+      "durationFrames": 21,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "kind": "video",
+      "assetId": "audio-visual",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.317,
+      "rotationDegrees": 0,
+      "id": "shot-42",
+      "name": "42 Montage 09",
+      "sourceStartFrame": 444,
+      "startFrame": 2688,
+      "durationFrames": 21,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "kind": "video",
+      "assetId": "character",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.33,
+      "rotationDegrees": 0,
+      "id": "shot-43",
+      "name": "43 Montage 10",
+      "sourceStartFrame": 408,
+      "startFrame": 2709,
+      "durationFrames": 22,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "kind": "video",
+      "assetId": "mix-03",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.7777777777777777,
+      "rotationDegrees": 0,
+      "id": "shot-44",
+      "name": "44 Montage 11",
+      "sourceStartFrame": 216,
+      "startFrame": 2731,
+      "durationFrames": 21,
+      "position": { "x": 0, "y": 100 }
+    },
+    {
+      "kind": "video",
+      "assetId": "audio-visual",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.317,
+      "rotationDegrees": 0,
+      "id": "shot-45",
+      "name": "45 Montage 12",
+      "sourceStartFrame": 624,
+      "startFrame": 2752,
+      "durationFrames": 21,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "end-card",
+      "name": "End card · Genobi",
+      "moduleId": "end-card",
+      "parameters": {
+        "eyebrow": "MADE WITH",
+        "title": "GENOBI",
+        "subtitle": "THE AI FILM STUDIO YOU DIRECT",
+        "credit1": "MUSIC · TRAILER-GENOBI",
+        "credit2": "KOSHIMAZAKI MIX",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "color": "#d5ff70",
+        "accent": "#e6a1ff",
+        "steps": "Gathering the shots / Cutting on the beat / Bringing it into focus",
+        "done": "Teaser ready",
+        "duration": 2.6
+      },
+      "startFrame": 2773,
+      "durationFrames": 96,
+      "locked": false,
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "title",
+      "name": "Title · GENOBI",
+      "moduleId": "gen-title",
+      "parameters": {
+        "text": "GENOBI",
+        "line": "THE AI FILM STUDIO YOU DIRECT",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "size": 128,
+        "color": "#d5ff70",
+        "muted": "#eaf2df",
+        "accent": "#d5ff70",
+        "x": 0.5,
+        "y": 0.46,
+        "duration": 3.6,
+        "mode": "trace-texts",
+        "steps": "Setting the title / Tracing glyphs / Inking",
+        "done": "Studio ready",
+        "fadeAt": 4.933,
+        "plate": 0
+      },
+      "startFrame": 0,
+      "durationFrames": 128,
+      "locked": false,
+      "track": "cards",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "reveal-1",
+      "name": "Generate · forest guardian",
+      "moduleId": "gen-image",
+      "parameters": {
+        "still": "/media/director-templates/genobi-teaser/still-character.jpg",
+        "matte": "#0c0e0c",
+        "accent": "#d5ff70",
+        "inset": 0,
+        "duration": 3,
+        "mode": "trace",
+        "steps": "Sampling / Screening / Colour",
+        "done": "Shot ready",
+        "fadeAt": 0
+      },
+      "startFrame": 128,
+      "durationFrames": 85,
+      "locked": false,
+      "track": "cards",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "paper-dither",
+      "name": "Paper Shaders · dithering",
+      "moduleId": "paper-shader",
+      "parameters": {
+        "shader": "dithering",
+        "colors": "#0c0e0c",
+        "back": "#d5ff70",
+        "backAlpha": 1,
+        "speed": 0.9,
+        "scale": 0.9,
+        "intensity": 0.35,
+        "seed": 4,
+        "fadeAt": 0
+      },
+      "startFrame": 1835,
+      "durationFrames": 32,
+      "locked": false,
+      "track": "cards",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "space",
+      "name": "Space.js · targeting",
+      "moduleId": "space-hud",
+      "parameters": {
+        "still": "/media/director-templates/dimensions-mix/mix-01.jpg",
+        "color": "#d5ff70",
+        "label": "SPACE.JS",
+        "credit": "PATRICK SCHROEN",
+        "targets": "0.5,0.42,0.18,0.3 / 0.3,0.6,0.12,0.18 / 0.7,0.62,0.12,0.18",
+        "interval": 0.3,
+        "dim": 0.25,
+        "fadeAt": 0
+      },
+      "startFrame": 1867,
+      "durationFrames": 32,
+      "locked": false,
+      "track": "cards",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "reveal-3",
+      "name": "Transitions.dev · neon bloom",
+      "moduleId": "gen-image",
+      "parameters": {
+        "still": "/media/director-templates/genobi-teaser/still-bloom.jpg",
+        "matte": "#0c0e0c",
+        "accent": "#d5ff70",
+        "inset": 0.06,
+        "duration": 1.2,
+        "mode": "trace-texts",
+        "steps": "Sketch / Screen / Colour",
+        "done": "Transition ready",
+        "fadeAt": 0
+      },
+      "startFrame": 1899,
+      "durationFrames": 32,
+      "locked": false,
+      "track": "cards",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "taste",
+      "name": "Taste layer · the libraries",
+      "moduleId": "gen-title",
+      "parameters": {
+        "text": "TASTE LAYER",
+        "line": "ANDREW ZELLINGER / TRANSITIONS.DEV · JAKUB ANTALIK / PAPER SHADERS · PAPER DESIGN / THREE.JS · ANIME.JS · P5.JS / P5.BRUSH · ALIEN.JS · SPACE.JS / PIXIJS FILTERS · TEXTMODE.JS · PLAY.CORE / MATRIX DIGITAL RAIN · GLYPHCSS · KRBN / SVGBOB · CRT-TERMINAL · CLI-SPINNERS / IBM PLEX MONO · GEIST",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "size": 104,
+        "color": "#d5ff70",
+        "muted": "#eaf2df",
+        "accent": "#d5ff70",
+        "x": 0.5,
+        "y": 0.5,
+        "duration": 3.2,
+        "mode": "trace-texts",
+        "steps": "Reading the credits / Tracing / Inking",
+        "done": "Credited in docs/credits",
+        "fadeAt": 4.489,
+        "plate": 0
+      },
+      "startFrame": 1931,
+      "durationFrames": 117,
+      "locked": false,
+      "track": "cards",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "cursor-36",
+      "name": "Pointer · Gallery · the generations",
+      "moduleId": "ui-cursor",
+      "parameters": {
+        "path": "0:0.5,0.55 / 0.4:0.5,0.55 / 0.966:0.5,0.55 / 1.666:0.317,0.772",
+        "clicks": "",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,21,64,0;1,0,0;1.4,-0.168,0.07;1.5103,-0.1812,0.0755"
+      },
+      "startFrame": 384,
+      "durationFrames": 85,
+      "locked": false,
+      "track": "cursor",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "cursor-44",
+      "name": "Pointer · Camera · model families",
+      "moduleId": "ui-cursor",
+      "parameters": {
+        "path": "0:0.234,0.743 / 0.451:0.234,0.743 / 0.617:0.234,0.743 / 1.317:0.311,0.743 / 2.601:0.311,0.743 / 3.301:0.289,0.743",
+        "clicks": "1.317 / 3.301",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,22,64,0;1,0,0;2.3,0.46,-0.65;2.4811,0.4962,-0.7406"
+      },
+      "startFrame": 469,
+      "durationFrames": 86,
+      "locked": false,
+      "track": "cursor",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "cursor-52",
+      "name": "Pointer · Camera · the prompt",
+      "moduleId": "ui-cursor",
+      "parameters": {
+        "path": "0:0.262,0.743 / 0.55:0.5,0.526",
+        "clicks": "0.55",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,21,64,0;1,0,0;2,0.2,0.16;2.1575,0.2157,0.1726"
+      },
+      "startFrame": 555,
+      "durationFrames": 85,
+      "locked": false,
+      "track": "cursor",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "cursor-60",
+      "name": "Pointer · Camera · camera controls",
+      "moduleId": "ui-cursor",
+      "parameters": {
+        "path": "0:0.737,0.461 / 0.365:0.472,0.26 / 0.915:0.472,0.26 / 1.615:0.23,0.499",
+        "clicks": "0.365 / 1.615",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,21,43,0;1,0,0;1.6,0.128,0.128;1.684,0.1347,0.1347"
+      },
+      "startFrame": 640,
+      "durationFrames": 64,
+      "locked": false,
+      "track": "cursor",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "cursor-66",
+      "name": "Pointer · Camera · the quote",
+      "moduleId": "ui-cursor",
+      "parameters": {
+        "path": "0:0.5,0.526 / 0.417:0.5,0.526 / 1.117:0.731,0.734",
+        "clicks": "",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,21,43,0;1,0,0;2.4,-0.528,0.096;2.526,-0.5557,0.101"
+      },
+      "startFrame": 704,
+      "durationFrames": 64,
+      "locked": false,
+      "track": "cursor",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "cursor-100",
+      "name": "Pointer · Editor · layers are recipes",
+      "moduleId": "ui-cursor",
+      "parameters": {
+        "path": "0:0.041,0.689 / 0.736:0.041,0.689 / 1.436:0.484,0.785 / 2.355:0.484,0.785 / 3.055:0.778,0.413",
+        "clicks": "1.436 / 3.055",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,21,64,0;1,0,0;1.8,-0.216,-0.216;1.9418,-0.233,-0.233"
+      },
+      "startFrame": 1067,
+      "durationFrames": 85,
+      "locked": false,
+      "track": "cursor",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "cursor-108",
+      "name": "Pointer · Editor · shot and lens",
+      "moduleId": "ui-cursor",
+      "parameters": {
+        "path": "0:0.264,0.749 / 0.635:0.264,0.749 / 1.183:0.264,0.749 / 1.883:0.287,0.508 / 2.317:0.287,0.508 / 3.017:0.302,0.624",
+        "clicks": "0.635 / 1.883 / 3.017",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,21,64,0;1,0,0;2.2,0.484,-0.11;2.3733,0.5221,-0.1187"
+      },
+      "startFrame": 1152,
+      "durationFrames": 85,
+      "locked": false,
+      "track": "cursor",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "cursor-124",
+      "name": "Pointer · Editor · send to Genobi",
+      "moduleId": "ui-cursor",
+      "parameters": {
+        "path": "0:0.302,0.624 / 0.283:0.385,0.395 / 1.717:0.385,0.395 / 2.417:0.938,0.472",
+        "clicks": "0.283",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,21,64,0;1,0,0;2,-0.5,0.1;2.1575,-0.561,0.1079"
+      },
+      "startFrame": 1323,
+      "durationFrames": 85,
+      "locked": false,
+      "track": "cursor",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "cursor-140",
+      "name": "Pointer · 3D · orbit the set",
+      "moduleId": "ui-cursor",
+      "parameters": {
+        "path": "0:0.45,0.45 / 0.398:0.45,0.45 / 0.865:0.45,0.45 / 1.565:0.6,0.42 / 1.715:0.6,0.42 / 2.415:0.11,0.176",
+        "clicks": "2.415",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,22,64,0;1,0,0;1.35,0.108,0.108;1.4563,0.1165,0.1165"
+      },
+      "startFrame": 1493,
+      "durationFrames": 86,
+      "locked": false,
+      "track": "cursor",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "cursor-148",
+      "name": "Pointer · 3D · build tools",
+      "moduleId": "ui-cursor",
+      "parameters": {
+        "path": "0:0.11,0.176 / 0.481:0.045,0.308 / 0.853:0.045,0.308 / 1.553:0.082,0.821",
+        "clicks": "0.481 / 1.553",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,21,64,0;1,0,0;1.5,0.25,0.075;1.6181,0.3091,0.0809"
+      },
+      "startFrame": 1579,
+      "durationFrames": 85,
+      "locked": false,
+      "track": "cursor",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "cursor-156",
+      "name": "Pointer · Genobi · the brief",
+      "moduleId": "ui-cursor",
+      "parameters": {
+        "path": "0:0.028,0.034 / 0.442:0.028,0.034 / 0.968:0.028,0.034 / 1.668:0.135,0.407",
+        "clicks": "0.442 / 1.668",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,21,64,0;1,0,0;2.1,0.55,0.42;2.2654,0.6327,0.4531"
+      },
+      "startFrame": 1664,
+      "durationFrames": 85,
+      "locked": false,
+      "track": "cursor",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "cursor-164",
+      "name": "Pointer · Genobi · ready to start",
+      "moduleId": "ui-cursor",
+      "parameters": {
+        "path": "0:0.135,0.407 / 1.619:0.135,0.407 / 2.319:0.053,0.466",
+        "clicks": "",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,22,64,0;1,0,0;2.3,0.65,0.276;2.4811,0.7406,0.2977"
+      },
+      "startFrame": 1749,
+      "durationFrames": 86,
+      "locked": false,
+      "track": "cursor",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "cursor-192",
+      "name": "Pointer · Taste · models and licences",
+      "moduleId": "ui-cursor",
+      "parameters": {
+        "path": "0:0.248,0.768 / 0.548:0.273,0.5 / 2.765:0.273,0.5 / 3.465:0.564,0.261",
+        "clicks": "",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,21,64,0;1,0,0;1.5,0.12,0.075;1.6181,0.1295,0.0809"
+      },
+      "startFrame": 2048,
+      "durationFrames": 85,
+      "locked": false,
+      "track": "cursor",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "cursor-200",
+      "name": "Pointer · Camera · the open upscale",
+      "moduleId": "ui-cursor",
+      "parameters": {
+        "path": "0:0.234,0.743 / 0.051:0.234,0.743 / 0.217:0.234,0.743 / 0.917:0.311,0.743",
+        "clicks": "0.917",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,22,42,0;1,0,0;2.3,0.46,-0.65;2.4179,0.4836,-0.7089"
+      },
+      "startFrame": 2133,
+      "durationFrames": 64,
+      "locked": false,
+      "track": "cursor",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "cursor-210",
+      "name": "Pointer · Editor · save the project",
+      "moduleId": "ui-cursor",
+      "parameters": {
+        "path": "0:0.951,0.608 / 1.0:0.951,0.608 / 1.7:0.951,0.608",
+        "clicks": "",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,21,43,0;1,0,0;2,-0.5,-0.1;2.105,-0.5525,-0.1053"
+      },
+      "startFrame": 2240,
+      "durationFrames": 64,
+      "locked": false,
+      "track": "cursor",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "cursor-216",
+      "name": "Pointer · Director · reuse the flow",
+      "moduleId": "ui-cursor",
+      "parameters": {
+        "path": "0:0.951,0.608 / 0.283:0.951,0.608 / 0.983:0.936,0.115 / 2.616:0.936,0.115 / 3.316:0.641,0.115",
+        "clicks": "0.983",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,21,64,0;1,0,0;1.3,0,-0.13;1.4024,0,-0.1402"
+      },
+      "startFrame": 2304,
+      "durationFrames": 85,
+      "locked": false,
+      "track": "cursor",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "focus-44",
+      "name": "Focus · MODEL FAMILIES · LTX FLUX H3 UPSCALE",
+      "moduleId": "ui-focus",
+      "parameters": {
+        "x": 0.301,
+        "y": 0.728,
+        "w": 0.02,
+        "h": 0.03,
+        "label": "MODEL FAMILIES · LTX FLUX H3 UPSCALE",
+        "color": "#d5ff70",
+        "dim": 0.45,
+        "draw": 0.6,
+        "fadeAt": 2.317,
+        "view": "24,22,64,22;1,0,0;2.3,0.46,-0.65;2.4811,0.4962,-0.7406"
+      },
+      "startFrame": 491,
+      "durationFrames": 64,
+      "locked": false,
+      "track": "focus",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "focus-66",
+      "name": "Focus · QUOTED FIRST · NOTHING SPENT UNASKED",
+      "moduleId": "ui-focus",
+      "parameters": {
+        "x": 0.669,
+        "y": 0.694,
+        "w": 0.123,
+        "h": 0.079,
+        "label": "QUOTED FIRST · NOTHING SPENT UNASKED",
+        "color": "#d5ff70",
+        "dim": 0.45,
+        "draw": 0.6,
+        "fadeAt": 0.983,
+        "view": "24,21,43,0;1,0,0;2.4,-0.528,0.096;2.526,-0.5557,0.101"
+      },
+      "startFrame": 704,
+      "durationFrames": 32,
+      "locked": false,
+      "track": "focus",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "focus-108",
+      "name": "Focus · SHOT & LENS · PER CLIP DIRECTION",
+      "moduleId": "ui-focus",
+      "parameters": {
+        "x": 0.26,
+        "y": 0.489,
+        "w": 0.055,
+        "h": 0.037,
+        "label": "SHOT & LENS · PER CLIP DIRECTION",
+        "color": "#d5ff70",
+        "dim": 0.45,
+        "draw": 0.6,
+        "fadeAt": 1.872,
+        "view": "24,21,64,21;1,0,0;2.2,0.484,-0.11;2.3733,0.5221,-0.1187"
+      },
+      "startFrame": 1173,
+      "durationFrames": 54,
+      "locked": false,
+      "track": "focus",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "focus-124",
+      "name": "Focus · SEND TO GENOBI",
+      "moduleId": "ui-focus",
+      "parameters": {
+        "x": 0.903,
+        "y": 0.455,
+        "w": 0.07,
+        "h": 0.035,
+        "label": "SEND TO GENOBI",
+        "color": "#d5ff70",
+        "dim": 0.45,
+        "draw": 0.6,
+        "fadeAt": 1.428,
+        "view": "24,21,64,42;1,0,0;2,-0.5,0.1;2.1575,-0.561,0.1079"
+      },
+      "startFrame": 1365,
+      "durationFrames": 43,
+      "locked": false,
+      "track": "focus",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "focus-164",
+      "name": "Focus · YOUR AGENT · TYPED OR SPOKEN",
+      "moduleId": "ui-focus",
+      "parameters": {
+        "x": 0.017,
+        "y": 0.376,
+        "w": 0.235,
+        "h": 0.062,
+        "label": "YOUR AGENT · TYPED OR SPOKEN",
+        "color": "#d5ff70",
+        "dim": 0.45,
+        "draw": 0.6,
+        "fadeAt": 1.872,
+        "view": "24,22,64,22;1,0,0;2.3,0.65,0.276;2.4811,0.7406,0.2977"
+      },
+      "startFrame": 1771,
+      "durationFrames": 53,
+      "locked": false,
+      "track": "focus",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "focus-200",
+      "name": "Focus · OPEN UPSCALER · SEEDVR2",
+      "moduleId": "ui-focus",
+      "parameters": {
+        "x": 0.301,
+        "y": 0.728,
+        "w": 0.02,
+        "h": 0.03,
+        "label": "OPEN UPSCALER · SEEDVR2",
+        "color": "#d5ff70",
+        "dim": 0.45,
+        "draw": 0.6,
+        "fadeAt": 1.872,
+        "view": "24,22,42,0;1,0,0;2.3,0.46,-0.65;2.4179,0.4836,-0.7089"
+      },
+      "startFrame": 2133,
+      "durationFrames": 54,
+      "locked": false,
+      "track": "focus",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "focus-210",
+      "name": "Focus · SAVE JSON",
+      "moduleId": "ui-focus",
+      "parameters": {
+        "x": 0.926,
+        "y": 0.593,
+        "w": 0.05,
+        "h": 0.03,
+        "label": "SAVE JSON",
+        "color": "#d5ff70",
+        "dim": 0.45,
+        "draw": 0.6,
+        "fadeAt": 1.428,
+        "view": "24,21,43,21;1,0,0;2,-0.5,-0.1;2.105,-0.5525,-0.1053"
+      },
+      "startFrame": 2261,
+      "durationFrames": 43,
+      "locked": false,
+      "track": "focus",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "reveal-2",
+      "name": "Generate · motorbike",
+      "moduleId": "gen-image",
+      "parameters": {
+        "still": "/media/director-templates/genobi-teaser/still-motorbike.jpg",
+        "matte": "#0c0e0c",
+        "accent": "#d5ff70",
+        "inset": 0,
+        "duration": 1.2,
+        "mode": "trace",
+        "steps": "Sampling / Screening / Colour",
+        "done": "Shot ready",
+        "fadeAt": 0
+      },
+      "startFrame": 736,
+      "durationFrames": 32,
+      "locked": false,
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "status-0",
+      "name": "Status · Booting the studio",
+      "moduleId": "gen-status",
+      "parameters": {
+        "label": "Booting the studio",
+        "done": "Studio ready",
+        "variant": "scan",
+        "color": "#d5ff70",
+        "x": 0.5,
+        "y": 0.86,
+        "scale": 1.3,
+        "doneAt": 2.8,
+        "fadeAt": 4.144
+      },
+      "startFrame": 0,
+      "durationFrames": 107,
+      "locked": false,
+      "track": "status",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "status-1",
+      "name": "Status · Generating shot 01 · FLUX 3",
+      "moduleId": "gen-status",
+      "parameters": {
+        "label": "Generating shot 01 · FLUX 3",
+        "done": "Shot ready",
+        "variant": "twinkle",
+        "color": "#d5ff70",
+        "x": 0.5,
+        "y": 0.93,
+        "scale": 1.3,
+        "doneAt": 3.1,
+        "fadeAt": 3.256
+      },
+      "startFrame": 128,
+      "durationFrames": 85,
+      "locked": false,
+      "track": "status",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "status-2",
+      "name": "Status · Generating · FLUX 3 · 10 s",
+      "moduleId": "gen-status",
+      "parameters": {
+        "label": "Generating · FLUX 3 · 10 s",
+        "done": "Shot ready",
+        "variant": "orbit",
+        "color": "#d5ff70",
+        "x": 0.5,
+        "y": 0.8,
+        "scale": 1.3,
+        "doneAt": 1.4,
+        "fadeAt": 2.367
+      },
+      "startFrame": 704,
+      "durationFrames": 64,
+      "locked": false,
+      "track": "status",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "status-3",
+      "name": "Status · Brief: a 20 s teaser on the beat",
+      "moduleId": "gen-status",
+      "parameters": {
+        "label": "Brief: a 20 s teaser on the beat",
+        "done": "Nothing runs until you approve",
+        "variant": "pulse",
+        "color": "#d5ff70",
+        "x": 0.5,
+        "y": 0.86,
+        "scale": 1.3,
+        "doneAt": 1.6,
+        "fadeAt": 2.367
+      },
+      "startFrame": 1771,
+      "durationFrames": 64,
+      "locked": false,
+      "track": "status",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "callout-camera",
+      "name": "Callout · CAMERA CONTROLS",
+      "moduleId": "gen-title",
+      "parameters": {
+        "text": "CAMERA CONTROLS",
+        "line": "",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "size": 60,
+        "color": "#d5ff70",
+        "muted": "#eaf2df",
+        "accent": "#d5ff70",
+        "x": 0.5,
+        "y": 0.9,
+        "duration": 0.8,
+        "mode": "trace",
+        "steps": "",
+        "done": "",
+        "fadeAt": 1.922,
+        "plate": 0.82
+      },
+      "startFrame": 640,
+      "durationFrames": 53,
+      "locked": false,
+      "track": "callout",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "callout-threejs",
+      "name": "Callout · ★ THREE.JS",
+      "moduleId": "gen-title",
+      "parameters": {
+        "text": "★ THREE.JS",
+        "line": "",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "size": 96,
+        "color": "#d5ff70",
+        "muted": "#eaf2df",
+        "accent": "#d5ff70",
+        "x": 0.5,
+        "y": 0.86,
+        "duration": 0.8,
+        "mode": "trace",
+        "steps": "",
+        "done": "",
+        "fadeAt": 1.922,
+        "plate": 0.82
+      },
+      "startFrame": 864,
+      "durationFrames": 53,
+      "locked": false,
+      "track": "callout",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "make",
+      "name": "Slam · MAKE",
+      "moduleId": "kinetic",
+      "parameters": {
+        "text": "MAKE",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "weight": 700,
+        "color": "#f6f8f2",
+        "accent": "#0c0e0c",
+        "bpm": 135,
+        "size": 225,
+        "beats": 2
+      },
+      "startFrame": 363,
+      "durationFrames": 21,
+      "locked": false,
+      "track": "impact",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "direct",
+      "name": "Slam · DIRECT",
+      "moduleId": "kinetic",
+      "parameters": {
+        "text": "DIRECT",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "weight": 700,
+        "color": "#f6f8f2",
+        "accent": "#0c0e0c",
+        "bpm": 135,
+        "size": 225,
+        "beats": 2
+      },
+      "startFrame": 789,
+      "durationFrames": 22,
+      "locked": false,
+      "track": "impact",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "build",
+      "name": "Slam · BUILD / WORLDS",
+      "moduleId": "kinetic",
+      "parameters": {
+        "text": "BUILD / WORLDS",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "weight": 700,
+        "color": "#f6f8f2",
+        "accent": "#0c0e0c",
+        "bpm": 135,
+        "size": 180,
+        "beats": 4
+      },
+      "startFrame": 1451,
+      "durationFrames": 42,
+      "locked": false,
+      "track": "impact",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "remix",
+      "name": "Slam · COMPARE / REMIX",
+      "moduleId": "kinetic",
+      "parameters": {
+        "text": "COMPARE / REMIX",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "weight": 700,
+        "color": "#f6f8f2",
+        "accent": "#0c0e0c",
+        "bpm": 135,
+        "size": 165,
+        "beats": 2
+      },
+      "startFrame": 2389,
+      "durationFrames": 22,
+      "locked": false,
+      "track": "impact",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "one",
+      "name": "Slam · ONE STUDIO",
+      "moduleId": "kinetic",
+      "parameters": {
+        "text": "ONE STUDIO",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "weight": 700,
+        "color": "#f6f8f2",
+        "accent": "#0c0e0c",
+        "bpm": 135,
+        "size": 180,
+        "beats": 4
+      },
+      "startFrame": 2475,
+      "durationFrames": 42,
+      "locked": false,
+      "track": "impact",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "hud-1",
+      "name": "HUD · intro",
+      "moduleId": "hud",
+      "parameters": {
+        "color": "#f6f8f2",
+        "accent": "#eaf2df",
+        "bpm": 135,
+        "text": "GENOBI // CUT IN GENOBI",
+        "credit": "MUSIC / KOSHIMAZAKI",
+        "seconds": 7.111
+      },
+      "startFrame": 213,
+      "durationFrames": 171,
+      "locked": false,
+      "track": "hud",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "hud-2",
+      "name": "HUD · montage",
+      "moduleId": "hud",
+      "parameters": {
+        "color": "#f6f8f2",
+        "accent": "#eaf2df",
+        "bpm": 135,
+        "text": "GENOBI // CUT ON THE BEAT IN THE DIRECTOR",
+        "credit": "MUSIC / KOSHIMAZAKI",
+        "seconds": 10.667
+      },
+      "startFrame": 2517,
+      "durationFrames": 256,
+      "locked": false,
+      "track": "hud",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "glitch-20",
+      "name": "Glitch · beat 20",
+      "moduleId": "slice-glitch",
+      "parameters": {
+        "amount": 0.85,
+        "slices": 18,
+        "seed": 143,
+        "duration": 0.2
+      },
+      "startFrame": 213,
+      "durationFrames": 6,
+      "locked": false,
+      "track": "glitch",
+      "kind": "filter",
+      "input": "composite-below"
+    },
+    {
+      "id": "glitch-36",
+      "name": "Glitch · beat 36",
+      "moduleId": "slice-glitch",
+      "parameters": {
+        "amount": 0.85,
+        "slices": 18,
+        "seed": 255,
+        "duration": 0.2
+      },
+      "startFrame": 384,
+      "durationFrames": 5,
+      "locked": false,
+      "track": "glitch",
+      "kind": "filter",
+      "input": "composite-below"
+    },
+    {
+      "id": "glitch-72",
+      "name": "Glitch · beat 72",
+      "moduleId": "slice-glitch",
+      "parameters": {
+        "amount": 0.85,
+        "slices": 18,
+        "seed": 507,
+        "duration": 0.2
+      },
+      "startFrame": 768,
+      "durationFrames": 5,
+      "locked": false,
+      "track": "glitch",
+      "kind": "filter",
+      "input": "composite-below"
+    },
+    {
+      "id": "glitch-76",
+      "name": "Glitch · beat 76",
+      "moduleId": "slice-glitch",
+      "parameters": {
+        "amount": 0.85,
+        "slices": 18,
+        "seed": 535,
+        "duration": 0.2
+      },
+      "startFrame": 811,
+      "durationFrames": 5,
+      "locked": false,
+      "track": "glitch",
+      "kind": "filter",
+      "input": "composite-below"
+    },
+    {
+      "id": "glitch-92",
+      "name": "Glitch · beat 92",
+      "moduleId": "slice-glitch",
+      "parameters": { "amount": 1, "slices": 18, "seed": 647, "duration": 0.3 },
+      "startFrame": 981,
+      "durationFrames": 8,
+      "locked": false,
+      "track": "glitch",
+      "kind": "filter",
+      "input": "composite-below"
+    },
+    {
+      "id": "glitch-140",
+      "name": "Glitch · beat 140",
+      "moduleId": "slice-glitch",
+      "parameters": {
+        "amount": 0.85,
+        "slices": 18,
+        "seed": 983,
+        "duration": 0.2
+      },
+      "startFrame": 1493,
+      "durationFrames": 6,
+      "locked": false,
+      "track": "glitch",
+      "kind": "filter",
+      "input": "composite-below"
+    },
+    {
+      "id": "glitch-156",
+      "name": "Glitch · beat 156",
+      "moduleId": "slice-glitch",
+      "parameters": {
+        "amount": 1,
+        "slices": 18,
+        "seed": 1095,
+        "duration": 0.3
+      },
+      "startFrame": 1664,
+      "durationFrames": 8,
+      "locked": false,
+      "track": "glitch",
+      "kind": "filter",
+      "input": "composite-below"
+    },
+    {
+      "id": "glitch-172",
+      "name": "Glitch · beat 172",
+      "moduleId": "slice-glitch",
+      "parameters": {
+        "amount": 0.85,
+        "slices": 18,
+        "seed": 1207,
+        "duration": 0.15
+      },
+      "startFrame": 1835,
+      "durationFrames": 4,
+      "locked": false,
+      "track": "glitch",
+      "kind": "filter",
+      "input": "composite-below"
+    },
+    {
+      "id": "glitch-236",
+      "name": "Glitch · beat 236",
+      "moduleId": "slice-glitch",
+      "parameters": {
+        "amount": 1,
+        "slices": 18,
+        "seed": 1655,
+        "duration": 0.3
+      },
+      "startFrame": 2517,
+      "durationFrames": 8,
+      "locked": false,
+      "track": "glitch",
+      "kind": "filter",
+      "input": "composite-below"
+    },
+    {
+      "id": "glitch-244",
+      "name": "Glitch · beat 244",
+      "moduleId": "slice-glitch",
+      "parameters": {
+        "amount": 0.9,
+        "slices": 18,
+        "seed": 1711,
+        "duration": 0.15
+      },
+      "startFrame": 2603,
+      "durationFrames": 4,
+      "locked": false,
+      "track": "glitch",
+      "kind": "filter",
+      "input": "composite-below"
+    },
+    {
+      "id": "glitch-252",
+      "name": "Glitch · beat 252",
+      "moduleId": "slice-glitch",
+      "parameters": {
+        "amount": 0.9,
+        "slices": 18,
+        "seed": 1767,
+        "duration": 0.15
+      },
+      "startFrame": 2688,
+      "durationFrames": 4,
+      "locked": false,
+      "track": "glitch",
+      "kind": "filter",
+      "input": "composite-below"
+    },
+    {
+      "id": "glitch-260",
+      "name": "Glitch · beat 260",
+      "moduleId": "slice-glitch",
+      "parameters": {
+        "amount": 0.85,
+        "slices": 18,
+        "seed": 1823,
+        "duration": 0.2
+      },
+      "startFrame": 2773,
+      "durationFrames": 6,
+      "locked": false,
+      "track": "glitch",
+      "kind": "filter",
+      "input": "composite-below"
+    }
+  ],
+  "generationPlans": [],
+  "generations": []
+}

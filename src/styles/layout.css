@@ -1,0 +1,82 @@
+.topbar {
+  height: calc(80 * var(--unit));
+  margin: 0 var(--space-48);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.wordmark {
+  display: flex;
+  align-items: center;
+  gap: var(--space-11);
+  font-size: var(--space-20);
+  letter-spacing: calc(-0.7 * var(--unit));
+  font-weight: 500;
+}
+.brand-mark {
+  width: 28px;
+  height: 28px;
+  flex: none;
+}
+/* cli-spinners frames are text; a fixed width keeps the line from shifting
+   as frames of different widths go by. */
+.cli-spinner {
+  display: inline-block;
+  min-width: 2ch;
+  font-family: var(--mono);
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.brand-busy {
+  font-size: var(--space-13);
+  color: var(--accent);
+}
+.brand-beta {
+  font-family: var(--mono);
+  font-size: var(--space-9);
+  color: var(--muted);
+  letter-spacing: var(--space-1);
+  margin: var(--space-3) 0 0 var(--space-15);
+}
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-18);
+}
+.local-label {
+  font-family: var(--mono);
+  font-size: var(--space-9);
+  letter-spacing: var(--space-1);
+  color: var(--muted);
+  display: flex;
+  gap: var(--space-8);
+  align-items: center;
+}
+.local-label i {
+  height: var(--space-5);
+  width: var(--space-5);
+  border-radius: var(--radius-round);
+  background: var(--accent);
+}
+.connection-button {
+  display: flex;
+  gap: var(--space-10);
+  align-items: center;
+  font-size: var(--space-12);
+  border: var(--space-1) solid var(--border);
+  padding: var(--space-9) var(--space-12);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+}
+.connection-button:hover {
+  background: var(--raised);
+}
+.connection-dot {
+  width: var(--space-5);
+  height: var(--space-5);
+  border-radius: var(--radius-round);
+  background: var(--muted);
+}
+.connection-dot.connected {
+  background: var(--accent);
+}

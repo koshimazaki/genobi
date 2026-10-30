@@ -1,0 +1,14 @@
+# Only reusable distribution sources belong here, never runtime profiles.
+auth.json
+.env*
+memories/
+sessions/
+logs/
+state.db*
+genobi-profile.json
+genobi-browser/
+plugins/
+local/
+workspace/
+home/
+*.bak*

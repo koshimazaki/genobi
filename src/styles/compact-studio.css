@@ -1,0 +1,349 @@
+main {
+  max-width: none;
+}
+.featured-video,
+.studio {
+  width: min(100%, clamp(52.875rem, 50vw, 86rem));
+  max-width: none;
+}
+.featured-video,
+.gallery {
+  --unit: clamp(0.0625rem, calc(0.025rem + 0.023vw), 0.06875rem);
+}
+.studio {
+  --unit: clamp(0.05625rem, calc(0.025rem + 0.02vw), 0.0625rem);
+  font-size: clamp(0.9rem, calc(0.45rem + 0.3vw), 1rem);
+}
+.topbar {
+  height: 56px;
+}
+.wordmark {
+  font-size: 18px;
+}
+.featured-caption {
+  padding-top: 8px;
+}
+.composer-top {
+  padding-block: 12px;
+}
+.composer-toolbar {
+  padding-block: 11px;
+}
+.featured-video {
+  margin-bottom: 8px;
+}
+/* Bounded by viewport height so a laptop still reaches the end of the first
+   gallery row without scrolling: header to that row stays within ~1000px. */
+.featured-media {
+  max-height: clamp(216px, min(calc(40px + 15vw), 32dvh), 500px);
+}
+.gallery {
+  margin-top: 14px;
+  width: min(100%, clamp(68.5rem, 82vw, 126rem));
+  max-width: none;
+}
+.gallery-heading {
+  margin-bottom: 12px;
+  align-items: center;
+}
+.gallery-heading h2 {
+  margin-top: 0;
+}
+.clip-info {
+  padding-block: 8px;
+}
+.clip-info h3 {
+  margin-bottom: 8px;
+}
+.studio-foot {
+  padding-block: 6px;
+}
+.prompt-editor {
+  padding-block: 13px;
+}
+/* The one control in this row that opens something, so it carries the accent
+   the mode badge beside it used to, and the generate button's own rim sweep
+   slowed down and narrowed. The pill itself is unoutlined: at rest there is
+   nothing to see but the accent label, and the light passing the rim is what
+   draws the shape. Under reduced motion the arc rests as a static highlight. */
+@property --camera-open-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+.camera-open {
+  /* The rim's colour: the accent here; Acoustic space sets its own blue. */
+  --rim: var(--accent);
+  --rim-ghost: var(--accent-ghost);
+  --rim-strong: var(--accent-strong);
+  position: relative;
+  isolation: isolate;
+  color: var(--rim);
+  padding: var(--space-5) var(--space-11);
+  /* Transparent, not absent: it holds the box the sweep travels along. */
+  border: var(--space-1) solid transparent;
+  border-radius: var(--radius-control);
+}
+.camera-open::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: var(--space-1);
+  pointer-events: none;
+  background: conic-gradient(
+    from var(--camera-open-angle),
+    transparent 0deg 250deg,
+    var(--rim-ghost) 300deg,
+    var(--rim) 330deg,
+    transparent 360deg
+  );
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .camera-open::before {
+    animation: camera-open-sweep 7s linear infinite;
+  }
+  /* The outline appears on approach instead of sitting there. */
+  .camera-open:hover {
+    color: var(--rim-strong);
+    border-color: color-mix(in srgb, var(--rim) 35%, transparent);
+    background: var(--hover-wash);
+  }
+}
+@keyframes camera-open-sweep {
+  to {
+    --camera-open-angle: 360deg;
+  }
+}
+.camera-sentences {
+  display: block;
+  margin-top: 6px;
+  padding: 0;
+  text-align: left;
+  color: var(--soft);
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.camera-sentences > span {
+  display: inline;
+  white-space: normal;
+}
+.camera-sentences:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--border-strong);
+  text-underline-offset: 3px;
+}
+.camera-dialog {
+  --unit: var(--composer-unit);
+  width: min(940px, calc(100vw - 32px));
+  max-width: none;
+  max-height: calc(100dvh - 40px);
+  padding: 0;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-panel);
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-panel);
+  overflow: hidden;
+}
+.camera-dialog[open] {
+  display: flex;
+  flex-direction: column;
+}
+.camera-dialog::backdrop {
+  background: rgb(0 0 0 / 45%);
+  backdrop-filter: blur(3px);
+}
+.camera-dialog > header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.camera-dialog h2 {
+  font-size: 18px;
+  font-weight: 500;
+  margin: 0 0 4px;
+}
+.camera-dialog p {
+  font-size: 13px;
+  color: var(--muted);
+  margin: 0;
+}
+.camera-dialog-body {
+  overflow-y: auto;
+  min-height: 0;
+}
+.camera-dialog .camera-panel {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+}
+.camera-phrases {
+  margin: 12px 20px 16px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  background: var(--sunken);
+}
+.camera-phrases:focus-within {
+  border-color: var(--border-strong);
+}
+.camera-phrase-line {
+  display: grid;
+  grid-template-columns: 90px minmax(0, 1fr);
+  align-items: start;
+  column-gap: 12px;
+  color: var(--section-color);
+}
+.camera-phrase-label {
+  grid-column: 1;
+  padding-top: 4px;
+  font: 11px/1.6 var(--mono);
+  cursor: text;
+}
+.camera-phrase-line textarea {
+  grid-column: 2;
+  min-width: 0;
+  width: 100%;
+  display: block;
+  padding: 0;
+  margin: 0;
+  resize: none;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: 16px;
+  line-height: 1.65;
+}
+.camera-phrase-line textarea:focus-visible {
+  outline: none;
+}
+.camera-phrase-line:focus-within {
+  background: var(--highlight-subtle);
+}
+.camera-phrase-line:focus-within .camera-phrase-label {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.camera-phrase-line textarea::placeholder {
+  color: var(--muted);
+}
+.camera-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 24px;
+  border-top: 1px solid var(--border);
+  padding: 12px 20px;
+  flex-shrink: 0;
+}
+/* A full target: on a phone the phrase field scrolling under the bar sits
+   within 24px of Cancel once the LTX movement sentence wraps to three lines. */
+.camera-dialog-actions .text-button {
+  min-height: 24px;
+}
+@media (max-width: 35rem) {
+  .camera-dialog {
+    width: calc(100vw - 16px);
+    max-height: calc(100dvh - 16px);
+  }
+  .camera-phrases {
+    margin: 10px 12px 14px;
+    padding: 10px;
+  }
+  .camera-phrase-line {
+    grid-template-columns: 76px minmax(0, 1fr);
+    column-gap: 8px;
+  }
+  .camera-phrase-label {
+    font-size: 10px;
+    padding-top: 5px;
+  }
+  .camera-dialog .camera-scene {
+    height: 150px;
+  }
+  .camera-sentences {
+    font-size: 14px;
+  }
+  .topbar-right {
+    gap: 8px;
+  }
+  .camera-open {
+    font-size: 11px;
+    gap: 4px;
+    padding: var(--space-4) var(--space-9);
+    /* The control keeps one line: wrapped onto two it grew taller than the
+       mode badge it sits beside. */
+    white-space: nowrap;
+  }
+}
+
+.download-clip {
+  color: var(--soft);
+  white-space: nowrap;
+  font-size: 11px;
+}
+.download-clip:hover {
+  color: var(--accent);
+}
+.clip-meta > span:first-child {
+  white-space: nowrap;
+  margin-right: 0;
+}
+.lightbox-content header > span {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gallery-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(16px, 0.55vw, 20px);
+}
+.clip-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.clip-meta button {
+  white-space: nowrap;
+}
+
+@media (min-width: 56rem) {
+  .gallery .clip-media {
+    aspect-ratio: 39 / 20;
+  }
+}
+@media (max-width: 68rem) {
+  .gallery-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+}
+@media (max-width: 35rem) {
+  .gallery-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+}
+
+.duration-frame-detail {
+  margin: 8px 0 0;
+  max-width: 210px;
+  color: var(--muted);
+  font: 10px/1.5 var(--mono);
+}

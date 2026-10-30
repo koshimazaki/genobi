@@ -1,0 +1,219 @@
+{
+  "schemaVersion": "director.bundle.v1",
+  "id": "mixed-graphics-demo",
+  "revision": 1,
+  "name": "Six-second media and graphics fixture",
+  "composition": {
+    "fps": 30,
+    "durationFrames": 180,
+    "width": 320,
+    "height": 180,
+    "colorSpace": "srgb",
+    "alpha": "straight",
+    "background": "#101316"
+  },
+  "assets": {
+    "audio": {
+      "kind": "audio",
+      "use": "production",
+      "file": {
+        "path": "media/tone.wav",
+        "sha256": "8244c079a193785d5a238ffa3130df52bc082c0872fa2d8ce8e694afcb383327"
+      },
+      "durationSeconds": 6,
+      "origin": "fixture"
+    },
+    "video": {
+      "kind": "video",
+      "use": "production",
+      "file": {
+        "path": "media/test-pattern.mp4",
+        "sha256": "0feb62326d9e0a06c26e8a7b459be1af68c99dc0f0754844695d970ea3b1f2f7"
+      },
+      "durationSeconds": 6,
+      "origin": "fixture"
+    },
+    "moodboard": {
+      "kind": "image",
+      "use": "reference",
+      "file": {
+        "path": "references/palette.svg",
+        "sha256": "3d434fe4ddb033827c094c50a24e596cf21d1bc146eee039c5a1b9d449260a4d"
+      },
+      "origin": "fixture"
+    }
+  },
+  "modules": {
+    "rings": {
+      "engine": "p5",
+      "engineVersion": "2.3.4",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/p5-rings.mjs",
+        "sha256": "5db563e9037112e8fcae5df899c638faabf51979e0864763203fd05272b74199"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["color", "count"],
+        "properties": {
+          "color": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 12
+          }
+        }
+      }
+    },
+    "bars": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/anime-bars.mjs",
+        "sha256": "db2376fd0d66cc5910295095675c7c1003d733ca0cffcfd997bf6ab73bf3079e"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["color", "length"],
+        "properties": {
+          "color": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "length": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 272
+          }
+        }
+      }
+    },
+    "dither": {
+      "engine": "threejs",
+      "engineVersion": "0.180.0",
+      "mode": "filter",
+      "file": {
+        "path": "graphics/three-dither.mjs",
+        "sha256": "a6f0800b1fb1ab0d0d5a2c8ec9bd3eb414f6bb824779bcfe61e9d9c1fe85159b"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["amount", "levels"],
+        "properties": {
+          "amount": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "levels": {
+            "type": "integer",
+            "minimum": 2,
+            "maximum": 32
+          }
+        }
+      }
+    }
+  },
+  "layers": [
+    {
+      "id": "score",
+      "name": "Quiet test tone",
+      "kind": "audio",
+      "startFrame": 0,
+      "durationFrames": 180,
+      "locked": false,
+      "assetId": "audio",
+      "sourceStartFrame": 0,
+      "gain": 1
+    },
+    {
+      "id": "plate",
+      "name": "Video plate",
+      "kind": "video",
+      "startFrame": 0,
+      "durationFrames": 180,
+      "locked": false,
+      "assetId": "video",
+      "sourceStartFrame": 0,
+      "fit": "contain",
+      "opacity": 1,
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "scale": 1,
+      "rotationDegrees": 0
+    },
+    {
+      "id": "pulse",
+      "name": "p5 rings",
+      "kind": "graphics",
+      "startFrame": 0,
+      "durationFrames": 180,
+      "locked": false,
+      "moduleId": "rings",
+      "parameters": {
+        "color": "#a8be5c",
+        "count": 3
+      },
+      "opacity": 0.65,
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "scale": 1,
+      "rotationDegrees": 0
+    },
+    {
+      "id": "labels",
+      "name": "Anime bars",
+      "kind": "graphics",
+      "startFrame": 30,
+      "durationFrames": 120,
+      "locked": true,
+      "moduleId": "bars",
+      "parameters": {
+        "color": "#8dbce8",
+        "length": 160
+      },
+      "opacity": 0.85,
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "scale": 1,
+      "rotationDegrees": 0
+    },
+    {
+      "id": "finish",
+      "name": "Three dither",
+      "kind": "filter",
+      "startFrame": 90,
+      "durationFrames": 90,
+      "locked": false,
+      "moduleId": "dither",
+      "input": "composite-below",
+      "parameters": {
+        "amount": 0.6,
+        "levels": 5
+      }
+    }
+  ],
+  "generationPlans": [
+    {
+      "id": "replace-test-pattern",
+      "status": "not-run",
+      "replaceAssetId": "video",
+      "referenceAssetIds": ["moodboard"],
+      "prompt": "Replace the fixture with a six-second camera move using the palette and graphic rhythm as style guidance."
+    }
+  ],
+  "generations": []
+}

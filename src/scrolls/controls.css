@@ -1,0 +1,149 @@
+/* Scrolls uses the same surfaces, radii and camera/action colours as Camera. */
+.scrolls .scroll-direction-trigger,
+.scrolls .scroll-cell-nav button {
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-control);
+  background: var(--sunken);
+  color: var(--text);
+  min-height: 44px;
+  padding: 8px 10px;
+}
+.scrolls .scroll-direction-trigger {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  text-align: left;
+  font-size: 12px;
+}
+.scroll-movement-menu[data-compact="true"] .scroll-direction-trigger {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 4px;
+  height: 100%;
+  align-content: start;
+}
+.scroll-movement-menu[data-compact="true"]
+  .scroll-direction-trigger
+  > span:last-child {
+  grid-column: 1 / -1;
+  overflow-wrap: anywhere;
+}
+.scrolls .scroll-direction-trigger small {
+  color: var(--muted);
+  margin: 0;
+}
+.scroll-movement-menu[data-kind="camera"] {
+  --direction-color: var(--camera-movement);
+}
+.scroll-movement-menu[data-kind="action"] {
+  --direction-color: var(--prompt-action);
+}
+.scrolls .scroll-direction-trigger:hover,
+.scrolls .scroll-direction-trigger:focus-visible {
+  border-color: var(--direction-color);
+}
+.scroll-movement-menu svg {
+  color: var(--direction-color);
+}
+.scroll-movement-strips .scroll-movement > div {
+  gap: 6px;
+  padding: 6px 0;
+}
+.scrolls .scroll-direction-dialog {
+  width: min(620px, calc(100vw - 32px));
+  color: var(--text);
+}
+.scroll-direction-dialog .scroll-movement-options {
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  max-height: min(48dvh, 380px);
+  padding: 16px;
+  gap: 8px;
+  border: 0;
+}
+.scrolls .scroll-direction-dialog .scroll-movement-options button {
+  display: grid;
+  justify-items: center;
+  gap: 6px;
+  min-height: 76px;
+  padding: 10px;
+  font-size: 12px;
+  background: var(--sunken);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  text-align: center;
+}
+.scrolls .scroll-direction-dialog button[aria-pressed="true"] {
+  border-color: var(--direction-color);
+  background: color-mix(in srgb, var(--direction-color) 12%, var(--sunken));
+}
+.scrolls .scroll-movement-custom {
+  padding: 0 16px 16px;
+}
+.scrolls .scroll-direction-dialog > header > button {
+  width: 36px;
+  min-height: 36px;
+  padding: 0;
+  font-size: 22px;
+  color: var(--text);
+  background: var(--sunken);
+  border: 1px solid var(--border);
+}
+.scroll-direction-dialog .camera-dialog-actions {
+  margin: 0;
+}
+.scroll-direction-dialog .camera-dialog-actions button {
+  margin-left: auto;
+}
+.scroll-sheet-with-remove {
+  position: relative;
+}
+.scrolls .scroll-sheet-remove {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  z-index: 5;
+  width: 36px;
+  min-height: 36px;
+  padding: 0;
+  font-size: 22px;
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: var(--shadow-panel);
+}
+.scrolls .scroll-composer {
+  border-color: var(--border-strong);
+  border-radius: var(--radius-panel);
+  background: var(--surface);
+  padding: 0;
+  gap: 0;
+  overflow: hidden;
+}
+.scrolls .scroll-composer > textarea {
+  flex-basis: 100%;
+  border: 0;
+  border-radius: 0;
+  min-height: 100px;
+  height: auto;
+  background: transparent;
+  padding: 20px 22px;
+  font-size: 16px;
+  line-height: 1.65;
+}
+.scrolls .scroll-composer > .scroll-toolbar {
+  flex-basis: 100%;
+  border-top: 1px solid var(--border);
+  padding: 12px 16px;
+  background: var(--sunken);
+  gap: 12px;
+}
+.scrolls .scroll-composer > .scroll-hint {
+  padding: 0 16px 12px;
+  background: var(--sunken);
+}
+.scrolls .scroll-cell-nav button[aria-pressed="true"] {
+  outline: none;
+  border-color: var(--accent-strong);
+  background: var(--accent-ghost);
+}

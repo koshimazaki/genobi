@@ -1,0 +1,493 @@
+@property --dir-gutter {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 156px;
+}
+.dir-timeline {
+  overflow: auto;
+  min-height: 0;
+  max-height: 360px;
+  position: relative;
+}
+.dir-timeline-inner {
+  position: relative;
+  min-width: 100%;
+  padding-bottom: 12px;
+}
+.dir-ruler-row,
+.dir-lane {
+  display: flex;
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 55%, transparent);
+}
+.dir-gutter {
+  position: sticky;
+  left: 0;
+  flex: none;
+  width: var(--dir-gutter, 156px);
+  background: var(--surface) !important;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-align: left;
+  border-radius: 0 !important;
+  border: 0 !important;
+  border-right: 1px solid var(--border) !important;
+  font-size: 10px !important;
+  padding: 0 10px !important;
+  height: 36px;
+}
+.dir-gutter span:nth-child(2) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+}
+.dir-gutter small {
+  font: 9px var(--mono);
+  color: var(--muted);
+}
+.dir-ruler-row > .dir-gutter {
+  height: 36px;
+  font: 8px var(--mono) !important;
+  color: var(--muted);
+}
+.dir-ruler {
+  position: relative;
+  height: 36px;
+  cursor: crosshair;
+}
+.dir-time-label,
+.dir-frame-label {
+  position: absolute;
+  color: var(--muted);
+  pointer-events: none;
+  white-space: nowrap;
+}
+.dir-time-label {
+  font: 10px var(--mono);
+  top: 5px;
+  padding-left: 4px;
+}
+.dir-frame-label {
+  font: 8px var(--mono);
+  bottom: 14px;
+  padding-left: 3px;
+  opacity: 0.8;
+}
+/* The upscaler TickFader's machined minor / muted major scale. */
+.dir-frame-scale {
+  position: absolute;
+  inset: auto 0 0;
+  height: 18px;
+  pointer-events: none;
+}
+.dir-frame-scale i {
+  position: absolute;
+  bottom: 0;
+  width: 1px;
+  height: 6px;
+  background: var(--machined);
+}
+.dir-frame-scale i.major {
+  height: 10px;
+  background: var(--muted);
+}
+.dir-frame-scale i.second {
+  height: 18px;
+  background: var(--muted);
+}
+.dir-track {
+  position: relative;
+  flex: none;
+  height: 36px;
+}
+.dir-clip {
+  container-type: inline-size;
+  position: absolute;
+  top: 4px;
+  height: 20px;
+  border: 1px solid #709bbb;
+  border-radius: 5px;
+  background: #234057;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0;
+  touch-action: none;
+  user-select: none;
+  cursor: grab;
+  color: #d8e9f6;
+  overflow: hidden;
+  font-size: 10px;
+}
+.dir-clip > span:not(.dir-trim) {
+  padding-left: 9px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dir-clip small {
+  padding-right: 12px;
+  font: 9px var(--mono);
+  opacity: 0.7;
+  margin-left: auto;
+}
+@container (max-width: 130px) {
+  .dir-clip small {
+    display: none;
+  }
+}
+.dir-clip.audio {
+  border-color: #899c59;
+  background: #354126;
+  color: #d7e9b9;
+}
+.dir-clip.image {
+  border-color: #b38b67;
+  background: #463528;
+  color: #f1d8bf;
+}
+.dir-clip.graphics {
+  border-color: #9a82bc;
+  background: #40324f;
+  color: #e2d3f6;
+}
+.dir-clip.filter {
+  border-color: #689e9a;
+  background: #234443;
+  color: #bbe6e0;
+}
+.dir-clip.is-active {
+  outline: 1px solid white;
+  outline-offset: 1px;
+}
+/* Keyboard focus must still show on the selected clip. */
+.dir-clip.is-active:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.dir-trim {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 7px;
+  background: #ffffff20;
+  cursor: ew-resize;
+}
+.dir-trim.right {
+  left: auto;
+  right: 0;
+}
+.dir-playhead {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--accent);
+  pointer-events: none;
+  z-index: 2;
+}
+.dir-playhead i {
+  display: block;
+  width: 9px;
+  height: 8px;
+  background: var(--accent);
+  margin-left: -4px;
+}
+.dir-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #709bbb;
+  flex: none;
+}
+.dir-dot.audio {
+  background: #b6c875;
+}
+.dir-dot.graphics {
+  background: #b9a4d7;
+}
+.dir-dot.image {
+  background: #d9ad84;
+}
+.dir-dot.filter {
+  background: #83c4be;
+}
+
+.dir-ruler-row,
+.dir-lane {
+  position: relative;
+  z-index: 1;
+}
+.dir-timeline-grid {
+  position: absolute;
+  top: 36px;
+  bottom: 12px;
+  left: var(--dir-gutter, 156px);
+  height: calc(100% - 48px);
+  pointer-events: none;
+}
+.dir-timeline-grid path {
+  vector-effect: non-scaling-stroke;
+  stroke-width: 1;
+  stroke: var(--muted);
+}
+.dir-timeline-grid .minor {
+  opacity: 0.035;
+}
+.dir-timeline-grid .major {
+  opacity: 0.08;
+}
+.dir-timeline-grid .second {
+  opacity: 0.18;
+}
+.dir-timeline-grid .beat {
+  opacity: 0.12;
+  stroke-dasharray: 2 3;
+}
+.dir-timeline-grid .bar {
+  opacity: 0.32;
+  stroke: var(--accent);
+}
+.dir-clip.is-aligned {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+.dir-align-guide {
+  position: absolute;
+  top: 36px;
+  bottom: 12px;
+  width: 1px;
+  border-left: 1px dashed var(--accent);
+  pointer-events: none;
+  z-index: 4;
+}
+.dir-align-guide span {
+  position: absolute;
+  top: 0;
+  left: 3px;
+  font: 9px var(--mono);
+  background: var(--surface);
+  color: var(--accent);
+  padding: 3px 5px;
+  white-space: nowrap;
+}
+
+.dir-gutter .dir-lane-select {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  flex: 1;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font-size: 10px;
+}
+.dir-lane-select > span:nth-child(2) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  text-align: left;
+}
+.dir-gutter .dir-mute {
+  padding: 4px;
+  border: 0;
+  background: transparent;
+  color: var(--soft);
+}
+.dir-gutter .dir-mute[aria-pressed="true"] {
+  color: var(--accent);
+}
+.dir-lane.is-muted .dir-clip,
+.dir-clip.is-off {
+  opacity: 0.38;
+}
+
+.dir-timeline {
+  --dir-gutter: 156px;
+}
+.dir-timeline.channels-folded {
+  --dir-gutter: 60px;
+}
+.dir-lane .dir-gutter,
+.dir-track {
+  height: 28px;
+}
+.dir-lane .dir-gutter {
+  padding: 0 7px !important;
+  gap: 5px;
+}
+.channels-folded .dir-gutter .dir-lane-select > span:nth-child(2) {
+  display: none;
+}
+.channels-folded .dir-lane-select {
+  gap: 3px;
+}
+.channels-folded .dir-lane-select small {
+  margin-left: auto;
+}
+.dir-mute {
+  position: relative;
+}
+.dir-hidden-slash {
+  position: absolute;
+  width: 16px;
+  height: 1px;
+  background: currentColor;
+  transform: rotate(-45deg);
+  left: 3px;
+  top: 10px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .dir-timeline {
+    transition: --dir-gutter var(--motion-enter) ease;
+  }
+  .dir-clip {
+    transition: opacity var(--motion-control) ease;
+  }
+}
+
+/* Moving a clip across tracks: the original dims, a ghost marks the landing. */
+.dir-clip.is-lifting {
+  opacity: 0.3;
+}
+.dir-clip-ghost {
+  position: absolute;
+  top: 4px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  padding-left: 9px;
+  border: 1px dashed #709bbb;
+  border-radius: 5px;
+  background: color-mix(in srgb, #234057 70%, transparent);
+  color: #d8e9f6;
+  font-size: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 2;
+}
+.dir-clip-ghost.audio {
+  border-color: #899c59;
+  background: color-mix(in srgb, #354126 70%, transparent);
+  color: #d7e9b9;
+}
+.dir-clip-ghost.image {
+  border-color: #b38b67;
+  background: color-mix(in srgb, #463528 70%, transparent);
+  color: #f1d8bf;
+}
+.dir-clip-ghost.graphics {
+  border-color: #9a82bc;
+  background: color-mix(in srgb, #40324f 70%, transparent);
+  color: #e2d3f6;
+}
+.dir-clip-ghost.filter {
+  border-color: #689e9a;
+  background: color-mix(in srgb, #234443 70%, transparent);
+  color: #bbe6e0;
+}
+.dir-clip-ghost.is-blocked {
+  border-color: var(--error-border, #b55);
+  background: var(--error-bg, #4a2222);
+  color: var(--error-text, #f3c7c7);
+}
+/* Covers the ruler only while a clip is dragged, so no row shifts. */
+.dir-new-track {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  padding-left: calc(var(--dir-gutter) + 10px);
+  border: 1px dashed var(--accent);
+  background: color-mix(in srgb, var(--surface) 88%, transparent);
+  color: var(--accent);
+  font: 10px var(--mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.dir-new-track.is-target {
+  background: var(--accent-ghost);
+}
+
+.dir-units {
+  flex: none;
+  display: inline-flex;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  overflow: hidden;
+}
+.dir-console-header .dir-units button {
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--muted);
+  padding: 4px 8px;
+}
+.dir-console-header .dir-units button[aria-pressed="true"] {
+  color: var(--accent);
+  background: var(--accent-ghost);
+}
+
+/* Phones: the header wraps rather than crushing its controls. */
+@media (max-width: 520px) {
+  .dir-console .dir-console-header,
+  .director .dir-console .dir-console-header {
+    flex-wrap: wrap;
+    height: auto;
+    row-gap: 6px;
+  }
+  /* Touch targets: track names and clips at least 24px tall (WCAG 2.5.8). */
+  .dir-gutter .dir-lane-select {
+    min-height: 24px;
+  }
+  /* The Hide/Mute toggle beside each name: sized here, not by the line box,
+     so a font still loading (or a fallback face) cannot shrink it under 24px. */
+  .dir-gutter .dir-mute {
+    min-width: 24px;
+    min-height: 24px;
+  }
+  .dir-timeline:not(.is-expanded) :is(.dir-clip, .dir-clip-ghost) {
+    top: 6px;
+    height: 24px;
+  }
+}
+
+/* Expanded: taller tracks and clips, more of them in view, louder waveforms. */
+.dir-console .dir-timeline.is-expanded {
+  max-height: min(72dvh, 900px);
+}
+.dir-timeline.is-expanded .dir-lane .dir-gutter,
+.dir-timeline.is-expanded .dir-track {
+  height: 56px;
+}
+.dir-timeline.is-expanded :is(.dir-clip, .dir-clip-ghost) {
+  top: 5px;
+  height: 46px;
+  align-items: flex-start;
+  padding-top: 5px;
+}
+.dir-timeline.is-expanded .dir-clip .dir-waveform {
+  opacity: 0.6;
+}
+
+.dir-trim-readout {
+  position: absolute;
+  top: 34px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  padding: 4px 9px;
+  border-radius: var(--radius-control);
+  background: #000000b8;
+  color: #fff;
+  font: 11px var(--mono);
+  white-space: nowrap;
+  pointer-events: none;
+}

@@ -1,0 +1,256 @@
+{
+  "schema": "genobi.showcase.v1",
+  "project": "dimensions-mix",
+  "name": "Dimensions mix",
+  "template": "dimensions-mix",
+  "summary": "A 23-second Supernatural Creatures teaser: the owner's three MiniMax H3 creature clips cut on the bar to the owner's track Dimensions (Koshimazaki Mix, Bob Macc master) at 140 BPM, with Signal overlays and an end card. Nothing is generated. Four versions, from the first baked cut to the editable end card with the owner's credit.",
+  "versions": [
+    {
+      "version": 1,
+      "date": "2026-10-29T01:46:10Z",
+      "by": ["owner", "agent"],
+      "title": "The first cut, with a baked end card",
+      "summary": "The first mix template: the cut written as data in beats and source seconds, 24 fps, a cold open on the drop, a slice per creature beat, the title slam on bar 9 and an end card captured from the Signal construction effect as a 102-frame video (mix-end.mp4).",
+      "changes": [
+        "Three 720 px clips and a -14 LUFS excerpt of the track, conformed with ffmpeg",
+        "Seven Signal recipes: screen open, build panels, scan, wireframe scan, kinetic slams, HUD, slice glitch",
+        "IGNITE and SHIFT slams in lilac #e6a1ff; title in Explorers, a local font",
+        "End card baked as mix-end.mp4: its words are pixels"
+      ],
+      "eventIds": ["dm-brief", "dm-first-review"],
+      "file": "project-v1.json",
+      "projectId": "dimensions-mix-v1",
+      "layers": 32,
+      "durationFrames": 555
+    },
+    {
+      "version": 2,
+      "date": "2026-10-29T18:53:18Z",
+      "by": ["owner", "agent"],
+      "title": "The owner's credit, white slams, Retro Gaming",
+      "summary": "The owner's Regenerate note carried out on the template source: the track credit, the pop-up slams from pink to near-white, and the Retro Gaming stack for the slams and title. The end card stayed the baked capture, so its credit line still showed the earlier name.",
+      "changes": [
+        "Credit: Dimensions · Koshimazaki Mix (Bob Macc master)",
+        "Slams and the title's offset block #e6a1ff to #f6f8f2",
+        "Slams and title font: Retro Gaming, RetroGaming, Pixelify Sans, monospace"
+      ],
+      "eventIds": ["dm-regenerate-note", "dm-baked-credit"],
+      "file": "project-v2.json",
+      "projectId": "dimensions-mix-v2",
+      "layers": 32,
+      "durationFrames": 555
+    },
+    {
+      "version": 3,
+      "date": "2026-10-29T23:53:11Z",
+      "by": ["owner", "agent"],
+      "title": "An editable end card, and one bundled pixel face",
+      "summary": "The end card became the end-card recipe: the construction effect loaded unchanged and run on its own clock, with the eyebrow, title, subtitle, both credits, steps, colours and build length as parameters. On the owner's decision the mix dropped Explorers and Retro Gaming for the bundled Nokia Cellphone FC.",
+      "changes": [
+        "end-card recipe layer from beat 44 to the end; mix-end.mp4 removed from the template",
+        "Nokia Cellphone FC bundled with its notice; slams, title slam and card title use it",
+        "Card credit: KOSHIMAZAKI MIX · BOB MACC MASTER"
+      ],
+      "eventIds": ["dm-endcard-title", "dm-endcard-new", "dm-fonts"],
+      "file": "project-v3.json",
+      "projectId": "dimensions-mix-v3",
+      "layers": 32,
+      "durationFrames": 555
+    },
+    {
+      "version": 4,
+      "date": "2026-10-30T00:22:47Z",
+      "by": ["owner", "agent"],
+      "title": "The card credits only the Koshimazaki mix",
+      "summary": "The end card's second credit line reads only KOSHIMAZAKI MIX, at the owner's request. This is the template as the gallery opens it today.",
+      "changes": ["end-card credit2: KOSHIMAZAKI MIX"],
+      "eventIds": ["dm-credit", "dm-card13", "dm-showcase"],
+      "file": "project-v4.json",
+      "projectId": "dimensions-mix-v4",
+      "layers": 32,
+      "durationFrames": 555
+    }
+  ],
+  "media": {
+    "e7c7afc43122bc5b3947c0651f8c77f9edd38f6684b7ea81c8ef2b95617a1ad7": {
+      "path": "media/mix-01.mp4",
+      "url": "/media/director-templates/dimensions-mix/mix-01.mp4"
+    },
+    "b749a9b1ede414a9be563d0d9bcd188296a2e97ec688a105b48c1312a2fda4f4": {
+      "path": "media/mix-02.mp4",
+      "url": "/media/director-templates/dimensions-mix/mix-02.mp4"
+    },
+    "d4bbda0fc4f75bf243827c4b50767d240b8c3cb4c6e9b85bf8d52223a9d6fcf9": {
+      "path": "media/mix-03.mp4",
+      "url": "/media/director-templates/dimensions-mix/mix-03.mp4"
+    },
+    "159b2fab108cbc4d23838be4a71c978324ad2b5a3765ee43329cde9e4bf51a18": {
+      "path": "media/mix-end.mp4",
+      "shipped": false,
+      "reason": "The baked card's credit line shows an earlier name the owner took off the card, so the capture is omitted from this snapshot."
+    },
+    "3528cd7a7b67732faee0f371bbab89de7952e5c3d06722f4a9490f12f9604286": {
+      "path": "media/mix-track.wav",
+      "url": "/media/director-templates/dimensions-mix/mix-track.wav"
+    }
+  },
+  "memory": {
+    "events": [
+      {
+        "id": "dm-brief",
+        "kind": "note",
+        "objectIds": ["shot-01", "title"],
+        "reason": "Brief as recorded in the implementation update: a finished teaser of the owner's three creature clips cut to the owner's track Dimensions, cold open on the drop, each creature on its beats, the title on the biggest hit, an end card that holds while the music fades. Read as cut data, nothing to generate.",
+        "source": "interpretation",
+        "actor": "agent",
+        "at": "2026-10-29T01:46:10Z",
+        "version": 1
+      },
+      {
+        "id": "dm-first-review",
+        "kind": "kept",
+        "objectIds": [],
+        "reason": "Owner's first review, applied in the implementation update: the Dimensions mix is the first gallery card, it opens as it is (no Generate), and the Editor shows the cut as lanes at 140 BPM.",
+        "source": "interpretation",
+        "actor": "agent",
+        "at": "2026-10-29T01:46:10Z",
+        "version": 1
+      },
+      {
+        "id": "dm-regenerate-note",
+        "kind": "note",
+        "objectIds": ["hit-ignite", "hit-shift", "title", "hud"],
+        "reason": "The owner's Regenerate note: \"change the name to Koshi Mazzaki Mix, and music Dimensions; change the popping up stuff from pink to white; use retro gaming on the text\". Read as: credit Dimensions · Koshimazaki Mix, slams near-white, Retro Gaming for slams and title.",
+        "source": "interpretation",
+        "actor": "agent",
+        "at": "2026-10-29T18:53:18Z",
+        "version": 2,
+        "guidance": {
+          "topic": "credit",
+          "value": "Dimensions · Koshimazaki Mix (Bob Macc master)"
+        }
+      },
+      {
+        "id": "dm-baked-credit",
+        "kind": "note",
+        "objectIds": ["shot-13"],
+        "reason": "The end card's credit is pixels in mix-end.mp4, so the card kept the earlier name after the implementation update; replacing it needed a new card, not an overlay.",
+        "source": "interpretation",
+        "actor": "agent",
+        "at": "2026-10-29T18:53:18Z",
+        "version": 2
+      },
+      {
+        "id": "dm-endcard-title",
+        "kind": "note",
+        "objectIds": ["shot-13"],
+        "reason": "The owner's clip prompt on the end card: \"Okay, so make the the title 'Koshi Mazaki Mix' and then the music Dimensions\". An agent read it as cut data and laid two kinetic overlays over the baked card; the baked name still showed beneath them.",
+        "source": "interpretation",
+        "actor": "agent",
+        "at": "2026-10-29T21:48:05Z",
+        "version": 3
+      },
+      {
+        "id": "dm-endcard-new",
+        "kind": "rerun",
+        "objectIds": ["shot-13", "end-card"],
+        "reason": "The owner's follow-up: \"Yes, so it's baked. So we need to like regenerate. So basically, make the new one. Essentially, that's the point.\" Read as: replace the card, not generate a clip. In the owner's copy an agent hid the capture (opacity 0); in the template the implementation update rebuilt the card as an editable recipe layer.",
+        "source": "interpretation",
+        "actor": "agent",
+        "at": "2026-10-29T21:57:52Z",
+        "version": 3
+      },
+      {
+        "id": "dm-fonts",
+        "kind": "note",
+        "objectIds": ["hit-ignite", "hit-shift", "title", "end-card"],
+        "reason": "Owner decision recorded in the implementation update: no Explorers (proprietary) and no Retro Gaming (no licence); bundle Nokia Cellphone FC, whose notice allows free distribution and forbids sale, so every browser draws the same face.",
+        "source": "interpretation",
+        "actor": "agent",
+        "at": "2026-10-29T23:53:11Z",
+        "version": 3,
+        "guidance": {
+          "topic": "font",
+          "value": "Nokia Cellphone FC for slams, title slam and card title; IBM Plex Mono for readouts"
+        }
+      },
+      {
+        "id": "dm-credit",
+        "kind": "note",
+        "objectIds": ["end-card"],
+        "reason": "At the owner's request  the card's second credit reads only KOSHIMAZAKI MIX; the earlier names are gone from the card.",
+        "source": "interpretation",
+        "actor": "agent",
+        "at": "2026-10-30T00:22:47Z",
+        "version": 4,
+        "guidance": { "topic": "credit", "value": "KOSHIMAZAKI MIX" }
+      },
+      {
+        "id": "dm-card13",
+        "kind": "note",
+        "objectIds": ["shot-13", "end-card"],
+        "reason": "The owner on 30 October: \"When I load [the Dimensions mix] in the Editor I don't see the video, I don't see the card 13 from the storyboard.\" Found two causes: saved copies from before the implementation update kept the hidden baked card, and Program went blank after a workspace switch. The update adds the editable card to such copies as they open and redraws Program.",
+        "source": "interpretation",
+        "actor": "agent",
+        "at": "2026-10-30T03:30:00Z",
+        "version": 4
+      },
+      {
+        "id": "dm-showcase",
+        "kind": "note",
+        "objectIds": [],
+        "reason": "The owner's showcase brief: \"all the stuff in JSONs, JSON for the project and for the memories, so it can be recreated easily, and we show the whole workflow of how it was made\". Read as this record: one project file per version, this memory, and a README timeline.",
+        "source": "interpretation",
+        "actor": "agent",
+        "at": "2026-10-30T03:30:00Z",
+        "version": 4
+      }
+    ],
+    "checkpoints": [
+      {
+        "id": "dm-v1",
+        "sessionId": "showcase-v1",
+        "summary": "Version 1 shipped as the first mix template : the cut as data, seven Signal recipes, the baked end card, the gallery card and Editor lanes.",
+        "eventIds": ["dm-brief", "dm-first-review"],
+        "unresolved": [],
+        "nextSteps": [],
+        "status": "done",
+        "at": "2026-10-29T01:46:10Z",
+        "version": 1
+      },
+      {
+        "id": "dm-v2",
+        "sessionId": "showcase-v2",
+        "summary": "Version 2: the owner's credit, near-white slams and the Retro Gaming stack, carried out on the template source; no media re-rendered.",
+        "eventIds": ["dm-regenerate-note", "dm-baked-credit"],
+        "unresolved": [],
+        "nextSteps": [],
+        "status": "done",
+        "at": "2026-10-29T18:53:18Z",
+        "version": 2
+      },
+      {
+        "id": "dm-v3",
+        "sessionId": "showcase-v3",
+        "summary": "Version 3: the end-card recipe replaces the capture; Nokia Cellphone FC bundled; frames checked against the old capture and Render MP4 kept 555 frames.",
+        "eventIds": ["dm-endcard-title", "dm-endcard-new", "dm-fonts"],
+        "unresolved": [],
+        "nextSteps": [],
+        "status": "done",
+        "at": "2026-10-29T23:53:11Z",
+        "version": 3
+      },
+      {
+        "id": "dm-v4",
+        "sessionId": "showcase-v4",
+        "summary": "Version 4: the card credits only KOSHIMAZAKI MIX. Later, the implementation update brought old saved copies up to this card as they open.",
+        "eventIds": ["dm-credit", "dm-card13", "dm-showcase"],
+        "unresolved": [],
+        "nextSteps": [],
+        "status": "done",
+        "at": "2026-10-30T03:30:00Z",
+        "version": 4
+      }
+    ]
+  }
+}

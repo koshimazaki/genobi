@@ -1,0 +1,92 @@
+.genobi-media-shelf {
+  padding: 10px 12px 12px;
+}
+.genobi-shelf-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  color: var(--muted);
+  font: 10px var(--mono);
+}
+.genobi-shelf-toolbar button {
+  padding: 5px 8px;
+  min-height: 30px;
+  font-size: 10px;
+}
+.genobi-shell .genobi-project-assets {
+  padding: 10px 0 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+}
+.genobi-shell .genobi-project-assets button {
+  cursor: grab;
+}
+.genobi-shell .genobi-project-assets button:active {
+  cursor: grabbing;
+}
+.genobi-shell .genobi-project-assets .dir-asset-frame {
+  width: 100%;
+}
+.genobi-shell .genobi-project-assets img {
+  pointer-events: none;
+}
+.genobi-asset-use {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--muted);
+  font-size: 9px;
+  margin-top: 4px;
+}
+.genobi-shelf-hint,
+.genobi-shelf-notice {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.5;
+}
+.genobi-shelf-notice {
+  color: var(--readout);
+}
+.project-prompt[data-dragging] {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+  background: var(--accent-ghost);
+}
+@media (max-width: 700px) {
+  .genobi-shelf-toolbar button {
+    min-height: 44px;
+  }
+}
+
+.genobi-project-asset {
+  position: relative;
+  min-width: 0;
+}
+.genobi-project-asset > button:first-child {
+  width: 100%;
+}
+.genobi-shell .genobi-project-assets .genobi-asset-remove {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  color: var(--text);
+  background: var(--badge-bg);
+  cursor: pointer;
+}
+.genobi-shell .genobi-project-assets .genobi-asset-remove:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.genobi-shelf-notice .text-button {
+  margin-left: 8px;
+}

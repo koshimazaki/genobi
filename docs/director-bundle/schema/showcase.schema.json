@@ -1,0 +1,286 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://camera-director.invalid/schemas/showcase-v1",
+  "title": "Genobi showcase record v1",
+  "description": "How a showcase project was made: its versions (each a Director project bundle in project-v<N>.json beside this file), the media they use, and the project memory that explains them. Memory events and checkpoints keep the shapes of shared/memory/schema.ts (decisionSchema, checkpointSchema) without the live store's revision counters. See docs/director-bundle/showcase/README.md.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "project",
+    "name",
+    "template",
+    "summary",
+    "versions",
+    "media",
+    "memory"
+  ],
+  "definitions": {
+    "id": { "type": "string", "pattern": "^[A-Za-z0-9_-]{1,80}$" },
+    "slug": { "type": "string", "pattern": "^[a-z][a-z0-9-]{0,63}$" },
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000,
+      "pattern": "^[^\\u0000-\\u0008\\u000b-\\u001f\\u007f]*$"
+    },
+    "line": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500,
+      "pattern": "^[^\\u0000-\\u0008\\u000b-\\u001f\\u007f]*$"
+    },
+    "sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "commit": { "type": "string", "pattern": "^[0-9a-f]{7,40}$" },
+    "date": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}(T\\d{2}:\\d{2}(:\\d{2}(\\.\\d+)?)?Z)?$"
+    },
+    "version": { "type": "integer", "minimum": 1, "maximum": 999 }
+  },
+  "properties": {
+    "schema": { "const": "genobi.showcase.v1" },
+    "project": { "$ref": "#/definitions/slug" },
+    "name": { "$ref": "#/definitions/line" },
+    "template": {
+      "$ref": "#/definitions/slug",
+      "description": "The mix template whose gallery card shows this record."
+    },
+    "summary": { "$ref": "#/definitions/text" },
+    "versions": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 99,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "version",
+          "date",
+          "by",
+          "title",
+          "summary",
+          "changes",
+          "eventIds",
+          "file",
+          "projectId",
+          "layers",
+          "durationFrames"
+        ],
+        "properties": {
+          "version": { "$ref": "#/definitions/version" },
+          "commit": {
+            "$ref": "#/definitions/commit",
+            "description": "The commit whose template, cut and mixProject built this version (scripts/showcase-versions.mjs)."
+          },
+          "pr": { "type": "integer", "minimum": 1 },
+          "date": { "$ref": "#/definitions/date" },
+          "by": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "enum": ["owner", "agent"] },
+            "description": "Who shaped it: the owner's brief or correction, an agent's build."
+          },
+          "title": { "$ref": "#/definitions/line" },
+          "summary": { "$ref": "#/definitions/text" },
+          "changes": {
+            "type": "array",
+            "maxItems": 24,
+            "items": { "$ref": "#/definitions/line" }
+          },
+          "eventIds": {
+            "type": "array",
+            "maxItems": 40,
+            "items": { "$ref": "#/definitions/id" }
+          },
+          "file": {
+            "type": "string",
+            "pattern": "^project-v[1-9][0-9]*\\.json$"
+          },
+          "projectId": { "$ref": "#/definitions/slug" },
+          "layers": { "type": "integer", "minimum": 1 },
+          "durationFrames": { "type": "integer", "minimum": 1 },
+          "rebased": {
+            "type": "array",
+            "maxItems": 64,
+            "items": { "type": "string", "pattern": "^[a-z][a-z0-9-]{0,63}$" },
+            "description": "Recipes this version is built on today's bytes of, because the ones it shipped with were replaced."
+          }
+        }
+      }
+    },
+    "pending": {
+      "type": "array",
+      "maxItems": 8,
+      "description": "Versions being built now that have no project file yet.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["version", "branch", "summary", "steps"],
+        "properties": {
+          "version": { "$ref": "#/definitions/version" },
+          "branch": { "type": "string", "pattern": "^[A-Za-z0-9._/-]{1,120}$" },
+          "summary": { "$ref": "#/definitions/text" },
+          "steps": {
+            "type": "array",
+            "maxItems": 12,
+            "items": { "$ref": "#/definitions/line" }
+          }
+        }
+      }
+    },
+    "media": {
+      "type": "object",
+      "description": "Every media file the versions use, by SHA-256: its bundle path and the public URL that serves those exact bytes, or where git keeps a file the studio does not ship.",
+      "propertyNames": { "pattern": "^[0-9a-f]{64}$" },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path"],
+        "properties": {
+          "path": {
+            "type": "string",
+            "pattern": "^media/[A-Za-z0-9._-]{1,120}$"
+          },
+          "url": {
+            "type": "string",
+            "pattern": "^/media/[A-Za-z0-9._/-]{1,200}$"
+          },
+          "git": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["commit", "path"],
+            "properties": {
+              "commit": { "$ref": "#/definitions/commit" },
+              "path": {
+                "type": "string",
+                "pattern": "^public/media/[A-Za-z0-9._/-]{1,200}$"
+              }
+            }
+          },
+          "shipped": { "const": false },
+          "reason": { "$ref": "#/definitions/line" }
+        }
+      }
+    },
+    "memory": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["events", "checkpoints"],
+      "properties": {
+        "events": {
+          "type": "array",
+          "maxItems": 200,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "kind",
+              "objectIds",
+              "source",
+              "actor",
+              "at",
+              "version",
+              "reason"
+            ],
+            "properties": {
+              "id": { "$ref": "#/definitions/id" },
+              "kind": {
+                "enum": [
+                  "kept",
+                  "rejected",
+                  "rerun",
+                  "undo",
+                  "preference",
+                  "note"
+                ]
+              },
+              "objectIds": {
+                "type": "array",
+                "maxItems": 16,
+                "items": { "$ref": "#/definitions/id" }
+              },
+              "reason": { "$ref": "#/definitions/line" },
+              "source": {
+                "enum": ["explicit-user", "ui-action", "interpretation"]
+              },
+              "supersedes": { "$ref": "#/definitions/id" },
+              "guidance": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["topic", "value"],
+                "properties": {
+                  "topic": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  "value": { "$ref": "#/definitions/line" }
+                }
+              },
+              "actor": { "enum": ["owner", "agent", "system"] },
+              "at": { "$ref": "#/definitions/date" },
+              "version": { "$ref": "#/definitions/version" }
+            }
+          }
+        },
+        "checkpoints": {
+          "type": "array",
+          "maxItems": 99,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "id",
+              "sessionId",
+              "summary",
+              "eventIds",
+              "unresolved",
+              "nextSteps",
+              "status",
+              "at",
+              "version"
+            ],
+            "properties": {
+              "id": { "$ref": "#/definitions/id" },
+              "sessionId": { "$ref": "#/definitions/id" },
+              "summary": { "$ref": "#/definitions/text" },
+              "eventIds": {
+                "type": "array",
+                "maxItems": 40,
+                "items": { "$ref": "#/definitions/id" }
+              },
+              "unresolved": {
+                "type": "array",
+                "maxItems": 16,
+                "items": { "type": "string", "minLength": 1, "maxLength": 300 }
+              },
+              "nextSteps": {
+                "type": "array",
+                "maxItems": 16,
+                "items": { "type": "string", "minLength": 1, "maxLength": 300 }
+              },
+              "status": { "enum": ["done", "stopped", "failed", "waiting"] },
+              "at": { "$ref": "#/definitions/date" },
+              "version": { "$ref": "#/definitions/version" }
+            }
+          }
+        }
+      }
+    },
+    "archive": {
+      "type": "boolean",
+      "description": "Keep media a later version replaced: scripts/showcase-versions.mjs copies those bytes to public/media/showcase/<project>/v<N>/ so every version still opens."
+    },
+    "recipeDefaults": {
+      "type": "object",
+      "description": "Values for parameters a recipe gained after a version, chosen to draw as the old recipe did; used when that version is built on today's trusted recipes.",
+      "propertyNames": { "pattern": "^[a-z][a-z0-9-]{0,63}$" },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": { "type": ["string", "number", "boolean"] }
+      }
+    }
+  }
+}

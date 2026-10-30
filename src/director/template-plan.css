@@ -1,0 +1,79 @@
+.dir-template-plan ol,
+.dir-template-plan ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+.dir-plan-shots li,
+.dir-plan-tracks li {
+  display: grid;
+  gap: 2px 10px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 12px;
+  min-width: 0;
+}
+.dir-plan-shots {
+  counter-reset: shot;
+}
+.dir-plan-shots li {
+  counter-increment: shot;
+}
+.dir-plan-shots strong::before {
+  content: counter(shot, decimal-leading-zero) " ";
+  color: var(--soft);
+  font: 11px var(--mono);
+}
+.dir-plan-shots span,
+.dir-plan-tracks span,
+.dir-plan-inputs dd {
+  color: var(--soft);
+  font-size: 11px;
+  line-height: 1.5;
+}
+/* Tighter than the remix panel's tool sections. */
+.dir-remix .dir-template-plan details {
+  margin: 2px 0 0;
+  padding-top: 0;
+  border-top: 0;
+}
+.dir-remix .dir-template-plan summary {
+  font-size: 11px;
+  color: var(--soft);
+}
+.dir-remix .dir-template-plan .dir-plan-inputs {
+  margin-top: 14px;
+}
+.dir-remix .dir-template-plan .dir-plan-inputs summary {
+  font-size: 13px;
+  color: var(--text);
+}
+.dir-template-plan details p {
+  margin: 6px 0 0;
+  font-size: 12px;
+}
+.dir-plan-tracks li {
+  grid-template-columns: 28px minmax(0, 1fr) auto;
+  align-items: baseline;
+}
+.dir-plan-tracks strong {
+  font: 11px var(--mono);
+  color: var(--soft);
+}
+.dir-plan-inputs dl {
+  display: grid;
+  gap: 4px;
+  margin: 8px 0 0;
+  font-size: 12px;
+}
+.dir-plan-inputs dd {
+  margin: 0 0 6px;
+  color: var(--text);
+}
+.dir-plan-inputs dd span {
+  display: block;
+  color: var(--soft);
+}

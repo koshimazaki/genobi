@@ -1,0 +1,266 @@
+/* The Editor transport from the timeline design (#178): two uncramped rows,
+   radio groups for Snap and FPS, a wide dotted zoom with Fit all, Length in
+   seconds and the timing fields behind a disclosure. */
+.director .dir-transport.dir-transport-v2 {
+  display: block;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.dir-transport-v2 .dir-transport-row {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  column-gap: 28px;
+  row-gap: 14px;
+}
+.dir-transport-v2 .dir-transport-secondary {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  column-gap: 24px;
+}
+.dir-transport-v2 .dir-playback {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.dir-transport-v2 .playback-button {
+  width: 36px;
+  height: 36px;
+}
+.dir-transport-v2 .playback-readout {
+  margin-left: 4px;
+  font: 18px var(--mono);
+  min-width: 64px;
+}
+.dir-radios {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+}
+.dir-radios legend,
+.dir-length > label,
+.dir-timing summary {
+  font: 9px/10px var(--mono);
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+  padding: 0;
+}
+.dir-radios > div {
+  display: flex;
+  height: 36px;
+  box-sizing: border-box;
+  padding: 3px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+}
+.dir-radios label {
+  position: relative;
+  cursor: pointer;
+}
+.dir-radios input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+}
+.dir-radios span {
+  display: flex;
+  align-items: center;
+  height: 28px;
+  box-sizing: border-box;
+  padding: 0 9px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-xs);
+  font: 10px var(--mono);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.dir-radios input:checked + span {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-ghost);
+}
+.dir-radios input:focus-visible + span {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.dir-radios:disabled span {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.dir-transport-v2 .dir-zoom {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  flex: 1 1 280px;
+  min-width: 240px;
+  max-width: 380px;
+  margin-left: auto;
+}
+.dir-transport-v2 .dir-zoom .tick-fader {
+  position: relative;
+  flex: 1;
+  width: auto;
+  min-width: 0;
+}
+/* The wider zoom's scale reads as dots, not ticks. */
+.dir-zoom .tick-fader__ruler i {
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: var(--border-strong);
+}
+.dir-zoom .tick-fader__ruler i.major {
+  background: var(--muted);
+}
+.dir-transport-v2 .dir-zoom > button,
+.dir-transport-v2 .dir-add-track {
+  flex: none;
+  height: 36px;
+}
+.dir-transport-v2 .dir-fit[aria-pressed="true"] {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-ghost);
+}
+.dir-length {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 68px;
+  grid-template-rows: 10px 36px auto;
+  align-items: center;
+  gap: 6px 12px;
+  flex: 1 1 250px;
+  max-width: 420px;
+}
+.dir-length > label {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+.dir-length > label small {
+  font-size: 8px;
+  margin-left: 6px;
+}
+.dir-length input[type="range"] {
+  min-width: 0;
+  width: 100%;
+  height: 36px;
+  margin: 0;
+  accent-color: var(--accent);
+}
+.dir-transport-v2 .dir-length input[type="number"] {
+  width: 68px;
+  height: 36px;
+  box-sizing: border-box;
+  padding: 6px;
+  font: 11px var(--mono);
+}
+.dir-length-note {
+  grid-column: 1 / -1;
+  font: 9px var(--mono);
+  color: var(--muted);
+}
+.dir-timing {
+  position: relative;
+}
+.dir-timing summary {
+  cursor: pointer;
+  list-style-position: inside;
+}
+.dir-timing summary span {
+  display: flex;
+  align-items: center;
+  height: 36px;
+  margin-top: 6px;
+  text-transform: none;
+  letter-spacing: 0;
+  font: 10px var(--mono);
+  color: var(--soft);
+}
+.dir-timing-fields {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 280px;
+  z-index: 25;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 12px;
+  background: var(--raised);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-panel);
+  box-shadow: 0 8px 24px var(--shadow-dialog);
+}
+.dir-timing-fields label {
+  display: grid;
+  gap: 5px;
+  font: 9px var(--mono);
+  color: var(--muted);
+}
+.dir-timing-fields input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 6px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font: 11px var(--mono);
+}
+.dir-timing-fields > button {
+  align-self: end;
+  height: 32px;
+}
+.dir-transport-v2 .dir-add-track {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+@media (max-width: 520px) {
+  .director .dir-transport.dir-transport-v2 {
+    padding: 12px;
+  }
+  .dir-transport-v2 .dir-transport-row {
+    column-gap: 14px;
+  }
+  .dir-transport-v2 .dir-playback {
+    flex-basis: 100%;
+    gap: 5px;
+  }
+  .dir-transport-v2 .dir-zoom,
+  .dir-length {
+    flex-basis: 100%;
+    min-width: 0;
+    max-width: none;
+    margin: 0;
+  }
+  .dir-radios span {
+    padding: 0 8px;
+  }
+  .dir-timing-fields {
+    width: min(280px, calc(100vw - 48px));
+  }
+}
+
+.dir-resolution {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  font: 10px var(--mono);
+}
+.dir-resolution select {
+  max-width: 100%;
+  min-height: 32px;
+}
+@media (max-width: 850px) {
+  .dir-resolution select {
+    min-height: 44px;
+  }
+}

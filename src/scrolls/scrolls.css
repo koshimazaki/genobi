@@ -1,0 +1,395 @@
+@import "./results.css";
+[data-preset="scrolls"] .genobi-grid {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "scrolls";
+}
+[data-preset="scrolls"] .genobi-panel-scrolls > .genobi-panel-heading {
+  display: none;
+}
+.scrolls {
+  --paper: #e8e5dd;
+  --ink: #272b29;
+  width: 100%;
+  max-width: 1440px;
+  margin: auto;
+  padding: 28px;
+  color: var(--text-primary, #e4e7e5);
+}
+.scrolls button,
+.scrolls input,
+.scrolls select,
+.scrolls textarea {
+  font: inherit;
+}
+.scrolls button,
+.scrolls select,
+.scrolls input:not([type="checkbox"]):not([type="range"]) {
+  min-height: 34px;
+  border: 1px solid #414740;
+  border-radius: 6px;
+  background: #252a26;
+  color: inherit;
+  padding: 7px 11px;
+}
+.scrolls button {
+  cursor: pointer;
+}
+.scrolls button:hover:not(:disabled) {
+  border-color: #a8bb83;
+}
+.scrolls button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.scrolls :focus-visible {
+  outline: 2px solid #c1eb8c;
+  outline-offset: 3px;
+}
+.scrolls input[type="checkbox"] {
+  accent-color: #b7e58a;
+}
+.scrolls textarea {
+  display: block;
+  width: 100%;
+  min-height: 90px;
+  resize: vertical;
+  background: #1c201d;
+  border: 1px solid #414740;
+  border-radius: 6px;
+  padding: 12px;
+  color: inherit;
+  line-height: 1.6;
+}
+.scrolls label {
+  font-size: 12px;
+  color: #b7beb5;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.scroll-header,
+.scroll-section-heading,
+.scroll-modebar,
+.scroll-paper-heading,
+.scroll-paper-foot,
+.scroll-inspector header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+.scroll-header {
+  margin-bottom: 26px;
+}
+.scrolls h1,
+.scrolls h2,
+.scrolls h3,
+.scrolls p {
+  margin: 0;
+}
+.scrolls h1 {
+  font-size: 28px;
+  letter-spacing: -1px;
+  font-weight: 600;
+}
+.scrolls h1 span {
+  display: block;
+  font-size: 12px;
+  letter-spacing: 0;
+  font-weight: 400;
+  color: #9aa495;
+  margin-top: 5px;
+}
+.scroll-eyebrow {
+  font:
+    10px "IBM Plex Mono",
+    monospace;
+  letter-spacing: 0.16em;
+  color: #b7d38e;
+  display: block;
+  margin-bottom: 7px;
+}
+.scroll-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.scroll-modebar {
+  margin-bottom: 18px;
+  flex-wrap: wrap;
+}
+.scroll-mode-switch {
+  display: flex;
+  gap: 3px;
+  padding: 3px;
+  background: #171b18;
+  border-radius: 8px;
+}
+.scroll-mode-switch button {
+  border: 0;
+  background: transparent;
+}
+.scroll-mode-switch button[aria-pressed="true"] {
+  background: #d8e6bb;
+  color: #23271f;
+}
+.scrolls .scroll-toggle {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 7px;
+}
+.scroll-paper {
+  background: var(--paper);
+  color: var(--ink);
+  padding: 24px;
+  border-radius: 3px;
+  box-shadow: 0 12px 35px #0003;
+}
+.scroll-paper-heading {
+  margin-bottom: 18px;
+  border-bottom: 2px solid #43483d;
+  padding-bottom: 14px;
+}
+.scroll-paper-heading input {
+  background: transparent !important;
+  color: var(--ink) !important;
+  font-size: 20px !important;
+  font-weight: 600 !important;
+  border: 0 !important;
+  min-width: 0;
+  width: 60%;
+  padding: 0 !important;
+}
+.scroll-paper-heading > span,
+.scroll-paper-foot {
+  font:
+    9px "IBM Plex Mono",
+    monospace;
+  letter-spacing: 0.08em;
+}
+.scroll-cell-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+.scrolls .scroll-cell {
+  border: 1px solid #aaa99e;
+  border-radius: 0;
+  padding: 0;
+  overflow: hidden;
+  background: #f5f2e9;
+  color: var(--ink);
+  text-align: left;
+}
+.scrolls .scroll-cell[aria-pressed="true"] {
+  outline: 3px solid #7c964f;
+  outline-offset: 2px;
+}
+.scroll-cell-art {
+  display: block;
+  aspect-ratio: 16/9;
+  border-bottom: 1px solid #aaa99e;
+  overflow: hidden;
+}
+.scroll-cell-art img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.scroll-cell-empty {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, #eeece3, #e2e0d7);
+}
+.scroll-cell-empty b {
+  font:
+    26px "IBM Plex Mono",
+    monospace;
+  color: #a6a99b;
+}
+.scroll-cell-empty span {
+  font-size: 11px;
+  line-height: 1.4;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+.scroll-cell-caption {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  font-size: 10px;
+}
+.scroll-cell-caption b {
+  font:
+    10px "IBM Plex Mono",
+    monospace;
+}
+.scroll-cell-caption span {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.scroll-cell-caption small {
+  font-size: 9px;
+}
+.scroll-movement-strips {
+  margin-top: 18px;
+  border-top: 1px solid #a5a89a;
+}
+.scroll-movement {
+  display: grid;
+  grid-template-columns: 80px minmax(0, 1fr);
+  align-items: stretch;
+  border-bottom: 1px solid #a5a89a;
+}
+.scroll-movement strong {
+  font:
+    9px "IBM Plex Mono",
+    monospace;
+  display: flex;
+  align-items: center;
+}
+.scroll-movement > div {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 100px), 1fr));
+}
+.scroll-movement button small {
+  display: block;
+  color: #737b66;
+  font:
+    9px "IBM Plex Mono",
+    monospace;
+  margin-bottom: 4px;
+}
+.scroll-paper-foot {
+  margin-top: 17px;
+  color: #69705d;
+}
+.scroll-inspector,
+.scroll-composer,
+.scroll-timing,
+.scroll-approval,
+.scroll-handoff {
+  margin-top: 18px;
+  border: 1px solid #3b4236;
+  border-radius: 8px;
+  padding: 18px;
+  background: #222720;
+}
+.scroll-inspector {
+  border-color: #718456;
+}
+.scroll-inspector header {
+  margin-bottom: 12px;
+}
+.scroll-inspector h2 {
+  font-size: 14px;
+}
+.scroll-inspector > label {
+  display: block;
+  margin: 10px 0;
+}
+.scroll-inspector > label input,
+.scroll-inspector > label textarea {
+  margin-top: 5px;
+  width: 100%;
+}
+.scroll-inspector-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 12px 0;
+}
+.scroll-inspector-row label {
+  flex: 1;
+  flex-direction: column;
+  align-items: stretch;
+  min-width: 120px;
+}
+.scroll-composer > label {
+  font-size: 13px;
+  margin-bottom: 10px;
+  color: #d9dfd2;
+}
+.scroll-composer > .scroll-toolbar {
+  margin-top: 14px;
+}
+.scrolls .scroll-primary {
+  background: #c0e99a;
+  border-color: #c0e99a;
+  color: #202719;
+  margin-left: auto;
+  font-weight: 600;
+}
+.scroll-hint {
+  font-size: 11px !important;
+  color: #9aa58f;
+  line-height: 1.6;
+  margin-top: 12px !important;
+}
+.scroll-timing .scroll-toolbar {
+  margin-top: 14px;
+}
+.scroll-timing input[type="number"] {
+  width: 85px;
+}
+.scroll-timing > p {
+  font-size: 12px;
+  margin-top: 12px;
+}
+.scroll-cut-list {
+  display: flex;
+  gap: 6px;
+  margin-top: 16px;
+  overflow: auto;
+}
+.scroll-cut-list button {
+  flex: 1;
+  min-width: 95px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.scroll-cut-list span {
+  font-size: 9px;
+  white-space: nowrap;
+}
+.scroll-preview {
+  margin-top: 18px;
+}
+.scroll-preview canvas {
+  width: 100%;
+  aspect-ratio: 16/9;
+  max-height: 450px;
+  object-fit: contain;
+  background: #101316;
+}
+.scroll-preview input[type="range"] {
+  flex: 1;
+  min-width: 80px;
+}
+.scroll-preview output {
+  font:
+    11px "IBM Plex Mono",
+    monospace;
+}
+.scroll-import-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 26px 0 18px;
+  flex-wrap: wrap;
+}
+.scroll-import-toolbar > span {
+  font-size: 11px;
+  color: #8e9987;
+}

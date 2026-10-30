@@ -1,0 +1,9 @@
+# Custom node packs baked into the image: <directory> <repository> <commit>.
+# Every pack is pinned to a full commit so a rebuild installs the same code.
+# scripts/verify.py checks that every node the bundled workflows use registers.
+#
+# Koshi-Nodes: AKUSPACE Prompt, Text Encode and Reference Audio (aligned).
+# The aligned node needs ee5998d or later (nodes/audio/aligned_ref.py).
+Koshi-Nodes https://github.com/koshimazaki/ComfyUI-Koshi-Nodes 6f3351e7854d3dc2a17deea977937b3427fcaadd
+# ComfyUI-LTXVideo: LTXVAudioOnlyModel and LTXVAudioOnlyEmptyVideoLatent (a2a).
+ComfyUI-LTXVideo https://github.com/Lightricks/ComfyUI-LTXVideo 220e1d45aa0469f518e982102fca4dca92a61862

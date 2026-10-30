@@ -1,0 +1,758 @@
+{
+  "schema": "genobi.showcase.v1",
+  "project": "genobi-teaser",
+  "name": "Genobi teaser",
+  "template": "genobi-teaser",
+  "summary": "Two minutes of the studio in use cut to the owner's track Trailer-Genobi at 135 BPM: studio footage driven in a browser, the owner's generations on the drops, Transitions.dev titles and reveals run unchanged, and Genobi recipes for the pointer, focus boxes, camera moves and wipes. Nothing is generated. Three versions: the first cut, the owner's two rounds of corrections, and creatures instead of realism.",
+  "archive": true,
+  "recipeDefaults": {
+    "gen-title": { "plate": 0 },
+    "ui-cursor": { "view": "" },
+    "ui-focus": { "view": "" }
+  },
+  "versions": [
+    {
+      "version": 1,
+      "date": "2026-10-30T02:31:11Z",
+      "by": ["owner", "agent"],
+      "title": "The first cut",
+      "summary": "The second mix template: nine silent studio recordings and the owner's generations cut to the whole track, with the construction end card (MADE WITH / GENOBI) and the HUD saying what the studio did rather than where clips came from.",
+      "changes": [
+        "Footage recorded by scripts/capture-genobi-teaser.mjs, nothing spent",
+        "Seven new recipes: gen-title, gen-image, gen-status, ui-zoom, ui-cursor, ui-focus, signal-wipe",
+        "Review notes applied: the HUD claims match the clips; Scrolls kept to four beats; every UI beat zooms onto a readable detail"
+      ],
+      "eventIds": [
+        "teaser-brief",
+        "teaser-claims",
+        "teaser-scrolls-dark",
+        "teaser-readable",
+        "teaser-3d-richer",
+        "gt-review",
+        "gt-showcase"
+      ],
+      "file": "project-v1.json",
+      "projectId": "genobi-teaser-v1",
+      "layers": 127,
+      "durationFrames": 2869,
+      "rebased": ["gen-title", "ui-cursor", "ui-focus"]
+    },
+    {
+      "version": 2,
+      "date": "2026-10-30T04:34:28Z",
+      "by": ["owner", "agent"],
+      "title": "Sharper, on the lyric, with a taste layer",
+      "summary": "The owner's round-2 and round-3 corrections: rendered at 1920 × 1080 from the same takes re-recorded at 3840 × 2160, camera controls and the ComfyUI workflow, the shader beat on the lyric with Paper's dithering shader then a Space.js effect, lyric-synced beats after it, and a TASTE LAYER of the libraries Genobi ships.",
+      "changes": [
+        "1920 × 1080 from 4K re-recordings of the same scripted takes; slice moves sample the 4K source; no AI upscale",
+        "0:27 CAMERA CONTROLS over Camera's BFL camera terms",
+        "0:36 ★ THREE.JS into the owner's ComfyUI workflow, with no text over the ComfyUI shot",
+        "About 1:16–1:18: Paper's dithering shader, then a Space.js effect, when the vocal sings \"shaders, transitions\"",
+        "Beats after it follow the lyric: transitions, references with credit, licences, run locally, save, reuse",
+        "TASTE LAYER on black, ANDREW ZELLINGER first",
+        "Less repetition: 124 of 128 layers; the owner's own upscaled clips swapped in as files"
+      ],
+      "eventIds": [
+        "teaser-sharper",
+        "teaser-same-takes",
+        "teaser-paper-shaders",
+        "teaser-taste-layer",
+        "teaser-less-repetition",
+        "teaser-camera-controls",
+        "teaser-threejs",
+        "teaser-comfyui",
+        "teaser-lyric-sync",
+        "teaser-shaders-dither",
+        "teaser-comfy-no-text",
+        "teaser-taste-collaborator",
+        "teaser-upscaled-clips",
+        "gt-v2-record"
+      ],
+      "file": "project-v2.json",
+      "projectId": "genobi-teaser-v2",
+      "layers": 124,
+      "durationFrames": 2869
+    },
+    {
+      "version": 3,
+      "date": "2026-10-30T11:00:00Z",
+      "by": ["owner", "agent"],
+      "title": "Creatures, not realism",
+      "summary": "The owner's look for the teaser and the Dimensions mix: creatures and anime across the board. His upscaled MiniMax H3 creature clips replace the motorbike, the forest trees and the neon bloom on the same beats, the rendered Dimensions mix beat plays his upscaled render, and every focus box's label reads at least 1.3 s .",
+      "changes": [
+        "Motorbike (0:32) → a vine creature, built by the gen-image reveal from its own frame; the status names MiniMax H3",
+        "Neon bloom (0:14) and four final-drop shots → the owner's upscaled MiniMax H3 creature clips",
+        "Toy creatures (0:12, 0:43, final drop) → creature clips, so the generated footage is MiniMax H3 and one FLUX 3 run, and the card names both",
+        "Forest trees (final drop) → a creature among orbs",
+        "Every focus box's label reads at least 1.3 s, fully typed and uncovered : focus-66 draws in 0.1 s and the reveal card starts a beat later (beat 70)",
+        "The Dimensions mix beat (0:51) plays the owner's upscaled render; the gallery, Camera and Dual Swords takes are recorded again so the interface shows the upscaled media",
+        "Every UI take recorded again at 3840 × 2160, CRF 18, from the branch being cut, with the same choreography and pace (the owner's capture-quality rule)",
+        "The ComfyUI take re-encoded once from the owner's original recording",
+        "About 1:18: Space.js and the Transitions.dev reveal share one flower creature, so no character switches before the TASTE LAYER; the layer carries the owner's credit line on a steady background",
+        "Opening forest guardian built from the 1918 × 820 FLUX start image; creature clips re-encoded near-lossless from the 4K and 5K upscales",
+        "0:19–0:24: the Editor timeline (a clip moved, its edge trimmed, the cut tool, Regenerate opened, nothing sent) in place of the Camera families take, which still plays at 200–210",
+        "Project media 146.5 MiB, under the Editor's 150 MiB: edits save in the Editor"
+      ],
+      "eventIds": [
+        "gt-focus-hold",
+        "teaser-v3-creatures",
+        "teaser-v3-upscaled-footage",
+        "teaser-v3-editor",
+        "teaser-capture-quality",
+        "teaser-no-character-switch",
+        "teaser-timeline-beat",
+        "teaser-space-beat"
+      ],
+      "file": "project-v3.json",
+      "projectId": "genobi-teaser-v3",
+      "layers": 124,
+      "durationFrames": 2869
+    }
+  ],
+  "media": {
+    "ca483856a4ee42fd7bd4612a8b8e39bb2403e0fa5140ad708b4e36ca99b11eb0": {
+      "path": "media/audio-visual.mp4",
+      "url": "/media/template-gallery/audio-visual.mp4"
+    },
+    "de616cc3445016308249d1a920faac5266c4e1620fd39899627879aaecf40f5a": {
+      "path": "media/character-piece.mp4",
+      "url": "/media/template-gallery/character-piece.mp4"
+    },
+    "1117e6306499bb95315d9874d0ed392e7b74c71a18b8f6f55aade3fd73edb631": {
+      "path": "media/creature-training-01.mp4",
+      "url": "/media/director-templates/genobi-teaser/creature-training-01.mp4"
+    },
+    "dedfa071a17074f404e5a5d053d5aeb281317106cff2cb105729f9a78120555f": {
+      "path": "media/creature-training-02.mp4",
+      "url": "/media/director-templates/genobi-teaser/creature-training-02.mp4"
+    },
+    "d85a2ce2b874baa68679e045790f72f75a0dc3abc2ed3175fae0592ef3bc0391": {
+      "path": "media/creature-training-03.mp4",
+      "url": "/media/director-templates/genobi-teaser/creature-training-03.mp4"
+    },
+    "f0cd32f9f5ce44e6c59e3904b77a22982230d54682b8dae04b2dd72dabad62fc": {
+      "path": "media/creature-training-04.mp4",
+      "url": "/media/director-templates/genobi-teaser/creature-training-04.mp4"
+    },
+    "c566b2e4306f71b0ebbd96dd5d997ff6248e6985b442323535e1f44e488c6dce": {
+      "path": "media/creature-training-05.mp4",
+      "url": "/media/director-templates/genobi-teaser/creature-training-05.mp4"
+    },
+    "d5fae7e0033d44a2da0b6f64d21daa868b8e26b3e2e86af6712b724b9e962741": {
+      "path": "media/creature-transformation-01.mp4",
+      "url": "/media/director-templates/genobi-teaser/creature-transformation-01.mp4"
+    },
+    "1ac8b6c7bd11ff139407e3c75baa66ad3ec6217e7f0163217d4bd61682c68d61": {
+      "path": "media/dimensions-mix-excerpt.mp4",
+      "url": "/media/director-templates/genobi-teaser/dimensions-mix-excerpt.mp4"
+    },
+    "48dcd3a2bcedb01436fce6c8ab658bf1afdb4d0135b2f551c284818262fe2408": {
+      "path": "media/dimensions-mix.mp4",
+      "url": "/media/showcase/genobi-teaser/v1/dimensions-mix.mp4"
+    },
+    "2dd783e0441743ada2ca70e661d9bc4e12113ee79c4abf0e8defac37c5e48ed2": {
+      "path": "media/library-01.mp4",
+      "url": "/media/library-01.mp4"
+    },
+    "ca6215f1067adb2d1acdf3e2ba6498e9540c94d8d29b4bc5cca02219fc9b42ab": {
+      "path": "media/library-03.mp4",
+      "url": "/media/library-03.mp4"
+    },
+    "e7c7afc43122bc5b3947c0651f8c77f9edd38f6684b7ea81c8ef2b95617a1ad7": {
+      "path": "media/mix-01.mp4",
+      "url": "/media/director-templates/dimensions-mix/mix-01.mp4"
+    },
+    "b749a9b1ede414a9be563d0d9bcd188296a2e97ec688a105b48c1312a2fda4f4": {
+      "path": "media/mix-02.mp4",
+      "url": "/media/director-templates/dimensions-mix/mix-02.mp4"
+    },
+    "d4bbda0fc4f75bf243827c4b50767d240b8c3cb4c6e9b85bf8d52223a9d6fcf9": {
+      "path": "media/mix-03.mp4",
+      "url": "/media/director-templates/dimensions-mix/mix-03.mp4"
+    },
+    "8ae2081069ef36790b3e1f1fa12e8c3aef584047e2965fd6180e3be168887e8a": {
+      "path": "media/product-video.mp4",
+      "url": "/media/template-gallery/product-video.mp4"
+    },
+    "8fd2a54090abd7cf714d225a0b5621fc46bc469389214041e48b2c15f8af939c": {
+      "path": "media/signal-taste-reel.mp4",
+      "url": "/media/template-gallery/signal-taste-reel.mp4"
+    },
+    "a791e2178613926c2d374c747e80cab9cf591af0f4925e7bac3462eeb6e8b90b": {
+      "path": "media/teaser-track.mp3",
+      "url": "/media/director-templates/genobi-teaser/teaser-track.mp3"
+    },
+    "6e9f4563b8ed80cea07c81b016e423aef711ba1c07da0823a9b38700a257b6d9": {
+      "path": "media/ui-agent.mp4",
+      "url": "/media/director-templates/genobi-teaser/ui-agent.mp4"
+    },
+    "e452de81f0636c1967f48989ff0d08ab5f064479b67d81fdbc9c448ab1b7ede2": {
+      "path": "media/ui-agent.mp4",
+      "url": "/media/showcase/genobi-teaser/v1/ui-agent.mp4"
+    },
+    "ff7df96b632841b7353ea61d977f955c56537b7db27cea07007b9f7a2cb4ca47": {
+      "path": "media/ui-agent.mp4",
+      "url": "/media/showcase/genobi-teaser/v2/ui-agent.mp4"
+    },
+    "1dc8b306e5f1c1d6c6d56b51ffff3bfaaffcd9ead5cf712f784b6249f1542232": {
+      "path": "media/ui-camera-control.mp4",
+      "url": "/media/director-templates/genobi-teaser/ui-camera-control.mp4"
+    },
+    "6219e3e7370596ba7b7defb2603edc462fc3145478c908a8de8de207a8789ab8": {
+      "path": "media/ui-camera-control.mp4",
+      "url": "/media/showcase/genobi-teaser/v2/ui-camera-control.mp4"
+    },
+    "2bcfef9adc7cfb2f6340159cf04e56abda87f767ecdff30ebbbbecd48a3ea7ab": {
+      "path": "media/ui-camera.mp4",
+      "url": "/media/showcase/genobi-teaser/v1/ui-camera.mp4"
+    },
+    "36fb3792096aee15561e88d60b59b67bce63f73570e84c4a530cfcb5bfecf2fa": {
+      "path": "media/ui-camera.mp4",
+      "url": "/media/showcase/genobi-teaser/v2/ui-camera.mp4"
+    },
+    "8e746c2f296b82198a82050d57b630c679a1954e703888aba32d514eda9d7b38": {
+      "path": "media/ui-camera.mp4",
+      "url": "/media/director-templates/genobi-teaser/ui-camera.mp4"
+    },
+    "7f2e8d433ecae0a5895b73166b4a168f4f49ec5cb979af64bf04c5df155f5908": {
+      "path": "media/ui-comfy.mp4",
+      "url": "/media/showcase/genobi-teaser/v2/ui-comfy.mp4"
+    },
+    "fdc4a58ba0527884d04eb8c6753e19efd1d9d64c98784be150f909c545c32529": {
+      "path": "media/ui-comfy.mp4",
+      "url": "/media/director-templates/genobi-teaser/ui-comfy.mp4"
+    },
+    "01985b596beaf65e111a378cf26bff5355eae1f17f99bbd0e03a33edfab80c46": {
+      "path": "media/ui-directions.mp4",
+      "url": "/media/director-templates/genobi-teaser/ui-directions.mp4"
+    },
+    "749c557e61d87079b87841be7cb007125d1dbfd2bbeb5c87392fe98a154d67d4": {
+      "path": "media/ui-directions.mp4",
+      "url": "/media/showcase/genobi-teaser/v2/ui-directions.mp4"
+    },
+    "ee2153370fd320b98284fbbf36c921226bda0c613e34d53e31ec9809d9747803": {
+      "path": "media/ui-directions.mp4",
+      "url": "/media/showcase/genobi-teaser/v1/ui-directions.mp4"
+    },
+    "49a34c910723d4078d1294ad480a12d6da9b98d774464fca61577c8ef8e5504a": {
+      "path": "media/ui-director.mp4",
+      "url": "/media/showcase/genobi-teaser/v2/ui-director.mp4"
+    },
+    "588892853acc45ad3cbdb164027956c032b75dcac53373de830684ea6a7547ab": {
+      "path": "media/ui-director.mp4",
+      "url": "/media/showcase/genobi-teaser/v1/ui-director.mp4"
+    },
+    "886b3227f3ccdb2071f50b441996e25429d157b492745c1b63bc16ce8a2f50e7": {
+      "path": "media/ui-director.mp4",
+      "url": "/media/director-templates/genobi-teaser/ui-director.mp4"
+    },
+    "528dc6e4096c446edef69d6e4bc7d3fcc3c83668c56ade97566228d9af662c92": {
+      "path": "media/ui-editor.mp4",
+      "url": "/media/showcase/genobi-teaser/v1/ui-editor.mp4"
+    },
+    "bab8be13afc1060f8e2a43e9022664606c48906c94d99324fa21c9a3b69002b5": {
+      "path": "media/ui-editor.mp4",
+      "url": "/media/showcase/genobi-teaser/v2/ui-editor.mp4"
+    },
+    "d7d9d0a92d9010bd62e70807b620151138f0f853bf9a901cca4f120c01bca853": {
+      "path": "media/ui-editor.mp4",
+      "url": "/media/director-templates/genobi-teaser/ui-editor.mp4"
+    },
+    "2d9c1b951af1453ba679b1fdfbb29ac72048aefa1b420df6a0ec30ff0cc9b630": {
+      "path": "media/ui-gallery.mp4",
+      "url": "/media/showcase/genobi-teaser/v1/ui-gallery.mp4"
+    },
+    "2fc6efb2178ad15b8b39f091abfffec56f9f13c633683f8d62056a85d4e0dfbc": {
+      "path": "media/ui-gallery.mp4",
+      "url": "/media/director-templates/genobi-teaser/ui-gallery.mp4"
+    },
+    "af7e5bbe731d36bee5ee6d7fbc426b501bc0a75387144e9e826d2498b57a30ac": {
+      "path": "media/ui-gallery.mp4",
+      "url": "/media/showcase/genobi-teaser/v2/ui-gallery.mp4"
+    },
+    "9a78ef2375f5b2f9c91a2d56734ba6972329f1647eb5b71fa7be433437eac756": {
+      "path": "media/ui-licences.mp4",
+      "url": "/media/director-templates/genobi-teaser/ui-licences.mp4"
+    },
+    "e02ee1b3a945b6cb4666d1a208533cde9b370ace771888310c131b7067c0d21b": {
+      "path": "media/ui-save.mp4",
+      "url": "/media/director-templates/genobi-teaser/ui-save.mp4"
+    },
+    "28d55425d2ba3aa18e5a9d7173d706a3ad19c64faf7a36a52380759b5598bd4f": {
+      "path": "media/ui-scrolls.mp4",
+      "url": "/media/showcase/genobi-teaser/v1/ui-scrolls.mp4"
+    },
+    "98be9b50b2200b67eead8364b973aed3a75f3d15b8cb1eb16c274eea38225642": {
+      "path": "media/ui-scrolls.mp4",
+      "url": "/media/director-templates/genobi-teaser/ui-scrolls.mp4"
+    },
+    "c725051a87da6b94799b2c3efea0c259cfd358b5ef2b3b3927ad8c76b8050503": {
+      "path": "media/ui-scrolls.mp4",
+      "url": "/media/showcase/genobi-teaser/v2/ui-scrolls.mp4"
+    },
+    "2c0a4f7c58120514c96101e9274af77810d6cc4d0cf34e482c220415db1490db": {
+      "path": "media/ui-swords.mp4",
+      "url": "/media/showcase/genobi-teaser/v2/ui-swords.mp4"
+    },
+    "32cf230bb858caaaeca0616e1a01bd6849d619fa50adf943bfe701b0041cd7ed": {
+      "path": "media/ui-swords.mp4",
+      "url": "/media/showcase/genobi-teaser/v1/ui-swords.mp4"
+    },
+    "576040d53fdb67a173c154c0cedd84a7c4d3b18a1a63714f56dd5df0a8b0790c": {
+      "path": "media/ui-swords.mp4",
+      "url": "/media/director-templates/genobi-teaser/ui-swords.mp4"
+    },
+    "5dd649d07cc3b0118edb2044d9b063b7476b6c0d8bd2db4cf4dcb8db83e7f677": {
+      "path": "media/ui-timeline.mp4",
+      "url": "/media/director-templates/genobi-teaser/ui-timeline.mp4"
+    },
+    "02454c537c5204f67b04a905cb943e6996df75ecb67a1b16acf48adaa9c827be": {
+      "path": "media/ui-world.mp4",
+      "url": "/media/showcase/genobi-teaser/v2/ui-world.mp4"
+    },
+    "2a562d4ea6c0702152de0a10bb2f3d60aec6b0fb08e5ac1a7cad2ca5f51220b1": {
+      "path": "media/ui-world.mp4",
+      "url": "/media/director-templates/genobi-teaser/ui-world.mp4"
+    },
+    "ba4e86fd168a49958efb44d3c1b7ca63c429a5d0dea0fa6854c8cafb7f4ddca6": {
+      "path": "media/ui-world.mp4",
+      "url": "/media/showcase/genobi-teaser/v1/ui-world.mp4"
+    }
+  },
+  "memory": {
+    "events": [
+      {
+        "id": "teaser-brief",
+        "kind": "note",
+        "objectIds": [],
+        "reason": "Genobi teaser · brief: Owner, 30 Oct 2026: \"make the teaser video with Genobi usage and the music we have\"; built like the Dimensions mix, \"going through functions, so the agent can actually show stuff: zoom in, click, use effects, loaders, cool interface\", with Transitions.dev transitions and our own Signal recipes.",
+        "source": "interpretation",
+        "guidance": {
+          "topic": "Genobi teaser · brief",
+          "value": "Owner, 30 Oct 2026: \"make the teaser video with Genobi usage and the music we have\"; built like the Dimensions mix, \"going through functions, so the agent can actually show stuff: zoom in, click, use effects, loaders, cool interface\", with Transitions.dev transitions and our own Signal recipes."
+        },
+        "actor": "agent",
+        "at": "2026-10-30T02:31:11Z",
+        "version": 1
+      },
+      {
+        "id": "teaser-claims",
+        "kind": "preference",
+        "objectIds": [],
+        "reason": "Genobi teaser · on-screen claims: Review of cut 1: no line may claim provenance it cannot back. The creature clips are the owner's MiniMax H3 outputs and the forest guardian a FLUX 3 run, made outside this cut; say what the studio did (\"cut in Genobi\"), never \"made in the studio\", and name only the models the piece used, such as MiniMax H3 (open weights).",
+        "source": "interpretation",
+        "guidance": {
+          "topic": "Genobi teaser · on-screen claims",
+          "value": "Review of cut 1: no line may claim provenance it cannot back. The creature clips are the owner's MiniMax H3 outputs and the forest guardian a FLUX 3 run, made outside this cut; say what the studio did (\"cut in Genobi\"), never \"made in the studio\", and name only the models the piece used, such as MiniMax H3 (open weights)."
+        },
+        "actor": "agent",
+        "at": "2026-10-30T02:31:11Z",
+        "version": 1
+      },
+      {
+        "id": "teaser-scrolls-dark",
+        "kind": "preference",
+        "objectIds": [],
+        "reason": "Genobi teaser · light pages: Review of cut 1: the Scrolls page is light and jumps out of the dark look; keep it short (four beats) and zoomed onto its dark cells or dialogs.",
+        "source": "interpretation",
+        "guidance": {
+          "topic": "Genobi teaser · light pages",
+          "value": "Review of cut 1: the Scrolls page is light and jumps out of the dark look; keep it short (four beats) and zoomed onto its dark cells or dialogs."
+        },
+        "actor": "agent",
+        "at": "2026-10-30T02:31:11Z",
+        "version": 1
+      },
+      {
+        "id": "teaser-readable",
+        "kind": "preference",
+        "objectIds": [],
+        "reason": "Genobi teaser · readable UI: Review of cut 1: UI text is tiny at 720p; every UI beat zooms onto a readable detail and holds it at least about 1.3 s (2 to 3 beats at 135 BPM).",
+        "source": "interpretation",
+        "guidance": {
+          "topic": "Genobi teaser · readable UI",
+          "value": "Review of cut 1: UI text is tiny at 720p; every UI beat zooms onto a readable detail and holds it at least about 1.3 s (2 to 3 beats at 135 BPM)."
+        },
+        "actor": "agent",
+        "at": "2026-10-30T02:31:11Z",
+        "version": 1
+      },
+      {
+        "id": "teaser-3d-richer",
+        "kind": "preference",
+        "objectIds": [],
+        "reason": "Genobi teaser · 3D shots: Review of cut 1: the 3D shots showed a bare default room; use richer presets and a camera move.",
+        "source": "interpretation",
+        "guidance": {
+          "topic": "Genobi teaser · 3D shots",
+          "value": "Review of cut 1: the 3D shots showed a bare default room; use richer presets and a camera move."
+        },
+        "actor": "agent",
+        "at": "2026-10-30T02:31:11Z",
+        "version": 1
+      },
+      {
+        "id": "teaser-sharper",
+        "kind": "preference",
+        "objectIds": [],
+        "reason": "Genobi teaser · resolution: Owner, round 2: \"a bit blurry, too low res\" and \"internal looks lower res\"; render 1920 × 1080 and record the studio at 2× (3840 × 2160) so a camera move keeps native detail. No AI upscale.",
+        "source": "interpretation",
+        "guidance": {
+          "topic": "Genobi teaser · resolution",
+          "value": "Owner, round 2: \"a bit blurry, too low res\" and \"internal looks lower res\"; render 1920 × 1080 and record the studio at 2× (3840 × 2160) so a camera move keeps native detail. No AI upscale."
+        },
+        "actor": "agent",
+        "at": "2026-10-30T04:34:28Z",
+        "version": 2
+      },
+      {
+        "id": "teaser-same-takes",
+        "kind": "preference",
+        "objectIds": [],
+        "reason": "Genobi teaser · re-recording: Owner, round 2: \"Record as before, those were great actual takes\"; re-record by replaying the same actions, timings and clicks (scripts/genobi-teaser-shots.mjs), only the resolution changes.",
+        "source": "interpretation",
+        "guidance": {
+          "topic": "Genobi teaser · re-recording",
+          "value": "Owner, round 2: \"Record as before, those were great actual takes\"; re-record by replaying the same actions, timings and clicks (scripts/genobi-teaser-shots.mjs), only the resolution changes."
+        },
+        "actor": "agent",
+        "at": "2026-10-30T04:34:28Z",
+        "version": 2
+      },
+      {
+        "id": "teaser-paper-shaders",
+        "kind": "preference",
+        "objectIds": [],
+        "reason": "Genobi teaser · shader beat: Owner, round 2, at about 1:14: \"just paper shaders there, some of the shaders in the same colours, maybe a glittering shader\"; Paper Shaders in Signal lime and lilac, on the composition clock.",
+        "source": "interpretation",
+        "guidance": {
+          "topic": "Genobi teaser · shader beat",
+          "value": "Owner, round 2, at about 1:14: \"just paper shaders there, some of the shaders in the same colours, maybe a glittering shader\"; Paper Shaders in Signal lime and lilac, on the composition clock."
+        },
+        "actor": "agent",
+        "at": "2026-10-30T04:34:28Z",
+        "version": 2
+      },
+      {
+        "id": "teaser-taste-layer",
+        "kind": "preference",
+        "objectIds": [],
+        "reason": "Genobi teaser · taste layer: Owner, round 2: a TASTE LAYER section on black listing the libraries Genobi really ships and credits (docs/credits/libraries), Transitions.dev and Paper Shaders included, typed in with a text effect; it also breaks up repetition.",
+        "source": "interpretation",
+        "guidance": {
+          "topic": "Genobi teaser · taste layer",
+          "value": "Owner, round 2: a TASTE LAYER section on black listing the libraries Genobi really ships and credits (docs/credits/libraries), Transitions.dev and Paper Shaders included, typed in with a text effect; it also breaks up repetition."
+        },
+        "actor": "agent",
+        "at": "2026-10-30T04:34:28Z",
+        "version": 2
+      },
+      {
+        "id": "teaser-less-repetition",
+        "kind": "preference",
+        "objectIds": [],
+        "reason": "Genobi teaser · pacing: Owner, round 2: less repetitive overall; tighten repeated beats and leave room for one more video of the owner's own (the project stays under 128 layers).",
+        "source": "interpretation",
+        "guidance": {
+          "topic": "Genobi teaser · pacing",
+          "value": "Owner, round 2: less repetitive overall; tighten repeated beats and leave room for one more video of the owner's own (the project stays under 128 layers)."
+        },
+        "actor": "agent",
+        "at": "2026-10-30T04:34:28Z",
+        "version": 2
+      },
+      {
+        "id": "teaser-camera-controls",
+        "kind": "preference",
+        "objectIds": [],
+        "reason": "Genobi teaser · camera controls: Owner, round 2: \"we don't say about camera control, which is kind of a BFL thing\"; at 0:27 type \"camera controls\" in the title style over Camera's camera controls (BFL's camera terms).",
+        "source": "interpretation",
+        "guidance": {
+          "topic": "Genobi teaser · camera controls",
+          "value": "Owner, round 2: \"we don't say about camera control, which is kind of a BFL thing\"; at 0:27 type \"camera controls\" in the title style over Camera's camera controls (BFL's camera terms)."
+        },
+        "actor": "agent",
+        "at": "2026-10-30T04:34:28Z",
+        "version": 2
+      },
+      {
+        "id": "teaser-threejs",
+        "kind": "preference",
+        "objectIds": [],
+        "reason": "Genobi teaser · Three.js callout: Owner, round 2: the vocal sings \"Three.js\"; at 0:36 a \"★ Three.js\" callout in the GENOBI title style, flowing straight into the ComfyUI workflow at 0:38: \"show the workflow and zoom into it\".",
+        "source": "interpretation",
+        "guidance": {
+          "topic": "Genobi teaser · Three.js callout",
+          "value": "Owner, round 2: the vocal sings \"Three.js\"; at 0:36 a \"★ Three.js\" callout in the GENOBI title style, flowing straight into the ComfyUI workflow at 0:38: \"show the workflow and zoom into it\"."
+        },
+        "actor": "agent",
+        "at": "2026-10-30T04:34:28Z",
+        "version": 2
+      },
+      {
+        "id": "teaser-comfyui",
+        "kind": "preference",
+        "objectIds": [],
+        "reason": "Genobi teaser · ComfyUI: Owner, round 2: \"at 0:38, inside the Comfy part, show the ComfyUI workflow we have, it's a Comfy competition, it's on brand\"; Genobi's World Builder nodes in a ComfyUI started only for the capture, prompts never queued.",
+        "source": "interpretation",
+        "guidance": {
+          "topic": "Genobi teaser · ComfyUI",
+          "value": "Owner, round 2: \"at 0:38, inside the Comfy part, show the ComfyUI workflow we have, it's a Comfy competition, it's on brand\"; Genobi's World Builder nodes in a ComfyUI started only for the capture, prompts never queued."
+        },
+        "actor": "agent",
+        "at": "2026-10-30T04:34:28Z",
+        "version": 2
+      },
+      {
+        "id": "teaser-lyric-sync",
+        "kind": "preference",
+        "objectIds": [],
+        "reason": "Genobi teaser · lyric: Owner, round 3: the shaders appear when the vocal sings \"shaders, transitions\" (around 1:17), and the following beats follow the words: transitions, creative references with credit, licence information in view, run locally / open-weight / APIs, save the project, reuse the flow.",
+        "source": "interpretation",
+        "guidance": {
+          "topic": "Genobi teaser · lyric",
+          "value": "Owner, round 3: the shaders appear when the vocal sings \"shaders, transitions\" (around 1:17), and the following beats follow the words: transitions, creative references with credit, licence information in view, run locally / open-weight / APIs, save the project, reuse the flow."
+        },
+        "actor": "agent",
+        "at": "2026-10-30T04:34:28Z",
+        "version": 2
+      },
+      {
+        "id": "teaser-shaders-dither",
+        "kind": "preference",
+        "objectIds": [],
+        "reason": "Genobi teaser · shaders: Owner, round 3: open the shader beat with Paper's dithering shader, lighter, in the teaser palette, with no big \"PAPER SHADERS\" title; then a Space.js effect right after, for variety instead of another typed title.",
+        "source": "interpretation",
+        "guidance": {
+          "topic": "Genobi teaser · shaders",
+          "value": "Owner, round 3: open the shader beat with Paper's dithering shader, lighter, in the teaser palette, with no big \"PAPER SHADERS\" title; then a Space.js effect right after, for variety instead of another typed title."
+        },
+        "actor": "agent",
+        "at": "2026-10-30T04:34:28Z",
+        "version": 2
+      },
+      {
+        "id": "teaser-comfy-no-text",
+        "kind": "preference",
+        "objectIds": [],
+        "reason": "Genobi teaser · ComfyUI: Owner, round 3: no text over the ComfyUI shot; the canvas speaks for itself.",
+        "source": "interpretation",
+        "guidance": {
+          "topic": "Genobi teaser · ComfyUI",
+          "value": "Owner, round 3: no text over the ComfyUI shot; the canvas speaks for itself."
+        },
+        "actor": "agent",
+        "at": "2026-10-30T04:34:28Z",
+        "version": 2
+      },
+      {
+        "id": "teaser-taste-collaborator",
+        "kind": "note",
+        "objectIds": [],
+        "reason": "Genobi teaser · taste layer: Owner, round 3: ANDREW ZELLINGER first in the TASTE LAYER list; a second collaborator stays off screen until the owner confirms the name.",
+        "source": "interpretation",
+        "guidance": {
+          "topic": "Genobi teaser · taste layer",
+          "value": "Owner, round 3: ANDREW ZELLINGER first in the TASTE LAYER list; a second collaborator stays off screen until the owner confirms the name."
+        },
+        "actor": "agent",
+        "at": "2026-10-30T04:34:28Z",
+        "version": 2
+      },
+      {
+        "id": "teaser-upscaled-clips",
+        "kind": "note",
+        "objectIds": [],
+        "reason": "Genobi teaser · generations: Owner, round 3: the typography is razor sharp, the generation clips softer; the owner upscales the FLUX and MiniMax clips himself and they are swapped in as files (UPSCALED in genobi-teaser.ts).",
+        "source": "interpretation",
+        "guidance": {
+          "topic": "Genobi teaser · generations",
+          "value": "Owner, round 3: the typography is razor sharp, the generation clips softer; the owner upscales the FLUX and MiniMax clips himself and they are swapped in as files (UPSCALED in genobi-teaser.ts)."
+        },
+        "actor": "agent",
+        "at": "2026-10-30T04:34:28Z",
+        "version": 2
+      },
+      {
+        "id": "gt-review",
+        "kind": "kept",
+        "objectIds": ["hud"],
+        "reason": "Review notes applied in the implementation update: the HUD says CUT IN GENOBI rather than claiming where clips came from; Scrolls, a light page, kept to four beats zoomed on its dark cells; every UI beat zooms onto a readable detail.",
+        "source": "interpretation",
+        "actor": "agent",
+        "at": "2026-10-30T02:31:11Z",
+        "version": 1
+      },
+      {
+        "id": "gt-showcase",
+        "kind": "note",
+        "objectIds": [],
+        "reason": "The owner's showcase brief for this teaser: \"The same as the other one: taking the original video to edit.\" Read as: the cut opens in the Editor as an editable project, versioned beside the Dimensions mix.",
+        "source": "interpretation",
+        "actor": "agent",
+        "at": "2026-10-30T03:30:00Z",
+        "version": 1
+      },
+      {
+        "id": "gt-v2-record",
+        "kind": "note",
+        "objectIds": [],
+        "reason": "The owner on the showcase: \"also add this to template editor as json and gallery\". Read as: v2 is the template the gallery opens, and it is recorded here as project-v2.json beside v1, both opening in the Editor.",
+        "source": "interpretation",
+        "actor": "agent",
+        "at": "2026-10-30T05:00:00Z",
+        "version": 2
+      },
+      {
+        "id": "gt-focus-hold",
+        "kind": "note",
+        "objectIds": ["focus-66"],
+        "reason": "Asked \"Teaser v2's focus-66 box is on screen for 0.98 s, under your 1.3 s minimum. Fix it?\", the owner answered \"Fix it\". Read as: every focus box's label stays readable, fully typed and uncovered, at least 1.3 s; applied to focus-66 and the other short boxes for version 3.",
+        "source": "interpretation",
+        "actor": "agent",
+        "at": "2026-10-30T10:30:00Z",
+        "version": 3
+      },
+      {
+        "id": "teaser-v3-creatures",
+        "kind": "preference",
+        "objectIds": [],
+        "reason": "Genobi teaser · look: the owner, 30 October: \"remove the bicycle… or the bike and the trees, and use more creatures and anime stuff across the board\". Read as: the teaser and the Dimensions mix share one on-brand look, creatures and anime rather than realism; the motorbike, the forest-trees clip and the neon bloom leave the cut and the owner's MiniMax H3 creature clips take their beats, timing unchanged.",
+        "source": "interpretation",
+        "guidance": {
+          "topic": "Genobi teaser · look",
+          "value": "Creatures and anime across the teaser and the Dimensions mix, not realism: no motorbike, no realistic trees."
+        },
+        "actor": "agent",
+        "at": "2026-10-30T11:00:00Z",
+        "version": 3
+      },
+      {
+        "id": "teaser-v3-upscaled-footage",
+        "kind": "note",
+        "objectIds": [],
+        "reason": "Genobi teaser · footage: the owner asked for his new upscaled footage: his upscaled MiniMax H3 (open weights) creature clips, a few seconds of each at 1920 × 1080, and the upscaled Dimensions mix, which also replaces the Dimensions mix gallery video. The gallery, Camera and Dual Swords takes are recorded again so the interface shows the upscaled media.",
+        "source": "interpretation",
+        "actor": "agent",
+        "at": "2026-10-30T11:00:00Z",
+        "version": 3
+      },
+      {
+        "id": "teaser-v3-editor",
+        "kind": "note",
+        "objectIds": [],
+        "reason": "Genobi teaser · Editor: the owner, 30 October: everything must be done in and visible in the Genobi Editor; he had not yet seen the teaser in the Editor. Read as: v3 opens from the gallery's How it was made list and its edits save, so its media stays under the 100 MB project-copy limit (v2 did not).",
+        "source": "interpretation",
+        "actor": "agent",
+        "at": "2026-10-30T11:00:00Z",
+        "version": 3
+      },
+      {
+        "id": "teaser-capture-quality",
+        "kind": "preference",
+        "objectIds": [],
+        "reason": "Genobi teaser · capture quality: Owner, v3 review: \"the recordings should be made in higher quality initially, and use the new cards; all the animations, all the pace, everything is fine — they should be made exactly the same, but recorded in higher resolution.\" Replay the same takes at 3840 × 2160, near-lossless, from the branch being cut.",
+        "source": "interpretation",
+        "guidance": {
+          "topic": "Genobi teaser · capture quality",
+          "value": "Owner, v3 review: \"the recordings should be made in higher quality initially, and use the new cards; all the animations, all the pace, everything is fine — they should be made exactly the same, but recorded in higher resolution.\" Replay the same takes at 3840 × 2160, near-lossless, from the branch being cut."
+        },
+        "actor": "agent",
+        "at": "2026-10-30T12:00:00Z",
+        "version": 3
+      },
+      {
+        "id": "teaser-no-character-switch",
+        "kind": "preference",
+        "objectIds": [],
+        "reason": "Genobi teaser · 1:20: Owner, v3 review: at about 1:20 remove the sudden character change; carry the same character into the pixel/dither transition instead of a hard switch, and keep the TASTE LAYER on a steady background with the line \"Libraries, shaders, transitions and creative references — we credit the people who made them; shape that selection around your work.\"",
+        "source": "interpretation",
+        "guidance": {
+          "topic": "Genobi teaser · 1:20",
+          "value": "Owner, v3 review: at about 1:20 remove the sudden character change; carry the same character into the pixel/dither transition instead of a hard switch, and keep the TASTE LAYER on a steady background with the line \"Libraries, shaders, transitions and creative references — we credit the people who made them; shape that selection around your work.\""
+        },
+        "actor": "agent",
+        "at": "2026-10-30T12:00:00Z",
+        "version": 3
+      },
+      {
+        "id": "teaser-timeline-beat",
+        "kind": "preference",
+        "objectIds": [],
+        "reason": "Genobi teaser · 0:19–0:24: Owner, v3 review: \"for slice it can use the cut tool in the timeline — it's in the beginning as well — will work well, adjusting clip length in the timeline\"; \"around 0:19–0:20 — move a clip, adjust timing — that's where we can do it; it shows the FLUX selection instead, it can do that later\"; \"to 0:24 — send it back, can press the Regenerate button.\"",
+        "source": "interpretation",
+        "guidance": {
+          "topic": "Genobi teaser · 0:19–0:24",
+          "value": "Owner, v3 review: \"for slice it can use the cut tool in the timeline — it's in the beginning as well — will work well, adjusting clip length in the timeline\"; \"around 0:19–0:20 — move a clip, adjust timing — that's where we can do it; it shows the FLUX selection instead, it can do that later\"; \"to 0:24 — send it back, can press the Regenerate button.\""
+        },
+        "actor": "agent",
+        "at": "2026-10-30T12:00:00Z",
+        "version": 3
+      },
+      {
+        "id": "teaser-space-beat",
+        "kind": "note",
+        "objectIds": [],
+        "reason": "Genobi teaser · the space: Owner, v3 review: \"once it's talking about the space… it says change to cathedral or whatever space, but it's showing a different part of the app instead. It should show the 3D part in that space… and then show a default view of the 3D\"; show the scene view, the 3D viewport filling the shot, default view first, then the Cathedral. Not yet placed: the beat needs the owner's timestamp.",
+        "source": "interpretation",
+        "guidance": {
+          "topic": "Genobi teaser · the space",
+          "value": "Owner, v3 review: \"once it's talking about the space… it says change to cathedral or whatever space, but it's showing a different part of the app instead. It should show the 3D part in that space… and then show a default view of the 3D\"; show the scene view, the 3D viewport filling the shot, default view first, then the Cathedral. Not yet placed: the beat needs the owner's timestamp."
+        },
+        "actor": "agent",
+        "at": "2026-10-30T12:00:00Z",
+        "version": 3
+      }
+    ],
+    "checkpoints": [
+      {
+        "id": "gt-v1",
+        "sessionId": "showcase-v1",
+        "summary": "Version 1 shipped as the second mix template : 2,869 frames at 24 fps, 127 layers, rendered by Render MP4 for the gallery card.",
+        "eventIds": ["teaser-brief", "gt-review", "gt-showcase"],
+        "unresolved": [],
+        "nextSteps": [],
+        "status": "done",
+        "at": "2026-10-30T02:31:11Z",
+        "version": 1
+      },
+      {
+        "id": "gt-v2",
+        "sessionId": "showcase-v2",
+        "summary": "Version 2 merged : the round-2 and round-3 corrections, rendered end to end with Render MP4 at 1920 × 1080 (2,869 frames). Recorded here from the merge commit; v1's replaced footage archived so v1 still opens.",
+        "eventIds": [
+          "teaser-sharper",
+          "teaser-lyric-sync",
+          "teaser-shaders-dither",
+          "teaser-taste-collaborator",
+          "gt-v2-record"
+        ],
+        "unresolved": [],
+        "nextSteps": [],
+        "status": "done",
+        "at": "2026-10-30T04:34:28Z",
+        "version": 2
+      },
+      {
+        "id": "gt-v3",
+        "sessionId": "showcase-v3",
+        "summary": "Version 3: creatures for the bike, trees and toys, every UI take recorded again at 3840 × 2160, the Editor timeline at 0:19, one creature through the shader beat, a 24 Mb/s master; project media 146.5 MiB, so the Editor saves edits.",
+        "eventIds": [
+          "gt-focus-hold",
+          "teaser-v3-creatures",
+          "teaser-v3-upscaled-footage",
+          "teaser-v3-editor",
+          "teaser-capture-quality",
+          "teaser-no-character-switch",
+          "teaser-timeline-beat",
+          "teaser-space-beat"
+        ],
+        "unresolved": [],
+        "nextSteps": [],
+        "status": "done",
+        "at": "2026-10-30T11:00:00Z",
+        "version": 3
+      }
+    ]
+  }
+}

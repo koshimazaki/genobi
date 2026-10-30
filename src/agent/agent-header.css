@@ -1,0 +1,102 @@
+/* The existing logo is the only Genobi control; its reply opens downward. */
+.wordmark .brand-home {
+  color: inherit;
+  text-decoration: none;
+}
+.wordmark > .agent-companion {
+  position: relative;
+  inset: auto;
+  display: flex;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  font-weight: 400;
+  letter-spacing: normal;
+  pointer-events: auto;
+}
+.wordmark .agent-launcher {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-color: transparent;
+  border-radius: 7px;
+  background: transparent;
+  box-shadow: none;
+}
+.wordmark .agent-launcher:hover,
+.wordmark .agent-launcher[aria-expanded="true"] {
+  border-color: var(--border-strong);
+  background: var(--accent-ghost);
+}
+.wordmark .agent-avatar {
+  width: 30px;
+  height: 30px;
+  border: 0;
+  background: transparent;
+}
+.wordmark .agent-avatar .brand-mark {
+  width: 24px;
+  height: 24px;
+}
+.wordmark .agent-avatar i {
+  right: 0;
+  bottom: 0;
+}
+.wordmark .agent-companion[data-status="idle"] .agent-avatar {
+  color: var(--text);
+}
+.wordmark .agent-companion[data-status="idle"] .agent-avatar i {
+  display: none;
+}
+.wordmark .agent-launcher-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+.wordmark .agent-bubble {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 12px);
+  width: min(340px, calc(100vw - 96px));
+  max-height: min(540px, calc(100svh - 90px));
+  border-radius: 3px 10px 10px 10px;
+  white-space: normal;
+  text-align: left;
+  z-index: 55;
+}
+.wordmark .agent-bubble::after {
+  top: -7px;
+  bottom: auto;
+  left: 9px;
+  border: 0;
+  border-top: 1px solid var(--agent-signal);
+  border-left: 1px solid var(--agent-signal);
+}
+.wordmark .agent-footnote {
+  margin-left: auto;
+}
+@media (max-width: 1200px) {
+  .wordmark .agent-bubble {
+    width: min(340px, calc(100vw - 48px));
+  }
+}
+@media (max-width: 700px) {
+  .wordmark > .agent-companion,
+  .wordmark .agent-launcher {
+    width: 44px;
+    height: 44px;
+  }
+  .wordmark .agent-avatar {
+    width: 42px;
+    height: 42px;
+  }
+  .wordmark .agent-bubble {
+    width: min(340px, calc(100vw - 35px));
+    max-height: min(520px, calc(100svh - 88px));
+  }
+  .wordmark .agent-bubble::after {
+    left: 15px;
+  }
+}

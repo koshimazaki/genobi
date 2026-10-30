@@ -1,0 +1,1663 @@
+{
+  "id": "genobi-teaser",
+  "bpm": 135,
+  "inPointSeconds": -0.037,
+  "fps": 24,
+  "width": 1920,
+  "height": 1080,
+  "beats": 269,
+  "track": {
+    "asset": "teaser-track",
+    "seconds": 119.59
+  },
+  "trackName": "Track · Trailer-Genobi",
+  "shots": [
+    {
+      "asset": "character",
+      "label": "Forest guardian · first look",
+      "sourceSeconds": 0,
+      "startBeat": 20,
+      "beats": 8,
+      "cropY": null,
+      "zoom": 1.33
+    },
+    {
+      "asset": "creature-03",
+      "label": "Flower creature",
+      "sourceSeconds": 0.2,
+      "startBeat": 28,
+      "beats": 4,
+      "cropY": null
+    },
+    {
+      "asset": "creature-04",
+      "label": "Lightning creature · spines",
+      "sourceSeconds": 0,
+      "startBeat": 32,
+      "beats": 4,
+      "cropY": null
+    },
+    {
+      "asset": "ui-gallery",
+      "label": "Gallery · the generations",
+      "sourceSeconds": 0.174,
+      "startBeat": 36,
+      "beats": 8,
+      "cropY": null,
+      "move": {
+        "x": 0.62,
+        "y": 0.45,
+        "zoom": 1.4,
+        "ease": 2,
+        "drift": 0.03
+      }
+    },
+    {
+      "asset": "ui-timeline",
+      "label": "Editor · move, trim, cut, regenerate",
+      "sourceSeconds": 2,
+      "startBeat": 44,
+      "beats": 10,
+      "cropY": null,
+      "move": {
+        "x": 0.52,
+        "y": 0.5,
+        "zoom": 1.2,
+        "ease": 2,
+        "drift": 0.02
+      }
+    },
+    {
+      "asset": "ui-camera",
+      "label": "Camera · the prompt",
+      "sourceSeconds": 6.8,
+      "startBeat": 54,
+      "beats": 6,
+      "cropY": null,
+      "move": {
+        "x": 0.4,
+        "y": 0.42,
+        "zoom": 2,
+        "ease": 2,
+        "drift": 0.03
+      }
+    },
+    {
+      "asset": "ui-camera-control",
+      "label": "Camera · camera controls",
+      "sourceSeconds": 1.93,
+      "startBeat": 60,
+      "beats": 6,
+      "cropY": null,
+      "move": {
+        "x": 0.42,
+        "y": 0.452,
+        "zoom": 1.6,
+        "ease": 2,
+        "drift": 0.03
+      }
+    },
+    {
+      "asset": "ui-camera",
+      "label": "Camera · the quote",
+      "sourceSeconds": 9.862,
+      "startBeat": 66,
+      "beats": 6,
+      "cropY": null,
+      "move": {
+        "x": 0.72,
+        "y": 0.46,
+        "zoom": 2.4,
+        "ease": 2,
+        "drift": 0.03
+      }
+    },
+    {
+      "asset": "creature-01",
+      "label": "Vine creature · the shot",
+      "sourceSeconds": 0.3,
+      "startBeat": 72,
+      "beats": 4,
+      "cropY": null
+    },
+    {
+      "asset": "ui-director",
+      "label": "Director · the mix plays",
+      "sourceSeconds": 0.194,
+      "startBeat": 76,
+      "beats": 5,
+      "cropY": null,
+      "move": {
+        "x": 0.2,
+        "y": 0.33,
+        "zoom": 2,
+        "ease": 2,
+        "drift": 0.03
+      }
+    },
+    {
+      "asset": "ui-comfy",
+      "label": "ComfyUI · the World Builder node, live",
+      "sourceSeconds": 0,
+      "startBeat": 81,
+      "beats": 5,
+      "cropY": null,
+      "move": {
+        "x": 0.278,
+        "y": 0.506,
+        "zoom": 2.8,
+        "ease": 1,
+        "drift": 0.03,
+        "from": {
+          "x": 0.278,
+          "y": 0.506,
+          "zoom": 2.8
+        }
+      }
+    },
+    {
+      "asset": "ui-comfy",
+      "label": "ComfyUI · out to the Genobi graph",
+      "sourceSeconds": 2.222,
+      "startBeat": 86,
+      "beats": 6,
+      "cropY": null,
+      "move": {
+        "x": 0.5,
+        "y": 0.5,
+        "zoom": 1,
+        "ease": 3,
+        "drift": 0.02,
+        "from": {
+          "x": 0.278,
+          "y": 0.506,
+          "zoom": 2.8
+        }
+      }
+    },
+    {
+      "asset": "mix-03",
+      "label": "Nocthorn · drop",
+      "sourceSeconds": 0.3,
+      "startBeat": 92,
+      "beats": 2,
+      "cropY": 240
+    },
+    {
+      "asset": "mix-01",
+      "label": "Mirebloom · splash",
+      "sourceSeconds": 1,
+      "startBeat": 94,
+      "beats": 2,
+      "cropY": 200
+    },
+    {
+      "asset": "creature-05",
+      "label": "Flower creature · close",
+      "sourceSeconds": 0.3,
+      "startBeat": 96,
+      "beats": 4,
+      "cropY": null
+    },
+    {
+      "asset": "ui-editor",
+      "label": "Editor · layers are recipes",
+      "sourceSeconds": 5.246,
+      "startBeat": 100,
+      "beats": 8,
+      "cropY": null,
+      "move": {
+        "x": 0.62,
+        "y": 0.62,
+        "zoom": 1.8,
+        "ease": 2,
+        "drift": 0.03
+      }
+    },
+    {
+      "asset": "ui-directions",
+      "label": "Editor · shot and lens",
+      "sourceSeconds": 0.6,
+      "startBeat": 108,
+      "beats": 8,
+      "cropY": null,
+      "move": {
+        "x": 0.28,
+        "y": 0.55,
+        "zoom": 2.2,
+        "ease": 2,
+        "drift": 0.03
+      }
+    },
+    {
+      "asset": "dimensions-excerpt",
+      "label": "The Dimensions mix · rendered",
+      "sourceSeconds": 0.2,
+      "startBeat": 116,
+      "beats": 8,
+      "cropY": null
+    },
+    {
+      "asset": "ui-directions",
+      "label": "Editor · send to Genobi",
+      "sourceSeconds": 5.051,
+      "startBeat": 124,
+      "beats": 8,
+      "cropY": null,
+      "move": {
+        "x": 0.76,
+        "y": 0.45,
+        "zoom": 2,
+        "ease": 2,
+        "drift": 0.03
+      }
+    },
+    {
+      "asset": "character",
+      "label": "Forest guardian · fire",
+      "sourceSeconds": 10.4,
+      "startBeat": 132,
+      "beats": 4,
+      "cropY": null,
+      "zoom": 1.33
+    },
+    {
+      "asset": "character",
+      "label": "Forest guardian · close",
+      "sourceSeconds": 16,
+      "startBeat": 136,
+      "beats": 4,
+      "cropY": null,
+      "zoom": 1.33
+    },
+    {
+      "asset": "ui-world",
+      "label": "3D · orbit the set",
+      "sourceSeconds": 0.191,
+      "startBeat": 140,
+      "beats": 8,
+      "cropY": null,
+      "move": {
+        "x": 0.42,
+        "y": 0.42,
+        "zoom": 1.35,
+        "ease": 2,
+        "drift": 0.03
+      }
+    },
+    {
+      "asset": "ui-world",
+      "label": "3D · build tools",
+      "sourceSeconds": 3.848,
+      "startBeat": 148,
+      "beats": 8,
+      "cropY": null,
+      "move": {
+        "x": 0.3,
+        "y": 0.45,
+        "zoom": 1.5,
+        "ease": 2,
+        "drift": 0.03
+      }
+    },
+    {
+      "asset": "ui-agent",
+      "label": "Genobi · the brief",
+      "sourceSeconds": 0.21,
+      "startBeat": 156,
+      "beats": 8,
+      "cropY": null,
+      "move": {
+        "x": 0.2,
+        "y": 0.3,
+        "zoom": 2.1,
+        "ease": 2,
+        "drift": 0.03
+      }
+    },
+    {
+      "asset": "ui-agent",
+      "label": "Genobi · ready to start",
+      "sourceSeconds": 3.515,
+      "startBeat": 164,
+      "beats": 8,
+      "cropY": null,
+      "move": {
+        "x": 0.18,
+        "y": 0.38,
+        "zoom": 2.3,
+        "ease": 2,
+        "drift": 0.03
+      }
+    },
+    {
+      "asset": "ui-licences",
+      "label": "Taste · models and licences",
+      "sourceSeconds": 3,
+      "startBeat": 192,
+      "beats": 8,
+      "cropY": null,
+      "move": {
+        "x": 0.42,
+        "y": 0.45,
+        "zoom": 1.5,
+        "ease": 2,
+        "drift": 0.03
+      }
+    },
+    {
+      "asset": "ui-camera",
+      "label": "Camera · the open upscale",
+      "sourceSeconds": 0.538,
+      "startBeat": 200,
+      "beats": 6,
+      "cropY": null,
+      "move": {
+        "x": 0.3,
+        "y": 0.8,
+        "zoom": 2.3,
+        "ease": 2,
+        "drift": 0.03
+      }
+    },
+    {
+      "asset": "ui-camera",
+      "label": "Camera · FLUX through the API",
+      "sourceSeconds": 5.585,
+      "startBeat": 206,
+      "beats": 4,
+      "cropY": null,
+      "move": {
+        "x": 0.27,
+        "y": 0.8,
+        "zoom": 2.4,
+        "ease": 2,
+        "drift": 0.03
+      }
+    },
+    {
+      "asset": "ui-save",
+      "label": "Editor · save the project",
+      "sourceSeconds": 1,
+      "startBeat": 210,
+      "beats": 6,
+      "cropY": null,
+      "move": {
+        "x": 0.88,
+        "y": 0.55,
+        "zoom": 2,
+        "ease": 2,
+        "drift": 0.03
+      }
+    },
+    {
+      "asset": "ui-save",
+      "label": "Director · reuse the flow",
+      "sourceSeconds": 3.7,
+      "startBeat": 216,
+      "beats": 8,
+      "cropY": null,
+      "move": {
+        "x": 0.5,
+        "y": 0.6,
+        "zoom": 1.3,
+        "ease": 2,
+        "drift": 0.03
+      }
+    },
+    {
+      "asset": "ui-swords",
+      "label": "Dual Swords · A and B",
+      "sourceSeconds": 0.267,
+      "startBeat": 224,
+      "beats": 4,
+      "cropY": null,
+      "move": {
+        "x": 0.42,
+        "y": 0.4,
+        "zoom": 1.6,
+        "ease": 2,
+        "drift": 0.03
+      }
+    },
+    {
+      "asset": "ui-scrolls",
+      "label": "Scrolls · the storyboard",
+      "sourceSeconds": 5,
+      "startBeat": 228,
+      "beats": 4,
+      "cropY": null,
+      "move": {
+        "x": 0.35,
+        "y": 0.8,
+        "zoom": 2.3,
+        "ease": 2,
+        "drift": 0.03
+      }
+    },
+    {
+      "asset": "mix-02",
+      "label": "Duneward · eyes ignite",
+      "sourceSeconds": 1.3,
+      "startBeat": 232,
+      "beats": 4,
+      "cropY": 120
+    },
+    {
+      "asset": "mix-03",
+      "label": "Montage 01",
+      "sourceSeconds": 4,
+      "startBeat": 236,
+      "beats": 2,
+      "cropY": 160
+    },
+    {
+      "asset": "creature-01",
+      "label": "Montage 02",
+      "sourceSeconds": 1.55,
+      "startBeat": 238,
+      "beats": 2,
+      "cropY": null
+    },
+    {
+      "asset": "creature-05",
+      "label": "Montage 03",
+      "sourceSeconds": 0.4,
+      "startBeat": 240,
+      "beats": 2,
+      "cropY": null
+    },
+    {
+      "asset": "character",
+      "label": "Montage 04",
+      "sourceSeconds": 14,
+      "startBeat": 242,
+      "beats": 2,
+      "cropY": null,
+      "zoom": 1.33
+    },
+    {
+      "asset": "mix-02",
+      "label": "Montage 05",
+      "sourceSeconds": 8,
+      "startBeat": 244,
+      "beats": 2,
+      "cropY": 220
+    },
+    {
+      "asset": "creature-02",
+      "label": "Montage 06",
+      "sourceSeconds": 0.6,
+      "startBeat": 246,
+      "beats": 2,
+      "cropY": null
+    },
+    {
+      "asset": "mix-01",
+      "label": "Montage 07",
+      "sourceSeconds": 7.9,
+      "startBeat": 248,
+      "beats": 2,
+      "cropY": 200
+    },
+    {
+      "asset": "creature-transform",
+      "label": "Montage 08",
+      "sourceSeconds": 0.2,
+      "startBeat": 250,
+      "beats": 2,
+      "cropY": null
+    },
+    {
+      "asset": "creature-04",
+      "label": "Montage 09",
+      "sourceSeconds": 2,
+      "startBeat": 252,
+      "beats": 2,
+      "cropY": null
+    },
+    {
+      "asset": "creature-03",
+      "label": "Montage 10",
+      "sourceSeconds": 0.8,
+      "startBeat": 254,
+      "beats": 2,
+      "cropY": null
+    },
+    {
+      "asset": "mix-03",
+      "label": "Montage 11",
+      "sourceSeconds": 9,
+      "startBeat": 256,
+      "beats": 2,
+      "cropY": 240
+    },
+    {
+      "asset": "creature-transform",
+      "label": "Montage 12",
+      "sourceSeconds": 1.9,
+      "startBeat": 258,
+      "beats": 2,
+      "cropY": null
+    }
+  ],
+  "layers": [
+    {
+      "id": "end-card",
+      "name": "End card · Genobi",
+      "module": "end-card",
+      "kind": "graphics",
+      "lane": "end",
+      "startBeat": 260,
+      "beats": 9,
+      "opacity": 1,
+      "card": true,
+      "parameters": {
+        "eyebrow": "MADE WITH",
+        "title": "GENOBI",
+        "subtitle": "THE AI FILM STUDIO YOU DIRECT",
+        "credit1": "MUSIC · TRAILER-GENOBI",
+        "credit2": "KOSHIMAZAKI MIX",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "color": "#d5ff70",
+        "accent": "#e6a1ff",
+        "steps": "Gathering the shots / Cutting on the beat / Bringing it into focus",
+        "done": "Teaser ready",
+        "duration": 2.6
+      }
+    },
+    {
+      "id": "title",
+      "name": "Title · GENOBI",
+      "module": "gen-title",
+      "kind": "graphics",
+      "lane": "cards",
+      "startBeat": 0,
+      "beats": 12,
+      "opacity": 1,
+      "card": true,
+      "parameters": {
+        "text": "GENOBI",
+        "line": "THE AI FILM STUDIO YOU DIRECT",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "size": 128,
+        "color": "#d5ff70",
+        "muted": "#eaf2df",
+        "accent": "#d5ff70",
+        "x": 0.5,
+        "y": 0.46,
+        "duration": 3.6,
+        "mode": "trace-texts",
+        "steps": "Setting the title / Tracing glyphs / Inking",
+        "done": "Studio ready",
+        "fadeAt": 4.933,
+        "plate": 0
+      }
+    },
+    {
+      "id": "reveal-1",
+      "name": "Generate · forest guardian",
+      "module": "gen-image",
+      "kind": "graphics",
+      "lane": "cards",
+      "startBeat": 12,
+      "beats": 8,
+      "opacity": 1,
+      "card": true,
+      "parameters": {
+        "still": "/media/director-templates/genobi-teaser/still-character-hd.jpg",
+        "matte": "#0c0e0c",
+        "accent": "#d5ff70",
+        "inset": 0,
+        "duration": 3,
+        "mode": "trace",
+        "steps": "Sampling / Screening / Colour",
+        "done": "Shot ready",
+        "fadeAt": 0
+      }
+    },
+    {
+      "id": "paper-dither",
+      "name": "Paper Shaders · dithering",
+      "module": "paper-shader",
+      "kind": "graphics",
+      "lane": "cards",
+      "startBeat": 172,
+      "beats": 3,
+      "opacity": 1,
+      "card": true,
+      "parameters": {
+        "shader": "dithering",
+        "colors": "#0c0e0c",
+        "back": "#d5ff70",
+        "backAlpha": 1,
+        "speed": 0.9,
+        "scale": 0.9,
+        "intensity": 0.35,
+        "seed": 4,
+        "fadeAt": 0
+      }
+    },
+    {
+      "id": "space",
+      "name": "Space.js · targeting",
+      "module": "space-hud",
+      "kind": "graphics",
+      "lane": "cards",
+      "startBeat": 175,
+      "beats": 3,
+      "opacity": 1,
+      "card": true,
+      "parameters": {
+        "still": "/media/director-templates/genobi-teaser/still-flower-creature.jpg",
+        "color": "#d5ff70",
+        "label": "SPACE.JS",
+        "credit": "PATRICK SCHROEN",
+        "targets": "0.5,0.42,0.18,0.3 / 0.3,0.6,0.12,0.18 / 0.7,0.62,0.12,0.18",
+        "interval": 0.3,
+        "dim": 0.25,
+        "fadeAt": 0
+      }
+    },
+    {
+      "id": "reveal-3",
+      "name": "Transitions.dev · the flower creature",
+      "module": "gen-image",
+      "kind": "graphics",
+      "lane": "cards",
+      "startBeat": 178,
+      "beats": 3,
+      "opacity": 1,
+      "card": true,
+      "parameters": {
+        "still": "/media/director-templates/genobi-teaser/still-flower-creature.jpg",
+        "matte": "#0c0e0c",
+        "accent": "#d5ff70",
+        "inset": 0.06,
+        "duration": 1.2,
+        "mode": "trace-texts",
+        "steps": "Sketch / Screen / Colour",
+        "done": "Transition ready",
+        "fadeAt": 0
+      }
+    },
+    {
+      "id": "taste",
+      "name": "Taste layer · the libraries",
+      "module": "gen-title",
+      "kind": "graphics",
+      "lane": "cards",
+      "startBeat": 181,
+      "beats": 11,
+      "opacity": 1,
+      "card": true,
+      "parameters": {
+        "text": "TASTE LAYER",
+        "line": "ANDREW ZELLINGER / TRANSITIONS.DEV · JAKUB ANTALIK / PAPER SHADERS · PAPER DESIGN / THREE.JS · ANIME.JS · P5.JS / P5.BRUSH · ALIEN.JS · SPACE.JS / PIXIJS FILTERS · TEXTMODE.JS · PLAY.CORE / MATRIX DIGITAL RAIN · GLYPHCSS · KRBN / SVGBOB · CRT-TERMINAL · CLI-SPINNERS / IBM PLEX MONO · GEIST",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "size": 104,
+        "color": "#d5ff70",
+        "muted": "#eaf2df",
+        "accent": "#d5ff70",
+        "x": 0.5,
+        "y": 0.5,
+        "duration": 3.2,
+        "mode": "trace-texts",
+        "steps": "Reading the credits / Tracing / Inking",
+        "done": "Credited in docs/credits",
+        "fadeAt": 4.489,
+        "plate": 0
+      }
+    },
+    {
+      "id": "cursor-36",
+      "name": "Pointer · Gallery · the generations",
+      "module": "ui-cursor",
+      "kind": "graphics",
+      "lane": "cursor",
+      "startBeat": 36,
+      "beats": 8,
+      "opacity": 1,
+      "parameters": {
+        "path": "0:0.5,0.55 / 0.39:0.5,0.55 / 1.008:0.5,0.55 / 1.708:0.806,0.258",
+        "clicks": "",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,21,64,0;1,0,0;1.4,-0.168,0.07;1.5103,-0.1812,0.0755"
+      }
+    },
+    {
+      "id": "cursor-44",
+      "name": "Pointer · Editor · move, trim, cut, regenerate",
+      "module": "ui-cursor",
+      "kind": "graphics",
+      "lane": "cursor",
+      "startBeat": 44,
+      "beats": 10,
+      "opacity": 1,
+      "parameters": {
+        "path": "0:0.484,0.664 / 0.05:0.532,0.664 / 0.55:0.532,0.664 / 1.25:0.616,0.664 / 1.82:0.576,0.664 / 2.346:0.576,0.664 / 3.046:0.22,0.372 / 3.589:0.22,0.372 / 4.289:0.865,0.115",
+        "clicks": "1.25 / 3.046 / 4.289",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,22,85,0;1,0,0;1.2,-0.024,0;1.284,-0.0257,0"
+      }
+    },
+    {
+      "id": "cursor-52",
+      "name": "Pointer · Camera · the prompt",
+      "module": "ui-cursor",
+      "kind": "graphics",
+      "lane": "cursor",
+      "startBeat": 54,
+      "beats": 6,
+      "opacity": 1,
+      "parameters": {
+        "path": "0:0.262,0.743 / 0.55:0.5,0.526",
+        "clicks": "0.55",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,21,43,0;1,0,0;2,0.2,0.16;2.105,0.2105,0.1684"
+      }
+    },
+    {
+      "id": "cursor-60",
+      "name": "Pointer · Camera · camera controls",
+      "module": "ui-cursor",
+      "kind": "graphics",
+      "lane": "cursor",
+      "startBeat": 60,
+      "beats": 6,
+      "opacity": 1,
+      "parameters": {
+        "path": "0:0.737,0.493 / 0.311:0.472,0.292 / 0.945:0.472,0.292 / 1.645:0.23,0.531",
+        "clicks": "0.311 / 1.645",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,21,43,0;1,0,0;1.6,0.128,0.0768;1.684,0.1347,0.0808"
+      }
+    },
+    {
+      "id": "cursor-66",
+      "name": "Pointer · Camera · the quote",
+      "module": "ui-cursor",
+      "kind": "graphics",
+      "lane": "cursor",
+      "startBeat": 66,
+      "beats": 6,
+      "opacity": 1,
+      "parameters": {
+        "path": "0:0.5,0.526 / 0.417:0.5,0.526 / 1.117:0.731,0.734",
+        "clicks": "",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,21,43,0;1,0,0;2.4,-0.528,0.096;2.526,-0.5557,0.101"
+      }
+    },
+    {
+      "id": "cursor-100",
+      "name": "Pointer · Editor · layers are recipes",
+      "module": "ui-cursor",
+      "kind": "graphics",
+      "lane": "cursor",
+      "startBeat": 100,
+      "beats": 8,
+      "opacity": 1,
+      "parameters": {
+        "path": "0:0.041,0.689 / 0.736:0.041,0.689 / 1.436:0.484,0.785 / 2.355:0.484,0.785 / 3.055:0.778,0.413",
+        "clicks": "1.436 / 3.055",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,21,64,0;1,0,0;1.8,-0.216,-0.216;1.9418,-0.233,-0.233"
+      }
+    },
+    {
+      "id": "cursor-108",
+      "name": "Pointer · Editor · shot and lens",
+      "module": "ui-cursor",
+      "kind": "graphics",
+      "lane": "cursor",
+      "startBeat": 108,
+      "beats": 8,
+      "opacity": 1,
+      "parameters": {
+        "path": "0:0.264,0.749 / 0.635:0.264,0.749 / 1.183:0.264,0.749 / 1.883:0.287,0.508 / 2.317:0.287,0.508 / 3.017:0.302,0.624",
+        "clicks": "0.635 / 1.883 / 3.017",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,21,64,0;1,0,0;2.2,0.484,-0.11;2.3733,0.5221,-0.1187"
+      }
+    },
+    {
+      "id": "cursor-124",
+      "name": "Pointer · Editor · send to Genobi",
+      "module": "ui-cursor",
+      "kind": "graphics",
+      "lane": "cursor",
+      "startBeat": 124,
+      "beats": 8,
+      "opacity": 1,
+      "parameters": {
+        "path": "0:0.302,0.624 / 0.283:0.385,0.395 / 1.717:0.385,0.395 / 2.417:0.938,0.472",
+        "clicks": "0.283",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,21,64,0;1,0,0;2,-0.5,0.1;2.1575,-0.561,0.1079"
+      }
+    },
+    {
+      "id": "cursor-140",
+      "name": "Pointer · 3D · orbit the set",
+      "module": "ui-cursor",
+      "kind": "graphics",
+      "lane": "cursor",
+      "startBeat": 140,
+      "beats": 8,
+      "opacity": 1,
+      "parameters": {
+        "path": "0:0.45,0.45 / 0.398:0.45,0.45 / 0.865:0.45,0.45 / 1.565:0.6,0.42 / 1.715:0.6,0.42 / 2.415:0.11,0.176",
+        "clicks": "2.415",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,22,64,0;1,0,0;1.35,0.108,0.108;1.4563,0.1165,0.1165"
+      }
+    },
+    {
+      "id": "cursor-148",
+      "name": "Pointer · 3D · build tools",
+      "module": "ui-cursor",
+      "kind": "graphics",
+      "lane": "cursor",
+      "startBeat": 148,
+      "beats": 8,
+      "opacity": 1,
+      "parameters": {
+        "path": "0:0.11,0.176 / 0.481:0.045,0.308 / 0.853:0.045,0.308 / 1.553:0.082,0.821",
+        "clicks": "0.481 / 1.553",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,21,64,0;1,0,0;1.5,0.25,0.075;1.6181,0.3091,0.0809"
+      }
+    },
+    {
+      "id": "cursor-156",
+      "name": "Pointer · Genobi · the brief",
+      "module": "ui-cursor",
+      "kind": "graphics",
+      "lane": "cursor",
+      "startBeat": 156,
+      "beats": 8,
+      "opacity": 1,
+      "parameters": {
+        "path": "0:0.028,0.034 / 0.442:0.028,0.034 / 0.968:0.028,0.034 / 1.668:0.135,0.407",
+        "clicks": "0.442 / 1.668",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,21,64,0;1,0,0;2.1,0.55,0.42;2.2654,0.6327,0.4531"
+      }
+    },
+    {
+      "id": "cursor-164",
+      "name": "Pointer · Genobi · ready to start",
+      "module": "ui-cursor",
+      "kind": "graphics",
+      "lane": "cursor",
+      "startBeat": 164,
+      "beats": 8,
+      "opacity": 1,
+      "parameters": {
+        "path": "0:0.135,0.407 / 1.619:0.135,0.407 / 2.319:0.053,0.466",
+        "clicks": "",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,22,64,0;1,0,0;2.3,0.65,0.276;2.4811,0.7406,0.2977"
+      }
+    },
+    {
+      "id": "cursor-192",
+      "name": "Pointer · Taste · models and licences",
+      "module": "ui-cursor",
+      "kind": "graphics",
+      "lane": "cursor",
+      "startBeat": 192,
+      "beats": 8,
+      "opacity": 1,
+      "parameters": {
+        "path": "0:0.248,0.768 / 0.548:0.273,0.5 / 2.765:0.273,0.5 / 3.465:0.564,0.261",
+        "clicks": "",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,21,64,0;1,0,0;1.5,0.12,0.075;1.6181,0.1295,0.0809"
+      }
+    },
+    {
+      "id": "cursor-200",
+      "name": "Pointer · Camera · the open upscale",
+      "module": "ui-cursor",
+      "kind": "graphics",
+      "lane": "cursor",
+      "startBeat": 200,
+      "beats": 6,
+      "opacity": 1,
+      "parameters": {
+        "path": "0:0.234,0.743 / 0.051:0.234,0.743 / 0.217:0.234,0.743 / 0.917:0.311,0.743",
+        "clicks": "0.917",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,22,42,0;1,0,0;2.3,0.46,-0.65;2.4179,0.4836,-0.7089"
+      }
+    },
+    {
+      "id": "cursor-210",
+      "name": "Pointer · Editor · save the project",
+      "module": "ui-cursor",
+      "kind": "graphics",
+      "lane": "cursor",
+      "startBeat": 210,
+      "beats": 6,
+      "opacity": 1,
+      "parameters": {
+        "path": "0:0.951,0.608 / 1.0:0.951,0.608 / 1.7:0.951,0.608",
+        "clicks": "",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,21,43,0;1,0,0;2,-0.5,-0.1;2.105,-0.5525,-0.1053"
+      }
+    },
+    {
+      "id": "cursor-216",
+      "name": "Pointer · Director · reuse the flow",
+      "module": "ui-cursor",
+      "kind": "graphics",
+      "lane": "cursor",
+      "startBeat": 216,
+      "beats": 8,
+      "opacity": 1,
+      "parameters": {
+        "path": "0:0.951,0.608 / 0.283:0.951,0.608 / 0.983:0.936,0.115 / 2.616:0.936,0.115 / 3.316:0.641,0.115",
+        "clicks": "0.983",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,21,64,0;1,0,0;1.3,0,-0.13;1.4024,0,-0.1402"
+      }
+    },
+    {
+      "id": "focus-66",
+      "name": "Focus · QUOTED FIRST · NOTHING SPENT UNASKED",
+      "module": "ui-focus",
+      "kind": "graphics",
+      "lane": "focus",
+      "startBeat": 66,
+      "beats": 4,
+      "opacity": 1,
+      "parameters": {
+        "x": 0.669,
+        "y": 0.694,
+        "w": 0.123,
+        "h": 0.079,
+        "label": "QUOTED FIRST · NOTHING SPENT UNASKED",
+        "color": "#d5ff70",
+        "dim": 0.45,
+        "draw": 0.1,
+        "fadeAt": 1.778,
+        "view": "24,21,43,0;1,0,0;2.4,-0.528,0.096;2.526,-0.5557,0.101"
+      }
+    },
+    {
+      "id": "focus-108",
+      "name": "Focus · SHOT & LENS · PER CLIP DIRECTION",
+      "module": "ui-focus",
+      "kind": "graphics",
+      "lane": "focus",
+      "startBeat": 110,
+      "beats": 5,
+      "opacity": 1,
+      "parameters": {
+        "x": 0.26,
+        "y": 0.489,
+        "w": 0.055,
+        "h": 0.037,
+        "label": "SHOT & LENS · PER CLIP DIRECTION",
+        "color": "#d5ff70",
+        "dim": 0.45,
+        "draw": 0.3,
+        "fadeAt": 1.872,
+        "view": "24,21,64,21;1,0,0;2.2,0.484,-0.11;2.3733,0.5221,-0.1187"
+      }
+    },
+    {
+      "id": "focus-124",
+      "name": "Focus · SEND TO GENOBI",
+      "module": "ui-focus",
+      "kind": "graphics",
+      "lane": "focus",
+      "startBeat": 128,
+      "beats": 4,
+      "opacity": 1,
+      "parameters": {
+        "x": 0.903,
+        "y": 0.455,
+        "w": 0.07,
+        "h": 0.035,
+        "label": "SEND TO GENOBI",
+        "color": "#d5ff70",
+        "dim": 0.45,
+        "draw": 0.1,
+        "fadeAt": 1.778,
+        "view": "24,21,64,42;1,0,0;2,-0.5,0.1;2.1575,-0.561,0.1079"
+      }
+    },
+    {
+      "id": "focus-164",
+      "name": "Focus · YOUR AGENT · TYPED OR SPOKEN",
+      "module": "ui-focus",
+      "kind": "graphics",
+      "lane": "focus",
+      "startBeat": 166,
+      "beats": 5,
+      "opacity": 1,
+      "parameters": {
+        "x": 0.017,
+        "y": 0.376,
+        "w": 0.235,
+        "h": 0.062,
+        "label": "YOUR AGENT · TYPED OR SPOKEN",
+        "color": "#d5ff70",
+        "dim": 0.45,
+        "draw": 0.3,
+        "fadeAt": 1.872,
+        "view": "24,22,64,22;1,0,0;2.3,0.65,0.276;2.4811,0.7406,0.2977"
+      }
+    },
+    {
+      "id": "focus-200",
+      "name": "Focus · OPEN UPSCALER · SEEDVR2",
+      "module": "ui-focus",
+      "kind": "graphics",
+      "lane": "focus",
+      "startBeat": 200,
+      "beats": 5,
+      "opacity": 1,
+      "parameters": {
+        "x": 0.301,
+        "y": 0.728,
+        "w": 0.02,
+        "h": 0.03,
+        "label": "OPEN UPSCALER · SEEDVR2",
+        "color": "#d5ff70",
+        "dim": 0.45,
+        "draw": 0.3,
+        "fadeAt": 1.872,
+        "view": "24,22,42,0;1,0,0;2.3,0.46,-0.65;2.4179,0.4836,-0.7089"
+      }
+    },
+    {
+      "id": "focus-210",
+      "name": "Focus · SAVE JSON",
+      "module": "ui-focus",
+      "kind": "graphics",
+      "lane": "focus",
+      "startBeat": 212,
+      "beats": 4,
+      "opacity": 1,
+      "parameters": {
+        "x": 0.926,
+        "y": 0.593,
+        "w": 0.05,
+        "h": 0.03,
+        "label": "SAVE JSON",
+        "color": "#d5ff70",
+        "dim": 0.45,
+        "draw": 0.1,
+        "fadeAt": 1.778,
+        "view": "24,21,43,21;1,0,0;2,-0.5,-0.1;2.105,-0.5525,-0.1053"
+      }
+    },
+    {
+      "id": "reveal-2",
+      "name": "Generate · creature",
+      "module": "gen-image",
+      "kind": "graphics",
+      "lane": "reveal",
+      "startBeat": 70,
+      "beats": 2,
+      "opacity": 1,
+      "parameters": {
+        "still": "/media/director-templates/genobi-teaser/still-creature.jpg",
+        "matte": "#0c0e0c",
+        "accent": "#d5ff70",
+        "inset": 0,
+        "duration": 0.8,
+        "mode": "trace",
+        "steps": "Sampling / Screening / Colour",
+        "done": "Shot ready",
+        "fadeAt": 0
+      }
+    },
+    {
+      "id": "status-0",
+      "name": "Status · Booting the studio",
+      "module": "gen-status",
+      "kind": "graphics",
+      "lane": "status",
+      "startBeat": 0,
+      "beats": 10,
+      "opacity": 1,
+      "parameters": {
+        "label": "Booting the studio",
+        "done": "Studio ready",
+        "variant": "scan",
+        "color": "#d5ff70",
+        "x": 0.5,
+        "y": 0.86,
+        "scale": 1.3,
+        "doneAt": 2.8,
+        "fadeAt": 4.144
+      }
+    },
+    {
+      "id": "status-1",
+      "name": "Status · Generating shot 01 · FLUX 3",
+      "module": "gen-status",
+      "kind": "graphics",
+      "lane": "status",
+      "startBeat": 12,
+      "beats": 8,
+      "opacity": 1,
+      "parameters": {
+        "label": "Generating shot 01 · FLUX 3",
+        "done": "Shot ready",
+        "variant": "twinkle",
+        "color": "#d5ff70",
+        "x": 0.5,
+        "y": 0.93,
+        "scale": 1.3,
+        "doneAt": 3.1,
+        "fadeAt": 3.256
+      }
+    },
+    {
+      "id": "status-2",
+      "name": "Status · Generating · MiniMax H3",
+      "module": "gen-status",
+      "kind": "graphics",
+      "lane": "status",
+      "startBeat": 66,
+      "beats": 6,
+      "opacity": 1,
+      "parameters": {
+        "label": "Generating · MiniMax H3",
+        "done": "Shot ready",
+        "variant": "orbit",
+        "color": "#d5ff70",
+        "x": 0.5,
+        "y": 0.8,
+        "scale": 1.3,
+        "doneAt": 1.4,
+        "fadeAt": 2.367
+      }
+    },
+    {
+      "id": "status-3",
+      "name": "Status · Brief: a 20 s teaser on the beat",
+      "module": "gen-status",
+      "kind": "graphics",
+      "lane": "status",
+      "startBeat": 166,
+      "beats": 6,
+      "opacity": 1,
+      "parameters": {
+        "label": "Brief: a 20 s teaser on the beat",
+        "done": "Nothing runs until you approve",
+        "variant": "pulse",
+        "color": "#d5ff70",
+        "x": 0.5,
+        "y": 0.86,
+        "scale": 1.3,
+        "doneAt": 1.6,
+        "fadeAt": 2.367
+      }
+    },
+    {
+      "id": "callout-camera",
+      "name": "Callout · CAMERA CONTROLS",
+      "module": "gen-title",
+      "kind": "graphics",
+      "lane": "callout",
+      "startBeat": 60,
+      "beats": 5,
+      "opacity": 1,
+      "parameters": {
+        "text": "CAMERA CONTROLS",
+        "line": "",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "size": 60,
+        "color": "#d5ff70",
+        "muted": "#eaf2df",
+        "accent": "#d5ff70",
+        "x": 0.5,
+        "y": 0.9,
+        "duration": 0.8,
+        "mode": "trace",
+        "steps": "",
+        "done": "",
+        "fadeAt": 1.922,
+        "plate": 0.82
+      }
+    },
+    {
+      "id": "callout-threejs",
+      "name": "Callout · ★ THREE.JS",
+      "module": "gen-title",
+      "kind": "graphics",
+      "lane": "callout",
+      "startBeat": 81,
+      "beats": 5,
+      "opacity": 1,
+      "parameters": {
+        "text": "★ THREE.JS",
+        "line": "",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "size": 96,
+        "color": "#d5ff70",
+        "muted": "#eaf2df",
+        "accent": "#d5ff70",
+        "x": 0.5,
+        "y": 0.86,
+        "duration": 0.8,
+        "mode": "trace",
+        "steps": "",
+        "done": "",
+        "fadeAt": 1.922,
+        "plate": 0.82
+      }
+    },
+    {
+      "id": "taste-credit",
+      "name": "Taste layer · we credit them",
+      "module": "gen-title",
+      "kind": "graphics",
+      "lane": "callout",
+      "startBeat": 183,
+      "beats": 9,
+      "opacity": 1,
+      "parameters": {
+        "text": " ",
+        "line": "Libraries, shaders, transitions and creative references — / we credit the people who made them; shape that selection around your work.",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "size": 34,
+        "color": "#d5ff70",
+        "muted": "#eaf2df",
+        "accent": "#d5ff70",
+        "x": 0.5,
+        "y": 0.91,
+        "duration": 1.6,
+        "mode": "trace",
+        "steps": "",
+        "done": "",
+        "fadeAt": 3.6,
+        "plate": 0
+      }
+    },
+    {
+      "id": "make",
+      "name": "Slam · MAKE",
+      "module": "kinetic",
+      "kind": "graphics",
+      "lane": "impact",
+      "startBeat": 34,
+      "beats": 2,
+      "opacity": 1,
+      "parameters": {
+        "text": "MAKE",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "weight": 700,
+        "color": "#f6f8f2",
+        "accent": "#0c0e0c",
+        "bpm": 135,
+        "size": 225,
+        "beats": 2
+      }
+    },
+    {
+      "id": "direct",
+      "name": "Slam · DIRECT",
+      "module": "kinetic",
+      "kind": "graphics",
+      "lane": "impact",
+      "startBeat": 74,
+      "beats": 2,
+      "opacity": 1,
+      "parameters": {
+        "text": "DIRECT",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "weight": 700,
+        "color": "#f6f8f2",
+        "accent": "#0c0e0c",
+        "bpm": 135,
+        "size": 225,
+        "beats": 2
+      }
+    },
+    {
+      "id": "build",
+      "name": "Slam · BUILD / WORLDS",
+      "module": "kinetic",
+      "kind": "graphics",
+      "lane": "impact",
+      "startBeat": 136,
+      "beats": 4,
+      "opacity": 1,
+      "parameters": {
+        "text": "BUILD / WORLDS",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "weight": 700,
+        "color": "#f6f8f2",
+        "accent": "#0c0e0c",
+        "bpm": 135,
+        "size": 180,
+        "beats": 4
+      }
+    },
+    {
+      "id": "remix",
+      "name": "Slam · COMPARE / REMIX",
+      "module": "kinetic",
+      "kind": "graphics",
+      "lane": "impact",
+      "startBeat": 224,
+      "beats": 2,
+      "opacity": 1,
+      "parameters": {
+        "text": "COMPARE / REMIX",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "weight": 700,
+        "color": "#f6f8f2",
+        "accent": "#0c0e0c",
+        "bpm": 135,
+        "size": 165,
+        "beats": 2
+      }
+    },
+    {
+      "id": "one",
+      "name": "Slam · ONE STUDIO",
+      "module": "kinetic",
+      "kind": "graphics",
+      "lane": "impact",
+      "startBeat": 232,
+      "beats": 4,
+      "opacity": 1,
+      "parameters": {
+        "text": "ONE STUDIO",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "weight": 700,
+        "color": "#f6f8f2",
+        "accent": "#0c0e0c",
+        "bpm": 135,
+        "size": 180,
+        "beats": 4
+      }
+    },
+    {
+      "id": "hud-1",
+      "name": "HUD · intro",
+      "module": "hud",
+      "kind": "graphics",
+      "lane": "hud",
+      "startBeat": 20,
+      "beats": 16,
+      "opacity": 1,
+      "parameters": {
+        "color": "#f6f8f2",
+        "accent": "#eaf2df",
+        "bpm": 135,
+        "text": "GENOBI // CUT IN GENOBI",
+        "credit": "MUSIC / KOSHIMAZAKI",
+        "seconds": 7.111
+      }
+    },
+    {
+      "id": "hud-2",
+      "name": "HUD · montage",
+      "module": "hud",
+      "kind": "graphics",
+      "lane": "hud",
+      "startBeat": 236,
+      "beats": 24,
+      "opacity": 1,
+      "parameters": {
+        "color": "#f6f8f2",
+        "accent": "#eaf2df",
+        "bpm": 135,
+        "text": "GENOBI // CUT ON THE BEAT IN THE DIRECTOR",
+        "credit": "MUSIC / KOSHIMAZAKI",
+        "seconds": 10.667
+      }
+    },
+    {
+      "id": "glitch-20",
+      "name": "Glitch · beat 20",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 20,
+      "beats": 0.5,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.85,
+        "slices": 18,
+        "seed": 143,
+        "duration": 0.2
+      }
+    },
+    {
+      "id": "glitch-36",
+      "name": "Glitch · beat 36",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 36,
+      "beats": 0.5,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.85,
+        "slices": 18,
+        "seed": 255,
+        "duration": 0.2
+      }
+    },
+    {
+      "id": "glitch-72",
+      "name": "Glitch · beat 72",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 72,
+      "beats": 0.5,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.85,
+        "slices": 18,
+        "seed": 507,
+        "duration": 0.2
+      }
+    },
+    {
+      "id": "glitch-76",
+      "name": "Glitch · beat 76",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 76,
+      "beats": 0.5,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.85,
+        "slices": 18,
+        "seed": 535,
+        "duration": 0.2
+      }
+    },
+    {
+      "id": "glitch-92",
+      "name": "Glitch · beat 92",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 92,
+      "beats": 0.75,
+      "opacity": 1,
+      "parameters": {
+        "amount": 1,
+        "slices": 18,
+        "seed": 647,
+        "duration": 0.3
+      }
+    },
+    {
+      "id": "glitch-140",
+      "name": "Glitch · beat 140",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 140,
+      "beats": 0.5,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.85,
+        "slices": 18,
+        "seed": 983,
+        "duration": 0.2
+      }
+    },
+    {
+      "id": "glitch-156",
+      "name": "Glitch · beat 156",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 156,
+      "beats": 0.75,
+      "opacity": 1,
+      "parameters": {
+        "amount": 1,
+        "slices": 18,
+        "seed": 1095,
+        "duration": 0.3
+      }
+    },
+    {
+      "id": "glitch-172",
+      "name": "Glitch · beat 172",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 172,
+      "beats": 0.375,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.85,
+        "slices": 18,
+        "seed": 1207,
+        "duration": 0.15
+      }
+    },
+    {
+      "id": "glitch-236",
+      "name": "Glitch · beat 236",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 236,
+      "beats": 0.75,
+      "opacity": 1,
+      "parameters": {
+        "amount": 1,
+        "slices": 18,
+        "seed": 1655,
+        "duration": 0.3
+      }
+    },
+    {
+      "id": "glitch-244",
+      "name": "Glitch · beat 244",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 244,
+      "beats": 0.375,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.9,
+        "slices": 18,
+        "seed": 1711,
+        "duration": 0.15
+      }
+    },
+    {
+      "id": "glitch-252",
+      "name": "Glitch · beat 252",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 252,
+      "beats": 0.375,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.9,
+        "slices": 18,
+        "seed": 1767,
+        "duration": 0.15
+      }
+    },
+    {
+      "id": "glitch-260",
+      "name": "Glitch · beat 260",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 260,
+      "beats": 0.5,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.85,
+        "slices": 18,
+        "seed": 1823,
+        "duration": 0.2
+      }
+    }
+  ]
+}

@@ -1,0 +1,105 @@
+.themed-select {
+  display: inline-block;
+  min-width: 0;
+  max-width: 100%;
+  vertical-align: middle;
+}
+.themed-select > select[hidden] {
+  display: none !important;
+}
+.themed-select .select-menu {
+  width: 100%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+}
+.themed-select .instrument-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.themed-select .select-menu .instrument-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 11px;
+  min-height: 34px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.themed-select .select-menu__value {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.themed-select .instrument-trigger:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.themed-select .instrument-trigger:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.themed-select-popover.instrument-popover {
+  padding: 5px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  background: var(--raised, var(--surface));
+  box-shadow: 0 12px 36px var(--shadow-dialog);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+.themed-select-popover .select-menu__option {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  width: 100%;
+  min-height: 40px;
+  padding: 10px 12px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 1.5;
+  text-align: left;
+  cursor: pointer;
+}
+.themed-select-popover .select-menu__option[aria-selected="true"] {
+  color: var(--accent);
+  background: var(--accent-ghost);
+}
+.themed-select-popover .select-menu__option:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.themed-select-popover .select-menu__option[aria-disabled="true"] {
+  color: var(--muted);
+  cursor: default;
+}
+.themed-select-popover .select-menu__check {
+  margin-left: auto;
+}
+.wb-workspace-menus .themed-select {
+  min-width: 160px;
+}
+@media (max-width: 700px) {
+  .themed-select .select-menu .instrument-trigger,
+  .themed-select-popover .select-menu__option {
+    min-height: 44px;
+  }
+  .wb-workspace-menus .themed-select {
+    min-width: 0;
+    width: 100%;
+  }
+}

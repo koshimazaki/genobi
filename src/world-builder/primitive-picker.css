@@ -1,0 +1,93 @@
+/* The primitives chooser (PrimitivePicker.tsx): a small panel at the top of
+   the viewport, beside the tool rail's Add button. */
+.wb-primitive-picker {
+  position: absolute;
+  top: 64px;
+  left: 82px;
+  z-index: 3;
+  width: 236px;
+  max-width: calc(100% - 94px);
+  display: grid;
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  box-shadow: 0 8px 24px var(--shadow-dialog);
+}
+.wb-primitive-picker > header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.wb-primitive-picker h2 {
+  margin: 0 auto 0 0;
+  font: 10px var(--mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--readout);
+}
+.wb-primitive-picker small {
+  font: 9px var(--mono);
+  color: var(--muted);
+}
+.wb-app .wb-primitive-picker > header button {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  background: transparent;
+  border-color: transparent;
+}
+.wb-primitive-picker fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.wb-primitive-picker .wb-primitive-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 4px;
+}
+.wb-app .wb-primitive-picker .wb-primitive-grid button {
+  min-height: 30px;
+  flex-direction: row;
+  justify-content: flex-start;
+  gap: 6px;
+  padding: 4px 7px;
+  font: 10px var(--mono);
+  background: var(--sunken);
+}
+.wb-primitive-picker .wb-hint {
+  margin: 0;
+  font: 9px/1.5 var(--mono);
+}
+@media (max-width: 900px) {
+  .wb-app .wb-primitive-picker .wb-primitive-grid button {
+    min-height: 44px;
+  }
+  .wb-app .wb-primitive-picker > header button {
+    width: 44px;
+    height: 32px;
+  }
+  .wb-primitive-picker .wb-hint {
+    display: none;
+  }
+}
+@media (max-width: 480px) {
+  .wb-primitive-picker {
+    width: auto;
+    right: 12px;
+    max-width: none;
+  }
+  .wb-primitive-picker .wb-primitive-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .wb-app .wb-primitive-picker .wb-primitive-grid button {
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+    padding: 3px 2px;
+    font-size: 8px;
+  }
+}

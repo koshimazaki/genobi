@@ -1,0 +1,469 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://camera-director.invalid/schemas/bundle-v1",
+  "title": "Director bundle v1 \u2014 proposed contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "id",
+    "revision",
+    "name",
+    "composition",
+    "assets",
+    "modules",
+    "layers",
+    "generationPlans",
+    "generations"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "const": "director.bundle.v1"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{0,63}$"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "globalPrompt": {
+      "description": "The one primary direction for the whole project (shared/director/directions.ts), set by set-global-prompt. Line breaks kept; no other control characters. Optional and additive; absent means none. The prompt brief (brief/prompt.json) stays as earlier context.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 12000,
+      "pattern": "^[^\\u0000-\\u0009\\u000b-\\u001f\\u007f]*$"
+    },
+    "composition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fps",
+        "durationFrames",
+        "width",
+        "height",
+        "colorSpace",
+        "alpha",
+        "background"
+      ],
+      "properties": {
+        "fps": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 120
+        },
+        "durationFrames": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "width": {
+          "type": "integer",
+          "minimum": 16,
+          "maximum": 4096
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 16,
+          "maximum": 4096
+        },
+        "designSize": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["width", "height"],
+          "properties": {
+            "width": { "type": "integer", "minimum": 16, "maximum": 4096 },
+            "height": { "type": "integer", "minimum": 16, "maximum": 4096 }
+          }
+        },
+        "colorSpace": {
+          "const": "srgb"
+        },
+        "alpha": {
+          "const": "straight"
+        },
+        "background": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$"
+        },
+        "bpm": {
+          "type": "number",
+          "minimum": 20,
+          "maximum": 300
+        },
+        "beatOffsetSeconds": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 3600
+        },
+        "beatsPerBar": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 16
+        }
+      }
+    },
+    "assets": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9-]{0,63}$"
+      },
+      "additionalProperties": {
+        "$ref": "https://camera-director.invalid/schemas/resources-v1#/definitions/asset"
+      }
+    },
+    "modules": {
+      "type": "object",
+      "propertyNames": {
+        "type": "string",
+        "pattern": "^[a-z][a-z0-9-]{0,63}$"
+      },
+      "additionalProperties": {
+        "$ref": "https://camera-director.invalid/schemas/resources-v1#/definitions/module"
+      }
+    },
+    "layers": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "https://camera-director.invalid/schemas/layers-v1#/definitions/layer"
+      }
+    },
+    "generationPlans": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "status",
+          "replaceAssetId",
+          "referenceAssetIds",
+          "prompt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{0,63}$"
+          },
+          "status": {
+            "const": "not-run"
+          },
+          "replaceAssetId": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{0,63}$"
+          },
+          "referenceAssetIds": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]{0,63}$"
+            }
+          },
+          "prompt": {
+            "type": "string",
+            "minLength": 1
+          },
+          "camera": {
+            "description": "A template shot's camera terms (shared/camera.ts), set by the set-camera command. Optional; absent means the template's own move.",
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["shot-sizes", "angles", "movements"],
+            "properties": {
+              "shot-sizes": {
+                "type": ["string", "null"],
+                "pattern": "^[a-z][a-z0-9-]{0,63}$"
+              },
+              "angles": {
+                "type": ["string", "null"],
+                "pattern": "^[a-z][a-z0-9-]{0,63}$"
+              },
+              "movements": {
+                "type": ["string", "null"],
+                "pattern": "^[a-z][a-z0-9-]{0,63}$"
+              }
+            }
+          }
+        }
+      }
+    },
+    "generations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "inputAssetIds",
+          "referenceAssetIds",
+          "outputAssetIds",
+          "prompt",
+          "tool"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{0,63}$"
+          },
+          "inputAssetIds": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]{0,63}$"
+            }
+          },
+          "referenceAssetIds": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]{0,63}$"
+            }
+          },
+          "outputAssetIds": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]{0,63}$"
+            }
+          },
+          "prompt": {
+            "type": "string"
+          },
+          "tool": {
+            "type": "string",
+            "minLength": 1
+          },
+          "recipe": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "version", "route"],
+            "properties": {
+              "id": {
+                "type": "string",
+                "pattern": "^[a-z0-9][a-z0-9.-]{0,79}$"
+              },
+              "version": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "route": {
+                "enum": ["router", "workflow", "bfl"]
+              },
+              "location": {
+                "enum": ["local", "cloud", "deployment"]
+              }
+            }
+          },
+          "derivation": {
+            "description": "A file the local media tools cut, joined, crossfaded or spaced from other media and an agent handed in (server/project-derived.ts). Optional and additive. Each source names its kind and origin, and the project asset holding the same bytes when there is one; checkReferences holds each assetId to the record's inputAssetIds. No studio job or source ids: lineage stays private.",
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["operation", "sources"],
+            "properties": {
+              "operation": {
+                "enum": ["trim", "concat", "crossfade", "space"]
+              },
+              "sources": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 8,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": ["kind", "origin"],
+                  "properties": {
+                    "kind": {
+                      "enum": ["video", "audio"]
+                    },
+                    "origin": {
+                      "enum": ["take", "upload", "library", "derived"]
+                    },
+                    "assetId": {
+                      "type": "string",
+                      "pattern": "^[a-z][a-z0-9-]{0,63}$"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "notes": {
+      "description": "Frame notes: a comment pinned to a composition frame and, optionally, to one layer (shared/director/notes.ts). Optional and additive; checkReferences keeps each frame inside the composition, each layerId naming a layer and ids unique.",
+      "type": "array",
+      "maxItems": 200,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "frame", "text"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{0,63}$"
+          },
+          "frame": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "layerId": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9-]{0,63}$"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "author": {
+            "enum": ["person", "agent"]
+          },
+          "createdAt": {
+            "type": "string",
+            "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]{1,3})?Z$"
+          },
+          "resolved": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "feedbackBase": {
+      "description": "The agent's revision that feedback is measured from (shared/director/feedback.ts): the project as an agent's last Director command left it, or as an agent wrote it into a bundle, and the project prompt then. Held to 1 MB as compact JSON, with registered recipes only. Optional and additive; its project is a whole manifest that holds no feedbackBase of its own.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["project", "prompt"],
+      "properties": {
+        "project": {
+          "allOf": [
+            {
+              "$ref": "#"
+            },
+            {
+              "not": {
+                "type": "object",
+                "required": ["feedbackBase"]
+              }
+            }
+          ]
+        },
+        "prompt": {
+          "type": "string",
+          "maxLength": 12000
+        }
+      }
+    },
+    "template": {
+      "description": "The house-style template and the inputs that built this project (docs/templates.md). Optional.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "inputs"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{0,63}$"
+        },
+        "inputs": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["subject", "title", "aspect"],
+          "properties": {
+            "subject": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240
+            },
+            "title": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 40
+            },
+            "aspect": {
+              "enum": ["21:9", "2:1", "16:9", "4:3", "1:1", "3:4", "9:16"]
+            },
+            "bpm": {
+              "type": "number",
+              "minimum": 20,
+              "maximum": 300
+            },
+            "acoustic": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["mode", "preset", "level"],
+              "properties": {
+                "mode": {
+                  "enum": ["room", "outside", "sfx"]
+                },
+                "preset": {
+                  "type": "string",
+                  "pattern": "^[a-z][a-z0-9_]{0,63}$"
+                },
+                "level": {
+                  "enum": ["low", "mid", "high"]
+                },
+                "text": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 600
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "preferences": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "selection": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "family": {
+              "enum": ["any", "flux", "ltx", "h3", "upscale"]
+            },
+            "weights": {
+              "enum": ["any", "open-weights", "commercial"]
+            },
+            "execution": {
+              "enum": ["any", "local", "cloud"]
+            },
+            "agent": {
+              "enum": ["any", "hermes", "claude", "codex"]
+            }
+          }
+        },
+        "usage": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["purpose", "policy"],
+          "properties": {
+            "purpose": {
+              "enum": [
+                "demo",
+                "commercial-video",
+                "redistribute-source",
+                "resell-template"
+              ]
+            },
+            "policy": {
+              "enum": ["any-licensed", "open-source", "mit-only"]
+            }
+          }
+        }
+      }
+    }
+  }
+}

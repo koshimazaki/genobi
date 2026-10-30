@@ -1,0 +1,713 @@
+{
+  "id": "world-builder-acoustics",
+  "revision": 0,
+  "last_node_id": 17,
+  "last_link_id": 21,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "DirectorSceneCapture",
+      "pos": [40, 300],
+      "size": [420, 220],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "frames",
+          "type": "IMAGE",
+          "links": [14]
+        },
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": [3]
+        },
+        {
+          "name": "fps",
+          "type": "FLOAT",
+          "links": []
+        },
+        {
+          "name": "recipe",
+          "type": "STRING",
+          "links": [1, 2, 19]
+        },
+        {
+          "name": "depth",
+          "type": "IMAGE",
+          "links": [13, 16]
+        },
+        {
+          "name": "canny",
+          "type": "IMAGE",
+          "links": [12, 15]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DirectorSceneCapture"
+      },
+      "widgets_values": ["", "", "{}", ""],
+      "title": "World Builder \u00b7 Capture (open it, build a room, Send take)"
+    },
+    {
+      "id": 2,
+      "type": "DirectorSceneAcoustics",
+      "pos": [560, 80],
+      "size": [340, 180],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "recipe",
+          "type": "STRING",
+          "link": 1
+        }
+      ],
+      "outputs": [
+        {
+          "name": "space_preset",
+          "type": "STRING",
+          "links": []
+        },
+        {
+          "name": "level",
+          "type": "STRING",
+          "links": []
+        },
+        {
+          "name": "rt60",
+          "type": "FLOAT",
+          "links": []
+        },
+        {
+          "name": "room_summary",
+          "type": "STRING",
+          "links": [8]
+        },
+        {
+          "name": "space_mode",
+          "type": "COMBO",
+          "links": [4]
+        },
+        {
+          "name": "application",
+          "type": "COMBO",
+          "links": [5]
+        },
+        {
+          "name": "room_preset",
+          "type": "COMBO",
+          "links": [6]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DirectorSceneAcoustics"
+      },
+      "widgets_values": [],
+      "title": "Acoustics: room \u2192 AKUSPACE preset"
+    },
+    {
+      "id": 3,
+      "type": "DirectorSceneReverb",
+      "pos": [560, 340],
+      "size": [380, 420],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 3
+        },
+        {
+          "name": "recipe",
+          "type": "STRING",
+          "link": 2
+        }
+      ],
+      "outputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": [10]
+        },
+        {
+          "name": "impulse_response",
+          "type": "AUDIO",
+          "links": [11]
+        },
+        {
+          "name": "summary",
+          "type": "STRING",
+          "links": [9]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DirectorSceneReverb"
+      },
+      "widgets_values": [
+        1.0,
+        1.0,
+        0.3,
+        0.0,
+        0.5,
+        0.35,
+        1.0,
+        "none",
+        6.0,
+        0,
+        "fixed",
+        0.0,
+        "",
+        ""
+      ],
+      "title": "Reverb: the take's own audio in the room"
+    },
+    {
+      "id": 4,
+      "type": "Koshi_AKUSPACEPrompt",
+      "pos": [980, 80],
+      "size": [360, 260],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "space_mode",
+          "type": "COMBO",
+          "widget": {
+            "name": "space_mode"
+          },
+          "link": 4
+        },
+        {
+          "name": "application",
+          "type": "COMBO",
+          "widget": {
+            "name": "application"
+          },
+          "link": 5
+        },
+        {
+          "name": "room_preset",
+          "type": "COMBO",
+          "widget": {
+            "name": "room_preset"
+          },
+          "link": 6
+        },
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "Prompt",
+          "type": "STRING",
+          "links": [7]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Koshi_AKUSPACEPrompt"
+      },
+      "widgets_values": [
+        "Room",
+        "Moderate",
+        "medium_room",
+        "mid",
+        "day",
+        "low",
+        "female spoken voice"
+      ],
+      "title": "AKUSPACE prompt from the built room (ComfyUI-Koshi-Nodes)"
+    },
+    {
+      "id": 5,
+      "type": "PreviewAny",
+      "pos": [1400, 80],
+      "size": [380, 120],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "source",
+          "type": "*",
+          "link": 7
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewAny"
+      },
+      "widgets_values": [],
+      "title": "AKUSPACE prompt"
+    },
+    {
+      "id": 6,
+      "type": "PreviewAny",
+      "pos": [980, 380],
+      "size": [380, 100],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "source",
+          "type": "*",
+          "link": 8
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewAny"
+      },
+      "widgets_values": [],
+      "title": "Room summary"
+    },
+    {
+      "id": 7,
+      "type": "PreviewAny",
+      "pos": [980, 520],
+      "size": [380, 100],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "source",
+          "type": "*",
+          "link": 9
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewAny"
+      },
+      "widgets_values": [],
+      "title": "Reverb summary"
+    },
+    {
+      "id": 8,
+      "type": "SaveAudio",
+      "pos": [980, 660],
+      "size": [380, 100],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 10
+        }
+      ],
+      "outputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SaveAudio"
+      },
+      "widgets_values": ["audio/world-builder-room"],
+      "title": "Take audio in the room (wet)"
+    },
+    {
+      "id": 9,
+      "type": "SaveAudio",
+      "pos": [980, 800],
+      "size": [380, 100],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 11
+        }
+      ],
+      "outputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SaveAudio"
+      },
+      "widgets_values": ["audio/world-builder-ir"],
+      "title": "Impulse response of the room"
+    },
+    {
+      "id": 10,
+      "type": "PreviewImage",
+      "pos": [560, 900],
+      "size": [300, 260],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 12
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      },
+      "widgets_values": [],
+      "title": "Canny guidance"
+    },
+    {
+      "id": 11,
+      "type": "PreviewImage",
+      "pos": [560, 1200],
+      "size": [300, 260],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 13
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      },
+      "widgets_values": [],
+      "title": "Depth guidance"
+    },
+    {
+      "id": 12,
+      "type": "DirectorStoryboardGrid",
+      "pos": [40, 900],
+      "size": [420, 320],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "image_1",
+          "type": "IMAGE",
+          "link": 14
+        },
+        {
+          "name": "image_2",
+          "type": "IMAGE",
+          "link": 15
+        },
+        {
+          "name": "image_3",
+          "type": "IMAGE",
+          "link": 16
+        },
+        {
+          "name": "image_4",
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "image_5",
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "image_6",
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "image_7",
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "image_8",
+          "type": "IMAGE",
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "grid",
+          "type": "IMAGE",
+          "links": [17]
+        },
+        {
+          "name": "panels",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DirectorStoryboardGrid"
+      },
+      "widgets_values": [512, 320, "2x2"],
+      "title": "Storyboard sheet: colour, canny, depth"
+    },
+    {
+      "id": 13,
+      "type": "PreviewImage",
+      "pos": [40, 1260],
+      "size": [420, 260],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 17
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewImage"
+      },
+      "widgets_values": [],
+      "title": "Storyboard grid"
+    },
+    {
+      "id": 14,
+      "type": "LoadAudio",
+      "pos": [1400, 340],
+      "size": [380, 120],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "AUDIO",
+          "type": "AUDIO",
+          "links": [18]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadAudio"
+      },
+      "widgets_values": ["dj_dry_voice.wav"],
+      "title": "Any voice (pick a WAV) \u2192 the same room"
+    },
+    {
+      "id": 15,
+      "type": "DirectorSceneReverb",
+      "pos": [1400, 500],
+      "size": [380, 420],
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 18
+        },
+        {
+          "name": "recipe",
+          "type": "STRING",
+          "link": 19
+        }
+      ],
+      "outputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": [20]
+        },
+        {
+          "name": "impulse_response",
+          "type": "AUDIO",
+          "links": []
+        },
+        {
+          "name": "summary",
+          "type": "STRING",
+          "links": [21]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DirectorSceneReverb"
+      },
+      "widgets_values": [
+        1.0,
+        1.0,
+        0.3,
+        0.0,
+        0.5,
+        0.5,
+        1.0,
+        "none",
+        6.0,
+        0,
+        "fixed",
+        0.0,
+        "",
+        ""
+      ],
+      "title": "Reverb: that voice in the room"
+    },
+    {
+      "id": 16,
+      "type": "SaveAudio",
+      "pos": [1820, 500],
+      "size": [380, 100],
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 20
+        }
+      ],
+      "outputs": [
+        {
+          "name": "audio",
+          "type": "AUDIO",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SaveAudio"
+      },
+      "widgets_values": ["audio/world-builder-voice"],
+      "title": "Voice in the room (wet)"
+    },
+    {
+      "id": 17,
+      "type": "PreviewAny",
+      "pos": [1820, 640],
+      "size": [380, 100],
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "source",
+          "type": "*",
+          "link": 21
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewAny"
+      },
+      "widgets_values": [],
+      "title": "Voice reverb summary"
+    }
+  ],
+  "links": [
+    [1, 1, 3, 2, 0, "STRING"],
+    [2, 1, 3, 3, 1, "STRING"],
+    [3, 1, 1, 3, 0, "AUDIO"],
+    [4, 2, 4, 4, 0, "COMBO"],
+    [5, 2, 5, 4, 1, "COMBO"],
+    [6, 2, 6, 4, 2, "COMBO"],
+    [7, 4, 0, 5, 0, "STRING"],
+    [8, 2, 3, 6, 0, "STRING"],
+    [9, 3, 2, 7, 0, "STRING"],
+    [10, 3, 0, 8, 0, "AUDIO"],
+    [11, 3, 1, 9, 0, "AUDIO"],
+    [12, 1, 5, 10, 0, "IMAGE"],
+    [13, 1, 4, 11, 0, "IMAGE"],
+    [14, 1, 0, 12, 0, "IMAGE"],
+    [15, 1, 5, 12, 1, "IMAGE"],
+    [16, 1, 4, 12, 2, "IMAGE"],
+    [17, 12, 0, 13, 0, "IMAGE"],
+    [18, 14, 0, 15, 0, "AUDIO"],
+    [19, 1, 3, 15, 1, "STRING"],
+    [20, 15, 0, 16, 0, "AUDIO"],
+    [21, 15, 2, 17, 0, "STRING"]
+  ],
+  "groups": [
+    {
+      "title": "1. Build the room, capture a take with its voice",
+      "bounding": [20, 20, 500, 520],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "title": "2. The same room drives the sound: AKUSPACE preset (LoRA route) and computed reverb (DSP route)",
+      "bounding": [540, 20, 1700, 860],
+      "color": "#8A8",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "title": "3. Guidance for the picture: canny, depth, storyboard",
+      "bounding": [20, 860, 860, 680],
+      "color": "#a1309b",
+      "font_size": 24,
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.55,
+      "offset": [0, 0]
+    }
+  },
+  "version": 0.4
+}

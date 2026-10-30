@@ -1,0 +1,109 @@
+{
+  "version": 1,
+  "stage": "used",
+  "usage": {
+    "purpose": "demo",
+    "policy": "any-licensed"
+  },
+  "scope": "Caller-supplied inventory plus known dependencies; not an audit or legal clearance. Models, API terms, fonts, music, images and unlisted dependencies require separate evidence.",
+  "needsReview": true,
+  "rows": [
+    {
+      "id": "transitions-ui-generation",
+      "name": "Transitions.dev / UI generation",
+      "author": "Jakub Antalik",
+      "license": "LicenseRef-Transitions-dev",
+      "source": "https://github.com/Jakubantalik/transitions.dev",
+      "version": "7189cbaeb284bd5a7c8f2d3260f449fea1d547e2",
+      "checked": "2026-10-23",
+      "decision": "conditions",
+      "reason": "Retain custom licence and credit. Personal/commercial product use permitted; competing motion-library redistribution restricted. Template/theme distribution has separate plan conditions.",
+      "dependency": false
+    },
+    {
+      "id": "three",
+      "name": "Three.js",
+      "author": "Three.js authors",
+      "license": "MIT",
+      "source": "https://github.com/mrdoob/three.js",
+      "version": "0.180.0",
+      "checked": "2026-10-23",
+      "decision": "conditions",
+      "reason": "Preserve copyright and MIT licence. Models, textures and example assets have separate rights.",
+      "dependency": false
+    },
+    {
+      "id": "geist",
+      "name": "Geist",
+      "author": "Vercel",
+      "license": "OFL-1.1",
+      "source": "https://github.com/vercel/geist-font",
+      "version": "75d647056bcbd9eaba3a14b1b58290d0692685d6",
+      "checked": "2026-10-23",
+      "decision": "conditions",
+      "reason": "Retain OFL and copyright; do not sell font by itself; observe reserved font names when modifying.",
+      "dependency": false
+    },
+    {
+      "id": "ibm-plex-mono",
+      "name": "IBM Plex Mono",
+      "author": "IBM",
+      "license": "OFL-1.1",
+      "source": "https://github.com/IBM/plex",
+      "version": "5.3.0",
+      "checked": "2026-10-23",
+      "decision": "conditions",
+      "reason": "Retain OFL and copyright; do not sell font by itself; observe reserved font names when modifying.",
+      "dependency": false
+    },
+    {
+      "id": "nokia-cellphone-local",
+      "name": "nokia-cellphone-local",
+      "author": "Unverified",
+      "license": "Unknown",
+      "source": null,
+      "version": null,
+      "checked": null,
+      "decision": "review",
+      "reason": "Unknown component or asset rights. Verify exact version, licence, source and intended use.",
+      "dependency": false
+    },
+    {
+      "id": "explorers-local",
+      "name": "explorers-local",
+      "author": "Unverified",
+      "license": "Unknown",
+      "source": null,
+      "version": null,
+      "checked": null,
+      "decision": "review",
+      "reason": "Unknown component or asset rights. Verify exact version, licence, source and intended use.",
+      "dependency": false
+    },
+    {
+      "id": "quaternius-ecctrl-character",
+      "name": "quaternius-ecctrl-character",
+      "author": "Unverified",
+      "license": "Unknown",
+      "source": null,
+      "version": null,
+      "checked": null,
+      "decision": "review",
+      "reason": "Unknown component or asset rights. Verify exact version, licence, source and intended use.",
+      "dependency": false
+    },
+    {
+      "id": "genobi-openai-character-sheet",
+      "name": "genobi-openai-character-sheet",
+      "author": "Unverified",
+      "license": "Unknown",
+      "source": null,
+      "version": null,
+      "checked": null,
+      "decision": "review",
+      "reason": "Unknown component or asset rights. Verify exact version, licence, source and intended use.",
+      "dependency": false
+    }
+  ],
+  "notes": "\n## Signal taste reel\n\n24-second silent 1920×1080, 30 fps capture of three local Genobi presets and the creator-credit end card.\n\n- 0–6s: prepared Scrolls character sheet, UI build.\n- 6–11s: gallery, Signal teaser.\n- 11–19s: existing Ecctrl / Quaternius GLB, character reveal with Three.js AsciiEffect.\n- 19–24s: creator credits.\n\nThe first two clips are inert snapshots; the GLB uses an embedded idle animation and an orbital turntable. No paid generation ran. Build annotations are decorative.\n\n## Asset and font evidence\n\n- Existing character sheet: AI-generated with OpenAI as recorded in Genobi’s Scrolls example metadata and LICENCES.md. No new API call.\n- Character/animation: existing public/world-assets/AnimationLibrary.glb. Ecctrl MIT and Quaternius animation CC0; retain public/world-assets/NOTICE.md and licence files.\n- Nokia Cellphone FC Small: Zeh Fernando’s local font, author notice permits free use/distribution but not sale of the font. No binary bundled.\n- Explorers: local Rémi Bordet / Studio Innate font appeared in the captured Scrolls heading. Commercial/web distribution rights must be checked against the holder’s purchased licence. No binary bundled. New default UI headings use Instrument Sans.\n- Instrument Sans: installed OFL dependency used by the app; see LICENCES-npm.md.\n\nThese asset IDs remain review entries in the automated report because its curated library index does not independently verify asset rights. This record describes what ran, not blanket clearance.\n\nRecommendations on the end card (Paper, Alien.js/Space.js, GlyphCSS, PixiJS, Krbn, Three Plotter Renderer) were not used to render this reel. Uncommon Web / Teknium is collection inspiration. Original Genobi integration and compositions are MIT; Transitions.dev keeps its own custom licence.\n"
+}

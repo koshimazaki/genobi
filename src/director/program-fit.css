@@ -1,0 +1,81 @@
+/* The panel owns scrolling. Prompt and monitors have natural minimum sizes,
+   so shortening a panel scrolls its content instead of painting over siblings.
+   The canvas backing store remains the composition's exact export size. */
+[data-preset="editor"] .genobi-panel-stage:has(.dir-program-row) {
+  display: flex;
+  flex-direction: column;
+}
+[data-preset="editor"]
+  .genobi-panel-stage:has(.dir-program-row)
+  > .genobi-panel-content,
+[data-preset="editor"] .genobi-panel-stage .genobi-host:has(.dir-program-row),
+[data-preset="editor"]
+  .genobi-panel-stage
+  .genobi-host
+  > div:has(> .dir-program-row) {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+}
+.dir-program-row {
+  flex: 0 0 auto;
+  min-height: 0;
+}
+.dir-monitor-panes > .dir-stage {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+/* Beats the shell's fixed Editor canvas height and the stage's own inline
+   aspect and max-height, which held the preview at one size. The basis is
+   the old natural height, so an unresized row looks as it did. */
+.genobi-shell[data-preset]
+  .genobi-panel-stage
+  .genobi-panel-content
+  .dir-program-row
+  > .dir-monitor-panes
+  > .dir-stage
+  > canvas,
+.dir-monitor-panes > .dir-stage > canvas {
+  flex: 0 0 auto;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: var(--editor-canvas-height, clamp(140px, 20dvh, 240px)) !important;
+  min-height: 120px;
+  max-height: none !important;
+  aspect-ratio: auto !important;
+  object-fit: contain;
+  margin: 0;
+}
+.dir-program-row .dir-project-direction .dir-prompt-field {
+  min-height: 0;
+}
+.dir-program-row .dir-project-direction .dir-prompt-field textarea {
+  min-height: 120px;
+  resize: none;
+}
+/* Before the first frame is drawn the canvas is blank; say why. */
+.dir-stage-pending {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  font: 10px var(--mono);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+@media (max-width: 850px) {
+  /* Stacked: both the preview and the prompt take a share of a taller row. */
+  /* div.: outranks editor-layout.css's grid whatever the load order. */
+  div.dir-program-row {
+    display: flex;
+    flex-direction: column;
+  }
+  .dir-monitor-panes > .dir-stage,
+  .dir-program-row > .dir-project-direction {
+    flex: 1 1 auto;
+  }
+}

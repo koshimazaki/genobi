@@ -1,0 +1,128 @@
+.arena-screen .arena-enlarge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  padding: 5px;
+  min-height: 28px;
+  background: var(--badge-bg);
+}
+.arena-card .arena-screen :is(video, img) {
+  cursor: zoom-in;
+}
+/* A movable, resizable window: `useWindowFrame` sets left, top, width, height. */
+.arena-lightbox {
+  position: fixed;
+  inset: auto;
+  margin: 0;
+  max-width: none;
+  max-height: none;
+  box-sizing: border-box;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-panel);
+  color: var(--text);
+  background: var(--bg);
+}
+.arena-lightbox::backdrop {
+  /* Light enough to see the comparison behind a moved window. */
+  background: rgb(0 0 0 / 55%);
+}
+.arena-lightbox-content {
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  height: 100%;
+  padding: 18px;
+  overflow: auto;
+}
+.arena-window-bar {
+  cursor: move;
+  touch-action: none;
+  user-select: none;
+}
+.arena-window-bar button {
+  cursor: pointer;
+}
+.arena-lightbox .arena-window-move {
+  cursor: move;
+  touch-action: none;
+}
+.arena-lightbox .arena-window-resize {
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  min-height: 28px;
+  padding: 6px;
+  cursor: nwse-resize;
+  touch-action: none;
+  background: var(--badge-bg);
+}
+.arena-lightbox-grid figcaption button {
+  min-height: 26px;
+  padding: 3px 8px;
+  font-size: 11px;
+}
+.arena-lightbox .arena-heading {
+  margin-bottom: 16px;
+}
+.arena-lightbox-grid {
+  display: grid;
+  flex: 1 1 auto;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: minmax(120px, 1fr);
+  gap: 12px;
+  min-height: 0;
+}
+.arena-lightbox-grid[data-count="1"] {
+  grid-template-columns: minmax(0, 1fr);
+}
+.arena-lightbox-grid figure {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  min-width: 0;
+  min-height: 0;
+}
+.arena-lightbox-grid figcaption {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 0;
+  font: 12px var(--mono);
+}
+.arena-lightbox-grid figcaption span {
+  margin-right: auto;
+  color: var(--muted);
+}
+/* Each clip fills its cell as the window grows or shrinks. */
+.arena-lightbox-grid .arena-screen {
+  flex: 1 1 auto;
+  min-height: 0;
+  aspect-ratio: auto;
+}
+.arena-lightbox-empty {
+  padding: 24px;
+  color: var(--muted);
+}
+/* Phone widths: the window fills the screen; there is no room to move it. */
+.arena-lightbox[data-compact] {
+  inset: 0;
+  width: 100vw;
+  height: 100dvh;
+  border-radius: 0;
+}
+@media (max-width: 540px) {
+  .arena-lightbox-content {
+    padding: 10px;
+  }
+  .arena-lightbox-grid {
+    grid-template-columns: minmax(0, 1fr);
+    grid-auto-rows: minmax(160px, auto);
+  }
+  .arena-lightbox-grid .arena-screen {
+    aspect-ratio: 16/9;
+  }
+}

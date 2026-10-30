@@ -1,0 +1,41 @@
+/* Send to Director / Add to assets: the button and what happened. */
+.send-director {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-4);
+}
+.send-director-status {
+  flex-basis: 100%;
+  color: var(--readout);
+  font-size: 10px;
+  line-height: 1.5;
+}
+.send-director-status .text-button {
+  margin-left: 8px;
+}
+/*
+ * On a gallery or Library card the button is an icon in the card's action
+ * row, and the answer is a full-width line under that row, inside the card,
+ * so Undo is never clipped by the asset rail.
+ */
+.send-director[data-icon] {
+  display: contents;
+}
+.clip-meta:has(.send-director[data-icon] > .send-director-status) {
+  flex-wrap: wrap;
+}
+.clip-actions:has(> .send-director[data-icon] > .send-director-status) {
+  flex: 1 1 100%;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  min-width: 0;
+}
+.send-director[data-icon] > .send-director-status {
+  order: 99;
+  flex-basis: 100%;
+  min-width: 0;
+  color: var(--text);
+  white-space: normal;
+  overflow-wrap: anywhere;
+}

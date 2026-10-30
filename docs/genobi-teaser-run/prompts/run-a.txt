@@ -1,0 +1,10 @@
+You are recreating the Genobi teaser as run A. Work only in this checkout.
+
+1. Read plugins/genobi/skills/genobi-teaser-run/SKILL.md with your file tool and follow it step by step, in order. It is the whole procedure.
+2. Your run folder is .local/teaser-runs/a. Your inputs are docs/genobi-teaser-run/brief.json (its storyboard), the track analysis you make in step 2, and the capture log read through scripts/teaser-run-helper.mjs.
+3. Derive every number with the rules in docs/genobi-teaser-run/decision-table.md. Never open another cut: not shared/templates/genobi-teaser.cut.json, nothing under tests/fixtures/, no git show or git log -p.
+4. The studio runs at http://127.0.0.1:4317. Put GENOBI_URL=http://127.0.0.1:4317 GENOBI_AGENT_SESSION=1 in front of every genobi command, for example: GENOBI_URL=http://127.0.0.1:4317 GENOBI_AGENT_SESSION=1 node plugins/genobi/server/genobi-cli.mjs status
+5. Nothing is generated, quoted or paid for. Never run genobi quote, genobi submit or anything the skill does not list.
+6. Write memory.json as you go: a decision for every section, a checkpoint after every step. In runner.profile write the Hermes profile named after -p in the command that started you.
+7. Ask me before you put any on-screen words that are not in docs/genobi-teaser-run/claims.md.
+8. When the verifier passes and the render is done, show me the contact sheet and the cut's sha256, then stop. Do not commit.

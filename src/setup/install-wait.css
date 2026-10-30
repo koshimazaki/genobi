@@ -1,0 +1,90 @@
+/*
+ * Setup's install wait (InstallWait.tsx): the installer's progress and the
+ * install's sentences on one panel, with the deck's Rain drawn faintly
+ * behind them. The rain is decoration at low contrast against the dialog's
+ * surface; the text above it keeps its own colours.
+ */
+.install-wait {
+  display: grid;
+  gap: 14px;
+  margin: 16px 0;
+}
+.install-wait__panel {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+  isolation: isolate;
+}
+.install-wait__rain {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  margin: 0;
+  padding: 6px 8px;
+  font: 12px/1.05 var(--mono);
+  letter-spacing: 0;
+  white-space: pre;
+  color: var(--accent);
+  opacity: 0.1;
+  pointer-events: none;
+  user-select: none;
+}
+.install-wait__content {
+  padding: 4px 16px 14px;
+}
+.install-wait .voice-install-progress,
+.install-wait .setup-hermes-profile {
+  margin: 0;
+}
+.install-messages {
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+}
+.install-messages__text {
+  margin: 0 0 10px;
+  min-height: 3lh;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--text);
+}
+.install-messages__controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.install-messages__controls small {
+  flex: 1;
+  color: var(--muted);
+  font: 11px var(--mono);
+}
+.genobi-setup .install-messages__controls button {
+  padding: 6px 12px;
+  font-size: 12px;
+}
+.install-video {
+  margin: 0;
+  display: grid;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+}
+.install-video figcaption {
+  font-size: 12px;
+  color: var(--soft);
+}
+.install-video video {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 10px;
+  background: #000;
+}
+@media (prefers-reduced-motion: reduce) {
+  .install-wait__rain {
+    opacity: 0.06;
+  }
+}

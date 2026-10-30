@@ -1,0 +1,27 @@
+.s3d-creature label {
+  display: grid;
+  gap: 6px;
+  font: 10px var(--mono);
+  color: var(--muted);
+}
+.s3d-creature input[type="file"] {
+  width: 100%;
+  min-width: 0;
+  color: var(--soft);
+  font: inherit;
+}
+.s3d-creature input::file-selector-button {
+  min-height: 30px;
+  margin-right: 8px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--soft);
+  font: inherit;
+  cursor: pointer;
+}
+.s3d-creature p {
+  margin: 0;
+  color: var(--muted);
+  font: 10px/1.5 var(--mono);
+}

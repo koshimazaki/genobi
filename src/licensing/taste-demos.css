@@ -1,0 +1,212 @@
+@font-face {
+  font-family: "Taste Geist";
+  src: url("/motion/fonts/geist/Geist-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+.taste-preview {
+  margin: 0 0 24px;
+}
+.taste-demo-stage {
+  height: 340px;
+  overflow: hidden;
+  border: 1px solid var(--taste-rule);
+  border-radius: 8px;
+  background: #101316;
+  position: relative;
+}
+.taste-demo-stage iframe,
+.taste-demo-stage video {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  object-fit: contain;
+}
+.taste-demo-rest {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+  background: radial-gradient(ellipse at top left, #333c2b, #101316 70%);
+}
+.taste-demo-rest > span {
+  font-size: 24px;
+}
+.taste-demo-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding-top: 12px;
+  font-size: 12px;
+}
+.taste-preview p {
+  font-size: 12px;
+  margin: 10px 0 0;
+}
+.taste-preview .taste-demo-credit {
+  font-size: 10px;
+}
+.taste-reference-link {
+  display: inline-block;
+  margin: 12px 0;
+}
+.taste-ripple {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: 4px;
+  height: 100%;
+  align-content: center;
+  padding: 24px 12px;
+  background: radial-gradient(ellipse, #292c20, #101316);
+}
+.taste-ripple button {
+  padding: 0;
+  aspect-ratio: 1;
+  min-height: 28px;
+  border: 5px solid #101316;
+  border-radius: 50%;
+  background: #d5ff70;
+}
+.taste-ripple button:nth-child(3n) {
+  background: #b6a3e8;
+}
+.taste-ripple button:nth-child(5n) {
+  background: #f2c59a;
+}
+.taste-ribbons {
+  width: 100%;
+  height: 100%;
+}
+.taste-ribbons canvas {
+  display: block;
+  max-width: 100%;
+}
+.taste-type-sample {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 16px;
+  height: 100%;
+  padding: 24px;
+  background: #dedccf;
+  color: #23271e;
+}
+.taste-type-sample > span {
+  font:
+    10px "IBM Plex Mono",
+    monospace;
+  letter-spacing: 1px;
+}
+.taste-type-sample textarea {
+  background: transparent;
+  border: 0;
+  color: inherit;
+  resize: none;
+  width: 100%;
+  min-width: 0;
+  flex: 1;
+  font-size: clamp(22px, 3vw, 38px);
+  line-height: 1.2;
+}
+.taste-type-mono textarea {
+  font-family: "IBM Plex Mono", monospace;
+}
+.taste-type-geist textarea {
+  font-family: "Taste Geist", sans-serif;
+}
+.taste-uncommon {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  padding: 16px 0;
+  border-top: 1px solid var(--taste-rule);
+  border-bottom: 1px solid var(--taste-rule);
+  margin: 24px 0;
+}
+.taste-uncommon .taste-uncommon-wordmark {
+  font-size: 22px;
+  letter-spacing: -1px;
+  text-decoration: none;
+}
+.taste-uncommon p {
+  font-size: 12px;
+  margin: 0;
+  flex: 1 1 220px;
+}
+.taste-uncommon .taste-select {
+  margin: 0;
+}
+@media (max-width: 650px) {
+  .taste-demo-stage {
+    height: 320px;
+  }
+  .taste-type-sample {
+    padding: 20px;
+  }
+}
+.taste-demo-stage > img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+}
+.taste-media-fallback {
+  padding: 24px;
+}
+.taste-workflow {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  gap: 12px;
+  padding: 20px;
+  background: linear-gradient(145deg, #273528, #101316 75%);
+}
+.taste-workflow-art {
+  display: flex;
+  gap: 8px;
+}
+.taste-workflow-art span {
+  flex: 1;
+  height: 60px;
+  display: grid;
+  place-items: center;
+  font:
+    18px "IBM Plex Mono",
+    monospace;
+  color: #7a8779;
+  border: 1px solid #485447;
+  border-radius: 3px;
+}
+.taste-workflow-art .is-active {
+  background: #d5ff70;
+  color: #101316;
+}
+.taste-workflow strong {
+  font-size: 22px;
+}
+.taste-workflow small {
+  font-size: 10px;
+  color: var(--taste-soft);
+}
+.taste-workflow-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.taste-workflow-steps button {
+  padding: 6px 9px;
+  min-height: 32px;
+  font-size: 11px;
+}
+.taste-workflow-steps button[aria-pressed="true"] {
+  border-color: #d5ff70;
+}

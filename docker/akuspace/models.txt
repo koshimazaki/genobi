@@ -1,0 +1,9 @@
+# Model files fetch-models downloads into /data/models: <folder> <url>.
+# LTX-2.5 is gated: accept the licence at https://huggingface.co/Lightricks/LTX-2.5
+# with the account HF_TOKEN belongs to. The AKUSPACE LoRA repository is public.
+diffusion_models https://huggingface.co/Lightricks/LTX-2.5/resolve/main/diffusion_models/ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors
+text_encoders https://huggingface.co/Lightricks/LTX-2.5/resolve/main/text_encoders/gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors
+vae https://huggingface.co/Lightricks/LTX-2.5/resolve/main/vae/ltx-2.5-video-vae-bf16.safetensors
+vae https://huggingface.co/Lightricks/LTX-2.5/resolve/main/vae/ltx-2.5-audio-vae-bf16.safetensors
+latent_upscale_models https://huggingface.co/Lightricks/LTX-2.5/resolve/main/latent_upscale_models/ltx-2.5-latent-spatial-upscaler-x2-bf16-1.0.safetensors
+loras https://huggingface.co/KoshiMazaki/akuspace-ltx25/resolve/main/akuspace-ltx25-v0.5.safetensors

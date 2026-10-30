@@ -1,0 +1,146 @@
+{
+  "width": 1024,
+  "height": 576,
+  "frames": 145,
+  "fov": 22,
+  "azimuth": -30,
+  "elevation": 19.290046219188735,
+  "radius": 10.594810050208546,
+  "targetX": 0,
+  "targetZ": 0,
+  "targetY": 1.15,
+  "orbit": 60,
+  "dolly": 0,
+  "light": 2,
+  "patternScale": 0.13,
+  "intensity": 1,
+  "speed": 1,
+  "depthNear": 0.1,
+  "depthFar": 50,
+  "version": 1,
+  "scene": "stage",
+  "avatar": true,
+  "avatarAsset": "mannequin",
+  "avatarMotion": [
+    {
+      "clip": "idle",
+      "seconds": 1.5
+    },
+    {
+      "clip": "hit",
+      "seconds": 0.5
+    },
+    {
+      "clip": "fall",
+      "seconds": 4
+    }
+  ],
+  "creatureReference": null,
+  "avatarPose": {
+    "x": 0,
+    "y": 0,
+    "z": 0,
+    "yaw": 0
+  },
+  "layout": {},
+  "textures": {},
+  "cameraCurve": "linear",
+  "cameraShot": "orbit60",
+  "elevationEnd": null,
+  "bandEnvelopes": {
+    "low": [],
+    "mid": [],
+    "high": []
+  },
+  "audioRoutes": [
+    {
+      "id": "route-1",
+      "enabled": true,
+      "source": "level",
+      "target": "primitives",
+      "property": "scale",
+      "amount": 2,
+      "threshold": 0,
+      "invert": false,
+      "lerp": 1
+    },
+    {
+      "id": "route-2",
+      "enabled": true,
+      "source": "level",
+      "target": "neuro",
+      "property": "scale",
+      "amount": 2,
+      "threshold": 0,
+      "invert": false,
+      "lerp": 1
+    }
+  ],
+  "fps": 24,
+  "seconds": null,
+  "prompt": "Move library · fall: A figure is struck and falls to the cathedral floor; slow orbit.",
+  "background": "#171e29",
+  "envelope": [],
+  "objects": [
+    {
+      "id": "room-floor",
+      "shape": "plane",
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "scale": 2,
+      "scaleX": 3,
+      "scaleY": 7.5,
+      "rotation": 0,
+      "rotationX": -1.5707963267948966,
+      "spin": 0,
+      "color": "#b9b2a3",
+      "prompt": "pews"
+    },
+    {
+      "id": "room-north",
+      "shape": "plane",
+      "x": 0,
+      "y": 9,
+      "z": -15,
+      "scale": 2,
+      "scaleX": 3,
+      "scaleY": 4.5,
+      "rotation": 0,
+      "rotationX": 0,
+      "spin": 0,
+      "color": "#b9b2a3",
+      "prompt": "stone"
+    },
+    {
+      "id": "room-east",
+      "shape": "plane",
+      "x": 6,
+      "y": 9,
+      "z": 0,
+      "scale": 2,
+      "scaleX": 7.5,
+      "scaleY": 4.5,
+      "rotation": 1.5707963267948966,
+      "rotationX": 0,
+      "spin": 0,
+      "color": "#b9b2a3",
+      "prompt": "stone"
+    },
+    {
+      "id": "room-west",
+      "shape": "plane",
+      "x": -6,
+      "y": 9,
+      "z": 0,
+      "scale": 2,
+      "scaleX": 7.5,
+      "scaleY": 4.5,
+      "rotation": 1.5707963267948966,
+      "rotationX": 0,
+      "spin": 0,
+      "color": "#b9b2a3",
+      "prompt": "stone"
+    }
+  ]
+}

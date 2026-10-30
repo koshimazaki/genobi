@@ -1,0 +1,149 @@
+{
+  "1": {
+    "class_type": "DirectorSceneCapture",
+    "inputs": {
+      "audio_file": "",
+      "capture_file": "world-p03.webm",
+      "depth_file": "world-p03-depth.webm",
+      "recipe_json": "{\"version\": 1, \"fps\": 24, \"width\": 1024, \"height\": 576, \"frames\": 17, \"fov\": 24, \"azimuth\": 0, \"elevation\": 19.093492000485615, \"radius\": 13.7568}"
+    }
+  },
+  "10": {
+    "class_type": "PreviewImage",
+    "inputs": {
+      "images": ["1", 5]
+    }
+  },
+  "11": {
+    "class_type": "PreviewImage",
+    "inputs": {
+      "images": ["1", 4]
+    }
+  },
+  "12": {
+    "class_type": "DirectorStoryboardGrid",
+    "inputs": {
+      "cell_height": 320,
+      "cell_width": 512,
+      "image_1": ["1", 0],
+      "image_2": ["1", 5],
+      "image_3": ["1", 4],
+      "layout": "2x2"
+    }
+  },
+  "13": {
+    "class_type": "PreviewImage",
+    "inputs": {
+      "images": ["12", 0]
+    }
+  },
+  "14": {
+    "class_type": "LoadAudio",
+    "inputs": {
+      "audio": "dj_dry_voice.wav"
+    }
+  },
+  "15": {
+    "class_type": "DirectorSceneReverb",
+    "inputs": {
+      "audio": ["14", 0],
+      "damping_high": 0.3,
+      "decay_scale": 1.0,
+      "dry": 1.0,
+      "early_late_balance": 0.5,
+      "listener_position": "",
+      "material_override": "none",
+      "max_ir_seconds": 6.0,
+      "output_gain_db": 0.0,
+      "pre_delay_ms": 0.0,
+      "recipe": ["1", 3],
+      "seed": 0,
+      "size_scale": 1.0,
+      "source_position": "",
+      "wet": 0.5
+    }
+  },
+  "16": {
+    "class_type": "SaveAudio",
+    "inputs": {
+      "audio": ["15", 0],
+      "filename_prefix": "audio/world-builder-voice"
+    }
+  },
+  "17": {
+    "class_type": "PreviewAny",
+    "inputs": {
+      "source": ["15", 2]
+    }
+  },
+  "2": {
+    "class_type": "DirectorSceneAcoustics",
+    "inputs": {
+      "recipe": ["1", 3]
+    }
+  },
+  "3": {
+    "class_type": "DirectorSceneReverb",
+    "inputs": {
+      "audio": ["1", 1],
+      "damping_high": 0.3,
+      "decay_scale": 1.0,
+      "dry": 1.0,
+      "early_late_balance": 0.5,
+      "listener_position": "",
+      "material_override": "none",
+      "max_ir_seconds": 6.0,
+      "output_gain_db": 0.0,
+      "pre_delay_ms": 0.0,
+      "recipe": ["1", 3],
+      "seed": 0,
+      "size_scale": 1.0,
+      "source_position": "",
+      "wet": 0.35
+    }
+  },
+  "4": {
+    "class_type": "Koshi_AKUSPACEPrompt",
+    "inputs": {
+      "application": ["2", 5],
+      "effect_level": "mid",
+      "outdoor_time": "day",
+      "room_preset": ["2", 6],
+      "sfx_level": "low",
+      "source_type": "male spoken voice",
+      "space_mode": ["2", 4]
+    }
+  },
+  "5": {
+    "class_type": "PreviewAny",
+    "inputs": {
+      "source": ["4", 0]
+    }
+  },
+  "6": {
+    "class_type": "PreviewAny",
+    "inputs": {
+      "source": ["2", 3]
+    }
+  },
+  "7": {
+    "class_type": "PreviewAny",
+    "inputs": {
+      "source": ["3", 2]
+    }
+  },
+  "8": {
+    "class_type": "SaveAudio",
+    "inputs": {
+      "audio": ["3", 0],
+      "filename_prefix": "audio/world-builder-room"
+    }
+  },
+  "9": {
+    "class_type": "SaveAudio",
+    "inputs": {
+      "audio": ["3", 1],
+      "filename_prefix": "audio/world-builder-ir"
+    }
+  }
+}

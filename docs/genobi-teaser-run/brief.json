@@ -1,0 +1,361 @@
+{
+  "id": "genobi-teaser",
+  "text": "Make the Genobi teaser: two minutes of the studio in use, cut to the owner's track Trailer-Genobi at its own tempo, at 1920 x 1080, built like the Dimensions mix (a cut written as data that the Director renders). Go through the studio's functions so the viewer sees it work: camera moves onto one readable detail per beat, the pointer and clicks, focus boxes, loaders and generated titles; camera controls at 0:27; the owner's ComfyUI recording with ★ Three.js where the vocal sings it at 0:36; a Paper Shaders beat and the TASTE LAYER credit; the owner's generations on the drops. End on the Genobi end card with the music credit. Nothing is generated, quoted or paid for.",
+  "owner": "Koshi",
+  "givenOn": "2026-10-30",
+  "inputs": {
+    "track": "public/media/director-templates/genobi-teaser/teaser-track.mp3",
+    "footage": "public/media/director-templates/genobi-teaser/ui-*.mp4 (4K), with the pointer log in docs/genobi-teaser-footage.json; ui-comfy is the owner's own ComfyUI recording and has no log",
+    "generations": "the template's media list (shared/templates/genobi-teaser.ts): character, product, audio-visual, dimensions, signal, library-01, library-03, mix-01, mix-02, mix-03",
+    "stills": "/media/director-templates/genobi-teaser/still-character.jpg, still-motorbike.jpg and still-bloom.jpg"
+  },
+  "constraints": [
+    "At most 120 s and 128 layers (shots + overlays + the track).",
+    "Every cut on the analysed beat grid; shots on whole beats.",
+    "On-screen words only from the approved list (docs/genobi-teaser-run/claims.md) unless the owner approves new ones.",
+    "Interface shots and words hold at least 1.3 s.",
+    "No generation, no quote, no paid call."
+  ],
+  "storyboard": {
+    "why": "The owner's story, segment by segment: what the viewer sees in what order, which actions of each studio recording to show (labels from docs/genobi-teaser-footage.json), where a box or a callout names a detail and which approved words go where. Segment edges are the track's required cuts and the owner's timestamps (camera controls 0:27 = beat 60, Three.js 0:36 = beat 81, out to ComfyUI 0:38 = beat 86). It gives no source times, lengths or overlay numbers for the studio recordings: the run derives those with docs/genobi-teaser-run/decision-table.md. The owner's ComfyUI recording has no capture log, so its source times and moves are the owner's direction, given here.",
+    "segments": [
+      {
+        "section": "open",
+        "from": 0,
+        "to": 12,
+        "cards": ["title"],
+        "status": ["Booting the studio", "Studio ready"]
+      },
+      {
+        "section": "first-shot",
+        "from": 12,
+        "to": 20,
+        "cards": ["reveal still-character.jpg"],
+        "status": ["Generating shot 01 · FLUX 3", "Shot ready"]
+      },
+      {
+        "section": "generations",
+        "from": 20,
+        "to": 36,
+        "shots": [
+          {
+            "asset": "character"
+          },
+          {
+            "asset": "product"
+          },
+          {
+            "asset": "audio-visual"
+          }
+        ],
+        "hud": "GENOBI // CUT IN GENOBI",
+        "slam": {
+          "text": "MAKE",
+          "endsAt": 36
+        }
+      },
+      {
+        "section": "make",
+        "from": 36,
+        "to": 60,
+        "shots": [
+          {
+            "asset": "ui-gallery",
+            "shows": ["gallery", "character card"]
+          },
+          {
+            "asset": "ui-camera",
+            "shows": ["families", "h3 family"],
+            "box": {
+              "on": "upscale family",
+              "words": "MODEL FAMILIES · LTX FLUX H3 UPSCALE"
+            }
+          },
+          {
+            "asset": "ui-camera",
+            "shows": ["prompt", "prompt"]
+          }
+        ]
+      },
+      {
+        "section": "make",
+        "from": 60,
+        "to": 76,
+        "shots": [
+          {
+            "asset": "ui-camera-control",
+            "shows": ["movements", "arc shot"],
+            "callout": {
+              "words": "CAMERA CONTROLS",
+              "size": 60,
+              "y": 0.9
+            }
+          },
+          {
+            "asset": "ui-camera",
+            "shows": ["quote", "quote"],
+            "box": {
+              "on": "quote",
+              "words": "QUOTED FIRST · NOTHING SPENT UNASKED"
+            },
+            "status": ["Generating · FLUX 3 · 10 s", "Shot ready"]
+          },
+          {
+            "asset": "library-01",
+            "reveal": "still-motorbike.jpg"
+          }
+        ],
+        "slam": {
+          "text": "DIRECT",
+          "endsAt": 76
+        }
+      },
+      {
+        "section": "direct",
+        "from": 76,
+        "to": 81,
+        "shots": [
+          {
+            "asset": "ui-director",
+            "shows": ["play", "play"]
+          }
+        ]
+      },
+      {
+        "section": "direct",
+        "from": 81,
+        "to": 86,
+        "shots": [
+          {
+            "asset": "ui-comfy",
+            "source": 0,
+            "move": {
+              "x": 0.278,
+              "y": 0.506,
+              "zoom": 2.8,
+              "ease": 1,
+              "drift": 0.03,
+              "from": {
+                "x": 0.278,
+                "y": 0.506,
+                "zoom": 2.8
+              }
+            },
+            "callout": {
+              "words": "★ THREE.JS",
+              "size": 96,
+              "y": 0.86
+            }
+          }
+        ]
+      },
+      {
+        "section": "direct",
+        "from": 86,
+        "to": 92,
+        "shots": [
+          {
+            "asset": "ui-comfy",
+            "source": 2.222,
+            "move": {
+              "x": 0.5,
+              "y": 0.5,
+              "zoom": 1,
+              "ease": 3,
+              "drift": 0.02,
+              "from": {
+                "x": 0.278,
+                "y": 0.506,
+                "zoom": 2.8
+              }
+            }
+          }
+        ]
+      },
+      {
+        "section": "direct",
+        "from": 92,
+        "to": 124,
+        "shots": [
+          {
+            "asset": "mix-03"
+          },
+          {
+            "asset": "mix-01"
+          },
+          {
+            "asset": "product"
+          },
+          {
+            "asset": "ui-editor",
+            "shows": ["a clip", "inspector"]
+          },
+          {
+            "asset": "ui-directions",
+            "shows": ["shot and lens", "35mm"],
+            "box": {
+              "on": "low angle",
+              "words": "SHOT & LENS · PER CLIP DIRECTION"
+            }
+          },
+          {
+            "asset": "dimensions"
+          }
+        ]
+      },
+      {
+        "section": "direct",
+        "from": 124,
+        "to": 140,
+        "shots": [
+          {
+            "asset": "ui-directions",
+            "shows": ["close", "send to genobi"],
+            "box": {
+              "on": "send to genobi",
+              "words": "SEND TO GENOBI"
+            }
+          },
+          {
+            "asset": "character"
+          },
+          {
+            "asset": "character"
+          }
+        ],
+        "slam": {
+          "text": "BUILD / WORLDS",
+          "endsAt": 140
+        }
+      },
+      {
+        "section": "build-remix",
+        "from": 140,
+        "to": 156,
+        "shots": [
+          {
+            "asset": "ui-world",
+            "shows": ["scene", "build"]
+          },
+          {
+            "asset": "ui-world",
+            "shows": ["rotate tool", "loop preview"]
+          }
+        ]
+      },
+      {
+        "section": "build-remix",
+        "from": 156,
+        "to": 172,
+        "shots": [
+          {
+            "asset": "ui-agent",
+            "shows": ["genobi", "brief"]
+          },
+          {
+            "asset": "ui-agent",
+            "shows": ["start", "start"],
+            "box": {
+              "on": "brief",
+              "words": "YOUR AGENT · TYPED OR SPOKEN"
+            },
+            "status": [
+              "Brief: a 20 s teaser on the beat",
+              "Nothing runs until you approve"
+            ]
+          }
+        ]
+      },
+      {
+        "section": "build-remix",
+        "from": 172,
+        "to": 192,
+        "cards": ["paper-dither", "space", "reveal-3", "taste"]
+      },
+      {
+        "section": "agents",
+        "from": 192,
+        "to": 224,
+        "shots": [
+          {
+            "asset": "ui-licences",
+            "shows": ["licence", "a library's creator"]
+          },
+          {
+            "asset": "ui-camera",
+            "shows": ["families", "upscale family"],
+            "box": {
+              "on": "upscale family",
+              "words": "OPEN UPSCALER · SEEDVR2"
+            }
+          },
+          {
+            "asset": "ui-camera",
+            "shows": ["prompt", "prompt"]
+          },
+          {
+            "asset": "ui-save",
+            "shows": ["save json", "save json"],
+            "box": {
+              "on": "save json",
+              "words": "SAVE JSON"
+            }
+          },
+          {
+            "asset": "ui-save",
+            "shows": ["director", "save editable project"]
+          }
+        ]
+      },
+      {
+        "section": "agents",
+        "from": 224,
+        "to": 236,
+        "shots": [
+          {
+            "asset": "ui-swords",
+            "shows": ["load a", "load a"],
+            "slam": "COMPARE / REMIX"
+          },
+          {
+            "asset": "ui-scrolls",
+            "shows": ["cell camera", "cell camera"]
+          },
+          {
+            "asset": "mix-02"
+          }
+        ],
+        "slam": {
+          "text": "ONE STUDIO",
+          "endsAt": 236
+        }
+      },
+      {
+        "section": "final-drop",
+        "from": 236,
+        "to": 260,
+        "montage": [
+          "mix-03",
+          "product",
+          "audio-visual",
+          "character",
+          "mix-02",
+          "library-03",
+          "mix-01",
+          "product",
+          "audio-visual",
+          "character",
+          "mix-03",
+          "audio-visual"
+        ],
+        "hud": "GENOBI // CUT ON THE BEAT IN THE DIRECTOR"
+      },
+      {
+        "section": "end-card",
+        "from": 260,
+        "to": 269,
+        "cards": ["end-card"]
+      }
+    ]
+  }
+}

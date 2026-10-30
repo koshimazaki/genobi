@@ -1,0 +1,38 @@
+/* The bubble as one conversation (Box 1.8) and the avatar's new-reply mark. */
+.agent-exchange {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 14px 16px 4px;
+  list-style: none;
+}
+.agent-exchange li {
+  max-width: 92%;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px 8px 8px 2px;
+  background: var(--sunken);
+}
+.agent-exchange li[data-from="person"] {
+  justify-self: end;
+  border-radius: 8px 8px 2px 8px;
+  background: var(--raised);
+}
+.agent-exchange li[data-from="agent"] {
+  border-color: var(--agent-signal);
+}
+.agent-exchange .agent-source {
+  margin-bottom: 4px;
+}
+.agent-exchange p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.agent-launcher[data-unread] .agent-avatar i {
+  display: block;
+  background: var(--readout);
+  box-shadow: 0 0 0 3px var(--accent-ghost);
+}

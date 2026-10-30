@@ -1,0 +1,34 @@
+{
+  "track": "public/media/director-templates/genobi-teaser/teaser-track.mp3",
+  "title": "Trailer-Genobi (the owner's own track, bundled with permission)",
+  "measured": "2026-10-30, with shared/audio-analysis.ts (the code behind genobi audio-analysis and the Editor's beat grid); local CPU, nothing paid",
+  "durationSeconds": 119.597,
+  "bpm": 134.994,
+  "periodSeconds": 0.444465,
+  "firstDownbeatSeconds": 1.775,
+  "beatsPerBar": 4,
+  "confidence": 0.76,
+  "residualMs": 8,
+  "drops": [
+    { "seconds": 7.84, "changeDb": 9.1, "cutBeat": 17.64, "bar": null },
+    { "seconds": 15.981, "changeDb": 7.2, "cutBeat": 35.96, "bar": 36 },
+    { "seconds": 25.636, "changeDb": 5.8, "cutBeat": 57.68, "bar": null },
+    { "seconds": 33.761, "changeDb": 14.1, "cutBeat": 75.96, "bar": 76 },
+    { "seconds": 55.098, "changeDb": 11.6, "cutBeat": 123.97, "bar": 124 },
+    { "seconds": 69.322, "changeDb": 8.4, "cutBeat": 155.97, "bar": 156 },
+    { "seconds": 83.544, "changeDb": 8.5, "cutBeat": 187.97, "bar": 188 },
+    { "seconds": 104.88, "changeDb": 14.1, "cutBeat": 235.98, "bar": 236 }
+  ],
+  "sectionChanges": {
+    "why": "Not every change is a drop the analyser reports: the per-bar NumPy pass in docs/genobi-teaser.md found the biggest change on beat 92 (+15 dB) and the low band dropping out at 136-140 and 232-236; 12, 20 and 260 are the title, the first picture and the end card.",
+    "beats": [12, 20, 92, 140, 260]
+  },
+  "requiredCuts": [12, 20, 36, 76, 92, 124, 140, 156, 188, 236, 260],
+  "cut": {
+    "bpm": 135,
+    "inPointSeconds": -0.037,
+    "fps": 24,
+    "beats": 269,
+    "rule": "The bundled track starts with 37 ms of silence, so a bar line falls on frame 0 and cut beat 4 is the first downbeat (4 x 60 / 135 = 1.778 s, measured 1.775 s). A cut beat is seconds x 135 / 60."
+  }
+}

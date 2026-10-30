@@ -1,0 +1,232 @@
+{
+  "example": "The final drop: twelve two-beat generations, the HUD and a glitch every 8 beats (beats 236-260).",
+  "inputs": {
+    "storyboard": {
+      "section": "final-drop",
+      "from": 236,
+      "to": 260,
+      "montage": [
+        "mix-03",
+        "product",
+        "audio-visual",
+        "character",
+        "mix-02",
+        "library-03",
+        "mix-01",
+        "product",
+        "audio-visual",
+        "character",
+        "mix-03",
+        "audio-visual"
+      ],
+      "hud": "GENOBI // CUT ON THE BEAT IN THE DIRECTOR"
+    },
+    "analysis": {
+      "drop": {
+        "seconds": 104.88,
+        "changeDb": 14.1,
+        "bar": 236
+      }
+    }
+  },
+  "decisions": [
+    {
+      "id": "d-final-drop-1",
+      "section": "final-drop",
+      "choice": "Twelve 2-beat shots in the storyboard's montage order, labels Montage 01-12.",
+      "because": "Rule 2.4; 24 beats / 2 = 12 fills the segment.",
+      "source": "rule"
+    },
+    {
+      "id": "d-final-drop-2",
+      "section": "final-drop",
+      "choice": "Source times continue each asset's earlier uses (mix-03 3.8 s: its first use at 92 was 4 beats from 0 s, r1(0 + 4 x 0.44444 + 2) = 3.8); mix clips cropY 200, wide clips zoom.",
+      "because": "Rule 3.",
+      "source": "rule"
+    },
+    {
+      "id": "d-final-drop-3",
+      "section": "final-drop",
+      "choice": "hud-2 over the 24 beats; glitch-236 (amount 1, 0.75 beat) and glitches on 244 and 252 (0.9, 0.375 beat), seed 3 + 7 x beat.",
+      "because": "Rules 5 and 8: the segment opens on a generation, so its first glitch is the big one.",
+      "source": "rule"
+    }
+  ],
+  "commands": ["node scripts/teaser-run-helper.mjs seconds 236"],
+  "cut": {
+    "shots": [
+      {
+        "asset": "mix-03",
+        "label": "Montage 01",
+        "sourceSeconds": 3.8,
+        "startBeat": 236,
+        "beats": 2,
+        "cropY": 200
+      },
+      {
+        "asset": "product",
+        "label": "Montage 02",
+        "sourceSeconds": 7.6,
+        "startBeat": 238,
+        "beats": 2,
+        "cropY": null,
+        "zoom": 1.33
+      },
+      {
+        "asset": "audio-visual",
+        "label": "Montage 03",
+        "sourceSeconds": 5.6,
+        "startBeat": 240,
+        "beats": 2,
+        "cropY": null,
+        "zoom": 1.317
+      },
+      {
+        "asset": "character",
+        "label": "Montage 04",
+        "sourceSeconds": 11.4,
+        "startBeat": 242,
+        "beats": 2,
+        "cropY": null,
+        "zoom": 1.33
+      },
+      {
+        "asset": "mix-02",
+        "label": "Montage 05",
+        "sourceSeconds": 3.8,
+        "startBeat": 244,
+        "beats": 2,
+        "cropY": 200
+      },
+      {
+        "asset": "library-03",
+        "label": "Montage 06",
+        "sourceSeconds": 0,
+        "startBeat": 246,
+        "beats": 2,
+        "cropY": null,
+        "zoom": 1.023
+      },
+      {
+        "asset": "mix-01",
+        "label": "Montage 07",
+        "sourceSeconds": 3.8,
+        "startBeat": 248,
+        "beats": 2,
+        "cropY": 200
+      },
+      {
+        "asset": "product",
+        "label": "Montage 08",
+        "sourceSeconds": 10.5,
+        "startBeat": 250,
+        "beats": 2,
+        "cropY": null,
+        "zoom": 1.33
+      },
+      {
+        "asset": "audio-visual",
+        "label": "Montage 09",
+        "sourceSeconds": 8.5,
+        "startBeat": 252,
+        "beats": 2,
+        "cropY": null,
+        "zoom": 1.317
+      },
+      {
+        "asset": "character",
+        "label": "Montage 10",
+        "sourceSeconds": 14.3,
+        "startBeat": 254,
+        "beats": 2,
+        "cropY": null,
+        "zoom": 1.33
+      },
+      {
+        "asset": "mix-03",
+        "label": "Montage 11",
+        "sourceSeconds": 6.7,
+        "startBeat": 256,
+        "beats": 2,
+        "cropY": 200
+      },
+      {
+        "asset": "audio-visual",
+        "label": "Montage 12",
+        "sourceSeconds": 11.4,
+        "startBeat": 258,
+        "beats": 2,
+        "cropY": null,
+        "zoom": 1.317
+      }
+    ],
+    "layers": [
+      {
+        "id": "hud-2",
+        "name": "HUD · final drop",
+        "module": "hud",
+        "kind": "graphics",
+        "lane": "hud",
+        "startBeat": 236,
+        "beats": 24,
+        "opacity": 1,
+        "parameters": {
+          "color": "#f6f8f2",
+          "accent": "#eaf2df",
+          "bpm": 135,
+          "text": "GENOBI // CUT ON THE BEAT IN THE DIRECTOR",
+          "credit": "MUSIC / KOSHIMAZAKI",
+          "seconds": 10.667
+        }
+      },
+      {
+        "id": "glitch-236",
+        "name": "Glitch · beat 236",
+        "module": "slice-glitch",
+        "kind": "filter",
+        "lane": "glitch",
+        "startBeat": 236,
+        "beats": 0.75,
+        "opacity": 1,
+        "parameters": {
+          "amount": 1,
+          "slices": 18,
+          "seed": 1655,
+          "duration": 0.3
+        }
+      },
+      {
+        "id": "glitch-244",
+        "name": "Glitch · beat 244",
+        "module": "slice-glitch",
+        "kind": "filter",
+        "lane": "glitch",
+        "startBeat": 244,
+        "beats": 0.375,
+        "opacity": 1,
+        "parameters": {
+          "amount": 0.9,
+          "slices": 18,
+          "seed": 1711,
+          "duration": 0.15
+        }
+      },
+      {
+        "id": "glitch-252",
+        "name": "Glitch · beat 252",
+        "module": "slice-glitch",
+        "kind": "filter",
+        "lane": "glitch",
+        "startBeat": 252,
+        "beats": 0.375,
+        "opacity": 1,
+        "parameters": {
+          "amount": 0.9,
+          "slices": 18,
+          "seed": 1767,
+          "duration": 0.15
+        }
+      }
+    ]
+  }
+}

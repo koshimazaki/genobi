@@ -1,0 +1,441 @@
+/* World Builder shares Director's tokens, wordmark and instrument controls. */
+.wb-app {
+  color: var(--text);
+  background: var(--bg);
+  min-height: 100dvh;
+  font-family: inherit;
+  padding: 0 24px 20px;
+  --wb-panel-width: 332px;
+}
+.wb-app * {
+  box-sizing: border-box;
+}
+.wb-app [hidden] {
+  display: none !important;
+}
+.wb-header.topbar {
+  margin: 0;
+  height: 64px;
+  gap: 18px;
+}
+.wb-header .brand-beta {
+  display: none;
+}
+.wb-header .topbar-right {
+  margin-left: auto;
+  gap: 10px;
+}
+.wb-product-name {
+  font: 11px var(--mono);
+  color: var(--muted);
+  border-left: 1px solid var(--border);
+  padding-left: 18px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+.wb-workspace {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--surface);
+  box-shadow: 0 1px 0 var(--highlight-soft);
+}
+.wb-app button,
+.wb-app select,
+.wb-app input,
+.wb-app textarea {
+  font: inherit;
+  color: inherit;
+}
+.wb-app button {
+  cursor: pointer;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--metal);
+  padding: 8px 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: inset 0 1px 0 var(--highlight-soft);
+  transition:
+    background 0.12s,
+    border-color 0.12s;
+}
+.wb-app button:hover {
+  border-color: var(--border-strong);
+  background: var(--raised);
+}
+.wb-app button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.wb-app button[aria-pressed="true"],
+.wb-app button[aria-expanded="true"] {
+  color: var(--accent-strong);
+  border-color: var(--accent);
+  background: var(--accent-ghost);
+}
+.wb-app :is(button, input, select, textarea, header):focus-visible {
+  outline: 2px solid var(--accent-strong);
+  outline-offset: 2px;
+}
+.wb-app select,
+.wb-app input[type="number"],
+.wb-app textarea {
+  background: var(--sunken);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px;
+  min-width: 0;
+}
+.wb-app select {
+  max-width: 100%;
+}
+.wb-app textarea {
+  width: 100%;
+  resize: vertical;
+  min-height: 84px;
+  line-height: 1.55;
+}
+.wb-app label {
+  display: grid;
+  gap: 7px;
+  font: 11px var(--mono);
+  color: var(--soft);
+}
+.wb-app input[type="checkbox"] {
+  accent-color: var(--accent);
+  width: 13px;
+  height: 13px;
+}
+.wb-app input[type="color"] {
+  height: 28px;
+  width: 100%;
+  padding: 0;
+  background: var(--sunken);
+  border: 1px solid var(--border);
+}
+.wb-workspace-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--border);
+  background: var(--metal);
+}
+.wb-mode-label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font: 11px var(--mono);
+  color: var(--soft);
+}
+.wb-mode-label small {
+  font-size: 9px;
+  color: var(--muted);
+  margin-left: 8px;
+}
+.wb-preset-picker select {
+  font-size: 11px;
+  padding: 5px 8px;
+  background: var(--sunken);
+}
+.wb-viewport {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 320px;
+  height: calc(100dvh - 238px);
+  background: var(--bg);
+  isolation: isolate;
+}
+.wb-canvas-fit {
+  width: min(100%, calc((100dvh - 238px) * var(--wb-aspect)));
+  aspect-ratio: var(--wb-aspect);
+  max-width: 100%;
+}
+.wb-canvas-fit canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  outline-offset: -3px;
+}
+.wb-view-modes {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--badge-bg);
+  box-shadow: 0 4px 16px #0003;
+}
+.wb-view-modes button {
+  padding: 6px 10px;
+  font: 10px var(--mono);
+  border-color: transparent;
+  background: transparent;
+}
+.wb-view-modes .wb-check {
+  padding: 0 8px;
+}
+.wb-check {
+  display: flex !important;
+  align-items: center;
+  gap: 6px !important;
+  font: 10px var(--mono) !important;
+}
+.wb-tool-rail {
+  position: absolute;
+  left: 12px;
+  top: 64px;
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--badge-bg);
+  box-shadow: 0 4px 16px #0003;
+}
+.wb-tool-rail button {
+  position: relative;
+  width: 48px;
+  min-height: 43px;
+  flex-direction: column;
+  gap: 3px;
+  padding: 5px 4px;
+  border-color: transparent;
+  background: transparent;
+}
+.wb-tool-rail span {
+  font: 8px var(--mono);
+}
+.wb-tool-rail kbd {
+  position: absolute;
+  right: 3px;
+  top: 2px;
+  font: 7px var(--mono);
+  opacity: 0.6;
+}
+.wb-tool-rail hr {
+  width: 30px;
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 3px auto;
+}
+.wb-viewport-badge {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  border: 1px solid var(--border);
+  padding: 5px 8px;
+  border-radius: 3px;
+  background: var(--badge-bg);
+  font: 9px var(--mono);
+  letter-spacing: 0.07em;
+  color: var(--soft);
+}
+.wb-take-strip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 9px 13px;
+  border-top: 1px solid var(--border);
+  background: var(--sunken);
+}
+.wb-take-strip button {
+  padding: 5px 8px;
+}
+.wb-take-strip input {
+  flex: 1;
+  min-width: 30px;
+  accent-color: var(--accent);
+  height: 18px;
+}
+.wb-take-strip output,
+.wb-resolution {
+  white-space: nowrap;
+  font: 10px var(--mono);
+  color: var(--readout);
+}
+.wb-take-strip small {
+  color: var(--muted);
+  margin-left: 6px;
+  font-size: 8px;
+}
+.wb-resolution {
+  color: var(--soft);
+  padding-left: 12px;
+  border-left: 1px solid var(--border);
+}
+.wb-console {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-top: 1px solid var(--border);
+  background: var(--metal);
+}
+.wb-panel-launchers {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.wb-panel-launchers button {
+  font: 10px var(--mono);
+  padding: 8px 10px;
+}
+.wb-app .wb-primary {
+  background: linear-gradient(180deg, var(--accent-strong), var(--accent));
+  border-color: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.wb-console > .wb-primary {
+  min-width: 160px;
+  justify-content: space-between;
+}
+.wb-feedback {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 0;
+  font: 10px var(--mono);
+  color: var(--muted);
+}
+.wb-feedback p {
+  margin: 0;
+}
+.wb-feedback [role="alert"] {
+  color: var(--error-text);
+}
+.wb-feedback > span {
+  max-width: 50%;
+  text-align: right;
+}
+@media (max-width: 760px) {
+  .wb-app {
+    padding: 0 12px 16px;
+  }
+  .wb-header.topbar {
+    height: 58px;
+    gap: 10px;
+  }
+  .wb-product-name {
+    display: none;
+  }
+  .wb-header .brand-beta {
+    display: none;
+  }
+  .wb-header .wordmark {
+    font-size: 16px;
+  }
+  .wb-header .connection-button {
+    padding: 6px 8px;
+    font-size: 10px;
+  }
+  .wb-viewport {
+    height: calc(100dvh - 255px);
+  }
+  .wb-canvas-fit {
+    width: min(100%, calc((100dvh - 255px) * var(--wb-aspect)));
+  }
+  .wb-console {
+    align-items: stretch;
+    flex-wrap: wrap;
+    padding: 10px;
+  }
+  .wb-panel-launchers {
+    flex: 1;
+    gap: 4px;
+  }
+  .wb-panel-launchers button {
+    font-size: 9px;
+    padding: 7px;
+  }
+  .wb-console > .wb-primary {
+    min-width: 110px;
+    font-size: 11px;
+  }
+  .wb-mode-label small,
+  .wb-resolution {
+    display: none;
+  }
+  .wb-panel {
+    top: 110px;
+    right: 12px;
+    max-height: calc(100dvh - 130px);
+  }
+  .wb-panel--left {
+    left: 12px;
+  }
+  .wb-feedback > span {
+    display: none;
+  }
+  .wb-workspace-bar {
+    padding: 9px 10px;
+  }
+  .wb-view-modes button {
+    padding: 5px 6px;
+  }
+  .wb-viewport-badge {
+    font-size: 8px;
+    bottom: 8px;
+  }
+  .wb-header .topbar-right {
+    gap: 5px;
+  }
+}
+
+.wb-product-name {
+  margin: 0;
+}
+.wb-brand {
+  display: flex;
+}
+@media (max-width: 480px) {
+  .wb-console {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  .wb-panel-launchers {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+  .wb-panel-launchers button {
+    padding: 6px 2px;
+    gap: 4px;
+    flex-direction: column;
+    font-size: 8px;
+    min-height: 40px;
+  }
+  .wb-console > .wb-primary {
+    width: 100%;
+    height: 36px;
+    min-width: 0;
+  }
+  .wb-viewport {
+    height: calc(100dvh - 290px);
+  }
+  .wb-canvas-fit {
+    width: min(100%, calc((100dvh - 290px) * var(--wb-aspect)));
+  }
+}
+@media (max-width: 480px) {
+  .wb-viewport {
+    height: auto;
+    min-height: 360px;
+  }
+  .wb-canvas-fit {
+    width: 100%;
+  }
+}

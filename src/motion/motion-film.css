@@ -1,0 +1,276 @@
+.motion-dialog {
+  position: fixed;
+  inset: 0;
+  z-index: 2147482990;
+  overflow: auto;
+  background: #0c0e0c;
+  color: #eaf2df;
+}
+.motion-film {
+  position: relative;
+  height: 1080px;
+  overflow: hidden;
+  background: radial-gradient(ellipse at center, #1b2616, #0c0e0c 70%);
+  --signal-break: 0;
+  --signal-progress: 0;
+}
+.motion-film > header,
+.motion-film > footer {
+  position: absolute;
+  left: 60px;
+  right: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font:
+    10px "Signal Nokia",
+    "IBM Plex Mono",
+    monospace;
+  letter-spacing: 1px;
+  color: #98aa84;
+}
+.motion-film > header {
+  top: 40px;
+}
+.motion-film > header strong {
+  font:
+    600 38px "Instrument Sans Variable",
+    sans-serif;
+  letter-spacing: -2px;
+  color: #edf5df;
+}
+.motion-film > footer {
+  bottom: 35px;
+  font-size: 8px;
+}
+.motion-title {
+  position: absolute;
+  top: 128px;
+  width: 100%;
+  text-align: center;
+}
+.motion-title p {
+  font:
+    12px "Signal Nokia",
+    "IBM Plex Mono",
+    monospace;
+  color: #d5ff70;
+  letter-spacing: 3px;
+  margin: 0 0 18px;
+}
+.motion-title h1 {
+  margin: 0;
+  font:
+    500 64px "Signal Explorers",
+    "Instrument Sans Variable",
+    sans-serif;
+  letter-spacing: 0;
+  line-height: 1.15;
+  text-transform: uppercase;
+}
+[data-type="arame"] .motion-title h1 {
+  font-family: "Signal Arame", "Instrument Sans Variable", sans-serif;
+}
+[data-type="instrument"] .motion-title h1 {
+  font-family: "Instrument Sans Variable", sans-serif;
+  letter-spacing: -3px;
+  text-transform: none;
+}
+.motion-specimen {
+  position: absolute;
+  width: min(1000px, 76vw);
+  height: 550px;
+  left: 50%;
+  top: 310px;
+  transform: translateX(-50%);
+  border: 1px solid #45583a;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #151b11;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.motion-snapshot {
+  flex: none;
+}
+.motion-snapshot > * {
+  margin: 0 !important;
+}
+.motion-snapshot .genobi-panel {
+  display: block;
+}
+.motion-snapshot .scroll-sheet-image {
+  max-height: 410px;
+}
+.motion-snapshot .scroll-region-canvas {
+  max-height: 410px;
+}
+.motion-chapter {
+  position: absolute;
+  top: 946px;
+  left: calc(50% - 500px);
+  width: 1000px;
+  display: flex;
+  gap: 25px;
+  align-items: center;
+  font:
+    12px "Signal Nokia",
+    "IBM Plex Mono",
+    monospace;
+  color: #c6d8af;
+}
+.motion-chapter i {
+  flex: 1;
+  height: 1px;
+  background: #36462b;
+}
+.motion-chapter i:after {
+  content: "";
+  display: block;
+  height: 1px;
+  background: #d5ff70;
+  transform: scaleX(var(--signal-progress));
+  transform-origin: left;
+}
+.motion-slices {
+  pointer-events: none;
+  position: absolute;
+  left: calc(50% - 500px);
+  top: 310px;
+  width: 1000px;
+  height: 550px;
+  opacity: var(--signal-break);
+}
+.motion-slices i {
+  position: absolute;
+  left: -20px;
+  right: 14px;
+  top: 22%;
+  height: 13px;
+  background: repeating-linear-gradient(
+    90deg,
+    #d5ff7066 0 48px,
+    transparent 48px 93px,
+    #77e4c133 93px 173px
+  );
+  transform: translateX(var(--signal-shift));
+  box-shadow: 13px 2px #e6a1ff66;
+}
+.motion-slices i:nth-child(2) {
+  top: 64%;
+  height: 3px;
+  left: 80px;
+  right: -25px;
+}
+.motion-slices i:nth-child(3) {
+  top: 80%;
+  height: 22px;
+  left: 420px;
+  background: repeating-linear-gradient(
+    0deg,
+    #c8f59b44 0 1px,
+    transparent 1px 4px
+  );
+}
+.motion-slices span {
+  position: absolute;
+  top: -22px;
+  right: 0;
+  font:
+    8px "Signal Nokia",
+    monospace;
+  color: #d5ff70;
+}
+.motion-film-controls {
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 18px;
+  padding: 8px 20px;
+  background: #151c10;
+  font:
+    11px "IBM Plex Mono",
+    monospace;
+}
+.motion-film-controls label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.motion-film-controls select {
+  padding: 7px;
+  background: #222c19;
+  color: #dcebc9;
+  border: 1px solid #53673e;
+}
+:root[data-theme="signal"] .t-gen-panel {
+  font-size: 8px;
+  line-height: 12px;
+  max-height: 550px;
+}
+:root[data-theme="signal"] .t-gen-step {
+  font-size: 11px;
+}
+@media (max-width: 1100px) {
+  .motion-title h1 {
+    font-size: 42px;
+  }
+  .motion-chapter {
+    left: 12vw;
+    width: 76vw;
+  }
+  .motion-slices {
+    left: 12vw;
+    width: 76vw;
+  }
+}
+@media (max-width: 600px) {
+  .motion-film {
+    height: 850px;
+  }
+  .motion-film > header,
+  .motion-film > footer {
+    left: 20px;
+    right: 20px;
+  }
+  .motion-film > header span:last-child,
+  .motion-film > footer span:last-child {
+    display: none;
+  }
+  .motion-title {
+    top: 140px;
+    padding: 0 18px;
+  }
+  .motion-title h1 {
+    font-size: 28px;
+  }
+  .motion-title p {
+    font-size: 9px;
+  }
+  .motion-specimen {
+    width: 92vw;
+    top: 260px;
+    height: 400px;
+  }
+  .motion-chapter {
+    top: 740px;
+    left: 4vw;
+    width: 92vw;
+    font-size: 8px;
+    gap: 10px;
+  }
+  .motion-slices {
+    top: 260px;
+    left: 4vw;
+    width: 92vw;
+    height: 400px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .motion-slices {
+    display: none;
+  }
+}

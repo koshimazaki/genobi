@@ -1,0 +1,145 @@
+/* Existing chain review and gallery cards. Camera has no run-mode switch. */
+.review-step {
+  position: absolute;
+  inset: auto var(--space-8) var(--space-8);
+  z-index: 3;
+  max-height: calc(100% - 2 * var(--space-8));
+  overflow: auto;
+  display: grid;
+  gap: var(--space-6);
+  padding: var(--space-8) var(--space-10);
+  background: color-mix(in srgb, var(--sunken) 88%, transparent);
+  backdrop-filter: blur(6px);
+  border: var(--space-1) solid var(--border-strong);
+  border-radius: var(--radius-md);
+  font: var(--space-9) var(--mono);
+  color: var(--soft);
+}
+.review-step__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  min-width: 0;
+}
+.review-step__head strong {
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: calc(0.8 * var(--unit));
+  white-space: nowrap;
+}
+.review-step__head span {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.review-step__stages,
+.chain-card__stages {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4) var(--space-10);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.review-step__stages li[data-status="ready"],
+.chain-card__stages li[data-status="ready"] {
+  color: var(--accent);
+}
+.review-step__stages li[data-status="paused"],
+.chain-card__stages li[data-status="paused"] {
+  color: var(--text);
+}
+.review-step__stages li[data-status="failed"],
+.chain-card__stages li[data-status="failed"] {
+  color: var(--error-text);
+}
+.review-step__targets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+.review-step__targets button {
+  min-height: 24px;
+  padding: var(--space-3) var(--space-8);
+  border: var(--space-1) solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--soft);
+}
+.review-step__targets button[aria-pressed="true"] {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-ghost);
+}
+.review-step__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6) var(--space-10);
+}
+.review-step__quote {
+  margin: 0;
+  flex: 1 1 14rem;
+  min-width: 0;
+}
+.review-step__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  margin-left: auto;
+}
+.review-step__go {
+  min-height: 28px;
+  padding: var(--space-4) var(--space-12);
+  border-radius: var(--radius-sm);
+  background: var(--accent);
+  color: var(--sunken);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.review-step__go:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.review-step__refusal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-8);
+  margin: 0;
+  color: var(--error-text);
+}
+
+.chain-card__body {
+  position: relative;
+  aspect-ratio: 16/10;
+  display: flex;
+  align-items: flex-end;
+  padding: var(--space-12);
+  background: var(--surface);
+  border: var(--space-1) solid var(--border);
+  border-radius: var(--radius-panel);
+  font: var(--text-small-8) var(--mono);
+  color: var(--muted);
+}
+.chain-card__stages {
+  flex-direction: column;
+}
+.chain-card__stages li {
+  display: flex;
+  gap: var(--space-8);
+}
+/* The status and quote line wraps inside its card instead of widening it. */
+.chain-card .clip-meta {
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+.chain-card .clip-meta span {
+  flex: 1 1 12rem;
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  line-height: 1.6;
+}

@@ -1,0 +1,153 @@
+/* The spawn dialog (SpawnAgentDialog.tsx): setup's look, one step at a time. */
+.spawn-agent {
+  box-sizing: border-box;
+  width: min(560px, calc(100vw - 32px));
+  max-height: calc(100svh - 32px);
+  padding: 24px;
+  border: 1px solid var(--border-strong);
+  border-radius: 20px;
+  background: var(--bg);
+  color: var(--text);
+  box-shadow: 0 24px 100px #0006;
+  overflow: auto;
+  /* Mounted inside the header's wordmark, which is \`white-space: nowrap\`
+     (compact-workspace.css): the dialog must wrap its own text. */
+  white-space: normal;
+  overflow-wrap: break-word;
+  line-height: 1.5;
+}
+.spawn-agent::backdrop {
+  background: #06090dd1;
+  backdrop-filter: blur(8px);
+}
+.spawn-agent__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+.spawn-agent__body > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.spawn-agent h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+.spawn-agent p {
+  margin: 0;
+}
+.spawn-agent button,
+.spawn-agent select,
+.spawn-agent input:not([type="radio"]) {
+  font: inherit;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 10px;
+  padding: 10px 14px;
+  min-height: 44px;
+}
+.spawn-agent button {
+  cursor: pointer;
+}
+.spawn-agent button:hover {
+  border-color: var(--accent);
+}
+.spawn-agent :is(button, select, input):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+.spawn-agent .setup-primary {
+  background: var(--accent);
+  color: var(--bg);
+  border-color: var(--accent);
+  font-weight: 600;
+}
+.spawn-agent__body > header button {
+  font-size: 22px;
+  padding: 2px 12px;
+  background: transparent;
+  border-color: transparent;
+}
+.spawn-agent__choose,
+.spawn-agent fieldset {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.spawn-agent legend {
+  font: 10px var(--mono);
+  letter-spacing: 0.13em;
+  color: var(--soft);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.spawn-agent fieldset label {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+.spawn-agent fieldset label span,
+.spawn-agent .setup-connect__harnesses li > span:nth-child(2) {
+  display: grid;
+  gap: 2px;
+}
+.spawn-agent small {
+  color: var(--soft);
+}
+.spawn-agent__lead {
+  font-weight: 600;
+}
+.spawn-agent__modes {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+.spawn-agent__modes li {
+  display: grid;
+  gap: 4px;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+.spawn-agent__modes span {
+  color: var(--soft);
+}
+.spawn-agent__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.spawn-agent__actions > button {
+  flex: 1 1 auto;
+}
+@media (max-width: 480px) {
+  .spawn-agent {
+    padding: 18px;
+  }
+  .spawn-agent__actions {
+    flex-direction: column;
+  }
+}
+.spawn-agent .setup-connect__harnesses ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.spawn-agent .setup-connect__harnesses li {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 10px;
+  align-items: center;
+}

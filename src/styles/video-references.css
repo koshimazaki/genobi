@@ -1,0 +1,147 @@
+.video-workspace {
+  grid-template-columns: minmax(0, 1fr) clamp(240px, 42%, 360px);
+  align-items: start;
+}
+.video-workspace > .prompt-editor {
+  padding: 6px 0;
+  min-width: 0;
+}
+.video-workspace .prompt-editor textarea {
+  max-height: 640px;
+  min-height: 64px;
+  font-size: 16px;
+  line-height: 1.6;
+}
+/*
+ * Beside the reference tray the prompt column is narrow, and FLUX 3's camera
+ * line would wrap and move the toolbar. It keeps one line here; the button's
+ * title and the camera dialog hold the whole wording.
+ */
+.video-workspace .camera-sentences {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.video-workspace .camera-sentences > span {
+  white-space: nowrap;
+}
+.prompt-resize-handle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 20px;
+  padding: 0;
+  cursor: ns-resize;
+  touch-action: none;
+  color: var(--machined);
+}
+.prompt-resize-handle span {
+  width: 32px;
+  height: 4px;
+  border-block: 1px solid currentColor;
+}
+.prompt-resize-handle:hover,
+.prompt-resize-handle:focus-visible {
+  color: var(--accent);
+  background: var(--hover-wash);
+}
+.video-reference-tray {
+  min-width: 0;
+}
+.video-reference-tray .image-reference-strip {
+  grid-template-columns: repeat(auto-fill, minmax(56px, 1fr));
+  max-height: 152px;
+  overflow-y: auto;
+}
+.video-workspace--h3 .video-reference-tray {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  column-gap: 12px;
+}
+.video-workspace--h3 .image-references header {
+  flex-wrap: wrap;
+  gap: 3px;
+}
+.video-workspace--h3 .image-references header span:last-child {
+  text-align: left;
+}
+.video-workspace--h3 .image-reference-strip {
+  grid-template-columns: repeat(2, minmax(0, 64px));
+  max-height: none;
+  overflow: visible;
+}
+.video-workspace--h3 .image-add-reference:disabled {
+  display: none;
+}
+.video-workspace textarea,
+.video-reference-tray .image-reference-strip {
+  scrollbar-width: thin;
+  scrollbar-color: var(--machined) transparent;
+}
+.video-guide {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  align-content: start;
+  min-width: 0;
+  padding-top: 6px;
+}
+.video-guide .select-menu {
+  min-width: 0;
+  max-width: 100%;
+}
+.video-guide button,
+.video-guide span,
+.video-reference-hint {
+  font: 9px var(--mono);
+}
+.video-guide > button {
+  border: 1px dashed var(--border-strong);
+  padding: 8px;
+  border-radius: var(--radius-control);
+}
+.video-guide > button:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--hover-wash);
+}
+.video-reference-hint {
+  grid-column: 1 / -1;
+  color: var(--muted);
+  margin: 6px 0 0 12px;
+  line-height: 1.4;
+}
+.video-reference-hint summary {
+  cursor: pointer;
+  width: fit-content;
+}
+.video-reference-hint summary:hover {
+  color: var(--accent);
+}
+.video-reference-hint p {
+  margin: 6px 0 0;
+}
+@media (max-width: 35rem) {
+  .video-workspace {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto;
+  }
+  .video-workspace--h3 .video-reference-tray {
+    border-top: 1px solid var(--border);
+  }
+  .video-workspace--h3 .image-references {
+    border-top: 0;
+  }
+  .video-workspace--h3 .image-reference-strip {
+    grid-template-columns: repeat(2, minmax(0, 64px));
+  }
+  .video-guide {
+    padding-left: 0;
+  }
+  .video-reference-hint {
+    margin-left: 0;
+  }
+}

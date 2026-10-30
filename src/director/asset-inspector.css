@@ -1,0 +1,128 @@
+/* Asset cards and the clip inspector's source section: a fixed media box per
+   card, so a poster arriving never moves the grid. */
+.dir-asset-frame {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100px;
+  overflow: hidden;
+  background: var(--bg);
+  border-radius: 5px;
+}
+.genobi-project-assets .dir-asset-frame {
+  height: auto;
+  aspect-ratio: 4 / 3;
+}
+.dir-asset-frame > :is(img, .dir-asset-placeholder) {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+.dir-asset-frame > img {
+  object-fit: contain;
+}
+/* Leave the badge its corner on small cards. */
+.dir-asset-frame > .dir-asset-placeholder {
+  padding-bottom: 16px;
+}
+.genobi-project-assets .dir-asset-frame > img {
+  object-fit: cover;
+}
+.dir-asset-duration {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  padding: 1px 4px;
+  border-radius: 3px;
+  background: rgb(0 0 0 / 72%);
+  color: #fff;
+  font: 10px/1.4 var(--mono);
+  white-space: nowrap;
+  pointer-events: none;
+}
+.dir-asset-range {
+  display: block;
+  min-height: 1.4em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: 10px/1.4 var(--mono);
+  color: var(--soft);
+}
+/* The asset of the selected clip, and the clips of the selected asset. */
+.genobi-project-assets button[aria-current="true"] {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+.dir-clip.is-source:not(.is-active) {
+  outline: 1px dashed var(--accent);
+  outline-offset: 1px;
+}
+.dir-asset-clips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.dir-asset-clips button {
+  font: 11px var(--mono);
+}
+.dir-source {
+  display: grid;
+  gap: 6px;
+  margin: 4px 0 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+.dir-source-heading {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+.dir-source-heading strong {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: 10px var(--mono);
+}
+.dir-source-heading button {
+  flex: none;
+  font: 10px var(--mono);
+  padding: 3px 6px;
+}
+.dir-source-posters {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+.dir-source-posters .dir-asset-frame {
+  height: 56px;
+}
+.dir-source-mark {
+  right: auto;
+  left: 4px;
+}
+.dir-source dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2px 8px;
+  margin: 0;
+  font: 10px/1.5 var(--mono);
+}
+.dir-source dt {
+  color: var(--muted);
+}
+.dir-source dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}

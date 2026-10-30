@@ -1,0 +1,480 @@
+.wb-panel {
+  position: fixed;
+  right: 24px;
+  top: 125px;
+  width: min(var(--wb-panel-width), calc(100vw - 16px));
+  max-height: calc(100dvh - 146px);
+  min-height: 80px;
+  display: flex;
+  flex-direction: column;
+  z-index: 50;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  box-shadow:
+    0 14px 55px var(--shadow-dialog),
+    inset 0 1px 0 var(--highlight-soft);
+  overflow: hidden;
+}
+.wb-panel:focus-within {
+  z-index: 60;
+}
+.wb-panel--left {
+  left: 24px;
+  right: auto;
+}
+.wb-panel > header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--metal);
+  padding: 10px 11px;
+  border-bottom: 1px solid var(--border);
+  flex: none;
+}
+.wb-panel h2 {
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+  margin: 0;
+}
+.wb-panel > header > svg {
+  color: var(--muted);
+}
+.wb-panel > header button {
+  width: 25px;
+  height: 25px;
+  padding: 3px;
+  background: transparent;
+  border-color: transparent;
+}
+.wb-panel-badge {
+  margin-left: auto;
+  color: var(--readout);
+  font: 8px var(--mono);
+  letter-spacing: 0.08em;
+}
+.wb-panel-body {
+  overflow: auto;
+  padding: 12px;
+  display: grid;
+  gap: 12px;
+  min-height: 0;
+}
+.wb-panel fieldset {
+  display: grid;
+  gap: 12px;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.wb-panel-body > fieldset > button {
+  width: 100%;
+}
+.wb-panel-body :is(p, figure) {
+  margin: 0;
+}
+.wb-panel small {
+  font: 9px var(--mono);
+  color: var(--muted);
+  line-height: 1.5;
+}
+.wb-panel audio {
+  width: 100%;
+  height: 32px;
+}
+.wb-panel progress {
+  width: 100%;
+  height: 5px;
+  accent-color: var(--accent);
+}
+.wb-resize-grip {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 15px;
+  height: 15px;
+  border-right: 2px solid var(--machined);
+  border-bottom: 2px solid var(--machined);
+  z-index: 2;
+}
+.wb-fold {
+  border-top: 1px solid var(--border);
+  padding-top: 4px;
+}
+.wb-fold > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  list-style: none;
+  padding: 9px 0;
+  font: 10px var(--mono);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--soft);
+}
+.wb-fold > summary::-webkit-details-marker {
+  display: none;
+}
+.wb-fold[open] > summary {
+  color: var(--readout);
+}
+.wb-fold[open] > summary svg {
+  transform: rotate(180deg);
+}
+.wb-fold > div {
+  display: grid;
+  gap: 10px;
+  padding: 3px 0 10px;
+}
+.wb-hint {
+  font-size: 11px;
+  line-height: 1.55;
+  color: var(--muted);
+}
+.wb-numbers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+}
+.wb-number input {
+  width: 100%;
+  font: 11px var(--mono);
+}
+.wb-transform-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+.wb-transform-grid > span {
+  grid-column: 1/-1;
+  font: 9px var(--mono);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.wb-transform-grid label > span {
+  font-size: 8px;
+}
+.wb-transform-grid input {
+  padding: 7px 5px !important;
+  font: 11px var(--mono);
+}
+.wb-shot-grid,
+.wb-primitive-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+}
+.wb-shot-grid button {
+  justify-content: space-between;
+  font-size: 12px;
+  height: 32px;
+  background: var(--sunken);
+}
+.wb-shot-grid button small {
+  font-size: 8px;
+  color: var(--readout);
+}
+.wb-primitive-grid button {
+  min-height: 64px;
+  flex-direction: column;
+  font: 10px var(--mono);
+  background: var(--sunken);
+}
+.wb-panel-actions,
+.wb-audio-transport {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+.wb-panel-actions > * {
+  flex: 1;
+}
+.wb-file-input {
+  cursor: pointer;
+  background: var(--metal);
+  border: 1px solid var(--border);
+  padding: 8px;
+  border-radius: var(--radius-sm);
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px !important;
+}
+.wb-file-input input {
+  max-width: 100%;
+  font-size: 10px;
+}
+.wb-object-list {
+  display: grid;
+  gap: 5px;
+}
+.wb-object-list button {
+  justify-content: space-between;
+}
+.wb-recent-audio {
+  display: grid;
+  gap: 5px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.wb-recent-audio button {
+  width: 100%;
+  justify-content: space-between;
+  gap: 8px;
+}
+.wb-recent-audio span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.wb-danger {
+  color: var(--error-text) !important;
+}
+.wb-active-shot {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--sunken);
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.wb-active-shot > div {
+  display: grid;
+  gap: 4px;
+  flex: 1;
+}
+.wb-active-shot small {
+  text-transform: uppercase;
+  font-size: 8px;
+}
+.wb-active-shot strong {
+  color: var(--readout);
+  font-size: 15px;
+}
+.wb-active-shot output {
+  display: grid;
+  text-align: center;
+  font: 12px var(--mono);
+  color: var(--readout);
+}
+.wb-active-shot button {
+  padding: 4px;
+  width: 23px;
+  height: 25px;
+}
+.wb-capture-readout {
+  display: grid;
+  gap: 5px;
+  background: var(--sunken);
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font: 10px var(--mono);
+}
+.wb-capture-readout strong {
+  color: var(--readout);
+  font-size: 20px;
+}
+.wb-capture-readout small {
+  text-transform: uppercase;
+}
+.wb-radars {
+  display: grid;
+  gap: 8px;
+}
+.wb-radars figure {
+  position: relative;
+  background: var(--sunken);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.wb-radars canvas {
+  display: block;
+  width: 100%;
+  height: 135px;
+}
+.wb-radars figure:nth-child(2) canvas {
+  height: 175px;
+}
+.wb-radars figcaption {
+  position: absolute;
+  left: 10px;
+  top: 8px;
+  font: 8px var(--mono);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.wb-signal-bars {
+  display: grid;
+  gap: 8px;
+}
+.wb-signal-bars > div {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.wb-signal-bars span {
+  font: 9px var(--mono);
+  width: 36px;
+  text-transform: uppercase;
+}
+.wb-signal-bars meter {
+  width: 100%;
+  height: 12px;
+  accent-color: var(--accent);
+}
+
+@media (max-width: 760px) {
+  .wb-panel {
+    top: 110px;
+    right: 12px;
+    max-height: calc(100dvh - 130px);
+  }
+  .wb-panel--left {
+    left: 12px;
+  }
+}
+
+.wb-panel[data-folded="true"] {
+  min-height: 0;
+}
+
+.wb-loop {
+  white-space: nowrap;
+  padding: 6px 8px;
+  font: 10px var(--mono);
+  color: var(--soft);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+}
+.wb-loop[aria-pressed="true"] {
+  color: var(--readout);
+  border-color: var(--accent);
+  background: var(--accent-ghost);
+}
+/* The capture length: one control in the Camera panel, the Capture panel and
+   the footer beside Capture take. */
+.wb-take-length {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.wb-take-length-value {
+  display: grid;
+  justify-items: center;
+  min-width: 58px;
+  font: 10px var(--mono);
+  color: var(--muted);
+}
+.wb-take-length-value label {
+  display: inline-flex;
+  align-items: baseline;
+  color: var(--readout);
+  font-size: 15px;
+  line-height: 1.1;
+}
+.wb-take-length-value input {
+  width: 5ch;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px dashed var(--border);
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: right;
+}
+.wb-take-length-value input:focus-visible {
+  outline: 1px solid var(--accent);
+  border-bottom-color: transparent;
+}
+.wb-take-length button {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  justify-content: center;
+}
+.wb-console > .wb-take-length {
+  margin-left: auto;
+  padding: 3px 6px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--sunken);
+}
+.wb-capture-readout .wb-take-length-value label {
+  font-size: 20px;
+}
+.wb-capture-length {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.wb-capture-result {
+  margin: 0;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font: 10px var(--mono);
+  color: var(--readout);
+  overflow-wrap: anywhere;
+}
+.wb-capture-result[data-error] {
+  color: var(--error-text);
+}
+@media (max-width: 480px) {
+  .wb-console {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+  .wb-console > .wb-panel-launchers {
+    grid-column: 1 / -1;
+  }
+  .wb-console > .wb-take-length {
+    margin-left: 0;
+  }
+}
+/* Touch: the typed seconds field keeps a 24 px target. */
+@media (max-width: 900px) {
+  .wb-take-length-value input {
+    min-height: 24px;
+  }
+}
+.wb-motion {
+  display: grid;
+  gap: 6px;
+}
+.wb-motion ol {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.wb-motion li {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 72px 26px;
+  align-items: center;
+  gap: 4px;
+}
+.wb-motion li > button {
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  justify-content: center;
+}
+.wb-motion small {
+  color: var(--muted);
+}
+.wb-loop-control {
+  display: grid;
+  gap: 6px;
+}
+.wb-loop-control ul {
+  margin: 0;
+  padding-left: 16px;
+}

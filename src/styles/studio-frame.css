@@ -1,0 +1,53 @@
+/* Mode selection must not move the hero, toolbar or gallery. */
+.featured-media {
+  height: clamp(216px, min(calc(40px + 15vw), 32dvh), 500px);
+}
+.composer-top {
+  /* The camera button makes a video row 49.5px tall; reserve the half pixel. */
+  min-height: 50px;
+}
+.composer > .prompt-editor,
+.composer > .upscale-input,
+.composer > .image-workspace {
+  min-height: 160px;
+}
+.composer-toolbar {
+  /* Each min-height includes the run-mode tags' 16px row (family-model.css). */
+  min-height: 126px;
+}
+.composer-toolbar--balanced {
+  align-content: start;
+}
+@media (max-width: 68rem) {
+  .composer > .prompt-editor,
+  .composer > .upscale-input,
+  .composer > .image-workspace {
+    min-height: 210px;
+  }
+}
+@media (max-width: 760px) {
+  .composer-toolbar {
+    min-height: 320px;
+  }
+}
+@media (max-width: 35rem) {
+  /* Video's five controls wrap to two rows below about 420px (324px). */
+  .composer-toolbar {
+    min-height: 326px;
+  }
+  .composer > .prompt-editor,
+  .composer > .upscale-input,
+  .composer > .image-workspace {
+    min-height: 270px;
+  }
+  .featured-caption {
+    height: 30px;
+    overflow: hidden;
+  }
+}
+@media (max-width: 22.5rem) {
+  /* Image and Edit controls also wrap below about 352px (337px). */
+  .composer-toolbar {
+    min-height: 338px;
+  }
+}

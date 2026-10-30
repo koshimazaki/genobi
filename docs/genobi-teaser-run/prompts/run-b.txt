@@ -1,0 +1,9 @@
+You are repeating the Genobi teaser as run B, from run A's memory only. Work only in this checkout.
+
+1. Read plugins/genobi/skills/genobi-teaser-run/SKILL.md with your file tool and follow it in mode B (the section "Run B: repeat from memory").
+2. Your run folder is .local/teaser-runs/b. Your only record of run A is .local/teaser-runs/b/from-a.memory.json. Do not look for or open run A's cut.json or any other file of run A.
+3. Derive every number with the rules in docs/genobi-teaser-run/decision-table.md, following run A's decisions. Never open another cut: not shared/templates/genobi-teaser.cut.json, nothing under tests/fixtures/, no git show or git log -p.
+4. The studio runs at http://127.0.0.1:4317. Put GENOBI_URL=http://127.0.0.1:4317 GENOBI_AGENT_SESSION=1 in front of every genobi command.
+5. Nothing is generated, quoted or paid for. Never run genobi quote, genobi submit or anything the skill does not list.
+6. Write your own memory.json as you go, with startedFrom set to "from-a.memory.json", a decision for every section, and in runner.profile the Hermes profile named after -p in the command that started you.
+7. When the verifier passes and the render is done, show me the contact sheet and the cut's sha256, then stop. Do not commit.

@@ -1,0 +1,227 @@
+/* The second line is metadata, not another row of boxed controls. */
+.composer-toolbar--balanced {
+  display: grid;
+  grid-template-columns: 153px minmax(0, 1fr) 148px;
+  grid-template-rows: auto auto auto;
+  gap: 8px 14px;
+  align-items: start;
+}
+.family-model {
+  display: contents;
+}
+.family-model__field {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: stretch;
+}
+.family-model__segments {
+  display: flex;
+  gap: 2px;
+  padding: 3px 4px 4px;
+}
+/* Four families share the fixed 153px Family box: each takes its content's
+   width, and Upscale is an icon only, so the box never widens. */
+.family-model__segments button {
+  display: flex;
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: nowrap;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  min-height: 24px;
+  padding: 3px 2px;
+  border-radius: var(--radius-xs);
+  font: 10px var(--mono);
+  color: var(--muted);
+}
+.family-model__segments button.is-selected {
+  background: var(--raised);
+  color: var(--accent);
+}
+.family-model__segments button:hover,
+.family-model__segments button[aria-expanded="true"] {
+  background: var(--overlay);
+  color: var(--text);
+}
+.family-model__summary {
+  grid-column: 1 / 3;
+  grid-row: 2;
+  justify-self: start;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  max-width: 100%;
+  padding: 0;
+  min-height: 18px;
+  color: var(--soft);
+  text-align: left;
+  font: 10px/1.6 var(--mono);
+}
+.family-model__summary span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.family-model__summary:hover {
+  color: var(--text);
+}
+/* Where the next run executes: one reserved row of tags, never taller. */
+.run-mode {
+  grid-column: 1 / 3;
+  grid-row: 3;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-width: 0;
+  /* 8px row gap - 6px + 14px: the 16px every toolbar min-height reserves. */
+  height: 14px;
+  margin: -6px 0 0;
+  overflow: hidden;
+  white-space: nowrap;
+  font: 9px/1 var(--mono);
+}
+.run-mode__tag {
+  flex: none;
+  padding: 1px 6px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+  background: var(--raised);
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.run-mode__tag--warn {
+  border-color: var(--error-border);
+  background: var(--error-bg);
+  color: var(--error-text);
+}
+.run-mode__note {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--soft);
+}
+.family-model__ticks {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.family-model__hidden {
+  min-height: 14px;
+  margin: -2px 8px 4px;
+  color: var(--muted);
+  font: 9px var(--mono);
+}
+.family-model__hidden:empty {
+  display: none;
+}
+.family-model__popover {
+  left: 0;
+  width: 300px;
+  max-width: calc(100vw - 48px);
+}
+.family-model__menu-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 4px;
+  color: var(--muted);
+  font: 10px var(--mono);
+}
+.family-model__menu-heading label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+.family-model__menu-heading input {
+  accent-color: var(--accent);
+}
+.toolbar-controls {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: stretch;
+  min-width: 0;
+}
+.toolbar-controls > .generation-controls {
+  height: 100%;
+  flex-wrap: nowrap;
+}
+/* Match the family segment's value baseline and all field bottoms. */
+.toolbar-controls .select-menu {
+  height: 100%;
+}
+.toolbar-controls .instrument-trigger {
+  min-height: 31px;
+  padding: 3px var(--space-8) 4px;
+  font-size: 10px;
+}
+.toolbar-action {
+  grid-column: 3;
+  grid-row: 1;
+  align-self: stretch;
+}
+.toolbar-action .generate-button {
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  min-height: 44px;
+  padding: 10px 15px;
+}
+.composer-toolbar--balanced > .cost {
+  grid-column: 3;
+  grid-row: 2;
+  min-height: 18px;
+  justify-content: flex-end;
+  align-items: baseline;
+  gap: 6px;
+}
+.composer-toolbar--balanced .cost strong {
+  font-size: 11px;
+}
+.composer-toolbar--balanced .cost span {
+  font-size: 8px;
+  white-space: nowrap;
+}
+@media (max-width: 760px) {
+  .composer-toolbar--balanced {
+    grid-template-columns: 153px minmax(0, 1fr);
+    gap: 10px 12px;
+  }
+  .family-model__summary {
+    grid-row: 2;
+  }
+  .run-mode {
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
+  .toolbar-controls {
+    grid-column: 1 / -1;
+    grid-row: 4;
+  }
+  .toolbar-controls > .generation-controls {
+    flex-wrap: wrap;
+  }
+  .toolbar-action {
+    grid-column: 1 / -1;
+    grid-row: 5;
+    border-top: 1px solid var(--border);
+    padding-top: 10px;
+  }
+  .toolbar-action .generate-button {
+    min-height: 44px;
+  }
+  .composer-toolbar--balanced > .cost {
+    grid-column: 1 / -1;
+    grid-row: 6;
+  }
+}
+/* Which key pays, beside the price: "BFL KEY" or "COMFY KEY". */
+.composer-toolbar--balanced .cost .cost__payer {
+  color: var(--readout);
+}

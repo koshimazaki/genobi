@@ -1,0 +1,234 @@
+main {
+  max-width: 72.5rem;
+  margin: auto;
+  padding: 0 var(--space-32);
+}
+.intro {
+  text-align: center;
+  padding: calc(49 * var(--unit)) 0 calc(27 * var(--unit));
+}
+.intro-kicker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-10);
+  font: var(--space-10) var(--mono);
+  color: var(--soft);
+  letter-spacing: var(--space-2);
+}
+.intro-kicker > span {
+  height: var(--space-4);
+  width: var(--space-4);
+  background: var(--accent);
+}
+.studio {
+  --unit: var(--composer-unit);
+  font-size: var(--composer-font-size);
+  max-width: calc(940 * var(--unit));
+  margin: auto;
+}
+.composer {
+  /* The upscale panel and the toolbar under it are separate rows, so their
+     columns are derived from these instead of stopping at unrelated places.
+     --col-mode sizes the Precise/Creative pair and the drop target together. */
+  /* The model column fits the longest generator name in one line: at 150 units
+     "FLUX 3 · Text to video" ellipsised to "text to vid…" in the closed
+     selector. The upscale panel derives its source column from this, so the two
+     rows still line up. */
+  --col-model: calc(168 * var(--unit));
+  --col-fader: calc(174 * var(--unit));
+  --col-mode: calc(144 * var(--unit));
+  /* One inset for the panel's own rows: the mode badge and Camera controls sit
+     above the prompt on the same vertical lines as the model column and the
+     generate button below them, so the pill closes where the button closes
+     rather than a few units inside it. */
+  --composer-inset: var(--space-18);
+  position: relative;
+  border: var(--space-1) solid var(--border-strong);
+  background: var(--surface);
+  border-radius: var(--radius-panel);
+  box-shadow:
+    0 var(--space-12) var(--space-40) var(--shadow-soft),
+    inset 0 var(--space-1) var(--highlight-subtle);
+}
+.composer-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-14) var(--composer-inset) var(--space-9);
+  border-bottom: var(--space-1) solid var(--border);
+}
+.mode-badge {
+  display: flex;
+  align-items: center;
+  gap: var(--space-9);
+  color: var(--soft);
+  font: var(--space-10) var(--mono);
+  letter-spacing: calc(0.3 * var(--unit));
+}
+/* The accent marks what can be clicked. This badge only names the current
+   mode, so its icon takes the label's own colour; Camera controls, beside it,
+   carries the accent. */
+.section-eyebrow {
+  font: var(--space-9) var(--mono);
+  letter-spacing: calc(1.2 * var(--unit));
+  color: var(--muted);
+}
+.prompt-editor {
+  padding: var(--space-22) var(--space-24) var(--space-12);
+}
+.prompt-editor textarea {
+  display: block;
+  width: 100%;
+  resize: none;
+  min-height: var(--space-32);
+  max-height: calc(240 * var(--unit));
+  background: transparent;
+  border: 0;
+  border-radius: var(--radius-xs);
+  padding: 0;
+  color: var(--text);
+  line-height: 1.65;
+  font-size: var(--space-18);
+  letter-spacing: calc(-0.15 * var(--unit));
+  scrollbar-width: thin;
+  scrollbar-color: var(--machined) transparent;
+}
+.prompt-editor textarea:focus-visible {
+  outline: var(--space-1) solid var(--border-strong);
+  outline-offset: var(--space-5);
+}
+.prompt-editor textarea::placeholder {
+  color: var(--muted);
+}
+.camera-editor {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-10);
+  margin-top: var(--space-10);
+}
+.camera-editor-mark {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  color: var(--section-color);
+  padding-top: var(--space-6);
+}
+.camera-editor textarea {
+  color: var(--section-color);
+  font-size: var(--space-17);
+}
+/* Shared composer shell; family-model.css places controls and metadata. */
+.composer-toolbar {
+  display: flex;
+  flex-direction: column;
+  row-gap: var(--space-10);
+  padding: var(--space-15) var(--composer-inset);
+  border-top: var(--space-1) solid var(--border);
+  background: var(--sunken);
+  border-radius: 0 0 var(--radius-panel) var(--radius-panel);
+}
+.cost {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-8);
+  font-family: var(--mono);
+}
+.cost strong {
+  font-size: var(--space-13);
+  font-weight: 400;
+  color: var(--readout);
+}
+.cost span {
+  font-size: var(--text-small-7);
+  letter-spacing: var(--space-1);
+  color: var(--muted);
+  white-space: nowrap;
+}
+.generate-button,
+.primary-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-16);
+  padding: var(--space-12) var(--space-17);
+  font-size: var(--space-12);
+  color: var(--accent-ink);
+  border: var(--space-1) solid var(--accent-strong);
+  border-radius: var(--radius-control);
+  background: var(--accent);
+  box-shadow:
+    0 var(--space-1) 0 var(--highlight-control) inset,
+    0 var(--space-2) var(--space-3) var(--shadow-press);
+}
+.generate-button:hover,
+.primary-button:hover {
+  background: var(--accent-strong);
+  color: var(--accent-ink);
+}
+.generate-button:active {
+  transform: translateY(calc(0.5 * var(--unit)));
+}
+
+.generate-button {
+  position: relative;
+  isolation: isolate;
+  min-width: 148px;
+  justify-content: space-between;
+}
+.generate-button-icon {
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.generation-indicator {
+  display: block;
+  width: 20px;
+  height: 20px;
+  color: inherit;
+}
+.generate-button.is-generating,
+.generate-button.is-generating:hover {
+  opacity: 1;
+  cursor: progress;
+  background: var(--accent-ghost);
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+  box-shadow: 0 0 10px color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+@property --generation-edge-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+/* The moving edge also marks the Editor's agent actions (Regenerate, Send to
+   agent) while a session they started works: one signal for the main action. */
+.generate-button.is-generating::before,
+.dir-agent-action.is-generating::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  pointer-events: none;
+  background: conic-gradient(
+    from var(--generation-edge-angle),
+    transparent 0deg 190deg,
+    var(--accent-ghost) 240deg,
+    var(--accent) 280deg,
+    transparent 320deg
+  );
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+  animation: generation-edge 8s linear infinite;
+}
+@keyframes generation-edge {
+  to {
+    --generation-edge-angle: 360deg;
+  }
+}

@@ -1,0 +1,119 @@
+{
+  "example": "The cards between the agent and the licences (beats 172-192): Paper Shaders dithering, space.js, the bloom built by gen-image and the TASTE LAYER credit. These are the owner's content: copy them unchanged.",
+  "inputs": {
+    "storyboard": {
+      "section": "build-remix",
+      "from": 172,
+      "to": 192,
+      "cards": ["paper-dither", "space", "reveal-3", "taste"]
+    }
+  },
+  "decisions": [
+    {
+      "id": "d-build-remix-3",
+      "section": "build-remix",
+      "choice": "paper-dither 172+3, space 175+3, reveal-3 178+3, taste 181+11, all cards on lane cards, copied unchanged; no glitch.",
+      "because": "Rule 5 (a segment listing several cards); rule 8 puts no glitch on 172, which is not a required cut. The music's drop on 188 falls inside the taste card, which holds it.",
+      "source": "rule"
+    }
+  ],
+  "commands": [],
+  "cut": {
+    "shots": [],
+    "layers": [
+      {
+        "id": "paper-dither",
+        "name": "Paper Shaders · dithering",
+        "module": "paper-shader",
+        "kind": "graphics",
+        "lane": "cards",
+        "startBeat": 172,
+        "beats": 3,
+        "opacity": 1,
+        "card": true,
+        "parameters": {
+          "shader": "dithering",
+          "colors": "#0c0e0c",
+          "back": "#d5ff70",
+          "backAlpha": 1,
+          "speed": 0.9,
+          "scale": 0.9,
+          "intensity": 0.35,
+          "seed": 4,
+          "fadeAt": 0
+        }
+      },
+      {
+        "id": "space",
+        "name": "Space.js · targeting",
+        "module": "space-hud",
+        "kind": "graphics",
+        "lane": "cards",
+        "startBeat": 175,
+        "beats": 3,
+        "opacity": 1,
+        "card": true,
+        "parameters": {
+          "still": "/media/director-templates/dimensions-mix/mix-01.jpg",
+          "color": "#d5ff70",
+          "label": "SPACE.JS",
+          "credit": "PATRICK SCHROEN",
+          "targets": "0.5,0.42,0.18,0.3 / 0.3,0.6,0.12,0.18 / 0.7,0.62,0.12,0.18",
+          "interval": 0.3,
+          "dim": 0.25,
+          "fadeAt": 0
+        }
+      },
+      {
+        "id": "reveal-3",
+        "name": "Transitions.dev · neon bloom",
+        "module": "gen-image",
+        "kind": "graphics",
+        "lane": "cards",
+        "startBeat": 178,
+        "beats": 3,
+        "opacity": 1,
+        "card": true,
+        "parameters": {
+          "still": "/media/director-templates/genobi-teaser/still-bloom.jpg",
+          "matte": "#0c0e0c",
+          "accent": "#d5ff70",
+          "inset": 0.06,
+          "duration": 1.2,
+          "mode": "trace-texts",
+          "steps": "Sketch / Screen / Colour",
+          "done": "Transition ready",
+          "fadeAt": 0
+        }
+      },
+      {
+        "id": "taste",
+        "name": "Taste layer · the libraries",
+        "module": "gen-title",
+        "kind": "graphics",
+        "lane": "cards",
+        "startBeat": 181,
+        "beats": 11,
+        "opacity": 1,
+        "card": true,
+        "parameters": {
+          "text": "TASTE LAYER",
+          "line": "ANDREW ZELLINGER / TRANSITIONS.DEV · JAKUB ANTALIK / PAPER SHADERS · PAPER DESIGN / THREE.JS · ANIME.JS · P5.JS / P5.BRUSH · ALIEN.JS · SPACE.JS / PIXIJS FILTERS · TEXTMODE.JS · PLAY.CORE / MATRIX DIGITAL RAIN · GLYPHCSS · KRBN / SVGBOB · CRT-TERMINAL · CLI-SPINNERS / IBM PLEX MONO · GEIST",
+          "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+          "size": 104,
+          "color": "#d5ff70",
+          "muted": "#eaf2df",
+          "accent": "#d5ff70",
+          "x": 0.5,
+          "y": 0.5,
+          "duration": 3.2,
+          "mode": "trace-texts",
+          "steps": "Reading the credits / Tracing / Inking",
+          "done": "Credited in docs/credits",
+          "fadeAt": 4.489,
+          "plate": 0
+        }
+      }
+    ]
+  }
+}

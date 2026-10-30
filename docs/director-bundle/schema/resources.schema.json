@@ -1,0 +1,91 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://camera-director.invalid/schemas/resources-v1",
+  "definitions": {
+    "file": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256"],
+      "properties": {
+        "path": {
+          "type": "string",
+          "pattern": "^(?:[A-Za-z0-9_-]+/)*[A-Za-z0-9_-]+\\.[A-Za-z0-9]+$"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "asset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "use", "file", "origin"],
+      "properties": {
+        "kind": {
+          "enum": ["audio", "video", "image"]
+        },
+        "use": {
+          "enum": ["production", "reference"]
+        },
+        "file": {
+          "$ref": "#/definitions/file"
+        },
+        "durationSeconds": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "origin": {
+          "enum": ["fixture", "uploaded", "generated"]
+        },
+        "generationId": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]{0,63}$"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "enum": ["audio", "video"]
+              }
+            }
+          },
+          "then": {
+            "required": ["durationSeconds"]
+          }
+        }
+      ]
+    },
+    "module": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "engine",
+        "engineVersion",
+        "mode",
+        "file",
+        "parameterSchema"
+      ],
+      "properties": {
+        "engine": {
+          "enum": ["p5", "animejs", "threejs"]
+        },
+        "engineVersion": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+        },
+        "mode": {
+          "enum": ["overlay", "filter"]
+        },
+        "file": {
+          "$ref": "#/definitions/file"
+        },
+        "parameterSchema": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}

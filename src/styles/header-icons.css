@@ -1,0 +1,49 @@
+/* The header's quiet icon buttons: Voice, the theme and the key. */
+.topbar-right .header-icon,
+.topbar-right .theme-picker .instrument-trigger {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  min-width: 30px;
+  height: 30px;
+  min-height: 30px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--soft);
+}
+.topbar-right .theme-picker .instrument-field {
+  border: 0;
+  background: none;
+}
+.topbar-right .theme-picker .instrument-trigger > svg:last-child {
+  display: none;
+}
+.topbar-right .header-icon:hover,
+.topbar-right .theme-picker .instrument-trigger:hover {
+  background: var(--hover-wash);
+  color: var(--text);
+}
+.topbar-right .header-icon .connection-dot {
+  position: absolute;
+  top: 2px;
+  right: 1px;
+  width: 4px;
+  height: 4px;
+}
+.genobi-shell .topbar-right .header-icon {
+  padding: 0;
+}
+/* One even step between the header icons, closed up on the right edge, so
+   the navigation keeps the room; the balance keeps a little more air. */
+@media (min-width: 701px) {
+  .genobi-shell .topbar .topbar-right {
+    gap: 6px;
+  }
+  .genobi-shell .topbar .account-balance {
+    margin-right: 10px;
+  }
+}

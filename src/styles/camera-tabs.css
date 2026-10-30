@@ -1,0 +1,180 @@
+.camera-panel--tabs .camera-choices {
+  padding: 0;
+}
+.camera-tabs {
+  display: grid;
+  grid-template-columns: repeat(var(--tab-count, 3), minmax(0, 1fr));
+  position: relative;
+  isolation: isolate;
+  border-bottom: var(--space-1) solid var(--border);
+}
+.camera-tab-indicator {
+  position: absolute;
+  z-index: -1;
+  inset: 0 auto 0 0;
+  width: calc(100% / var(--tab-count, 3));
+  background: var(--surface);
+  border-bottom: var(--space-2) solid var(--section-color);
+  transform: translateX(calc(var(--active-tab) * 100%));
+}
+.camera-tabs [role="tab"] {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+  min-width: 0;
+  padding: var(--space-10) var(--space-12);
+  color: var(--muted);
+  text-align: left;
+}
+.camera-tabs [role="tab"] > span:first-child {
+  font: var(--space-10) var(--mono);
+}
+.camera-tab-choice {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: calc(28 * var(--unit));
+  height: calc(21 * var(--unit));
+  color: var(--muted);
+}
+.camera-tab-choice svg {
+  width: 100%;
+  height: 100%;
+}
+.camera-tabs .has-choice {
+  color: var(--section-color);
+}
+.camera-tabs [aria-selected="true"] > span:first-child {
+  color: var(--text);
+}
+.camera-tabs [role="tab"]:hover {
+  background: var(--hover-wash);
+}
+.camera-tab-panel {
+  padding: var(--space-12) var(--space-14) var(--space-15);
+}
+.camera-grid-footer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-10);
+  margin-top: var(--space-10);
+}
+.camera-grid-footer > a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-5);
+  font: var(--space-9) var(--mono);
+  color: var(--muted);
+}
+.camera-none {
+  margin-left: auto;
+  border: var(--space-1) solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-5) var(--space-10);
+  color: var(--soft);
+  font-size: var(--space-10);
+}
+.camera-none.selected {
+  border-color: var(--section-color);
+  color: var(--section-color);
+  background: color-mix(in srgb, var(--section-color) 10%, transparent);
+}
+.camera-grid-arrows {
+  display: flex;
+  gap: var(--space-2);
+}
+.camera-grid-arrows button:disabled {
+  opacity: 0.22;
+  cursor: default;
+}
+.camera-preset-grid {
+  position: relative;
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-rows: repeat(2, auto);
+  grid-auto-columns: calc((100% - 3 * var(--space-7)) / 4);
+  gap: var(--space-7);
+  overflow-x: auto;
+  scrollbar-width: none;
+  scroll-snap-type: x mandatory;
+  padding: var(--space-3);
+}
+.camera-preset-grid::-webkit-scrollbar {
+  display: none;
+}
+.camera-preset-grid .preset {
+  min-width: 0;
+  min-height: calc(82 * var(--unit));
+  padding-inline: var(--space-4);
+}
+.camera-preset-grid .preset span {
+  white-space: normal;
+  line-height: 1.35;
+  font-size: var(--space-10);
+}
+.camera-panel--tabs .camera-scene,
+.camera-panel--tabs .preview-fallback {
+  height: calc(240 * var(--unit));
+}
+.camera-layout-compare {
+  display: flex;
+  justify-content: flex-end;
+  padding: var(--space-8) var(--space-14) 0;
+}
+.camera-layout-compare .text-button {
+  font-size: var(--space-9);
+  color: var(--muted);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .camera-tab-indicator {
+    transition:
+      transform var(--motion-enter) ease,
+      border-color var(--motion-enter) ease;
+  }
+  .camera-tab-panel {
+    animation: camera-tab-enter var(--motion-enter) ease-out;
+  }
+}
+@keyframes camera-tab-enter {
+  from {
+    opacity: 0.4;
+    transform: translateX(var(--space-6));
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (max-width: 35rem) {
+  .camera-preset-grid {
+    grid-auto-columns: calc((100% - var(--space-7)) / 2);
+  }
+  .camera-tabs [role="tab"] {
+    padding: var(--space-10) var(--space-6);
+    gap: var(--space-4);
+  }
+  .camera-tabs [role="tab"] > span:first-child {
+    font-size: var(--space-9);
+  }
+  .camera-tab-choice {
+    width: var(--space-20);
+    height: var(--space-15);
+  }
+}
+
+.camera-tab-label {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+}
+.camera-tab-label strong {
+  font: var(--space-10) var(--mono);
+  font-weight: 400;
+  color: var(--section-color);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}

@@ -1,0 +1,153 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# A force-push or a quick follow-up commit should not leave two runs racing.
+concurrency:
+  group: ci-${{ github.ref }}
+  # Superseded PR checks can stop. A main run may already be migrating or
+  # deploying production, so let it finish and serialize deployment below.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Format, lint, types, tests, build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 22
+          cache: npm
+
+      # `npm ci` over `npm install`: the lockfile is committed, so CI installs
+      # the exact tree the author tested against.
+      - name: Install
+        run: npm ci
+
+      # Ordered cheapest-first, so an obvious failure reports in seconds
+      # rather than after a full build.
+      - name: Format
+        run: npm run format:check
+      - name: Lint
+        run: npm run lint
+      - name: Director schema freshness
+        run: npm run check:director-validators
+      # Every docs/ page has known tags and a summary, its relative links and
+      # anchors resolve, the wiki home links it, and docs/index.json is current.
+      - name: Wiki tags, links and index
+        run: npm run check:wiki
+      # plugins/genobi/registry.json and docs/registry*.md match the MCP tool
+      # definitions and the skills' frontmatter; tags and linked docs exist.
+      - name: Tool and skill registry
+        run: npm run check:registry
+      # plugins/genobi/capabilities.json names every registry tool and skill,
+      # its tools, skills and docs exist, each verified feature points at a
+      # dated record, and docs/capabilities.md is rendered from it.
+      - name: Capability map
+        run: npm run check:capabilities
+      # Every production npm package declares an allowed licence, and
+      # LICENCES-npm.md matches package-lock.json.
+      - name: Dependency licences
+        run: npm run check:licences
+      # No tracked source file over 500 lines, outside the commented allowlist
+      # of generated files in scripts/check-file-size.mjs.
+      - name: File size
+        run: npm run check:size
+      - name: Types
+        run: npm run typecheck
+      - name: Tests
+        run: npm test
+      - name: Build
+        run: npm run build
+      # The World Builder node's standalone bundle builds from src/world-builder
+      # and two builds are identical (the bundle itself is gitignored).
+      - name: Scene adapter bundle
+        run: npm run check:scene-adapter
+
+      # Optional review download, never consumed by deployment (it rebuilds).
+      # Storage exhaustion must not turn passing verification into a failure.
+      - name: Upload build output
+        continue-on-error: true
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: dist-${{ github.sha }}
+          path: dist
+          retention-days: 1
+
+  cloudflare:
+    name: Cloudflare boundary
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 22
+          cache: npm
+
+      # Keep the workflow reusable on a tree without the adapter. Wrangler
+      # config is present in this repository, so this runs on every PR/main push.
+      - name: Detect Cloudflare port
+        id: detect
+        run: |
+          if [ -f wrangler.jsonc ] || [ -f wrangler.toml ] || [ -f wrangler.json ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+            echo "Wrangler config found — running boundary checks."
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "No Wrangler config on this ref — skipping."
+          fi
+
+      - name: Install
+        if: steps.detect.outputs.present == 'true'
+        run: npm ci
+
+      # The real portability gate. worker/tsconfig.json compiles shared/ and
+      # the three portable server modules under "types": [] and lib ES2022 —
+      # no Node, no DOM. A stray `node:fs` in the portable layer fails here
+      # while every other check stays green.
+      - name: Worker types (portable layer stays portable)
+        if: steps.detect.outputs.present == 'true'
+        run: npm run check:worker
+
+      # The Worker serves ./dist through its ASSETS binding, so wrangler
+      # refuses to bundle without it ("assets.directory ... does not exist").
+      # Building here keeps this job independent of `verify` rather than
+      # chaining the two through an artifact.
+      - name: Build assets for the Worker
+        if: steps.detect.outputs.present == 'true'
+        run: npm run build
+
+      # --dry-run bundles the Worker and validates bindings, compatibility
+      # flags and asset config without contacting the API, so it needs no
+      # credentials and cannot deploy from a pull request.
+      - name: Wrangler config and bundle
+        if: steps.detect.outputs.present == 'true'
+        run: npx wrangler deploy --dry-run --outdir "${RUNNER_TEMP}/wrangler-dry-run"
+
+      # D1 is SQLite. Replaying the migrations in order against a scratch
+      # database catches bad DDL and ordering mistakes before they reach a
+      # real database, where partially-applied migrations are expensive.
+      - name: D1 migrations replay
+        if: steps.detect.outputs.present == 'true'
+        run: |
+          if [ ! -d migrations ]; then
+            echo "No migrations directory — nothing to replay."
+            exit 0
+          fi
+          db="${RUNNER_TEMP}/d1-replay.sqlite"
+          rm -f "$db"
+          for migration in $(ls migrations/*.sql | sort); do
+            echo "Applying ${migration}"
+            sqlite3 "$db" < "$migration"
+          done
+          echo "Resulting schema:"
+          sqlite3 "$db" ".tables"

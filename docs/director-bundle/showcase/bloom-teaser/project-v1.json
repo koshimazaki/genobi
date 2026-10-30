@@ -1,0 +1,1138 @@
+{
+  "schemaVersion": "director.bundle.v1",
+  "id": "bloom-teaser-v1",
+  "name": "Bloom · v1",
+  "revision": 1,
+  "composition": {
+    "fps": 24,
+    "durationFrames": 458,
+    "width": 1920,
+    "height": 1080,
+    "designSize": { "width": 960, "height": 540 },
+    "colorSpace": "srgb",
+    "alpha": "straight",
+    "background": "#0c0e0c",
+    "bpm": 140,
+    "beatsPerBar": 4
+  },
+  "assets": {
+    "bloom-h3-a": {
+      "kind": "video",
+      "use": "production",
+      "origin": "uploaded",
+      "durationSeconds": 15.083,
+      "file": {
+        "path": "media/bloom-h3-a.mp4",
+        "sha256": "a5d28c66777bd85c2325fe92c0f297ad398baa075416c67f224d13afdd5a75e4"
+      }
+    },
+    "bloom-h3-b": {
+      "kind": "video",
+      "use": "production",
+      "origin": "uploaded",
+      "durationSeconds": 15.083,
+      "file": {
+        "path": "media/bloom-h3-b.mp4",
+        "sha256": "5276e31e954a068d60a9b8a66fe3a5d4b0568cefdc1009a880a93243816b1114"
+      }
+    },
+    "bloom-track": {
+      "kind": "audio",
+      "use": "production",
+      "origin": "uploaded",
+      "durationSeconds": 19.112,
+      "file": {
+        "path": "media/bloom-track.mp3",
+        "sha256": "fd85fbc672e13a664989232f4b7321c930c5dd94b24e0bed4ae7a52e321d5df3"
+      }
+    }
+  },
+  "modules": {
+    "space-hud": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/teaser-space.mjs",
+        "sha256": "33f3c5d049a6ef1de996ff7a63da347b39ca092c16ace5ef4ddafcf8fe29855e"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "still",
+          "color",
+          "label",
+          "credit",
+          "targets",
+          "interval",
+          "dim",
+          "fadeAt"
+        ],
+        "properties": {
+          "still": {
+            "type": "string",
+            "maxLength": 120,
+            "pattern": "^/media/[a-z0-9][a-z0-9/_-]*\\.(jpg|png|webp)$"
+          },
+          "color": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "label": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 32,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "credit": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 40,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "targets": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 200,
+            "pattern": "^[0-9., /]*$"
+          },
+          "interval": { "type": "number", "minimum": 0.05, "maximum": 2 },
+          "dim": { "type": "number", "minimum": 0, "maximum": 1 },
+          "fadeAt": { "type": "number", "minimum": 0, "maximum": 60 }
+        }
+      }
+    },
+    "end-card-still": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/mix-end-card-still.mjs",
+        "sha256": "1a9c3dd024156211a0ad4c4acc39dabe79e7d87be90c6aecc9f397048f64ab5c"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "eyebrow",
+          "title",
+          "subtitle",
+          "credit1",
+          "credit2",
+          "font",
+          "color",
+          "accent",
+          "steps",
+          "done",
+          "duration",
+          "still"
+        ],
+        "properties": {
+          "eyebrow": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 32,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 24,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "subtitle": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 36,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "credit1": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 50,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "credit2": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 50,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "font": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120,
+            "pattern": "^[A-Za-z0-9 ,\"'-]+$"
+          },
+          "color": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "accent": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "steps": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 160,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "done": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 40,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "duration": { "type": "number", "minimum": 1, "maximum": 8 },
+          "still": {
+            "type": "string",
+            "maxLength": 120,
+            "pattern": "^/media/[a-z0-9][a-z0-9/_-]*\\.(jpg|png|webp)$"
+          }
+        }
+      }
+    },
+    "crt": {
+      "engine": "threejs",
+      "engineVersion": "0.180.0",
+      "mode": "filter",
+      "file": {
+        "path": "graphics/three-crt.mjs",
+        "sha256": "dfc0f65e04232e7de2822a6da3adb15e606a5843a962e1db585831131a253513"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["amount", "curvature", "rgb", "vignette"],
+        "properties": {
+          "amount": { "type": "number", "minimum": 0, "maximum": 1 },
+          "curvature": { "type": "number", "minimum": 0, "maximum": 0.3 },
+          "rgb": { "type": "number", "minimum": 0, "maximum": 10 },
+          "vignette": { "type": "number", "minimum": 0, "maximum": 1 }
+        }
+      }
+    },
+    "wire-scan": {
+      "engine": "threejs",
+      "engineVersion": "0.180.0",
+      "mode": "filter",
+      "file": {
+        "path": "graphics/mix-wire-scan.mjs",
+        "sha256": "ea23e0a7b8f48a503a65f2e316a612582a489a6eaf14aa8476950eca4bf4b117"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["color", "amount", "sweep", "trail"],
+        "properties": {
+          "color": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "amount": { "type": "number", "minimum": 0, "maximum": 1 },
+          "sweep": { "type": "number", "minimum": 0.1, "maximum": 8 },
+          "trail": { "type": "number", "minimum": 0.05, "maximum": 1 }
+        }
+      }
+    },
+    "slice-glitch": {
+      "engine": "threejs",
+      "engineVersion": "0.180.0",
+      "mode": "filter",
+      "file": {
+        "path": "graphics/mix-slice-glitch.mjs",
+        "sha256": "f1e5a045aae8ae9bc1b7691cd939c783cd078864c9ca7f945f85a17d7ccbb588"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["amount", "slices", "seed", "duration"],
+        "properties": {
+          "amount": { "type": "number", "minimum": 0, "maximum": 1 },
+          "slices": { "type": "integer", "minimum": 2, "maximum": 64 },
+          "seed": { "type": "integer", "minimum": 0, "maximum": 9999 },
+          "duration": { "type": "number", "minimum": 0.02, "maximum": 2 }
+        }
+      }
+    },
+    "hud": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/mix-hud.mjs",
+        "sha256": "623ccbbb6058884a5687b7d84b5e3c57cbcba11859ccb8642c6831c6957d4e2e"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["color", "accent", "bpm", "text", "credit", "seconds"],
+        "properties": {
+          "color": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "accent": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "bpm": { "type": "number", "minimum": 20, "maximum": 300 },
+          "text": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 60,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "credit": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 60,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "seconds": { "type": "number", "minimum": 1, "maximum": 120 }
+        }
+      }
+    },
+    "screen-open": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/mix-screen-open.mjs",
+        "sha256": "396bf3dab13d4f83f60a9790251dcf64cbb632e55b19d651169d70aba886e209"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["color", "matte", "duration", "glyphs", "seed"],
+        "properties": {
+          "color": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "matte": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "duration": { "type": "number", "minimum": 0.1, "maximum": 8 },
+          "glyphs": { "type": "integer", "minimum": 0, "maximum": 64 },
+          "seed": { "type": "integer", "minimum": 0, "maximum": 9999 }
+        }
+      }
+    },
+    "build-panel": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/mix-build-panel.mjs",
+        "sha256": "54c341f37a896d90bdd05e5b854671b5ca90962c65d8a98660cd15cda699beb6"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "side",
+          "title",
+          "lines",
+          "color",
+          "muted",
+          "accent",
+          "bpm",
+          "duration"
+        ],
+        "properties": {
+          "side": { "type": "string", "enum": ["left", "right"] },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "lines": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 200,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "color": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "muted": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "accent": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "bpm": { "type": "number", "minimum": 20, "maximum": 300 },
+          "duration": { "type": "number", "minimum": 0.2, "maximum": 8 }
+        }
+      }
+    },
+    "scan": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/mix-scan.mjs",
+        "sha256": "c55f2da9c34a8064758db970ca3f9f664bc22cf2be9f0c04707f2f09d8d20b50"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["color", "accent", "text", "x", "y", "bpm"],
+        "properties": {
+          "color": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "accent": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 32,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "x": { "type": "number", "minimum": 0, "maximum": 1 },
+          "y": { "type": "number", "minimum": 0, "maximum": 1 },
+          "bpm": { "type": "number", "minimum": 20, "maximum": 300 }
+        }
+      }
+    },
+    "ui-focus": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/teaser-focus.mjs",
+        "sha256": "904b427c4360cf1acd891efe34c602472a828e736102ea35c274cb0a33013b3e"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "x",
+          "y",
+          "w",
+          "h",
+          "label",
+          "color",
+          "dim",
+          "draw",
+          "fadeAt",
+          "view"
+        ],
+        "properties": {
+          "x": { "type": "number", "minimum": 0, "maximum": 1 },
+          "y": { "type": "number", "minimum": 0, "maximum": 1 },
+          "w": { "type": "number", "minimum": 0, "maximum": 1 },
+          "h": { "type": "number", "minimum": 0, "maximum": 1 },
+          "label": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 40,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "color": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "dim": { "type": "number", "minimum": 0, "maximum": 1 },
+          "draw": { "type": "number", "minimum": 0.1, "maximum": 4 },
+          "fadeAt": { "type": "number", "minimum": 0, "maximum": 60 },
+          "view": {
+            "type": "string",
+            "maxLength": 160,
+            "pattern": "^$|^[0-9]+,[0-9]+,[0-9]+,[0-9]+(;[0-9.]+,-?[0-9.]+,-?[0-9.]+){3}$"
+          }
+        }
+      }
+    },
+    "kinetic": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/mix-kinetic.mjs",
+        "sha256": "5352245651b8f5d1b2bb194326eead422ba7afe0c03bac6576b69d6ba4a9a50e"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "text",
+          "font",
+          "weight",
+          "color",
+          "accent",
+          "bpm",
+          "size",
+          "beats"
+        ],
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "font": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120,
+            "pattern": "^[A-Za-z0-9 ,\"'-]+$"
+          },
+          "weight": { "type": "integer", "minimum": 100, "maximum": 900 },
+          "color": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "accent": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "bpm": { "type": "number", "minimum": 20, "maximum": 300 },
+          "size": { "type": "number", "minimum": 8, "maximum": 240 },
+          "beats": { "type": "number", "minimum": 0.25, "maximum": 32 }
+        }
+      }
+    }
+  },
+  "layers": [
+    {
+      "id": "track",
+      "name": "Track · Anime-Genobi (Koshimazaki)",
+      "kind": "audio",
+      "assetId": "bloom-track",
+      "sourceStartFrame": 0,
+      "gain": 1,
+      "startFrame": 0,
+      "durationFrames": 458,
+      "locked": false
+    },
+    {
+      "kind": "video",
+      "assetId": "bloom-h3-a",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "id": "shot-01",
+      "name": "01 Bloom · eye ignites (first downbeat)",
+      "sourceStartFrame": 0,
+      "startFrame": 31,
+      "durationFrames": 20,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "kind": "video",
+      "assetId": "bloom-h3-b",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "id": "shot-02",
+      "name": "02 Bloom · lotus opens on the helm",
+      "sourceStartFrame": 19,
+      "startFrame": 51,
+      "durationFrames": 21,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "kind": "video",
+      "assetId": "bloom-h3-a",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "id": "shot-03",
+      "name": "03 Bloom · head and petals (scan)",
+      "sourceStartFrame": 29,
+      "startFrame": 72,
+      "durationFrames": 41,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "kind": "video",
+      "assetId": "bloom-h3-b",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "id": "shot-04",
+      "name": "04 Bloom · crouch",
+      "sourceStartFrame": 72,
+      "startFrame": 113,
+      "durationFrames": 21,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "kind": "video",
+      "assetId": "bloom-h3-b",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "id": "shot-05",
+      "name": "05 Bloom · jump kick",
+      "sourceStartFrame": 96,
+      "startFrame": 134,
+      "durationFrames": 20,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "kind": "video",
+      "assetId": "bloom-h3-a",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "id": "shot-06",
+      "name": "06 Bloom · hand reaches for the lens",
+      "sourceStartFrame": 103,
+      "startFrame": 154,
+      "durationFrames": 31,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "kind": "video",
+      "assetId": "bloom-h3-b",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "id": "shot-07",
+      "name": "07 Bloom · ninja stance",
+      "sourceStartFrame": 151,
+      "startFrame": 185,
+      "durationFrames": 31,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "kind": "video",
+      "assetId": "bloom-h3-a",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "id": "shot-08",
+      "name": "08 Bloom · full body on the drop (wire scan)",
+      "sourceStartFrame": 223,
+      "startFrame": 216,
+      "durationFrames": 31,
+      "position": { "x": 0, "y": 0 },
+      "motion": { "scaleTo": 1.2, "xTo": 0, "yTo": 0, "opacityTo": 1 }
+    },
+    {
+      "kind": "video",
+      "assetId": "bloom-h3-a",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.2,
+      "rotationDegrees": 0,
+      "id": "shot-08-hold",
+      "name": "08 Bloom · full body on the drop (wire scan) · hold",
+      "sourceStartFrame": 254,
+      "startFrame": 247,
+      "durationFrames": 10,
+      "position": { "x": 0, "y": 0 },
+      "motion": { "scaleTo": 1.2, "xTo": 0, "yTo": 0, "opacityTo": 1 }
+    },
+    {
+      "kind": "video",
+      "assetId": "bloom-h3-a",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "id": "shot-09",
+      "name": "09 Bloom · leap",
+      "sourceStartFrame": 278,
+      "startFrame": 257,
+      "durationFrames": 21,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "kind": "video",
+      "assetId": "bloom-h3-a",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "id": "shot-10",
+      "name": "10 Bloom · low lunge",
+      "sourceStartFrame": 322,
+      "startFrame": 278,
+      "durationFrames": 20,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "kind": "video",
+      "assetId": "bloom-h3-b",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "id": "shot-11",
+      "name": "11 Bloom · reach, roots bloom (title)",
+      "sourceStartFrame": 216,
+      "startFrame": 298,
+      "durationFrames": 31,
+      "position": { "x": 0, "y": 0 },
+      "motion": { "scaleTo": 1.15, "xTo": 0, "yTo": -62.1, "opacityTo": 1 }
+    },
+    {
+      "kind": "video",
+      "assetId": "bloom-h3-b",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.15,
+      "rotationDegrees": 0,
+      "id": "shot-11-hold",
+      "name": "11 Bloom · reach, roots bloom (title) · hold",
+      "sourceStartFrame": 247,
+      "startFrame": 329,
+      "durationFrames": 10,
+      "position": { "x": 0, "y": -62.1 },
+      "motion": { "scaleTo": 1.15, "xTo": 0, "yTo": -62.1, "opacityTo": 1 }
+    },
+    {
+      "id": "sheet-scan",
+      "name": "Space.js scan · character sheet",
+      "moduleId": "space-hud",
+      "parameters": {
+        "still": "/media/director-templates/bloom-teaser/bloom-sheet.jpg",
+        "color": "#62f2e4",
+        "label": "SUBJECT · BLOOM",
+        "credit": "SHEET SCAN · 6 CALLOUTS",
+        "targets": "0.47,0.47,0.32,0.86 / 0.07,0.12,0.12,0.2 / 0.07,0.33,0.12,0.2 / 0.91,0.15,0.15,0.22 / 0.91,0.38,0.15,0.2 / 0.94,0.83,0.08,0.2",
+        "interval": 0.16,
+        "dim": 0.15,
+        "fadeAt": 0
+      },
+      "startFrame": 0,
+      "durationFrames": 31,
+      "locked": false,
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "end-card",
+      "name": "End card · Bloom",
+      "moduleId": "end-card-still",
+      "parameters": {
+        "eyebrow": "GENOBI // OPEN PATH",
+        "title": "BLOOM",
+        "subtitle": "ANIME TEASER",
+        "credit1": "MUSIC · KOSHIMAZAKI",
+        "credit2": "VIDEO · MINIMAX H3 OPEN WEIGHTS",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "color": "#62f2e4",
+        "accent": "#ff5ad8",
+        "steps": "Scanning the sheet / Mapping the callouts / Bringing it into bloom",
+        "done": "First look",
+        "duration": 2.4,
+        "still": "/media/director-templates/bloom-teaser/bloom-end-card.jpg"
+      },
+      "startFrame": 339,
+      "durationFrames": 119,
+      "locked": false,
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "crt",
+      "name": "Surveillance scanlines",
+      "moduleId": "crt",
+      "parameters": {
+        "amount": 0.55,
+        "curvature": 0.04,
+        "rgb": 1.5,
+        "vignette": 0.45
+      },
+      "startFrame": 31,
+      "durationFrames": 308,
+      "locked": false,
+      "kind": "filter",
+      "input": "composite-below"
+    },
+    {
+      "id": "wire",
+      "name": "Wireframe scan · full body",
+      "moduleId": "wire-scan",
+      "parameters": {
+        "color": "#62f2e4",
+        "amount": 0.85,
+        "sweep": 1.4,
+        "trail": 0.35
+      },
+      "startFrame": 216,
+      "durationFrames": 41,
+      "locked": false,
+      "kind": "filter",
+      "input": "composite-below"
+    },
+    {
+      "id": "glitch-1",
+      "name": "Slice glitch · beat 3",
+      "moduleId": "slice-glitch",
+      "parameters": {
+        "amount": 0.8,
+        "slices": 18,
+        "seed": 11,
+        "duration": 0.161
+      },
+      "startFrame": 31,
+      "durationFrames": 4,
+      "locked": false,
+      "track": "glitch",
+      "kind": "filter",
+      "input": "composite-below"
+    },
+    {
+      "id": "glitch-2",
+      "name": "Slice glitch · beat 11",
+      "moduleId": "slice-glitch",
+      "parameters": {
+        "amount": 0.7,
+        "slices": 18,
+        "seed": 18,
+        "duration": 0.161
+      },
+      "startFrame": 113,
+      "durationFrames": 4,
+      "locked": false,
+      "track": "glitch",
+      "kind": "filter",
+      "input": "composite-below"
+    },
+    {
+      "id": "glitch-3",
+      "name": "Slice glitch · beat 21",
+      "moduleId": "slice-glitch",
+      "parameters": {
+        "amount": 1,
+        "slices": 18,
+        "seed": 25,
+        "duration": 0.214
+      },
+      "startFrame": 216,
+      "durationFrames": 5,
+      "locked": false,
+      "track": "glitch",
+      "kind": "filter",
+      "input": "composite-below"
+    },
+    {
+      "id": "glitch-4",
+      "name": "Slice glitch · beat 25",
+      "moduleId": "slice-glitch",
+      "parameters": {
+        "amount": 0.8,
+        "slices": 18,
+        "seed": 32,
+        "duration": 0.161
+      },
+      "startFrame": 257,
+      "durationFrames": 4,
+      "locked": false,
+      "track": "glitch",
+      "kind": "filter",
+      "input": "composite-below"
+    },
+    {
+      "id": "glitch-5",
+      "name": "Slice glitch · beat 33",
+      "moduleId": "slice-glitch",
+      "parameters": {
+        "amount": 0.9,
+        "slices": 18,
+        "seed": 39,
+        "duration": 0.214
+      },
+      "startFrame": 339,
+      "durationFrames": 6,
+      "locked": false,
+      "track": "glitch",
+      "kind": "filter",
+      "input": "composite-below"
+    },
+    {
+      "id": "hud",
+      "name": "Surveillance HUD · REC / CAM",
+      "moduleId": "hud",
+      "parameters": {
+        "color": "#f6f8f2",
+        "accent": "#ff5ad8",
+        "bpm": 140,
+        "text": "● REC  CAM 01 // SUBJECT BLOOM",
+        "credit": "MUSIC / KOSHIMAZAKI",
+        "seconds": 12.857
+      },
+      "startFrame": 31,
+      "durationFrames": 308,
+      "locked": false,
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "open",
+      "name": "Screen open",
+      "moduleId": "screen-open",
+      "parameters": {
+        "color": "#62f2e4",
+        "matte": "#0b0a10",
+        "duration": 0.6,
+        "glyphs": 28,
+        "seed": 9
+      },
+      "startFrame": 0,
+      "durationFrames": 21,
+      "locked": false,
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "caption-1",
+      "name": "Caption · subject",
+      "moduleId": "build-panel",
+      "parameters": {
+        "side": "left",
+        "title": "BLOOM",
+        "lines": "SUBJECT 01 / FLORA-CYBERNETIC / TRACKING",
+        "color": "#f6f8f2",
+        "muted": "#cfc6dd",
+        "accent": "#ff5ad8",
+        "bpm": 140,
+        "duration": 0.6
+      },
+      "startFrame": 31,
+      "durationFrames": 41,
+      "locked": false,
+      "track": "captions",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "caption-2",
+      "name": "Caption · hand",
+      "moduleId": "build-panel",
+      "parameters": {
+        "side": "right",
+        "title": "CALLOUT 04",
+        "lines": "HAND / BLOOM EMITTER / ARMED",
+        "color": "#f6f8f2",
+        "muted": "#cfc6dd",
+        "accent": "#ff5ad8",
+        "bpm": 140,
+        "duration": 0.6
+      },
+      "startFrame": 154,
+      "durationFrames": 31,
+      "locked": false,
+      "track": "captions",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "caption-3",
+      "name": "Caption · stance",
+      "moduleId": "build-panel",
+      "parameters": {
+        "side": "left",
+        "title": "NINJA FORM",
+        "lines": "STANCE / ROOT LOCK / CHARGED",
+        "color": "#f6f8f2",
+        "muted": "#cfc6dd",
+        "accent": "#ff5ad8",
+        "bpm": 140,
+        "duration": 0.6
+      },
+      "startFrame": 185,
+      "durationFrames": 31,
+      "locked": false,
+      "track": "captions",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "scan",
+      "name": "Scan · helm",
+      "moduleId": "scan",
+      "parameters": {
+        "color": "#f6f8f2",
+        "accent": "#62f2e4",
+        "text": "HELM · GLASS DOME",
+        "x": 0.47,
+        "y": 0.34,
+        "bpm": 140
+      },
+      "startFrame": 72,
+      "durationFrames": 41,
+      "locked": false,
+      "kind": "graphics",
+      "opacity": 0.95,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "target-1",
+      "name": "Target box · CALLOUT 02 · LOTUS",
+      "moduleId": "ui-focus",
+      "parameters": {
+        "x": 0.33,
+        "y": 0.15,
+        "w": 0.34,
+        "h": 0.6,
+        "label": "CALLOUT 02 · LOTUS",
+        "color": "#ff5ad8",
+        "dim": 0.3,
+        "draw": 0.2,
+        "fadeAt": 0.707,
+        "view": ""
+      },
+      "startFrame": 51,
+      "durationFrames": 21,
+      "locked": false,
+      "track": "focus",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "target-2",
+      "name": "Target box · TARGET LOCK · KICK",
+      "moduleId": "ui-focus",
+      "parameters": {
+        "x": 0.39,
+        "y": 0.05,
+        "w": 0.32,
+        "h": 0.8,
+        "label": "TARGET LOCK · KICK",
+        "color": "#ff5ad8",
+        "dim": 0.3,
+        "draw": 0.2,
+        "fadeAt": 0.707,
+        "view": ""
+      },
+      "startFrame": 134,
+      "durationFrames": 20,
+      "locked": false,
+      "track": "focus",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "target-3",
+      "name": "Target box · TARGET LOCK · LEAP",
+      "moduleId": "ui-focus",
+      "parameters": {
+        "x": 0.38,
+        "y": 0.08,
+        "w": 0.24,
+        "h": 0.8,
+        "label": "TARGET LOCK · LEAP",
+        "color": "#ff5ad8",
+        "dim": 0.3,
+        "draw": 0.2,
+        "fadeAt": 0.707,
+        "view": ""
+      },
+      "startFrame": 257,
+      "durationFrames": 21,
+      "locked": false,
+      "track": "focus",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "hit-strike",
+      "name": "Impact · Strike",
+      "moduleId": "kinetic",
+      "parameters": {
+        "text": "STRIKE",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "weight": 700,
+        "color": "#f6f8f2",
+        "accent": "#0b0a10",
+        "bpm": 140,
+        "size": 130,
+        "beats": 1
+      },
+      "startFrame": 134,
+      "durationFrames": 10,
+      "locked": false,
+      "track": "impact",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "hit-bloom",
+      "name": "Impact · Bloom",
+      "moduleId": "kinetic",
+      "parameters": {
+        "text": "BLOOM",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "weight": 700,
+        "color": "#f6f8f2",
+        "accent": "#0b0a10",
+        "bpm": 140,
+        "size": 130,
+        "beats": 1
+      },
+      "startFrame": 278,
+      "durationFrames": 10,
+      "locked": false,
+      "track": "impact",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "title",
+      "name": "Title · Bloom",
+      "moduleId": "kinetic",
+      "parameters": {
+        "text": "BLOOM / ANIME TEASER",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "weight": 400,
+        "color": "#ff5ad8",
+        "accent": "#f6f8f2",
+        "bpm": 140,
+        "size": 150,
+        "beats": 4
+      },
+      "startFrame": 298,
+      "durationFrames": 41,
+      "locked": false,
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    }
+  ],
+  "generationPlans": [],
+  "generations": []
+}

@@ -1,0 +1,23 @@
+/** What `describe()` reports this World Builder can do. */
+export const SCENE_CAPABILITIES = [
+  "primitives",
+  "per-axis-transform",
+  "surface-image-video",
+  "playground-layout",
+  "avatar-pose",
+  "avatar-move-list",
+  "live-character-camera-control",
+  "live-session-recording",
+  "camera",
+  "fixed-frame-png-webm",
+  "capture-any-mode",
+  "move-seconds",
+  "orbit-360",
+  "seamless-loop",
+  "linear-depth-pass",
+  "audio-envelope",
+  "audio-mod-matrix",
+  "screen-image-video",
+  "recipe-json",
+  "scene-library",
+] as const;

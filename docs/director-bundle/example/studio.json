@@ -1,0 +1,1570 @@
+{
+  "schemaVersion": "director.bundle.v1",
+  "id": "signal-studies",
+  "revision": 1,
+  "name": "Signal studies / 01",
+  "composition": {
+    "fps": 30,
+    "durationFrames": 180,
+    "width": 640,
+    "height": 360,
+    "colorSpace": "srgb",
+    "alpha": "straight",
+    "background": "#101316",
+    "bpm": 120
+  },
+  "assets": {
+    "audio": {
+      "kind": "audio",
+      "use": "production",
+      "file": {
+        "path": "media/pulse.wav",
+        "sha256": "69c8217f4b1fee8b17e0c137d3ae662b83e069d212e2162a7c304e2b50283653"
+      },
+      "durationSeconds": 6,
+      "origin": "fixture"
+    },
+    "video": {
+      "kind": "video",
+      "use": "production",
+      "file": {
+        "path": "media/orbit-motion.mp4",
+        "sha256": "c7d377aecd79286985264ba1155843a3105b143fb703478159db75f9b329b55b"
+      },
+      "durationSeconds": 6,
+      "origin": "fixture"
+    },
+    "moodboard": {
+      "kind": "image",
+      "use": "reference",
+      "file": {
+        "path": "references/palette.svg",
+        "sha256": "3d434fe4ddb033827c094c50a24e596cf21d1bc146eee039c5a1b9d449260a4d"
+      },
+      "origin": "fixture"
+    },
+    "image-1": {
+      "kind": "image",
+      "use": "production",
+      "origin": "fixture",
+      "file": {
+        "path": "media/orbit-1.png",
+        "sha256": "7c1f471bbdcac06c19201f3f2ee441cfefbdefcbdb84f630442c31fada913eb4"
+      }
+    },
+    "image-2": {
+      "kind": "image",
+      "use": "production",
+      "origin": "fixture",
+      "file": {
+        "path": "media/orbit-2.png",
+        "sha256": "eb1d15c0e11c6dc33ba4a70692dde9209e9d6b6c68ee182f8f5c0a55c9030a79"
+      }
+    }
+  },
+  "modules": {
+    "rings": {
+      "engine": "p5",
+      "engineVersion": "2.3.4",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/p5-rings.mjs",
+        "sha256": "5db563e9037112e8fcae5df899c638faabf51979e0864763203fd05272b74199"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["color", "count"],
+        "properties": {
+          "color": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 12
+          }
+        }
+      }
+    },
+    "bars": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/anime-bars.mjs",
+        "sha256": "db2376fd0d66cc5910295095675c7c1003d733ca0cffcfd997bf6ab73bf3079e"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["color", "length"],
+        "properties": {
+          "color": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "length": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 272
+          }
+        }
+      }
+    },
+    "dither": {
+      "engine": "threejs",
+      "engineVersion": "0.180.0",
+      "mode": "filter",
+      "file": {
+        "path": "graphics/three-dither.mjs",
+        "sha256": "a6f0800b1fb1ab0d0d5a2c8ec9bd3eb414f6bb824779bcfe61e9d9c1fe85159b"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["amount", "levels"],
+        "properties": {
+          "amount": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "levels": {
+            "type": "integer",
+            "minimum": 2,
+            "maximum": 32
+          }
+        }
+      }
+    },
+    "title": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/anime-title.mjs",
+        "sha256": "84cc0b58830446d7c3b00f42dc44170b53245536ffb805cffaae90132f3a082e"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["text", "color", "size", "bpm"],
+        "properties": {
+          "text": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "color": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "size": {
+            "type": "number",
+            "minimum": 8,
+            "maximum": 96
+          },
+          "bpm": {
+            "type": "number",
+            "minimum": 20,
+            "maximum": 300
+          }
+        }
+      }
+    },
+    "crt": {
+      "engine": "threejs",
+      "engineVersion": "0.180.0",
+      "mode": "filter",
+      "file": {
+        "path": "graphics/three-crt.mjs",
+        "sha256": "dfc0f65e04232e7de2822a6da3adb15e606a5843a962e1db585831131a253513"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["amount", "curvature", "rgb", "vignette"],
+        "properties": {
+          "amount": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "curvature": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 0.3
+          },
+          "rgb": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 10
+          },
+          "vignette": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        }
+      }
+    },
+    "caption": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/anime-caption.mjs",
+        "sha256": "67d07b30779dfb04b26fb0cb22a691b6f99efc604e63dc0f4c79ca0b96bd1102"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["text", "color", "size", "bpm"],
+        "properties": {
+          "text": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "color": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "size": {
+            "type": "number",
+            "minimum": 8,
+            "maximum": 96
+          },
+          "bpm": {
+            "type": "number",
+            "minimum": 20,
+            "maximum": 300
+          }
+        }
+      }
+    },
+    "screen-open": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/mix-screen-open.mjs",
+        "sha256": "396bf3dab13d4f83f60a9790251dcf64cbb632e55b19d651169d70aba886e209"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["color", "matte", "duration", "glyphs", "seed"],
+        "properties": {
+          "color": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "matte": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "duration": {
+            "type": "number",
+            "minimum": 0.1,
+            "maximum": 8
+          },
+          "glyphs": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 64
+          },
+          "seed": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9999
+          }
+        }
+      }
+    },
+    "build-panel": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/mix-build-panel.mjs",
+        "sha256": "54c341f37a896d90bdd05e5b854671b5ca90962c65d8a98660cd15cda699beb6"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "side",
+          "title",
+          "lines",
+          "color",
+          "muted",
+          "accent",
+          "bpm",
+          "duration"
+        ],
+        "properties": {
+          "side": {
+            "type": "string",
+            "enum": ["left", "right"]
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "lines": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 200,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "color": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "muted": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "accent": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "bpm": {
+            "type": "number",
+            "minimum": 20,
+            "maximum": 300
+          },
+          "duration": {
+            "type": "number",
+            "minimum": 0.2,
+            "maximum": 8
+          }
+        }
+      }
+    },
+    "scan": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/mix-scan.mjs",
+        "sha256": "c55f2da9c34a8064758db970ca3f9f664bc22cf2be9f0c04707f2f09d8d20b50"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["color", "accent", "text", "x", "y", "bpm"],
+        "properties": {
+          "color": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "accent": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 32,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "x": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "y": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "bpm": {
+            "type": "number",
+            "minimum": 20,
+            "maximum": 300
+          }
+        }
+      }
+    },
+    "kinetic": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/mix-kinetic.mjs",
+        "sha256": "5352245651b8f5d1b2bb194326eead422ba7afe0c03bac6576b69d6ba4a9a50e"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "text",
+          "font",
+          "weight",
+          "color",
+          "accent",
+          "bpm",
+          "size",
+          "beats"
+        ],
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "font": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120,
+            "pattern": "^[A-Za-z0-9 ,\"'-]+$"
+          },
+          "weight": {
+            "type": "integer",
+            "minimum": 100,
+            "maximum": 900
+          },
+          "color": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "accent": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "bpm": {
+            "type": "number",
+            "minimum": 20,
+            "maximum": 300
+          },
+          "size": {
+            "type": "number",
+            "minimum": 8,
+            "maximum": 240
+          },
+          "beats": {
+            "type": "number",
+            "minimum": 0.25,
+            "maximum": 32
+          }
+        }
+      }
+    },
+    "hud": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/mix-hud.mjs",
+        "sha256": "623ccbbb6058884a5687b7d84b5e3c57cbcba11859ccb8642c6831c6957d4e2e"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["color", "accent", "bpm", "text", "credit", "seconds"],
+        "properties": {
+          "color": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "accent": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "bpm": {
+            "type": "number",
+            "minimum": 20,
+            "maximum": 300
+          },
+          "text": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 60,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "credit": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 60,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "seconds": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 120
+          }
+        }
+      }
+    },
+    "wire-scan": {
+      "engine": "threejs",
+      "engineVersion": "0.180.0",
+      "mode": "filter",
+      "file": {
+        "path": "graphics/mix-wire-scan.mjs",
+        "sha256": "ea23e0a7b8f48a503a65f2e316a612582a489a6eaf14aa8476950eca4bf4b117"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["color", "amount", "sweep", "trail"],
+        "properties": {
+          "color": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "amount": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "sweep": {
+            "type": "number",
+            "minimum": 0.1,
+            "maximum": 8
+          },
+          "trail": {
+            "type": "number",
+            "minimum": 0.05,
+            "maximum": 1
+          }
+        }
+      }
+    },
+    "slice-glitch": {
+      "engine": "threejs",
+      "engineVersion": "0.180.0",
+      "mode": "filter",
+      "file": {
+        "path": "graphics/mix-slice-glitch.mjs",
+        "sha256": "f1e5a045aae8ae9bc1b7691cd939c783cd078864c9ca7f945f85a17d7ccbb588"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["amount", "slices", "seed", "duration"],
+        "properties": {
+          "amount": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "slices": {
+            "type": "integer",
+            "minimum": 2,
+            "maximum": 64
+          },
+          "seed": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9999
+          },
+          "duration": {
+            "type": "number",
+            "minimum": 0.02,
+            "maximum": 2
+          }
+        }
+      }
+    },
+    "end-card": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/mix-end-card.mjs",
+        "sha256": "de103235d40ca2c883ea05dcff48920b7acf5e74e0252fa9b7ffe7c7b22aa12c"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "eyebrow",
+          "title",
+          "subtitle",
+          "credit1",
+          "credit2",
+          "font",
+          "color",
+          "accent",
+          "steps",
+          "done",
+          "duration"
+        ],
+        "properties": {
+          "eyebrow": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 32,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 24,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "subtitle": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 36,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "credit1": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 50,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "credit2": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 50,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "font": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120,
+            "pattern": "^[A-Za-z0-9 ,\"'-]+$"
+          },
+          "color": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "accent": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "steps": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 160,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "done": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 40,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "duration": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 8
+          }
+        }
+      }
+    },
+    "end-card-still": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/mix-end-card-still.mjs",
+        "sha256": "1a9c3dd024156211a0ad4c4acc39dabe79e7d87be90c6aecc9f397048f64ab5c"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "eyebrow",
+          "title",
+          "subtitle",
+          "credit1",
+          "credit2",
+          "font",
+          "color",
+          "accent",
+          "steps",
+          "done",
+          "duration",
+          "still"
+        ],
+        "properties": {
+          "eyebrow": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 32,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 24,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "subtitle": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 36,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "credit1": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 50,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "credit2": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 50,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "font": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120,
+            "pattern": "^[A-Za-z0-9 ,\"'-]+$"
+          },
+          "color": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "accent": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "steps": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 160,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "done": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 40,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "duration": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 8
+          },
+          "still": {
+            "type": "string",
+            "maxLength": 120,
+            "pattern": "^/media/[a-z0-9][a-z0-9/_-]*\\.(jpg|png|webp)$"
+          }
+        }
+      }
+    },
+    "gen-title": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/teaser-gen-title.mjs",
+        "sha256": "adbe6034b8c9be483935439e016d0dc8d93b6e0d396d693a3be867fa2a273606"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "text",
+          "line",
+          "font",
+          "size",
+          "color",
+          "muted",
+          "accent",
+          "x",
+          "y",
+          "duration",
+          "mode",
+          "steps",
+          "done",
+          "fadeAt",
+          "plate"
+        ],
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 28,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "line": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 480,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "font": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120,
+            "pattern": "^[A-Za-z0-9 ,\"'-]+$"
+          },
+          "size": {
+            "type": "number",
+            "minimum": 24,
+            "maximum": 220
+          },
+          "color": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "muted": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "accent": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "x": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "y": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "duration": {
+            "type": "number",
+            "minimum": 0.8,
+            "maximum": 8
+          },
+          "mode": {
+            "type": "string",
+            "enum": ["trace", "trace-texts"]
+          },
+          "steps": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 160,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "done": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 40,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "fadeAt": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 60
+          },
+          "plate": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        }
+      }
+    },
+    "gen-image": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/teaser-gen-image.mjs",
+        "sha256": "e53de680444d386c9e626f576d71656c818db8f6967af01413863f39a225bd93"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "still",
+          "matte",
+          "accent",
+          "inset",
+          "duration",
+          "mode",
+          "steps",
+          "done",
+          "fadeAt"
+        ],
+        "properties": {
+          "still": {
+            "type": "string",
+            "maxLength": 120,
+            "pattern": "^/media/[a-z0-9][a-z0-9/_-]*\\.(jpg|png|webp)$"
+          },
+          "matte": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "accent": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "inset": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 0.3
+          },
+          "duration": {
+            "type": "number",
+            "minimum": 0.8,
+            "maximum": 8
+          },
+          "mode": {
+            "type": "string",
+            "enum": ["trace", "trace-texts"]
+          },
+          "steps": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 160,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "done": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 40,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "fadeAt": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 60
+          }
+        }
+      }
+    },
+    "gen-status": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/teaser-gen-status.mjs",
+        "sha256": "c2b228effed009182d72c62630ec8a39234d517e350e61216f50b4f935b189b2"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "label",
+          "done",
+          "variant",
+          "color",
+          "x",
+          "y",
+          "scale",
+          "doneAt",
+          "fadeAt"
+        ],
+        "properties": {
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 48,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "done": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 48,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "variant": {
+            "type": "string",
+            "enum": ["scan", "twinkle", "orbit", "pulse"]
+          },
+          "color": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "x": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "y": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "scale": {
+            "type": "number",
+            "minimum": 0.5,
+            "maximum": 3
+          },
+          "doneAt": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 60
+          },
+          "fadeAt": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 60
+          }
+        }
+      }
+    },
+    "ui-zoom": {
+      "engine": "threejs",
+      "engineVersion": "0.180.0",
+      "mode": "filter",
+      "file": {
+        "path": "graphics/teaser-zoom.mjs",
+        "sha256": "f6cd7c39dd4abd5f625260dee5c1bd0c2b3c6b4e303381e534beb8a9856b6b69"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "fromX",
+          "fromY",
+          "fromZoom",
+          "x",
+          "y",
+          "zoom",
+          "ease",
+          "drift"
+        ],
+        "properties": {
+          "fromX": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "fromY": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "fromZoom": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 6
+          },
+          "x": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "y": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "zoom": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 6
+          },
+          "ease": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 8
+          },
+          "drift": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 0.2
+          }
+        }
+      }
+    },
+    "ui-cursor": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/teaser-cursor.mjs",
+        "sha256": "6077050ef15a65a2d7a74a5b25dd6ee0bab476b6bac4b09965a541760722aed5"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "clicks",
+          "fill",
+          "outline",
+          "color",
+          "size",
+          "view"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 600,
+            "pattern": "^[0-9.:, /]+$"
+          },
+          "clicks": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 200,
+            "pattern": "^[0-9. /]*$"
+          },
+          "fill": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "outline": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "color": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "size": {
+            "type": "number",
+            "minimum": 0.5,
+            "maximum": 3
+          },
+          "view": {
+            "type": "string",
+            "maxLength": 160,
+            "pattern": "^$|^[0-9]+,[0-9]+,[0-9]+,[0-9]+(;[0-9.]+,-?[0-9.]+,-?[0-9.]+){3}$"
+          }
+        }
+      }
+    },
+    "ui-focus": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/teaser-focus.mjs",
+        "sha256": "904b427c4360cf1acd891efe34c602472a828e736102ea35c274cb0a33013b3e"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "x",
+          "y",
+          "w",
+          "h",
+          "label",
+          "color",
+          "dim",
+          "draw",
+          "fadeAt",
+          "view"
+        ],
+        "properties": {
+          "x": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "y": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "w": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "h": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "label": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 40,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "color": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "dim": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "draw": {
+            "type": "number",
+            "minimum": 0.1,
+            "maximum": 4
+          },
+          "fadeAt": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 60
+          },
+          "view": {
+            "type": "string",
+            "maxLength": 160,
+            "pattern": "^$|^[0-9]+,[0-9]+,[0-9]+,[0-9]+(;[0-9.]+,-?[0-9.]+,-?[0-9.]+){3}$"
+          }
+        }
+      }
+    },
+    "signal-wipe": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/teaser-wipe.mjs",
+        "sha256": "a8d2aea4e76818c478c5bf08ced08585d4a915fc1d18d885a4c585218fafde37"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["direction", "color", "accent", "seconds", "seed"],
+        "properties": {
+          "direction": {
+            "type": "string",
+            "enum": ["left", "right", "up", "down"]
+          },
+          "color": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "accent": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "seconds": {
+            "type": "number",
+            "minimum": 0.1,
+            "maximum": 4
+          },
+          "seed": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9999
+          }
+        }
+      }
+    },
+    "paper-shader": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/teaser-paper.mjs",
+        "sha256": "5f6d70ad74a416ef164968e05e87b1270c97354dd20d6b141197c955d3e7aff2"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "shader",
+          "colors",
+          "back",
+          "backAlpha",
+          "speed",
+          "scale",
+          "intensity",
+          "seed",
+          "fadeAt"
+        ],
+        "properties": {
+          "shader": {
+            "type": "string",
+            "enum": [
+              "dithering",
+              "mesh-gradient",
+              "dot-orbit",
+              "god-rays",
+              "swirl",
+              "voronoi"
+            ]
+          },
+          "colors": {
+            "type": "string",
+            "minLength": 7,
+            "maxLength": 79,
+            "pattern": "^#[0-9a-fA-F]{6}(,#[0-9a-fA-F]{6}){0,9}$"
+          },
+          "back": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "backAlpha": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "speed": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 4
+          },
+          "scale": {
+            "type": "number",
+            "minimum": 0.1,
+            "maximum": 4
+          },
+          "intensity": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "seed": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1000
+          },
+          "fadeAt": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 60
+          }
+        }
+      }
+    },
+    "space-hud": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/teaser-space.mjs",
+        "sha256": "33f3c5d049a6ef1de996ff7a63da347b39ca092c16ace5ef4ddafcf8fe29855e"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "still",
+          "color",
+          "label",
+          "credit",
+          "targets",
+          "interval",
+          "dim",
+          "fadeAt"
+        ],
+        "properties": {
+          "still": {
+            "type": "string",
+            "maxLength": 120,
+            "pattern": "^/media/[a-z0-9][a-z0-9/_-]*\\.(jpg|png|webp)$"
+          },
+          "color": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "label": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 32,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "credit": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 40,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "targets": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 200,
+            "pattern": "^[0-9., /]*$"
+          },
+          "interval": {
+            "type": "number",
+            "minimum": 0.05,
+            "maximum": 2
+          },
+          "dim": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "fadeAt": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 60
+          }
+        }
+      }
+    }
+  },
+  "layers": [
+    {
+      "id": "score",
+      "name": "Pulse / 120 BPM",
+      "kind": "audio",
+      "startFrame": 0,
+      "durationFrames": 180,
+      "locked": false,
+      "assetId": "audio",
+      "sourceStartFrame": 0,
+      "gain": 1
+    },
+    {
+      "id": "plate",
+      "name": "Orbit / video plate",
+      "kind": "video",
+      "startFrame": 0,
+      "durationFrames": 180,
+      "locked": false,
+      "assetId": "video",
+      "sourceStartFrame": 0,
+      "fit": "contain",
+      "opacity": 1,
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "scale": 1,
+      "rotationDegrees": 0
+    },
+    {
+      "id": "photo-1",
+      "name": "Orbit 1",
+      "kind": "image",
+      "assetId": "image-1",
+      "fit": "contain",
+      "startFrame": 60,
+      "durationFrames": 30,
+      "locked": false,
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "motion": {
+        "scaleTo": 1.12,
+        "xTo": 0,
+        "yTo": 0,
+        "opacityTo": 1
+      }
+    },
+    {
+      "id": "photo-2",
+      "name": "Orbit 2",
+      "kind": "image",
+      "assetId": "image-2",
+      "fit": "contain",
+      "startFrame": 90,
+      "durationFrames": 30,
+      "locked": false,
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "motion": {
+        "scaleTo": 1.12,
+        "xTo": 0,
+        "yTo": 0,
+        "opacityTo": 1
+      }
+    },
+    {
+      "id": "pulse",
+      "name": "p5 rings",
+      "kind": "graphics",
+      "startFrame": 0,
+      "durationFrames": 180,
+      "locked": false,
+      "moduleId": "rings",
+      "parameters": {
+        "color": "#a8be5c",
+        "count": 3
+      },
+      "opacity": 0.65,
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "scale": 1,
+      "rotationDegrees": 0
+    },
+    {
+      "id": "labels",
+      "name": "Anime bars",
+      "kind": "graphics",
+      "startFrame": 30,
+      "durationFrames": 120,
+      "locked": true,
+      "moduleId": "bars",
+      "parameters": {
+        "color": "#8dbce8",
+        "length": 160
+      },
+      "opacity": 0.85,
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "scale": 1,
+      "rotationDegrees": 0
+    },
+    {
+      "id": "finish",
+      "name": "Three dither",
+      "kind": "filter",
+      "startFrame": 90,
+      "durationFrames": 90,
+      "locked": false,
+      "moduleId": "dither",
+      "input": "composite-below",
+      "parameters": {
+        "amount": 0.6,
+        "levels": 5
+      }
+    },
+    {
+      "id": "title",
+      "name": "Signal / animated title",
+      "kind": "graphics",
+      "moduleId": "title",
+      "startFrame": 0,
+      "durationFrames": 180,
+      "locked": false,
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "parameters": {
+        "text": "SIGNAL STUDIES",
+        "color": "#e4e8ed",
+        "size": 42,
+        "bpm": 120
+      }
+    },
+    {
+      "id": "crt-pass",
+      "name": "CRT / RGB / vignette",
+      "kind": "filter",
+      "moduleId": "crt",
+      "input": "composite-below",
+      "startFrame": 0,
+      "durationFrames": 180,
+      "locked": false,
+      "parameters": {
+        "amount": 0.85,
+        "curvature": 0.08,
+        "rgb": 1.3,
+        "vignette": 0.45
+      }
+    }
+  ],
+  "generationPlans": [
+    {
+      "id": "replace-test-pattern",
+      "status": "not-run",
+      "replaceAssetId": "video",
+      "referenceAssetIds": ["moodboard"],
+      "prompt": "Replace the fixture with a six-second camera move using the palette and graphic rhythm as style guidance."
+    }
+  ],
+  "generations": []
+}

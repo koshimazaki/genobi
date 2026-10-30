@@ -1,0 +1,42 @@
+# ComfyUI with AKUSPACE and LTX-2.5 on one NVIDIA GPU.
+#
+#   cp env.example .env              # add HF_TOKEN
+#   docker compose build
+#   docker compose run --rm fetch-models
+#   docker compose up -d
+#   docker compose exec comfyui sh /opt/akuspace/scripts/entrypoint.sh verify
+#
+# ComfyUI has no sign-in, so the port is bound to this machine only. Reach a
+# rented box through an SSH tunnel or Tailscale rather than opening it.
+services:
+  comfyui:
+    build:
+      context: .
+      args:
+        TORCH_INDEX_URL: ${TORCH_INDEX_URL:-}
+    image: genobi/akuspace-comfy:local
+    ports:
+      - "127.0.0.1:${AKUSPACE_PORT:-8188}:8188"
+    # No keys: the Hugging Face token stays with fetch-models.
+    environment:
+      COMFY_ARGS: ${COMFY_ARGS:-}
+    volumes:
+      - ${AKUSPACE_DATA:-./data}:/data
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    restart: unless-stopped
+
+  # One-off download of the weights into the same volume; needs no GPU.
+  fetch-models:
+    image: genobi/akuspace-comfy:local
+    profiles: [setup]
+    command: fetch-models
+    environment:
+      HF_TOKEN: ${HF_TOKEN:-}
+    volumes:
+      - ${AKUSPACE_DATA:-./data}:/data

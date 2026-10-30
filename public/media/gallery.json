@@ -1,0 +1,106 @@
+[
+  {
+    "id": "library-05",
+    "label": "Creature in flowers, push in and pull back",
+    "url": "/media/library-05.mp4",
+    "poster": "/media/library-05.jpg",
+    "width": 1920,
+    "height": 1080,
+    "duration": 15.041667,
+    "bytes": 22824518,
+    "model": "minimax-h3-router",
+    "description": "A moss-grown robot creature trains among biting flowers in overgrown ruins at dusk: whip spins, a leap, then a wide pull-back to it meditating. Machine generated with MiniMax H3 (open weights) and upscaled, outside Camera; no prompt is on record."
+  },
+  {
+    "id": "library-06",
+    "label": "Creature morph, slow push in",
+    "url": "/media/library-06.mp4",
+    "poster": "/media/library-06.jpg",
+    "width": 1920,
+    "height": 1098,
+    "duration": 15.041667,
+    "bytes": 19633049,
+    "model": "minimax-h3-router",
+    "description": "A cloaked forest spirit fights, then unfolds into a petal-headed creature with one glowing eye among floating orbs. Machine generated with MiniMax H3 (open weights) and upscaled, outside Camera; no prompt is on record."
+  },
+  {
+    "id": "library-07",
+    "label": "Creature particles, orbit",
+    "url": "/media/library-07.mp4",
+    "poster": "/media/library-07.jpg",
+    "width": 1920,
+    "height": 1080,
+    "duration": 15.041667,
+    "bytes": 24207733,
+    "model": "minimax-h3-router",
+    "description": "An antlered water spirit raises rings of pink light orbs in a painted forest lake; the camera circles it. Machine generated with MiniMax H3 (open weights) and upscaled, outside Camera; no prompt is on record."
+  },
+  {
+    "id": "library-02",
+    "label": "Chrome chair, orbit",
+    "url": "/media/library-02.mp4",
+    "poster": "/media/library-02.jpg",
+    "width": 960,
+    "height": 528,
+    "duration": 5.041667,
+    "bytes": 421391,
+    "setup": {
+      "generator": "video",
+      "description": "A sculptural chrome chair in a quiet concrete gallery. Soft afternoon light falls across the floor.",
+      "camera": {
+        "shot-sizes": "close-up",
+        "angles": "high-angle",
+        "movements": "orbit"
+      },
+      "cameraEdits": {
+        "close-up": "Close-up of the subject.",
+        "high-angle": "High angle looking down at the subject.",
+        "orbit": "Slow orbit around the subject."
+      },
+      "cameraEnabled": true,
+      "duration": 5,
+      "resolution": "hd",
+      "aspectRatio": "16:9",
+      "draft": false,
+      "upscaleFactor": 2,
+      "upscaleCreativity": 0,
+      "prompt": "A sculptural chrome chair in a quiet concrete gallery. Soft afternoon light falls across the floor.\n\nClose-up of the subject.\n\nHigh angle looking down at the subject.\n\nSlow orbit around the subject.",
+      "costUsd": 0.85,
+      "generatedAt": "2026-09-19T20:42:38.485Z"
+    }
+  },
+  {
+    "id": "library-04",
+    "label": "Red cabin, dolly in",
+    "url": "/media/library-04.mp4",
+    "poster": "/media/library-04.jpg",
+    "width": 960,
+    "height": 528,
+    "duration": 5.041667,
+    "bytes": 569518,
+    "setup": {
+      "generator": "video",
+      "description": "A solitary red cabin on a rocky island. Early morning mist, still water and a soft overcast sky.",
+      "camera": {
+        "shot-sizes": "macro",
+        "angles": "worms-eye",
+        "movements": "dolly-in"
+      },
+      "cameraEdits": {
+        "macro": "Macro detail of the subject's surface.",
+        "worms-eye": "Worm's eye view from ground level.",
+        "dolly-in": "Dolly in toward the subject."
+      },
+      "cameraEnabled": true,
+      "duration": 5,
+      "resolution": "hd",
+      "aspectRatio": "16:9",
+      "draft": true,
+      "upscaleFactor": 2,
+      "upscaleCreativity": 0,
+      "prompt": "A solitary red cabin on a rocky island. Early morning mist, still water and a soft overcast sky.\n\nMacro detail of the subject's surface.\n\nWorm's eye view from ground level.\n\nDolly in toward the subject.",
+      "costUsd": 0.3,
+      "generatedAt": "2026-09-19T20:46:09.015Z"
+    }
+  }
+]

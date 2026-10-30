@@ -1,0 +1,104 @@
+/* The Sound tab's mod matrix (ModMatrixEditor.tsx). */
+.wb-mod-matrix {
+  display: grid;
+  gap: 8px;
+}
+.wb-mod-route {
+  display: grid;
+  gap: 8px;
+  padding: 9px 10px 10px;
+  background: var(--sunken);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.wb-mod-route[data-enabled="false"] {
+  opacity: 0.58;
+}
+.wb-mod-route-head {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.wb-mod-route-target {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 7px;
+}
+/* The target takes the full row; property and Inv share the next. */
+.wb-mod-route-target > :first-child {
+  grid-column: 1 / -1;
+}
+.wb-mod-route-head > button,
+.wb-mod-route-target > button {
+  flex: none;
+  padding: 4px 8px;
+  font: 9px var(--mono);
+  text-transform: uppercase;
+}
+.wb-mod-route-target > button[aria-pressed="true"] {
+  color: var(--readout);
+  border-color: var(--accent);
+}
+.wb-mod-sources {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.wb-mod-sources button {
+  position: relative;
+  min-width: 0;
+  height: 28px;
+  padding: 0 4px;
+  overflow: hidden;
+  font: 9px var(--mono);
+  text-transform: uppercase;
+  background: transparent;
+  border-color: transparent;
+  color: var(--muted);
+}
+.wb-mod-sources button[aria-checked="true"] {
+  color: var(--readout);
+  background: var(--metal);
+  border-color: var(--border);
+}
+.wb-mod-sources button span {
+  position: absolute;
+  left: 5px;
+  right: 5px;
+  bottom: 3px;
+  height: 2px;
+  transform-origin: left center;
+  border-radius: 1px;
+  background: var(--accent);
+  opacity: 0.4;
+}
+.wb-mod-route-sliders {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+}
+.wb-mod-route-sliders label {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.wb-mod-route-sliders span {
+  display: flex;
+  justify-content: space-between;
+  font: 8.5px var(--mono);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.wb-mod-route-sliders output {
+  color: var(--readout);
+}
+.wb-mod-route-sliders input {
+  width: 100%;
+  accent-color: var(--accent);
+}

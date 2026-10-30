@@ -1,0 +1,16 @@
+.anchored-popover {
+  position: fixed;
+  z-index: 120;
+  max-height: calc(100dvh - 24px);
+  overflow: auto;
+  box-sizing: border-box;
+  padding: 10px;
+  background: var(--raised);
+  color: var(--text);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-panel);
+  box-shadow: 0 12px 32px var(--shadow-dialog);
+}
+.anchored-popover:focus {
+  outline: none;
+}

@@ -1,0 +1,2077 @@
+{
+  "generated": "By scripts/wiki-index.mjs; run npm run wiki:index. Paths are relative to docs/.",
+  "tags": {
+    "vision": {
+      "meaning": "What Genobi is for and why",
+      "pages": ["agent-workspace.md", "submission.md", "vision.md"]
+    },
+    "plan": {
+      "meaning": "Plans, sequencing, scope decisions and requirement capture",
+      "pages": [
+        "agent-workspace.md",
+        "director-studio-shell.md",
+        "dual-editor-editing.md",
+        "genmod.md",
+        "genobi-deck.md",
+        "supervised-workflow-checks.md"
+      ]
+    },
+    "design": {
+      "meaning": "Design mocks and port handoffs for a studio surface",
+      "pages": ["editor-timeline.md"]
+    },
+    "architecture": {
+      "meaning": "The cloud boundary, adapters, deployment and review",
+      "pages": [
+        "activity-settings.md",
+        "architecture.md",
+        "cloudflare.md",
+        "read-through.md",
+        "review-checklist.md",
+        "runner-pairing.md",
+        "taste-memory.md",
+        "verification.md"
+      ]
+    },
+    "workflows": {
+      "meaning": "Generation workflows, Comfy graphs and handoffs",
+      "pages": [
+        "akuspace-docker.md",
+        "arena.md",
+        "comfy-cloud-inventory.md",
+        "comfy-deployment.md",
+        "director-comfy.md",
+        "genmod.md",
+        "media-space.md",
+        "openjutsu-swap.md",
+        "run-location.md",
+        "runs/anime-teaser.md",
+        "seedvr2-upscale.md",
+        "supervised-workflow-checks.md",
+        "upscaling.md",
+        "vfx-recipes/README.md",
+        "vfx-recipes/anime-opening.md",
+        "vfx-recipes/hologram-turntable.md",
+        "vfx-recipes/neon-glitch.md",
+        "vfx-recipes/surveillance-scan.md",
+        "workflow-reference-library.md"
+      ]
+    },
+    "camera": {
+      "meaning": "Camera wording, moves and their sources",
+      "pages": [
+        "3d-tab.md",
+        "camera-wording.md",
+        "layout-to-render-status.md",
+        "minimax-h3-camera.md"
+      ]
+    },
+    "director": {
+      "meaning": "The Director composer, its templates, editor and evidence",
+      "pages": [
+        "agent-workspace.md",
+        "anime-teaser-template.md",
+        "bloom-teaser.md",
+        "construction-motion.md",
+        "credits/README.md",
+        "credits/libraries/alien-js/README.md",
+        "credits/libraries/animejs/README.md",
+        "credits/libraries/ascii-magic-art/README.md",
+        "credits/libraries/claude-animation-base/README.md",
+        "credits/libraries/cli-spinners/README.md",
+        "credits/libraries/crt-terminal/README.md",
+        "credits/libraries/geist/README.md",
+        "credits/libraries/glyphcss/README.md",
+        "credits/libraries/hermes/README.md",
+        "credits/libraries/ibm-plex-mono/README.md",
+        "credits/libraries/krbn/README.md",
+        "credits/libraries/matrix-rain/README.md",
+        "credits/libraries/p5-brush/README.md",
+        "credits/libraries/p5/README.md",
+        "credits/libraries/paper-shaders/README.md",
+        "credits/libraries/pixi-filters/README.md",
+        "credits/libraries/play-core/README.md",
+        "credits/libraries/space-js/README.md",
+        "credits/libraries/svgbob-wasm/README.md",
+        "credits/libraries/textmode-js/README.md",
+        "credits/libraries/three-plotter-renderer/README.md",
+        "credits/libraries/three/README.md",
+        "credits/libraries/transitions-ui-generation/README.md",
+        "dimensions-mix.md",
+        "director-agent-tools.md",
+        "director-bundle/README.md",
+        "director-bundle/motion-effects.md",
+        "director-bundle/showcase/README.md",
+        "director-bundle/showcase/bloom-teaser/README.md",
+        "director-bundle/showcase/dimensions-mix/README.md",
+        "director-bundle/showcase/genobi-teaser/README.md",
+        "director-comfy.md",
+        "director-prompts.md",
+        "director-references.md",
+        "director-remix-research.md",
+        "director-remix-verification.md",
+        "director-resolution.md",
+        "director-studio-shell.md",
+        "director-working-version.md",
+        "dual-editor-editing.md",
+        "dual-editor.md",
+        "editor-timeline.md",
+        "genmod.md",
+        "genobi-teaser-run/README.md",
+        "genobi-teaser-run/claims.md",
+        "genobi-teaser-run/decision-table.md",
+        "genobi-teaser.md",
+        "licence-strategy.md",
+        "motion-fonts.md",
+        "project-assets.md",
+        "runs/anime-teaser.md",
+        "scrolls.md",
+        "taste-memory.md",
+        "template-gallery.md",
+        "templates.md",
+        "vfx-recipes/README.md",
+        "vfx-recipes/anime-opening.md",
+        "vfx-recipes/hologram-turntable.md",
+        "vfx-recipes/neon-glitch.md",
+        "vfx-recipes/surveillance-scan.md",
+        "workflow-reference-library.md"
+      ]
+    },
+    "3d": {
+      "meaning": "3D Ninja, World Builder and scenes",
+      "pages": [
+        "3d-tab.md",
+        "falling-room.md",
+        "scene-builder.md",
+        "scene-examples.md",
+        "vfx-recipes/hologram-turntable.md",
+        "vision.md",
+        "world-builder-acoustics.md",
+        "world-builder-capture.md",
+        "world-builder-controls.md",
+        "world-builder-interface.md",
+        "world-builder-sound.md",
+        "world-builder-verification.md",
+        "world-builder.md",
+        "world-live.md"
+      ]
+    },
+    "sound": {
+      "meaning": "Audio, soundtracks and Acoustic Space",
+      "pages": [
+        "akuspace-docker.md",
+        "anime-teaser-template.md",
+        "audio-analysis.md",
+        "bloom-teaser.md",
+        "camera-wording.md",
+        "dimensions-mix.md",
+        "director-bundle/showcase/bloom-teaser/README.md",
+        "director-bundle/showcase/dimensions-mix/README.md",
+        "director-bundle/showcase/genobi-teaser/README.md",
+        "falling-room.md",
+        "genobi-teaser-run/decision-table.md",
+        "genobi-teaser.md",
+        "media-space.md",
+        "scene-builder.md",
+        "scene-examples.md",
+        "scrolls.md",
+        "templates.md",
+        "vision.md",
+        "world-builder-acoustics.md",
+        "world-builder-sound.md"
+      ]
+    },
+    "agents": {
+      "meaning": "Agent commands, skills, linking and agent-facing references",
+      "pages": [
+        "activity-settings.md",
+        "agent-approvals.md",
+        "agent-bubble.md",
+        "agent-context.md",
+        "agent-sessions.md",
+        "agent-setup.md",
+        "agent-workspace.md",
+        "anime-teaser-template.md",
+        "arena.md",
+        "audio-analysis.md",
+        "capabilities.md",
+        "credits/README.md",
+        "director-agent-tools.md",
+        "director-bundle/README.md",
+        "director-bundle/motion-effects.md",
+        "director-bundle/showcase/README.md",
+        "director-prompts.md",
+        "director-references.md",
+        "dual-editor.md",
+        "falling-room.md",
+        "genobi-cli.md",
+        "genobi-deck.md",
+        "genobi-teaser-run/README.md",
+        "genobi-teaser-run/claims.md",
+        "genobi-teaser-run/decision-table.md",
+        "genobi-teaser-run/run-log-template.md",
+        "hermes-open-route.md",
+        "hermes-profiles.md",
+        "hermes-runs.md",
+        "hermes-runs/2026-10-24-claude-watcher-example.md",
+        "hermes-runs/2026-10-27-claude-anime-teaser.md",
+        "hermes-runs/2026-10-28-hermes-audio-visual-library-dry-run.md",
+        "hermes-runs/2026-10-28-hermes-audio-visual-library-review.md",
+        "licence-strategy.md",
+        "machine-check.md",
+        "registry-skills.md",
+        "registry-tools.md",
+        "registry.md",
+        "runner-pairing.md",
+        "runs/anime-teaser.md",
+        "scene-builder.md",
+        "scene-examples.md",
+        "scrolls.md",
+        "supervised-workflow-checks.md",
+        "supervisor.md",
+        "taste-memory.md",
+        "teachings.md",
+        "upscaling.md",
+        "vfx-recipes/README.md",
+        "vision.md",
+        "voice-mode.md",
+        "workflow-reference-library.md",
+        "world-builder.md",
+        "world-live.md"
+      ]
+    },
+    "setup": {
+      "meaning": "First-run setup, keys, harness sign-in and onboarding",
+      "pages": ["agent-setup.md", "teachings.md"]
+    },
+    "voice": {
+      "meaning": "Voice mode: installer, transcription, mic and dictionary",
+      "pages": []
+    },
+    "templates": {
+      "meaning": "House templates, their inputs, intake and skills",
+      "pages": [
+        "anime-teaser-template.md",
+        "bloom-teaser.md",
+        "falling-room.md"
+      ]
+    },
+    "backend": {
+      "meaning": "Server and Worker API, jobs, storage and providers",
+      "pages": [
+        "agent-approvals.md",
+        "agent-sessions.md",
+        "agent-setup.md",
+        "architecture.md",
+        "audio-analysis.md",
+        "bfl-key-reuse.md",
+        "cloudflare.md",
+        "comfy-deployment.md",
+        "genobi-cli.md",
+        "layout-to-render-status.md",
+        "machine-check.md",
+        "media-space.md",
+        "openjutsu-swap.md",
+        "read-through.md",
+        "run-location.md",
+        "voice-mode.md",
+        "voice-setup.md"
+      ]
+    },
+    "cloudflare": {
+      "meaning": "Pages, the Worker, D1 and R2",
+      "pages": [
+        "architecture.md",
+        "cloudflare.md",
+        "runner-pairing.md",
+        "template-gallery.md"
+      ]
+    },
+    "comfy": {
+      "meaning": "Comfy Cloud, Comfy Router, workflows and nodes",
+      "pages": [
+        "akuspace-docker.md",
+        "camera-wording.md",
+        "comfy-cloud-inventory.md",
+        "comfy-deployment.md",
+        "director-comfy.md",
+        "director-remix-verification.md",
+        "minimax-h3-camera.md",
+        "openjutsu-swap.md",
+        "run-location.md",
+        "seedvr2-upscale.md",
+        "upscaling.md",
+        "workflow-reference-library.md",
+        "world-builder-acoustics.md",
+        "world-builder.md"
+      ]
+    },
+    "ltx": {
+      "meaning": "LTX models and prompting",
+      "pages": [
+        "akuspace-docker.md",
+        "anime-teaser-template.md",
+        "camera-wording.md",
+        "director-comfy.md",
+        "genmod.md",
+        "runs/anime-teaser.md",
+        "templates.md"
+      ]
+    },
+    "bfl": {
+      "meaning": "The BFL FLUX API and its documentation",
+      "pages": [
+        "architecture.md",
+        "bfl-key-reuse.md",
+        "camera-wording.md",
+        "credits.md",
+        "upscaling.md"
+      ]
+    },
+    "mcp": {
+      "meaning": "The Genobi MCP server and agent plugin",
+      "pages": [
+        "agent-sessions.md",
+        "arena.md",
+        "audio-analysis.md",
+        "capabilities.md",
+        "dual-editor.md",
+        "genobi-cli.md",
+        "hermes-open-route.md",
+        "hermes-profiles.md",
+        "hermes-runs.md",
+        "hermes-runs/2026-10-24-claude-watcher-example.md",
+        "hermes-runs/2026-10-27-claude-anime-teaser.md",
+        "hermes-runs/2026-10-28-hermes-audio-visual-library-dry-run.md",
+        "hermes-runs/2026-10-28-hermes-audio-visual-library-review.md",
+        "machine-check.md",
+        "media-space.md",
+        "openjutsu-swap.md",
+        "registry-skills.md",
+        "registry-tools.md",
+        "registry.md",
+        "run-location.md",
+        "scene-builder.md",
+        "scene-examples.md",
+        "scrolls.md",
+        "upscaling.md",
+        "world-live.md"
+      ]
+    },
+    "studio": {
+      "meaning": "The studio interface, shell, layouts and state",
+      "pages": [
+        "3d-tab.md",
+        "activity-settings.md",
+        "agent-approvals.md",
+        "agent-bubble.md",
+        "agent-context.md",
+        "agent-sessions.md",
+        "agent-setup.md",
+        "arena.md",
+        "bfl-key-reuse.md",
+        "director-resolution.md",
+        "director-studio-shell.md",
+        "director-working-version.md",
+        "editor-timeline.md",
+        "genobi-deck.md",
+        "project-assets.md",
+        "read-through.md",
+        "run-location.md",
+        "studio-interface.md",
+        "supervised-workflow-checks.md",
+        "supervisor.md",
+        "teachings.md",
+        "template-gallery.md",
+        "voice-mode.md",
+        "voice-setup.md",
+        "world-builder-controls.md",
+        "world-builder-interface.md"
+      ]
+    },
+    "dual-editor": {
+      "meaning": "Dual Editor",
+      "pages": ["dual-editor-editing.md", "dual-editor.md", "project-assets.md"]
+    },
+    "world-builder": {
+      "meaning": "World Builder and Scene Adapter",
+      "pages": [
+        "project-assets.md",
+        "world-builder-acoustics.md",
+        "world-builder-capture.md",
+        "world-builder-controls.md",
+        "world-builder-interface.md",
+        "world-builder-sound.md",
+        "world-builder-verification.md",
+        "world-builder.md"
+      ]
+    },
+    "bundle": {
+      "meaning": "The `director.bundle.v1` project format",
+      "pages": [
+        "director-agent-tools.md",
+        "director-bundle/README.md",
+        "director-bundle/motion-effects.md",
+        "director-bundle/showcase/README.md",
+        "director-prompts.md"
+      ]
+    },
+    "research": {
+      "meaning": "External evidence and reference reviews",
+      "pages": [
+        "comfy-deployment.md",
+        "director-references.md",
+        "director-remix-research.md",
+        "genmod.md",
+        "minimax-h3-camera.md",
+        "vfx-recipes/README.md",
+        "vfx-recipes/anime-opening.md",
+        "vfx-recipes/hologram-turntable.md",
+        "vfx-recipes/neon-glitch.md",
+        "vfx-recipes/surveillance-scan.md",
+        "workflow-reference-library.md"
+      ]
+    },
+    "verification": {
+      "meaning": "What was run and what it showed",
+      "pages": [
+        "director-remix-verification.md",
+        "director-working-version.md",
+        "dual-editor.md",
+        "genobi-teaser-run/README.md",
+        "genobi-teaser-run/claims.md",
+        "genobi-teaser-run/run-log-template.md",
+        "hermes-profiles.md",
+        "hermes-runs.md",
+        "hermes-runs/2026-10-24-claude-watcher-example.md",
+        "hermes-runs/2026-10-27-claude-anime-teaser.md",
+        "hermes-runs/2026-10-28-hermes-audio-visual-library-dry-run.md",
+        "hermes-runs/2026-10-28-hermes-audio-visual-library-review.md",
+        "submission.md",
+        "verification.md",
+        "world-builder-verification.md"
+      ]
+    },
+    "review": {
+      "meaning": "Review questions and checklists",
+      "pages": ["review-checklist.md"]
+    },
+    "licences": {
+      "meaning": "Licences, credits and attribution",
+      "pages": [
+        "comfy-cloud-inventory.md",
+        "construction-motion.md",
+        "credits.md",
+        "credits/README.md",
+        "credits/libraries/alien-js/README.md",
+        "credits/libraries/animejs/README.md",
+        "credits/libraries/ascii-magic-art/README.md",
+        "credits/libraries/claude-animation-base/README.md",
+        "credits/libraries/cli-spinners/README.md",
+        "credits/libraries/crt-terminal/README.md",
+        "credits/libraries/geist/README.md",
+        "credits/libraries/glyphcss/README.md",
+        "credits/libraries/hermes/README.md",
+        "credits/libraries/ibm-plex-mono/README.md",
+        "credits/libraries/krbn/README.md",
+        "credits/libraries/matrix-rain/README.md",
+        "credits/libraries/p5-brush/README.md",
+        "credits/libraries/p5/README.md",
+        "credits/libraries/paper-shaders/README.md",
+        "credits/libraries/pixi-filters/README.md",
+        "credits/libraries/play-core/README.md",
+        "credits/libraries/space-js/README.md",
+        "credits/libraries/svgbob-wasm/README.md",
+        "credits/libraries/textmode-js/README.md",
+        "credits/libraries/three-plotter-renderer/README.md",
+        "credits/libraries/three/README.md",
+        "credits/libraries/transitions-ui-generation/README.md",
+        "genobi-teaser.md",
+        "licence-strategy.md",
+        "motion-fonts.md",
+        "openjutsu-swap.md",
+        "seedvr2-upscale.md"
+      ]
+    },
+    "models": {
+      "meaning": "Which models run where",
+      "pages": [
+        "akuspace-docker.md",
+        "capabilities.md",
+        "comfy-cloud-inventory.md",
+        "comfy-deployment.md",
+        "hermes-open-route.md",
+        "hermes-runs.md",
+        "machine-check.md",
+        "seedvr2-upscale.md",
+        "templates.md",
+        "upscaling.md",
+        "voice-mode.md",
+        "voice-setup.md",
+        "workflow-reference-library.md"
+      ]
+    },
+    "wiki": {
+      "meaning": "The wiki's own pages",
+      "pages": ["README.md", "tags.md"]
+    },
+    "storyboard": {
+      "meaning": "Storyboards, character sheets and Scrolls",
+      "pages": ["scrolls.md", "vfx-recipes/anime-opening.md"]
+    },
+    "memory": {
+      "meaning": "Project evidence, session checkpoints and reusable taste",
+      "pages": [
+        "director-bundle/showcase/README.md",
+        "director-bundle/showcase/bloom-teaser/README.md",
+        "director-bundle/showcase/dimensions-mix/README.md",
+        "director-bundle/showcase/genobi-teaser/README.md"
+      ]
+    }
+  },
+  "pages": [
+    {
+      "title": "3D camera: plates, radar and playblast",
+      "path": "3d-tab.md",
+      "tags": ["3d", "camera", "studio"],
+      "summary": "The 3D section's camera panel, with ten camera plates, the curve and combo layers, starter gestures, the radar and a playblast saved to the Director with its camera path.",
+      "links": ["scene-builder.md", "world-builder-interface.md"]
+    },
+    {
+      "title": "Genobi wiki",
+      "path": "README.md",
+      "tags": ["wiki"],
+      "summary": "The wiki home, listing every page by area, with the tag vocabulary and how agents search it.",
+      "links": [
+        "3d-tab.md",
+        "activity-settings.md",
+        "agent-approvals.md",
+        "agent-bubble.md",
+        "agent-context.md",
+        "agent-sessions.md",
+        "agent-setup.md",
+        "agent-workspace.md",
+        "akuspace-docker.md",
+        "anime-teaser-template.md",
+        "architecture.md",
+        "arena.md",
+        "audio-analysis.md",
+        "bfl-key-reuse.md",
+        "bloom-teaser.md",
+        "camera-wording.md",
+        "capabilities.md",
+        "cloudflare.md",
+        "comfy-cloud-inventory.md",
+        "comfy-deployment.md",
+        "construction-motion.md",
+        "credits.md",
+        "credits/README.md",
+        "credits/libraries/alien-js/README.md",
+        "credits/libraries/animejs/README.md",
+        "credits/libraries/ascii-magic-art/README.md",
+        "credits/libraries/claude-animation-base/README.md",
+        "credits/libraries/cli-spinners/README.md",
+        "credits/libraries/crt-terminal/README.md",
+        "credits/libraries/geist/README.md",
+        "credits/libraries/glyphcss/README.md",
+        "credits/libraries/hermes/README.md",
+        "credits/libraries/ibm-plex-mono/README.md",
+        "credits/libraries/krbn/README.md",
+        "credits/libraries/matrix-rain/README.md",
+        "credits/libraries/p5-brush/README.md",
+        "credits/libraries/p5/README.md",
+        "credits/libraries/paper-shaders/README.md",
+        "credits/libraries/pixi-filters/README.md",
+        "credits/libraries/play-core/README.md",
+        "credits/libraries/space-js/README.md",
+        "credits/libraries/svgbob-wasm/README.md",
+        "credits/libraries/textmode-js/README.md",
+        "credits/libraries/three-plotter-renderer/README.md",
+        "credits/libraries/three/README.md",
+        "credits/libraries/transitions-ui-generation/README.md",
+        "dimensions-mix.md",
+        "director-agent-tools.md",
+        "director-bundle/README.md",
+        "director-bundle/motion-effects.md",
+        "director-bundle/showcase/README.md",
+        "director-bundle/showcase/bloom-teaser/README.md",
+        "director-bundle/showcase/dimensions-mix/README.md",
+        "director-bundle/showcase/genobi-teaser/README.md",
+        "director-comfy.md",
+        "director-prompts.md",
+        "director-references.md",
+        "director-remix-research.md",
+        "director-remix-verification.md",
+        "director-resolution.md",
+        "director-studio-shell.md",
+        "director-working-version.md",
+        "dual-editor-editing.md",
+        "dual-editor.md",
+        "editor-timeline.md",
+        "falling-room.md",
+        "genmod.md",
+        "genobi-cli.md",
+        "genobi-deck.md",
+        "genobi-teaser-run/README.md",
+        "genobi-teaser-run/claims.md",
+        "genobi-teaser-run/decision-table.md",
+        "genobi-teaser-run/run-log-template.md",
+        "genobi-teaser.md",
+        "hermes-open-route.md",
+        "hermes-profiles.md",
+        "hermes-runs.md",
+        "hermes-runs/2026-10-24-claude-watcher-example.md",
+        "hermes-runs/2026-10-27-claude-anime-teaser.md",
+        "hermes-runs/2026-10-28-hermes-audio-visual-library-dry-run.md",
+        "hermes-runs/2026-10-28-hermes-audio-visual-library-review.md",
+        "layout-to-render-status.md",
+        "licence-strategy.md",
+        "machine-check.md",
+        "media-space.md",
+        "minimax-h3-camera.md",
+        "motion-fonts.md",
+        "openjutsu-swap.md",
+        "project-assets.md",
+        "read-through.md",
+        "registry-skills.md",
+        "registry-tools.md",
+        "registry.md",
+        "review-checklist.md",
+        "run-location.md",
+        "runner-pairing.md",
+        "runs/anime-teaser.md",
+        "scene-builder.md",
+        "scene-examples.md",
+        "scrolls.md",
+        "seedvr2-upscale.md",
+        "studio-interface.md",
+        "submission.md",
+        "supervised-workflow-checks.md",
+        "supervisor.md",
+        "tags.md",
+        "taste-memory.md",
+        "teachings.md",
+        "template-gallery.md",
+        "templates.md",
+        "upscaling.md",
+        "verification.md",
+        "vfx-recipes/README.md",
+        "vfx-recipes/anime-opening.md",
+        "vfx-recipes/hologram-turntable.md",
+        "vfx-recipes/neon-glitch.md",
+        "vfx-recipes/surveillance-scan.md",
+        "vision.md",
+        "voice-mode.md",
+        "voice-setup.md",
+        "workflow-reference-library.md",
+        "world-builder-acoustics.md",
+        "world-builder-capture.md",
+        "world-builder-controls.md",
+        "world-builder-interface.md",
+        "world-builder-sound.md",
+        "world-builder-verification.md",
+        "world-builder.md",
+        "world-live.md"
+      ]
+    },
+    {
+      "title": "Settings and activity",
+      "path": "activity-settings.md",
+      "tags": ["agents", "studio", "architecture"],
+      "summary": "Optional operational tool history, its evidence boundaries, and independent bubble controls.",
+      "links": ["agent-setup.md", "runner-pairing.md"]
+    },
+    {
+      "title": "Confirm before spending",
+      "path": "agent-approvals.md",
+      "tags": ["agents", "studio", "backend"],
+      "summary": "Confirm before spending - an agent session's quote appears in the person's studio with its plan, price and payer; Approve runs it once through the quoted submission in the person's session, Decline voids it, and an expired or changed quote cannot be approved.",
+      "links": ["agent-context.md", "agent-sessions.md", "upscaling.md"]
+    },
+    {
+      "title": "Genobi bubble",
+      "path": "agent-bubble.md",
+      "tags": ["agents", "studio"],
+      "summary": "Genobi's contextual bubble, the session as one growing conversation, the new-reply mark on its avatar, its evidence boundary, activity history and responsive behavior.",
+      "links": ["agent-sessions.md", "genobi-deck.md"]
+    },
+    {
+      "title": "Picks and context",
+      "path": "agent-context.md",
+      "tags": ["agents", "studio"],
+      "summary": "The context block a project-prompt session starts with - the person's recent picks and the composer's settings - its limits, how the server checks it, and how \"my last two picks\" and \"these settings\" are resolved to real ids before the agent reads the prompt.",
+      "links": [
+        "agent-sessions.md",
+        "director-prompts.md",
+        "voice-mode.md",
+        "world-builder.md"
+      ]
+    },
+    {
+      "title": "Agent sessions",
+      "path": "agent-sessions.md",
+      "tags": ["agents", "backend", "mcp", "studio"],
+      "summary": "The project prompt starts a local agent session (Claude Code, or Hermes in its genobi profile) with the Genobi tools and its own browser, and further messages go to the running session; how it is set up, what it may and may not do, the spending guard and the routes.",
+      "links": [
+        "agent-approvals.md",
+        "agent-bubble.md",
+        "agent-context.md",
+        "agent-setup.md",
+        "dual-editor.md",
+        "genobi-cli.md",
+        "hermes-open-route.md",
+        "hermes-runs.md",
+        "registry.md",
+        "runner-pairing.md",
+        "scrolls.md"
+      ]
+    },
+    {
+      "title": "Agent setup",
+      "path": "agent-setup.md",
+      "tags": ["agents", "backend", "setup", "studio"],
+      "summary": "Setting up local agent sessions — setup's Connect step (keys, harness sign-in that re-checks fresh, Hermes' open models as a list), Set up Hermes from the studio with no script or restart and plain sentences while it runs, Hermes signing in inside its own Terminal session window, the saved runner setting, the environment variables, and Hermes' genobi profile and open route.",
+      "links": [
+        "agent-sessions.md",
+        "director-agent-tools.md",
+        "director-bundle/README.md",
+        "hermes-open-route.md",
+        "hermes-runs.md",
+        "run-location.md",
+        "supervisor.md",
+        "voice-mode.md",
+        "voice-setup.md"
+      ]
+    },
+    {
+      "title": "Agent workspace",
+      "path": "agent-workspace.md",
+      "tags": ["vision", "agents", "director", "plan"],
+      "summary": "One shared creative workspace, two ways to drive it (the built-in voice agent or the person's own harness), with Genobi speech bubbles instead of a chat panel and project memory kept apart from any transcript.",
+      "links": [
+        "agent-bubble.md",
+        "architecture.md",
+        "director-agent-tools.md",
+        "director-bundle/README.md",
+        "hermes-runs.md",
+        "voice-mode.md"
+      ]
+    },
+    {
+      "title": "AKUSPACE ComfyUI in Docker",
+      "path": "akuspace-docker.md",
+      "tags": ["workflows", "comfy", "ltx", "sound", "models"],
+      "summary": "A Docker image of ComfyUI with the Koshi AKUSPACE nodes and ComfyUI-LTXVideo, running AKUSPACE text to video, audio to audio and image to video on LTX-2.5.",
+      "links": ["comfy-deployment.md", "run-location.md"]
+    },
+    {
+      "title": "Anime teaser template",
+      "path": "anime-teaser-template.md",
+      "tags": ["templates", "director", "agents", "ltx", "sound"],
+      "summary": "The anime teaser as a template - what it asks for, what it generates when something is missing, the exact models and prompts for the sheet, the storyboard, the audio and the two shots, and the cut to the beat.",
+      "links": [
+        "comfy-cloud-inventory.md",
+        "runs/anime-teaser.md",
+        "template-gallery.md",
+        "templates.md"
+      ]
+    },
+    {
+      "title": "Architecture and the cloud boundary",
+      "path": "architecture.md",
+      "tags": ["architecture", "backend", "cloudflare", "bfl"],
+      "summary": "One API served by Express locally and a Pages Worker in the cloud, and how paid requests and keys stay safe.",
+      "links": [
+        "activity-settings.md",
+        "agent-bubble.md",
+        "agent-sessions.md",
+        "arena.md",
+        "cloudflare.md",
+        "comfy-deployment.md",
+        "construction-motion.md",
+        "director-bundle/README.md",
+        "director-resolution.md",
+        "director-studio-shell.md",
+        "director-working-version.md",
+        "dual-editor-editing.md",
+        "dual-editor.md",
+        "genobi-cli.md",
+        "hermes-profiles.md",
+        "licence-strategy.md",
+        "machine-check.md",
+        "media-space.md",
+        "openjutsu-swap.md",
+        "run-location.md",
+        "runner-pairing.md",
+        "supervisor.md",
+        "taste-memory.md",
+        "template-gallery.md",
+        "voice-mode.md",
+        "voice-setup.md"
+      ]
+    },
+    {
+      "title": "Arena",
+      "path": "arena.md",
+      "tags": ["workflows", "agents", "mcp", "studio"],
+      "summary": "Compare two to four workflow results in Project Tools, with shared playback, references and an agent-readable record.",
+      "links": []
+    },
+    {
+      "title": "Audio analysis",
+      "path": "audio-analysis.md",
+      "tags": ["sound", "backend", "agents", "mcp"],
+      "summary": "Audio analysis on the local server — tempo and a fitted beat grid, a downbeat estimate, onsets per band, intensity and key moments, with no Python; the optional librosa worker; the agent flow through genobi_audio_upload and genobi_audio_analysis.",
+      "links": []
+    },
+    {
+      "title": "Reuse a BFL Dashboard key",
+      "path": "bfl-key-reuse.md",
+      "tags": ["studio", "bfl", "backend"],
+      "summary": "Explicitly reuse a BFL Dashboard Keychain key in the local studio.",
+      "links": []
+    },
+    {
+      "title": "Bloom: the anime teaser",
+      "path": "bloom-teaser.md",
+      "tags": ["director", "sound", "templates"],
+      "summary": "Bloom, the anime teaser mix template - 19 seconds of the owner's two MiniMax H3 (open weights) takes of the Bloom character sheet, cut to the owner's track at 140 BPM under a character-scan and surveillance look, with an editable end card and nothing to generate.",
+      "links": [
+        "director-bundle/showcase/bloom-teaser/README.md",
+        "templates.md"
+      ]
+    },
+    {
+      "title": "Camera wording and examples",
+      "path": "camera-wording.md",
+      "tags": ["camera", "bfl", "ltx", "comfy", "sound"],
+      "summary": "The camera terms the studio uses, their BFL, LTX and MiniMax H3 sources, what it claims, and the Acoustic Space LoRA.",
+      "links": ["minimax-h3-camera.md", "voice-mode.md"]
+    },
+    {
+      "title": "Capability map",
+      "path": "capabilities.md",
+      "tags": ["agents", "mcp", "models"],
+      "summary": "Every Genobi feature by where it is in the studio, with how it runs (local and free, a local model, Comfy Cloud or a paid API), its models, MCP tools, CLI verbs, skills, docs and status; generated from the plugin's capability map.",
+      "links": [
+        "3d-tab.md",
+        "README.md",
+        "agent-approvals.md",
+        "agent-bubble.md",
+        "agent-sessions.md",
+        "agent-setup.md",
+        "akuspace-docker.md",
+        "anime-teaser-template.md",
+        "architecture.md",
+        "arena.md",
+        "audio-analysis.md",
+        "camera-wording.md",
+        "cloudflare.md",
+        "comfy-cloud-inventory.md",
+        "comfy-deployment.md",
+        "dimensions-mix.md",
+        "director-agent-tools.md",
+        "director-bundle/README.md",
+        "director-bundle/motion-effects.md",
+        "director-remix-verification.md",
+        "dual-editor-editing.md",
+        "dual-editor.md",
+        "editor-timeline.md",
+        "falling-room.md",
+        "genmod.md",
+        "genobi-cli.md",
+        "genobi-deck.md",
+        "genobi-teaser-run/README.md",
+        "genobi-teaser.md",
+        "hermes-open-route.md",
+        "hermes-profiles.md",
+        "hermes-runs.md",
+        "hermes-runs/2026-10-28-hermes-audio-visual-library-dry-run.md",
+        "layout-to-render-status.md",
+        "licence-strategy.md",
+        "machine-check.md",
+        "media-space.md",
+        "minimax-h3-camera.md",
+        "openjutsu-swap.md",
+        "project-assets.md",
+        "registry-skills.md",
+        "registry-tools.md",
+        "registry.md",
+        "run-location.md",
+        "runs/anime-teaser.md",
+        "scene-builder.md",
+        "scene-examples.md",
+        "scrolls.md",
+        "seedvr2-upscale.md",
+        "supervised-workflow-checks.md",
+        "supervisor.md",
+        "taste-memory.md",
+        "template-gallery.md",
+        "templates.md",
+        "upscaling.md",
+        "verification.md",
+        "vision.md",
+        "voice-mode.md",
+        "voice-setup.md",
+        "world-builder-capture.md",
+        "world-builder-verification.md",
+        "world-builder.md",
+        "world-live.md"
+      ]
+    },
+    {
+      "title": "Cloudflare deployment",
+      "path": "cloudflare.md",
+      "tags": ["architecture", "cloudflare", "backend"],
+      "summary": "Hosted deployment on Cloudflare Pages, with the runtime, D1 and R2 limits, lifecycle, reproduction and deployment.",
+      "links": ["runner-pairing.md", "template-gallery.md"]
+    },
+    {
+      "title": "Comfy Cloud inventory",
+      "path": "comfy-cloud-inventory.md",
+      "tags": ["workflows", "comfy", "models", "licences"],
+      "summary": "What Comfy Cloud runs for Genobi today, what needs importing, and what stays local.",
+      "links": ["architecture.md", "machine-check.md"]
+    },
+    {
+      "title": "Comfy Developer Platform deployment",
+      "path": "comfy-deployment.md",
+      "tags": ["workflows", "comfy", "backend", "models", "research"],
+      "summary": "A Comfy Developer Platform build recipe for the Openjutsu swap, AKUSPACE and Layout-to-Render from one set of pins in comfy-build/; how comfy build push treats weights, the shared ComfyUI version, sizes per workflow and one build versus several.",
+      "links": ["akuspace-docker.md"]
+    },
+    {
+      "title": "Signal: construction video workflows",
+      "path": "construction-motion.md",
+      "tags": ["licences", "director"],
+      "summary": "Signal: construction video workflows — usage, provenance and licence boundaries.",
+      "links": ["dimensions-mix.md", "genobi-teaser.md", "motion-fonts.md"]
+    },
+    {
+      "title": "Credits and lineage",
+      "path": "credits.md",
+      "tags": ["licences", "bfl"],
+      "summary": "Design lineage, licence, attributions and the BFL documentation the studio follows.",
+      "links": ["camera-wording.md", "credits/README.md"]
+    },
+    {
+      "title": "The taste layer: people, tools and lineage",
+      "path": "credits/README.md",
+      "tags": ["licences", "agents", "director"],
+      "summary": "The people and projects behind Genobi’s curated creative toolkit.",
+      "links": [
+        "credits/libraries/alien-js/README.md",
+        "credits/libraries/animejs/README.md",
+        "credits/libraries/ascii-magic-art/README.md",
+        "credits/libraries/claude-animation-base/README.md",
+        "credits/libraries/cli-spinners/README.md",
+        "credits/libraries/crt-terminal/README.md",
+        "credits/libraries/geist/README.md",
+        "credits/libraries/glyphcss/README.md",
+        "credits/libraries/hermes/README.md",
+        "credits/libraries/ibm-plex-mono/README.md",
+        "credits/libraries/krbn/README.md",
+        "credits/libraries/matrix-rain/README.md",
+        "credits/libraries/p5-brush/README.md",
+        "credits/libraries/p5/README.md",
+        "credits/libraries/paper-shaders/README.md",
+        "credits/libraries/pixi-filters/README.md",
+        "credits/libraries/play-core/README.md",
+        "credits/libraries/space-js/README.md",
+        "credits/libraries/svgbob-wasm/README.md",
+        "credits/libraries/textmode-js/README.md",
+        "credits/libraries/three-plotter-renderer/README.md",
+        "credits/libraries/three/README.md",
+        "credits/libraries/transitions-ui-generation/README.md",
+        "director-references.md",
+        "licence-strategy.md",
+        "motion-fonts.md",
+        "vfx-recipes/README.md"
+      ]
+    },
+    {
+      "title": "Alien.js",
+      "path": "credits/libraries/alien-js/README.md",
+      "tags": ["licences", "director"],
+      "summary": "Alien.js — usage, provenance and licence boundaries.",
+      "links": []
+    },
+    {
+      "title": "Anime.js",
+      "path": "credits/libraries/animejs/README.md",
+      "tags": ["licences", "director"],
+      "summary": "Anime.js — usage, provenance and licence boundaries.",
+      "links": []
+    },
+    {
+      "title": "ascii-magic-art",
+      "path": "credits/libraries/ascii-magic-art/README.md",
+      "tags": ["licences", "director"],
+      "summary": "ascii-magic-art — optional creative use, pinned source and licence boundaries.",
+      "links": []
+    },
+    {
+      "title": "Claude Animation Base",
+      "path": "credits/libraries/claude-animation-base/README.md",
+      "tags": ["licences", "director"],
+      "summary": "Claude Animation Base — usage, provenance and licence boundaries.",
+      "links": []
+    },
+    {
+      "title": "cli-spinners",
+      "path": "credits/libraries/cli-spinners/README.md",
+      "tags": ["licences", "director"],
+      "summary": "cli-spinners — optional creative use, pinned source and licence boundaries.",
+      "links": []
+    },
+    {
+      "title": "crt-terminal",
+      "path": "credits/libraries/crt-terminal/README.md",
+      "tags": ["licences", "director"],
+      "summary": "crt-terminal — optional creative use, pinned source and licence boundaries.",
+      "links": []
+    },
+    {
+      "title": "Geist",
+      "path": "credits/libraries/geist/README.md",
+      "tags": ["licences", "director"],
+      "summary": "Geist — usage, provenance and licence boundaries.",
+      "links": []
+    },
+    {
+      "title": "GlyphCSS",
+      "path": "credits/libraries/glyphcss/README.md",
+      "tags": ["licences", "director"],
+      "summary": "GlyphCSS — usage, provenance and licence boundaries.",
+      "links": []
+    },
+    {
+      "title": "Hermes Agent",
+      "path": "credits/libraries/hermes/README.md",
+      "tags": ["licences", "director"],
+      "summary": "Hermes Agent — usage, provenance and licence boundaries.",
+      "links": []
+    },
+    {
+      "title": "IBM Plex Mono",
+      "path": "credits/libraries/ibm-plex-mono/README.md",
+      "tags": ["licences", "director"],
+      "summary": "IBM Plex Mono — usage, provenance and licence boundaries.",
+      "links": []
+    },
+    {
+      "title": "Krbn",
+      "path": "credits/libraries/krbn/README.md",
+      "tags": ["licences", "director"],
+      "summary": "Krbn — usage, provenance and licence boundaries.",
+      "links": []
+    },
+    {
+      "title": "Matrix digital rain",
+      "path": "credits/libraries/matrix-rain/README.md",
+      "tags": ["licences", "director"],
+      "summary": "Matrix digital rain — optional creative use, pinned source and licence boundaries.",
+      "links": []
+    },
+    {
+      "title": "p5.brush",
+      "path": "credits/libraries/p5-brush/README.md",
+      "tags": ["licences", "director"],
+      "summary": "p5.brush — usage, provenance and licence boundaries.",
+      "links": []
+    },
+    {
+      "title": "p5.js",
+      "path": "credits/libraries/p5/README.md",
+      "tags": ["licences", "director"],
+      "summary": "p5.js — usage, provenance and licence boundaries.",
+      "links": []
+    },
+    {
+      "title": "Paper Shaders",
+      "path": "credits/libraries/paper-shaders/README.md",
+      "tags": ["licences", "director"],
+      "summary": "Paper Shaders — usage, provenance and licence boundaries.",
+      "links": ["genobi-teaser.md"]
+    },
+    {
+      "title": "PixiJS Filters",
+      "path": "credits/libraries/pixi-filters/README.md",
+      "tags": ["licences", "director"],
+      "summary": "PixiJS Filters — usage, provenance and licence boundaries.",
+      "links": []
+    },
+    {
+      "title": "play.core",
+      "path": "credits/libraries/play-core/README.md",
+      "tags": ["licences", "director"],
+      "summary": "play.core — optional creative use, pinned source and licence boundaries.",
+      "links": []
+    },
+    {
+      "title": "Space.js",
+      "path": "credits/libraries/space-js/README.md",
+      "tags": ["licences", "director"],
+      "summary": "Space.js — usage, provenance and licence boundaries.",
+      "links": ["genobi-teaser.md"]
+    },
+    {
+      "title": "svgbob (WASM)",
+      "path": "credits/libraries/svgbob-wasm/README.md",
+      "tags": ["licences", "director"],
+      "summary": "svgbob (WASM) — optional creative use, pinned source and licence boundaries.",
+      "links": []
+    },
+    {
+      "title": "textmode.js",
+      "path": "credits/libraries/textmode-js/README.md",
+      "tags": ["licences", "director"],
+      "summary": "textmode.js — optional creative use, pinned source and licence boundaries.",
+      "links": []
+    },
+    {
+      "title": "Three Plotter Renderer",
+      "path": "credits/libraries/three-plotter-renderer/README.md",
+      "tags": ["licences", "director"],
+      "summary": "Three Plotter Renderer — usage, provenance and licence boundaries.",
+      "links": []
+    },
+    {
+      "title": "Three.js",
+      "path": "credits/libraries/three/README.md",
+      "tags": ["licences", "director"],
+      "summary": "Three.js — usage, provenance and licence boundaries.",
+      "links": []
+    },
+    {
+      "title": "Transitions.dev / UI generation",
+      "path": "credits/libraries/transitions-ui-generation/README.md",
+      "tags": ["licences", "director"],
+      "summary": "Transitions.dev / UI generation — usage, provenance and licence boundaries.",
+      "links": []
+    },
+    {
+      "title": "Dimensions mix",
+      "path": "dimensions-mix.md",
+      "tags": ["director", "sound"],
+      "summary": "The Dimensions mix, the first mix template - a 23-second Supernatural Creatures teaser cut from three bundled clips to the owner's track at 140 BPM, with Signal overlays, a construction end card and nothing to generate.",
+      "links": [
+        "construction-motion.md",
+        "director-bundle/showcase/dimensions-mix/README.md",
+        "director-resolution.md",
+        "motion-fonts.md",
+        "seedvr2-upscale.md",
+        "templates.md"
+      ]
+    },
+    {
+      "title": "Director agent tools",
+      "path": "director-agent-tools.md",
+      "tags": ["agents", "director", "bundle"],
+      "summary": "The agent commands over a Director project, with tracks and timing, the project drawer and animation references.",
+      "links": [
+        "agent-setup.md",
+        "director-bundle/README.md",
+        "director-prompts.md",
+        "director-resolution.md",
+        "hermes-runs.md",
+        "licence-strategy.md"
+      ]
+    },
+    {
+      "title": "Director bundle v1",
+      "path": "director-bundle/README.md",
+      "tags": ["director", "bundle", "agents"],
+      "summary": "The director.bundle.v1 interchange format, a JSON manifest with media files, graphics modules and their schemas.",
+      "links": [
+        "dimensions-mix.md",
+        "director-bundle/motion-effects.md",
+        "director-prompts.md",
+        "director-working-version.md",
+        "templates.md"
+      ]
+    },
+    {
+      "title": "Motion effects",
+      "path": "director-bundle/motion-effects.md",
+      "tags": ["director", "bundle", "agents"],
+      "summary": "The five registered motion-effect recipes (shake, transition, grade, speed lines, styled title), their parameters and how agents use them.",
+      "links": ["dimensions-mix.md", "director-bundle/README.md"]
+    },
+    {
+      "title": "Showcase projects",
+      "path": "director-bundle/showcase/README.md",
+      "tags": ["director", "bundle", "agents", "memory"],
+      "summary": "Showcase projects - finished cuts kept version by version as Director project files, with the memory that explains each change, so any version opens in the Editor, can be recreated, and an agent can continue from it.",
+      "links": [
+        "director-bundle/showcase/bloom-teaser/README.md",
+        "director-bundle/showcase/dimensions-mix/README.md",
+        "director-bundle/showcase/genobi-teaser/README.md"
+      ]
+    },
+    {
+      "title": "Bloom: how it was made",
+      "path": "director-bundle/showcase/bloom-teaser/README.md",
+      "tags": ["director", "sound", "memory"],
+      "summary": "How Bloom, the anime teaser, was made - v1, the first cut to the owner's track - and how to recreate or continue it.",
+      "links": ["bloom-teaser.md"]
+    },
+    {
+      "title": "Dimensions mix: how it was made",
+      "path": "director-bundle/showcase/dimensions-mix/README.md",
+      "tags": ["director", "sound", "memory"],
+      "summary": "How the Dimensions mix was made, version by version - from the first cut with a baked end card to the editable card with the owner's credit - and how to recreate or continue each version.",
+      "links": ["dimensions-mix.md", "director-bundle/showcase/README.md"]
+    },
+    {
+      "title": "Genobi teaser: how it was made",
+      "path": "director-bundle/showcase/genobi-teaser/README.md",
+      "tags": ["director", "sound", "memory"],
+      "summary": "How the Genobi teaser was made - v1, the first cut, v2, the owner's two rounds of corrections, and v3, creatures instead of realism - and how to recreate or continue each version.",
+      "links": ["director-bundle/showcase/README.md", "genobi-teaser.md"]
+    },
+    {
+      "title": "MP4 and LTX handoff",
+      "path": "director-comfy.md",
+      "tags": ["workflows", "director", "comfy", "ltx"],
+      "summary": "Clean Director MP4 export into the pinned LTX workflow, the Comfy Cloud adapter and the asset and render node notes.",
+      "links": ["director-remix-verification.md"]
+    },
+    {
+      "title": "Prompts and directions",
+      "path": "director-prompts.md",
+      "tags": ["director", "bundle", "agents"],
+      "summary": "The Director's prompt contract - one global prompt per project, and per clip its own prompt and typed shot, lens, camera and action directions - in the bundle, the commands, the studio and what agents read.",
+      "links": [
+        "agent-context.md",
+        "camera-wording.md",
+        "director-agent-tools.md"
+      ]
+    },
+    {
+      "title": "Director reference review",
+      "path": "director-references.md",
+      "tags": ["agents", "director", "research"],
+      "summary": "Review of external agent studios, prompts and articles, mapped to the Director pipeline.",
+      "links": []
+    },
+    {
+      "title": "Katana / Genjutsu → Director: evidence and proposed reconstruction",
+      "path": "director-remix-research.md",
+      "tags": ["director", "research"],
+      "summary": "Public evidence on Higgsfield Katana and Genjutsu, and the proposed Director reconstruction.",
+      "links": []
+    },
+    {
+      "title": "Director remix verification",
+      "path": "director-remix-verification.md",
+      "tags": ["director", "verification", "comfy"],
+      "summary": "Evidence for the Director remix proof, from automated checks and media evidence to the hosted smoke.",
+      "links": ["project-assets.md"]
+    },
+    {
+      "title": "Composition resolution and monitors",
+      "path": "director-resolution.md",
+      "tags": ["director", "studio"],
+      "summary": "Composition resolution, asset matching, framing and responsive Program/output monitors.",
+      "links": []
+    },
+    {
+      "title": "Genobi studio shell: approved next build",
+      "path": "director-studio-shell.md",
+      "tags": ["director", "studio", "plan"],
+      "summary": "The approved Genobi studio shell, with one project, six workspaces, Project Tools, layouts and build order.",
+      "links": [
+        "architecture.md",
+        "project-assets.md",
+        "studio-interface.md",
+        "template-gallery.md",
+        "voice-mode.md"
+      ]
+    },
+    {
+      "title": "Director: first working composer",
+      "path": "director-working-version.md",
+      "tags": ["director", "studio", "verification"],
+      "summary": "The working Director composer, with its offline asset foundation, how to try it, rendering and verification.",
+      "links": [
+        "cloudflare.md",
+        "director-bundle/README.md",
+        "director-bundle/motion-effects.md",
+        "templates.md"
+      ]
+    },
+    {
+      "title": "Dual Editor editing scope",
+      "path": "dual-editor-editing.md",
+      "tags": ["director", "dual-editor", "plan"],
+      "summary": "Dual Editor editing scope, with captured requirements, the timeline contract, frame grading and next steps.",
+      "links": []
+    },
+    {
+      "title": "Dual Editor",
+      "path": "dual-editor.md",
+      "tags": ["director", "dual-editor", "agents", "mcp", "verification"],
+      "summary": "Dual Editor, the browser-local two-frame workspace, with its controls, decoding boundary and verification.",
+      "links": [
+        "architecture.md",
+        "director-agent-tools.md",
+        "dual-editor-editing.md",
+        "media-space.md",
+        "project-assets.md"
+      ]
+    },
+    {
+      "title": "Editor timeline",
+      "path": "editor-timeline.md",
+      "tags": ["studio", "director", "design"],
+      "summary": "The production Editor timeline after the timeline design port, what changed, where it lives and what still differs from the mock.",
+      "links": []
+    },
+    {
+      "title": "Falling room",
+      "path": "falling-room.md",
+      "tags": ["templates", "3d", "sound", "agents"],
+      "summary": "The Falling room template, the owner's generated loop in eight steps (brief, scene, picture and room sound, sequence, manual edit, revision, kept edit, bundle), mapped to what exists, what is free, what is paid and what is blocked.",
+      "links": [
+        "agent-setup.md",
+        "template-gallery.md",
+        "templates.md",
+        "voice-mode.md",
+        "voice-setup.md",
+        "world-builder.md"
+      ]
+    },
+    {
+      "title": "Gen-Mod: one take, modified",
+      "path": "genmod.md",
+      "tags": ["director", "ltx", "workflows", "research", "plan"],
+      "summary": "Gen-Mod, generation modified — edit frame 0 of a take (character, face, background or anything the Edit tool can box), carry it through the source's motion with LTX-2.5, and iterate on a JSON recipe with an agent.",
+      "links": [
+        "architecture.md",
+        "comfy-cloud-inventory.md",
+        "director-comfy.md",
+        "director-remix-verification.md",
+        "taste-memory.md"
+      ]
+    },
+    {
+      "title": "Genobi CLI",
+      "path": "genobi-cli.md",
+      "tags": ["agents", "mcp", "backend"],
+      "summary": "Terminal access to the MCP tool contract, persistent private connection profiles, shared Taste and Dual Swords commands.",
+      "links": [
+        "capabilities.md",
+        "hermes-open-route.md",
+        "taste-memory.md",
+        "world-live.md"
+      ]
+    },
+    {
+      "title": "The Genobi deck",
+      "path": "genobi-deck.md",
+      "tags": ["studio", "agents", "plan"],
+      "summary": "The Genobi deck — a footer terminal that shows what the studio and its agent are doing, with ASCII visualisers; the MVP shipped and the plan to grow it.",
+      "links": [
+        "agent-bubble.md",
+        "motion-fonts.md",
+        "taste-memory.md",
+        "teachings.md",
+        "voice-setup.md"
+      ]
+    },
+    {
+      "title": "Teaser run kit",
+      "path": "genobi-teaser-run/README.md",
+      "tags": ["agents", "director", "verification"],
+      "summary": "The teaser run kit - everything an agent on a weaker open model (Hermes on DeepSeek) needs to derive the Genobi teaser (version 2) end to end and prove it, with a repeat run from the first run's memory, a verifier, worked examples and a repeatable run sheet.",
+      "links": [
+        "director-bundle/showcase/README.md",
+        "genobi-teaser-run/claims.md",
+        "genobi-teaser-run/decision-table.md",
+        "genobi-teaser-run/run-log-template.md",
+        "genobi-teaser.md",
+        "hermes-runs.md"
+      ]
+    },
+    {
+      "title": "Teaser claim rules",
+      "path": "genobi-teaser-run/claims.md",
+      "tags": ["agents", "director", "verification"],
+      "summary": "The claim rules for every word the Genobi teaser puts on screen - the approved wording, the forbidden kinds of claim with the owner's corrections behind them, and the checklist a run follows before it writes a word.",
+      "links": ["genobi-teaser-run/README.md"]
+    },
+    {
+      "title": "Teaser decision rules",
+      "path": "genobi-teaser-run/decision-table.md",
+      "tags": ["agents", "director", "sound"],
+      "summary": "The Genobi teaser's decision rules - how a run turns the brief's storyboard, the track analysis and the capture log into every shot length, source time, camera move and overlay value of the version 2 cut, with the helper commands that compute them and no number copied from an earlier cut.",
+      "links": ["genobi-teaser-run/README.md"]
+    },
+    {
+      "title": "Teaser run log template",
+      "path": "genobi-teaser-run/run-log-template.md",
+      "tags": ["agents", "verification"],
+      "summary": "The proof page a teaser run fills in - model, commands, timings, approvals, decisions, verifier output, render and contact sheet - copied to docs/hermes-runs/ for each run.",
+      "links": ["genobi-teaser-run/README.md"]
+    },
+    {
+      "title": "Genobi teaser",
+      "path": "genobi-teaser.md",
+      "tags": ["director", "sound", "licences"],
+      "summary": "The Genobi teaser, the second mix template - two minutes of the studio in use cut to the owner's track at 135 BPM at 1920 × 1080, with 4K studio footage replayed in a browser, the owner's ComfyUI recording, Paper Shaders, a taste-layer credit, Transitions.dev titles run unchanged, and how to repeat it with every owner correction.",
+      "links": [
+        "dimensions-mix.md",
+        "director-bundle/showcase/genobi-teaser/README.md"
+      ]
+    },
+    {
+      "title": "The Hermes open route",
+      "path": "hermes-open-route.md",
+      "tags": ["agents", "models", "mcp"],
+      "summary": "Hermes is Genobi's open route; which models and providers it refuses, every Hermes route the genobi profile pins, local model servers, and why there is no fallback.",
+      "links": ["agent-setup.md"]
+    },
+    {
+      "title": "Hermes Creative and Hermes Developer",
+      "path": "hermes-profiles.md",
+      "tags": ["agents", "mcp", "verification"],
+      "summary": "Install and maintain separate Hermes Creative and Hermes Developer terminal profiles from versioned repository sources.",
+      "links": [
+        "agent-approvals.md",
+        "agent-sessions.md",
+        "agent-setup.md",
+        "hermes-runs.md",
+        "supervisor.md"
+      ]
+    },
+    {
+      "title": "Hermes runs",
+      "path": "hermes-runs.md",
+      "tags": ["agents", "mcp", "models", "verification"],
+      "summary": "Hermes runs - the first agent model and why, the free first run against the read-only tools, the provenance card, and the plan for the paid runs (Klein box edit, two passes, three example videos) with their quotes and approvals.",
+      "links": [
+        "genobi-teaser-run/README.md",
+        "hermes-runs/2026-10-24-claude-watcher-example.md",
+        "hermes-runs/2026-10-27-claude-anime-teaser.md",
+        "hermes-runs/2026-10-28-hermes-audio-visual-library-dry-run.md",
+        "hermes-runs/2026-10-28-hermes-audio-visual-library-review.md",
+        "runs/anime-teaser.md",
+        "templates.md"
+      ]
+    },
+    {
+      "title": "Run log: watcher-example, Claude Code",
+      "path": "hermes-runs/2026-10-24-claude-watcher-example.md",
+      "tags": ["agents", "verification", "mcp"],
+      "summary": "Watcher log of a Claude Code session (watcher-example): done, 46 lines, 1 of 1 quoted steps approved, 0 declined.",
+      "links": ["hermes-runs.md"]
+    },
+    {
+      "title": "Run log: anime-teaser-claude, Claude Code",
+      "path": "hermes-runs/2026-10-27-claude-anime-teaser.md",
+      "tags": ["agents", "verification", "mcp"],
+      "summary": "Watcher log of a Claude Code session (anime-teaser-claude): waiting, with no step left to approve, 21 lines, 0 of 4 quoted steps approved, 0 declined.",
+      "links": ["hermes-runs.md"]
+    },
+    {
+      "title": "Run log: audio-visual library dry run, Hermes",
+      "path": "hermes-runs/2026-10-28-hermes-audio-visual-library-dry-run.md",
+      "tags": ["agents", "verification", "mcp"],
+      "summary": "Watcher log of a Hermes session (audio-visual library dry run): done, 46 lines, 0 of 0 quoted steps approved, 0 declined.",
+      "links": ["hermes-runs.md"]
+    },
+    {
+      "title": "Run log: audio-visual library review, Hermes",
+      "path": "hermes-runs/2026-10-28-hermes-audio-visual-library-review.md",
+      "tags": ["agents", "verification", "mcp"],
+      "summary": "Watcher log of a Hermes session (audio-visual library review): done, 40 lines, 0 of 0 quoted steps approved, 0 declined.",
+      "links": ["hermes-runs.md"]
+    },
+    {
+      "title": "LTX Layout-to-Render compatibility — 26 October 2026",
+      "path": "layout-to-render-status.md",
+      "tags": ["backend", "camera"],
+      "summary": "Exact LTX Layout-to-Render node and model availability on Comfy Cloud, with input rules and integration gaps.",
+      "links": []
+    },
+    {
+      "title": "Licence-aware direction",
+      "path": "licence-strategy.md",
+      "tags": ["agents", "director", "licences"],
+      "summary": "Intended-use preferences, curated creative libraries and per-run licence reports.",
+      "links": ["credits/README.md"]
+    },
+    {
+      "title": "Machine check",
+      "path": "machine-check.md",
+      "tags": ["agents", "models", "backend", "mcp"],
+      "summary": "The machine check — a local probe of memory, disk and Apple silicon or NVIDIA GPU, a pure plan of which models run locally and which on Comfy Cloud with each documented requirement, the genobi_machine tool and the genobi-machine skill.",
+      "links": [
+        "agent-sessions.md",
+        "comfy-cloud-inventory.md",
+        "voice-mode.md"
+      ]
+    },
+    {
+      "title": "Space: a room on a clip's sound",
+      "path": "media-space.md",
+      "tags": ["sound", "workflows", "backend", "mcp"],
+      "summary": "Space, a local media tool that puts an AKUSPACE room on a clip's existing sound in timed segments by ffmpeg convolution — the presets, the filter graph, the ffmpeg 6 and 7 afir difference, limits, how it relates to the AKUSPACE LoRA, and what was run.",
+      "links": ["architecture.md", "camera-wording.md", "dual-editor.md"]
+    },
+    {
+      "title": "MiniMax H3 camera wording",
+      "path": "minimax-h3-camera.md",
+      "tags": ["camera", "comfy", "research"],
+      "summary": "What MiniMax documents about camera wording and prompt structure for H3, and the mapping from the studio's camera controls that every H3 entry now speaks.",
+      "links": ["camera-wording.md"]
+    },
+    {
+      "title": "Signal typography",
+      "path": "motion-fonts.md",
+      "tags": ["licences", "director"],
+      "summary": "Signal typography — usage, provenance and licence boundaries.",
+      "links": []
+    },
+    {
+      "title": "Openjutsu character swap",
+      "path": "openjutsu-swap.md",
+      "tags": ["workflows", "comfy", "backend", "mcp", "licences"],
+      "summary": "Comfy's Openjutsu character swap in Genobi, its first frame made by a FLUX 3 Image Klein box edit, on its own Comfy deployment, and how to run the first test.",
+      "links": ["comfy-deployment.md"]
+    },
+    {
+      "title": "Outputs into project assets",
+      "path": "project-assets.md",
+      "tags": ["studio", "director", "world-builder", "dual-editor"],
+      "summary": "Every studio output lands in the open project's assets through one path - 3D takes and first frames, Dual Swords frames, rendered and saved videos, gallery results.",
+      "links": ["director-agent-tools.md", "templates.md"]
+    },
+    {
+      "title": "Read-through",
+      "path": "read-through.md",
+      "tags": ["architecture", "backend", "studio"],
+      "summary": "Follows one user action through shared/, the screen, the local adapter and the hosted adapter.",
+      "links": [
+        "audio-analysis.md",
+        "camera-wording.md",
+        "director-prompts.md",
+        "director-resolution.md",
+        "director-studio-shell.md",
+        "machine-check.md",
+        "project-assets.md",
+        "run-location.md"
+      ]
+    },
+    {
+      "title": "Registry: skills",
+      "path": "registry-skills.md",
+      "tags": ["agents", "mcp"],
+      "summary": "Every Genobi plugin skill with its description, the tools it uses and its docs; generated from the plugin registry.",
+      "links": [
+        "3d-tab.md",
+        "agent-approvals.md",
+        "agent-sessions.md",
+        "anime-teaser-template.md",
+        "architecture.md",
+        "camera-wording.md",
+        "comfy-deployment.md",
+        "credits/README.md",
+        "director-agent-tools.md",
+        "director-bundle/README.md",
+        "dual-editor.md",
+        "falling-room.md",
+        "genobi-cli.md",
+        "genobi-teaser-run/README.md",
+        "genobi-teaser-run/claims.md",
+        "genobi-teaser-run/decision-table.md",
+        "genobi-teaser.md",
+        "hermes-open-route.md",
+        "hermes-profiles.md",
+        "hermes-runs.md",
+        "licence-strategy.md",
+        "machine-check.md",
+        "media-space.md",
+        "registry-tools.md",
+        "registry.md",
+        "run-location.md",
+        "runs/anime-teaser.md",
+        "scene-builder.md",
+        "scene-examples.md",
+        "scrolls.md",
+        "seedvr2-upscale.md",
+        "supervisor.md",
+        "taste-memory.md",
+        "templates.md",
+        "upscaling.md",
+        "world-builder.md",
+        "world-live.md"
+      ]
+    },
+    {
+      "title": "Registry: tools",
+      "path": "registry-tools.md",
+      "tags": ["agents", "mcp"],
+      "summary": "Every Genobi MCP tool with its description, access, teaching skills and docs; generated from the plugin registry.",
+      "links": [
+        "3d-tab.md",
+        "README.md",
+        "agent-approvals.md",
+        "agent-sessions.md",
+        "architecture.md",
+        "arena.md",
+        "audio-analysis.md",
+        "credits/README.md",
+        "director-agent-tools.md",
+        "director-bundle/README.md",
+        "director-working-version.md",
+        "dual-editor.md",
+        "falling-room.md",
+        "hermes-runs.md",
+        "licence-strategy.md",
+        "machine-check.md",
+        "media-space.md",
+        "registry-skills.md",
+        "registry.md",
+        "run-location.md",
+        "scene-builder.md",
+        "scene-examples.md",
+        "scrolls.md",
+        "seedvr2-upscale.md",
+        "supervisor.md",
+        "tags.md",
+        "taste-memory.md",
+        "templates.md",
+        "upscaling.md",
+        "world-builder.md",
+        "world-live.md"
+      ]
+    },
+    {
+      "title": "Tool and skill registry",
+      "path": "registry.md",
+      "tags": ["agents", "mcp"],
+      "summary": "Every Genobi MCP tool and plugin skill by tag, with the skills that teach each tool and its docs; generated from the plugin registry.",
+      "links": [
+        "3d-tab.md",
+        "README.md",
+        "agent-approvals.md",
+        "agent-sessions.md",
+        "anime-teaser-template.md",
+        "architecture.md",
+        "arena.md",
+        "audio-analysis.md",
+        "camera-wording.md",
+        "capabilities.md",
+        "comfy-deployment.md",
+        "credits/README.md",
+        "director-agent-tools.md",
+        "director-bundle/README.md",
+        "director-working-version.md",
+        "dual-editor.md",
+        "falling-room.md",
+        "genobi-cli.md",
+        "genobi-teaser-run/README.md",
+        "genobi-teaser-run/claims.md",
+        "genobi-teaser-run/decision-table.md",
+        "genobi-teaser.md",
+        "hermes-open-route.md",
+        "hermes-profiles.md",
+        "hermes-runs.md",
+        "licence-strategy.md",
+        "machine-check.md",
+        "media-space.md",
+        "registry-skills.md",
+        "registry-tools.md",
+        "run-location.md",
+        "runs/anime-teaser.md",
+        "scene-builder.md",
+        "scene-examples.md",
+        "scrolls.md",
+        "seedvr2-upscale.md",
+        "supervisor.md",
+        "tags.md",
+        "taste-memory.md",
+        "templates.md",
+        "upscaling.md",
+        "world-builder.md",
+        "world-live.md"
+      ]
+    },
+    {
+      "title": "Review checklist",
+      "path": "review-checklist.md",
+      "tags": ["architecture", "review"],
+      "summary": "Questions to answer from source and tests when reviewing a change, including agent and independent review passes.",
+      "links": ["architecture.md", "cloudflare.md"]
+    },
+    {
+      "title": "Run location and workflow swapping",
+      "path": "run-location.md",
+      "tags": ["workflows", "comfy", "backend", "studio", "mcp"],
+      "summary": "Run location (Local ComfyUI or Comfy Cloud), the local ComfyUI client, workflow swapping and the local model map.",
+      "links": ["openjutsu-swap.md"]
+    },
+    {
+      "title": "Hosted runner pairing",
+      "path": "runner-pairing.md",
+      "tags": ["agents", "cloudflare", "architecture"],
+      "summary": "Explicit outbound pairing between a hosted Genobi studio and its owner's local agent runner.",
+      "links": []
+    },
+    {
+      "title": "Anime teaser run card",
+      "path": "runs/anime-teaser.md",
+      "tags": ["agents", "director", "ltx", "workflows"],
+      "summary": "The anime teaser run card - four quoted LTX-2.5 Fast shots cut into a vertical 11-second teaser, the first template Claude Code and Hermes both run, with prompts, price, acceptance checks, the gaps found and the replication protocol.",
+      "links": [
+        "agent-approvals.md",
+        "anime-teaser-template.md",
+        "camera-wording.md",
+        "director-bundle/motion-effects.md",
+        "hermes-runs.md",
+        "vfx-recipes/anime-opening.md"
+      ]
+    },
+    {
+      "title": "Scene builder",
+      "path": "scene-builder.md",
+      "tags": ["3d", "agents", "sound", "mcp"],
+      "summary": "Agent-built 3D scenes as data - the scene document, its commands and the roomBox helper, Load and Save in the 3D tab, and the room acoustics estimated from the geometry (Sabine/Eyring RT60 per band, critical distance, pre-delay, early reflections).",
+      "links": ["3d-tab.md", "scene-examples.md", "world-builder.md"]
+    },
+    {
+      "title": "Scene examples: use them before expanding the builder",
+      "path": "scene-examples.md",
+      "tags": ["3d", "agents", "sound", "mcp"],
+      "summary": "Editable primitive starter scenes, bundled mannequins, deterministic capture and an LTX plus AKUSPACE first-frame workflow kit.",
+      "links": ["akuspace-docker.md"]
+    },
+    {
+      "title": "Scrolls",
+      "path": "scrolls.md",
+      "tags": ["director", "storyboard", "agents", "mcp", "sound"],
+      "summary": "Standalone character sheets and storyboards, a reference-guided sheet generator, selected guidance handoffs, deterministic audio animatics, and bounded portable bundles.",
+      "links": ["project-assets.md", "vfx-recipes/README.md"]
+    },
+    {
+      "title": "SeedVR2 open upscaler",
+      "path": "seedvr2-upscale.md",
+      "tags": ["workflows", "comfy", "models", "licences"],
+      "summary": "SeedVR2, the open video upscaler - Comfy's core-node SeedVR2 3B template as the seedvr2-upscale workflow entry, free on a local ComfyUI, quoted on Comfy Cloud, and the Dimensions mix's optional last step.",
+      "links": [
+        "dimensions-mix.md",
+        "run-location.md",
+        "upscaling.md",
+        "verification.md"
+      ]
+    },
+    {
+      "title": "Studio interface",
+      "path": "studio-interface.md",
+      "tags": ["studio"],
+      "summary": "Shared tool headings, workspace alignment, menus and finishing controls.",
+      "links": ["editor-timeline.md", "run-location.md"]
+    },
+    {
+      "title": "Genobi: submission dossier",
+      "path": "submission.md",
+      "tags": ["vision", "verification"],
+      "summary": "The Open Source Higgsfield submission dossier - the prose for the form, how we read the challenge, where the innovation is, what was built per section, how each example video was made, what is verified locally and deployed.",
+      "links": [
+        "agent-approvals.md",
+        "agent-sessions.md",
+        "akuspace-docker.md",
+        "audio-analysis.md",
+        "camera-wording.md",
+        "capabilities.md",
+        "cloudflare.md",
+        "dimensions-mix.md",
+        "director-remix-verification.md",
+        "dual-editor.md",
+        "falling-room.md",
+        "hermes-runs.md",
+        "hermes-runs/2026-10-27-claude-anime-teaser.md",
+        "layout-to-render-status.md",
+        "machine-check.md",
+        "media-space.md",
+        "run-location.md",
+        "scene-builder.md",
+        "supervised-workflow-checks.md",
+        "template-gallery.md",
+        "verification.md",
+        "vision.md",
+        "voice-mode.md",
+        "world-builder-verification.md"
+      ]
+    },
+    {
+      "title": "Supervised workflow checks",
+      "path": "supervised-workflow-checks.md",
+      "tags": ["plan", "workflows", "agents", "studio"],
+      "summary": "End-to-end acceptance for supervised workflow checks.",
+      "links": ["project-assets.md"]
+    },
+    {
+      "title": "Local agent supervisor",
+      "path": "supervisor.md",
+      "tags": ["agents", "studio"],
+      "summary": "Launch local development sessions or connect an external supervisor viewer.",
+      "links": [
+        "agent-sessions.md",
+        "agent-setup.md",
+        "genobi-deck.md",
+        "hermes-profiles.md"
+      ]
+    },
+    {
+      "title": "Wiki tags",
+      "path": "tags.md",
+      "tags": ["wiki"],
+      "summary": "The allowed wiki tags and what each one means.",
+      "links": ["README.md"]
+    },
+    {
+      "title": "Shared project memory and taste",
+      "path": "taste-memory.md",
+      "tags": ["architecture", "agents", "director"],
+      "summary": "Local project evidence, durable agent checkpoints, scoped taste and annotated references shared by every harness.",
+      "links": ["genobi-cli.md"]
+    },
+    {
+      "title": "Teachings",
+      "path": "teachings.md",
+      "tags": ["studio", "agents", "setup"],
+      "summary": "Teachings — short fixed hints, each saying what one part of the studio is for, shown in the deck's bar, the idle bubble and setup while nothing is running.",
+      "links": [
+        "agent-approvals.md",
+        "agent-bubble.md",
+        "arena.md",
+        "genobi-deck.md",
+        "vision.md",
+        "voice-mode.md"
+      ]
+    },
+    {
+      "title": "Template gallery and sharing",
+      "path": "template-gallery.md",
+      "tags": ["studio", "director", "cloudflare"],
+      "summary": "The Gallery-first studio view, its card order, its model badges (named from the registry) and Open only toggle, its \"Make your own\" drawer (mechanical templates generated in place, agent templates started in a session), its FLUX 3 generation cards, its preview clips, and the public watch and embed pages with their link-preview metadata and security headers.",
+      "links": [
+        "bloom-teaser.md",
+        "dimensions-mix.md",
+        "falling-room.md",
+        "genobi-teaser.md",
+        "project-assets.md",
+        "templates.md",
+        "voice-mode.md"
+      ]
+    },
+    {
+      "title": "House-style templates",
+      "path": "templates.md",
+      "tags": ["director", "ltx", "sound", "models"],
+      "summary": "The house-style templates (product video, character piece, audio-visual, anime teaser, sheet to shot), their run kinds, inputs, tiers, shots and tracks, the asset intake, and how to open or start them from the gallery and the Director.",
+      "links": [
+        "anime-teaser-template.md",
+        "camera-wording.md",
+        "dimensions-mix.md",
+        "director-working-version.md",
+        "falling-room.md",
+        "hermes-runs.md",
+        "template-gallery.md",
+        "vision.md"
+      ]
+    },
+    {
+      "title": "Upscaling",
+      "path": "upscaling.md",
+      "tags": ["workflows", "models", "agents", "mcp", "bfl", "comfy"],
+      "summary": "Upscaling video in Genobi - SeedVR2 (open) and FLUX Video Upscale (API), their real limits, run locations and payers, single and split runs (19 s parts plus the remainder, a local GPU's part length), the one-approval agent flow, failures, and the CLI and MCP commands.",
+      "links": ["run-location.md", "seedvr2-upscale.md"]
+    },
+    {
+      "title": "Verification",
+      "path": "verification.md",
+      "tags": ["architecture", "verification"],
+      "summary": "What has been tested in the studio and what has not, from automated checks to paid provider calls.",
+      "links": ["cloudflare.md"]
+    },
+    {
+      "title": "VFX recipes",
+      "path": "vfx-recipes/README.md",
+      "tags": ["director", "workflows", "research", "agents"],
+      "summary": "Credited prompt recipes for neon glitch, character scans, anime-opening edits and hologram treatments.",
+      "links": [
+        "credits/README.md",
+        "vfx-recipes/anime-opening.md",
+        "vfx-recipes/hologram-turntable.md",
+        "vfx-recipes/neon-glitch.md",
+        "vfx-recipes/surveillance-scan.md"
+      ]
+    },
+    {
+      "title": "Anime opening: generate, then edit",
+      "path": "vfx-recipes/anime-opening.md",
+      "tags": ["director", "workflows", "research", "storyboard"],
+      "summary": "Character references and a shot plan feed a generation pass, followed by a separate anime-opening edit and effects pass.",
+      "links": ["vfx-recipes/README.md"]
+    },
+    {
+      "title": "Hologram turntable",
+      "path": "vfx-recipes/hologram-turntable.md",
+      "tags": ["director", "workflows", "research", "3d"],
+      "summary": "An optional hologram turntable recipe grounded in Alien.js, with a later approved-asset or Tripo route.",
+      "links": [
+        "credits/libraries/alien-js/README.md",
+        "credits/libraries/space-js/README.md",
+        "vfx-recipes/README.md",
+        "vfx-recipes/surveillance-scan.md"
+      ]
+    },
+    {
+      "title": "Dark neon glitch",
+      "path": "vfx-recipes/neon-glitch.md",
+      "tags": ["director", "workflows", "research"],
+      "summary": "A dark neon subject treatment with palette mapping, displaced trails, block echoes and a loop-seam plan.",
+      "links": ["vfx-recipes/README.md"]
+    },
+    {
+      "title": "Surveillance subject scan",
+      "path": "vfx-recipes/surveillance-scan.md",
+      "tags": ["director", "workflows", "research"],
+      "summary": "Six-stage character analysis as a fictional HUD, preserving source art and distinguishing authored labels from measured analysis.",
+      "links": ["vfx-recipes/README.md"]
+    },
+    {
+      "title": "Genobi: vision, philosophy and pitch",
+      "path": "vision.md",
+      "tags": ["vision", "3d", "sound", "agents"],
+      "summary": "What Genobi is for, an open-source video studio for AI ninjas, with its mission, philosophy and the story video.",
+      "links": [
+        "agent-sessions.md",
+        "arena.md",
+        "camera-wording.md",
+        "director-agent-tools.md",
+        "genmod.md",
+        "genobi-deck.md",
+        "licence-strategy.md",
+        "minimax-h3-camera.md",
+        "supervisor.md",
+        "taste-memory.md"
+      ]
+    },
+    {
+      "title": "Voice mode",
+      "path": "voice-mode.md",
+      "tags": ["agents", "studio", "backend", "models"],
+      "summary": "Voice mode in the studio header — one-click recording, local Qwen3-ASR transcription through a Python worker, the WIE-style LED waveform, where the transcript goes (a spoken generation request to Camera, the prompt on screen, or an agent session), the language setting, setup and what stays on the machine.",
+      "links": [
+        "agent-approvals.md",
+        "agent-context.md",
+        "agent-sessions.md",
+        "agent-setup.md",
+        "voice-setup.md",
+        "world-builder.md"
+      ]
+    },
+    {
+      "title": "Voice setup",
+      "path": "voice-setup.md",
+      "tags": ["studio", "backend", "models"],
+      "summary": "Installing local voice — a verified Qwen3-ASR already on the machine found and offered before any download, setup's Save & set up as the confirming click and the agent it starts once voice connects, plain sentences, a faint Rain and an optional intro video while it installs, the mic's guided panel with Use this one and Install new, the step list with per-step outcomes and pip's progress, cancellation, and manual setup with environment variables.",
+      "links": ["agent-setup.md", "voice-mode.md"]
+    },
+    {
+      "title": "Workflow reference library",
+      "path": "workflow-reference-library.md",
+      "tags": [
+        "workflows",
+        "comfy",
+        "models",
+        "director",
+        "agents",
+        "research"
+      ],
+      "summary": "Future model and custom-node workflow references for reusable video production, separate from runnable studio entries.",
+      "links": ["comfy-cloud-inventory.md", "run-location.md"]
+    },
+    {
+      "title": "World Builder acoustics",
+      "path": "world-builder-acoustics.md",
+      "tags": ["3d", "world-builder", "comfy", "sound"],
+      "summary": "World Builder's room acoustics estimate (Sabine RT60 to AKUSPACE presets) and the Reverb node's DSP route.",
+      "links": ["media-space.md", "world-builder.md"]
+    },
+    {
+      "title": "World Builder · Capture panel",
+      "path": "world-builder-capture.md",
+      "tags": ["3d", "world-builder"],
+      "summary": "The World Builder Capture panel ported from Holodeck — badge, record button, format, rate and time, passes and outputs.",
+      "links": ["world-builder-controls.md", "world-builder.md"]
+    },
+    {
+      "title": "World Builder controls",
+      "path": "world-builder-controls.md",
+      "tags": ["3d", "world-builder", "studio"],
+      "summary": "World Builder controls - capture and edits during Play, character orientation, preview and character shortcuts, and the panel dock.",
+      "links": ["world-builder.md"]
+    },
+    {
+      "title": "World Builder interface pass",
+      "path": "world-builder-interface.md",
+      "tags": ["3d", "world-builder", "studio"],
+      "summary": "The World Builder interface pass, with the captured brief, panels and controls, CAD follow-ups and verification.",
+      "links": [
+        "project-assets.md",
+        "world-builder-controls.md",
+        "world-builder-sound.md",
+        "world-live.md"
+      ]
+    },
+    {
+      "title": "World Builder sound",
+      "path": "world-builder-sound.md",
+      "tags": ["3d", "world-builder", "sound"],
+      "summary": "World Builder's Sound panel, the example track, the audio mod matrix, the reactive room presets and what the Comfy node shows of them.",
+      "links": ["world-builder.md"]
+    },
+    {
+      "title": "World Builder verification — 16 October 2026",
+      "path": "world-builder-verification.md",
+      "tags": ["3d", "world-builder", "verification"],
+      "summary": "World Builder verification from 16 and 17 October 2026, with working paths, automated checks and what is still to verify.",
+      "links": ["world-builder-interface.md"]
+    },
+    {
+      "title": "World Builder and Scene Adapter",
+      "path": "world-builder.md",
+      "tags": ["3d", "world-builder", "agents", "comfy"],
+      "summary": "World Builder and Scene Adapter, the set-preparation tool beside Director, its agent contract and Comfy integration.",
+      "links": [
+        "agent-context.md",
+        "camera-wording.md",
+        "falling-room.md",
+        "media-space.md",
+        "project-assets.md",
+        "scrolls.md",
+        "voice-mode.md",
+        "world-builder-acoustics.md",
+        "world-builder-capture.md",
+        "world-builder-controls.md",
+        "world-builder-interface.md",
+        "world-builder-sound.md",
+        "world-builder-verification.md",
+        "world-live.md"
+      ]
+    },
+    {
+      "title": "Live World sessions",
+      "path": "world-live.md",
+      "tags": ["3d", "agents", "mcp"],
+      "summary": "Walk, switch characters, animate the local creature, and record camera and character movement through World, API or CLI.",
+      "links": ["world-builder.md"]
+    }
+  ]
+}

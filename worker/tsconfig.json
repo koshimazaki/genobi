@@ -1,0 +1,19 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "types": [],
+    "lib": ["ES2022"]
+  },
+  "include": [
+    "./**/*.ts",
+    "../observability/**/*.ts",
+    "../shared/**/*.ts",
+    "../server/bfl.ts",
+    "../server/comfy-sdk.ts",
+    "../server/errors.ts",
+    "../server/take.ts",
+    "../server/validation.ts",
+    "../server/validate-chain.ts",
+    "../server/validate-camera.ts"
+  ]
+}

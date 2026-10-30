@@ -1,0 +1,34 @@
+.resize-handle {
+  touch-action: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  z-index: 7;
+}
+.resize-handle:hover,
+.resize-handle:focus-visible {
+  background: var(--accent-ghost);
+}
+.resize-handle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+.resize-width {
+  cursor: col-resize;
+  width: 8px;
+}
+.resize-height {
+  cursor: row-resize;
+  height: 8px;
+}
+.resize-width i {
+  height: 32px;
+  width: 2px;
+  background: var(--border-strong);
+}
+.resize-height i {
+  width: 32px;
+  height: 2px;
+  background: var(--border-strong);
+}

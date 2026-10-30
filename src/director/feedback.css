@@ -1,0 +1,96 @@
+/* Feedback for the agent: a drawer over the console's right edge, the
+   mirror of the notes drawer, so opening it moves nothing else. */
+.dir-feedback-drawer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(320px, 100%);
+  z-index: 7;
+  transform: translateX(100%);
+  visibility: hidden;
+  opacity: 0;
+}
+.dir-feedback-drawer[data-open="true"] {
+  transform: translateX(0);
+  visibility: visible;
+  opacity: 1;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .dir-feedback-drawer {
+    transition:
+      transform var(--motion-enter) ease,
+      opacity var(--motion-enter) ease,
+      visibility var(--motion-enter);
+  }
+}
+.dir-feedback {
+  box-sizing: border-box;
+  height: 100%;
+  overflow: auto;
+  padding: 10px;
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+  box-shadow: -5px 0 16px var(--shadow-soft);
+  font: var(--space-10, 10px) var(--mono);
+  color: var(--soft);
+  line-height: 1.5;
+}
+.dir-feedback header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+.dir-feedback p {
+  margin: 0 0 8px;
+}
+.dir-feedback-summary {
+  color: var(--text);
+}
+.dir-feedback-actions {
+  display: flex;
+  gap: 6px;
+}
+.dir-feedback button {
+  flex: none;
+  min-height: 24px;
+  padding: 4px 7px;
+  font: inherit;
+}
+.dir-feedback-status:empty {
+  display: none;
+}
+.dir-feedback-status {
+  margin-top: 8px;
+}
+.dir-feedback h3 {
+  margin: 12px 0 4px;
+  font: inherit;
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.dir-feedback-list {
+  display: grid;
+  gap: 6px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+  overflow-wrap: anywhere;
+}
+.dir-feedback-list li {
+  padding-left: 7px;
+  border-left: 2px solid var(--border);
+}
+.dir-feedback-list code {
+  color: var(--accent);
+  font: inherit;
+}
+.dir-feedback-list small {
+  display: block;
+  color: var(--muted);
+  font: inherit;
+}

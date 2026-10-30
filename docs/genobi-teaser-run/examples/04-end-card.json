@@ -1,0 +1,111 @@
+{
+  "example": "ONE STUDIO on the last break, then the end card holds to the last beat (beats 232-269).",
+  "inputs": {
+    "storyboard": [
+      {
+        "text": "ONE STUDIO",
+        "endsAt": 236
+      },
+      {
+        "section": "end-card",
+        "from": 260,
+        "to": 269,
+        "cards": ["end-card"]
+      }
+    ],
+    "analysis": {
+      "totalBeats": 269
+    }
+  },
+  "decisions": [
+    {
+      "id": "d-agents-9",
+      "section": "agents",
+      "choice": "one-studio: kinetic ONE STUDIO, beats 232-236, size 180.",
+      "because": "Rule 7: it ends at endsAt 236; 10 characters, so 4 beats and size 180.",
+      "source": "rule"
+    },
+    {
+      "id": "d-end-card-1",
+      "section": "end-card",
+      "choice": "end-card (card) copied from this example on lane end, beats 260-269; glitch-260 small.",
+      "because": "Rules 5 and 8; one card holds from the last shot to the cut's end.",
+      "source": "rule"
+    }
+  ],
+  "commands": ["node scripts/teaser-run-helper.mjs seconds 260"],
+  "cut": {
+    "shots": [
+      {
+        "asset": "mix-02",
+        "label": "mix-02 · 232",
+        "sourceSeconds": 0,
+        "startBeat": 232,
+        "beats": 4,
+        "cropY": 200
+      }
+    ],
+    "layers": [
+      {
+        "id": "end-card",
+        "name": "End card · Genobi",
+        "module": "end-card",
+        "kind": "graphics",
+        "lane": "end",
+        "startBeat": 260,
+        "beats": 9,
+        "opacity": 1,
+        "card": true,
+        "parameters": {
+          "eyebrow": "MADE WITH",
+          "title": "GENOBI",
+          "subtitle": "THE AI FILM STUDIO YOU DIRECT",
+          "credit1": "MUSIC · TRAILER-GENOBI",
+          "credit2": "KOSHIMAZAKI MIX",
+          "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+          "color": "#d5ff70",
+          "accent": "#e6a1ff",
+          "steps": "Gathering the shots / Cutting on the beat / Bringing it into focus",
+          "done": "Teaser ready",
+          "duration": 2.6
+        }
+      },
+      {
+        "id": "one-studio",
+        "name": "Slam · ONE STUDIO",
+        "module": "kinetic",
+        "kind": "graphics",
+        "lane": "impact",
+        "startBeat": 232,
+        "beats": 4,
+        "opacity": 1,
+        "parameters": {
+          "text": "ONE STUDIO",
+          "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+          "weight": 700,
+          "color": "#f6f8f2",
+          "accent": "#0c0e0c",
+          "bpm": 135,
+          "size": 180,
+          "beats": 4
+        }
+      },
+      {
+        "id": "glitch-260",
+        "name": "Glitch · beat 260",
+        "module": "slice-glitch",
+        "kind": "filter",
+        "lane": "glitch",
+        "startBeat": 260,
+        "beats": 0.5,
+        "opacity": 1,
+        "parameters": {
+          "amount": 0.85,
+          "slices": 18,
+          "seed": 1823,
+          "duration": 0.2
+        }
+      }
+    ]
+  }
+}

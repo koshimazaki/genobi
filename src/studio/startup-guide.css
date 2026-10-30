@@ -1,0 +1,34 @@
+.startup-guide {
+  width: min(560px, calc(100vw - 24px));
+  max-height: calc(100svh - 24px);
+  overflow: auto;
+}
+.startup-guide ol {
+  padding: 0 0 0 22px;
+  margin: 20px 0;
+}
+.startup-guide li {
+  padding-left: 6px;
+  margin: 14px 0;
+}
+.startup-guide li::marker {
+  color: var(--accent-strong);
+  font: 12px var(--mono);
+}
+.startup-guide strong {
+  font-size: 13px;
+  font-weight: 500;
+}
+.startup-guide li p {
+  margin: 5px 0 0;
+}
+.startup-guide .dialog-actions {
+  gap: 12px;
+  flex-wrap: wrap;
+}
+@media (max-width: 700px) {
+  .startup-guide button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}

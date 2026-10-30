@@ -1,0 +1,18 @@
+# LTX-2.5 Layout-to-Render, two-stage distilled (the supplied graph): 72.4 GB.
+# <folder> <repository> <revision> <path in repository> <bytes> <sha256 or ->
+# The graph and its model card name the BF16 distilled transformer and BF16
+# Gemma 4 encoder, not the int8 files AKUSPACE uses, so only the VAEs and the
+# upscaler (2.8 GB) are shared. Both repositories are gated: accept the LTX-2.5
+# and Layout-to-Render licences with HF_TOKEN's account. Hashes are hidden for
+# gated repositories, so these are checked by size only. Read 27 October 2026.
+# The optional GemmaAPITextEncode branch's gemma4_e2b_it_bf16 is left out.
+diffusion_models Lightricks/LTX-2.5 49b093a39c19169a8a81721dcc541e07e945232f diffusion_models/ltx-2.5-22b-distilled-transformer-bf16.safetensors 42018190584 -
+text_encoders Lightricks/LTX-2.5 49b093a39c19169a8a81721dcc541e07e945232f text_encoders/gemma4-12b-with-proj-ltx-2.5-bf16.safetensors 26263858182 -
+vae Lightricks/LTX-2.5 49b093a39c19169a8a81721dcc541e07e945232f vae/ltx-2.5-video-vae-bf16.safetensors 1472223346 -
+vae Lightricks/LTX-2.5 49b093a39c19169a8a81721dcc541e07e945232f vae/ltx-2.5-audio-vae-bf16.safetensors 364866540 -
+latent_upscale_models Lightricks/LTX-2.5 49b093a39c19169a8a81721dcc541e07e945232f latent_upscale_models/ltx-2.5-latent-spatial-upscaler-x2-bf16-1.0.safetensors 995778752 -
+loras Lightricks/LTX-2.5-22b-IC-LoRA-Layout-To-Render bd765d5592f0ae78457162852a353b6a375cb00f ltx-2.5-22b-ic-lora-layout-to-render-1.0.safetensors 1308787439 -
+# Union Control IC-LoRA for workflows/world-builder-canny-depth.json (Capture's
+# depth or canny as the guide). Public, not gated; its header carries
+# reference_downscale_factor 2. Revision, size and hash read 29 October 2026.
+loras Lightricks/LTX-2.3-22b-IC-LoRA-Union-Control 20a580c8606c06a0988d40375a61309e0fe5893d ltx-2.3-22b-ic-lora-union-control-ref0.5.safetensors 654465352 a1b888a87f661d27f08b394ae559e8e1050be33900bcc36a5cdf659e48f88d18

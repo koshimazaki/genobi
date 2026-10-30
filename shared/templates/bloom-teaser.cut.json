@@ -1,0 +1,520 @@
+{
+  "id": "bloom-teaser",
+  "bpm": 140,
+  "inPointSeconds": 0.04,
+  "fps": 24,
+  "width": 1920,
+  "height": 1080,
+  "designSize": {
+    "width": 960,
+    "height": 540
+  },
+  "beats": 44.5,
+  "track": {
+    "asset": "bloom-track",
+    "seconds": 19.112
+  },
+  "trackName": "Track · Anime-Genobi (Koshimazaki)",
+  "shots": [
+    {
+      "asset": "bloom-h3-a",
+      "label": "Bloom · eye ignites (first downbeat)",
+      "sourceSeconds": 0.0,
+      "startBeat": 3,
+      "beats": 2,
+      "cropY": null
+    },
+    {
+      "asset": "bloom-h3-b",
+      "label": "Bloom · lotus opens on the helm",
+      "sourceSeconds": 0.8,
+      "startBeat": 5,
+      "beats": 2,
+      "cropY": null
+    },
+    {
+      "asset": "bloom-h3-a",
+      "label": "Bloom · head and petals (scan)",
+      "sourceSeconds": 1.2,
+      "startBeat": 7,
+      "beats": 4,
+      "cropY": null
+    },
+    {
+      "asset": "bloom-h3-b",
+      "label": "Bloom · crouch",
+      "sourceSeconds": 3.0,
+      "startBeat": 11,
+      "beats": 2,
+      "cropY": null
+    },
+    {
+      "asset": "bloom-h3-b",
+      "label": "Bloom · jump kick",
+      "sourceSeconds": 4.0,
+      "startBeat": 13,
+      "beats": 2,
+      "cropY": null
+    },
+    {
+      "asset": "bloom-h3-a",
+      "label": "Bloom · hand reaches for the lens",
+      "sourceSeconds": 4.3,
+      "startBeat": 15,
+      "beats": 3,
+      "cropY": null
+    },
+    {
+      "asset": "bloom-h3-b",
+      "label": "Bloom · ninja stance",
+      "sourceSeconds": 6.3,
+      "startBeat": 18,
+      "beats": 3,
+      "cropY": null
+    },
+    {
+      "asset": "bloom-h3-a",
+      "label": "Bloom · full body on the drop (wire scan)",
+      "sourceSeconds": 9.3,
+      "startBeat": 21,
+      "beats": 4,
+      "cropY": null,
+      "move": {
+        "x": 0.5,
+        "y": 0.5,
+        "zoom": 1.2,
+        "ease": 3,
+        "drift": 0
+      }
+    },
+    {
+      "asset": "bloom-h3-a",
+      "label": "Bloom · leap",
+      "sourceSeconds": 11.6,
+      "startBeat": 25,
+      "beats": 2,
+      "cropY": null
+    },
+    {
+      "asset": "bloom-h3-a",
+      "label": "Bloom · low lunge",
+      "sourceSeconds": 13.4,
+      "startBeat": 27,
+      "beats": 2,
+      "cropY": null
+    },
+    {
+      "asset": "bloom-h3-b",
+      "label": "Bloom · reach, roots bloom (title)",
+      "sourceSeconds": 9.0,
+      "startBeat": 29,
+      "beats": 4,
+      "cropY": null,
+      "move": {
+        "x": 0.5,
+        "y": 0.55,
+        "zoom": 1.15,
+        "ease": 3,
+        "drift": 0
+      }
+    }
+  ],
+  "layers": [
+    {
+      "id": "sheet-scan",
+      "name": "Space.js scan · character sheet",
+      "module": "space-hud",
+      "kind": "graphics",
+      "lane": "cards",
+      "startBeat": 0,
+      "beats": 3,
+      "opacity": 1,
+      "parameters": {
+        "still": "/media/director-templates/bloom-teaser/bloom-sheet.jpg",
+        "color": "#62f2e4",
+        "label": "SUBJECT · BLOOM",
+        "credit": "SHEET SCAN · 6 CALLOUTS",
+        "targets": "0.47,0.47,0.32,0.86 / 0.07,0.12,0.12,0.2 / 0.07,0.33,0.12,0.2 / 0.91,0.15,0.15,0.22 / 0.91,0.38,0.15,0.2 / 0.94,0.83,0.08,0.2",
+        "interval": 0.16,
+        "dim": 0.15,
+        "fadeAt": 0
+      },
+      "card": true
+    },
+    {
+      "id": "end-card",
+      "name": "End card · Bloom",
+      "module": "end-card-still",
+      "kind": "graphics",
+      "lane": "end",
+      "startBeat": 33,
+      "beats": 11.5,
+      "opacity": 1,
+      "parameters": {
+        "eyebrow": "GENOBI // OPEN PATH",
+        "title": "BLOOM",
+        "subtitle": "ANIME TEASER",
+        "credit1": "MUSIC · KOSHIMAZAKI",
+        "credit2": "VIDEO · MINIMAX H3 OPEN WEIGHTS",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "color": "#62f2e4",
+        "accent": "#ff5ad8",
+        "steps": "Scanning the sheet / Mapping the callouts / Bringing it into bloom",
+        "done": "First look",
+        "duration": 2.4,
+        "still": "/media/director-templates/bloom-teaser/bloom-end-card.jpg"
+      }
+    },
+    {
+      "id": "crt",
+      "name": "Surveillance scanlines",
+      "module": "crt",
+      "kind": "filter",
+      "lane": "crt",
+      "startBeat": 3,
+      "beats": 30,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.55,
+        "curvature": 0.04,
+        "rgb": 1.5,
+        "vignette": 0.45
+      }
+    },
+    {
+      "id": "wire",
+      "name": "Wireframe scan · full body",
+      "module": "wire-scan",
+      "kind": "filter",
+      "lane": "wire",
+      "startBeat": 21,
+      "beats": 4,
+      "opacity": 1,
+      "parameters": {
+        "color": "#62f2e4",
+        "amount": 0.85,
+        "sweep": 1.4,
+        "trail": 0.35
+      }
+    },
+    {
+      "id": "glitch-1",
+      "name": "Slice glitch · beat 3",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 3,
+      "beats": 0.375,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.8,
+        "slices": 18,
+        "seed": 11,
+        "duration": 0.161
+      }
+    },
+    {
+      "id": "glitch-2",
+      "name": "Slice glitch · beat 11",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 11,
+      "beats": 0.375,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.7,
+        "slices": 18,
+        "seed": 18,
+        "duration": 0.161
+      }
+    },
+    {
+      "id": "glitch-3",
+      "name": "Slice glitch · beat 21",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 21,
+      "beats": 0.5,
+      "opacity": 1,
+      "parameters": {
+        "amount": 1.0,
+        "slices": 18,
+        "seed": 25,
+        "duration": 0.214
+      }
+    },
+    {
+      "id": "glitch-4",
+      "name": "Slice glitch · beat 25",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 25,
+      "beats": 0.375,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.8,
+        "slices": 18,
+        "seed": 32,
+        "duration": 0.161
+      }
+    },
+    {
+      "id": "glitch-5",
+      "name": "Slice glitch · beat 33",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 33,
+      "beats": 0.5,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.9,
+        "slices": 18,
+        "seed": 39,
+        "duration": 0.214
+      }
+    },
+    {
+      "id": "hud",
+      "name": "Surveillance HUD · REC / CAM",
+      "module": "hud",
+      "kind": "graphics",
+      "lane": "hud",
+      "startBeat": 3,
+      "beats": 30,
+      "opacity": 1,
+      "parameters": {
+        "color": "#f6f8f2",
+        "accent": "#ff5ad8",
+        "bpm": 140,
+        "text": "● REC  CAM 01 // SUBJECT BLOOM",
+        "credit": "MUSIC / KOSHIMAZAKI",
+        "seconds": 12.857
+      }
+    },
+    {
+      "id": "open",
+      "name": "Screen open",
+      "module": "screen-open",
+      "kind": "graphics",
+      "lane": "open",
+      "startBeat": 0,
+      "beats": 2,
+      "opacity": 1,
+      "parameters": {
+        "color": "#62f2e4",
+        "matte": "#0b0a10",
+        "duration": 0.6,
+        "glyphs": 28,
+        "seed": 9
+      }
+    },
+    {
+      "id": "caption-1",
+      "name": "Caption · subject",
+      "module": "build-panel",
+      "kind": "graphics",
+      "lane": "captions",
+      "startBeat": 3,
+      "beats": 4,
+      "opacity": 1,
+      "parameters": {
+        "side": "left",
+        "title": "BLOOM",
+        "lines": "SUBJECT 01 / FLORA-CYBERNETIC / TRACKING",
+        "color": "#f6f8f2",
+        "muted": "#cfc6dd",
+        "accent": "#ff5ad8",
+        "bpm": 140,
+        "duration": 0.6
+      }
+    },
+    {
+      "id": "caption-2",
+      "name": "Caption · hand",
+      "module": "build-panel",
+      "kind": "graphics",
+      "lane": "captions",
+      "startBeat": 15,
+      "beats": 3,
+      "opacity": 1,
+      "parameters": {
+        "side": "right",
+        "title": "CALLOUT 04",
+        "lines": "HAND / BLOOM EMITTER / ARMED",
+        "color": "#f6f8f2",
+        "muted": "#cfc6dd",
+        "accent": "#ff5ad8",
+        "bpm": 140,
+        "duration": 0.6
+      }
+    },
+    {
+      "id": "caption-3",
+      "name": "Caption · stance",
+      "module": "build-panel",
+      "kind": "graphics",
+      "lane": "captions",
+      "startBeat": 18,
+      "beats": 3,
+      "opacity": 1,
+      "parameters": {
+        "side": "left",
+        "title": "NINJA FORM",
+        "lines": "STANCE / ROOT LOCK / CHARGED",
+        "color": "#f6f8f2",
+        "muted": "#cfc6dd",
+        "accent": "#ff5ad8",
+        "bpm": 140,
+        "duration": 0.6
+      }
+    },
+    {
+      "id": "scan",
+      "name": "Scan · helm",
+      "module": "scan",
+      "kind": "graphics",
+      "lane": "scan",
+      "startBeat": 7,
+      "beats": 4,
+      "opacity": 0.95,
+      "parameters": {
+        "color": "#f6f8f2",
+        "accent": "#62f2e4",
+        "text": "HELM · GLASS DOME",
+        "x": 0.47,
+        "y": 0.34,
+        "bpm": 140
+      }
+    },
+    {
+      "id": "target-1",
+      "name": "Target box · CALLOUT 02 · LOTUS",
+      "module": "ui-focus",
+      "kind": "graphics",
+      "lane": "focus",
+      "startBeat": 5,
+      "beats": 2,
+      "opacity": 1,
+      "parameters": {
+        "x": 0.33,
+        "y": 0.15,
+        "w": 0.34,
+        "h": 0.6,
+        "label": "CALLOUT 02 · LOTUS",
+        "color": "#ff5ad8",
+        "dim": 0.3,
+        "draw": 0.2,
+        "fadeAt": 0.707,
+        "view": ""
+      }
+    },
+    {
+      "id": "target-2",
+      "name": "Target box · TARGET LOCK · KICK",
+      "module": "ui-focus",
+      "kind": "graphics",
+      "lane": "focus",
+      "startBeat": 13,
+      "beats": 2,
+      "opacity": 1,
+      "parameters": {
+        "x": 0.39,
+        "y": 0.05,
+        "w": 0.32,
+        "h": 0.8,
+        "label": "TARGET LOCK · KICK",
+        "color": "#ff5ad8",
+        "dim": 0.3,
+        "draw": 0.2,
+        "fadeAt": 0.707,
+        "view": ""
+      }
+    },
+    {
+      "id": "target-3",
+      "name": "Target box · TARGET LOCK · LEAP",
+      "module": "ui-focus",
+      "kind": "graphics",
+      "lane": "focus",
+      "startBeat": 25,
+      "beats": 2,
+      "opacity": 1,
+      "parameters": {
+        "x": 0.38,
+        "y": 0.08,
+        "w": 0.24,
+        "h": 0.8,
+        "label": "TARGET LOCK · LEAP",
+        "color": "#ff5ad8",
+        "dim": 0.3,
+        "draw": 0.2,
+        "fadeAt": 0.707,
+        "view": ""
+      }
+    },
+    {
+      "id": "hit-strike",
+      "name": "Impact · Strike",
+      "module": "kinetic",
+      "kind": "graphics",
+      "lane": "impact",
+      "startBeat": 13,
+      "beats": 1,
+      "opacity": 1,
+      "parameters": {
+        "text": "STRIKE",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "weight": 700,
+        "color": "#f6f8f2",
+        "accent": "#0b0a10",
+        "bpm": 140,
+        "size": 130,
+        "beats": 1
+      }
+    },
+    {
+      "id": "hit-bloom",
+      "name": "Impact · Bloom",
+      "module": "kinetic",
+      "kind": "graphics",
+      "lane": "impact",
+      "startBeat": 27,
+      "beats": 1,
+      "opacity": 1,
+      "parameters": {
+        "text": "BLOOM",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "weight": 700,
+        "color": "#f6f8f2",
+        "accent": "#0b0a10",
+        "bpm": 140,
+        "size": 130,
+        "beats": 1
+      }
+    },
+    {
+      "id": "title",
+      "name": "Title · Bloom",
+      "module": "kinetic",
+      "kind": "graphics",
+      "lane": "title",
+      "startBeat": 29,
+      "beats": 4,
+      "opacity": 1,
+      "parameters": {
+        "text": "BLOOM / ANIME TEASER",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "weight": 400,
+        "color": "#ff5ad8",
+        "accent": "#f6f8f2",
+        "bpm": 140,
+        "size": 150,
+        "beats": 4
+      }
+    }
+  ]
+}

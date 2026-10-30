@@ -1,0 +1,182 @@
+{
+  "width": 1024,
+  "height": 576,
+  "frames": 121,
+  "fov": 34,
+  "azimuth": 0,
+  "elevation": 18.189045699651306,
+  "radius": 7.368174807915459,
+  "targetX": 0,
+  "targetZ": 0,
+  "targetY": 1.25,
+  "orbit": 0,
+  "dolly": 0,
+  "light": 2,
+  "patternScale": 0.13,
+  "intensity": 1,
+  "speed": 1,
+  "depthNear": 0.1,
+  "depthFar": 50,
+  "version": 1,
+  "scene": "stage",
+  "avatar": true,
+  "avatarAsset": "mannequin",
+  "avatarMotion": [
+    {
+      "clip": "dance",
+      "seconds": 5
+    }
+  ],
+  "creatureReference": null,
+  "avatarPose": {
+    "x": 0,
+    "y": 0,
+    "z": 0,
+    "yaw": 0
+  },
+  "layout": {},
+  "textures": {},
+  "cameraCurve": "linear",
+  "cameraShot": "face",
+  "elevationEnd": null,
+  "bandEnvelopes": {
+    "low": [],
+    "mid": [],
+    "high": []
+  },
+  "audioRoutes": [
+    {
+      "id": "route-1",
+      "enabled": true,
+      "source": "low",
+      "target": "prop:ball-left",
+      "property": "scale",
+      "amount": 1.8,
+      "threshold": 0.02,
+      "invert": false,
+      "lerp": 0.6
+    },
+    {
+      "id": "route-2",
+      "enabled": true,
+      "source": "high",
+      "target": "prop:ball-right",
+      "property": "height",
+      "amount": 1,
+      "threshold": 0.02,
+      "invert": false,
+      "lerp": 0.6
+    },
+    {
+      "id": "route-3",
+      "enabled": true,
+      "source": "mid",
+      "target": "prop:ball-left",
+      "property": "glow",
+      "amount": 1.5,
+      "threshold": 0.02,
+      "invert": false,
+      "lerp": 0.6
+    },
+    {
+      "id": "route-4",
+      "enabled": true,
+      "source": "mid",
+      "target": "prop:ball-right",
+      "property": "glow",
+      "amount": 1.5,
+      "threshold": 0.02,
+      "invert": false,
+      "lerp": 0.6
+    }
+  ],
+  "fps": 24,
+  "seconds": null,
+  "prompt": "Move library · dance-balls: A figure dances in a club between two balls that pulse with the beat.",
+  "background": "#171e29",
+  "envelope": [],
+  "objects": [
+    {
+      "id": "room-floor",
+      "shape": "plane",
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "scale": 1,
+      "scaleX": 2.41,
+      "scaleY": 3.1,
+      "rotation": 0,
+      "rotationX": -1.5707963267948966,
+      "spin": 0,
+      "color": "#655b83",
+      "prompt": "concrete"
+    },
+    {
+      "id": "room-north",
+      "shape": "plane",
+      "x": 0,
+      "y": 1.24,
+      "z": -3.1,
+      "scale": 1,
+      "scaleX": 2.41,
+      "scaleY": 1.24,
+      "rotation": 0,
+      "rotationX": 0,
+      "spin": 0,
+      "color": "#655b83",
+      "prompt": "wood"
+    },
+    {
+      "id": "room-east",
+      "shape": "plane",
+      "x": 2.41,
+      "y": 1.24,
+      "z": 0,
+      "scale": 1,
+      "scaleX": 3.1,
+      "scaleY": 1.24,
+      "rotation": 1.5707963267948966,
+      "rotationX": 0,
+      "spin": 0,
+      "color": "#655b83",
+      "prompt": "wood"
+    },
+    {
+      "id": "room-west",
+      "shape": "plane",
+      "x": -2.41,
+      "y": 1.24,
+      "z": 0,
+      "scale": 1,
+      "scaleX": 3.1,
+      "scaleY": 1.24,
+      "rotation": 1.5707963267948966,
+      "rotationX": 0,
+      "spin": 0,
+      "color": "#655b83",
+      "prompt": "wood"
+    },
+    {
+      "id": "ball-left",
+      "shape": "sphere",
+      "x": -1.2,
+      "y": 0.95,
+      "z": 0,
+      "scale": 0.35,
+      "spin": 0,
+      "color": "#e0577a",
+      "prompt": "a glossy ball floating at hip height"
+    },
+    {
+      "id": "ball-right",
+      "shape": "sphere",
+      "x": 1.2,
+      "y": 0.95,
+      "z": 0,
+      "scale": 0.35,
+      "spin": 0,
+      "color": "#4fb8d8",
+      "prompt": "a glossy ball floating at hip height"
+    }
+  ]
+}

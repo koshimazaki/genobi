@@ -1,0 +1,3164 @@
+{
+  "id": "b0a5d1c2-5f3e-4e7a-9a61-1c0e8a2d4b01",
+  "revision": 0,
+  "last_node_id": 904,
+  "last_link_id": 90,
+  "nodes": [
+    {
+      "id": 900,
+      "type": "MarkdownNote",
+      "pos": [-760, 0],
+      "size": [700, 2300],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "# World Builder → AKUSPACE on LTX-2.5\n\nOne queue from a World Builder take to a clip whose sound is in the room you built. Two routes to the same room, side by side:\n\n- **LoRA route** (group 3): the AKUSPACE LoRA, loaded, writes the room into LTX-2.5's own audio. The take's dry audio is the reference.\n- **DSP route** (group 2): World Builder · Reverb convolves the same dry audio with an impulse response computed from the room's geometry.\n\nThe two SaveVideo nodes at the end carry the same picture with each route's sound, so you can A/B them.\n\n## Nodes to point at\n- **World Builder · Capture**: the take (colour frames, depth, recipe, audio).\n- **World Builder · Acoustics**: reads the room, names the AKUSPACE preset; its `space_mode`, `application` and `room_preset` drive both AKUSPACE nodes.\n- **LoraLoaderModelOnly**: `akuspace-ltx25-v0.5.safetensors` at 1.0 on the LTX-2.5 transformer.\n- **AKUSPACE Text Encode**: scene text + the room's dropdowns, the trained caption.\n- **AKUSPACE Reference Audio (aligned)**: places the dry reference at t=0; the LoRA does the transforming.\n- **World Builder · Inputs**: sends the finished frames and sound back to the World Builder screen (**Send inputs to World Builder**).\n\n## Six stops\n1. **Take.** Capture → frame count and fps feed every consumer: latent length, audio latent, conditioning frame rate, muxer. One number, nothing drifts.\n2. **Room.** Acoustics → AKUSPACE Prompt (preview of the caption) and Reverb (wet audio, impulse response).\n3. **Model.** LTX-2.5 22B distilled int8 → AKUSPACE LoRA → aligned reference.\n4. **Stage 1.** Empty video latent at half size + empty audio latent, `LTXVDualCFGGuider` 1/1, euler_ancestral, 8 sigmas.\n5. **Stage 2.** ×2 latent upsampler on the video, re-paired with the stage-1 audio, 3 sigmas.\n6. **Decode.** Tiled video VAE, audio VAE → CreateVideo ×2 → SaveVideo ×2, FLAC of the LoRA audio.\n\n## Optional\n- **Text only** toggle: on (default) ignores the take's picture; off opens the clip on the take's first frame (a blockout frame, so mostly for camera checks; Layout-to-Render is the graph for restyling a take).\n- The **LoadAudio** test track: disconnect it to use the take's own audio.\n- **Effect level**: `low` gives the most audible treatment (the node runs inverted today).\n\n## Settings that stay\n`video_cfg = audio_cfg = 1.0` (the transformer is CFG-distilled). Width and height are **half** the output (stage 2 doubles them), multiples of 32.\n\n## Models (comfy-build/models/akuspace.txt)\n`ltx-2.5-22b-distilled-transformer-comfy-int8-convrot`, `gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot`, the two LTX-2.5 VAEs, the ×2 latent upscaler, `akuspace-ltx25-v0.5` (39.9 GB, LTX-2.5 gated).\n\n**This Mac is display only: no LTX weights here, do not queue groups 3–4.** Groups 1–2 run on any ComfyUI with the Director World Builder and Koshi nodes.\n\n**Test audio: Koshi Mosaic · Dimensions.** The first 60 s of the owner's track, 128 kbps MP3 with a 1.5 s fade, the World Builder's example track: `public/media/director-templates/dimensions-mix/mix-track.mp3` in the repository. Copy it into ComfyUI's `input/` as `mix-track.mp3`. Bundled with the owner's permission, not MIT (LICENCES.md).\n"
+      ],
+      "color": "#2a2f45",
+      "bgcolor": "#1f2235",
+      "title": "World Builder → AKUSPACE · read me"
+    },
+    {
+      "id": 901,
+      "type": "MarkdownNote",
+      "pos": [40, 60],
+      "size": [420, 470],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "## 1 · The take\n\n**World Builder · Capture.** Click **Open World Builder**, build the room, then **Send take to Comfy**: it fills `capture_file`, `depth_file` and `recipe_json`. Nothing queues.\n\n- `frames` colour, `depth` the linear depth pass, `canny` computed here, `fps` 24, `recipe` the editable JSON, `audio` the take's sound.\n- Record **8 s = 193 frames** (8k+1) at 24 fps; the recipe must match the capture.\n\n**Optional:** `audio` (the socket). The LoadAudio beside it overrides `audio_file`, trimmed or padded to the take. Disconnect it to use the take's own WAV; leave both empty for silence.\n\n**Test audio: Koshi Mosaic · Dimensions.** The first 60 s of the owner's track, 128 kbps MP3 with a 1.5 s fade, the World Builder's example track: `public/media/director-templates/dimensions-mix/mix-track.mp3` in the repository. Copy it into ComfyUI's `input/` as `mix-track.mp3`. Bundled with the owner's permission, not MIT (LICENCES.md)."
+      ],
+      "color": "#2a2f45",
+      "bgcolor": "#1f2235",
+      "title": "Take · read me"
+    },
+    {
+      "id": 40,
+      "type": "LoadAudio",
+      "pos": [40, 570],
+      "size": [420, 136],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "audio",
+          "name": "audio",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "audio"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "AUDIO",
+          "name": "AUDIO",
+          "type": "AUDIO",
+          "links": [1]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoadAudio"
+      },
+      "widgets_values": ["mix-track.mp3", ""],
+      "title": "Test audio · Koshi Mosaic · Dimensions"
+    },
+    {
+      "id": 1,
+      "type": "DirectorSceneCapture",
+      "pos": [510, 60],
+      "size": [440, 300],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "capture_file",
+          "name": "capture_file",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "capture_file"
+          }
+        },
+        {
+          "localized_name": "audio_file",
+          "name": "audio_file",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "audio_file"
+          }
+        },
+        {
+          "localized_name": "recipe_json",
+          "name": "recipe_json",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "recipe_json"
+          }
+        },
+        {
+          "localized_name": "depth_file",
+          "name": "depth_file",
+          "type": "STRING",
+          "link": null,
+          "shape": 7,
+          "widget": {
+            "name": "depth_file"
+          }
+        },
+        {
+          "localized_name": "audio",
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 1,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "frames",
+          "name": "frames",
+          "type": "IMAGE",
+          "links": [2, 3, 16]
+        },
+        {
+          "localized_name": "audio",
+          "name": "audio",
+          "type": "AUDIO",
+          "links": [11, 46]
+        },
+        {
+          "localized_name": "fps",
+          "name": "fps",
+          "type": "FLOAT",
+          "links": [17, 30, 39, 80, 84, 88]
+        },
+        {
+          "localized_name": "recipe",
+          "name": "recipe",
+          "type": "STRING",
+          "links": [4, 12]
+        },
+        {
+          "localized_name": "depth",
+          "name": "depth",
+          "type": "IMAGE",
+          "links": null
+        },
+        {
+          "localized_name": "canny",
+          "name": "canny",
+          "type": "IMAGE",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DirectorSceneCapture"
+      },
+      "widgets_values": [
+        "director/world-take.webm",
+        "",
+        "{\"version\": 1, \"fps\": 24, \"width\": 1024, \"height\": 576, \"frames\": 193, \"fov\": 24, \"azimuth\": 0, \"elevation\": 19.09, \"radius\": 13.76}",
+        "director/world-take-depth.webm"
+      ],
+      "title": "World Builder · Capture (take, depth, recipe)",
+      "color": "#3f789e",
+      "bgcolor": "#1f2a33"
+    },
+    {
+      "id": 6,
+      "type": "GetImageSize",
+      "pos": [510, 420],
+      "size": [300, 110],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "image",
+          "name": "image",
+          "type": "IMAGE",
+          "link": 2
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "width",
+          "name": "width",
+          "type": "INT",
+          "links": null
+        },
+        {
+          "localized_name": "height",
+          "name": "height",
+          "type": "INT",
+          "links": null
+        },
+        {
+          "localized_name": "batch_size",
+          "name": "batch_size",
+          "type": "INT",
+          "links": [33, 38]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "GetImageSize"
+      },
+      "widgets_values": [],
+      "title": "Take length (frames)"
+    },
+    {
+      "id": 5,
+      "type": "ImageFromBatch",
+      "pos": [510, 580],
+      "size": [300, 130],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "image",
+          "name": "image",
+          "type": "IMAGE",
+          "link": 3
+        },
+        {
+          "localized_name": "batch_index",
+          "name": "batch_index",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "batch_index"
+          }
+        },
+        {
+          "localized_name": "length",
+          "name": "length",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "length"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "IMAGE",
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [21]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ImageFromBatch"
+      },
+      "widgets_values": [0, 1],
+      "title": "Take first frame"
+    },
+    {
+      "id": 30,
+      "type": "PrimitiveStringMultiline",
+      "pos": [1060, 1180],
+      "size": [420, 240],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "value",
+          "name": "value",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "value"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "STRING",
+          "name": "STRING",
+          "type": "STRING",
+          "links": [9, 24]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PrimitiveStringMultiline"
+      },
+      "widgets_values": [
+        "A locked-off wide shot of a tiled underground club room lit by a single vertical neon tube, two turntables on a counter, haze drifting through the light. The camera follows the World Builder take's path at walking pace."
+      ],
+      "title": "Scene text (what happens)"
+    },
+    {
+      "id": 2,
+      "type": "DirectorSceneAcoustics",
+      "pos": [1060, 60],
+      "size": [360, 210],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "recipe",
+          "name": "recipe",
+          "type": "STRING",
+          "link": 4
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "space_preset",
+          "name": "space_preset",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "localized_name": "level",
+          "name": "level",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "localized_name": "rt60",
+          "name": "rt60",
+          "type": "FLOAT",
+          "links": null
+        },
+        {
+          "localized_name": "room_summary",
+          "name": "room_summary",
+          "type": "STRING",
+          "links": [5]
+        },
+        {
+          "localized_name": "space_mode",
+          "name": "space_mode",
+          "type": "COMBO",
+          "links": [6, 25]
+        },
+        {
+          "localized_name": "application",
+          "name": "application",
+          "type": "COMBO",
+          "links": [7, 26]
+        },
+        {
+          "localized_name": "room_preset",
+          "name": "room_preset",
+          "type": "COMBO",
+          "links": [8, 27]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DirectorSceneAcoustics"
+      },
+      "widgets_values": [],
+      "title": "Acoustics: room → AKUSPACE preset"
+    },
+    {
+      "id": 3,
+      "type": "PreviewAny",
+      "pos": [1060, 320],
+      "size": [360, 120],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "source",
+          "name": "source",
+          "type": "*",
+          "link": 5
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "STRING",
+          "name": "STRING",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewAny"
+      },
+      "widgets_values": [],
+      "title": "Room summary (RT60, preset)"
+    },
+    {
+      "id": 4,
+      "type": "Koshi_AKUSPACEPrompt",
+      "pos": [1480, 60],
+      "size": [400, 300],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "space_mode",
+          "name": "space_mode",
+          "type": "COMBO",
+          "link": 6,
+          "widget": {
+            "name": "space_mode"
+          }
+        },
+        {
+          "localized_name": "application",
+          "name": "application",
+          "type": "COMBO",
+          "link": 7,
+          "widget": {
+            "name": "application"
+          }
+        },
+        {
+          "localized_name": "room_preset",
+          "name": "room_preset",
+          "type": "COMBO",
+          "link": 8,
+          "widget": {
+            "name": "room_preset"
+          }
+        },
+        {
+          "localized_name": "effect_level",
+          "name": "effect_level",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "effect_level"
+          }
+        },
+        {
+          "localized_name": "outdoor_time",
+          "name": "outdoor_time",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "outdoor_time"
+          }
+        },
+        {
+          "localized_name": "sfx_level",
+          "name": "sfx_level",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "sfx_level"
+          }
+        },
+        {
+          "localized_name": "source_type",
+          "name": "source_type",
+          "type": "COMBO",
+          "link": null,
+          "shape": 7,
+          "widget": {
+            "name": "source_type"
+          }
+        },
+        {
+          "localized_name": "prompt",
+          "name": "prompt",
+          "type": "STRING",
+          "link": 9,
+          "shape": 7
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "Prompt",
+          "name": "Prompt",
+          "type": "STRING",
+          "links": [10]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Koshi_AKUSPACEPrompt"
+      },
+      "widgets_values": [
+        "Room",
+        "Moderate",
+        "medium_room",
+        "low",
+        "day",
+        "low",
+        "female spoken voice"
+      ],
+      "title": "AKUSPACE prompt: scene + the built room",
+      "color": "#FF9F43",
+      "bgcolor": "#1a1a1a"
+    },
+    {
+      "id": 7,
+      "type": "PreviewAny",
+      "pos": [1480, 410],
+      "size": [400, 160],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "source",
+          "name": "source",
+          "type": "*",
+          "link": 10
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "STRING",
+          "name": "STRING",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewAny"
+      },
+      "widgets_values": [],
+      "title": "The prompt the model reads"
+    },
+    {
+      "id": 10,
+      "type": "DirectorSceneReverb",
+      "pos": [1060, 660],
+      "size": [380, 440],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "audio",
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 11
+        },
+        {
+          "localized_name": "recipe",
+          "name": "recipe",
+          "type": "STRING",
+          "link": 12
+        },
+        {
+          "localized_name": "size_scale",
+          "name": "size_scale",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "size_scale"
+          }
+        },
+        {
+          "localized_name": "decay_scale",
+          "name": "decay_scale",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "decay_scale"
+          }
+        },
+        {
+          "localized_name": "damping_high",
+          "name": "damping_high",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "damping_high"
+          }
+        },
+        {
+          "localized_name": "pre_delay_ms",
+          "name": "pre_delay_ms",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "pre_delay_ms"
+          }
+        },
+        {
+          "localized_name": "early_late_balance",
+          "name": "early_late_balance",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "early_late_balance"
+          }
+        },
+        {
+          "localized_name": "wet",
+          "name": "wet",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "wet"
+          }
+        },
+        {
+          "localized_name": "dry",
+          "name": "dry",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "dry"
+          }
+        },
+        {
+          "localized_name": "material_override",
+          "name": "material_override",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "material_override"
+          }
+        },
+        {
+          "localized_name": "max_ir_seconds",
+          "name": "max_ir_seconds",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "max_ir_seconds"
+          }
+        },
+        {
+          "localized_name": "seed",
+          "name": "seed",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "seed"
+          }
+        },
+        {
+          "localized_name": "output_gain_db",
+          "name": "output_gain_db",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "output_gain_db"
+          }
+        },
+        {
+          "localized_name": "source_position",
+          "name": "source_position",
+          "type": "STRING",
+          "link": null,
+          "shape": 7,
+          "widget": {
+            "name": "source_position"
+          }
+        },
+        {
+          "localized_name": "listener_position",
+          "name": "listener_position",
+          "type": "STRING",
+          "link": null,
+          "shape": 7,
+          "widget": {
+            "name": "listener_position"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "audio",
+          "name": "audio",
+          "type": "AUDIO",
+          "links": [15, 18, 85]
+        },
+        {
+          "localized_name": "impulse_response",
+          "name": "impulse_response",
+          "type": "AUDIO",
+          "links": [14]
+        },
+        {
+          "localized_name": "summary",
+          "name": "summary",
+          "type": "STRING",
+          "links": [13]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "DirectorSceneReverb"
+      },
+      "widgets_values": [
+        1.0,
+        1.0,
+        0.3,
+        0.0,
+        0.5,
+        0.35,
+        1.0,
+        "none",
+        6.0,
+        0,
+        "fixed",
+        0.0,
+        "",
+        ""
+      ],
+      "title": "Reverb: the take's audio in the built room"
+    },
+    {
+      "id": 12,
+      "type": "PreviewAny",
+      "pos": [1480, 660],
+      "size": [400, 110],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "source",
+          "name": "source",
+          "type": "*",
+          "link": 13
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "STRING",
+          "name": "STRING",
+          "type": "STRING",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PreviewAny"
+      },
+      "widgets_values": [],
+      "title": "Reverb summary"
+    },
+    {
+      "id": 11,
+      "type": "SaveAudio",
+      "pos": [1480, 820],
+      "size": [400, 110],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "audio",
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 14
+        },
+        {
+          "localized_name": "filename_prefix",
+          "name": "filename_prefix",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "filename_prefix"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "audio",
+          "name": "audio",
+          "type": "AUDIO",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SaveAudio"
+      },
+      "widgets_values": ["audio/world-builder-ir"],
+      "title": "Impulse response of the room"
+    },
+    {
+      "id": 13,
+      "type": "SaveAudio",
+      "pos": [1480, 980],
+      "size": [400, 110],
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "audio",
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 15
+        },
+        {
+          "localized_name": "filename_prefix",
+          "name": "filename_prefix",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "filename_prefix"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "audio",
+          "name": "audio",
+          "type": "AUDIO",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SaveAudio"
+      },
+      "widgets_values": ["audio/world-builder-wet"],
+      "title": "Take audio in the room (wet)"
+    },
+    {
+      "id": 14,
+      "type": "CreateVideo",
+      "pos": [1900, 600],
+      "size": [320, 150],
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "images",
+          "name": "images",
+          "type": "IMAGE",
+          "link": 16
+        },
+        {
+          "localized_name": "fps",
+          "name": "fps",
+          "type": "FLOAT",
+          "link": 17,
+          "widget": {
+            "name": "fps"
+          }
+        },
+        {
+          "localized_name": "audio",
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 18,
+          "shape": 7
+        },
+        {
+          "localized_name": "bit_depth",
+          "name": "bit_depth",
+          "type": "COMBO",
+          "link": null,
+          "shape": 7,
+          "widget": {
+            "name": "bit_depth"
+          }
+        },
+        {
+          "localized_name": "color_space",
+          "name": "color_space",
+          "type": "COMBO",
+          "link": null,
+          "shape": 7,
+          "widget": {
+            "name": "color_space"
+          }
+        },
+        {
+          "localized_name": "codec",
+          "name": "codec",
+          "type": "COMBO",
+          "link": null,
+          "shape": 7,
+          "widget": {
+            "name": "codec"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "VIDEO",
+          "name": "VIDEO",
+          "type": "VIDEO",
+          "links": [19]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CreateVideo"
+      },
+      "widgets_values": [24.0, 8, "sRGB", "none"],
+      "title": "Take + wet audio (runs without LTX)"
+    },
+    {
+      "id": 15,
+      "type": "SaveVideo",
+      "pos": [1900, 800],
+      "size": [400, 380],
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "video",
+          "name": "video",
+          "type": "VIDEO",
+          "link": 19
+        },
+        {
+          "localized_name": "filename_prefix",
+          "name": "filename_prefix",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "filename_prefix"
+          }
+        },
+        {
+          "localized_name": "format",
+          "name": "format",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "format"
+          }
+        },
+        {
+          "localized_name": "codec",
+          "name": "codec",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "shape": 7,
+          "widget": {
+            "name": "codec"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "video",
+          "name": "video",
+          "type": "VIDEO",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SaveVideo"
+      },
+      "widgets_values": [
+        "video/world-builder-take-room",
+        "auto",
+        "auto",
+        "auto"
+      ],
+      "title": "Take in the room (preview)"
+    },
+    {
+      "id": 902,
+      "type": "MarkdownNote",
+      "pos": [1900, 60],
+      "size": [420, 480],
+      "flags": {},
+      "order": 17,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "## 2 · The room drives the sound\n\n- **Acoustics** reads the recipe's room (Sabine RT60) and names the AKUSPACE preset and level.\n- **AKUSPACE Prompt** shows the caption the LoRA route uses (scene text + room).\n- **Reverb** (DSP route): the take's dry audio through an impulse response computed from the room: image-source early reflections, then a seeded tail. Outputs: wet audio, the IR, a summary.\n\n**Optional:** `wet` / `dry`, `size_scale`, `decay_scale`, `material_override`, and the source/listener positions (empty = the recipe's). The take preview below needs no model."
+      ],
+      "color": "#2a2f45",
+      "bgcolor": "#1f2235",
+      "title": "Room · read me"
+    },
+    {
+      "id": 903,
+      "type": "MarkdownNote",
+      "pos": [40, 1560],
+      "size": [440, 560],
+      "flags": {},
+      "order": 18,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "## 3 · LTX-2.5 with the AKUSPACE LoRA (GPU)\n\nThe owner's one-pass AKUSPACE chain with the take wired in:\n\n- Loaders left: transformer → **LoRA at 1.0**, Gemma 4 encoder, video and audio VAEs, ×2 upscaler.\n- **Scene text** feeds the Text Encode *and* the AKUSPACE Prompt preview, so what you read above is what the model gets.\n- The Text Encode's **Mode / Application / Reverb size** come from Acoustics (linked). Unlink one to set it by hand.\n- **Reference audio** is the take's dry audio (the test track trimmed to the take).\n- Frame count = the take's frame count (Get Image Size), fps = the take's fps.\n\n~45 GB VRAM at 193 frames (RTX PRO 6000 class)."
+      ],
+      "color": "#2a2f45",
+      "bgcolor": "#1f2235",
+      "title": "LTX + LoRA · read me"
+    },
+    {
+      "id": 20,
+      "type": "UNETLoader",
+      "pos": [40, 2180],
+      "size": [420, 110],
+      "flags": {},
+      "order": 19,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "unet_name",
+          "name": "unet_name",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "unet_name"
+          }
+        },
+        {
+          "localized_name": "weight_dtype",
+          "name": "weight_dtype",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "weight_dtype"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "MODEL",
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [20]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "UNETLoader"
+      },
+      "widgets_values": [
+        "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+        "default"
+      ],
+      "title": "Load LTX-2.5 transformer (int8)"
+    },
+    {
+      "id": 21,
+      "type": "LoraLoaderModelOnly",
+      "pos": [40, 2350],
+      "size": [420, 110],
+      "flags": {},
+      "order": 20,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "model",
+          "name": "model",
+          "type": "MODEL",
+          "link": 20
+        },
+        {
+          "localized_name": "lora_name",
+          "name": "lora_name",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "lora_name"
+          }
+        },
+        {
+          "localized_name": "strength_model",
+          "name": "strength_model",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "strength_model"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "MODEL",
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [43]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LoraLoaderModelOnly"
+      },
+      "widgets_values": ["akuspace-ltx25-v0.5.safetensors", 1.0],
+      "title": "AKUSPACE LoRA",
+      "color": "#FF9F43",
+      "bgcolor": "#1a1a1a"
+    },
+    {
+      "id": 22,
+      "type": "CLIPLoader",
+      "pos": [40, 2520],
+      "size": [420, 130],
+      "flags": {},
+      "order": 21,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "clip_name",
+          "name": "clip_name",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "clip_name"
+          }
+        },
+        {
+          "localized_name": "type",
+          "name": "type",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "type"
+          }
+        },
+        {
+          "localized_name": "device",
+          "name": "device",
+          "type": "COMBO",
+          "link": null,
+          "shape": 7,
+          "widget": {
+            "name": "device"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "CLIP",
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [22, 23]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPLoader"
+      },
+      "widgets_values": [
+        "gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors",
+        "ltxv",
+        "default"
+      ],
+      "title": "Load Gemma 4 encoder (int8)"
+    },
+    {
+      "id": 23,
+      "type": "VAELoader",
+      "pos": [40, 2710],
+      "size": [420, 80],
+      "flags": {},
+      "order": 22,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "vae_name",
+          "name": "vae_name",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "vae_name"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "VAE",
+          "name": "VAE",
+          "type": "VAE",
+          "links": [34, 62, 63, 76]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": ["ltx-2.5-video-vae-bf16.safetensors"],
+      "title": "Video VAE"
+    },
+    {
+      "id": 24,
+      "type": "VAELoader",
+      "pos": [40, 2850],
+      "size": [420, 80],
+      "flags": {},
+      "order": 23,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "vae_name",
+          "name": "vae_name",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "vae_name"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "VAE",
+          "name": "VAE",
+          "type": "VAE",
+          "links": [40, 47, 78]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": ["ltx-2.5-audio-vae-bf16.safetensors"],
+      "title": "Audio VAE"
+    },
+    {
+      "id": 25,
+      "type": "LatentUpscaleModelLoader",
+      "pos": [40, 2990],
+      "size": [420, 80],
+      "flags": {},
+      "order": 24,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "model_name",
+          "name": "model_name",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "model_name"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "LATENT_UPSCALE_MODEL",
+          "name": "LATENT_UPSCALE_MODEL",
+          "type": "LATENT_UPSCALE_MODEL",
+          "links": [61]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LatentUpscaleModelLoader"
+      },
+      "widgets_values": [
+        "ltx-2.5-latent-spatial-upscaler-x2-bf16-1.0.safetensors"
+      ],
+      "title": "×2 latent upscaler"
+    },
+    {
+      "id": 26,
+      "type": "PrimitiveInt",
+      "pos": [540, 1560],
+      "size": [300, 90],
+      "flags": {},
+      "order": 25,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "value",
+          "name": "value",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "value"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "INT",
+          "name": "INT",
+          "type": "INT",
+          "links": [31]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PrimitiveInt"
+      },
+      "widgets_values": [832, "fixed"],
+      "title": "Width (half of output)"
+    },
+    {
+      "id": 27,
+      "type": "PrimitiveInt",
+      "pos": [540, 1710],
+      "size": [300, 90],
+      "flags": {},
+      "order": 26,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "value",
+          "name": "value",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "value"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "INT",
+          "name": "INT",
+          "type": "INT",
+          "links": [32]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PrimitiveInt"
+      },
+      "widgets_values": [464, "fixed"],
+      "title": "Height (half of output)"
+    },
+    {
+      "id": 38,
+      "type": "PrimitiveBoolean",
+      "pos": [540, 1860],
+      "size": [300, 80],
+      "flags": {},
+      "order": 27,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "value",
+          "name": "value",
+          "type": "BOOLEAN",
+          "link": null,
+          "widget": {
+            "name": "value"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "BOOLEAN",
+          "name": "BOOLEAN",
+          "type": "BOOLEAN",
+          "links": [37, 66]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "PrimitiveBoolean"
+      },
+      "widgets_values": [true],
+      "title": "Text only (ignore the take's first frame)"
+    },
+    {
+      "id": 37,
+      "type": "LTXVPreprocess",
+      "pos": [540, 2000],
+      "size": [300, 90],
+      "flags": {},
+      "order": 28,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "image",
+          "name": "image",
+          "type": "IMAGE",
+          "link": 21
+        },
+        {
+          "localized_name": "img_compression",
+          "name": "img_compression",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "img_compression"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "output_image",
+          "name": "output_image",
+          "type": "IMAGE",
+          "links": [35, 64]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LTXVPreprocess"
+      },
+      "widgets_values": [18],
+      "title": "Prepare the first frame"
+    },
+    {
+      "id": 32,
+      "type": "CLIPTextEncode",
+      "pos": [540, 2160],
+      "size": [420, 200],
+      "flags": {},
+      "order": 29,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "text",
+          "name": "text",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "text"
+          }
+        },
+        {
+          "localized_name": "clip",
+          "name": "clip",
+          "type": "CLIP",
+          "link": 22
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "CONDITIONING",
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [29]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "cut, shot change, scene change, warped face, deformed hands, extra fingers, text, captions, watermark, distorted, clipped, metallic"
+      ],
+      "title": "Negative"
+    },
+    {
+      "id": 31,
+      "type": "Koshi_AKUSPACETextEncode",
+      "pos": [1020, 1560],
+      "size": [420, 560],
+      "flags": {},
+      "order": 30,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "clip",
+          "name": "clip",
+          "type": "CLIP",
+          "link": 23
+        },
+        {
+          "localized_name": "text",
+          "name": "text",
+          "type": "STRING",
+          "link": 24,
+          "widget": {
+            "name": "text"
+          }
+        },
+        {
+          "localized_name": "space_mode",
+          "name": "space_mode",
+          "type": "COMBO",
+          "link": 25,
+          "widget": {
+            "name": "space_mode"
+          }
+        },
+        {
+          "localized_name": "application",
+          "name": "application",
+          "type": "COMBO",
+          "link": 26,
+          "widget": {
+            "name": "application"
+          }
+        },
+        {
+          "localized_name": "room_preset",
+          "name": "room_preset",
+          "type": "COMBO",
+          "link": 27,
+          "widget": {
+            "name": "room_preset"
+          }
+        },
+        {
+          "localized_name": "effect_level",
+          "name": "effect_level",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "effect_level"
+          }
+        },
+        {
+          "localized_name": "outdoor_time",
+          "name": "outdoor_time",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "outdoor_time"
+          }
+        },
+        {
+          "localized_name": "sfx_level",
+          "name": "sfx_level",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "sfx_level"
+          }
+        },
+        {
+          "localized_name": "source_type",
+          "name": "source_type",
+          "type": "COMBO",
+          "link": null,
+          "shape": 7,
+          "widget": {
+            "name": "source_type"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "Conditioning",
+          "name": "Conditioning",
+          "type": "CONDITIONING",
+          "links": [28]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "Koshi_AKUSPACETextEncode"
+      },
+      "widgets_values": [
+        "",
+        "Room",
+        "Moderate",
+        "medium_room",
+        "low",
+        "day",
+        "low",
+        "female spoken voice"
+      ],
+      "title": "AKUSPACE Text Encode (scene + room)",
+      "color": "#FF9F43",
+      "bgcolor": "#1a1a1a"
+    },
+    {
+      "id": 33,
+      "type": "LTXVConditioning",
+      "pos": [1020, 2180],
+      "size": [300, 100],
+      "flags": {},
+      "order": 31,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "positive",
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 28
+        },
+        {
+          "localized_name": "negative",
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 29
+        },
+        {
+          "localized_name": "frame_rate",
+          "name": "frame_rate",
+          "type": "FLOAT",
+          "link": 30,
+          "widget": {
+            "name": "frame_rate"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "positive",
+          "name": "positive",
+          "type": "CONDITIONING",
+          "links": [44]
+        },
+        {
+          "localized_name": "negative",
+          "name": "negative",
+          "type": "CONDITIONING",
+          "links": [45]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LTXVConditioning"
+      },
+      "widgets_values": [25.0],
+      "title": "Frame rate from the take"
+    },
+    {
+      "id": 36,
+      "type": "EmptyLTXVLatentVideo",
+      "pos": [1020, 2340],
+      "size": [300, 150],
+      "flags": {},
+      "order": 32,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "width",
+          "name": "width",
+          "type": "INT",
+          "link": 31,
+          "widget": {
+            "name": "width"
+          }
+        },
+        {
+          "localized_name": "height",
+          "name": "height",
+          "type": "INT",
+          "link": 32,
+          "widget": {
+            "name": "height"
+          }
+        },
+        {
+          "localized_name": "length",
+          "name": "length",
+          "type": "INT",
+          "link": 33,
+          "widget": {
+            "name": "length"
+          }
+        },
+        {
+          "localized_name": "batch_size",
+          "name": "batch_size",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "batch_size"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "LATENT",
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [36]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "EmptyLTXVLatentVideo"
+      },
+      "widgets_values": [768, 512, 97, 1],
+      "title": "Empty video latent (take length)"
+    },
+    {
+      "id": 39,
+      "type": "LTXVImgToVideoInplace",
+      "pos": [1020, 2550],
+      "size": [300, 150],
+      "flags": {},
+      "order": 33,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "vae",
+          "name": "vae",
+          "type": "VAE",
+          "link": 34
+        },
+        {
+          "localized_name": "image",
+          "name": "image",
+          "type": "IMAGE",
+          "link": 35
+        },
+        {
+          "localized_name": "latent",
+          "name": "latent",
+          "type": "LATENT",
+          "link": 36
+        },
+        {
+          "localized_name": "strength",
+          "name": "strength",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "strength"
+          }
+        },
+        {
+          "localized_name": "bypass",
+          "name": "bypass",
+          "type": "BOOLEAN",
+          "link": 37,
+          "widget": {
+            "name": "bypass"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "latent",
+          "name": "latent",
+          "type": "LATENT",
+          "links": [41]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LTXVImgToVideoInplace"
+      },
+      "widgets_values": [0.7, false],
+      "title": "First frame, stage 1 (bypassed by Text only)"
+    },
+    {
+      "id": 41,
+      "type": "LTXVEmptyLatentAudio",
+      "pos": [1020, 2760],
+      "size": [300, 130],
+      "flags": {},
+      "order": 34,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "frames_number",
+          "name": "frames_number",
+          "type": "INT",
+          "link": 38,
+          "widget": {
+            "name": "frames_number"
+          }
+        },
+        {
+          "localized_name": "frame_rate",
+          "name": "frame_rate",
+          "type": "FLOAT,INT",
+          "link": 39
+        },
+        {
+          "localized_name": "batch_size",
+          "name": "batch_size",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "batch_size"
+          }
+        },
+        {
+          "localized_name": "audio_vae",
+          "name": "audio_vae",
+          "type": "VAE",
+          "link": 40
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "Latent",
+          "name": "Latent",
+          "type": "LATENT",
+          "links": [42]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LTXVEmptyLatentAudio"
+      },
+      "widgets_values": [97, 1],
+      "title": "Empty audio latent (take length)"
+    },
+    {
+      "id": 42,
+      "type": "LTXVConcatAVLatent",
+      "pos": [1020, 2950],
+      "size": [300, 80],
+      "flags": {},
+      "order": 35,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "video_latent",
+          "name": "video_latent",
+          "type": "LATENT",
+          "link": 41
+        },
+        {
+          "localized_name": "audio_latent",
+          "name": "audio_latent",
+          "type": "LATENT",
+          "link": 42
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "latent",
+          "name": "latent",
+          "type": "LATENT",
+          "links": [58]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LTXVConcatAVLatent"
+      },
+      "widgets_values": [],
+      "title": "Concat AV latent"
+    },
+    {
+      "id": 34,
+      "type": "AKUSPACEReferenceAudioAligned",
+      "pos": [1480, 1560],
+      "size": [380, 160],
+      "flags": {},
+      "order": 36,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "model",
+          "name": "model",
+          "type": "MODEL",
+          "link": 43
+        },
+        {
+          "localized_name": "positive",
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 44
+        },
+        {
+          "localized_name": "negative",
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 45
+        },
+        {
+          "localized_name": "reference_audio",
+          "name": "reference_audio",
+          "type": "AUDIO",
+          "link": 46
+        },
+        {
+          "localized_name": "audio_vae",
+          "name": "audio_vae",
+          "type": "VAE",
+          "link": 47
+        },
+        {
+          "localized_name": "reference_guidance_scale",
+          "name": "reference_guidance_scale",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "reference_guidance_scale"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "model",
+          "name": "model",
+          "type": "MODEL",
+          "links": [48, 51]
+        },
+        {
+          "localized_name": "positive",
+          "name": "positive",
+          "type": "CONDITIONING",
+          "links": [49, 52]
+        },
+        {
+          "localized_name": "negative",
+          "name": "negative",
+          "type": "CONDITIONING",
+          "links": [50, 53]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "AKUSPACEReferenceAudioAligned"
+      },
+      "widgets_values": [0.0],
+      "title": "AKUSPACE Reference Audio (take's dry audio)",
+      "color": "#FF9F43",
+      "bgcolor": "#1a1a1a"
+    },
+    {
+      "id": 46,
+      "type": "LTXVDualCFGGuider",
+      "pos": [1940, 1560],
+      "size": [300, 130],
+      "flags": {},
+      "order": 37,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "model",
+          "name": "model",
+          "type": "MODEL",
+          "link": 48
+        },
+        {
+          "localized_name": "positive",
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 49
+        },
+        {
+          "localized_name": "negative",
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 50
+        },
+        {
+          "localized_name": "video_cfg",
+          "name": "video_cfg",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "video_cfg"
+          }
+        },
+        {
+          "localized_name": "audio_cfg",
+          "name": "audio_cfg",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "audio_cfg"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "GUIDER",
+          "name": "GUIDER",
+          "type": "GUIDER",
+          "links": [55]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LTXVDualCFGGuider"
+      },
+      "widgets_values": [1.0, 1.0],
+      "title": "Guider 1/1"
+    },
+    {
+      "id": 55,
+      "type": "LTXVDualCFGGuider",
+      "pos": [1940, 1740],
+      "size": [300, 130],
+      "flags": {},
+      "order": 38,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "model",
+          "name": "model",
+          "type": "MODEL",
+          "link": 51
+        },
+        {
+          "localized_name": "positive",
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 52
+        },
+        {
+          "localized_name": "negative",
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 53
+        },
+        {
+          "localized_name": "video_cfg",
+          "name": "video_cfg",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "video_cfg"
+          }
+        },
+        {
+          "localized_name": "audio_cfg",
+          "name": "audio_cfg",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "audio_cfg"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "GUIDER",
+          "name": "GUIDER",
+          "type": "GUIDER",
+          "links": [70]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LTXVDualCFGGuider"
+      },
+      "widgets_values": [1.0, 1.0],
+      "title": "Guider 1/1 (stage 2)"
+    },
+    {
+      "id": 43,
+      "type": "RandomNoise",
+      "pos": [1940, 1940],
+      "size": [300, 90],
+      "flags": {},
+      "order": 39,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "noise_seed",
+          "name": "noise_seed",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "noise_seed"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "NOISE",
+          "name": "NOISE",
+          "type": "NOISE",
+          "links": [54]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "RandomNoise"
+      },
+      "widgets_values": [558811532553686, "fixed"],
+      "title": "Seed, stage 1"
+    },
+    {
+      "id": 44,
+      "type": "KSamplerSelect",
+      "pos": [1940, 2090],
+      "size": [300, 80],
+      "flags": {},
+      "order": 40,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "sampler_name",
+          "name": "sampler_name",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "sampler_name"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "SAMPLER",
+          "name": "SAMPLER",
+          "type": "SAMPLER",
+          "links": [56]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSamplerSelect"
+      },
+      "widgets_values": ["euler_ancestral"],
+      "title": "Sampler, stage 1"
+    },
+    {
+      "id": 45,
+      "type": "ManualSigmas",
+      "pos": [1940, 2230],
+      "size": [300, 80],
+      "flags": {},
+      "order": 41,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "sigmas",
+          "name": "sigmas",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "sigmas"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "SIGMAS",
+          "name": "SIGMAS",
+          "type": "SIGMAS",
+          "links": [57]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ManualSigmas"
+      },
+      "widgets_values": [
+        "1.0, 0.99375, 0.9875, 0.98125, 0.975, 0.909375, 0.725, 0.421875, 0.0"
+      ],
+      "title": "8 sigmas, stage 1"
+    },
+    {
+      "id": 52,
+      "type": "RandomNoise",
+      "pos": [1940, 2370],
+      "size": [300, 90],
+      "flags": {},
+      "order": 42,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "noise_seed",
+          "name": "noise_seed",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "noise_seed"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "NOISE",
+          "name": "NOISE",
+          "type": "NOISE",
+          "links": [69]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "RandomNoise"
+      },
+      "widgets_values": [42, "fixed"],
+      "title": "Seed, stage 2"
+    },
+    {
+      "id": 53,
+      "type": "KSamplerSelect",
+      "pos": [1940, 2520],
+      "size": [300, 80],
+      "flags": {},
+      "order": 43,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "sampler_name",
+          "name": "sampler_name",
+          "type": "COMBO",
+          "link": null,
+          "widget": {
+            "name": "sampler_name"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "SAMPLER",
+          "name": "SAMPLER",
+          "type": "SAMPLER",
+          "links": [71]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSamplerSelect"
+      },
+      "widgets_values": ["euler_ancestral"],
+      "title": "Sampler, stage 2"
+    },
+    {
+      "id": 54,
+      "type": "ManualSigmas",
+      "pos": [1940, 2660],
+      "size": [300, 80],
+      "flags": {},
+      "order": 44,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "sigmas",
+          "name": "sigmas",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "sigmas"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "SIGMAS",
+          "name": "SIGMAS",
+          "type": "SIGMAS",
+          "links": [72]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "ManualSigmas"
+      },
+      "widgets_values": ["0.85, 0.7250, 0.4219, 0.0"],
+      "title": "3 sigmas, stage 2"
+    },
+    {
+      "id": 47,
+      "type": "SamplerCustomAdvanced",
+      "pos": [2320, 1560],
+      "size": [280, 130],
+      "flags": {},
+      "order": 45,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "noise",
+          "name": "noise",
+          "type": "NOISE",
+          "link": 54
+        },
+        {
+          "localized_name": "guider",
+          "name": "guider",
+          "type": "GUIDER",
+          "link": 55
+        },
+        {
+          "localized_name": "sampler",
+          "name": "sampler",
+          "type": "SAMPLER",
+          "link": 56
+        },
+        {
+          "localized_name": "sigmas",
+          "name": "sigmas",
+          "type": "SIGMAS",
+          "link": 57
+        },
+        {
+          "localized_name": "latent_image",
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 58
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "output",
+          "name": "output",
+          "type": "LATENT",
+          "links": [59]
+        },
+        {
+          "localized_name": "denoised_output",
+          "name": "denoised_output",
+          "type": "LATENT",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SamplerCustomAdvanced"
+      },
+      "widgets_values": [],
+      "title": "Stage 1"
+    },
+    {
+      "id": 48,
+      "type": "LTXVSeparateAVLatent",
+      "pos": [2320, 1750],
+      "size": [280, 80],
+      "flags": {},
+      "order": 46,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "av_latent",
+          "name": "av_latent",
+          "type": "LATENT",
+          "link": 59
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "video_latent",
+          "name": "video_latent",
+          "type": "LATENT",
+          "links": [60]
+        },
+        {
+          "localized_name": "audio_latent",
+          "name": "audio_latent",
+          "type": "LATENT",
+          "links": [68]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LTXVSeparateAVLatent"
+      },
+      "widgets_values": [],
+      "title": "Separate AV"
+    },
+    {
+      "id": 49,
+      "type": "LTXVLatentUpsampler",
+      "pos": [2320, 1890],
+      "size": [280, 100],
+      "flags": {},
+      "order": 47,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "samples",
+          "name": "samples",
+          "type": "LATENT",
+          "link": 60
+        },
+        {
+          "localized_name": "upscale_model",
+          "name": "upscale_model",
+          "type": "LATENT_UPSCALE_MODEL",
+          "link": 61
+        },
+        {
+          "localized_name": "vae",
+          "name": "vae",
+          "type": "VAE",
+          "link": 62
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "LATENT",
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [65]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LTXVLatentUpsampler"
+      },
+      "widgets_values": [],
+      "title": "×2 upsample the video"
+    },
+    {
+      "id": 50,
+      "type": "LTXVImgToVideoInplace",
+      "pos": [2320, 2050],
+      "size": [280, 150],
+      "flags": {},
+      "order": 48,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "vae",
+          "name": "vae",
+          "type": "VAE",
+          "link": 63
+        },
+        {
+          "localized_name": "image",
+          "name": "image",
+          "type": "IMAGE",
+          "link": 64
+        },
+        {
+          "localized_name": "latent",
+          "name": "latent",
+          "type": "LATENT",
+          "link": 65
+        },
+        {
+          "localized_name": "strength",
+          "name": "strength",
+          "type": "FLOAT",
+          "link": null,
+          "widget": {
+            "name": "strength"
+          }
+        },
+        {
+          "localized_name": "bypass",
+          "name": "bypass",
+          "type": "BOOLEAN",
+          "link": 66,
+          "widget": {
+            "name": "bypass"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "latent",
+          "name": "latent",
+          "type": "LATENT",
+          "links": [67]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LTXVImgToVideoInplace"
+      },
+      "widgets_values": [1.0, false],
+      "title": "First frame, stage 2 (bypassed by Text only)"
+    },
+    {
+      "id": 51,
+      "type": "LTXVConcatAVLatent",
+      "pos": [2320, 2260],
+      "size": [280, 80],
+      "flags": {},
+      "order": 49,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "video_latent",
+          "name": "video_latent",
+          "type": "LATENT",
+          "link": 67
+        },
+        {
+          "localized_name": "audio_latent",
+          "name": "audio_latent",
+          "type": "LATENT",
+          "link": 68
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "latent",
+          "name": "latent",
+          "type": "LATENT",
+          "links": [73]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LTXVConcatAVLatent"
+      },
+      "widgets_values": [],
+      "title": "Re-pair with stage-1 audio"
+    },
+    {
+      "id": 56,
+      "type": "SamplerCustomAdvanced",
+      "pos": [2660, 1560],
+      "size": [280, 130],
+      "flags": {},
+      "order": 50,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "noise",
+          "name": "noise",
+          "type": "NOISE",
+          "link": 69
+        },
+        {
+          "localized_name": "guider",
+          "name": "guider",
+          "type": "GUIDER",
+          "link": 70
+        },
+        {
+          "localized_name": "sampler",
+          "name": "sampler",
+          "type": "SAMPLER",
+          "link": 71
+        },
+        {
+          "localized_name": "sigmas",
+          "name": "sigmas",
+          "type": "SIGMAS",
+          "link": 72
+        },
+        {
+          "localized_name": "latent_image",
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 73
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "output",
+          "name": "output",
+          "type": "LATENT",
+          "links": [74]
+        },
+        {
+          "localized_name": "denoised_output",
+          "name": "denoised_output",
+          "type": "LATENT",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SamplerCustomAdvanced"
+      },
+      "widgets_values": [],
+      "title": "Stage 2"
+    },
+    {
+      "id": 57,
+      "type": "LTXVSeparateAVLatent",
+      "pos": [2660, 1750],
+      "size": [280, 80],
+      "flags": {},
+      "order": 51,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "av_latent",
+          "name": "av_latent",
+          "type": "LATENT",
+          "link": 74
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "video_latent",
+          "name": "video_latent",
+          "type": "LATENT",
+          "links": [75]
+        },
+        {
+          "localized_name": "audio_latent",
+          "name": "audio_latent",
+          "type": "LATENT",
+          "links": [77]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LTXVSeparateAVLatent"
+      },
+      "widgets_values": [],
+      "title": "Separate AV"
+    },
+    {
+      "id": 58,
+      "type": "VAEDecodeTiled",
+      "pos": [2660, 1890],
+      "size": [280, 180],
+      "flags": {},
+      "order": 52,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "samples",
+          "name": "samples",
+          "type": "LATENT",
+          "link": 75
+        },
+        {
+          "localized_name": "vae",
+          "name": "vae",
+          "type": "VAE",
+          "link": 76
+        },
+        {
+          "localized_name": "tile_size",
+          "name": "tile_size",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "tile_size"
+          }
+        },
+        {
+          "localized_name": "overlap",
+          "name": "overlap",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "overlap"
+          }
+        },
+        {
+          "localized_name": "temporal_size",
+          "name": "temporal_size",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "temporal_size"
+          }
+        },
+        {
+          "localized_name": "temporal_overlap",
+          "name": "temporal_overlap",
+          "type": "INT",
+          "link": null,
+          "widget": {
+            "name": "temporal_overlap"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "IMAGE",
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [79, 83, 89]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecodeTiled"
+      },
+      "widgets_values": [512, 64, 64, 8],
+      "title": "Decode video (tiled)"
+    },
+    {
+      "id": 59,
+      "type": "LTXVAudioVAEDecode",
+      "pos": [2660, 2130],
+      "size": [280, 80],
+      "flags": {},
+      "order": 53,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "samples",
+          "name": "samples",
+          "type": "LATENT",
+          "link": 77
+        },
+        {
+          "localized_name": "audio_vae",
+          "name": "audio_vae",
+          "type": "VAE",
+          "link": 78
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "Audio",
+          "name": "Audio",
+          "type": "AUDIO",
+          "links": [81, 87, 90]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "LTXVAudioVAEDecode"
+      },
+      "widgets_values": [],
+      "title": "Decode AKUSPACE audio"
+    },
+    {
+      "id": 60,
+      "type": "CreateVideo",
+      "pos": [3060, 1560],
+      "size": [320, 150],
+      "flags": {},
+      "order": 54,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "images",
+          "name": "images",
+          "type": "IMAGE",
+          "link": 79
+        },
+        {
+          "localized_name": "fps",
+          "name": "fps",
+          "type": "FLOAT",
+          "link": 80,
+          "widget": {
+            "name": "fps"
+          }
+        },
+        {
+          "localized_name": "audio",
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 81,
+          "shape": 7
+        },
+        {
+          "localized_name": "bit_depth",
+          "name": "bit_depth",
+          "type": "COMBO",
+          "link": null,
+          "shape": 7,
+          "widget": {
+            "name": "bit_depth"
+          }
+        },
+        {
+          "localized_name": "color_space",
+          "name": "color_space",
+          "type": "COMBO",
+          "link": null,
+          "shape": 7,
+          "widget": {
+            "name": "color_space"
+          }
+        },
+        {
+          "localized_name": "codec",
+          "name": "codec",
+          "type": "COMBO",
+          "link": null,
+          "shape": 7,
+          "widget": {
+            "name": "codec"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "VIDEO",
+          "name": "VIDEO",
+          "type": "VIDEO",
+          "links": [82]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CreateVideo"
+      },
+      "widgets_values": [24.0, 8, "sRGB", "none"],
+      "title": "LoRA route: LTX picture + AKUSPACE audio"
+    },
+    {
+      "id": 61,
+      "type": "SaveVideo",
+      "pos": [3060, 1760],
+      "size": [400, 380],
+      "flags": {},
+      "order": 55,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "video",
+          "name": "video",
+          "type": "VIDEO",
+          "link": 82
+        },
+        {
+          "localized_name": "filename_prefix",
+          "name": "filename_prefix",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "filename_prefix"
+          }
+        },
+        {
+          "localized_name": "format",
+          "name": "format",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "format"
+          }
+        },
+        {
+          "localized_name": "codec",
+          "name": "codec",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "shape": 7,
+          "widget": {
+            "name": "codec"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "video",
+          "name": "video",
+          "type": "VIDEO",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SaveVideo"
+      },
+      "widgets_values": [
+        "video/world-builder-akuspace-lora",
+        "auto",
+        "auto",
+        "auto"
+      ],
+      "title": "Save · LoRA route"
+    },
+    {
+      "id": 62,
+      "type": "CreateVideo",
+      "pos": [3520, 1560],
+      "size": [320, 150],
+      "flags": {},
+      "order": 56,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "images",
+          "name": "images",
+          "type": "IMAGE",
+          "link": 83
+        },
+        {
+          "localized_name": "fps",
+          "name": "fps",
+          "type": "FLOAT",
+          "link": 84,
+          "widget": {
+            "name": "fps"
+          }
+        },
+        {
+          "localized_name": "audio",
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 85,
+          "shape": 7
+        },
+        {
+          "localized_name": "bit_depth",
+          "name": "bit_depth",
+          "type": "COMBO",
+          "link": null,
+          "shape": 7,
+          "widget": {
+            "name": "bit_depth"
+          }
+        },
+        {
+          "localized_name": "color_space",
+          "name": "color_space",
+          "type": "COMBO",
+          "link": null,
+          "shape": 7,
+          "widget": {
+            "name": "color_space"
+          }
+        },
+        {
+          "localized_name": "codec",
+          "name": "codec",
+          "type": "COMBO",
+          "link": null,
+          "shape": 7,
+          "widget": {
+            "name": "codec"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "VIDEO",
+          "name": "VIDEO",
+          "type": "VIDEO",
+          "links": [86]
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CreateVideo"
+      },
+      "widgets_values": [24.0, 8, "sRGB", "none"],
+      "title": "DSP route: LTX picture + Reverb audio"
+    },
+    {
+      "id": 63,
+      "type": "SaveVideo",
+      "pos": [3520, 1760],
+      "size": [400, 380],
+      "flags": {},
+      "order": 57,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "video",
+          "name": "video",
+          "type": "VIDEO",
+          "link": 86
+        },
+        {
+          "localized_name": "filename_prefix",
+          "name": "filename_prefix",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "filename_prefix"
+          }
+        },
+        {
+          "localized_name": "format",
+          "name": "format",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "format"
+          }
+        },
+        {
+          "localized_name": "codec",
+          "name": "codec",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "shape": 7,
+          "widget": {
+            "name": "codec"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "video",
+          "name": "video",
+          "type": "VIDEO",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SaveVideo"
+      },
+      "widgets_values": [
+        "video/world-builder-akuspace-dsp",
+        "auto",
+        "auto",
+        "auto"
+      ],
+      "title": "Save · DSP route"
+    },
+    {
+      "id": 64,
+      "type": "SaveAudioAdvanced",
+      "pos": [3060, 2200],
+      "size": [400, 130],
+      "flags": {},
+      "order": 58,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "audio",
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 87
+        },
+        {
+          "localized_name": "filename_prefix",
+          "name": "filename_prefix",
+          "type": "STRING",
+          "link": null,
+          "widget": {
+            "name": "filename_prefix"
+          }
+        },
+        {
+          "localized_name": "format",
+          "name": "format",
+          "type": "COMFY_DYNAMICCOMBO_V3",
+          "link": null,
+          "widget": {
+            "name": "format"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "audio",
+          "name": "audio",
+          "type": "AUDIO",
+          "links": null
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "SaveAudioAdvanced"
+      },
+      "widgets_values": ["audio/world-builder-akuspace", "flac"],
+      "title": "LoRA audio (FLAC)"
+    },
+    {
+      "id": 65,
+      "type": "DirectorSceneInputs",
+      "pos": [3520, 2200],
+      "size": [400, 120],
+      "flags": {},
+      "order": 59,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "fps",
+          "name": "fps",
+          "type": "FLOAT",
+          "link": 88,
+          "widget": {
+            "name": "fps"
+          }
+        },
+        {
+          "localized_name": "images",
+          "name": "images",
+          "type": "IMAGE",
+          "link": 89,
+          "shape": 7
+        },
+        {
+          "localized_name": "audio",
+          "name": "audio",
+          "type": "AUDIO",
+          "link": 90,
+          "shape": 7
+        }
+      ],
+      "outputs": [],
+      "properties": {
+        "Node name for S&R": "DirectorSceneInputs"
+      },
+      "widgets_values": [24],
+      "title": "World Builder · Inputs (back to the screen)",
+      "color": "#3f789e",
+      "bgcolor": "#1f2a33"
+    },
+    {
+      "id": 904,
+      "type": "MarkdownNote",
+      "pos": [3060, 2400],
+      "size": [860, 360],
+      "flags": {},
+      "order": 60,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": [
+        "## 4 · Outputs\n\n- **LoRA route**: the LTX picture with LTX's own AKUSPACE audio.\n- **DSP route**: the same picture with the Reverb's wet take audio.\n- **FLAC**: the LoRA audio alone, for a correlation check.\n- **World Builder · Inputs**: the rendered frames and LoRA audio back into the open World Builder (screen texture and modulation). Queue, then click **Send inputs to World Builder**; keep one Capture editor open.\n\nThe take preview in group 2 is the only video output that runs without LTX."
+      ],
+      "color": "#2a2f45",
+      "bgcolor": "#1f2235",
+      "title": "Outputs · read me"
+    }
+  ],
+  "links": [
+    [1, 40, 0, 1, 4, "AUDIO"],
+    [2, 1, 0, 6, 0, "IMAGE"],
+    [3, 1, 0, 5, 0, "IMAGE"],
+    [4, 1, 3, 2, 0, "STRING"],
+    [5, 2, 3, 3, 0, "STRING"],
+    [6, 2, 4, 4, 0, "COMBO"],
+    [7, 2, 5, 4, 1, "COMBO"],
+    [8, 2, 6, 4, 2, "COMBO"],
+    [9, 30, 0, 4, 7, "STRING"],
+    [10, 4, 0, 7, 0, "STRING"],
+    [11, 1, 1, 10, 0, "AUDIO"],
+    [12, 1, 3, 10, 1, "STRING"],
+    [13, 10, 2, 12, 0, "STRING"],
+    [14, 10, 1, 11, 0, "AUDIO"],
+    [15, 10, 0, 13, 0, "AUDIO"],
+    [16, 1, 0, 14, 0, "IMAGE"],
+    [17, 1, 2, 14, 1, "FLOAT"],
+    [18, 10, 0, 14, 2, "AUDIO"],
+    [19, 14, 0, 15, 0, "VIDEO"],
+    [20, 20, 0, 21, 0, "MODEL"],
+    [21, 5, 0, 37, 0, "IMAGE"],
+    [22, 22, 0, 32, 1, "CLIP"],
+    [23, 22, 0, 31, 0, "CLIP"],
+    [24, 30, 0, 31, 1, "STRING"],
+    [25, 2, 4, 31, 2, "COMBO"],
+    [26, 2, 5, 31, 3, "COMBO"],
+    [27, 2, 6, 31, 4, "COMBO"],
+    [28, 31, 0, 33, 0, "CONDITIONING"],
+    [29, 32, 0, 33, 1, "CONDITIONING"],
+    [30, 1, 2, 33, 2, "FLOAT"],
+    [31, 26, 0, 36, 0, "INT"],
+    [32, 27, 0, 36, 1, "INT"],
+    [33, 6, 2, 36, 2, "INT"],
+    [34, 23, 0, 39, 0, "VAE"],
+    [35, 37, 0, 39, 1, "IMAGE"],
+    [36, 36, 0, 39, 2, "LATENT"],
+    [37, 38, 0, 39, 4, "BOOLEAN"],
+    [38, 6, 2, 41, 0, "INT"],
+    [39, 1, 2, 41, 1, "FLOAT"],
+    [40, 24, 0, 41, 3, "VAE"],
+    [41, 39, 0, 42, 0, "LATENT"],
+    [42, 41, 0, 42, 1, "LATENT"],
+    [43, 21, 0, 34, 0, "MODEL"],
+    [44, 33, 0, 34, 1, "CONDITIONING"],
+    [45, 33, 1, 34, 2, "CONDITIONING"],
+    [46, 1, 1, 34, 3, "AUDIO"],
+    [47, 24, 0, 34, 4, "VAE"],
+    [48, 34, 0, 46, 0, "MODEL"],
+    [49, 34, 1, 46, 1, "CONDITIONING"],
+    [50, 34, 2, 46, 2, "CONDITIONING"],
+    [51, 34, 0, 55, 0, "MODEL"],
+    [52, 34, 1, 55, 1, "CONDITIONING"],
+    [53, 34, 2, 55, 2, "CONDITIONING"],
+    [54, 43, 0, 47, 0, "NOISE"],
+    [55, 46, 0, 47, 1, "GUIDER"],
+    [56, 44, 0, 47, 2, "SAMPLER"],
+    [57, 45, 0, 47, 3, "SIGMAS"],
+    [58, 42, 0, 47, 4, "LATENT"],
+    [59, 47, 0, 48, 0, "LATENT"],
+    [60, 48, 0, 49, 0, "LATENT"],
+    [61, 25, 0, 49, 1, "LATENT_UPSCALE_MODEL"],
+    [62, 23, 0, 49, 2, "VAE"],
+    [63, 23, 0, 50, 0, "VAE"],
+    [64, 37, 0, 50, 1, "IMAGE"],
+    [65, 49, 0, 50, 2, "LATENT"],
+    [66, 38, 0, 50, 4, "BOOLEAN"],
+    [67, 50, 0, 51, 0, "LATENT"],
+    [68, 48, 1, 51, 1, "LATENT"],
+    [69, 52, 0, 56, 0, "NOISE"],
+    [70, 55, 0, 56, 1, "GUIDER"],
+    [71, 53, 0, 56, 2, "SAMPLER"],
+    [72, 54, 0, 56, 3, "SIGMAS"],
+    [73, 51, 0, 56, 4, "LATENT"],
+    [74, 56, 0, 57, 0, "LATENT"],
+    [75, 57, 0, 58, 0, "LATENT"],
+    [76, 23, 0, 58, 1, "VAE"],
+    [77, 57, 1, 59, 0, "LATENT"],
+    [78, 24, 0, 59, 1, "VAE"],
+    [79, 58, 0, 60, 0, "IMAGE"],
+    [80, 1, 2, 60, 1, "FLOAT"],
+    [81, 59, 0, 60, 2, "AUDIO"],
+    [82, 60, 0, 61, 0, "VIDEO"],
+    [83, 58, 0, 62, 0, "IMAGE"],
+    [84, 1, 2, 62, 1, "FLOAT"],
+    [85, 10, 0, 62, 2, "AUDIO"],
+    [86, 62, 0, 63, 0, "VIDEO"],
+    [87, 59, 0, 64, 0, "AUDIO"],
+    [88, 1, 2, 65, 0, "FLOAT"],
+    [89, 58, 0, 65, 1, "IMAGE"],
+    [90, 59, 0, 65, 2, "AUDIO"]
+  ],
+  "groups": [
+    {
+      "id": 1,
+      "title": "1 · The take: World Builder · Capture",
+      "bounding": [0, -40, 1000, 790],
+      "color": "#3f789e",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 2,
+      "title": "2 · The same room: AKUSPACE caption (LoRA route) and computed reverb (DSP route)",
+      "bounding": [1020, -40, 1340, 1500],
+      "color": "#88aa88",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 3,
+      "title": "3 · LTX-2.5 + AKUSPACE LoRA (GPU only; do not queue on the Mac)",
+      "bounding": [0, 1460, 3000, 1640],
+      "color": "#a1309b",
+      "font_size": 24,
+      "flags": {}
+    },
+    {
+      "id": 4,
+      "title": "4 · Outputs: A/B the two routes, send the clip back",
+      "bounding": [3020, 1460, 960, 1360],
+      "color": "#b58b2a",
+      "font_size": 24,
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.55,
+      "offset": [760, 80]
+    }
+  },
+  "version": 0.4
+}

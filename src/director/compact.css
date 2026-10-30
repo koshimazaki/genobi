@@ -1,0 +1,340 @@
+/* Same width/unit/font rules as styles/compact-studio.css. */
+.director {
+  --unit: clamp(0.05625rem, calc(0.025rem + 0.02vw), 0.0625rem);
+  width: min(calc(100% - 32px), clamp(52.875rem, 50vw, 86rem));
+}
+.director.director {
+  max-width: none;
+  padding: 12px 0 20px;
+  font-size: clamp(0.9rem, calc(0.45rem + 0.3vw), 1rem);
+}
+.director .dir-header {
+  padding-bottom: 10px;
+  gap: 12px;
+  font-size: 11px;
+}
+.director .dir-brand {
+  font-size: 18px;
+}
+.director .dir-heading {
+  padding: 12px 0;
+  gap: 12px;
+}
+.director .dir-heading h1 {
+  font-size: 18px;
+  margin-top: 4px;
+}
+.director .dir-file-actions {
+  gap: 6px;
+}
+.director button:not(.instrument-trigger):not(.select-menu__option) {
+  font: var(--space-10) var(--mono);
+  padding: 5px 8px;
+}
+.director .dir-stage {
+  background: var(--bg);
+}
+.director .dir-stage canvas {
+  width: 100%;
+  height: clamp(150px, min(calc(40px + 15vw), 18dvh), 204px);
+  aspect-ratio: auto;
+  object-fit: contain;
+}
+.director .dir-stage-meta,
+.director .dir-stage-footer {
+  padding: 6px 10px;
+  font: var(--space-9) var(--mono);
+}
+.director .dir-console {
+  margin-top: 10px;
+}
+.director .dir-console-header {
+  height: 34px;
+  padding: 4px 10px;
+  gap: 6px;
+}
+.director .dir-console-header strong {
+  font-size: var(--space-9);
+}
+.director .dir-console-header button {
+  font-size: var(--space-10);
+  padding: 4px 7px;
+}
+.director .dir-icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  height: 28px;
+  min-width: 28px;
+  flex: none;
+}
+.director .dir-icon-button[aria-pressed="true"] {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-ghost);
+}
+.director .dir-transport {
+  gap: 7px;
+  padding: 8px 10px;
+  align-items: center;
+}
+.director .dir-transport > button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  min-width: 30px;
+  padding: 5px;
+  gap: 5px;
+}
+.director .dir-transport > output {
+  font: var(--space-16) var(--mono);
+  min-width: 48px;
+}
+.director .dir-transport > small {
+  font: var(--space-9) var(--mono);
+}
+.director .dir-transport > label {
+  font: var(--text-small-7) var(--mono);
+  padding: 5px 6px;
+  gap: 4px;
+}
+.director .dir-transport > label input {
+  font: var(--space-10) var(--mono);
+  width: 48px;
+}
+.director .dir-transport .instrument-field {
+  min-width: 70px;
+}
+.director .dir-transport .tick-fader {
+  width: 110px;
+}
+.director .dir-transport .tick-fader__heading {
+  gap: 4px;
+}
+.director .dir-transport .tick-fader label,
+.director .dir-transport .tick-fader output {
+  font: var(--space-9) var(--mono);
+  white-space: nowrap;
+}
+.director .dir-transport .dir-add-track {
+  margin-left: auto;
+  padding-inline: 8px;
+}
+.director .dir-seek {
+  margin: 0 10px 7px;
+}
+.director .dir-seek .tick-fader__heading label,
+.director .dir-seek .tick-fader__heading output {
+  font: var(--space-9) var(--mono);
+}
+.director .dir-seek .tick-fader__ruler {
+  height: 8px;
+}
+.director .dir-seek .tick-fader__ruler i.major {
+  height: 8px;
+}
+.director .dir-seek .tick-fader__limits {
+  display: none;
+}
+.director .dir-edit-area {
+  display: block;
+  position: relative;
+  overflow: hidden;
+}
+.dir-inspector-drawer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(248px, 100%);
+  z-index: 6;
+  transform: translateX(100%);
+  visibility: hidden;
+  opacity: 0;
+}
+.dir-inspector-drawer[data-open="true"] {
+  transform: translateX(0);
+  visibility: visible;
+  opacity: 1;
+}
+/* The open drawer covers the end of the timeline. Room for it after the last
+   frame lets every clip scroll clear of the drawer, however narrow the
+   column (the Assets rail takes a third of it). */
+.director
+  .dir-edit-area:has(> .dir-inspector-drawer[data-open="true"])
+  .dir-timeline-inner {
+  box-sizing: content-box;
+  padding-right: min(248px, 100%);
+}
+.director .dir-inspector {
+  height: 100%;
+  max-height: none;
+  padding: 10px;
+  box-shadow: -5px 0 16px var(--shadow-soft);
+}
+.director .dir-inspector header {
+  gap: 6px;
+  margin-bottom: 10px;
+  align-items: center;
+}
+.director .dir-inspector header small {
+  margin-left: auto;
+}
+.director .dir-inspector label {
+  font: var(--space-10) var(--mono);
+  margin-bottom: 8px;
+  gap: 4px;
+}
+.director .dir-inspector input:not([type="checkbox"]) {
+  font: var(--space-10) var(--mono);
+  padding: 5px 6px;
+}
+.director .dir-lock {
+  margin-bottom: 10px;
+}
+.director .dir-fields {
+  gap: 6px;
+}
+.dir-add-dialog {
+  --unit: var(--composer-unit);
+  width: min(440px, calc(100vw - 32px));
+  padding: 0;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-panel);
+  box-shadow: var(--shadow-panel);
+  overflow: visible;
+}
+.dir-add-dialog::backdrop {
+  background: rgb(0 0 0 / 45%);
+  backdrop-filter: blur(3px);
+}
+.dir-add-dialog > header,
+.dir-add-dialog > footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+}
+.dir-add-dialog > header {
+  border-bottom: 1px solid var(--border);
+}
+.dir-add-dialog h2 {
+  font-size: 18px;
+  font-weight: 500;
+  margin: 0;
+}
+.dir-add-dialog-body {
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+}
+.dir-add-dialog-body .select-menu {
+  max-width: none;
+}
+.dir-track-name {
+  display: grid;
+  gap: 6px;
+  font: var(--space-10) var(--mono);
+  color: var(--soft);
+}
+.dir-track-name input {
+  width: 100%;
+  background: var(--sunken);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px;
+  font: var(--space-12) var(--mono);
+}
+.director .dir-asset-drop {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 130px;
+  gap: 10px;
+  border-style: dashed;
+  background: var(--sunken);
+  color: var(--soft);
+  padding: 12px;
+}
+.dir-asset-drop span {
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  font: var(--space-11) var(--mono);
+}
+.dir-asset-drop small {
+  font: var(--space-9) var(--mono);
+  color: var(--muted);
+}
+.dir-add-dialog-body [role="alert"] {
+  color: var(--error-text);
+  font-size: 12px;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .dir-inspector-drawer {
+    transition:
+      transform var(--motion-enter) ease,
+      opacity var(--motion-enter) ease,
+      visibility var(--motion-enter);
+  }
+}
+@media (max-width: 760px) {
+  .director .dir-transport {
+    gap: 6px;
+  }
+  .director .dir-stage canvas {
+    height: 150px;
+  }
+  .director .dir-heading {
+    gap: 8px;
+  }
+  .director .dir-file-actions button {
+    font-size: var(--space-10);
+    padding: 6px;
+  }
+  .director .dir-timeline {
+    max-height: 330px;
+  }
+}
+
+.director .dir-transport .tick-fader__limits {
+  display: none;
+}
+.director .dir-transport .tick-fader input[type="range"] {
+  height: 16px;
+}
+.director .dir-transport .tick-fader__ruler {
+  height: 6px;
+}
+.director .dir-transport .tick-fader__ruler i {
+  height: 3px;
+}
+.director .dir-transport .tick-fader__ruler i.major {
+  height: 6px;
+}
+
+.director .dir-transport > label {
+  height: 42px;
+  line-height: 10px;
+  justify-content: center;
+}
+.director .dir-transport > label input {
+  height: 18px;
+  line-height: 18px;
+}
+@media (max-width: 700px) {
+  .director .dir-transport > label {
+    height: 50px;
+  }
+  .director .dir-transport > label input {
+    height: 24px;
+    min-height: 24px;
+    line-height: 24px;
+  }
+}

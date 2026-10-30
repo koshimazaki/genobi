@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Genobi bubble · local fixture</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
+    <style>
+      .bubble-fixture-controls {
+        position: fixed;
+        right: 12px;
+        top: 72px;
+        z-index: 80;
+        max-width: 210px;
+        padding: 10px;
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        background: var(--surface);
+        font-size: 11px;
+      }
+      .bubble-fixture-controls > div {
+        display: grid;
+        gap: 10px;
+        padding-top: 10px;
+      }
+      .bubble-fixture-controls summary {
+        cursor: pointer;
+      }
+      @media (max-width: 640px) {
+        .bubble-fixture-controls {
+          top: 8px;
+          right: 8px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <div id="bubble-fixture"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    <script type="module" src="/scripts/preview-agent-bubble.tsx"></script>
+  </body>
+</html>

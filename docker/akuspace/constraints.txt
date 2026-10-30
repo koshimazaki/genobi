@@ -1,0 +1,8 @@
+# Held for every pip install in the image, so no pack's requirements can move
+# torch. torchaudio must match torch exactly: AKUSPACE Reference Audio (aligned)
+# imports it inside a guarded block, so without it the node still registers
+# and fails only when a graph runs (scripts/verify.py checks for this).
+# PyPI's Linux wheels for torch 2.11.0 bundle CUDA 13.0 (NVIDIA driver 580+).
+torch==2.11.0
+torchvision==0.26.0
+torchaudio==2.11.0

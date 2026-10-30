@@ -1,0 +1,207 @@
+/* Acoustic Space. Its theme accent marks five things only: the Acoustic space button's
+   label, rim and border, its switch when on, the prompt line it adds, and its
+   selected tile and level. Everything else stays in the studio's neutrals and
+   lime, which Camera controls keeps. */
+.composer-top__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  min-width: 0;
+}
+/* Two classes, so it outranks `.camera-open` in compact-studio.css, which
+   loads later and would otherwise set the rim back to lime. */
+.camera-open.acoustic-open {
+  --rim: var(--acoustic);
+  --rim-ghost: color-mix(in srgb, var(--acoustic) 14%, transparent);
+  --rim-strong: color-mix(in srgb, var(--acoustic) 80%, var(--text));
+}
+.acoustic-sentence {
+  display: block;
+  margin-top: 4px;
+  padding: 0;
+  text-align: left;
+  color: var(--acoustic);
+  font: inherit;
+  font-size: 14px;
+  line-height: 1.6;
+}
+.acoustic-sentence:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--border-strong);
+  text-underline-offset: 3px;
+}
+.generation-controls__acoustic {
+  width: calc(108 * var(--unit));
+}
+.generation-controls__acoustic
+  .draft-trigger[aria-checked="true"]
+  .draft-trigger__track {
+  background: var(--acoustic);
+}
+
+.acoustic-dialog {
+  --section-color: var(--acoustic);
+  height: min(580px, calc(100dvh - 40px));
+}
+.acoustic-dialog .camera-dialog-body {
+  flex: 1;
+}
+/* An empty section reads in the neutrals; only a chosen space carries the accent. */
+.acoustic-dialog .camera-tab-label strong.is-none {
+  color: var(--muted);
+}
+.acoustic-panel {
+  background: var(--sunken);
+  border-bottom: var(--space-1) solid var(--border);
+}
+.acoustic-preset-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-7);
+  padding: var(--space-3);
+}
+.acoustic-preset-grid .preset {
+  min-width: 0;
+  height: calc(82 * var(--unit));
+  min-height: calc(82 * var(--unit));
+  width: 100%;
+  padding-inline: var(--space-4);
+}
+.acoustic-preset-grid .preset svg {
+  width: 2.625em;
+  height: 1.969em;
+  flex-shrink: 0;
+}
+.acoustic-preset-grid .preset span {
+  white-space: normal;
+  line-height: 1.35;
+  font-size: var(--space-10);
+}
+.acoustic-levels {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  margin-top: var(--space-10);
+}
+.acoustic-levels .instrument-label {
+  padding: 0 var(--space-6) 0 0;
+}
+.acoustic-level {
+  border: var(--space-1) solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-5) var(--space-10);
+  color: var(--soft);
+  font-size: var(--space-10);
+}
+/* A level is part of the chosen space, so it takes the tile's accent: in this
+   dialog the accent means what the run will hear. */
+.acoustic-level.selected {
+  border-color: var(--acoustic);
+  color: var(--acoustic);
+  background: color-mix(in srgb, var(--acoustic) 12%, transparent);
+}
+.acoustic-phrase {
+  grid-column: 2;
+  display: block;
+  color: var(--acoustic);
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+/* The source line hangs under Connect key without taking part in the row, so
+   the button stays on the same line as ACCOUNT and the theme picker. Two short
+   centred lines under the button, set like ACCOUNT: IBM Plex Mono, capitals. */
+.connection-group {
+  position: relative;
+  display: flex;
+}
+.source-link {
+  position: absolute;
+  top: calc(100% + var(--space-4));
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  /* The block is centred on the button; its two lines share one left edge. */
+  align-items: flex-start;
+  gap: var(--space-2);
+  line-height: 1;
+  color: var(--muted);
+  font-family: var(--mono);
+  /* The size of ACCOUNT, so the two labels of the top bar read as one set. */
+  font-size: var(--space-9);
+  letter-spacing: var(--space-1);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.source-link:hover {
+  color: var(--soft);
+}
+.key-footnote a {
+  color: var(--soft);
+  text-decoration: underline;
+  text-decoration-color: var(--border-strong);
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 35rem) {
+  .acoustic-dialog {
+    height: calc(100dvh - 16px);
+  }
+  .acoustic-preset-grid .preset {
+    padding-block: var(--space-5);
+    gap: var(--space-4);
+  }
+  /* Two buttons and the badge do not fit one phone line: the buttons wrap
+     under the badge, keeping the right edge they close on. */
+  .composer-top:has(.acoustic-open) {
+    flex-wrap: wrap;
+    row-gap: var(--space-8);
+  }
+  .composer-top__actions {
+    gap: var(--space-4);
+    margin-left: auto;
+  }
+  .mode-badge {
+    white-space: nowrap;
+  }
+  .source-link {
+    font-size: var(--space-8);
+  }
+}
+.acoustic-dialog .camera-none.selected {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-ghost);
+}
+
+.acoustic-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr);
+}
+.acoustic-layout .acoustic-panel {
+  border-right: var(--space-1) solid var(--border);
+}
+.acoustic-layout .camera-preview-column {
+  padding: var(--space-16);
+}
+.acoustic-dialog .camera-scene,
+.acoustic-dialog .preview-fallback {
+  height: calc(240 * var(--unit));
+}
+.acoustic-edit-note {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.acoustic-phrase-line textarea {
+  color: var(--acoustic);
+}
+@media (max-width: 48rem) {
+  .acoustic-layout {
+    grid-template-columns: 1fr;
+  }
+  .acoustic-layout .acoustic-panel {
+    border-right: 0;
+  }
+}

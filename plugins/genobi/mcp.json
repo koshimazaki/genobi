@@ -1,0 +1,11 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+  "mcpServers": {
+    "genobi": {
+      "type": "stdio",
+      "command": "node",
+      "args": ["${PLUGIN_ROOT}/server/genobi-mcp.mjs"],
+      "env": { "GENOBI_URL": "http://127.0.0.1:4317" }
+    }
+  }
+}

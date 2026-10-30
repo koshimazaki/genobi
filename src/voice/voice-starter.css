@@ -1,0 +1,35 @@
+.voice-starter {
+  margin-block: 20px;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+.voice-starter h2 {
+  font-size: 18px;
+}
+.voice-starter p {
+  line-height: 1.6;
+}
+.voice-starter button,
+.voice-starter-continue,
+.local-run-instructions summary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  cursor: pointer;
+}
+.voice-starter-continue {
+  margin-inline: 12px;
+}
+.voice-starter > .voice-setup {
+  position: relative;
+  top: auto;
+  width: 100%;
+  margin-block: 16px;
+  max-height: none;
+}
+.local-run-instructions pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 12px;
+}

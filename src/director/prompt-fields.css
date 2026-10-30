@@ -1,0 +1,123 @@
+/* The project prompt's fields (Box 2.8): each labelled line is a field with
+   a coloured rule and label, palette hexes carry a swatch, and a line of only
+   references shows them as tiles. Every colour is a theme token from
+   tokens.css (the LTX prompt-part colours), read through --field-color. */
+.prompt-line {
+  --field-color: var(--soft);
+}
+.prompt-line[data-field="subject"] {
+  --field-color: var(--prompt-character);
+}
+.prompt-line[data-field="title"] {
+  --field-color: var(--accent-strong);
+}
+.prompt-line[data-field="look"] {
+  --field-color: var(--camera-shot);
+}
+.prompt-line[data-field="lighting"] {
+  --field-color: var(--camera-light);
+}
+.prompt-line[data-field="palette"] {
+  --field-color: var(--prompt-scene);
+}
+.prompt-line[data-field="negative"] {
+  --field-color: var(--camera-angle);
+}
+.prompt-line[data-field="shots"] {
+  --field-color: var(--camera-movement);
+}
+.prompt-line[data-field="references"] {
+  --field-color: var(--prompt-action);
+}
+.prompt-line[data-field="audio"] {
+  --field-color: var(--prompt-audio);
+}
+.prompt-line[data-field] {
+  margin: var(--space-3) 0;
+  padding: var(--space-1) 0 var(--space-1) var(--space-10);
+  border-left: var(--space-2) solid
+    color-mix(in srgb, var(--field-color) 60%, transparent);
+  line-height: 1.55;
+}
+.prompt-line[data-field="header"] {
+  margin: 0 0 var(--space-3);
+  padding: 0;
+  border: 0;
+  color: var(--muted);
+  font: var(--text-small-8) var(--mono);
+  letter-spacing: calc(0.8 * var(--unit));
+  text-transform: uppercase;
+}
+.prompt-line[data-field="title"] {
+  font-weight: 600;
+  letter-spacing: calc(0.4 * var(--unit));
+}
+.prompt-field-label {
+  margin-right: var(--space-6);
+  color: var(--field-color);
+  font: 600 var(--text-small-8) var(--mono);
+  letter-spacing: calc(0.8 * var(--unit));
+  text-transform: uppercase;
+}
+.prompt-hex {
+  color: var(--soft);
+  font-family: var(--mono);
+  font-size: 0.85em;
+  white-space: nowrap;
+}
+.prompt-swatch {
+  display: inline-block;
+  width: 0.95em;
+  height: 0.95em;
+  margin: 0 0.35em 0 0.1em;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-xs);
+  background: var(--swatch);
+  vertical-align: -0.12em;
+}
+
+/* References you can see: a line of only references shows tiles. */
+.prompt-line[data-tiles] {
+  line-height: 1;
+}
+.prompt-line[data-tiles] .prompt-inline-reference {
+  display: inline-grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-3) var(--space-4);
+  margin: var(--space-1) var(--space-6) var(--space-1) 0;
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  font-size: 11px;
+  vertical-align: top;
+}
+.dir-remix
+  .prompt-line[data-tiles]
+  .prompt-inline-reference
+  > :is(img, video, .prompt-font-sample, .dir-asset-placeholder) {
+  grid-column: 1 / -1;
+  width: 96px;
+  height: 72px;
+  border-radius: var(--radius-control);
+  object-fit: cover;
+  background: var(--bg);
+}
+.dir-remix .prompt-line[data-tiles] .prompt-font-sample {
+  font-size: 32px;
+}
+.prompt-inline-reference[data-drop-target] {
+  border-color: var(--accent);
+  background: var(--accent-ghost);
+}
+@media (max-width: 700px) {
+  .prompt-line[data-field] {
+    padding-left: var(--space-8);
+  }
+  .dir-remix
+    .prompt-line[data-tiles]
+    .prompt-inline-reference
+    > :is(img, video, .prompt-font-sample, .dir-asset-placeholder) {
+    width: 88px;
+    height: 66px;
+  }
+}

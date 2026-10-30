@@ -1,0 +1,130 @@
+{
+  "schema": "genobi-teaser-run-memory/1",
+  "runId": "a",
+  "date": "2026-10-31",
+  "runner": {
+    "agent": "hermes",
+    "model": "deepseek/deepseek-v4.1-flash",
+    "provider": "nous",
+    "profile": "hermes-developer"
+  },
+  "startedFrom": "docs/genobi-teaser-run/brief.json",
+  "brief": {
+    "text": "Make the Genobi teaser: two minutes of the studio in use, cut to the owner's track Trailer-Genobi at its own tempo, built like the Dimensions mix (a cut written as data that the Director renders). Go through the studio's functions so the viewer sees it work: zoom in, click, focus boxes, loaders and generated titles, and land the owner's generations on the drops. End on the Genobi end card with the music credit. Nothing is generated, quoted or paid for."
+  },
+  "analysis": {
+    "source": "genobi audio-analysis on teaser-track.mp3, then teaser-run-helper sections",
+    "bpm": 135,
+    "measuredBpm": 134.994,
+    "firstDownbeatSeconds": 1.775,
+    "drops": [36, 76, 124, 156, 188, 236],
+    "offBar": [17.64, 57.68],
+    "requiredCuts": [12, 20, 36, 76, 92, 124, 140, 156, 188, 236, 260]
+  },
+  "decisions": [
+    {
+      "id": "d-open-1",
+      "section": "open",
+      "choice": "No shots. Layers: title, status-0.",
+      "because": "Rules 5 and 6: cards hold the frame, with a status for the card's length.",
+      "source": "rule"
+    },
+    {
+      "id": "d-first-shot-1",
+      "section": "first-shot",
+      "choice": "No shots. Layers: reveal-1, status-1.",
+      "because": "Rules 5 and 6: cards hold the frame, with a status for the card's length.",
+      "source": "rule"
+    },
+    {
+      "id": "d-generations-1",
+      "section": "generations",
+      "choice": "Shots character 20+4 from 0 s, product 24+4 from 0 s, audio-visual 28+8 from 0 s. Overlays besides pointers and glitches: make, hud-1.",
+      "because": "Rules 2 and 3 (slice for studio shots, the storyboard's source for the ComfyUI recording, 4 beats for generations, 2 in the montage, boxed shots at least 6, fitted to each segment), then rules 4 to 8.",
+      "source": "rule"
+    },
+    {
+      "id": "d-make-1",
+      "section": "make",
+      "choice": "Shots ui-gallery 36+7 from 0.2 s, ui-camera 43+11 from 0.2 s, ui-camera 54+6 from 6.9 s, ui-camera-control 60+6 from 1.8 s, ui-camera 66+6 from 10.4 s, library-01 72+4 from 0 s. Overlays besides pointers and glitches: focus-43, focus-66, reveal-2, status-2, callout-camera-controls, direct.",
+      "because": "Rules 2 and 3 (slice for studio shots, the storyboard's source for the ComfyUI recording, 4 beats for generations, 2 in the montage, boxed shots at least 6, fitted to each segment), then rules 4 to 8.",
+      "source": "rule"
+    },
+    {
+      "id": "d-direct-1",
+      "section": "direct",
+      "choice": "Shots ui-director 76+5 from 0.2 s, ui-comfy 81+5 from 0 s, ui-comfy 86+6 from 2.222 s, mix-03 92+4 from 0 s, mix-01 96+4 from 0 s, product 100+4 from 3.8 s, ui-editor 104+8 from 6 s, ui-directions 112+8 from 0.8 s, dimensions 120+4 from 0 s, ui-directions 124+8 from 4.8 s, character 132+4 from 3.8 s, character 136+4 from 7.6 s. Overlays besides pointers and glitches: focus-112, focus-124, callout-three-js, build-worlds.",
+      "because": "Rules 2 and 3 (slice for studio shots, the storyboard's source for the ComfyUI recording, 4 beats for generations, 2 in the montage, boxed shots at least 6, fitted to each segment), then rules 4 to 8.",
+      "source": "rule"
+    },
+    {
+      "id": "d-build-remix-1",
+      "section": "build-remix",
+      "choice": "Shots ui-world 140+9 from 0.2 s, ui-world 149+7 from 3.8 s, ui-agent 156+10 from 0.2 s, ui-agent 166+6 from 5.6 s. Overlays besides pointers and glitches: paper-dither, space, reveal-3, taste, focus-166, status-3.",
+      "because": "Rules 2 and 3 (slice for studio shots, the storyboard's source for the ComfyUI recording, 4 beats for generations, 2 in the montage, boxed shots at least 6, fitted to each segment), then rules 4 to 8.",
+      "source": "rule"
+    },
+    {
+      "id": "d-agents-1",
+      "section": "agents",
+      "choice": "Shots ui-licences 192+8 from 3.1 s, ui-camera 200+6 from 0.2 s, ui-camera 206+4 from 6.9 s, ui-save 210+6 from 2.3 s, ui-save 216+8 from 4.2 s, ui-swords 224+4 from 0.2 s, ui-scrolls 228+4 from 6.3 s, mix-02 232+4 from 0 s. Overlays besides pointers and glitches: focus-200, focus-210, compare-remix, one-studio.",
+      "because": "Rules 2 and 3 (slice for studio shots, the storyboard's source for the ComfyUI recording, 4 beats for generations, 2 in the montage, boxed shots at least 6, fitted to each segment), then rules 4 to 8.",
+      "source": "rule"
+    },
+    {
+      "id": "d-final-drop-1",
+      "section": "final-drop",
+      "choice": "Shots mix-03 236+2 from 3.8 s, product 238+2 from 7.6 s, audio-visual 240+2 from 5.6 s, character 242+2 from 11.4 s, mix-02 244+2 from 3.8 s, library-03 246+2 from 0 s, mix-01 248+2 from 3.8 s, product 250+2 from 10.5 s, audio-visual 252+2 from 8.5 s, character 254+2 from 14.3 s, mix-03 256+2 from 6.7 s, audio-visual 258+2 from 11.4 s. Overlays besides pointers and glitches: hud-2.",
+      "because": "Rules 2 and 3 (slice for studio shots, the storyboard's source for the ComfyUI recording, 4 beats for generations, 2 in the montage, boxed shots at least 6, fitted to each segment), then rules 4 to 8.",
+      "source": "rule"
+    },
+    {
+      "id": "d-end-card-1",
+      "section": "end-card",
+      "choice": "No shots. Layers: end-card.",
+      "because": "Rules 5 and 6: cards hold the frame, with a status for the card's length.",
+      "source": "rule"
+    }
+  ],
+  "corrections": [
+    {
+      "quote": "no provenance claims",
+      "rule": "Say what the studio did, never where an external clip came from."
+    },
+    {
+      "quote": "Scrolls is light",
+      "rule": "Keep Scrolls shots to four beats, zoomed onto the dark cells or the camera dialog."
+    },
+    {
+      "quote": "hold it at least about 1.3 s",
+      "rule": "Every interface beat and every line of words stays on screen at least 1.3 s."
+    },
+    {
+      "quote": "camera controls at 0:27; ★ Three.js at 0:36 where the vocal sings it; the ComfyUI workflow at 0:38",
+      "rule": "The storyboard's segment edges 60, 81 and 86 are the owner's timestamps; keep them."
+    }
+  ],
+  "checkpoints": [
+    {
+      "step": "analyse",
+      "summary": "bpm 134.994 -> 135, downbeat 1.775 s (beat 3.99), drops on bars 36 76 124 156 188 236.",
+      "at": "2026-10-31T09:05:00Z"
+    },
+    {
+      "step": "cut",
+      "summary": "cut.json written: 45 shots, 59 overlays, 127 Director layers.",
+      "at": "2026-10-31T09:40:00Z"
+    },
+    {
+      "step": "verify",
+      "summary": "verify-teaser-run: PASS, cut.json sha256 77ad5a35…",
+      "at": "2026-10-31T09:42:00Z"
+    }
+  ],
+  "outputs": {
+    "cut": "cut.json",
+    "verify": "verify.txt",
+    "render": "render/render.mp4",
+    "contactSheet": "render/contact-sheet.png"
+  }
+}

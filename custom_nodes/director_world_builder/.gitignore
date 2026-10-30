@@ -1,0 +1,7 @@
+web/adapter.mjs
+web/adapter.css
+web/index.html
+__pycache__/
+web/world-assets/
+web/fonts/
+web/media/

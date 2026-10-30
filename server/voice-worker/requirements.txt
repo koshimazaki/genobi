@@ -1,0 +1,9 @@
+# Genobi voice mode's local speech-to-text worker (voice_worker.py), in its own
+# virtualenv. Node never imports these; only the worker process does. The pins
+# are X Console's, verified there with Qwen3-ASR-0.6B on Metal (M1 Max,
+# macOS 14.6) on 26 September 2026. See docs/voice-mode.md for setup.
+qwen-asr==0.0.6
+torch==2.14.0
+transformers==4.57.6
+accelerate==1.12.0
+numpy

@@ -1,0 +1,18 @@
+# Machine-specific MCP paths and open-model pins are added by agent:hermes-roles.
+# Native Hermes updates preserve the installed config by default.
+# Hermes resolves a profile's CLI tools from `platform_toolsets.cli`
+# (hermes_cli/tools_config.py `_get_platform_tools`, read by cli.py), not a
+# top-level `toolsets:` list: the old key was ignored and left the broad
+# platform defaults on (computer_use, delegation, cronjob). MCP servers are
+# named as configured (`genobi`, `studio_browser`), never `mcp-<server>`.
+# Creative directs and prepares without a shell, so no `terminal`.
+platform_toolsets:
+  cli:
+    - file
+    - skills
+    - memory
+    - todo
+    - genobi
+    - studio_browser
+terminal:
+  cwd: .

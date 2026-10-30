@@ -1,0 +1,66 @@
+{
+  "version": 1,
+  "about": "One source for World Builder room sets and the Acoustics node. room-presets.ts builds the sets from `rooms`; acoustics.py reads everything here. Absorption values are rounded mid-frequency (500 Hz-1 kHz) coefficients for planning, not measurements.",
+  "rooms": {
+    "small_room": {
+      "label": "Small room",
+      "size_m": [2.4, 3.2, 2.5],
+      "color": "#8fa9b3",
+      "materials": { "floor": "carpet", "walls": "plaster" }
+    },
+    "medium_room": {
+      "label": "Acoustic room",
+      "size_m": [6.2, 9.3, 2.9],
+      "color": "#7d999c",
+      "materials": { "floor": "wood", "walls": "plaster" }
+    },
+    "empty_club": {
+      "label": "Club",
+      "size_m": [4.82, 6.2, 2.48],
+      "color": "#655b83",
+      "materials": { "floor": "concrete", "walls": "wood" }
+    },
+    "cathedral": {
+      "label": "Cathedral",
+      "size_m": [12, 30, 18],
+      "color": "#b9b2a3",
+      "materials": { "floor": "pews", "walls": "stone" }
+    }
+  },
+  "absorption": {
+    "marble": 0.01,
+    "concrete": 0.02,
+    "tile": 0.02,
+    "stone": 0.03,
+    "brick": 0.04,
+    "glass": 0.04,
+    "plaster": 0.06,
+    "metal": 0.06,
+    "wood": 0.1,
+    "carpet": 0.3,
+    "pews": 0.4,
+    "curtain": 0.5,
+    "foam": 0.8
+  },
+  "colour_classes": {
+    "about": "Used when a surface's prompt names no material. Relative luminance of its colour: light >= 0.5, dark < 0.15, mid between.",
+    "light": 0.05,
+    "mid": 0.1,
+    "dark": 0.2
+  },
+  "bands": {
+    "about": "RT60 bands in seconds, ordered by the decay each AKUSPACE preset was trained on (small 0.67, club 1.2, medium 1.9, cathedral 4.8). Level is the position inside the band in thirds; cathedral's band is read up to 8 s.",
+    "order": ["dry", "small_room", "empty_club", "medium_room", "cathedral"],
+    "edges": [0.3, 0.95, 1.55, 3.0, 8.0]
+  },
+  "outdoor": {
+    "about": "A recipe with no room-* set is open sky. Key light below this value reads as night.",
+    "night_below_light": 1.0
+  },
+  "akuspace_widgets": {
+    "about": "Exact combo lists of Koshi_AKUSPACEPrompt (identical at Koshi-Nodes 6f3351e, the sources.lock pin, and 1761937). A list-typed output connects only when these match the input's list.",
+    "space_mode": ["Off", "Room", "Space", "Sound effects"],
+    "application": ["Off", "Low", "Moderate", "Heavy", "Day", "Night", "High"],
+    "room_preset": ["small_room", "empty_club", "medium_room", "cathedral"]
+  }
+}

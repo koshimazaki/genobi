@@ -1,0 +1,1729 @@
+{
+  "id": "genobi-teaser",
+  "bpm": 135,
+  "inPointSeconds": -0.037,
+  "fps": 24,
+  "width": 1920,
+  "height": 1080,
+  "beats": 269,
+  "track": {
+    "asset": "teaser-track",
+    "seconds": 119.59
+  },
+  "trackName": "Track · Trailer-Genobi",
+  "shots": [
+    {
+      "asset": "character",
+      "label": "character · 20",
+      "sourceSeconds": 0,
+      "startBeat": 20,
+      "beats": 4,
+      "cropY": null,
+      "zoom": 1.33
+    },
+    {
+      "asset": "product",
+      "label": "product · 24",
+      "sourceSeconds": 0,
+      "startBeat": 24,
+      "beats": 4,
+      "cropY": null,
+      "zoom": 1.33
+    },
+    {
+      "asset": "audio-visual",
+      "label": "audio-visual · 28",
+      "sourceSeconds": 0,
+      "startBeat": 28,
+      "beats": 8,
+      "cropY": null,
+      "zoom": 1.317
+    },
+    {
+      "asset": "ui-gallery",
+      "label": "Gallery · gallery",
+      "sourceSeconds": 0.2,
+      "startBeat": 36,
+      "beats": 7,
+      "cropY": null,
+      "move": {
+        "x": 0.32,
+        "y": 0.77,
+        "zoom": 1.8,
+        "ease": 2,
+        "drift": 0.03
+      }
+    },
+    {
+      "asset": "ui-camera",
+      "label": "Camera · families",
+      "sourceSeconds": 0.2,
+      "startBeat": 43,
+      "beats": 11,
+      "cropY": null,
+      "move": {
+        "x": 0.31,
+        "y": 0.74,
+        "zoom": 2.2,
+        "ease": 2,
+        "drift": 0.03
+      }
+    },
+    {
+      "asset": "ui-camera",
+      "label": "Camera · prompt",
+      "sourceSeconds": 6.9,
+      "startBeat": 54,
+      "beats": 6,
+      "cropY": null,
+      "move": {
+        "x": 0.5,
+        "y": 0.53,
+        "zoom": 1.8,
+        "ease": 2,
+        "drift": 0.03
+      }
+    },
+    {
+      "asset": "ui-camera-control",
+      "label": "Camera · movements",
+      "sourceSeconds": 1.8,
+      "startBeat": 60,
+      "beats": 6,
+      "cropY": null,
+      "move": {
+        "x": 0.23,
+        "y": 0.5,
+        "zoom": 2.2,
+        "ease": 2,
+        "drift": 0.03
+      }
+    },
+    {
+      "asset": "ui-camera",
+      "label": "Camera · quote",
+      "sourceSeconds": 10.4,
+      "startBeat": 66,
+      "beats": 6,
+      "cropY": null,
+      "move": {
+        "x": 0.73,
+        "y": 0.73,
+        "zoom": 1.8,
+        "ease": 2,
+        "drift": 0.03
+      }
+    },
+    {
+      "asset": "library-01",
+      "label": "library-01 · 72",
+      "sourceSeconds": 0,
+      "startBeat": 72,
+      "beats": 4,
+      "cropY": null,
+      "zoom": 1.023
+    },
+    {
+      "asset": "ui-director",
+      "label": "Director · play",
+      "sourceSeconds": 0.2,
+      "startBeat": 76,
+      "beats": 5,
+      "cropY": null,
+      "move": {
+        "x": 0.05,
+        "y": 0.23,
+        "zoom": 1.8,
+        "ease": 2,
+        "drift": 0.03
+      }
+    },
+    {
+      "asset": "ui-comfy",
+      "label": "ComfyUI · from 0 s",
+      "sourceSeconds": 0,
+      "startBeat": 81,
+      "beats": 5,
+      "cropY": null,
+      "move": {
+        "x": 0.278,
+        "y": 0.506,
+        "zoom": 2.8,
+        "ease": 1,
+        "drift": 0.03,
+        "from": {
+          "x": 0.278,
+          "y": 0.506,
+          "zoom": 2.8
+        }
+      }
+    },
+    {
+      "asset": "ui-comfy",
+      "label": "ComfyUI · from 2.222 s",
+      "sourceSeconds": 2.222,
+      "startBeat": 86,
+      "beats": 6,
+      "cropY": null,
+      "move": {
+        "x": 0.5,
+        "y": 0.5,
+        "zoom": 1,
+        "ease": 3,
+        "drift": 0.02,
+        "from": {
+          "x": 0.278,
+          "y": 0.506,
+          "zoom": 2.8
+        }
+      }
+    },
+    {
+      "asset": "mix-03",
+      "label": "mix-03 · 92",
+      "sourceSeconds": 0,
+      "startBeat": 92,
+      "beats": 4,
+      "cropY": 200
+    },
+    {
+      "asset": "mix-01",
+      "label": "mix-01 · 96",
+      "sourceSeconds": 0,
+      "startBeat": 96,
+      "beats": 4,
+      "cropY": 200
+    },
+    {
+      "asset": "product",
+      "label": "product · 100",
+      "sourceSeconds": 3.8,
+      "startBeat": 100,
+      "beats": 4,
+      "cropY": null,
+      "zoom": 1.33
+    },
+    {
+      "asset": "ui-editor",
+      "label": "Editor · a clip",
+      "sourceSeconds": 6,
+      "startBeat": 104,
+      "beats": 8,
+      "cropY": null,
+      "move": {
+        "x": 0.78,
+        "y": 0.41,
+        "zoom": 2.2,
+        "ease": 2,
+        "drift": 0.03
+      }
+    },
+    {
+      "asset": "ui-directions",
+      "label": "Editor · shot and lens",
+      "sourceSeconds": 0.8,
+      "startBeat": 112,
+      "beats": 8,
+      "cropY": null,
+      "move": {
+        "x": 0.29,
+        "y": 0.51,
+        "zoom": 1.8,
+        "ease": 2,
+        "drift": 0.03
+      }
+    },
+    {
+      "asset": "dimensions",
+      "label": "dimensions · 120",
+      "sourceSeconds": 0,
+      "startBeat": 120,
+      "beats": 4,
+      "cropY": null
+    },
+    {
+      "asset": "ui-directions",
+      "label": "Editor · close",
+      "sourceSeconds": 4.8,
+      "startBeat": 124,
+      "beats": 8,
+      "cropY": null,
+      "move": {
+        "x": 0.94,
+        "y": 0.47,
+        "zoom": 1.8,
+        "ease": 2,
+        "drift": 0.03
+      }
+    },
+    {
+      "asset": "character",
+      "label": "character · 132",
+      "sourceSeconds": 3.8,
+      "startBeat": 132,
+      "beats": 4,
+      "cropY": null,
+      "zoom": 1.33
+    },
+    {
+      "asset": "character",
+      "label": "character · 136",
+      "sourceSeconds": 7.6,
+      "startBeat": 136,
+      "beats": 4,
+      "cropY": null,
+      "zoom": 1.33
+    },
+    {
+      "asset": "ui-world",
+      "label": "3D · scene",
+      "sourceSeconds": 0.2,
+      "startBeat": 140,
+      "beats": 9,
+      "cropY": null,
+      "move": {
+        "x": 0.11,
+        "y": 0.18,
+        "zoom": 2.2,
+        "ease": 2,
+        "drift": 0.03
+      }
+    },
+    {
+      "asset": "ui-world",
+      "label": "3D · rotate tool",
+      "sourceSeconds": 3.8,
+      "startBeat": 149,
+      "beats": 7,
+      "cropY": null,
+      "move": {
+        "x": 0.08,
+        "y": 0.82,
+        "zoom": 2.2,
+        "ease": 2,
+        "drift": 0.03
+      }
+    },
+    {
+      "asset": "ui-agent",
+      "label": "Genobi · genobi",
+      "sourceSeconds": 0.2,
+      "startBeat": 156,
+      "beats": 10,
+      "cropY": null,
+      "move": {
+        "x": 0.13,
+        "y": 0.41,
+        "zoom": 1.8,
+        "ease": 2,
+        "drift": 0.03
+      }
+    },
+    {
+      "asset": "ui-agent",
+      "label": "Genobi · start",
+      "sourceSeconds": 5.6,
+      "startBeat": 166,
+      "beats": 6,
+      "cropY": null,
+      "move": {
+        "x": 0.13,
+        "y": 0.41,
+        "zoom": 1.8,
+        "ease": 2,
+        "drift": 0.03
+      }
+    },
+    {
+      "asset": "ui-licences",
+      "label": "Licences · licence",
+      "sourceSeconds": 3.1,
+      "startBeat": 192,
+      "beats": 8,
+      "cropY": null,
+      "move": {
+        "x": 0.56,
+        "y": 0.26,
+        "zoom": 1.8,
+        "ease": 2,
+        "drift": 0.03
+      }
+    },
+    {
+      "asset": "ui-camera",
+      "label": "Camera · families",
+      "sourceSeconds": 0.2,
+      "startBeat": 200,
+      "beats": 6,
+      "cropY": null,
+      "move": {
+        "x": 0.31,
+        "y": 0.74,
+        "zoom": 2.2,
+        "ease": 2,
+        "drift": 0.03
+      }
+    },
+    {
+      "asset": "ui-camera",
+      "label": "Camera · prompt",
+      "sourceSeconds": 6.9,
+      "startBeat": 206,
+      "beats": 4,
+      "cropY": null,
+      "move": {
+        "x": 0.5,
+        "y": 0.53,
+        "zoom": 1.8,
+        "ease": 2,
+        "drift": 0.03
+      }
+    },
+    {
+      "asset": "ui-save",
+      "label": "Save · save json",
+      "sourceSeconds": 2.3,
+      "startBeat": 210,
+      "beats": 6,
+      "cropY": null,
+      "move": {
+        "x": 0.95,
+        "y": 0.61,
+        "zoom": 2.2,
+        "ease": 2,
+        "drift": 0.03
+      }
+    },
+    {
+      "asset": "ui-save",
+      "label": "Save · director",
+      "sourceSeconds": 4.2,
+      "startBeat": 216,
+      "beats": 8,
+      "cropY": null,
+      "move": {
+        "x": 0.64,
+        "y": 0.11,
+        "zoom": 1.8,
+        "ease": 2,
+        "drift": 0.03
+      }
+    },
+    {
+      "asset": "ui-swords",
+      "label": "Dual Swords · load a",
+      "sourceSeconds": 0.2,
+      "startBeat": 224,
+      "beats": 4,
+      "cropY": null,
+      "move": {
+        "x": 0.82,
+        "y": 0.56,
+        "zoom": 2.2,
+        "ease": 2,
+        "drift": 0.03
+      }
+    },
+    {
+      "asset": "ui-scrolls",
+      "label": "Scrolls · cell camera",
+      "sourceSeconds": 6.3,
+      "startBeat": 228,
+      "beats": 4,
+      "cropY": null,
+      "move": {
+        "x": 0.36,
+        "y": 0.69,
+        "zoom": 1.8,
+        "ease": 2,
+        "drift": 0.03
+      }
+    },
+    {
+      "asset": "mix-02",
+      "label": "mix-02 · 232",
+      "sourceSeconds": 0,
+      "startBeat": 232,
+      "beats": 4,
+      "cropY": 200
+    },
+    {
+      "asset": "mix-03",
+      "label": "Montage 01",
+      "sourceSeconds": 3.8,
+      "startBeat": 236,
+      "beats": 2,
+      "cropY": 200
+    },
+    {
+      "asset": "product",
+      "label": "Montage 02",
+      "sourceSeconds": 7.6,
+      "startBeat": 238,
+      "beats": 2,
+      "cropY": null,
+      "zoom": 1.33
+    },
+    {
+      "asset": "audio-visual",
+      "label": "Montage 03",
+      "sourceSeconds": 5.6,
+      "startBeat": 240,
+      "beats": 2,
+      "cropY": null,
+      "zoom": 1.317
+    },
+    {
+      "asset": "character",
+      "label": "Montage 04",
+      "sourceSeconds": 11.4,
+      "startBeat": 242,
+      "beats": 2,
+      "cropY": null,
+      "zoom": 1.33
+    },
+    {
+      "asset": "mix-02",
+      "label": "Montage 05",
+      "sourceSeconds": 3.8,
+      "startBeat": 244,
+      "beats": 2,
+      "cropY": 200
+    },
+    {
+      "asset": "library-03",
+      "label": "Montage 06",
+      "sourceSeconds": 0,
+      "startBeat": 246,
+      "beats": 2,
+      "cropY": null,
+      "zoom": 1.023
+    },
+    {
+      "asset": "mix-01",
+      "label": "Montage 07",
+      "sourceSeconds": 3.8,
+      "startBeat": 248,
+      "beats": 2,
+      "cropY": 200
+    },
+    {
+      "asset": "product",
+      "label": "Montage 08",
+      "sourceSeconds": 10.5,
+      "startBeat": 250,
+      "beats": 2,
+      "cropY": null,
+      "zoom": 1.33
+    },
+    {
+      "asset": "audio-visual",
+      "label": "Montage 09",
+      "sourceSeconds": 8.5,
+      "startBeat": 252,
+      "beats": 2,
+      "cropY": null,
+      "zoom": 1.317
+    },
+    {
+      "asset": "character",
+      "label": "Montage 10",
+      "sourceSeconds": 14.3,
+      "startBeat": 254,
+      "beats": 2,
+      "cropY": null,
+      "zoom": 1.33
+    },
+    {
+      "asset": "mix-03",
+      "label": "Montage 11",
+      "sourceSeconds": 6.7,
+      "startBeat": 256,
+      "beats": 2,
+      "cropY": 200
+    },
+    {
+      "asset": "audio-visual",
+      "label": "Montage 12",
+      "sourceSeconds": 11.4,
+      "startBeat": 258,
+      "beats": 2,
+      "cropY": null,
+      "zoom": 1.317
+    }
+  ],
+  "layers": [
+    {
+      "id": "end-card",
+      "name": "End card · Genobi",
+      "module": "end-card",
+      "kind": "graphics",
+      "lane": "end",
+      "startBeat": 260,
+      "beats": 9,
+      "opacity": 1,
+      "card": true,
+      "parameters": {
+        "eyebrow": "MADE WITH",
+        "title": "GENOBI",
+        "subtitle": "THE AI FILM STUDIO YOU DIRECT",
+        "credit1": "MUSIC · TRAILER-GENOBI",
+        "credit2": "KOSHIMAZAKI MIX",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "color": "#d5ff70",
+        "accent": "#e6a1ff",
+        "steps": "Gathering the shots / Cutting on the beat / Bringing it into focus",
+        "done": "Teaser ready",
+        "duration": 2.6
+      }
+    },
+    {
+      "id": "title",
+      "name": "Title · GENOBI",
+      "module": "gen-title",
+      "kind": "graphics",
+      "lane": "cards",
+      "startBeat": 0,
+      "beats": 12,
+      "opacity": 1,
+      "card": true,
+      "parameters": {
+        "text": "GENOBI",
+        "line": "THE AI FILM STUDIO YOU DIRECT",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "size": 128,
+        "color": "#d5ff70",
+        "muted": "#eaf2df",
+        "accent": "#d5ff70",
+        "x": 0.5,
+        "y": 0.46,
+        "duration": 3.6,
+        "mode": "trace-texts",
+        "steps": "Setting the title / Tracing glyphs / Inking",
+        "done": "Studio ready",
+        "fadeAt": 4.933,
+        "plate": 0
+      }
+    },
+    {
+      "id": "reveal-1",
+      "name": "Generate · forest guardian",
+      "module": "gen-image",
+      "kind": "graphics",
+      "lane": "cards",
+      "startBeat": 12,
+      "beats": 8,
+      "opacity": 1,
+      "card": true,
+      "parameters": {
+        "still": "/media/director-templates/genobi-teaser/still-character.jpg",
+        "matte": "#0c0e0c",
+        "accent": "#d5ff70",
+        "inset": 0,
+        "duration": 3,
+        "mode": "trace",
+        "steps": "Sampling / Screening / Colour",
+        "done": "Shot ready",
+        "fadeAt": 0
+      }
+    },
+    {
+      "id": "paper-dither",
+      "name": "Paper Shaders · dithering",
+      "module": "paper-shader",
+      "kind": "graphics",
+      "lane": "cards",
+      "startBeat": 172,
+      "beats": 3,
+      "opacity": 1,
+      "card": true,
+      "parameters": {
+        "shader": "dithering",
+        "colors": "#0c0e0c",
+        "back": "#d5ff70",
+        "backAlpha": 1,
+        "speed": 0.9,
+        "scale": 0.9,
+        "intensity": 0.35,
+        "seed": 4,
+        "fadeAt": 0
+      }
+    },
+    {
+      "id": "space",
+      "name": "Space.js · targeting",
+      "module": "space-hud",
+      "kind": "graphics",
+      "lane": "cards",
+      "startBeat": 175,
+      "beats": 3,
+      "opacity": 1,
+      "card": true,
+      "parameters": {
+        "still": "/media/director-templates/dimensions-mix/mix-01.jpg",
+        "color": "#d5ff70",
+        "label": "SPACE.JS",
+        "credit": "PATRICK SCHROEN",
+        "targets": "0.5,0.42,0.18,0.3 / 0.3,0.6,0.12,0.18 / 0.7,0.62,0.12,0.18",
+        "interval": 0.3,
+        "dim": 0.25,
+        "fadeAt": 0
+      }
+    },
+    {
+      "id": "reveal-3",
+      "name": "Transitions.dev · neon bloom",
+      "module": "gen-image",
+      "kind": "graphics",
+      "lane": "cards",
+      "startBeat": 178,
+      "beats": 3,
+      "opacity": 1,
+      "card": true,
+      "parameters": {
+        "still": "/media/director-templates/genobi-teaser/still-bloom.jpg",
+        "matte": "#0c0e0c",
+        "accent": "#d5ff70",
+        "inset": 0.06,
+        "duration": 1.2,
+        "mode": "trace-texts",
+        "steps": "Sketch / Screen / Colour",
+        "done": "Transition ready",
+        "fadeAt": 0
+      }
+    },
+    {
+      "id": "taste",
+      "name": "Taste layer · the libraries",
+      "module": "gen-title",
+      "kind": "graphics",
+      "lane": "cards",
+      "startBeat": 181,
+      "beats": 11,
+      "opacity": 1,
+      "card": true,
+      "parameters": {
+        "text": "TASTE LAYER",
+        "line": "ANDREW ZELLINGER / TRANSITIONS.DEV · JAKUB ANTALIK / PAPER SHADERS · PAPER DESIGN / THREE.JS · ANIME.JS · P5.JS / P5.BRUSH · ALIEN.JS · SPACE.JS / PIXIJS FILTERS · TEXTMODE.JS · PLAY.CORE / MATRIX DIGITAL RAIN · GLYPHCSS · KRBN / SVGBOB · CRT-TERMINAL · CLI-SPINNERS / IBM PLEX MONO · GEIST",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "size": 104,
+        "color": "#d5ff70",
+        "muted": "#eaf2df",
+        "accent": "#d5ff70",
+        "x": 0.5,
+        "y": 0.5,
+        "duration": 3.2,
+        "mode": "trace-texts",
+        "steps": "Reading the credits / Tracing / Inking",
+        "done": "Credited in docs/credits",
+        "fadeAt": 4.489,
+        "plate": 0
+      }
+    },
+    {
+      "id": "cursor-36",
+      "name": "Pointer · Gallery · gallery",
+      "module": "ui-cursor",
+      "kind": "graphics",
+      "lane": "cursor",
+      "startBeat": 36,
+      "beats": 7,
+      "opacity": 1,
+      "parameters": {
+        "path": "0:0.5,0.55 / 0.4:0.5,0.55 / 0.966:0.5,0.55 / 1.666:0.317,0.772",
+        "clicks": "",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,21,54,0;1,0,0;1.8,0.324,-0.4;1.9193,0.3455,-0.4596"
+      }
+    },
+    {
+      "id": "cursor-43",
+      "name": "Pointer · Camera · families",
+      "module": "ui-cursor",
+      "kind": "graphics",
+      "lane": "cursor",
+      "startBeat": 43,
+      "beats": 11,
+      "opacity": 1,
+      "parameters": {
+        "path": "0:0.234,0.743 / 0.451:0.234,0.743 / 0.617:0.234,0.743 / 1.317:0.311,0.743 / 2.601:0.311,0.743 / 3.301:0.289,0.743",
+        "clicks": "1.317 / 3.301",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,21,96,0;1,0,0;2.2,0.418,-0.528;2.4613,0.4676,-0.5907"
+      }
+    },
+    {
+      "id": "cursor-54",
+      "name": "Pointer · Camera · prompt",
+      "module": "ui-cursor",
+      "kind": "graphics",
+      "lane": "cursor",
+      "startBeat": 54,
+      "beats": 6,
+      "opacity": 1,
+      "parameters": {
+        "path": "0:0.262,0.743 / 0.45:0.5,0.526",
+        "clicks": "0.45",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,21,43,0;1,0,0;1.8,0,-0.054;1.8945,0,-0.0568"
+      }
+    },
+    {
+      "id": "cursor-60",
+      "name": "Pointer · Camera · movements",
+      "module": "ui-cursor",
+      "kind": "graphics",
+      "lane": "cursor",
+      "startBeat": 60,
+      "beats": 6,
+      "opacity": 1,
+      "parameters": {
+        "path": "0:0.737,0.461 / 0.465:0.472,0.26 / 1.015:0.472,0.26 / 1.715:0.23,0.499",
+        "clicks": "0.465 / 1.715",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,21,43,0;1,0,0;2.2,0.594,0;2.3155,0.6252,0"
+      }
+    },
+    {
+      "id": "cursor-66",
+      "name": "Pointer · Camera · quote",
+      "module": "ui-cursor",
+      "kind": "graphics",
+      "lane": "cursor",
+      "startBeat": 66,
+      "beats": 6,
+      "opacity": 1,
+      "parameters": {
+        "path": "0:0.5,0.526 / 0.417:0.731,0.734",
+        "clicks": "",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,21,43,0;1,0,0;1.8,-0.4,-0.4;1.8945,-0.4357,-0.4357"
+      }
+    },
+    {
+      "id": "cursor-76",
+      "name": "Pointer · Director · play",
+      "module": "ui-cursor",
+      "kind": "graphics",
+      "lane": "cursor",
+      "startBeat": 76,
+      "beats": 5,
+      "opacity": 1,
+      "parameters": {
+        "path": "0:0.054,0.233 / 0.429:0.054,0.233",
+        "clicks": "0.429",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,21,32,0;1,0,0;1.8,0.4,0.4;1.8698,0.4349,0.4349"
+      }
+    },
+    {
+      "id": "cursor-104",
+      "name": "Pointer · Editor · a clip",
+      "module": "ui-cursor",
+      "kind": "graphics",
+      "lane": "cursor",
+      "startBeat": 104,
+      "beats": 8,
+      "opacity": 1,
+      "parameters": {
+        "path": "0:0.041,0.689 / 0.436:0.484,0.785 / 1.355:0.484,0.785 / 2.055:0.778,0.413",
+        "clicks": "0.436 / 2.055",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,22,64,0;1,0,0;2.2,-0.6,0.198;2.3733,-0.6645,0.2136"
+      }
+    },
+    {
+      "id": "cursor-112",
+      "name": "Pointer · Editor · shot and lens",
+      "module": "ui-cursor",
+      "kind": "graphics",
+      "lane": "cursor",
+      "startBeat": 112,
+      "beats": 8,
+      "opacity": 1,
+      "parameters": {
+        "path": "0:0.264,0.749 / 0.435:0.264,0.749 / 0.983:0.264,0.749 / 1.683:0.287,0.508 / 2.117:0.287,0.508 / 2.817:0.302,0.624",
+        "clicks": "0.435 / 1.683 / 2.817",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,21,64,0;1,0,0;1.8,0.378,-0.018;1.9418,0.4078,-0.0194"
+      }
+    },
+    {
+      "id": "cursor-124",
+      "name": "Pointer · Editor · close",
+      "module": "ui-cursor",
+      "kind": "graphics",
+      "lane": "cursor",
+      "startBeat": 124,
+      "beats": 8,
+      "opacity": 1,
+      "parameters": {
+        "path": "0:0.302,0.624 / 0.483:0.385,0.395 / 1.917:0.385,0.395 / 2.617:0.938,0.472",
+        "clicks": "0.483",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,21,64,0;1,0,0;1.8,-0.4,0.054;1.9418,-0.4709,0.0583"
+      }
+    },
+    {
+      "id": "cursor-140",
+      "name": "Pointer · 3D · scene",
+      "module": "ui-cursor",
+      "kind": "graphics",
+      "lane": "cursor",
+      "startBeat": 140,
+      "beats": 9,
+      "opacity": 1,
+      "parameters": {
+        "path": "0:0.45,0.45 / 0.398:0.45,0.45 / 0.865:0.45,0.45 / 1.565:0.6,0.42 / 1.715:0.6,0.42 / 2.415:0.11,0.176",
+        "clicks": "2.415",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,22,74,0;1,0,0;2.2,0.6,0.6;2.4008,0.7004,0.7004"
+      }
+    },
+    {
+      "id": "cursor-149",
+      "name": "Pointer · 3D · rotate tool",
+      "module": "ui-cursor",
+      "kind": "graphics",
+      "lane": "cursor",
+      "startBeat": 149,
+      "beats": 7,
+      "opacity": 1,
+      "parameters": {
+        "path": "0:0.11,0.176 / 0.481:0.045,0.308 / 0.853:0.045,0.308 / 1.553:0.082,0.821",
+        "clicks": "0.481 / 1.553",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,22,53,0;1,0,0;2.2,0.6,-0.6;2.343,0.6715,-0.6715"
+      }
+    },
+    {
+      "id": "cursor-156",
+      "name": "Pointer · Genobi · genobi",
+      "module": "ui-cursor",
+      "kind": "graphics",
+      "lane": "cursor",
+      "startBeat": 156,
+      "beats": 10,
+      "opacity": 1,
+      "parameters": {
+        "path": "0:0.028,0.034 / 0.442:0.028,0.034 / 0.968:0.028,0.034 / 1.668:0.135,0.407",
+        "clicks": "0.442 / 1.668",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,21,86,0;1,0,0;1.8,0.4,0.162;1.9913,0.4956,0.1792"
+      }
+    },
+    {
+      "id": "cursor-166",
+      "name": "Pointer · Genobi · start",
+      "module": "ui-cursor",
+      "kind": "graphics",
+      "lane": "cursor",
+      "startBeat": 166,
+      "beats": 6,
+      "opacity": 1,
+      "parameters": {
+        "path": "0:0.135,0.407 / 0.469:0.053,0.466",
+        "clicks": "",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,21,43,0;1,0,0;1.8,0.4,0.162;1.8945,0.4473,0.1705"
+      }
+    },
+    {
+      "id": "cursor-192",
+      "name": "Pointer · Licences · licence",
+      "module": "ui-cursor",
+      "kind": "graphics",
+      "lane": "cursor",
+      "startBeat": 192,
+      "beats": 8,
+      "opacity": 1,
+      "parameters": {
+        "path": "0:0.248,0.768 / 0.448:0.273,0.5 / 2.665:0.273,0.5 / 3.365:0.564,0.261",
+        "clicks": "",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,21,64,0;1,0,0;1.8,-0.108,0.4;1.9418,-0.1165,0.466"
+      }
+    },
+    {
+      "id": "cursor-200",
+      "name": "Pointer · Camera · families",
+      "module": "ui-cursor",
+      "kind": "graphics",
+      "lane": "cursor",
+      "startBeat": 200,
+      "beats": 6,
+      "opacity": 1,
+      "parameters": {
+        "path": "0:0.234,0.743 / 0.451:0.234,0.743 / 0.617:0.234,0.743 / 1.317:0.311,0.743",
+        "clicks": "1.317",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,22,42,0;1,0,0;2.2,0.418,-0.528;2.3128,0.4394,-0.5551"
+      }
+    },
+    {
+      "id": "cursor-206",
+      "name": "Pointer · Camera · prompt",
+      "module": "ui-cursor",
+      "kind": "graphics",
+      "lane": "cursor",
+      "startBeat": 206,
+      "beats": 4,
+      "opacity": 1,
+      "parameters": {
+        "path": "0:0.262,0.743 / 0.45:0.5,0.526",
+        "clicks": "0.45",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,22,21,0;1,0,0;1.8,0,-0.054;1.845,0,-0.0554"
+      }
+    },
+    {
+      "id": "cursor-210",
+      "name": "Pointer · Save · save json",
+      "module": "ui-cursor",
+      "kind": "graphics",
+      "lane": "cursor",
+      "startBeat": 210,
+      "beats": 6,
+      "opacity": 1,
+      "parameters": {
+        "path": "0:0.951,0.608 / 0.4:0.951,0.608 / 1.683:0.951,0.608 / 2.383:0.936,0.115",
+        "clicks": "2.383",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,21,43,0;1,0,0;2.2,-0.6,-0.242;2.3155,-0.6577,-0.2547"
+      }
+    },
+    {
+      "id": "cursor-216",
+      "name": "Pointer · Save · director",
+      "module": "ui-cursor",
+      "kind": "graphics",
+      "lane": "cursor",
+      "startBeat": 216,
+      "beats": 8,
+      "opacity": 1,
+      "parameters": {
+        "path": "0:0.951,0.608 / 0.483:0.936,0.115 / 2.116:0.936,0.115 / 2.816:0.641,0.115",
+        "clicks": "0.483",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,21,64,0;1,0,0;1.8,-0.252,0.4;1.9418,-0.2718,0.4709"
+      }
+    },
+    {
+      "id": "cursor-224",
+      "name": "Pointer · Dual Swords · load a",
+      "module": "ui-cursor",
+      "kind": "graphics",
+      "lane": "cursor",
+      "startBeat": 224,
+      "beats": 4,
+      "opacity": 1,
+      "parameters": {
+        "path": "0:0.817,0.562 / 0.435:0.817,0.562",
+        "clicks": "0.435",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,22,21,0;1,0,0;2.2,-0.6,-0.132;2.255,-0.6275,-0.1353"
+      }
+    },
+    {
+      "id": "cursor-228",
+      "name": "Pointer · Scrolls · cell camera",
+      "module": "ui-cursor",
+      "kind": "graphics",
+      "lane": "cursor",
+      "startBeat": 228,
+      "beats": 4,
+      "opacity": 1,
+      "parameters": {
+        "path": "0:0.135,0.164 / 0.416:0.363,0.692",
+        "clicks": "0.416",
+        "fill": "#f6f8f2",
+        "outline": "#0c0e0c",
+        "color": "#d5ff70",
+        "size": 1.25,
+        "view": "24,21,22,0;1,0,0;1.8,0.252,-0.342;1.8473,0.2586,-0.351"
+      }
+    },
+    {
+      "id": "focus-43",
+      "name": "Focus · MODEL FAMILIES · LTX FLUX H3 UPSCALE",
+      "module": "ui-focus",
+      "kind": "graphics",
+      "lane": "focus",
+      "startBeat": 45,
+      "beats": 8,
+      "opacity": 1,
+      "parameters": {
+        "x": 0.301,
+        "y": 0.728,
+        "w": 0.02,
+        "h": 0.03,
+        "label": "MODEL FAMILIES · LTX FLUX H3 UPSCALE",
+        "color": "#d5ff70",
+        "dim": 0.45,
+        "draw": 0.3,
+        "fadeAt": 3.206,
+        "view": "24,21,96,21;1,0,0;2.2,0.418,-0.528;2.4613,0.4676,-0.5907"
+      }
+    },
+    {
+      "id": "focus-66",
+      "name": "Focus · QUOTED FIRST · NOTHING SPENT UNASKED",
+      "module": "ui-focus",
+      "kind": "graphics",
+      "lane": "focus",
+      "startBeat": 66,
+      "beats": 4,
+      "opacity": 1,
+      "parameters": {
+        "x": 0.679,
+        "y": 0.704,
+        "w": 0.103,
+        "h": 0.059,
+        "label": "QUOTED FIRST · NOTHING SPENT UNASKED",
+        "color": "#d5ff70",
+        "dim": 0.45,
+        "draw": 0.1,
+        "fadeAt": 1.778,
+        "view": "24,21,43,0;1,0,0;1.8,-0.4,-0.4;1.8945,-0.4357,-0.4357"
+      }
+    },
+    {
+      "id": "focus-112",
+      "name": "Focus · SHOT & LENS · PER CLIP DIRECTION",
+      "module": "ui-focus",
+      "kind": "graphics",
+      "lane": "focus",
+      "startBeat": 115,
+      "beats": 4,
+      "opacity": 1,
+      "parameters": {
+        "x": 0.26,
+        "y": 0.489,
+        "w": 0.055,
+        "h": 0.037,
+        "label": "SHOT & LENS · PER CLIP DIRECTION",
+        "color": "#d5ff70",
+        "dim": 0.45,
+        "draw": 0.1,
+        "fadeAt": 1.778,
+        "view": "24,21,64,32;1,0,0;1.8,0.378,-0.018;1.9418,0.4078,-0.0194"
+      }
+    },
+    {
+      "id": "focus-124",
+      "name": "Focus · SEND TO GENOBI",
+      "module": "ui-focus",
+      "kind": "graphics",
+      "lane": "focus",
+      "startBeat": 128,
+      "beats": 4,
+      "opacity": 1,
+      "parameters": {
+        "x": 0.903,
+        "y": 0.455,
+        "w": 0.07,
+        "h": 0.035,
+        "label": "SEND TO GENOBI",
+        "color": "#d5ff70",
+        "dim": 0.45,
+        "draw": 0.1,
+        "fadeAt": 1.778,
+        "view": "24,21,64,42;1,0,0;1.8,-0.4,0.054;1.9418,-0.4709,0.0583"
+      }
+    },
+    {
+      "id": "focus-166",
+      "name": "Focus · YOUR AGENT · TYPED OR SPOKEN",
+      "module": "ui-focus",
+      "kind": "graphics",
+      "lane": "focus",
+      "startBeat": 166,
+      "beats": 5,
+      "opacity": 1,
+      "parameters": {
+        "x": 0.017,
+        "y": 0.376,
+        "w": 0.235,
+        "h": 0.062,
+        "label": "YOUR AGENT · TYPED OR SPOKEN",
+        "color": "#d5ff70",
+        "dim": 0.45,
+        "draw": 0.3,
+        "fadeAt": 1.872,
+        "view": "24,21,43,0;1,0,0;1.8,0.4,0.162;1.8945,0.4473,0.1705"
+      }
+    },
+    {
+      "id": "focus-200",
+      "name": "Focus · OPEN UPSCALER · SEEDVR2",
+      "module": "ui-focus",
+      "kind": "graphics",
+      "lane": "focus",
+      "startBeat": 202,
+      "beats": 4,
+      "opacity": 1,
+      "parameters": {
+        "x": 0.301,
+        "y": 0.728,
+        "w": 0.02,
+        "h": 0.03,
+        "label": "OPEN UPSCALER · SEEDVR2",
+        "color": "#d5ff70",
+        "dim": 0.45,
+        "draw": 0.1,
+        "fadeAt": 1.778,
+        "view": "24,22,42,22;1,0,0;2.2,0.418,-0.528;2.3128,0.4394,-0.5551"
+      }
+    },
+    {
+      "id": "focus-210",
+      "name": "Focus · SAVE JSON",
+      "module": "ui-focus",
+      "kind": "graphics",
+      "lane": "focus",
+      "startBeat": 210,
+      "beats": 5,
+      "opacity": 1,
+      "parameters": {
+        "x": 0.926,
+        "y": 0.593,
+        "w": 0.05,
+        "h": 0.03,
+        "label": "SAVE JSON",
+        "color": "#d5ff70",
+        "dim": 0.45,
+        "draw": 0.3,
+        "fadeAt": 1.872,
+        "view": "24,21,43,0;1,0,0;2.2,-0.6,-0.242;2.3155,-0.6577,-0.2547"
+      }
+    },
+    {
+      "id": "reveal-2",
+      "name": "Generate · reveal card",
+      "module": "gen-image",
+      "kind": "graphics",
+      "lane": "reveal",
+      "startBeat": 70,
+      "beats": 2,
+      "opacity": 1,
+      "parameters": {
+        "still": "/media/director-templates/genobi-teaser/still-motorbike.jpg",
+        "matte": "#0c0e0c",
+        "accent": "#d5ff70",
+        "inset": 0,
+        "duration": 0.8,
+        "mode": "trace",
+        "steps": "Sampling / Screening / Colour",
+        "done": "Shot ready",
+        "fadeAt": 0
+      }
+    },
+    {
+      "id": "status-0",
+      "name": "Status · Booting the studio",
+      "module": "gen-status",
+      "kind": "graphics",
+      "lane": "status",
+      "startBeat": 0,
+      "beats": 12,
+      "opacity": 1,
+      "parameters": {
+        "label": "Booting the studio",
+        "done": "Studio ready",
+        "variant": "scan",
+        "color": "#d5ff70",
+        "x": 0.5,
+        "y": 0.86,
+        "scale": 1.3,
+        "doneAt": 3.2,
+        "fadeAt": 5.033
+      }
+    },
+    {
+      "id": "status-1",
+      "name": "Status · Generating shot 01 · FLUX 3",
+      "module": "gen-status",
+      "kind": "graphics",
+      "lane": "status",
+      "startBeat": 12,
+      "beats": 8,
+      "opacity": 1,
+      "parameters": {
+        "label": "Generating shot 01 · FLUX 3",
+        "done": "Shot ready",
+        "variant": "twinkle",
+        "color": "#d5ff70",
+        "x": 0.5,
+        "y": 0.86,
+        "scale": 1.3,
+        "doneAt": 2.1,
+        "fadeAt": 3.256
+      }
+    },
+    {
+      "id": "status-2",
+      "name": "Status · Generating · FLUX 3 · 10 s",
+      "module": "gen-status",
+      "kind": "graphics",
+      "lane": "status",
+      "startBeat": 68,
+      "beats": 4,
+      "opacity": 1,
+      "parameters": {
+        "label": "Generating · FLUX 3 · 10 s",
+        "done": "Shot ready",
+        "variant": "orbit",
+        "color": "#d5ff70",
+        "x": 0.5,
+        "y": 0.86,
+        "scale": 1.3,
+        "doneAt": 1.1,
+        "fadeAt": 1.478
+      }
+    },
+    {
+      "id": "status-3",
+      "name": "Status · Brief: a 20 s teaser on the beat",
+      "module": "gen-status",
+      "kind": "graphics",
+      "lane": "status",
+      "startBeat": 168,
+      "beats": 4,
+      "opacity": 1,
+      "parameters": {
+        "label": "Brief: a 20 s teaser on the beat",
+        "done": "Nothing runs until you approve",
+        "variant": "pulse",
+        "color": "#d5ff70",
+        "x": 0.5,
+        "y": 0.86,
+        "scale": 1.3,
+        "doneAt": 1.1,
+        "fadeAt": 1.478
+      }
+    },
+    {
+      "id": "callout-camera-controls",
+      "name": "Callout · CAMERA CONTROLS",
+      "module": "gen-title",
+      "kind": "graphics",
+      "lane": "callout",
+      "startBeat": 60,
+      "beats": 5,
+      "opacity": 1,
+      "parameters": {
+        "text": "CAMERA CONTROLS",
+        "line": "",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "size": 60,
+        "color": "#d5ff70",
+        "muted": "#eaf2df",
+        "accent": "#d5ff70",
+        "x": 0.5,
+        "y": 0.9,
+        "duration": 0.8,
+        "mode": "trace",
+        "steps": "",
+        "done": "",
+        "fadeAt": 1.922,
+        "plate": 0.82
+      }
+    },
+    {
+      "id": "callout-three-js",
+      "name": "Callout · ★ THREE.JS",
+      "module": "gen-title",
+      "kind": "graphics",
+      "lane": "callout",
+      "startBeat": 81,
+      "beats": 5,
+      "opacity": 1,
+      "parameters": {
+        "text": "★ THREE.JS",
+        "line": "",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "size": 96,
+        "color": "#d5ff70",
+        "muted": "#eaf2df",
+        "accent": "#d5ff70",
+        "x": 0.5,
+        "y": 0.86,
+        "duration": 0.8,
+        "mode": "trace",
+        "steps": "",
+        "done": "",
+        "fadeAt": 1.922,
+        "plate": 0.82
+      }
+    },
+    {
+      "id": "make",
+      "name": "Slam · MAKE",
+      "module": "kinetic",
+      "kind": "graphics",
+      "lane": "impact",
+      "startBeat": 34,
+      "beats": 2,
+      "opacity": 1,
+      "parameters": {
+        "text": "MAKE",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "weight": 700,
+        "color": "#f6f8f2",
+        "accent": "#0c0e0c",
+        "bpm": 135,
+        "size": 225,
+        "beats": 2
+      }
+    },
+    {
+      "id": "direct",
+      "name": "Slam · DIRECT",
+      "module": "kinetic",
+      "kind": "graphics",
+      "lane": "impact",
+      "startBeat": 74,
+      "beats": 2,
+      "opacity": 1,
+      "parameters": {
+        "text": "DIRECT",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "weight": 700,
+        "color": "#f6f8f2",
+        "accent": "#0c0e0c",
+        "bpm": 135,
+        "size": 225,
+        "beats": 2
+      }
+    },
+    {
+      "id": "build-worlds",
+      "name": "Slam · BUILD / WORLDS",
+      "module": "kinetic",
+      "kind": "graphics",
+      "lane": "impact",
+      "startBeat": 136,
+      "beats": 4,
+      "opacity": 1,
+      "parameters": {
+        "text": "BUILD / WORLDS",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "weight": 700,
+        "color": "#f6f8f2",
+        "accent": "#0c0e0c",
+        "bpm": 135,
+        "size": 180,
+        "beats": 4
+      }
+    },
+    {
+      "id": "compare-remix",
+      "name": "Slam · COMPARE / REMIX",
+      "module": "kinetic",
+      "kind": "graphics",
+      "lane": "impact",
+      "startBeat": 224,
+      "beats": 4,
+      "opacity": 1,
+      "parameters": {
+        "text": "COMPARE / REMIX",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "weight": 700,
+        "color": "#f6f8f2",
+        "accent": "#0c0e0c",
+        "bpm": 135,
+        "size": 180,
+        "beats": 4
+      }
+    },
+    {
+      "id": "one-studio",
+      "name": "Slam · ONE STUDIO",
+      "module": "kinetic",
+      "kind": "graphics",
+      "lane": "impact",
+      "startBeat": 232,
+      "beats": 4,
+      "opacity": 1,
+      "parameters": {
+        "text": "ONE STUDIO",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "weight": 700,
+        "color": "#f6f8f2",
+        "accent": "#0c0e0c",
+        "bpm": 135,
+        "size": 180,
+        "beats": 4
+      }
+    },
+    {
+      "id": "hud-1",
+      "name": "HUD · intro",
+      "module": "hud",
+      "kind": "graphics",
+      "lane": "hud",
+      "startBeat": 20,
+      "beats": 16,
+      "opacity": 1,
+      "parameters": {
+        "color": "#f6f8f2",
+        "accent": "#eaf2df",
+        "bpm": 135,
+        "text": "GENOBI // CUT IN GENOBI",
+        "credit": "MUSIC / KOSHIMAZAKI",
+        "seconds": 7.111
+      }
+    },
+    {
+      "id": "hud-2",
+      "name": "HUD · final drop",
+      "module": "hud",
+      "kind": "graphics",
+      "lane": "hud",
+      "startBeat": 236,
+      "beats": 24,
+      "opacity": 1,
+      "parameters": {
+        "color": "#f6f8f2",
+        "accent": "#eaf2df",
+        "bpm": 135,
+        "text": "GENOBI // CUT ON THE BEAT IN THE DIRECTOR",
+        "credit": "MUSIC / KOSHIMAZAKI",
+        "seconds": 10.667
+      }
+    },
+    {
+      "id": "glitch-20",
+      "name": "Glitch · beat 20",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 20,
+      "beats": 0.5,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.85,
+        "slices": 18,
+        "seed": 143,
+        "duration": 0.2
+      }
+    },
+    {
+      "id": "glitch-36",
+      "name": "Glitch · beat 36",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 36,
+      "beats": 0.5,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.85,
+        "slices": 18,
+        "seed": 255,
+        "duration": 0.2
+      }
+    },
+    {
+      "id": "glitch-76",
+      "name": "Glitch · beat 76",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 76,
+      "beats": 0.5,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.85,
+        "slices": 18,
+        "seed": 535,
+        "duration": 0.2
+      }
+    },
+    {
+      "id": "glitch-92",
+      "name": "Glitch · beat 92",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 92,
+      "beats": 0.75,
+      "opacity": 1,
+      "parameters": {
+        "amount": 1,
+        "slices": 18,
+        "seed": 647,
+        "duration": 0.3
+      }
+    },
+    {
+      "id": "glitch-124",
+      "name": "Glitch · beat 124",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 124,
+      "beats": 0.5,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.85,
+        "slices": 18,
+        "seed": 871,
+        "duration": 0.2
+      }
+    },
+    {
+      "id": "glitch-140",
+      "name": "Glitch · beat 140",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 140,
+      "beats": 0.5,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.85,
+        "slices": 18,
+        "seed": 983,
+        "duration": 0.2
+      }
+    },
+    {
+      "id": "glitch-156",
+      "name": "Glitch · beat 156",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 156,
+      "beats": 0.5,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.85,
+        "slices": 18,
+        "seed": 1095,
+        "duration": 0.2
+      }
+    },
+    {
+      "id": "glitch-236",
+      "name": "Glitch · beat 236",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 236,
+      "beats": 0.75,
+      "opacity": 1,
+      "parameters": {
+        "amount": 1,
+        "slices": 18,
+        "seed": 1655,
+        "duration": 0.3
+      }
+    },
+    {
+      "id": "glitch-244",
+      "name": "Glitch · beat 244",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 244,
+      "beats": 0.375,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.9,
+        "slices": 18,
+        "seed": 1711,
+        "duration": 0.15
+      }
+    },
+    {
+      "id": "glitch-252",
+      "name": "Glitch · beat 252",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 252,
+      "beats": 0.375,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.9,
+        "slices": 18,
+        "seed": 1767,
+        "duration": 0.15
+      }
+    },
+    {
+      "id": "glitch-260",
+      "name": "Glitch · beat 260",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 260,
+      "beats": 0.5,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.85,
+        "slices": 18,
+        "seed": 1823,
+        "duration": 0.2
+      }
+    }
+  ]
+}

@@ -1,0 +1,65 @@
+.scroll-movement-menu {
+  display: grid;
+  gap: 6px;
+}
+.scroll-movement-menu details {
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: var(--sunken);
+}
+.scroll-movement-menu summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 38px;
+  padding: 5px 9px;
+  cursor: pointer;
+  font-size: 13px;
+}
+.scroll-movement-menu summary[aria-disabled="true"] {
+  cursor: default;
+  opacity: 0.5;
+}
+.scroll-movement-menu summary > span:last-child {
+  flex: 1;
+  overflow-wrap: anywhere;
+}
+.scroll-movement-menu .scroll-movement-glyph {
+  width: 42px;
+  height: 26px;
+  flex: 0 0 42px;
+}
+.scroll-movement-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px;
+  padding: 8px;
+  max-height: 240px;
+  overflow: auto;
+  border-top: 1px solid var(--border);
+}
+.scroll-movement-options button {
+  display: grid;
+  justify-items: center;
+  align-content: center;
+  gap: 3px;
+  min-height: 62px;
+  padding: 6px;
+  font-size: 10px;
+}
+.scroll-movement-options button[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: var(--accent-ghost);
+}
+.scroll-movement-menu[data-kind="camera"] svg {
+  color: var(--intel);
+}
+.scroll-movement-menu[data-kind="action"] svg {
+  color: var(--prompt-action);
+}
+.scrolls .scroll-movement-custom {
+  display: grid;
+  gap: 5px;
+  padding: 8px;
+  font-size: 11px;
+}

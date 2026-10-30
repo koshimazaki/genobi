@@ -1,0 +1,36 @@
+.playback-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  min-width: 30px;
+  padding: 5px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm, 4px);
+  background: var(--surface);
+  color: var(--text);
+}
+.playback-button:hover:not(:disabled) {
+  background: var(--raised);
+  border-color: var(--accent);
+}
+.playback-button[aria-pressed="true"] {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-ghost);
+}
+.playback-readout {
+  font: 16px var(--mono);
+  color: var(--accent);
+  min-width: 48px;
+}
+.playback-total {
+  font: 10px var(--mono);
+  color: var(--muted);
+}
+.playback-stop {
+  width: 10px;
+  height: 10px;
+  background: currentColor;
+  border-radius: 1px;
+}

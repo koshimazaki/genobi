@@ -1,0 +1,404 @@
+/* The Editor timeline design (#178) on the production timeline: a resizable
+   channel column, playhead row, storyboard shots, linked Camera and Action
+   views, Markers and Rhythm, film-strip video and the composition END edge.
+   Every row shares --dir-gutter, so the ruler, grid, clips and playhead keep
+   one origin at any column width, zoom or scroll. */
+.dir-timeline-frame {
+  position: relative;
+  min-width: 0;
+}
+.director .dir-timeline {
+  scrollbar-width: thin;
+  scrollbar-color: var(--machined) var(--sunken);
+}
+.director .dir-timeline::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.director .dir-timeline::-webkit-scrollbar-track {
+  background: var(--sunken);
+}
+.director .dir-timeline::-webkit-scrollbar-thumb {
+  background: var(--machined);
+  border: 2px solid var(--sunken);
+  border-radius: var(--radius-control);
+}
+.dir-channel-divider {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  /* Inside the gutter's edge, so it never covers a clip at frame 0. */
+  left: calc(var(--dir-gutter) - 8px);
+  z-index: 9;
+}
+.dir-channel-divider > .resize-width {
+  height: 100%;
+}
+.dir-channel-divider .resize-width i {
+  height: 40px;
+  background: var(--muted);
+}
+
+/* Playhead row: the range's thumb centre sits on the frame's origin. */
+.dir-seek-row {
+  display: flex;
+  position: relative;
+  z-index: 1;
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 55%, transparent);
+}
+.dir-seek-row > .dir-gutter {
+  height: 28px;
+  justify-content: space-between;
+  font: 8px var(--mono) !important;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+.dir-seek-head output {
+  font: 9px var(--mono);
+  color: var(--readout);
+}
+.dir-seek-track {
+  position: relative;
+  flex: none;
+  height: 28px;
+}
+.dir-seek-track input[type="range"] {
+  position: absolute;
+  left: -7px;
+  top: 6px;
+  height: 16px;
+  margin: 0;
+  padding: 0;
+  accent-color: var(--accent);
+  cursor: ew-resize;
+}
+/* The range is sized for a 14 px thumb (TimelineRuler.tsx): its centre is
+   frame f's origin at every zoom. */
+.dir-seek-track input[type="range"] {
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+}
+.dir-seek-track input[type="range"]::-webkit-slider-runnable-track {
+  height: 3px;
+  background: var(--border);
+}
+.dir-seek-track input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  box-sizing: border-box;
+  width: 14px;
+  height: 14px;
+  margin-top: -5.5px;
+  border: 1px solid var(--muted);
+  border-radius: 50%;
+  background: var(--accent);
+}
+.dir-seek-track input[type="range"]::-moz-range-track {
+  height: 3px;
+  background: var(--border);
+}
+.dir-seek-track input[type="range"]::-moz-range-thumb {
+  box-sizing: border-box;
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--muted);
+  border-radius: 50%;
+  background: var(--accent);
+}
+.director .dir-timeline .dir-timeline-grid,
+.director .dir-timeline .dir-align-guide {
+  top: 65px;
+}
+.dir-timeline .dir-timeline-grid {
+  height: calc(100% - 77px);
+}
+.dir-timeline .dir-playhead {
+  top: 28px;
+}
+.dir-ruler {
+  touch-action: none;
+}
+
+/* Rows take their own heights; clips fill them. */
+.director .dir-timeline .dir-lane > .dir-gutter,
+.director .dir-timeline .dir-lane > .dir-track {
+  height: var(--lane-height, 30px);
+}
+.director .dir-timeline :is(.dir-clip, .dir-clip-ghost) {
+  top: 4px;
+  bottom: 4px;
+  height: auto;
+}
+
+/* Channel names: full, short, then coloured dots. */
+.dir-channel {
+  --channel-color: var(--muted);
+  position: sticky;
+}
+.dir-channel-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-round);
+  background: var(--channel-color);
+  flex: none;
+}
+.dir-channel .dir-lane-select {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+  font: 10px var(--mono);
+  color: var(--text);
+}
+.dir-channel-full,
+.dir-channel-short {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dir-channel-short,
+.dir-channel-menu > .dir-channel-dot {
+  display: none;
+}
+.dir-channel-linked {
+  color: var(--muted);
+}
+.dir-channel-tag {
+  font: 9px var(--mono);
+  color: var(--muted);
+}
+.dir-channel-tools {
+  display: flex;
+  gap: 1px;
+}
+.dir-channel button {
+  background: transparent;
+  border: 0;
+  color: var(--muted);
+}
+.dir-gutter .dir-lane-lock,
+.dir-gutter .dir-channel-menu {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  min-height: 22px;
+  padding: 2px;
+}
+.dir-channel .dir-lane-lock[aria-pressed="true"] {
+  color: var(--accent);
+}
+.dir-row-resize {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -4px;
+}
+.dir-row-resize i {
+  opacity: 0;
+}
+.dir-channel:hover .dir-row-resize i,
+.dir-row-resize:focus-visible i {
+  opacity: 1;
+}
+.dir-timeline[data-density="short"] .dir-channel-full,
+.dir-timeline:not([data-density="full"]) .dir-channel-tag,
+.dir-timeline:not([data-density="full"]) .dir-channel-tools,
+.dir-timeline:not([data-density="full"]) .dir-seek-head output {
+  display: none;
+}
+.dir-timeline[data-density="short"] .dir-channel-short {
+  display: inline;
+  font-size: 9px;
+}
+.dir-timeline[data-density="dots"]
+  .dir-channel
+  > :not(.dir-channel-menu, .dir-row-resize),
+.dir-timeline[data-density="dots"] .dir-channel-menu > svg,
+.dir-timeline[data-density="dots"] .dir-seek-head label {
+  display: none;
+}
+.dir-timeline[data-density="dots"] .dir-gutter {
+  justify-content: center;
+  padding: 0 !important;
+  gap: 0;
+}
+.dir-timeline[data-density="dots"] .dir-channel-menu {
+  width: 28px;
+  min-height: 28px;
+}
+.dir-timeline[data-density="dots"] .dir-channel-menu > .dir-channel-dot {
+  display: block;
+  width: 8px;
+  height: 8px;
+}
+.dir-row-menu {
+  display: grid;
+  gap: 2px;
+  padding: 6px;
+}
+.dir-row-menu strong {
+  padding: 4px 8px 6px;
+  font: 10px var(--mono);
+  color: var(--soft);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dir-row-menu button {
+  text-align: left;
+  justify-content: flex-start;
+  padding: 6px 8px;
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text);
+  font-size: 11px;
+}
+.dir-row-menu button:hover:not(:disabled),
+.dir-row-menu button:focus-visible {
+  border-color: var(--border-strong);
+  background: var(--sunken);
+}
+
+/* Storyboard shots: own thumbnail, shot code and caption. */
+.director .dir-timeline .dir-clip.is-shot {
+  display: block;
+  padding: 0;
+  background: var(--sunken);
+  border-color: color-mix(in srgb, var(--intel) 45%, var(--border));
+  color: var(--text);
+}
+.dir-clip.is-shot.is-active {
+  outline-color: var(--intel);
+}
+.dir-shot-thumb {
+  position: absolute;
+  inset: 0 0 20px;
+  display: block;
+  overflow: hidden;
+  background: var(--bg);
+  pointer-events: none;
+}
+.dir-shot-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  opacity: 0.85;
+}
+.dir-clip.is-active .dir-shot-thumb img {
+  opacity: 1;
+}
+.dir-shot-thumb .dir-asset-placeholder,
+.dir-shot-missing {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  font: 9px var(--mono);
+  color: var(--muted);
+}
+.director .dir-clip > .dir-shot-code {
+  position: absolute;
+  left: 9px;
+  top: 4px;
+  padding: 1px 4px;
+  font: 9px var(--mono);
+  background: var(--badge-bg);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-xs);
+  pointer-events: none;
+}
+.director .dir-clip > .dir-shot-caption {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 20px;
+  padding: 0 9px;
+  display: block;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: 9px/20px var(--font, inherit);
+  color: var(--text);
+  background: var(--surface);
+  border: 0;
+  border-top: 1px solid var(--border);
+  border-radius: 0;
+  cursor: pointer;
+}
+.director .dir-clip > button.dir-shot-caption:hover,
+.director .dir-clip > button.dir-shot-caption:focus-visible {
+  color: var(--intel);
+}
+.dir-clip.is-shot .dir-trim {
+  z-index: 2;
+}
+
+/* Film perforations and ribs, adapted from the reference's video clip. */
+.director .dir-timeline .dir-clip.video:not(.is-shot) {
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0 14px,
+      color-mix(in srgb, var(--bg) 45%, transparent) 14px 15px
+    ),
+    #234057;
+}
+.dir-clip.video:not(.is-shot)::before,
+.dir-clip.video:not(.is-shot)::after {
+  content: "";
+  position: absolute;
+  height: 3px;
+  left: 8px;
+  right: 8px;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    90deg,
+    color-mix(in srgb, var(--bg) 70%, transparent) 0 3px,
+    transparent 3px 8px
+  );
+}
+.dir-clip.video:not(.is-shot)::before {
+  top: 2px;
+}
+.dir-clip.video:not(.is-shot)::after {
+  bottom: 2px;
+}
+.dir-clip.is-locked {
+  cursor: not-allowed;
+}
+
+/* Phones: 24 px targets (WCAG 2.5.8). Row heights stay as set on desktop. */
+@media (max-width: 520px) {
+  .dir-seek-track input[type="range"] {
+    top: 2px;
+    height: 24px;
+  }
+  .dir-gutter :is(.dir-lane-lock, .dir-channel-menu, .dir-mute) {
+    min-width: 24px;
+    min-height: 24px;
+  }
+  .dir-row-resize {
+    display: none;
+  }
+  .director .dir-timeline .dir-lane > :is(.dir-gutter, .dir-track) {
+    height: max(var(--lane-height, 30px), 34px);
+  }
+  .dir-channel-divider {
+    left: calc(var(--dir-gutter) - 24px);
+  }
+  .director .dir-clip > .dir-shot-caption {
+    height: 24px;
+    line-height: 24px;
+  }
+  .dir-shot-thumb {
+    bottom: 24px;
+  }
+  .dir-channel-divider > .resize-width {
+    width: 24px;
+  }
+}

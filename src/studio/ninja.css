@@ -1,0 +1,340 @@
+.genobi-ninja-controls {
+  margin-bottom: 20px;
+}
+.genobi-ninja-controls .genobi-picker {
+  margin-bottom: 0;
+  border-radius: 12px 12px 0 0;
+}
+.genobi-layout-toolbar {
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-top: 0;
+  border-radius: 0 0 12px 12px;
+  background: var(--surface);
+}
+.genobi-layout-toolbar p {
+  margin: 0 0 12px;
+  font-size: 12px;
+  color: var(--soft);
+  line-height: 1.5;
+}
+.genobi-layout-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.genobi-layout-actions button,
+.genobi-panel-arrange button {
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  padding: 9px 12px;
+  min-height: 36px;
+  background: var(--sunken);
+  color: var(--text);
+  font: 12px var(--sans, inherit);
+  cursor: pointer;
+  transition:
+    background 160ms,
+    border-color 160ms;
+}
+.genobi-layout-actions .genobi-layout-save,
+.genobi-panel-arrange button[aria-pressed="true"] {
+  border-color: var(--accent);
+  color: var(--accent-strong);
+  background: var(--accent-ghost);
+}
+.genobi-layout-actions button:hover:not(:disabled),
+.genobi-panel-arrange button:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+.genobi-layout-actions button:disabled,
+.genobi-panel-arrange button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.genobi-layout-dirty {
+  color: var(--muted);
+  font: 10px var(--mono);
+}
+.genobi-layout-toolbar .genobi-layout-message {
+  color: var(--accent-strong);
+  margin: 12px 0 0;
+}
+.genobi-layout-message:empty {
+  display: none;
+}
+[data-preset="ninja"] .genobi-panel-heading {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  padding: 10px 12px;
+}
+.genobi-panel-arrange {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.genobi-panel-arrange button {
+  padding: 5px 8px;
+  min-width: 36px;
+}
+.genobi-panel-arrange .genobi-drag-grip {
+  touch-action: none;
+  cursor: grab;
+  user-select: none;
+  font-size: 21px;
+  line-height: 1;
+}
+.genobi-panel[data-dragging] {
+  outline: 1px dashed var(--accent);
+  opacity: 0.65;
+}
+.genobi-panel[data-dragging] .genobi-drag-grip {
+  cursor: grabbing;
+}
+.genobi-panel[data-drop] {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+}
+@media (max-width: 700px) {
+  .genobi-layout-actions button,
+  .genobi-panel-arrange button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  .genobi-layout-dirty {
+    flex-basis: 100%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .genobi-layout-actions button,
+  .genobi-panel-arrange button {
+    transition: none;
+  }
+}
+
+[data-preset="ninja"] .genobi-grid {
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  grid-auto-rows: 8px;
+  gap: 8px;
+  grid-auto-flow: row;
+}
+[data-preset="ninja"] .genobi-grid[data-compact="true"] {
+  grid-auto-flow: row dense;
+}
+[data-preset="ninja"] .genobi-panel {
+  position: relative;
+  grid-column: span var(--ninja-columns, 6);
+  grid-row: span var(--ninja-rows, 1);
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 20px;
+  box-sizing: border-box;
+}
+[data-preset="ninja"] .genobi-panel-heading {
+  flex: none;
+}
+[data-preset="ninja"] .genobi-panel-content {
+  min-height: 0;
+}
+[data-preset="ninja"] .genobi-panel[data-sized] > .genobi-panel-content {
+  flex: 1;
+  overflow: auto;
+}
+.genobi-resize-handle {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 8px 0;
+  color: var(--soft);
+  background: var(--sunken);
+  cursor: nwse-resize;
+  touch-action: none;
+}
+.genobi-resize-handle:hover {
+  color: var(--accent-strong);
+}
+/* Only explicitly sized Ninja panels own a scrolling viewport. */
+[data-preset="ninja"]
+  .genobi-panel-stage[data-sized]
+  :is(.genobi-panel-content, .genobi-host, .genobi-host > div) {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+[data-preset="ninja"] .genobi-panel-stage[data-sized] .dir-stage {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+[data-preset="ninja"] .genobi-panel-stage[data-sized] .dir-stage canvas {
+  flex: 1;
+  min-height: 0;
+  width: 100% !important;
+  height: 100% !important;
+  max-height: none !important;
+  object-fit: contain;
+}
+[data-preset="ninja"]
+  .genobi-panel[data-fit="cover"]
+  :is(.dir-stage canvas, .featured-video) {
+  object-fit: cover;
+}
+[data-preset="ninja"]
+  .genobi-panel-preview[data-sized]
+  :is(.genobi-host, .genobi-host > div, .featured) {
+  height: 100%;
+}
+[data-preset="ninja"] .genobi-panel-preview[data-sized] .featured-video {
+  height: 100%;
+  aspect-ratio: auto;
+  object-fit: contain;
+}
+[data-preset="ninja"]
+  .genobi-panel-preview[data-sized][data-fit="cover"]
+  .featured-video {
+  object-fit: cover;
+}
+[data-preset="ninja"]
+  .genobi-panel-composer[data-sized]
+  :is(.genobi-host, .genobi-host > div, .studio, .composer) {
+  display: flex;
+  flex-direction: column;
+  min-height: min-content;
+  height: 100%;
+}
+[data-preset="ninja"] .genobi-panel-composer[data-sized] .prompt-editor {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 100px;
+}
+[data-preset="ninja"]
+  .genobi-panel-composer[data-sized]
+  .prompt-editor
+  > textarea {
+  flex: 1;
+  height: 100% !important;
+  max-height: none;
+  min-height: 80px;
+  overflow-y: auto !important;
+}
+[data-preset="ninja"] :is(.prompt-editor, .dir-remix) textarea {
+  resize: vertical;
+}
+@media (min-width: 701px) and (max-width: 1100px) {
+  [data-preset="ninja"] .genobi-panel {
+    grid-column: span max(6, var(--ninja-columns, 6));
+  }
+}
+@media (max-width: 700px) {
+  [data-preset="ninja"] .genobi-grid {
+    display: flex;
+    gap: 8px;
+  }
+  .genobi-resize-handle {
+    width: 36px;
+    height: 36px;
+  }
+  [data-preset="ninja"] .genobi-panel {
+    padding-bottom: 30px;
+  }
+}
+.genobi-modebar {
+  justify-content: flex-start;
+}
+
+.genobi-config-button {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--soft);
+  background: var(--sunken);
+  cursor: pointer;
+}
+.genobi-config-button[aria-pressed="true"] {
+  color: var(--accent-strong);
+  border-color: var(--accent);
+}
+[data-preset="ninja"][data-configuring="false"] .genobi-panel {
+  padding-bottom: 0;
+}
+.genobi-layout-json {
+  margin-top: 14px;
+  font-size: 12px;
+  color: var(--soft);
+}
+.genobi-layout-json summary {
+  cursor: pointer;
+}
+.genobi-layout-json pre {
+  max-height: 260px;
+  overflow: auto;
+  font: 11px var(--mono);
+  padding: 12px;
+  background: var(--bg);
+  border-radius: 8px;
+}
+@media (max-width: 700px) {
+  .genobi-modebar {
+    gap: 6px;
+  }
+  .genobi-config-button {
+    width: 36px;
+    height: 44px;
+  }
+}
+/* Saved layouts sit inside configuration, so the canvas never moves for them. */
+.genobi-saved-layouts {
+  margin: 12px 0 0;
+  padding: 10px 0 0;
+  border: 0;
+  border-top: 1px solid var(--border);
+  min-width: 0;
+}
+.genobi-saved-layouts legend {
+  padding: 0;
+  font-size: 12px;
+  color: var(--soft);
+}
+.genobi-saved-layouts select,
+.genobi-saved-layouts input {
+  min-height: 36px;
+  min-width: 0;
+  max-width: 100%;
+  padding: 0 10px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--sunken);
+  color: var(--text);
+  font: 12px var(--sans, inherit);
+}
+.genobi-saved-layouts select {
+  flex: 1 1 160px;
+}
+.genobi-saved-layouts input {
+  flex: 1 1 140px;
+}
+.genobi-layout-toolbar .genobi-saved-where {
+  margin: 8px 0 0;
+  font-size: 11px;
+}
+@media (max-width: 700px) {
+  .genobi-saved-layouts select,
+  .genobi-saved-layouts input {
+    min-height: 44px;
+    flex-basis: 100%;
+  }
+}

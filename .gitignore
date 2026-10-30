@@ -1,0 +1,33 @@
+node_modules/
+dist/
+.local/
+.env*
+.dev.vars*
+.DS_Store
+.dr-morph-review/
+!env.example
+
+.wrangler/
+.mf/
+
+# Local review renders and exports, and agent worktrees and personal settings.
+output/
+.claude/worktrees/
+.claude/settings.local.json
+
+# Key material never belongs in the repository.
+*.pem
+*.key
+
+.pages/
+.pages-project/
+
+# Camera test clips and manifests: real runs, never committed.
+test/ltx/
+.shots/
+
+# Voice models installed beside the checkout (server/voice-discovery.ts).
+/models/
+
+# TypeScript incremental build state
+*.tsbuildinfo

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Genobi CLI"
+  short_description: "Use Genobi studio tools from a terminal"
+  default_prompt: "Use the Genobi CLI to complete this studio task with shared project context."

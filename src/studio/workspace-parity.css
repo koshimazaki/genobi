@@ -1,0 +1,372 @@
+/* Camera and the Assets rail establish the shared workspace top edge. */
+.genobi-shell[data-preset] .genobi-grid {
+  margin-top: 0;
+}
+.genobi-shell .template-gallery {
+  padding-top: 0;
+}
+.workspace-heading {
+  min-width: 0;
+}
+.workspace-heading__identity {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 14px;
+}
+.genobi-shell .workspace-heading .workspace-heading__identity h1 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: inherit;
+  font-size: 18px;
+  font-weight: 550;
+  line-height: 1.25;
+  letter-spacing: -0.4px;
+  margin: 0;
+  color: var(--text);
+}
+.genobi-shell .workspace-heading h1 svg {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  color: var(--accent);
+}
+.workspace-heading .workspace-heading__identity p {
+  font-family: inherit;
+  font-size: 12px;
+  line-height: 1.5;
+  margin: 0;
+  color: var(--soft);
+  letter-spacing: 0;
+}
+.workspace-heading__project {
+  display: block;
+  margin: 3px 0 0 30px;
+  font-size: 11px;
+  color: var(--muted);
+}
+.genobi-shell .genobi-panel-content .dir-heading {
+  padding: 12px;
+  align-items: flex-start;
+}
+.genobi-shell .genobi-panel-content .dir-heading h1 {
+  font-size: 18px;
+}
+.genobi-shell .genobi-panel-content .memory-panel {
+  border: 0;
+  border-radius: 0;
+  margin: 0;
+  padding: 0 12px 4px;
+  background: transparent;
+}
+.genobi-shell .memory-panel > summary {
+  width: fit-content;
+  min-height: 28px;
+  font-size: 11px;
+  color: var(--soft);
+}
+.genobi-shell .genobi-panel-content .project-tools {
+  padding: 12px;
+}
+.project-tools > .workspace-heading {
+  margin-bottom: 12px;
+}
+.genobi-shell[data-preset="world"] .genobi-panel-world,
+.genobi-shell[data-preset="scrolls"] .genobi-panel-scrolls {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--sunken);
+}
+.genobi-shell .genobi-panel-content .scrolls {
+  max-width: none;
+  margin: 0;
+  padding: 12px;
+}
+.genobi-shell .scroll-header {
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.genobi-shell .scroll-header > .workspace-heading {
+  flex: 1 1 100%;
+}
+.genobi-shell .scroll-toolbar {
+  margin-left: auto;
+}
+.genobi-shell .scrolls .scroll-mode-switch {
+  display: flex;
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.genobi-shell .scrolls .scroll-mode-switch button {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 9px 12px;
+  background: var(--surface);
+  color: var(--soft);
+}
+.genobi-shell .scrolls .scroll-mode-switch button[aria-pressed="true"] {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-ghost);
+}
+.genobi-shell .genobi-panel-content .dual-editor {
+  padding: 12px;
+}
+.genobi-shell .de-heading {
+  align-items: flex-start;
+  padding: 0 0 10px;
+}
+/* World Builder's bar is one thin row: title, purpose line, then menus. */
+.genobi-shell .wb-workspace-bar {
+  padding: 6px 12px;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 16px;
+}
+.genobi-shell .wb-workspace-bar > .workspace-heading {
+  flex: 0 1 auto;
+}
+.genobi-shell
+  .wb-workspace-bar
+  .workspace-heading
+  .workspace-heading__identity
+  h1 {
+  font-size: 16px;
+}
+.genobi-shell .wb-workspace-menus {
+  flex: 0 1 auto;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 12px 20px;
+}
+.genobi-shell .wb-workspace-menus > label {
+  flex: 0 1 auto;
+}
+.genobi-shell .wb-workspace-menus .themed-select {
+  width: 180px;
+  min-width: 0;
+}
+.genobi-shell[data-preset] .genobi-panel-content .wb-app {
+  margin: 0;
+  padding: 0;
+}
+.ninja-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  margin: 8px 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--sunken);
+}
+@media (max-width: 700px) {
+  .genobi-shell .workspace-heading .workspace-heading__identity h1,
+  .genobi-shell .genobi-panel-content .dir-heading h1 {
+    font-size: 18px;
+  }
+  .workspace-heading__identity {
+    gap: 8px 12px;
+  }
+  .workspace-heading__identity > p {
+    flex-basis: 100%;
+    padding-left: 30px;
+  }
+  .genobi-shell .genobi-panel-content .dir-heading {
+    align-items: flex-start;
+  }
+  .genobi-shell .scroll-toolbar {
+    margin-left: 0;
+    flex-wrap: wrap;
+  }
+  .genobi-shell .scroll-header {
+    gap: 12px;
+  }
+}
+
+/* Tool headers replace the generic panel caption in their own workspaces. */
+.genobi-shell[data-preset="tools"] .genobi-panel-tools > .genobi-panel-heading {
+  display: none;
+}
+.genobi-shell[data-preset="world"] .wb-app .wb-workspace {
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+.genobi-shell[data-preset="world"] .wb-workspace-bar,
+.genobi-shell[data-preset="world"] .wb-console {
+  background: var(--sunken);
+  box-shadow: none;
+}
+
+/* A compact title row, followed by controls on the Assets tabs' baseline. */
+.genobi-shell
+  :is(.de-heading, .wb-workspace-bar, .scroll-header)
+  > .workspace-heading {
+  min-height: 30px;
+  display: flex;
+  align-items: center;
+}
+.genobi-shell .de-heading {
+  align-items: center;
+}
+.genobi-shell .de-mode-switch {
+  padding-bottom: 12px;
+}
+.genobi-shell .dir-file-actions {
+  flex-wrap: wrap;
+}
+.genobi-shell[data-preset] .genobi-panel-content .dir-file-actions button,
+.genobi-shell .de-heading .de-button,
+.genobi-shell .de-mode-switch .de-button,
+.genobi-shell .scrolls .scroll-mode-switch button,
+.genobi-shell .scroll-toolbar button {
+  min-height: 32px;
+  padding: 6px 10px;
+  font:
+    400 12px/18px "Instrument Sans Variable",
+    sans-serif;
+  border-radius: var(--radius-sm);
+}
+.genobi-shell .scrolls .scroll-toggle {
+  min-height: 32px;
+  margin: 0;
+  font:
+    400 12px/18px "Instrument Sans Variable",
+    sans-serif;
+  align-self: center;
+}
+@media (max-width: 700px) {
+  .genobi-shell[data-preset] .genobi-panel-content .dir-file-actions button,
+  .genobi-shell .de-heading .de-button,
+  .genobi-shell .de-mode-switch .de-button,
+  .genobi-shell .scrolls .scroll-mode-switch button,
+  .genobi-shell .scroll-toolbar button,
+  .genobi-shell .scrolls .scroll-toggle {
+    min-height: 44px;
+  }
+  .genobi-shell .wb-workspace-menus {
+    width: 100%;
+    gap: 12px;
+  }
+  .genobi-shell .wb-workspace-menus > label {
+    flex: 1 1 120px;
+  }
+  .genobi-shell .wb-workspace-menus .themed-select {
+    width: 100%;
+  }
+}
+
+@media (min-width: 701px) and (max-width: 1600px) {
+  .genobi-shell {
+    padding-inline: 24px;
+  }
+  .genobi-shell > .genobi-host .topbar {
+    gap: 12px;
+  }
+  .genobi-shell .genobi-presets button {
+    padding-inline: 6px;
+    font-size: 11px;
+  }
+  .genobi-shell .topbar-right {
+    gap: 8px;
+  }
+}
+@media (min-width: 701px) and (max-width: 1300px) {
+  .genobi-shell .genobi-presets {
+    flex-wrap: wrap;
+    flex-shrink: 1;
+  }
+}
+
+@media (max-width: 700px) {
+  .genobi-shell .brand-beta {
+    display: none;
+  }
+  .genobi-shell .topbar-right {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-content: space-between;
+    width: 100%;
+    gap: 4px;
+  }
+  .genobi-shell .topbar-navigation {
+    grid-row: 3;
+  }
+  .genobi-shell .wordmark {
+    min-width: max-content;
+  }
+  .genobi-shell > .genobi-host .topbar {
+    column-gap: 6px;
+  }
+}
+
+@media (max-width: 700px) {
+  .genobi-shell .gallery-filters button {
+    min-height: 32px;
+  }
+}
+
+/* Phone tools share the same left edge; the dock keeps all tools in one row. */
+@media (max-width: 700px) {
+  .genobi-shell .genobi-modebar {
+    display: block;
+  }
+  .genobi-shell .genobi-presets {
+    display: grid;
+    grid-template-columns: repeat(9, minmax(0, 1fr));
+    width: 100%;
+    gap: 2px;
+  }
+  .genobi-shell .genobi-presets:has(.genobi-config-button) {
+    grid-template-columns: repeat(10, minmax(0, 1fr));
+  }
+  .genobi-shell .genobi-preset-item {
+    display: contents;
+  }
+  .genobi-shell .genobi-presets button {
+    min-width: 0;
+    width: 100%;
+    padding: 6px 0;
+    gap: 0;
+  }
+  .genobi-shell .genobi-presets button > span {
+    display: none;
+  }
+  .genobi-shell .genobi-presets svg {
+    width: 18px;
+    height: 18px;
+  }
+  .genobi-shell .gallery-filter-slot {
+    justify-content: flex-end;
+  }
+  .genobi-shell .gallery-filter-slot:empty {
+    display: none;
+  }
+  .genobi-shell .genobi-panel-content .dual-editor {
+    padding: 12px;
+  }
+  .genobi-shell .de-heading {
+    align-items: stretch;
+    gap: 12px;
+  }
+  .genobi-shell .de-options {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+  .genobi-shell .de-pair {
+    grid-template-columns: minmax(0, 1fr);
+    overflow: visible;
+  }
+}

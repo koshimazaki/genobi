@@ -1,0 +1,189 @@
+.supervisor-development {
+  padding: var(--space-16);
+  color: var(--text);
+  background: transparent;
+}
+.supervisor-development h2 {
+  margin: 0;
+  font-size: 23px;
+  font-weight: 500;
+  letter-spacing: -0.6px;
+  margin-top: 3px;
+}
+.supervisor-development .section-eyebrow {
+  font-size: 8px;
+}
+.development-launcher > header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.development-launcher form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 8px;
+  margin: 0;
+}
+.development-launcher .select-menu {
+  width: 156px;
+  min-width: 0;
+}
+.development-launcher .select-menu:nth-child(2) {
+  width: 212px;
+}
+.supervisor-development .instrument-label {
+  font: 9px var(--mono);
+}
+.supervisor-development .instrument-trigger {
+  font-size: 11px;
+}
+.supervisor-development p {
+  max-width: 75ch;
+  color: var(--soft);
+}
+.supervisor-note {
+  margin: 10px 0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.development-start,
+.server-restart button,
+.supervisor-actions button,
+.supervisor-external form > button {
+  padding: 8px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-control);
+  background: var(--surface);
+  color: var(--text);
+  font: 11px var(--mono);
+  cursor: pointer;
+}
+.development-start {
+  color: var(--accent-ink);
+  background: var(--accent);
+  border-color: var(--accent-strong);
+}
+.development-start:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+.supervisor-external,
+.development-handover {
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+  margin-top: 12px;
+}
+.supervisor-development summary {
+  width: fit-content;
+  cursor: pointer;
+  color: var(--soft);
+  font: 12px var(--mono);
+}
+.supervisor-development summary:hover,
+.supervisor-development a {
+  color: var(--accent);
+}
+.supervisor-actions,
+.supervisor-external form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: end;
+  margin: 12px 0;
+  font: 11px var(--mono);
+}
+.supervisor-actions {
+  align-items: center;
+}
+.supervisor-actions a {
+  margin-right: auto;
+}
+.supervisor-external label {
+  display: grid;
+  gap: 6px;
+  flex: 1;
+  max-width: 320px;
+}
+.supervisor-development input:not([type="checkbox"]),
+.supervisor-development textarea {
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  background: var(--sunken);
+  color: var(--text);
+  font: 12px/1.5 var(--mono);
+}
+.development-handover textarea {
+  display: block;
+  width: 100%;
+  max-width: 760px;
+  box-sizing: border-box;
+  resize: vertical;
+}
+.development-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 10px 0;
+  font-size: 12px;
+}
+.supervisor-development iframe {
+  display: block;
+  width: 100%;
+  height: min(760px, 75vh);
+  min-height: 420px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-panel);
+  background: var(--bg);
+}
+.supervisor-development :focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+@media (max-width: 35rem) {
+  .development-launcher form {
+    width: 100%;
+  }
+  .development-launcher .select-menu,
+  .development-launcher .select-menu:nth-child(2) {
+    width: auto;
+    flex: 1;
+  }
+  .development-start {
+    flex: 1 0 100%;
+    min-height: 40px;
+  }
+}
+/* Stale server code: one quiet line with its restart beside it. */
+.server-restart {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 12px;
+  margin: 10px 0;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+  font-size: 12px;
+}
+.supervisor-development .server-restart p {
+  margin: 0;
+}
+.genobi-developers article {
+  display: grid;
+  gap: 6px;
+  margin-top: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control);
+}
+.genobi-developers pre {
+  margin: 0;
+  max-height: 120px;
+  overflow: auto;
+  font: 10px var(--mono);
+  white-space: pre-wrap;
+}

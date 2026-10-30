@@ -1,0 +1,235 @@
+/* Prompt and monitors travel together when the Editor panel moves. */
+.dir-program-row {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  container-type: inline-size;
+}
+.dir-monitor-panes {
+  display: grid;
+  grid-template-columns:
+    minmax(0, min(var(--program-width, 560px), 65%))
+    8px minmax(0, 1fr);
+  align-items: start;
+  min-width: 0;
+}
+.dir-monitor-panes > * {
+  min-width: 0;
+}
+.dir-output-empty {
+  padding: 16px;
+  color: var(--muted);
+}
+.dir-output-empty h2 {
+  font-size: 14px;
+}
+.dir-monitor-panes .dir-render-result {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.dir-project-direction {
+  border-bottom: 1px solid var(--border);
+}
+@container (max-width: 700px) {
+  .dir-monitor-panes {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .dir-monitor-panes > .resize-handle {
+    display: none;
+  }
+}
+.dir-stage-meta .dir-enlarge {
+  margin-left: auto;
+  display: inline-grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+}
+.dir-stage canvas {
+  cursor: zoom-in;
+}
+.dir-project-direction {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 12px 14px;
+  border-left: 0;
+}
+.dir-project-direction header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.dir-project-direction header strong {
+  font-size: 13px;
+  font-weight: 600;
+}
+.dir-project-direction header span,
+.dir-project-direction footer {
+  font: 9px var(--mono);
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+/* The field's own label is the heading above; keep it for assistive tech. */
+.dir-project-direction .dir-prompt-field {
+  flex: 1;
+  font-size: 0;
+  margin: 0;
+}
+.dir-project-direction .dir-prompt-field textarea {
+  flex: 1;
+  min-height: 120px;
+  font-size: 14px;
+  line-height: 1.55;
+  border-color: transparent;
+  background: transparent;
+  padding: 2px 0;
+}
+.dir-project-direction .dir-prompt-field textarea:focus-visible {
+  border-color: var(--border-strong);
+  background: var(--bg);
+  padding: 6px;
+}
+.dir-project-direction .dir-prompt-field [role="alert"] {
+  font-size: 11px;
+}
+.dir-project-direction footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+  text-transform: none;
+  letter-spacing: 0;
+}
+.dir-project-direction footer span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--soft);
+}
+.dir-lightbox {
+  width: min(1200px, 94vw);
+  max-width: 94vw;
+  padding: 16px;
+  background: var(--sunken);
+  color: var(--text);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-panel);
+}
+.dir-lightbox::backdrop {
+  background: var(--backdrop);
+}
+.dir-lightbox header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  font: 10px var(--mono);
+  text-transform: uppercase;
+}
+.dir-lightbox canvas {
+  display: block;
+  width: 100%;
+  max-height: min(78vh, 780px);
+  object-fit: contain;
+}
+
+/* Docked inspector: the lanes and the inspector share the row, so Fit all
+   follows the inspector opening, closing and resizing. */
+.director .dir-console .dir-edit-area.is-docked {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  overflow: visible;
+}
+.director .dir-console .dir-edit-area.is-docked[data-inspector="true"] {
+  grid-template-columns: minmax(0, 1fr) 8px var(--inspector-width, 300px);
+}
+.director .dir-edit-area.is-docked .dir-inspector-drawer {
+  position: static;
+  width: auto;
+  transform: none;
+  min-width: 0;
+}
+.director .dir-edit-area.is-docked .dir-inspector-drawer[data-open="false"] {
+  display: none;
+}
+.director .dir-edit-area.is-docked .dir-inspector {
+  box-shadow: none;
+  border-left: 1px solid var(--border);
+  max-height: 640px;
+}
+.director
+  .dir-edit-area.is-docked:has(> .dir-inspector-drawer[data-open="true"])
+  .dir-timeline-inner {
+  padding-right: 0;
+}
+[data-preset="editor"] .dir-console .dir-timeline,
+.director .dir-console .dir-timeline {
+  max-height: min(600px, 66dvh);
+}
+[data-preset="editor"] .dir-console .dir-timeline.is-expanded,
+.director .dir-console .dir-timeline.is-expanded {
+  max-height: min(860px, 80dvh);
+}
+@media (max-width: 850px) {
+  .dir-monitor-panes,
+  .director .dir-console .dir-edit-area.is-docked[data-inspector="true"] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .dir-monitor-panes > .resize-handle,
+  .dir-edit-area.is-docked > .dir-inspector-resize {
+    display: none;
+  }
+  .dir-project-direction {
+    border-left: 0;
+    border-top: 1px solid var(--border);
+  }
+  .director .dir-edit-area.is-docked .dir-inspector {
+    border-left: 0;
+    border-top: 1px solid var(--border);
+  }
+}
+.dir-program-row .dir-stage-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.dir-timeline-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 16px;
+  padding: 6px 12px;
+  border-top: 1px solid var(--border);
+  font: 9px var(--mono);
+  color: var(--muted);
+}
+.dir-timeline-foot > span:first-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--soft);
+}
+.dir-timeline-foot > span:first-child i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.dir-timeline-foot .dir-foot-hint {
+  margin-left: auto;
+}
+.dir-restore-views {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.dir-restore-views button {
+  padding: 2px 8px;
+  font: 9px var(--mono);
+}

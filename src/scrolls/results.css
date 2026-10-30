@@ -1,0 +1,267 @@
+.scroll-results {
+  border-top: 1px solid #3b4236;
+  padding-top: 20px;
+}
+.scroll-section-heading {
+  margin-bottom: 15px;
+}
+.scroll-section-heading h3 {
+  font-size: 17px;
+  font-weight: 500;
+}
+.scroll-section-heading span {
+  font-size: 11px;
+  color: #9ba88e;
+}
+.scroll-result-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+.scroll-result {
+  border: 1px solid #3c4437;
+  border-radius: 7px;
+  background: #21261e;
+  overflow: hidden;
+}
+.scroll-result[data-selected="true"] {
+  border-color: #b9df8f;
+  box-shadow: 0 0 0 1px #b9df8f;
+}
+.scroll-result-select {
+  position: relative;
+  display: block !important;
+  cursor: pointer;
+}
+.scroll-result-select > input {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 1;
+  width: 17px;
+  height: 17px;
+}
+.scroll-result-select > span {
+  width: 100%;
+  aspect-ratio: 16/9;
+  display: flex;
+  background: #171b16;
+}
+.scroll-result-select img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.scroll-audio-card {
+  display: grid;
+  place-content: center;
+  text-align: center;
+  width: 100%;
+  font:
+    16px "IBM Plex Mono",
+    monospace;
+}
+.scroll-result-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 10px;
+}
+.scroll-result-meta strong {
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.scroll-result-meta small {
+  font-size: 10px;
+  color: #929e85;
+}
+.scroll-result-actions {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  padding: 0 9px 10px;
+  align-items: center;
+}
+.scroll-result-actions button,
+.scroll-result-actions a {
+  font-size: 10px;
+  padding: 5px;
+  min-height: 26px;
+}
+.scroll-result-actions a {
+  color: #bddf98;
+}
+/* Send to Director's answer takes the card's full width. */
+.scroll-result-actions .send-director:has(> .send-director-status) {
+  flex-basis: 100%;
+}
+.scroll-results-empty {
+  border: 1px dashed #424b38;
+  border-radius: 8px;
+  padding: 35px;
+  text-align: center;
+  color: #939f87;
+  font-size: 12px;
+}
+.scroll-handoff-actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+.scroll-message {
+  color: #c4dcaa;
+  font-size: 12px;
+  line-height: 1.6;
+  min-height: 20px;
+  margin: 14px 0 !important;
+}
+.scroll-handoff pre,
+.scroll-approval pre {
+  white-space: pre-wrap;
+  overflow: auto;
+  max-height: 260px;
+  font-size: 11px;
+  line-height: 1.6;
+  background: #141912;
+  padding: 14px;
+}
+.scroll-handoff > p,
+.scroll-approval > p,
+.scroll-agent-command p {
+  font-size: 12px;
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+.scroll-agent-command {
+  border-top: 1px solid #37402e;
+  padding-top: 12px;
+  color: #9ca78f;
+  font-size: 12px;
+}
+.scroll-agent-command textarea {
+  margin: 12px 0;
+  font-family: monospace;
+}
+.scroll-examples {
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid #3b4236;
+}
+.scroll-example-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+.scroll-example-grid button {
+  padding: 0;
+  overflow: hidden;
+  text-align: left;
+}
+.scroll-example-grid img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16/9;
+  object-fit: contain;
+  background: #eeeae0;
+}
+.scroll-example-grid span {
+  display: block;
+  font-size: 11px;
+  padding: 10px;
+}
+.scroll-example-dialog {
+  position: fixed;
+  inset: 5vh 4vw;
+  z-index: 1000;
+  max-width: 1200px;
+  max-height: 90vh;
+  overflow: auto;
+  background: #20251e;
+  color: #e4e7df;
+  border: 1px solid #7d8a6a;
+  padding: 18px;
+  border-radius: 8px;
+  margin: auto;
+}
+.scroll-example-dialog::backdrop {
+  background: #000a;
+}
+.scroll-example-dialog img {
+  width: 100%;
+  max-height: 70vh;
+  object-fit: contain;
+}
+.scroll-example-dialog p {
+  font-size: 12px;
+  margin: 10px 0;
+}
+@media (max-width: 850px) {
+  .scrolls {
+    padding: 16px;
+  }
+  .scroll-header {
+    align-items: flex-start;
+  }
+  .scroll-paper {
+    padding: 14px;
+  }
+  .scroll-cell-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .scroll-result-grid,
+  .scroll-example-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .scroll-paper-heading > span {
+    font-size: 8px;
+  }
+  .scroll-paper-foot span {
+    display: none;
+  }
+}
+@media (max-width: 480px) {
+  .scroll-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+  .scroll-modebar {
+    gap: 10px;
+  }
+  .scrolls h1 {
+    font-size: 23px;
+  }
+  .scroll-paper {
+    padding: 10px;
+  }
+  .scroll-cell-grid {
+    gap: 8px;
+  }
+  .scroll-paper-heading {
+    gap: 8px;
+  }
+  .scroll-movement {
+    grid-template-columns: 56px minmax(0, 1fr);
+  }
+  .scroll-movement strong {
+    font-size: 8px;
+  }
+  .scroll-toolbar {
+    gap: 8px;
+  }
+  .scroll-composer,
+  .scroll-inspector,
+  .scroll-timing {
+    padding: 12px;
+  }
+  .scroll-handoff-actions button {
+    flex: 1;
+  }
+  .scroll-paper-heading input {
+    font-size: 15px !important;
+  }
+}

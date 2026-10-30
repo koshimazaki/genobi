@@ -1,0 +1,84 @@
+/* Confirm before spending: an agent's quoted step, its plan, price and payer. */
+.agent-approvals {
+  margin: 0;
+  padding: 10px 12px 0;
+  list-style: none;
+}
+.agent-approvals li {
+  margin-bottom: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--readout);
+  border-radius: 6px;
+  background: var(--raised);
+}
+.agent-approvals li:not([data-status="pending"]) {
+  border-left-color: var(--border);
+  color: var(--soft);
+}
+.agent-approval-plan {
+  margin: 0 0 4px;
+  font-size: 13px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.agent-approval-prompt {
+  margin: 0 0 8px;
+  color: var(--soft);
+  font-size: 12px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.agent-approval-terms {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2px 10px;
+  margin: 0 0 8px;
+  font: 11px var(--mono);
+}
+.agent-approval-terms dt {
+  color: var(--soft);
+}
+.agent-approval-terms dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+.agent-approval-status {
+  margin: 0 0 6px;
+  font-size: 12px;
+}
+.agent-approval-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.agent-approval-actions button {
+  min-height: 34px;
+  padding: 4px 12px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: transparent;
+  color: var(--text);
+  font: 11px var(--mono);
+}
+.agent-approval-actions .agent-approve {
+  border-color: var(--readout);
+  background: var(--readout);
+  color: var(--accent-ink);
+}
+.agent-approval-actions button:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+@media (max-width: 640px) {
+  .agent-approval-actions button {
+    min-height: 44px;
+  }
+}
+.agent-handoff {
+  margin: 10px 12px 0;
+}
+.agent-handoff button {
+  margin-left: 6px;
+  text-decoration: underline;
+}

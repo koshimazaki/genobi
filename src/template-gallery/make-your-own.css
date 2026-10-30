@@ -1,0 +1,136 @@
+/* "Make your own": the drawer's output, recipe and run, for mechanical and
+   agent templates alike. Every block has a fixed footprint, so a quote, a
+   run's progress, a result or a refusal never moves what is below it. */
+/* Beats `.branded-preview > div`, which styles the footer strip. */
+.branded-preview > .template-output-frame {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: auto;
+  padding: 0;
+  aspect-ratio: 2.35;
+  background: #080a0c;
+}
+.template-output-frame video {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  aspect-ratio: auto;
+  object-fit: contain;
+}
+.template-output-empty {
+  color: var(--soft);
+  font-size: 12px;
+}
+.template-output-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  max-height: 100%;
+  overflow-y: auto;
+  margin: 0;
+  padding: 6px 10px;
+  background: #000c;
+  color: #f4f4f4;
+  font: 11px/1.5 var(--mono);
+}
+.template-drawer .template-output-line {
+  line-height: 1.5;
+}
+.template-recipe textarea,
+.template-recipe input,
+.template-recipe select {
+  font: inherit;
+  color: var(--readout);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+.template-prompt {
+  display: block;
+  width: 100%;
+  height: 132px;
+  padding: 8px;
+  resize: none;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.template-brief {
+  display: block;
+  width: 100%;
+  height: 32px;
+  padding: 0 8px;
+}
+.template-prompts {
+  height: 120px;
+  overflow-y: auto;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--soft);
+  font-size: 11px;
+}
+.template-drawer .template-prompts p {
+  margin: 0 0 8px;
+  line-height: 1.5;
+}
+.template-prompts strong {
+  color: var(--readout);
+  font-weight: 500;
+}
+.template-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 32px;
+  margin-top: 8px;
+  font-size: 11px;
+  color: var(--soft);
+}
+.template-controls label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.template-controls select {
+  height: 28px;
+  padding: 0 4px;
+}
+.template-model {
+  margin-right: auto;
+  color: var(--readout);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.template-actions .template-slot {
+  font: inherit;
+}
+.template-actions .template-slot[data-empty] {
+  visibility: hidden;
+}
+.template-actions .template-primary[data-confirm] {
+  outline: 2px solid var(--readout);
+  outline-offset: 2px;
+}
+
+/* How it was made: a mix's recorded versions, each opening in the Editor. */
+.template-showcase {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.template-showcase li {
+  display: grid;
+  gap: 6px;
+  justify-items: start;
+}
+.template-showcase p {
+  margin: 0;
+}
+.template-showcase span {
+  color: var(--muted, inherit);
+}

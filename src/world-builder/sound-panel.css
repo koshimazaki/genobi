@@ -1,0 +1,246 @@
+/* The Sound panel (AudioControls.tsx): transport, meters, scopes, tracks. */
+.wb-sound {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  /* The spectrogram's heat, read by useSignalScopes. */
+  --spec-heat-cold: var(--sunken);
+  --spec-heat-low: var(--intel);
+  --spec-heat-mid: var(--accent);
+  --spec-heat-high: var(--camera-light);
+  --spec-heat-hot: var(--coral-accent);
+  --spec-heat-peak: var(--accent-strong);
+  --band-low: var(--accent);
+  --band-mid: var(--intel);
+  --band-high: var(--camera-light);
+  --band-level: var(--soft);
+}
+.wb-sound-sections {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+.wb-sound-sections[hidden] {
+  display: none;
+}
+.wb-sound-transport {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+  padding: 7px 8px;
+  background: var(--sunken);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.wb-sound .wb-play,
+.wb-sound .wb-icon-button {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  min-width: 30px;
+  height: 30px;
+  min-height: 30px;
+  padding: 0;
+}
+.wb-sound .wb-play[aria-pressed="true"] {
+  color: var(--accent-ink);
+  background: linear-gradient(180deg, var(--accent-strong), var(--accent));
+  border-color: var(--accent-strong);
+}
+.wb-sound .wb-play svg {
+  fill: currentColor;
+}
+.wb-load-audio {
+  position: relative;
+  cursor: pointer;
+  background: var(--metal);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.wb-load-audio:focus-within {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+/* The input covers the icon: a click on it opens the file picker. */
+.wb-load-audio input {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+.wb-track {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+}
+.wb-track small {
+  font: 8px var(--mono);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.wb-track span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: 11px var(--mono);
+  color: var(--soft);
+}
+
+/* Meters: a bar scaled from the bottom, and a peak-hold line. */
+.wb-meter {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 2px;
+}
+.wb-meter > i {
+  position: absolute;
+  inset: 0;
+  transform: scaleY(0);
+  transform-origin: bottom;
+  background: var(--band, var(--accent));
+}
+.wb-meter > b {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: var(--text);
+  opacity: 0.6;
+}
+[data-band="low"] {
+  --band: var(--band-low);
+}
+[data-band="mid"] {
+  --band: var(--band-mid);
+}
+[data-band="high"] {
+  --band: var(--band-high);
+}
+[data-band="level"] {
+  --band: var(--band-level);
+}
+.wb-meter-strip {
+  flex: none;
+  display: flex;
+  gap: 2px;
+  height: 30px;
+}
+.wb-meter-strip .wb-meter {
+  width: 7px;
+}
+.wb-meter-strip small {
+  display: none;
+}
+
+/* Signal scopes. */
+.wb-scopes {
+  display: grid;
+  gap: 6px;
+}
+.wb-scope-bars {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 9px;
+  margin-bottom: 6px;
+}
+.wb-scope-band {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+}
+.wb-scope-read {
+  font: 10px var(--mono);
+  font-variant-numeric: tabular-nums;
+  color: var(--readout);
+}
+/* Tall enough for the dynamics to read; the docked column scrolls. */
+.wb-meter-tall {
+  width: 100%;
+  height: 120px;
+}
+.wb-scope-band small {
+  font: 8px var(--mono);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.wb-panel-body p.wb-scope-label {
+  margin: 4px 0 0;
+  font: 9px var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.wb-scope-canvas {
+  display: block;
+  width: 100%;
+  height: 112px;
+  background: var(--sunken);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.wb-scope-spectrum {
+  height: 72px;
+}
+
+/* Recent tracks: the transport's popover and the Audio assets list. */
+/* The popover spans the transport row, so it never leaves the panel. */
+.wb-recent-menu {
+  flex: none;
+}
+.wb-recent-popover {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  z-index: 5;
+  max-height: 260px;
+  overflow-y: auto;
+  padding: 6px;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 24px var(--shadow-dialog);
+}
+.wb-sound .wb-recent-audio li {
+  display: flex;
+  gap: 5px;
+  min-width: 0;
+  cursor: grab;
+}
+.wb-sound .wb-recent-audio li > button:first-child {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+  justify-items: start;
+  gap: 2px;
+  text-align: left;
+}
+.wb-sound .wb-recent-audio li[data-current="true"] > button:first-child {
+  border-color: var(--accent);
+  background: var(--accent-ghost);
+}
+.wb-sound .wb-recent-audio span {
+  max-width: 100%;
+  font: 11px var(--mono);
+  color: var(--soft);
+}
+
+@media (max-width: 760px) {
+  /* Phone: the transport keeps one row; touch targets stay 44px. */
+  .wb-app .wb-sound .wb-play,
+  .wb-app .wb-sound .wb-icon-button {
+    width: 40px;
+    min-width: 40px;
+    height: 44px;
+  }
+  .wb-meter-strip {
+    height: 44px;
+  }
+}

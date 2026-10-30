@@ -1,0 +1,156 @@
+/* The scene library: a compact strip under the take strip. It sits outside
+   the viewport's fixed height, so opening it never resizes the scene. */
+.wb-library {
+  border-top: 1px solid var(--border);
+  background: var(--sunken);
+  min-width: 0;
+}
+.wb-library > header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 13px;
+  min-width: 0;
+}
+.wb-library .wb-lib-toggle,
+.wb-lib-tabs button,
+.wb-lib-actions button,
+.wb-lib-save button,
+.wb-lib-preset > button {
+  padding: 4px 8px;
+  font-size: 11px;
+}
+.wb-lib-toggle small {
+  margin-left: 6px;
+  color: var(--muted);
+  font: 9px var(--mono);
+}
+.wb-lib-tabs {
+  display: flex;
+  gap: 4px;
+}
+.wb-lib-tabs button[aria-selected="true"] {
+  color: var(--accent-strong);
+  border-color: var(--accent);
+  background: var(--accent-ghost);
+}
+.wb-lib-message {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 11px;
+  color: var(--soft);
+}
+#wb-library-body {
+  padding: 0 13px 10px;
+}
+.wb-lib-row {
+  display: flex;
+  gap: 8px;
+  margin: 0;
+  padding: 0 0 4px;
+  list-style: none;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+.wb-lib-card {
+  flex: 0 0 216px;
+  display: grid;
+  gap: 6px;
+  padding: 6px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  min-width: 0;
+}
+.wb-lib-media {
+  aspect-ratio: 16 / 9;
+  background: #000;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.wb-lib-media img,
+.wb-lib-media video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+.wb-lib-meta {
+  display: grid;
+  min-width: 0;
+}
+.wb-lib-meta strong,
+.wb-lib-load strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 11px;
+}
+.wb-lib-meta small,
+.wb-lib-load small {
+  font: 9px var(--mono);
+  color: var(--muted);
+}
+.wb-lib-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.wb-lib-card.wb-lib-preset {
+  flex-basis: 184px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: stretch;
+  gap: 4px;
+  padding: 0;
+  border: 0;
+  background: none;
+}
+.wb-library .wb-lib-load {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  justify-items: start;
+  align-content: center;
+  gap: 2px;
+  width: 100%;
+  min-width: 0;
+  padding: 6px 8px;
+  text-align: left;
+}
+.wb-lib-load strong {
+  max-width: 100%;
+}
+.wb-lib-save {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.wb-lib-save input {
+  flex: 0 1 220px;
+  min-width: 0;
+  font-size: 11px;
+}
+@media (max-width: 900px) {
+  .wb-library > header {
+    flex-wrap: wrap;
+    padding: 6px 8px;
+  }
+  #wb-library-body {
+    padding: 0 8px 8px;
+  }
+  .wb-lib-toggle,
+  .wb-lib-tabs button,
+  .wb-lib-actions button,
+  .wb-lib-save button,
+  .wb-lib-save input,
+  .wb-lib-preset > button {
+    min-height: 44px;
+  }
+  .wb-lib-message {
+    flex-basis: 100%;
+    white-space: normal;
+  }
+}

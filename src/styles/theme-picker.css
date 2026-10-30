@@ -1,0 +1,45 @@
+.theme-picker .instrument-label,
+.theme-picker .select-menu__trigger .select-menu__value {
+  position: absolute;
+  width: var(--space-1);
+  height: var(--space-1);
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+.theme-picker .instrument-field {
+  border-color: var(--border-strong);
+  background: var(--metal);
+}
+.theme-picker .instrument-trigger {
+  min-height: calc(34 * var(--unit));
+  padding: var(--space-8) var(--space-9);
+  gap: var(--space-7);
+  color: var(--soft);
+}
+.theme-picker .select-menu__options {
+  right: 0;
+  left: auto;
+  min-width: calc(235 * var(--unit));
+}
+.theme-swatch {
+  display: flex;
+  border: var(--space-1) solid var(--machined);
+  border-radius: var(--radius-xs);
+  overflow: hidden;
+}
+.theme-swatch i {
+  display: block;
+  width: var(--space-9);
+  height: var(--space-16);
+}
+@media (max-width: 35rem) {
+  .topbar-right {
+    gap: var(--space-8);
+  }
+  .theme-picker .instrument-trigger {
+    padding: var(--space-7);
+    gap: var(--space-4);
+    min-height: var(--space-32);
+  }
+}

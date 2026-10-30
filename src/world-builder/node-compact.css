@@ -1,0 +1,49 @@
+/* The Comfy node's inline view (`host-messages.ts`, `director:layout`): the
+   viewport, its mode buttons and the take strip at the node's own size. The
+   same editor becomes the full layout when the node opens it. */
+:root[data-wb-layout="compact"] .wb-app {
+  min-height: 0;
+  height: 100dvh;
+  padding: 0;
+  overflow: hidden;
+}
+:root[data-wb-layout="compact"]
+  :is(
+    .wb-header,
+    .wb-workspace-bar,
+    .wb-live-controls,
+    .wb-library,
+    #wb-inspector,
+    .wb-console,
+    .wb-feedback,
+    .wb-viewport-badge,
+    .wb-resolution
+  ) {
+  display: none !important;
+}
+:root[data-wb-layout="compact"] .wb-workspace {
+  border: 0;
+  border-radius: 0;
+}
+:root[data-wb-layout="compact"] .wb-stage-grid {
+  --wb-view-height: calc(100dvh - 38px);
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "view";
+}
+:root[data-wb-layout="compact"] .wb-take-strip {
+  height: 38px;
+  padding: 6px 10px;
+  gap: 8px;
+}
+:root[data-wb-layout="compact"] .wb-take-strip button {
+  padding: 3px 7px;
+  font-size: 11px;
+}
+:root[data-wb-layout="compact"] .wb-view-modes {
+  top: 6px;
+  left: 6px;
+}
+:root[data-wb-layout="compact"] .wb-tool-rail {
+  top: 48px;
+  left: 6px;
+}

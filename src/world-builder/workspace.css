@@ -1,0 +1,198 @@
+/* One scene, with a dock that never covers the capture frame. The docked
+   column runs from the viewport's top to the workspace's foot; the console
+   (launchers, take length, Capture take) stays in the left column beside it. */
+.wb-stage-grid {
+  --wb-view-height: min(66dvh, 564px);
+  --wb-dock-width: clamp(320px, 22vw, 440px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "view" "panel" "console";
+  align-items: start;
+}
+.genobi-shell .wb-stage-grid {
+  --wb-view-height: min(60dvh, 560px);
+}
+.wb-stage-grid[data-inspector="true"] {
+  grid-template-columns: minmax(0, 1fr) var(--wb-dock-width);
+  grid-template-areas: "view panel" "console panel";
+}
+.wb-view-column {
+  grid-area: view;
+  min-width: 0;
+}
+.wb-stage-grid > .wb-console {
+  grid-area: console;
+  min-width: 0;
+}
+/* One thin row: the title, its purpose line beside it, then the menus. */
+.wb-workspace-bar > .workspace-heading {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+/* The scene-adapter bundle has no studio stylesheet, so this sets the flex. */
+.wb-app .wb-workspace-bar .workspace-heading__identity {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: nowrap;
+  gap: 12px;
+  min-width: 0;
+}
+.wb-app .wb-workspace-bar .workspace-heading__identity h1 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 550;
+  line-height: 1.2;
+  letter-spacing: -0.3px;
+  white-space: nowrap;
+}
+.wb-app .wb-workspace-bar .workspace-heading__identity h1 svg {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  color: var(--accent);
+}
+.wb-app .wb-workspace-bar .workspace-heading__identity p {
+  min-width: 0;
+  overflow: hidden;
+  font-size: 11px;
+  color: var(--muted);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.wb-workspace-menus {
+  margin-left: auto;
+  display: flex;
+  gap: 12px;
+  min-width: 0;
+}
+.wb-workspace-menus label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.wb-workspace-menus select {
+  max-width: 180px;
+  font-size: 11px;
+}
+/* Size containment keeps the panels' content from growing the rows: the
+   column takes the left column's height and scrolls inside it. */
+.wb-inspector.wb-panel {
+  grid-area: panel;
+  align-self: stretch;
+  contain: size;
+  position: static;
+  width: 100%;
+  min-width: 0;
+  height: auto;
+  max-height: none;
+  border: 0;
+  border-left: 1px solid var(--border);
+  border-radius: 0;
+  box-shadow: none;
+}
+.wb-inspector > header {
+  justify-content: space-between;
+}
+.wb-inspector > header button {
+  min-width: 36px;
+  min-height: 36px;
+}
+.wb-inspector-content {
+  display: grid;
+  gap: 12px;
+}
+.wb-stage-grid .wb-viewport {
+  height: var(--wb-view-height);
+  min-height: 0;
+  overflow: hidden;
+}
+.wb-stage-grid .wb-canvas-fit {
+  width: min(100%, calc(var(--wb-view-height) * var(--wb-aspect)));
+}
+.wb-app .wb-panel-launchers {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+@media (max-width: 900px) {
+  .wb-workspace-bar {
+    flex-wrap: wrap;
+  }
+  .wb-app .wb-workspace-bar .workspace-heading__identity {
+    flex-wrap: wrap;
+  }
+  .wb-app .wb-workspace-bar .workspace-heading__identity p {
+    white-space: normal;
+  }
+  .wb-workspace-menus {
+    flex: 1;
+    justify-content: flex-end;
+  }
+  .wb-stage-grid[data-inspector="true"] {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "view" "panel" "console";
+  }
+  .wb-inspector.wb-panel {
+    contain: none;
+    height: auto;
+    max-height: 50dvh;
+    border-left: 0;
+    border-top: 1px solid var(--border);
+  }
+  .wb-workspace-menus label {
+    flex: 1;
+    display: grid;
+  }
+  .wb-workspace-menus select {
+    width: 100%;
+    max-width: none;
+  }
+  .wb-app .wb-panel button,
+  .wb-app .wb-panel summary,
+  .wb-workspace-menus select,
+  .wb-view-modes button,
+  .wb-take-strip button,
+  .wb-console > .wb-primary {
+    min-height: 44px;
+  }
+  .wb-app .wb-panel button {
+    min-width: 28px;
+  }
+  .wb-take-strip input {
+    height: 44px;
+  }
+  .wb-take-strip {
+    gap: 6px;
+    padding: 8px;
+  }
+  .wb-take-strip small {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .wb-workspace-menus {
+    flex-basis: 100%;
+  }
+}
+
+.wb-live-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 0;
+}
+.wb-live-controls button,
+.wb-live-controls select {
+  font-size: 11px;
+  padding: 5px 8px;
+}
+.wb-live-controls label {
+  font-size: 11px;
+}
+.wb-live-controls input {
+  width: 260px;
+  font-family: monospace;
+}

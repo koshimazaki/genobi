@@ -1,0 +1,22 @@
+# Source trees assembled into a ComfyUI folder, each at a full commit:
+#   <set> <destination> <repository> <commit> <subfolder or .> <patch or ->
+# scripts/install-sources.sh reads this file for the
+# Comfy build recipe (scripts/prepare-comfy-build.sh). The "core" set is always
+# installed; the others are chosen per build (swap, akuspace, layout-to-render).
+#
+# ComfyUI v0.41.0, the commit Openjutsu was tested on (comfy-openjutsu
+# build/model-files.md). It has every core node the swap graph uses (the MiniMax
+# H3 nodes, SAM3_Detect / SAM3_VideoTrack / SAM3_TrackToMask, Video Slice,
+# ModelAttentionBackend, SelectCLIPDevice) and the LTX-2.5 core nodes the
+# AKUSPACE and Layout-to-Render graphs use (checked in its source).
+core ComfyUI https://github.com/comfyanonymous/ComfyUI 98cc0bf84b7cb1383654c5b402e7612d875d6d22 . -
+# Akatz Labs' H3 character swap node pack (GPL-3.0) from a subfolder of the tool
+# repository, with Openjutsu's deployment patch (GPL-3.0): PyAV instead of
+# ffprobe, and resolution choices as the numbers 480 and 768.
+swap ComfyUI/custom_nodes/h3_character_swap https://github.com/akatz-labs/h3-character-swap-tool 0670e4fdf95adf2262caa4b81afed2a9c4ae4b7b worker_nodes/h3_character_swap patches/h3_character_swap.patch
+# The AKUSPACE nodes (docker/akuspace/custom-nodes.lock).
+akuspace ComfyUI/custom_nodes/Koshi-Nodes https://github.com/koshimazaki/ComfyUI-Koshi-Nodes 6f3351e7854d3dc2a17deea977937b3427fcaadd . -
+akuspace ComfyUI/custom_nodes/ComfyUI-LTXVideo https://github.com/Lightricks/ComfyUI-LTXVideo 220e1d45aa0469f518e982102fca4dca92a61862 . -
+# Layout-to-Render's LTXICLoRALoaderModelOnly and LTXAddVideoICLoRAGuide (and the
+# optional GemmaAPITextEncode) are in ComfyUI-LTXVideo at the same commit.
+layout-to-render ComfyUI/custom_nodes/ComfyUI-LTXVideo https://github.com/Lightricks/ComfyUI-LTXVideo 220e1d45aa0469f518e982102fca4dca92a61862 . -

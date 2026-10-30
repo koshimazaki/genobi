@@ -1,0 +1,81 @@
+{
+  "_source": "Transcribed from iclora.py of Lightricks/ComfyUI-LTXVideo at 220e1d45aa0469f518e982102fca4dca92a61862 (comfy-build/sources.lock), in /object_info shape, for the two pack nodes the World Builder graphs use. The pack is not installed on the Mac, so its /object_info has neither.",
+  "LTXICLoRALoaderModelOnly": {
+    "input": {
+      "required": {
+        "model": ["MODEL"],
+        "lora_name": ["COMBO", { "options": [] }],
+        "strength_model": [
+          "FLOAT",
+          { "default": 1.0, "min": -100.0, "max": 100.0, "step": 0.01 }
+        ]
+      }
+    },
+    "input_order": { "required": ["model", "lora_name", "strength_model"] },
+    "output": ["MODEL", "FLOAT"],
+    "output_name": ["model", "latent_downscale_factor"],
+    "output_node": false,
+    "python_module": "custom_nodes.ComfyUI-LTXVideo"
+  },
+  "LTXAddVideoICLoRAGuide": {
+    "input": {
+      "required": {
+        "positive": ["CONDITIONING"],
+        "negative": ["CONDITIONING"],
+        "vae": ["VAE"],
+        "latent": ["LATENT"],
+        "image": ["IMAGE"],
+        "frame_idx": ["INT", { "default": 0, "min": -9999, "max": 9999 }],
+        "strength": [
+          "FLOAT",
+          { "default": 1.0, "min": 0.0, "max": 1.0, "step": 0.01 }
+        ],
+        "latent_downscale_factor": [
+          "FLOAT",
+          { "default": 1.0, "min": 1.0, "max": 10.0, "step": 1.0 }
+        ],
+        "crop": [
+          "COMBO",
+          { "default": "disabled", "options": ["disabled", "center"] }
+        ],
+        "use_tiled_encode": ["BOOLEAN", { "default": false }],
+        "tile_size": [
+          "INT",
+          { "default": 256, "min": 64, "max": 512, "step": 32 }
+        ],
+        "tile_overlap": [
+          "INT",
+          { "default": 64, "min": 16, "max": 256, "step": 16 }
+        ]
+      },
+      "optional": {
+        "use_streaming": ["BOOLEAN", { "default": false }],
+        "tile_frames": [
+          "INT",
+          { "default": 97, "min": 0, "max": 1000, "step": 1 }
+        ]
+      }
+    },
+    "input_order": {
+      "required": [
+        "positive",
+        "negative",
+        "vae",
+        "latent",
+        "image",
+        "frame_idx",
+        "strength",
+        "latent_downscale_factor",
+        "crop",
+        "use_tiled_encode",
+        "tile_size",
+        "tile_overlap"
+      ],
+      "optional": ["use_streaming", "tile_frames"]
+    },
+    "output": ["CONDITIONING", "CONDITIONING", "LATENT"],
+    "output_name": ["positive", "negative", "latent"],
+    "output_node": false,
+    "python_module": "custom_nodes.ComfyUI-LTXVideo"
+  }
+}

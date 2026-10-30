@@ -1,0 +1,142 @@
+{
+  "width": 1024,
+  "height": 576,
+  "frames": 121,
+  "fov": 22,
+  "azimuth": 0,
+  "elevation": 14.93141717813755,
+  "radius": 9.314504817756013,
+  "targetX": 0,
+  "targetZ": 0,
+  "targetY": 1.25,
+  "orbit": 0,
+  "dolly": 0,
+  "light": 2,
+  "patternScale": 0.13,
+  "intensity": 1,
+  "speed": 1,
+  "depthNear": 0.1,
+  "depthFar": 50,
+  "version": 1,
+  "scene": "stage",
+  "avatar": true,
+  "avatarAsset": "mannequin",
+  "avatarMotion": [
+    {
+      "clip": "idle",
+      "seconds": 1
+    },
+    {
+      "clip": "jog",
+      "seconds": 4
+    }
+  ],
+  "creatureReference": null,
+  "avatarPose": {
+    "x": 0,
+    "y": 0,
+    "z": 0,
+    "yaw": -1.5707963267948966
+  },
+  "layout": {},
+  "textures": {},
+  "cameraCurve": "linear",
+  "cameraShot": "sideAction",
+  "elevationEnd": null,
+  "bandEnvelopes": {
+    "low": [],
+    "mid": [],
+    "high": []
+  },
+  "audioRoutes": [
+    {
+      "id": "route-1",
+      "enabled": true,
+      "source": "level",
+      "target": "primitives",
+      "property": "scale",
+      "amount": 2,
+      "threshold": 0,
+      "invert": false,
+      "lerp": 1
+    },
+    {
+      "id": "route-2",
+      "enabled": true,
+      "source": "level",
+      "target": "neuro",
+      "property": "scale",
+      "amount": 2,
+      "threshold": 0,
+      "invert": false,
+      "lerp": 1
+    }
+  ],
+  "fps": 24,
+  "seconds": null,
+  "prompt": "Move library · jog: A figure starts to jog on the spot in a plaster room, side on.",
+  "background": "#171e29",
+  "envelope": [],
+  "objects": [
+    {
+      "id": "room-floor",
+      "shape": "plane",
+      "x": 0,
+      "y": 0,
+      "z": 0,
+      "scale": 1,
+      "scaleX": 3.1,
+      "scaleY": 4.65,
+      "rotation": 0,
+      "rotationX": -1.5707963267948966,
+      "spin": 0,
+      "color": "#7d999c",
+      "prompt": "wood"
+    },
+    {
+      "id": "room-north",
+      "shape": "plane",
+      "x": 0,
+      "y": 1.45,
+      "z": -4.65,
+      "scale": 1,
+      "scaleX": 3.1,
+      "scaleY": 1.45,
+      "rotation": 0,
+      "rotationX": 0,
+      "spin": 0,
+      "color": "#7d999c",
+      "prompt": "plaster"
+    },
+    {
+      "id": "room-east",
+      "shape": "plane",
+      "x": 3.1,
+      "y": 1.45,
+      "z": 0,
+      "scale": 1,
+      "scaleX": 4.65,
+      "scaleY": 1.45,
+      "rotation": 1.5707963267948966,
+      "rotationX": 0,
+      "spin": 0,
+      "color": "#7d999c",
+      "prompt": "plaster"
+    },
+    {
+      "id": "room-west",
+      "shape": "plane",
+      "x": -3.1,
+      "y": 1.45,
+      "z": 0,
+      "scale": 1,
+      "scaleX": 4.65,
+      "scaleY": 1.45,
+      "rotation": 1.5707963267948966,
+      "rotationX": 0,
+      "spin": 0,
+      "color": "#7d999c",
+      "prompt": "plaster"
+    }
+  ]
+}

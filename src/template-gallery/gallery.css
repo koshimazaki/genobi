@@ -1,0 +1,477 @@
+.template-gallery {
+  position: relative;
+  padding-top: 16px;
+}
+.template-gallery[hidden] {
+  display: none;
+}
+.template-cards {
+  display: grid;
+  grid-template-columns: 1.7fr 1fr;
+  gap: 16px;
+}
+.template-card {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.template-card[data-featured="true"] {
+  grid-row: span 2;
+}
+.template-card-preview {
+  position: relative;
+  display: block;
+  padding: 0;
+  overflow: hidden;
+  border-radius: 8px;
+  background: var(--sunken);
+  aspect-ratio: 2.35;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+}
+.template-card-preview video,
+.template-card-preview img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  inset: 0;
+}
+.template-card[data-featured="true"] .template-card-preview {
+  aspect-ratio: auto;
+}
+.template-duration,
+.template-preview-label {
+  position: absolute;
+  z-index: 1;
+  bottom: 10px;
+  padding: 3px 6px;
+  color: #fff;
+  background: #101316b3;
+  border-radius: 4px;
+  font: 10px var(--mono);
+  opacity: 0;
+  transition: opacity 160ms;
+}
+.template-duration {
+  right: 10px;
+}
+.template-preview-label {
+  left: 10px;
+}
+.template-card-preview:hover span,
+.template-card-preview:focus-visible span {
+  opacity: 1;
+}
+.template-card-caption {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 32px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.template-card-caption button {
+  min-height: 24px;
+  padding: 4px 0;
+  display: inline-flex;
+  align-items: center;
+}
+.template-card-caption button:first-child {
+  margin-right: auto;
+  text-align: left;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+}
+/* What the piece is for, after its name ("Dimensions mix · Anime teaser"). */
+.template-subtitle {
+  color: var(--muted);
+  font-weight: 400;
+}
+.template-tool {
+  display: inline-flex;
+}
+/* A generation card's tag, in the caption's fixed 32 px row. */
+.template-kind {
+  flex: none;
+  padding: 2px 6px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font: 10px var(--mono);
+  text-transform: uppercase;
+}
+.template-status {
+  font-size: 12px;
+  color: var(--readout);
+  margin: 8px 0;
+}
+.template-status:empty {
+  display: none;
+}
+.template-empty {
+  grid-column: 1 / -1;
+  padding: 80px 24px;
+  text-align: center;
+  color: var(--soft);
+}
+.template-empty button {
+  color: var(--accent);
+}
+.template-filters {
+  position: relative;
+}
+.gallery-filter-trigger {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px;
+  font-size: 12px;
+  color: var(--soft);
+  white-space: nowrap;
+}
+.gallery-filter-trigger span {
+  color: var(--readout);
+}
+.template-filter-panel {
+  position: absolute;
+  top: calc(100% + 14px);
+  right: 0;
+  z-index: 40;
+  width: 280px;
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--sunken);
+  box-shadow: 0 10px 30px var(--shadow-dialog);
+}
+.template-filter-panel label {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  align-items: center;
+  gap: 8px;
+  color: var(--soft);
+  font-size: 12px;
+}
+.template-filter-panel select {
+  min-width: 0;
+  padding: 6px;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+.template-filter-panel > button {
+  justify-self: end;
+  color: var(--accent);
+  font-size: 12px;
+}
+.template-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  cursor: default;
+  background: #0003;
+}
+.template-drawer {
+  position: fixed;
+  z-index: 91;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: min(420px, 100%);
+  padding: 20px;
+  overflow-y: auto;
+  background: var(--sunken);
+  border-left: 1px solid var(--border);
+  box-shadow: -12px 0 40px #0005;
+  animation: template-slide 220ms ease-out;
+  font-size: 13px;
+}
+.template-drawer header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.template-drawer h2 {
+  font-size: 17px;
+  font-weight: 500;
+  margin: 0;
+}
+.template-drawer header button {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+}
+.template-drawer h3 {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--soft);
+  margin: 24px 0 8px;
+}
+.template-drawer p {
+  line-height: 1.6;
+}
+.template-drawer ul {
+  padding-left: 16px;
+  line-height: 1.8;
+}
+.template-drawer .template-metadata {
+  color: var(--muted);
+  font-size: 11px;
+}
+.branded-preview {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+.branded-preview video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 2.35;
+  background: #080a0c;
+}
+.branded-preview > div {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 10px;
+  font-size: 11px;
+  color: var(--readout);
+}
+.branded-preview svg {
+  width: 15px;
+  height: 15px;
+}
+.template-demo-note {
+  color: var(--soft);
+  border-left: 2px solid var(--border-strong);
+  padding-left: 10px;
+  font-size: 11px;
+}
+.template-primary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-radius: 5px;
+  margin-top: 24px;
+}
+.template-primary[aria-disabled="true"],
+.template-primary:disabled,
+.template-secondary[aria-disabled="true"] {
+  opacity: 0.5;
+}
+.template-actions {
+  display: grid;
+  gap: 8px;
+  margin-top: 24px;
+}
+.template-actions .template-primary {
+  width: 100%;
+  margin-top: 0;
+  font: inherit;
+}
+.template-secondary {
+  display: block;
+  padding: 10px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 5px;
+  color: var(--readout);
+  text-align: center;
+}
+/* Drop zones: one fixed-size cell per reference, so a dropped file, the
+   example or "Genobi makes it" never moves the drawer's actions. */
+.template-zones {
+  display: grid;
+  grid-template-columns: repeat(var(--zones, 3), minmax(0, 1fr));
+  gap: 8px;
+}
+.template-zone {
+  display: grid;
+  /* Preview, name, state (or the refusal), and room for all three actions. */
+  grid-template-rows: 64px 16px 30px 80px;
+  gap: 4px;
+  min-width: 0;
+  padding: 6px;
+  border: 1px dashed var(--border-strong);
+  border-radius: 5px;
+  font-size: 11px;
+}
+.template-zone[data-state="yours"] {
+  border-style: solid;
+  border-color: var(--accent);
+}
+.template-zone-preview {
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border-radius: 3px;
+  background: var(--bg);
+  color: var(--muted);
+  text-align: center;
+}
+.template-zone-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.template-zone strong {
+  overflow: hidden;
+  font-weight: 500;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.template-zone-state {
+  overflow: hidden;
+  color: var(--soft);
+  line-height: 15px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+.template-zone-actions {
+  display: grid;
+  grid-auto-rows: 24px;
+  align-content: start;
+  gap: 4px;
+}
+.template-zone-actions button,
+.template-zone-drop {
+  display: grid;
+  place-items: center;
+  min-width: 0;
+  padding: 0 6px;
+  white-space: nowrap;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--soft);
+  font-size: 11px;
+  cursor: pointer;
+}
+.template-zone-drop:focus-within {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.template-zone-actions button[aria-pressed="true"] {
+  border-color: var(--accent);
+  color: var(--readout);
+}
+.template-zone-state[data-refused] {
+  color: var(--error-text);
+}
+.template-share {
+  border-top: 1px solid var(--border);
+  margin-top: 24px;
+  padding-top: 16px;
+}
+.template-share-tabs {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font-size: 12px;
+}
+.template-share-tabs button {
+  padding: 4px 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--soft);
+}
+.template-share-tabs button[aria-pressed="true"] {
+  color: var(--readout);
+}
+.template-share-tabs button:last-child {
+  margin-left: auto;
+}
+.template-share textarea {
+  display: block;
+  width: 100%;
+  resize: vertical;
+  margin: 10px 0;
+  padding: 8px;
+  font: 10px/1.6 var(--mono);
+  background: var(--bg);
+  color: var(--soft);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+.template-share > a {
+  font-size: 11px;
+  color: var(--soft);
+  text-decoration: underline;
+}
+.template-share > span {
+  margin-left: 12px;
+  font-size: 11px;
+  color: var(--readout);
+}
+@keyframes template-slide {
+  from {
+    transform: translateX(24px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+@media (max-width: 700px) {
+  .template-cards {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .template-card[data-featured="true"] {
+    grid-row: auto;
+  }
+  .template-card[data-featured="true"] .template-card-preview {
+    aspect-ratio: 2.35;
+  }
+  .template-duration,
+  .template-preview-label {
+    opacity: 1;
+  }
+  .template-filter-panel {
+    position: fixed;
+    top: 100px;
+    right: 16px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .template-drawer {
+    animation: none;
+  }
+}
+
+/* Reserve the filter space across tabs so mode changes do not reflow navigation. */
+.gallery-filter-slot {
+  flex: 0 0 72px;
+}
+.genobi-shell .genobi-presets {
+  min-width: 0;
+  overflow: visible;
+  flex-shrink: 0;
+}
+@media (max-width: 700px) {
+  .gallery-filter-slot {
+    display: flex;
+    align-items: flex-start;
+    padding-top: 8px;
+  }
+  .genobi-shell .genobi-presets {
+    overflow-x: visible;
+    flex-shrink: 1;
+  }
+}

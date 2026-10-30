@@ -1,0 +1,492 @@
+{
+  "about": "Genobi's capability map: one entry per feature, saying where it is in the studio, which MCP tools, CLI verbs, skills and docs serve it, where it runs and on which models, and whether a dated record shows it working. Hand-maintained; npm run check:capabilities checks it against registry.json and renders docs/capabilities.md from it.",
+  "routes": {
+    "local-free": "Runs on this machine with no model and no spend.",
+    "local-model": "An open-weights model on this machine: a local ComfyUI, or a local model server for the agent.",
+    "paid-api": "A provider API billed per run or per token: Comfy Router, BFL, Nous, or the person's own agent subscription.",
+    "comfy-cloud": "Comfy Cloud, or a Comfy Developer Platform deployment, billed as Comfy GPU time."
+  },
+  "statuses": {
+    "verified": "A docs page, run card or workflow README records it working on a date; evidence is that date and section.",
+    "implemented": "Built and covered by tests, with no dated record of a real run yet.",
+    "planned": "Specified in the docs, not built."
+  },
+  "weights": {
+    "open": "The route runs the published weights, on this machine or on Comfy, so anyone can download and run them.",
+    "closed": "The weights are not published; the model is reached only through its provider's API.",
+    "api": "The route calls a provider's hosted API, so it runs no weights of ours, even where the model's weights are published elsewhere."
+  },
+  "models": {
+    "ltx-2-5-fast": { "name": "LTX-2.5 Fast on Comfy Router", "weights": "api" },
+    "ltx-2-5": { "name": "LTX-2.5 open workflow", "weights": "open" },
+    "ltx-2-5-pro": { "name": "LTX-2.5 Pro on Comfy Router", "weights": "api" },
+    "akuspace-lora": { "name": "AKUSPACE LoRA on LTX-2.5", "weights": "open" },
+    "layout-ic-lora": { "name": "LTX-2.5 Layout-to-Render IC-LoRA", "weights": "open" },
+    "flux-3-t2v": { "name": "FLUX 3 text to video", "weights": "closed" },
+    "flux-3-i2v": { "name": "FLUX 3 image to video", "weights": "closed" },
+    "flux-3-image": { "name": "FLUX 3 image and edit", "weights": "closed" },
+    "flux-video-upscale": { "name": "FLUX Video Upscale", "weights": "closed" },
+    "seedvr2-upscale": { "name": "SeedVR2 3B video upscale (Comfy workflow)", "weights": "open" },
+    "flux-3-klein": { "name": "FLUX 3 Image Klein", "weights": "open" },
+    "flux-3-klein-api": { "name": "FLUX 3 Image Klein on BFL's API", "weights": "api" },
+    "minimax-h3": { "name": "MiniMax H3 (Comfy workflow)", "weights": "open" },
+    "minimax-h3-router": { "name": "MiniMax H3 on Comfy Router", "weights": "api" },
+    "minimax-music-3": { "name": "MiniMax Music 3", "weights": "open" },
+    "h3-swap": { "name": "H3 character swap LoRA with SAM 3.1", "weights": "open" },
+    "qwen3-asr": { "name": "Qwen3-ASR-0.6B", "weights": "open" },
+    "deepseek-v4-1-flash": { "name": "DeepSeek V4.1 Flash on Nous (Hermes)", "weights": "api" },
+    "local-llm": { "name": "An open model on a local server, such as Qwen on Ollama (Hermes)", "weights": "open" },
+    "claude-code": { "name": "Claude Code (the person's subscription)", "weights": "closed" },
+    "codex": { "name": "Codex (the person's subscription)", "weights": "closed" }
+  },
+  "capabilities": [
+    {
+      "id": "template-gallery", "name": "Template gallery", "status": "verified", "evidence": "2026-10-29 docs/falling-room.md#what-was-run-29-october-2026",
+      "where": "Gallery · / (the first view), /watch/:id, /embed/:id",
+      "description": "The first view: template and generation cards, a drawer per card with drop zones, Take it to Director, and watch and embed pages.",
+      "mcp": ["genobi_template_plan"], "cli": ["template-plan"],
+      "skills": ["genobi-studio"], "docs": ["docs/template-gallery.md", "docs/templates.md"],
+      "runs": [{ "route": "local-free" }]
+    },
+    {
+      "id": "house-templates", "name": "Product video, Character piece and Audio-visual", "status": "implemented",
+      "where": "Gallery · Character piece and Audio-visual drawers, then /director; Product video at /director?example=product-video (no longer a gallery card)",
+      "description": "Three house-style agent templates: the agent plans, budgets and quotes each shot, hands the takes in and finishes with a provenance card.",
+      "mcp": ["genobi_template_plan", "genobi_budget", "genobi_provenance"], "cli": ["template-plan", "budget", "provenance"],
+      "skills": ["product-video", "character-piece", "audio-visual"], "docs": ["docs/templates.md", "docs/hermes-runs.md"],
+      "runs": [{ "route": "paid-api", "models": ["ltx-2-5-fast"] }, { "route": "comfy-cloud", "models": ["ltx-2-5", "akuspace-lora", "flux-3-klein"] }]
+    },
+    {
+      "id": "anime-teaser", "name": "Anime teaser and Sheet to shot", "status": "implemented",
+      "where": "Gallery · Sheet to shot drawer; Anime teaser at /director?example=anime-teaser (no longer a gallery card: the Dimensions mix is the anime teaser)",
+      "description": "A track, a character sheet and a storyboard (each dropped or generated) become two MiniMax H3 shots cut to the beat; Sheet to shot makes one shot in place.",
+      "mcp": ["genobi_scrolls", "genobi_audio_analysis"], "cli": ["scrolls", "audio-analysis"],
+      "skills": ["anime-teaser"], "docs": ["docs/anime-teaser-template.md", "docs/runs/anime-teaser.md"],
+      "runs": [{ "route": "paid-api", "models": ["minimax-h3-router", "flux-3-image"] }, { "route": "comfy-cloud", "models": ["minimax-music-3"] }]
+    },
+    {
+      "id": "falling-room", "name": "Falling room", "status": "verified", "evidence": "2026-10-29 docs/falling-room.md#what-was-run-29-october-2026",
+      "where": "Director · /director?example=falling-room (no longer a gallery card)",
+      "description": "The free half of the generated loop: brief, World Builder take, room sound, a manual edit the agent keeps, and the editable bundle.",
+      "mcp": ["genobi_world_recipe", "genobi_project_feedback"], "cli": ["world-recipe", "project-feedback"],
+      "skills": ["falling-room"], "docs": ["docs/falling-room.md", "docs/world-builder.md"],
+      "runs": [{ "route": "local-free" }]
+    },
+    {
+      "id": "falling-room-still", "name": "Falling room still", "status": "implemented",
+      "where": "Director · /director?example=falling-room, the Still shot",
+      "description": "The template's one paid step: a FLUX 3 Image Klein still from the brief, with the take's first frame as its reference; not yet run.",
+      "mcp": ["genobi_quote", "genobi_submit"], "cli": ["quote", "submit"],
+      "skills": ["falling-room"], "docs": ["docs/falling-room.md"],
+      "runs": [{ "route": "paid-api", "models": ["flux-3-klein-api"] }]
+    },
+    {
+      "id": "dimensions-mix", "name": "Dimensions mix", "status": "implemented",
+      "where": "Gallery · second card, /director?example=dimensions-mix",
+      "description": "A finished 23-second teaser cut from three bundled clips to a 140 BPM track with Signal overlays; nothing to generate, opens as editable lanes.",
+      "mcp": [], "cli": [],
+      "skills": [], "docs": ["docs/dimensions-mix.md"],
+      "runs": [{ "route": "local-free" }]
+    },
+    {
+      "id": "genobi-teaser", "name": "Genobi teaser", "status": "implemented",
+      "where": "Gallery · /director?example=genobi-teaser",
+      "description": "A two-minute mix of the studio in use cut to a 135 BPM track: 4K studio footage with camera moves, Transitions.dev titles, Paper Shaders and a taste-layer credit; nothing to generate, opens as editable lanes.",
+      "mcp": [], "cli": [],
+      "skills": ["genobi-teaser"], "docs": ["docs/genobi-teaser.md"],
+      "runs": [{ "route": "local-free" }]
+    },
+    {
+      "id": "genobi-teaser-run", "name": "Genobi teaser run kit", "status": "implemented",
+      "where": "Agents · the genobi-teaser-run skill and scripts/verify-teaser-run.mjs",
+      "description": "An agent on a weaker open model recreates the Genobi teaser cut from its brief and repeats it from its own memory, checked by a verifier; nothing is generated.",
+      "mcp": [], "cli": [],
+      "skills": ["genobi-teaser-run"], "docs": ["docs/genobi-teaser-run/README.md", "docs/genobi-teaser.md"],
+      "runs": [{ "route": "local-free" }]
+    },
+    {
+      "id": "ltx-router", "name": "LTX-2.5 on Comfy Router, in LTX's camera words", "status": "verified", "evidence": "2026-10-26 docs/supervised-workflow-checks.md#local-campaign-evidence--26-october-2026",
+      "where": "Camera · /?workspace=camera, Model menu (LTX) and Camera controls",
+      "description": "Text to video on LTX-2.5 Fast or Pro through one Comfy key; the camera panel writes shot, angle and movement in the LTX prompt guide's wording.",
+      "mcp": ["genobi_models", "genobi_quote", "genobi_submit", "genobi_job", "genobi_jobs", "genobi_take"], "cli": ["models", "quote", "submit", "job"],
+      "skills": ["genobi-camera", "genobi-studio"], "docs": ["docs/camera-wording.md", "docs/architecture.md"],
+      "runs": [{ "route": "paid-api", "models": ["ltx-2-5-fast", "ltx-2-5-pro"] }]
+    },
+    {
+      "id": "flux-router", "name": "FLUX 3 text to video, image and edit on Router", "status": "verified", "evidence": "2026-10-26 docs/supervised-workflow-checks.md#local-campaign-evidence--26-october-2026",
+      "where": "Camera · Model menu (FLUX), Image and Edit modes",
+      "description": "The premium layer on Comfy Router: FLUX 3 text to video, and FLUX 3 image and edit, each quoted before it runs.",
+      "mcp": ["genobi_quote", "genobi_submit"], "cli": ["quote", "submit"],
+      "skills": ["genobi-camera"], "docs": ["docs/camera-wording.md", "docs/supervised-workflow-checks.md"],
+      "runs": [{ "route": "paid-api", "models": ["flux-3-t2v", "flux-3-image"] }]
+    },
+    {
+      "id": "flux-i2v-upscale", "name": "FLUX 3 image to video and video upscale", "status": "implemented",
+      "where": "Camera · FLUX 3 · Image to video, and Upscale",
+      "description": "FLUX 3 from one to ten keyframes on BFL directly, and the FLUX video upscaler; no dated run in a section of its own.",
+      "mcp": ["genobi_quote", "genobi_submit"], "cli": ["quote", "submit"],
+      "skills": ["genobi-camera"], "docs": ["workflows/minimax-h3-omniref.README.md", "docs/verification.md"],
+      "runs": [{ "route": "paid-api", "models": ["flux-3-i2v", "flux-video-upscale"] }]
+    },
+    {
+      "id": "klein", "name": "FLUX 3 Image Klein stills and box edits", "status": "implemented",
+      "where": "Camera · Image and Edit modes, FLUX 3 Image Klein",
+      "description": "Open-weights stills from Comfy's Klein template, with boxes written into the prompt as layout rows; also on BFL's Klein API.",
+      "mcp": ["genobi_quote", "genobi_submit"], "cli": ["quote", "submit"],
+      "skills": ["genobi-camera", "genobi-hermes"], "docs": ["workflows/flux-3-klein-t2i.README.md", "docs/hermes-runs.md"],
+      "runs": [{ "route": "comfy-cloud", "models": ["flux-3-klein"] }, { "route": "local-model", "models": ["flux-3-klein"] }, { "route": "paid-api", "models": ["flux-3-klein-api"] }]
+    },
+    {
+      "id": "seedvr2-upscale", "name": "SeedVR2 open video upscale", "status": "implemented",
+      "where": "Camera · Upscale, SeedVR2 · Video upscale; the Dimensions mix's optional last step",
+      "description": "Comfy's core-node SeedVR2 3B template as an open workflow: the clip in, 1.5× to 3× out, free on a local ComfyUI.",
+      "mcp": ["genobi_quote", "genobi_submit"], "cli": ["quote", "submit"],
+      "skills": ["genobi-camera"], "docs": ["workflows/seedvr2-upscale.README.md", "docs/seedvr2-upscale.md"],
+      "runs": [{ "route": "local-model", "models": ["seedvr2-upscale"] }, { "route": "comfy-cloud", "models": ["seedvr2-upscale"] }]
+    },
+    {
+      "id": "upscale-parts", "name": "Upscale long clips in parts", "status": "implemented",
+      "where": "Camera · Upscale, Split into parts on a clip past 20 s (local studio); a studio agent's set is one approval",
+      "description": "A clip longer than one upscale takes, cut on frame boundaries into 19 s parts plus the remainder (a local GPU's SeedVR2 part length up to 120 s), each part its own reserved upscale under one quote and one confirmation or approval, then joined at the source's frame count with its own sound.",
+      "mcp": ["genobi_upscale_parts_plan", "genobi_upscale_parts", "genobi_upscale_parts_confirm", "genobi_upscale_parts_retry", "genobi_upscale_parts_retry_confirm"], "cli": ["upscale-parts-plan", "upscale-parts", "upscale-parts-confirm", "upscale-parts-retry", "upscale-parts-retry-confirm"],
+      "skills": ["genobi-upscale", "genobi-camera"], "docs": ["docs/upscaling.md", "docs/seedvr2-upscale.md"],
+      "runs": [{ "route": "paid-api", "models": ["flux-video-upscale"] }, { "route": "local-model", "models": ["seedvr2-upscale"] }, { "route": "comfy-cloud", "models": ["seedvr2-upscale"] }]
+    },
+    {
+      "id": "ltx-open-akuspace", "name": "LTX-2.5 open workflow and Acoustic Space", "status": "implemented",
+      "where": "Camera · Model menu, LTX-2.5 · Open workflow and LTX-2.5 · Acoustic Space",
+      "description": "Comfy's LTX-2.5 graph as an open workflow, and the same graph with the AKUSPACE LoRA so the sound carries the room.",
+      "mcp": ["genobi_quote", "genobi_submit"], "cli": ["quote", "submit"],
+      "skills": ["genobi-akuspace", "audio-visual"], "docs": ["workflows/ltx-2-5-akuspace-t2v.README.md", "docs/camera-wording.md"],
+      "runs": [{ "route": "comfy-cloud", "models": ["ltx-2-5", "akuspace-lora"] }, { "route": "local-model", "models": ["ltx-2-5", "akuspace-lora"] }]
+    },
+    {
+      "id": "minimax", "name": "MiniMax H3 reference to video and Music 3", "status": "implemented",
+      "where": "Camera · Model menu (H3)",
+      "description": "H3 from two reference images on Router, or with an RGB, Canny or depth guide video on Comfy Cloud; Music 3 makes a track from a caption.",
+      "mcp": ["genobi_quote", "genobi_submit"], "cli": ["quote", "submit"],
+      "skills": ["genobi-camera"], "docs": ["workflows/minimax-h3-omniref.README.md", "workflows/minimax-music-3.README.md", "docs/minimax-h3-camera.md"],
+      "runs": [{ "route": "paid-api", "models": ["minimax-h3-router"] }, { "route": "comfy-cloud", "models": ["minimax-h3", "minimax-music-3"] }]
+    },
+    {
+      "id": "run-location", "name": "Run location and workflow swap", "status": "implemented",
+      "where": "Camera · run location (Studio setup, or the model menu's Local tick; tags under the model say where a run goes); agents per session",
+      "description": "Choose local ComfyUI or Comfy Cloud for every open workflow, and swap the graph behind a model for the session.",
+      "mcp": ["genobi_run_location", "genobi_workflows", "genobi_workflow_select"], "cli": ["run-location", "workflows", "workflow-select"],
+      "skills": ["genobi-camera", "genobi-akuspace"], "docs": ["docs/run-location.md", "docs/comfy-cloud-inventory.md"],
+      "runs": [{ "route": "local-model", "models": ["ltx-2-5", "flux-3-klein"] }, { "route": "comfy-cloud", "models": ["ltx-2-5", "flux-3-klein"] }]
+    },
+    {
+      "id": "machine-check", "name": "Machine check", "status": "verified", "evidence": "2026-10-22 docs/machine-check.md#evidence",
+      "where": "Setup · machine check; agents any time",
+      "description": "Probes memory, disk and GPU and says which models run on this machine and which on Comfy Cloud.",
+      "mcp": ["genobi_machine"], "cli": ["machine"],
+      "skills": ["genobi-machine"], "docs": ["docs/machine-check.md"],
+      "runs": [{ "route": "local-free" }]
+    },
+    {
+      "id": "arena", "name": "Arena", "status": "implemented",
+      "where": "Project Tools · Arena",
+      "description": "Compare two to four models or workflows on one prompt and reference set, play them together and record the preferred one and why.",
+      "mcp": ["genobi_arena"], "cli": ["arena"],
+      "skills": ["genobi-swords"], "docs": ["docs/arena.md"],
+      "runs": [{ "route": "local-free" }]
+    },
+    {
+      "id": "director-agent", "name": "Director projects edited by agents", "status": "verified", "evidence": "2026-10-28 docs/hermes-runs.md#run-cards-and-logs",
+      "where": "Director · /director, JSON editor and agent tools (link code)",
+      "description": "An agent links the open project by its code, reads it, applies revision-checked commands the person sees live, hands takes in and reads the person's edits back.",
+      "mcp": ["genobi_projects", "genobi_link_project", "genobi_project", "genobi_director_command", "genobi_project_feedback", "genobi_take_to_project"], "cli": ["link-project", "project", "director-command", "take-to-project"],
+      "skills": ["genobi-director"], "docs": ["docs/director-agent-tools.md", "docs/project-assets.md"],
+      "runs": [{ "route": "local-free" }]
+    },
+    {
+      "id": "director-bundle", "name": "Editable project bundle", "status": "verified", "evidence": "2026-10-29 docs/falling-room.md#what-was-run-29-october-2026",
+      "where": "Director · Download bundle, Open bundle",
+      "description": "Download bundle writes the project, its media, the brief, feedback and the World Builder recipe as a ZIP; Open bundle checks it and reads it back for editing.",
+      "mcp": [], "cli": [],
+      "skills": ["director-remix"], "docs": ["docs/director-bundle/README.md", "docs/falling-room.md"],
+      "runs": [{ "route": "local-free" }]
+    },
+    {
+      "id": "motion-mp4", "name": "Motion effects and MP4 export", "status": "implemented",
+      "where": "Director · effects and Render MP4",
+      "description": "Registered motion-effect recipes (shake, transitions, grade, speed lines, titles) and a rendered MP4 of the composition.",
+      "mcp": [], "cli": [],
+      "skills": ["director-remix"], "docs": ["docs/director-bundle/motion-effects.md", "docs/director-remix-verification.md"],
+      "runs": [{ "route": "local-free" }]
+    },
+    {
+      "id": "editor-timeline", "name": "Editor timeline", "status": "implemented",
+      "where": "Editor · /director?workspace=editor",
+      "description": "Program beside the global prompt, a frame-accurate transport, channel lanes, storyboard cells with camera and action views, and Regenerate (or Send to Genobi from the Global prompt or a clip's inspector) to the agent.",
+      "mcp": ["genobi_director_command"], "cli": ["director-command"],
+      "skills": ["genobi-director"], "docs": ["docs/editor-timeline.md", "docs/director-agent-tools.md"],
+      "runs": [{ "route": "local-free" }]
+    },
+    {
+      "id": "audio-analysis", "name": "Audio analysis and the beat grid", "status": "verified", "evidence": "2026-10-21 docs/audio-analysis.md#verification",
+      "where": "Director · track lane and Timing; agents",
+      "description": "Tempo, a fitted beat grid, downbeat, onsets per band, intensity and key moments of a track, on the local server.",
+      "mcp": ["genobi_audio_upload", "genobi_audio_analysis"], "cli": ["audio-upload", "audio-analysis"],
+      "skills": ["genobi-director"], "docs": ["docs/audio-analysis.md"],
+      "runs": [{ "route": "local-free" }]
+    },
+    {
+      "id": "world-builder", "name": "World Builder sets and capture", "status": "verified", "evidence": "2026-10-17 docs/world-builder-verification.md#interface-and-primitive-authoring-17-october-2026",
+      "where": "3D · /world-builder and the 3D workspace",
+      "description": "Build or edit a set from presets and primitives, frame a camera move, and capture colour, depth and sound as guidance for a video model.",
+      "mcp": [], "cli": [],
+      "skills": ["genobi-3d", "world-builder"], "docs": ["docs/world-builder.md", "docs/world-builder-capture.md", "docs/world-builder-verification.md"],
+      "runs": [{ "route": "local-free" }]
+    },
+    {
+      "id": "world-handoff", "name": "World Builder recipes from agents", "status": "verified", "evidence": "2026-10-29 docs/falling-room.md#what-was-run-29-october-2026",
+      "where": "3D · World Builder on a linked project",
+      "description": "An agent sends a scene recipe or a named take to the open World Builder, which applies it and reports back.",
+      "mcp": ["genobi_world_recipe"], "cli": ["world-recipe"],
+      "skills": ["genobi-3d", "falling-room"], "docs": ["docs/world-builder.md", "docs/falling-room.md"],
+      "runs": [{ "route": "local-free" }]
+    },
+    {
+      "id": "world-live", "name": "Live World sessions", "status": "implemented",
+      "where": "3D · World, Walk mode",
+      "description": "Walk a character, trigger its moves and steer the camera; an agent pairs with a one-use code and sends bounded controls.",
+      "mcp": ["genobi_world"], "cli": ["world"],
+      "skills": ["genobi-3d"], "docs": ["docs/world-live.md"],
+      "runs": [{ "route": "local-free" }]
+    },
+    {
+      "id": "world-take-to-project", "name": "World takes into the project from agents", "status": "implemented",
+      "where": "3D · World Builder's Takes library, paired with an agent",
+      "description": "A paired agent reads the current recipe, loads any move-library preset by file name and sends a named take to the open project as the card's Send to Director does: first frame and MP4, labelled with the take's name.",
+      "mcp": ["genobi_world"], "cli": ["world"],
+      "skills": ["genobi-3d", "genobi-cli"], "docs": ["docs/world-live.md", "docs/world-builder.md"],
+      "runs": [{ "route": "local-free" }]
+    },
+    {
+      "id": "scene-acoustics", "name": "Scenes as data and room acoustics", "status": "verified", "evidence": "2026-10-24 docs/scene-builder.md#what-was-run",
+      "where": "3D · Load and Save scene, acoustics readout",
+      "description": "Agent-built primitive scenes with materials, loaded in the 3D tab, and a room's RT60 mapped to an AKUSPACE preset.",
+      "mcp": ["genobi_scene"], "cli": ["scene"],
+      "skills": ["genobi-3d"], "docs": ["docs/scene-builder.md", "docs/scene-examples.md"],
+      "runs": [{ "route": "local-free" }]
+    },
+    {
+      "id": "camera-plates", "name": "3D camera plates and playblast", "status": "implemented",
+      "where": "3D · camera plates",
+      "description": "Ten camera plates from Holodeck's moves with curves, combo layers, gestures and a radar, played back into the Director.",
+      "mcp": [], "cli": [],
+      "skills": [], "docs": ["docs/3d-tab.md"],
+      "runs": [{ "route": "local-free" }]
+    },
+    {
+      "id": "world-builder-nodes", "name": "World Builder nodes in ComfyUI", "status": "verified", "evidence": "2026-10-29 workflows/world-builder-acoustics.api.README.md#run-evidence-29-october-2026",
+      "where": "Comfy · the director_world_builder pack in a local ComfyUI",
+      "description": "Capture, Acoustics, Storyboard and Reverb nodes: a take's frames, depth and canny, the room's AKUSPACE caption and a reverb from its geometry.",
+      "mcp": [], "cli": [],
+      "skills": ["world-builder"], "docs": ["workflows/world-builder-acoustics.api.README.md", "docs/world-builder.md"],
+      "runs": [{ "route": "local-free" }]
+    },
+    {
+      "id": "dual-swords", "name": "Dual Swords frame editor", "status": "verified", "evidence": "2026-10-16 docs/dual-editor.md#verification--16-october-2026",
+      "where": "Dual Swords · the Dual Swords workspace",
+      "description": "Two clips side by side or stacked, exact frame selection, live trim preview and native or lossless export, in the browser.",
+      "mcp": [], "cli": [],
+      "skills": [], "docs": ["docs/dual-editor.md", "docs/dual-editor-editing.md"],
+      "runs": [{ "route": "local-free" }]
+    },
+    {
+      "id": "media-tools", "name": "Media tools for agents: probe and trim", "status": "verified", "evidence": "2026-10-28 docs/hermes-runs.md#run-cards-and-logs",
+      "where": "Dual Swords · agents through MCP or genobi swords",
+      "description": "Check ffmpeg, probe a clip and trim a section on the studio's local ffmpeg.",
+      "mcp": ["genobi_media_tools", "genobi_media_probe", "genobi_media_trim"], "cli": ["swords probe", "swords trim"],
+      "skills": ["genobi-swords"], "docs": ["docs/dual-editor.md"],
+      "runs": [{ "route": "local-free" }]
+    },
+    {
+      "id": "media-tools-more", "name": "Media tools for agents: frames, join and crossfade", "status": "implemented",
+      "where": "Dual Swords · agents through MCP or genobi swords",
+      "description": "Pull still frames, join clips end to end and crossfade two clips on the studio's local ffmpeg.",
+      "mcp": ["genobi_media_frames", "genobi_media_concat", "genobi_media_crossfade"], "cli": ["swords frames", "swords concat", "swords crossfade"],
+      "skills": ["genobi-swords"], "docs": ["docs/dual-editor.md"],
+      "runs": [{ "route": "local-free" }]
+    },
+    {
+      "id": "media-space", "name": "Space: an AKUSPACE room on existing sound", "status": "verified", "evidence": "2026-10-24 docs/media-space.md#verification--24-october-2026",
+      "where": "Dual Swords · Space; agents",
+      "description": "Timed segments of a clip's own sound put through a room's impulse response by local ffmpeg convolution.",
+      "mcp": ["genobi_media_space"], "cli": ["media-space"],
+      "skills": ["genobi-swords", "genobi-akuspace"], "docs": ["docs/media-space.md"],
+      "runs": [{ "route": "local-free" }]
+    },
+    {
+      "id": "scrolls", "name": "Scrolls: character sheets and storyboards", "status": "implemented",
+      "where": "Scrolls · /scrolls",
+      "description": "A portable sheet or storyboard timed to a song before any video exists, with quoted image requests per sheet or panel.",
+      "mcp": ["genobi_scrolls", "genobi_scrolls_panels"], "cli": ["scrolls", "scrolls-panels"],
+      "skills": ["genobi-scrolls"], "docs": ["docs/scrolls.md"],
+      "runs": [{ "route": "local-free" }, { "route": "comfy-cloud", "models": ["flux-3-klein"] }, { "route": "paid-api", "models": ["flux-3-image"] }]
+    },
+    {
+      "id": "setup-connect", "name": "Setup: keys, sign-in and starting the agent", "status": "implemented",
+      "where": "Setup · first run",
+      "description": "First-run setup: Comfy and BFL keys, harness sign-in checks for Claude Code, Hermes and Codex, then the agent starts from the summary.",
+      "mcp": [], "cli": [],
+      "skills": [], "docs": ["docs/agent-setup.md"],
+      "runs": [{ "route": "local-free" }]
+    },
+    {
+      "id": "voice-mode", "name": "Voice mode", "status": "verified", "evidence": "2026-10-21 docs/voice-mode.md#verification",
+      "where": "Studio · header microphone",
+      "description": "Speak a prompt or a brief from the header; a local model transcribes it and it goes to the prompt or the running agent.",
+      "mcp": [], "cli": [],
+      "skills": [], "docs": ["docs/voice-mode.md", "docs/voice-setup.md"],
+      "runs": [{ "route": "local-model", "models": ["qwen3-asr"] }]
+    },
+    {
+      "id": "agent-sessions", "name": "Agent sessions in the bubble and deck", "status": "verified", "evidence": "2026-10-21 docs/agent-sessions.md#verification",
+      "where": "Studio · Genobi bubble and footer deck",
+      "description": "The studio starts the person's own agent with the Genobi tools and its own browser; the bubble shows updates and the deck the log. Hermes has its own entry.",
+      "mcp": ["genobi_status", "genobi_skill"], "cli": ["status", "skill"],
+      "skills": ["genobi-studio"], "docs": ["docs/agent-sessions.md", "docs/agent-bubble.md", "docs/genobi-deck.md"],
+      "runs": [{ "route": "paid-api", "models": ["claude-code"] }]
+    },
+    {
+      "id": "approvals", "name": "Quote, approve, then spend", "status": "verified", "evidence": "2026-10-22 docs/agent-approvals.md#verification",
+      "where": "Studio · bubble approval; CLI submit --confirm",
+      "description": "An agent's paid step appears with its plan and price; Approve runs it once under its idempotency key, Decline voids it, nothing is retried.",
+      "mcp": ["genobi_budget", "genobi_quote", "genobi_submit"], "cli": ["budget", "quote", "submit"],
+      "skills": ["genobi-studio"], "docs": ["docs/agent-approvals.md"],
+      "runs": [{ "route": "local-free" }]
+    },
+    {
+      "id": "hermes-open-route", "name": "Hermes on an open model through Nous", "status": "verified", "evidence": "2026-10-28 docs/hermes-runs/2026-10-28-hermes-audio-visual-library-dry-run.md#run-log-audio-visual-library-dry-run-hermes",
+      "where": "Agents · Hermes profile, chosen in setup",
+      "description": "Hermes held to open models with no fallback; on 28 October it ran DeepSeek V4.1 Flash on Nous in one recorded studio session.",
+      "mcp": [], "cli": [],
+      "skills": ["genobi-hermes"], "docs": ["docs/hermes-open-route.md", "docs/hermes-profiles.md"],
+      "runs": [{ "route": "paid-api", "models": ["deepseek-v4-1-flash"] }]
+    },
+    {
+      "id": "hermes-local", "name": "Hermes on a local model server", "status": "implemented",
+      "where": "Agents · Hermes profile with a local provider",
+      "description": "Hermes on an open model served on this machine, such as Qwen on Ollama; pinned like every route, not yet run.",
+      "mcp": [], "cli": [],
+      "skills": ["genobi-hermes"], "docs": ["docs/hermes-open-route.md"],
+      "runs": [{ "route": "local-model", "models": ["local-llm"] }]
+    },
+    {
+      "id": "development", "name": "Development: build the studio with an agent", "status": "implemented",
+      "where": "Project Tools · Development",
+      "description": "Launch Hermes Developer, Claude Code or Codex in a terminal per role, watched by a read-only supervisor viewer.",
+      "mcp": [], "cli": [],
+      "skills": ["genobi-comfy"], "docs": ["docs/supervisor.md", "docs/hermes-profiles.md", "docs/comfy-deployment.md", "docs/run-location.md"],
+      "runs": [{ "route": "paid-api", "models": ["claude-code", "codex", "deepseek-v4-1-flash"] }]
+    },
+    {
+      "id": "genobi-develop", "name": "Genobi starts a Developer", "status": "implemented",
+      "where": "Agents · genobi_develop; followed in Project Tools · Development",
+      "description": "A creative Genobi session hands a change to the studio itself to a Developer: the person's saved runner, in a worktree from origin/main, leaving a diff or a pull request.",
+      "mcp": ["genobi_develop"], "cli": ["develop"],
+      "skills": ["genobi-develop"], "docs": ["docs/agent-sessions.md", "docs/supervisor.md"],
+      "runs": [{ "route": "paid-api", "models": ["claude-code", "codex", "deepseek-v4-1-flash"] }]
+    },
+    {
+      "id": "genobi-cli", "name": "Genobi CLI commands", "status": "verified", "evidence": "2026-10-29 docs/falling-room.md#what-was-run-29-october-2026",
+      "where": "Agents · the genobi command (plugins/genobi/server/genobi-cli.mjs)",
+      "description": "Every MCP tool as a terminal command with its exact schema; on 29 October an agent linked a project and sent a World Builder take through it.",
+      "mcp": ["genobi_link_project", "genobi_world_recipe"], "cli": ["link-project", "world-recipe"],
+      "skills": ["genobi-cli"], "docs": ["docs/genobi-cli.md"],
+      "runs": [{ "route": "local-free" }]
+    },
+    {
+      "id": "genobi-cli-discovery", "name": "Genobi CLI discovery and profiles", "status": "implemented",
+      "where": "Agents · the genobi command, offline",
+      "description": "The command catalogue and exact schemas offline, private connection and model profiles, and this map with genobi capabilities.",
+      "mcp": [], "cli": ["tools", "schema", "profile", "capabilities"],
+      "skills": ["genobi-cli"], "docs": ["docs/genobi-cli.md"],
+      "runs": [{ "route": "local-free" }]
+    },
+    {
+      "id": "terminal-takes", "name": "Takes from a terminal or an agent in the gallery", "status": "implemented",
+      "where": "Gallery · cards marked From terminal or From agent, on the local server",
+      "description": "A take the genobi command or an MCP client quoted and submitted shows in the studio's gallery once Ready, marked with where it came from; the studio plays it, recreates it and sends it to the Director's assets.",
+      "mcp": ["genobi_quote", "genobi_submit"], "cli": ["quote", "submit"],
+      "skills": ["genobi-cli"], "docs": ["docs/genobi-cli.md", "docs/project-assets.md"],
+      "runs": [{ "route": "local-free" }]
+    },
+    {
+      "id": "agent-discovery", "name": "Skills and wiki search for agents", "status": "verified", "evidence": "2026-10-28 docs/hermes-runs.md#run-cards-and-logs",
+      "where": "Agents · MCP and CLI",
+      "description": "An agent lists and loads skills and searches and reads the wiki.",
+      "mcp": ["genobi_skill", "genobi_docs"], "cli": ["skill", "docs"],
+      "skills": ["genobi-studio"], "docs": ["docs/README.md", "docs/registry.md"],
+      "runs": [{ "route": "local-free" }]
+    },
+    {
+      "id": "registry-map", "name": "Registry search and this capability map", "status": "implemented",
+      "where": "Agents · MCP and CLI",
+      "description": "Search tools and skills by tag or text, and read this capability map before choosing a route.",
+      "mcp": ["genobi_registry"], "cli": ["registry", "capabilities"],
+      "skills": ["genobi-studio"], "docs": ["docs/registry.md", "docs/capabilities.md"],
+      "runs": [{ "route": "local-free" }]
+    },
+    {
+      "id": "taste-licences", "name": "Taste layer, project memory and licences", "status": "implemented",
+      "where": "Studio · /taste; agents per project",
+      "description": "Curated creative libraries and scoped preferences, project decisions and checkpoints shared across harnesses, and a licence report per result.",
+      "mcp": ["genobi_context", "genobi_decision", "genobi_session_checkpoint", "genobi_taste", "genobi_reference", "genobi_licences"], "cli": ["context", "decision", "session-checkpoint", "licences"],
+      "skills": ["genobi-taste", "genobi-licensing"], "docs": ["docs/taste-memory.md", "docs/licence-strategy.md"],
+      "runs": [{ "route": "local-free" }]
+    },
+    {
+      "id": "openjutsu-swap", "name": "Openjutsu character swap with a Klein first frame", "status": "implemented",
+      "where": "Comfy · npm run swap or an agent's quote (local studio only)",
+      "description": "Swap the person in a 5 to 15 second part of a clip; Genobi makes the first frame with a Klein box edit, so a box can change a whole person or one item.",
+      "mcp": ["genobi_quote", "genobi_submit", "genobi_media_trim"], "cli": ["quote", "submit", "media-trim"],
+      "skills": [], "docs": ["docs/openjutsu-swap.md", "docs/comfy-deployment.md"],
+      "runs": [{ "route": "comfy-cloud", "models": ["minimax-h3", "h3-swap"] }, { "route": "paid-api", "models": ["flux-3-klein-api"] }]
+    },
+    {
+      "id": "akuspace-docker", "name": "AKUSPACE ComfyUI in Docker", "status": "verified", "evidence": "2026-10-24 docs/akuspace-docker.md#checked",
+      "where": "Comfy · a rented GPU box or a local Docker host",
+      "description": "A pinned ComfyUI image with the AKUSPACE nodes and ComfyUI-LTXVideo whose verify command checks every graph; built and checked on CPU, no render has run.",
+      "mcp": [], "cli": [],
+      "skills": ["genobi-akuspace"], "docs": ["docs/akuspace-docker.md"],
+      "runs": [{ "route": "local-free" }]
+    },
+    {
+      "id": "hosted-studio", "name": "Hosted studio on Cloudflare Pages", "status": "implemented",
+      "where": "Hosted · Cloudflare Pages",
+      "description": "The earlier hosted FLUX studio on Pages, with D1, R2 and the visitor's own BFL key; its library runs are recorded without a dated section, and this release is not deployed.",
+      "mcp": [], "cli": [],
+      "skills": [], "docs": ["docs/cloudflare.md", "docs/architecture.md"],
+      "runs": [{ "route": "paid-api", "models": ["flux-3-t2v"] }]
+    },
+    {
+      "id": "layout-to-render", "name": "Layout-to-Render from a World Builder take", "status": "planned",
+      "where": "3D · capture, then a Comfy workflow",
+      "description": "A Three.js playblast drives LTX-2.5 with the Layout-to-Render IC-LoRA from an art-directed first frame; no registered run yet.",
+      "mcp": [], "cli": [],
+      "skills": [], "docs": ["docs/layout-to-render-status.md"],
+      "runs": [{ "route": "comfy-cloud", "models": ["ltx-2-5", "layout-ic-lora"] }]
+    },
+    {
+      "id": "genmod", "name": "Gen-Mod: edit frame 0, carry it through", "status": "planned",
+      "where": "Director · a take's frame 0",
+      "description": "An edited first frame and the source soundtrack or pose drive a new LTX-2.5 take; the graphs are built, not registered or run.",
+      "mcp": [], "cli": [],
+      "skills": [], "docs": ["docs/genmod.md", "workflows/genmod.README.md"],
+      "runs": [{ "route": "comfy-cloud", "models": ["ltx-2-5"] }]
+    },
+    {
+      "id": "desktop-app", "name": "Desktop app", "status": "planned",
+      "where": "Studio · a desktop shell",
+      "description": "The studio as a Tauri desktop app with its data folder in the app data directory.",
+      "mcp": [], "cli": [],
+      "skills": [], "docs": ["docs/vision.md"],
+      "runs": [{ "route": "local-free" }]
+    }
+  ]
+}

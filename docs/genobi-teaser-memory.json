@@ -1,0 +1,179 @@
+{
+  "about": "The Genobi teaser's brief and every owner correction, as project memory an agent records with `genobi decision` (source interpretation, quoting the owner) and the reusable rules as Taste proposals the owner activates. Apply with scripts/seed-genobi-teaser-memory.mjs; see docs/genobi-teaser.md#how-to-repeat-it.",
+  "decisions": [
+    {
+      "id": "teaser-brief",
+      "kind": "note",
+      "topic": "Genobi teaser · brief",
+      "value": "Owner, 30 Oct 2026: \"make the teaser video with Genobi usage and the music we have\"; built like the Dimensions mix, \"going through functions, so the agent can actually show stuff: zoom in, click, use effects, loaders, cool interface\", with Transitions.dev transitions and our own Signal recipes."
+    },
+    {
+      "id": "teaser-claims",
+      "kind": "preference",
+      "topic": "Genobi teaser · on-screen claims",
+      "value": "Review of cut 1: no line may claim provenance it cannot back. The creature clips are the owner's MiniMax H3 outputs and the forest guardian a FLUX 3 run, made outside this cut; say what the studio did (\"cut in Genobi\"), never \"made in the studio\", and name only the models the piece used, such as MiniMax H3 (open weights)."
+    },
+    {
+      "id": "teaser-scrolls-dark",
+      "kind": "preference",
+      "topic": "Genobi teaser · light pages",
+      "value": "Review of cut 1: the Scrolls page is light and jumps out of the dark look; keep it short (four beats) and zoomed onto its dark cells or dialogs."
+    },
+    {
+      "id": "teaser-readable",
+      "kind": "preference",
+      "topic": "Genobi teaser · readable UI",
+      "value": "Review of cut 1: UI text is tiny at 720p; every UI beat zooms onto a readable detail and holds it at least about 1.3 s (2 to 3 beats at 135 BPM)."
+    },
+    {
+      "id": "teaser-3d-richer",
+      "kind": "preference",
+      "topic": "Genobi teaser · 3D shots",
+      "value": "Review of cut 1: the 3D shots showed a bare default room; use richer presets and a camera move."
+    },
+    {
+      "id": "teaser-sharper",
+      "kind": "preference",
+      "topic": "Genobi teaser · resolution",
+      "value": "Owner, round 2: \"a bit blurry, too low res\" and \"internal looks lower res\"; render 1920 × 1080 and record the studio at 2× (3840 × 2160) so a camera move keeps native detail. No AI upscale."
+    },
+    {
+      "id": "teaser-same-takes",
+      "kind": "preference",
+      "topic": "Genobi teaser · re-recording",
+      "value": "Owner, round 2: \"Record as before, those were great actual takes\"; re-record by replaying the same actions, timings and clicks (scripts/genobi-teaser-shots.mjs), only the resolution changes."
+    },
+    {
+      "id": "teaser-paper-shaders",
+      "kind": "preference",
+      "topic": "Genobi teaser · shader beat",
+      "value": "Owner, round 2, at about 1:14: \"just paper shaders there, some of the shaders in the same colours, maybe a glittering shader\"; Paper Shaders in Signal lime and lilac, on the composition clock."
+    },
+    {
+      "id": "teaser-taste-layer",
+      "kind": "preference",
+      "topic": "Genobi teaser · taste layer",
+      "value": "Owner, round 2: a TASTE LAYER section on black listing the libraries Genobi really ships and credits (docs/credits/libraries), Transitions.dev and Paper Shaders included, typed in with a text effect; it also breaks up repetition."
+    },
+    {
+      "id": "teaser-less-repetition",
+      "kind": "preference",
+      "topic": "Genobi teaser · pacing",
+      "value": "Owner, round 2: less repetitive overall; tighten repeated beats and leave room for one more video of the owner's own (the project stays under 128 layers)."
+    },
+    {
+      "id": "teaser-camera-controls",
+      "kind": "preference",
+      "topic": "Genobi teaser · camera controls",
+      "value": "Owner, round 2: \"we don't say about camera control, which is kind of a BFL thing\"; at 0:27 type \"camera controls\" in the title style over Camera's camera controls (BFL's camera terms)."
+    },
+    {
+      "id": "teaser-threejs",
+      "kind": "preference",
+      "topic": "Genobi teaser · Three.js callout",
+      "value": "Owner, round 2: the vocal sings \"Three.js\"; at 0:36 a \"★ Three.js\" callout in the GENOBI title style, flowing straight into the ComfyUI workflow at 0:38: \"show the workflow and zoom into it\"."
+    },
+    {
+      "id": "teaser-comfyui",
+      "kind": "preference",
+      "topic": "Genobi teaser · ComfyUI",
+      "value": "Owner, round 2: \"at 0:38, inside the Comfy part, show the ComfyUI workflow we have, it's a Comfy competition, it's on brand\"; Genobi's World Builder nodes in a ComfyUI started only for the capture, prompts never queued."
+    },
+    {
+      "id": "teaser-lyric-sync",
+      "kind": "preference",
+      "topic": "Genobi teaser · lyric",
+      "value": "Owner, round 3: the shaders appear when the vocal sings \"shaders, transitions\" (around 1:17), and the following beats follow the words: transitions, creative references with credit, licence information in view, run locally / open-weight / APIs, save the project, reuse the flow."
+    },
+    {
+      "id": "teaser-shaders-dither",
+      "kind": "preference",
+      "topic": "Genobi teaser · shaders",
+      "value": "Owner, round 3: open the shader beat with Paper's dithering shader, lighter, in the teaser palette, with no big \"PAPER SHADERS\" title; then a Space.js effect right after, for variety instead of another typed title."
+    },
+    {
+      "id": "teaser-comfy-no-text",
+      "kind": "preference",
+      "topic": "Genobi teaser · ComfyUI",
+      "value": "Owner, round 3: no text over the ComfyUI shot; the canvas speaks for itself."
+    },
+    {
+      "id": "teaser-taste-collaborator",
+      "kind": "note",
+      "topic": "Genobi teaser · taste layer",
+      "value": "Owner, round 3: ANDREW ZELLINGER first in the TASTE LAYER list; a second collaborator stays off screen until the owner confirms the name."
+    },
+    {
+      "id": "teaser-upscaled-clips",
+      "kind": "note",
+      "topic": "Genobi teaser · generations",
+      "value": "Owner, round 3: the typography is razor sharp, the generation clips softer; the owner upscales the FLUX and MiniMax clips himself and they are swapped in as files (UPSCALED in genobi-teaser.ts)."
+    },
+    {
+      "id": "teaser-capture-quality",
+      "kind": "preference",
+      "topic": "Genobi teaser · capture quality",
+      "value": "Owner, v3 review: \"the recordings should be made in higher quality initially, and use the new cards; all the animations, all the pace, everything is fine — they should be made exactly the same, but recorded in higher resolution.\" Replay the same takes at 3840 × 2160, near-lossless, from the branch being cut."
+    },
+    {
+      "id": "teaser-no-character-switch",
+      "kind": "preference",
+      "topic": "Genobi teaser · 1:20",
+      "value": "Owner, v3 review: at about 1:20 remove the sudden character change; carry the same character into the pixel/dither transition instead of a hard switch, and keep the TASTE LAYER on a steady background with the line \"Libraries, shaders, transitions and creative references — we credit the people who made them; shape that selection around your work.\""
+    },
+    {
+      "id": "teaser-timeline-beat",
+      "kind": "preference",
+      "topic": "Genobi teaser · 0:19–0:24",
+      "value": "Owner, v3 review: \"for slice it can use the cut tool in the timeline — it's in the beginning as well — will work well, adjusting clip length in the timeline\"; \"around 0:19–0:20 — move a clip, adjust timing — that's where we can do it; it shows the FLUX selection instead, it can do that later\"; \"to 0:24 — send it back, can press the Regenerate button.\""
+    },
+    {
+      "id": "teaser-space-beat",
+      "kind": "note",
+      "topic": "Genobi teaser · the space",
+      "value": "Owner, v3 review: \"once it's talking about the space… it says change to cathedral or whatever space, but it's showing a different part of the app instead. It should show the 3D part in that space… and then show a default view of the 3D\"; show the scene view, the 3D viewport filling the shot, default view first, then the Cathedral. Not yet placed: the beat needs the owner's timestamp."
+    }
+  ],
+  "taste": [
+    {
+      "id": "teaser-taste-claims",
+      "topic": "On-screen claims",
+      "value": "Say what the studio did, never where an external clip came from; no tool or provider named that the piece did not use.",
+      "scope": {
+        "medium": "video",
+        "useCase": "teaser"
+      },
+      "evidence": ["teaser-claims"]
+    },
+    {
+      "id": "teaser-taste-readable",
+      "topic": "Readable interface beats",
+      "value": "Zoom every interface beat onto one readable detail and hold it at least 1.3 s; keep light pages short in a dark film.",
+      "scope": {
+        "medium": "video",
+        "useCase": "teaser"
+      },
+      "evidence": ["teaser-readable", "teaser-scrolls-dark"]
+    },
+    {
+      "id": "teaser-taste-capture",
+      "topic": "Interface capture",
+      "value": "Record interface footage at 2× the render (3840 × 2160 for 1080p) by replaying a scripted take; render at 1920 × 1080; no AI upscale.",
+      "scope": {
+        "medium": "video",
+        "useCase": "teaser"
+      },
+      "evidence": ["teaser-sharper", "teaser-same-takes"]
+    },
+    {
+      "id": "teaser-taste-sources",
+      "topic": "Fonts and transitions",
+      "value": "Bundled fonts only (Instrument Sans, IBM Plex Mono, Pixelify Sans, Nokia Cellphone FC); free Transitions.dev transitions only, run unchanged.",
+      "scope": {
+        "medium": "video",
+        "useCase": "*"
+      },
+      "evidence": ["teaser-brief"]
+    }
+  ]
+}

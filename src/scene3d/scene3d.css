@@ -1,0 +1,441 @@
+/* 3D camera panel (#18). Dimensions stay fixed across plate, playback and
+   playblast states so nothing below the panel moves. */
+.s3d-frame {
+  container: s3d / inline-size;
+}
+.s3d {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(17rem, 1fr);
+  gap: 14px;
+  padding: 14px;
+  color: var(--text);
+  font-size: 12px;
+}
+.s3d-view,
+.s3d-side {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+.s3d-canvas {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--bg);
+}
+.s3d-canvas canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+/* WebGL unavailable or lost: the message takes the frame, not a blank canvas. */
+.s3d-canvas canvas[hidden] {
+  display: none;
+}
+.s3d-unavailable {
+  margin: 0;
+  padding: 4em 1.5em;
+  text-align: center;
+  color: var(--soft);
+}
+.s3d-transport {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.s3d-transport label {
+  flex: 1;
+  display: flex;
+}
+.s3d-transport input {
+  width: 100%;
+  min-height: 28px;
+  accent-color: var(--intel);
+}
+.s3d-transport output,
+.s3d output {
+  font: 10px var(--mono);
+  color: var(--readout);
+  font-variant-numeric: tabular-nums;
+}
+.s3d-transport output {
+  width: 4.5em;
+  text-align: right;
+}
+.s3d-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.s3d button {
+  min-height: 30px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--soft);
+  font: 500 11px inherit;
+  cursor: pointer;
+  transition:
+    background var(--motion-fast),
+    color var(--motion-fast),
+    border-color var(--motion-fast);
+}
+.s3d button:hover {
+  color: var(--text);
+  background: var(--raised);
+}
+.s3d button[aria-pressed="true"] {
+  color: var(--accent-strong);
+  background: var(--accent-ghost);
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+}
+.s3d-transport button {
+  min-width: 4.6rem;
+}
+.s3d fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+.s3d legend,
+.s3d label > span,
+.s3d-slider-head,
+.s3d-stack header,
+.s3d figcaption {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+  padding: 0;
+  font: 9px var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.s3d legend {
+  width: 100%;
+}
+.s3d legend span,
+.s3d figcaption span {
+  color: var(--readout);
+}
+.s3d select {
+  width: 100%;
+  min-height: 30px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--text);
+  font: 12px inherit;
+  padding: 0 8px;
+}
+.s3d-scene-picker {
+  display: block;
+}
+.s3d-plates > div {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px;
+}
+.s3d-plates button {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 7px;
+  min-height: 36px;
+  padding: 0 9px;
+  text-align: left;
+}
+.s3d-plates button span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.s3d-plates small,
+.s3d-gestures small {
+  font: 9px var(--mono);
+  color: var(--muted);
+}
+.s3d-plates em {
+  font: normal 8px var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--camera-shot);
+}
+.s3d-curve-preview {
+  height: 48px;
+  margin-bottom: 6px;
+  border-radius: 7px;
+  background: var(--bg);
+  overflow: hidden;
+}
+.s3d-curve-preview svg {
+  width: 100%;
+  height: 100%;
+}
+.s3d-curve-axis {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+.s3d-curve-line {
+  fill: none;
+  stroke: var(--intel);
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+.s3d-curve-row {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 4px;
+}
+.s3d-curve-row button {
+  display: grid;
+  place-items: center;
+  padding: 0;
+}
+.s3d-curve-row button[aria-pressed="true"] .s3d-curve-line {
+  stroke: var(--accent-strong);
+}
+.s3d-stack ol {
+  display: grid;
+  gap: 4px;
+  margin: 0 0 10px;
+  padding: 0;
+  list-style: none;
+}
+.s3d-stack li {
+  position: relative;
+  height: 24px;
+  border-radius: 6px;
+  overflow: hidden;
+  background: var(--bg);
+  font: 9px var(--mono);
+}
+.s3d-stack-progress {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--intel);
+  opacity: 0.32;
+}
+.s3d-stack-weight {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  background: var(--camera-shot);
+}
+.s3d-stack-name,
+.s3d-stack-meta {
+  position: absolute;
+  top: 7px;
+  text-transform: uppercase;
+}
+.s3d-stack-name {
+  left: 8px;
+  color: var(--text);
+}
+.s3d-stack-meta {
+  right: 8px;
+  color: var(--muted);
+}
+.s3d-stack li[data-empty] .s3d-stack-name {
+  color: var(--muted);
+}
+.s3d-sliders {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.s3d-slider-head label {
+  color: inherit;
+}
+.s3d-sliders input {
+  width: 100%;
+  min-height: 24px;
+  margin: 0;
+  accent-color: var(--accent);
+}
+.s3d-gestures > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.s3d-gestures button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px;
+}
+.s3d-radar {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.s3d-radar figure {
+  margin: 0;
+  min-width: 0;
+}
+.s3d-radar canvas {
+  display: block;
+  width: 100%;
+  height: 150px;
+  border-radius: 8px;
+  background: var(--bg);
+}
+.s3d-playblast {
+  display: grid;
+  gap: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+.s3d-playblast-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 9.5rem;
+  align-items: end;
+  gap: 8px;
+}
+.s3d-playblast-row label {
+  display: block;
+}
+.s3d .s3d-primary {
+  color: var(--accent-ink);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.s3d .s3d-primary:hover {
+  color: var(--accent-ink);
+  background: var(--accent-strong);
+}
+.s3d progress {
+  width: 100%;
+  height: 6px;
+  accent-color: var(--intel);
+}
+.s3d-status {
+  height: 4.2em;
+  margin: 0;
+  overflow-y: auto;
+  color: var(--soft);
+  font-size: 11px;
+  line-height: 1.4;
+}
+.s3d-status a {
+  color: var(--accent-strong);
+}
+/* Load / Save scene beside the picker; a refusal reads in place. */
+.s3d-scene-file-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 5px;
+}
+.s3d-scene-error {
+  margin: 6px 0 0;
+  color: var(--soft);
+  font-size: 11px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+/* Room acoustics readout: text and a tiny bar per octave band. */
+.s3d-acoustics-bands {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 4px;
+  height: 64px;
+  margin: 0 0 8px;
+  padding: 0;
+  list-style: none;
+}
+.s3d-acoustics-bands li {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto auto;
+  align-items: end;
+  justify-items: center;
+  min-width: 0;
+}
+.s3d-acoustics-bar {
+  width: 100%;
+  border-radius: 3px 3px 0 0;
+  background: var(--intel);
+  opacity: 0.55;
+}
+.s3d-acoustics-bands small {
+  font: 9px var(--mono);
+  color: var(--muted);
+}
+.s3d-acoustics dl {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 3px 10px;
+  margin: 0;
+}
+.s3d-acoustics dt {
+  font: 9px var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.s3d-acoustics dd {
+  margin: 0;
+  font: 11px var(--mono);
+  color: var(--readout);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.s3d-acoustics-note,
+.s3d-acoustics-empty {
+  margin: 8px 0 0;
+  color: var(--soft);
+  font-size: 11px;
+  line-height: 1.4;
+}
+/* The panel collapses on its own width, not the viewport's: a narrow Ninja
+   column at a desktop width must not squeeze the view beside 17rem of
+   controls. 880px matches the old 900px viewport break for a full panel. */
+@container s3d (max-width: 880px) {
+  .s3d {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@container s3d (max-width: 640px) {
+  .s3d {
+    padding: 10px;
+  }
+  .s3d-radar canvas {
+    height: 130px;
+  }
+  .s3d-playblast-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .s3d-playblast-row button {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 700px) {
+  .s3d button,
+  .s3d select {
+    min-height: 36px;
+  }
+}
+/* One-line captions: a long plate name must not change the pane height. */
+.s3d figcaption {
+  white-space: nowrap;
+}
+.s3d figcaption span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.s3d-cast-credits .s3d-status {
+  overflow-wrap: anywhere;
+}

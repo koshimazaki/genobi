@@ -1,0 +1,122 @@
+{
+  "ui-gallery": {
+    "kind": "video",
+    "url": "/media/showcase/genobi-teaser/v1/ui-gallery.mp4",
+    "path": "media/ui-gallery.mp4",
+    "durationSeconds": 12
+  },
+  "ui-camera": {
+    "kind": "video",
+    "url": "/media/showcase/genobi-teaser/v1/ui-camera.mp4",
+    "path": "media/ui-camera.mp4",
+    "durationSeconds": 13.25
+  },
+  "ui-director": {
+    "kind": "video",
+    "url": "/media/showcase/genobi-teaser/v1/ui-director.mp4",
+    "path": "media/ui-director.mp4",
+    "durationSeconds": 10.208
+  },
+  "ui-editor": {
+    "kind": "video",
+    "url": "/media/showcase/genobi-teaser/v1/ui-editor.mp4",
+    "path": "media/ui-editor.mp4",
+    "durationSeconds": 15
+  },
+  "ui-directions": {
+    "kind": "video",
+    "url": "/media/showcase/genobi-teaser/v1/ui-directions.mp4",
+    "path": "media/ui-directions.mp4",
+    "durationSeconds": 10.291
+  },
+  "ui-world": {
+    "kind": "video",
+    "url": "/media/showcase/genobi-teaser/v1/ui-world.mp4",
+    "path": "media/ui-world.mp4",
+    "durationSeconds": 14
+  },
+  "ui-swords": {
+    "kind": "video",
+    "url": "/media/showcase/genobi-teaser/v1/ui-swords.mp4",
+    "path": "media/ui-swords.mp4",
+    "durationSeconds": 8.541
+  },
+  "ui-scrolls": {
+    "kind": "video",
+    "url": "/media/showcase/genobi-teaser/v1/ui-scrolls.mp4",
+    "path": "media/ui-scrolls.mp4",
+    "durationSeconds": 9.166
+  },
+  "ui-agent": {
+    "kind": "video",
+    "url": "/media/showcase/genobi-teaser/v1/ui-agent.mp4",
+    "path": "media/ui-agent.mp4",
+    "durationSeconds": 7.916
+  },
+  "character": {
+    "kind": "video",
+    "url": "/media/template-gallery/character-piece.mp4",
+    "path": "media/character-piece.mp4",
+    "durationSeconds": 20.041
+  },
+  "product": {
+    "kind": "video",
+    "url": "/media/template-gallery/product-video.mp4",
+    "path": "media/product-video.mp4",
+    "durationSeconds": 20.041
+  },
+  "audio-visual": {
+    "kind": "video",
+    "url": "/media/template-gallery/audio-visual.mp4",
+    "path": "media/audio-visual.mp4",
+    "durationSeconds": 29.041
+  },
+  "dimensions": {
+    "kind": "video",
+    "url": "/media/template-gallery/dimensions-mix.mp4",
+    "path": "media/dimensions-mix.mp4",
+    "durationSeconds": 23.145
+  },
+  "signal": {
+    "kind": "video",
+    "url": "/media/template-gallery/signal-taste-reel.mp4",
+    "path": "media/signal-taste-reel.mp4",
+    "durationSeconds": 24
+  },
+  "library-01": {
+    "kind": "video",
+    "url": "/media/library-01.mp4",
+    "path": "media/library-01.mp4",
+    "durationSeconds": 10.041
+  },
+  "library-03": {
+    "kind": "video",
+    "url": "/media/library-03.mp4",
+    "path": "media/library-03.mp4",
+    "durationSeconds": 10.041
+  },
+  "mix-01": {
+    "kind": "video",
+    "url": "/media/director-templates/dimensions-mix/mix-01.mp4",
+    "path": "media/mix-01.mp4",
+    "durationSeconds": 13.5
+  },
+  "mix-02": {
+    "kind": "video",
+    "url": "/media/director-templates/dimensions-mix/mix-02.mp4",
+    "path": "media/mix-02.mp4",
+    "durationSeconds": 13.5
+  },
+  "mix-03": {
+    "kind": "video",
+    "url": "/media/director-templates/dimensions-mix/mix-03.mp4",
+    "path": "media/mix-03.mp4",
+    "durationSeconds": 13.5
+  },
+  "teaser-track": {
+    "kind": "audio",
+    "url": "/media/director-templates/genobi-teaser/teaser-track.mp3",
+    "path": "media/teaser-track.mp3",
+    "durationSeconds": 119.59
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "flux-studio-lite",
+  "main": "worker/index.ts",
+  "account_id": "da207e184a404c2be5debcd3368d3e74",
+  "compatibility_date": "2026-09-19",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*"],
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "flux-studio-lite",
+      "database_id": "69115f7b-cf28-4e4b-80f1-5aac2e5df24d",
+      "migrations_dir": "migrations",
+    },
+  ],
+  "r2_buckets": [
+    { "binding": "MEDIA", "bucket_name": "flux-studio-lite-media" },
+  ],
+  // Lifecycle sweep: age out abandoned jobs, drop dead links and expired
+  // rows. Pages has no cron trigger, so worker/sweep.ts also runs from the
+  // request path; whichever fires first claims the interval.
+  "triggers": { "crons": ["*/5 * * * *"] },
+  "observability": { "enabled": true, "head_sampling_rate": 0.1 },
+}

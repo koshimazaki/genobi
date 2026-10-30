@@ -1,0 +1,171 @@
+{
+  "schema": "genobi.showcase.v1",
+  "project": "bloom-teaser",
+  "name": "Bloom",
+  "template": "bloom-teaser",
+  "summary": "A 19-second anime teaser of the owner's character Bloom: two MiniMax H3 (open weights) takes of one character sheet cut to the owner's track Anime-Genobi at 140 BPM, under a character-scan and surveillance look, with an editable end card. Nothing is generated.",
+  "versions": [
+    {
+      "version": 1,
+      "date": "2026-10-30T14:12:00Z",
+      "by": ["owner", "agent"],
+      "title": "The first cut, to the owner's track",
+      "summary": "The third mix template: a Space.js scan of the character sheet as the pickup, the takes' strongest poses and ninja moves on the beat from the first downbeat, CRT scanlines, a REC / CAM HUD, target boxes and callouts, the wireframe sweep on the drop, the title, and the construction end card with Bloom's own still.",
+      "changes": [
+        "Two takes encoded once at 1920 × 1080, CRF 18, no sound",
+        "The owner's track trimmed 40 ms and raised to -14 LUFS; 44.5 beats at 140 BPM, 458 frames",
+        "One new recipe, end-card-still: the construction end card with a still parameter",
+        "Gallery: Bloom replaces Neon bloom; the Dimensions mix becomes the music video"
+      ],
+      "eventIds": [
+        "bloom-brief",
+        "bloom-look",
+        "bloom-prompt",
+        "bloom-gallery",
+        "bloom-track",
+        "bloom-end-card",
+        "bloom-naming",
+        "bloom-provenance"
+      ],
+      "file": "project-v1.json",
+      "projectId": "bloom-teaser-v1",
+      "layers": 35,
+      "durationFrames": 458
+    }
+  ],
+  "media": {
+    "a5d28c66777bd85c2325fe92c0f297ad398baa075416c67f224d13afdd5a75e4": {
+      "path": "media/bloom-h3-a.mp4",
+      "url": "/media/director-templates/bloom-teaser/bloom-h3-a.mp4"
+    },
+    "5276e31e954a068d60a9b8a66fe3a5d4b0568cefdc1009a880a93243816b1114": {
+      "path": "media/bloom-h3-b.mp4",
+      "url": "/media/director-templates/bloom-teaser/bloom-h3-b.mp4"
+    },
+    "fd85fbc672e13a664989232f4b7321c930c5dd94b24e0bed4ae7a52e321d5df3": {
+      "path": "media/bloom-track.mp3",
+      "url": "/media/director-templates/bloom-teaser/bloom-track.mp3"
+    }
+  },
+  "memory": {
+    "events": [
+      {
+        "id": "bloom-brief",
+        "kind": "note",
+        "objectIds": [],
+        "reason": "Owner, 30 Oct 2026: a new ~30 s anime teaser template for the \"bloom\" character, \"proof of the open path: MiniMax H3 (open weights) video + the owner's own music\"; the best moments of both clips cut on beats, \"you may skip a beat cut to let a strong shot flow\"; an editable end card: \"BLOOM\", \"ANIME TEASER\", \"MUSIC · KOSHIMAZAKI\".",
+        "source": "interpretation",
+        "actor": "agent",
+        "at": "2026-10-30T14:12:00Z",
+        "version": 1,
+        "guidance": {
+          "topic": "Bloom · brief",
+          "value": "Owner, 30 Oct 2026: a new ~30 s anime teaser template for the \"bloom\" character, \"proof of the open path: MiniMax H3 (open weights) video + the owner's own music\"; the best moments of both clips cut on beats, \"you may skip a beat cut to let a strong shot flow\"; an editable end card: \"BLOOM\", \"ANIME TEASER\", \"MUSIC · KOSHIMAZAKI\"."
+        }
+      },
+      {
+        "id": "bloom-look",
+        "kind": "note",
+        "objectIds": [],
+        "reason": "Owner, 30 Oct 2026, the style: a character SCAN + CAMERA SURVEILLANCE look: scanlines/HUD readouts, target boxes on the character, REC/CAM labels, a character-sheet \"scan\" that maps the sheet's callouts onto the moving figure; holographic overlays/interface with Space.js or Alien.js, reusing existing recipes.",
+        "source": "interpretation",
+        "actor": "agent",
+        "at": "2026-10-30T14:12:00Z",
+        "version": 1,
+        "guidance": {
+          "topic": "Bloom · look",
+          "value": "Owner, 30 Oct 2026, the style: a character SCAN + CAMERA SURVEILLANCE look: scanlines/HUD readouts, target boxes on the character, REC/CAM labels, a character-sheet \"scan\" that maps the sheet's callouts onto the moving figure; holographic overlays/interface with Space.js or Alien.js, reusing existing recipes."
+        }
+      },
+      {
+        "id": "bloom-prompt",
+        "kind": "note",
+        "objectIds": [],
+        "reason": "Prompt (img1 = sheet): animate each pose of this character sheet of <<<img1>>> , sequentially but as one smooth take, make it a starting point of cinematic advert. blosoming flowers are subtle. Wide angle lens, camera facing character. Starting from extereme close-up to full body shot. Fast pased, jumping and making ninja moves, with glowing and growing flowers mixed with cynernetic elements of the body of the characters. Include details featured on the <<<img1>>>",
+        "source": "interpretation",
+        "actor": "agent",
+        "at": "2026-10-30T14:12:00Z",
+        "version": 1
+      },
+      {
+        "id": "bloom-gallery",
+        "kind": "note",
+        "objectIds": [],
+        "reason": "Owner, 30 Oct 2026: the Bloom card (\"Bloom\" · \"Anime teaser\", footage \"MiniMax H3 · open weights\") replaces Neon bloom; the Dimensions mix's subtitle changes from \"Anime teaser\" to \"Music video\"; order Genobi teaser, Dimensions mix, Bloom, then the rest. Neon bloom's card id is audio-visual-generation, so that id went into NOT_IN_GALLERY.",
+        "source": "interpretation",
+        "actor": "agent",
+        "at": "2026-10-30T14:12:00Z",
+        "version": 1,
+        "guidance": {
+          "topic": "Bloom · gallery",
+          "value": "Owner, 30 Oct 2026: the Bloom card (\"Bloom\" · \"Anime teaser\", footage \"MiniMax H3 · open weights\") replaces Neon bloom; the Dimensions mix's subtitle changes from \"Anime teaser\" to \"Music video\"; order Genobi teaser, Dimensions mix, Bloom, then the rest. Neon bloom's card id is audio-visual-generation, so that id went into NOT_IN_GALLERY."
+        }
+      },
+      {
+        "id": "bloom-track",
+        "kind": "note",
+        "objectIds": ["track"],
+        "reason": "Owner, 30 Oct 2026, the track: Anime-Genobi.mp3, 19.152 s, \"so the teaser is ~19 s, not 30 — fit the cut to the track (end card inside it, no silence after the track ends, no looping)\"; credit \"music by Koshimazaki (owner-made)\". Read as: 140 BPM (analysed 139.86), first 40 ms trimmed so beat 0 is frame 0, 44.5 beats ending 30 ms before the track ends.",
+        "source": "interpretation",
+        "actor": "agent",
+        "at": "2026-10-30T14:12:00Z",
+        "version": 1,
+        "guidance": {
+          "topic": "Bloom · track",
+          "value": "Owner, 30 Oct 2026, the track: Anime-Genobi.mp3, 19.152 s, \"so the teaser is ~19 s, not 30 — fit the cut to the track (end card inside it, no silence after the track ends, no looping)\"; credit \"music by Koshimazaki (owner-made)\". Read as: 140 BPM (analysed 139.86), first 40 ms trimmed so beat 0 is frame 0, 44.5 beats ending 30 ms before the track ends."
+        }
+      },
+      {
+        "id": "bloom-end-card",
+        "kind": "note",
+        "objectIds": ["end-card"],
+        "reason": "The construction end card's still is fixed to a Dimensions creature, so the cut uses a copy, end-card-still, with the piece's own still as a parameter; the Dimensions mix's recipe and every project pinned to its hash stay unchanged.",
+        "source": "interpretation",
+        "actor": "agent",
+        "at": "2026-10-30T14:12:00Z",
+        "version": 1
+      },
+      {
+        "id": "bloom-naming",
+        "kind": "note",
+        "objectIds": [],
+        "reason": "Rule from the brief: never name the tool the clips were downloaded from, in text or file names; inputs are copied and renamed (bloom-h3-a.mp4, bloom-h3-b.mp4, bloom-sheet.jpg, bloom-track.mp3).",
+        "source": "interpretation",
+        "actor": "agent",
+        "at": "2026-10-30T14:12:00Z",
+        "version": 1,
+        "guidance": {
+          "topic": "Bloom · naming",
+          "value": "Rule from the brief: never name the tool the clips were downloaded from, in text or file names; inputs are copied and renamed (bloom-h3-a.mp4, bloom-h3-b.mp4, bloom-sheet.jpg, bloom-track.mp3)."
+        }
+      },
+      {
+        "id": "bloom-provenance",
+        "kind": "note",
+        "objectIds": [],
+        "reason": "Owner, 30 Oct 2026, provenance: the video is \"MiniMax H3 (open weights)\"; the character sheet's own model is uncertain, so it is called \"character sheet (reference image)\" with no model named and no claim that it is open; music \"by Koshimazaki (owner-made)\".",
+        "source": "interpretation",
+        "guidance": {
+          "topic": "Bloom · provenance",
+          "value": "The video is MiniMax H3 (open weights); the character sheet is a reference image with no model claimed; music by Koshimazaki (owner-made)."
+        },
+        "actor": "agent",
+        "at": "2026-10-30T14:12:00Z",
+        "version": 1
+      }
+    ],
+    "checkpoints": [
+      {
+        "id": "bloom-v1",
+        "sessionId": "showcase-v1",
+        "summary": "Version 1 built on feat/bloom-anime-teaser (#252): 458 frames at 24 fps, rendered by Render MP4 at 1080p for the gallery card and a master.",
+        "eventIds": ["bloom-brief", "bloom-track"],
+        "unresolved": [],
+        "nextSteps": [],
+        "status": "done",
+        "at": "2026-10-30T14:12:00Z",
+        "version": 1
+      }
+    ]
+  }
+}

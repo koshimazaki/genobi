@@ -1,0 +1,157 @@
+{
+  "example": "The open: a title card and a boot status, then the first picture is built on a card, then the first shot (beats 0-24).",
+  "inputs": {
+    "storyboard": [
+      {
+        "section": "open",
+        "from": 0,
+        "to": 12,
+        "cards": ["title"],
+        "status": ["Booting the studio", "Studio ready"]
+      },
+      {
+        "section": "first-shot",
+        "from": 12,
+        "to": 20,
+        "cards": ["reveal still-character.jpg"],
+        "status": ["Generating shot 01 · FLUX 3", "Shot ready"]
+      }
+    ],
+    "analysis": {
+      "bpm": 135,
+      "firstDownbeatBeat": 3.99,
+      "requiredCuts": [12, 20]
+    }
+  },
+  "decisions": [
+    {
+      "id": "d-open-1",
+      "section": "open",
+      "choice": "title (gen-title, card) on lane cards, beats 0-12, copied from this example; status-0 'Booting the studio' -> 'Studio ready' for 12 beats, doneAt 3.2, fadeAt 5.033.",
+      "because": "Rule 5 (title card) and rule 6: seconds = 12 x 0.44444 = 5.333, doneAt r1(0.6 x 5.333) = 3.2, fadeAt r3(5.333 - 0.3) = 5.033, variant scan (the first status).",
+      "source": "rule"
+    },
+    {
+      "id": "d-first-shot-1",
+      "section": "first-shot",
+      "choice": "reveal-1 of still-character.jpg (card) on lane cards, beats 12-20, duration 3; status-1 'Generating shot 01 · FLUX 3' -> 'Shot ready', doneAt 2.1, fadeAt 3.256, variant twinkle.",
+      "because": "Rules 5 and 6; FLUX 3 is approved wording here because the forest guardian is a FLUX 3 run.",
+      "source": "rule"
+    },
+    {
+      "id": "d-generations-1",
+      "section": "generations",
+      "choice": "character at 20 for 4 beats from 0 s, zoom 1.33.",
+      "because": "Rule 2.3 (a generation is 4 beats) and rule 3 (first use starts at 0 s; character zooms 1.33).",
+      "source": "rule"
+    }
+  ],
+  "commands": ["node scripts/teaser-run-helper.mjs seconds 12"],
+  "cut": {
+    "shots": [
+      {
+        "asset": "character",
+        "label": "character · 20",
+        "sourceSeconds": 0,
+        "startBeat": 20,
+        "beats": 4,
+        "cropY": null,
+        "zoom": 1.33
+      }
+    ],
+    "layers": [
+      {
+        "id": "title",
+        "name": "Title · GENOBI",
+        "module": "gen-title",
+        "kind": "graphics",
+        "lane": "cards",
+        "startBeat": 0,
+        "beats": 12,
+        "opacity": 1,
+        "card": true,
+        "parameters": {
+          "text": "GENOBI",
+          "line": "THE AI FILM STUDIO YOU DIRECT",
+          "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+          "size": 128,
+          "color": "#d5ff70",
+          "muted": "#eaf2df",
+          "accent": "#d5ff70",
+          "x": 0.5,
+          "y": 0.46,
+          "duration": 3.6,
+          "mode": "trace-texts",
+          "steps": "Setting the title / Tracing glyphs / Inking",
+          "done": "Studio ready",
+          "fadeAt": 4.933,
+          "plate": 0
+        }
+      },
+      {
+        "id": "reveal-1",
+        "name": "Generate · forest guardian",
+        "module": "gen-image",
+        "kind": "graphics",
+        "lane": "cards",
+        "startBeat": 12,
+        "beats": 8,
+        "opacity": 1,
+        "card": true,
+        "parameters": {
+          "still": "/media/director-templates/genobi-teaser/still-character.jpg",
+          "matte": "#0c0e0c",
+          "accent": "#d5ff70",
+          "inset": 0,
+          "duration": 3,
+          "mode": "trace",
+          "steps": "Sampling / Screening / Colour",
+          "done": "Shot ready",
+          "fadeAt": 0
+        }
+      },
+      {
+        "id": "status-0",
+        "name": "Status · Booting the studio",
+        "module": "gen-status",
+        "kind": "graphics",
+        "lane": "status",
+        "startBeat": 0,
+        "beats": 12,
+        "opacity": 1,
+        "parameters": {
+          "label": "Booting the studio",
+          "done": "Studio ready",
+          "variant": "scan",
+          "color": "#d5ff70",
+          "x": 0.5,
+          "y": 0.86,
+          "scale": 1.3,
+          "doneAt": 3.2,
+          "fadeAt": 5.033
+        }
+      },
+      {
+        "id": "status-1",
+        "name": "Status · Generating shot 01 · FLUX 3",
+        "module": "gen-status",
+        "kind": "graphics",
+        "lane": "status",
+        "startBeat": 12,
+        "beats": 8,
+        "opacity": 1,
+        "parameters": {
+          "label": "Generating shot 01 · FLUX 3",
+          "done": "Shot ready",
+          "variant": "twinkle",
+          "color": "#d5ff70",
+          "x": 0.5,
+          "y": 0.86,
+          "scale": 1.3,
+          "doneAt": 2.1,
+          "fadeAt": 3.256
+        }
+      }
+    ]
+  }
+}

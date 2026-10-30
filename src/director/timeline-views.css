@@ -1,0 +1,143 @@
+/* The timeline's views (Camera, Action, Markers, Rhythm) and the END edge. */
+/* Camera and Action: the shot's interval, its direction as a glyph. */
+.dir-view {
+  --lane-color: var(--intel);
+}
+.dir-cell {
+  position: absolute;
+  top: 5px;
+  bottom: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  touch-action: none;
+  user-select: none;
+  cursor: grab;
+  color: var(--lane-color);
+  border: 1px solid color-mix(in srgb, var(--lane-color) 40%, var(--border));
+  background: color-mix(in srgb, var(--lane-color) 9%, var(--sunken));
+  border-radius: var(--radius-control);
+}
+.dir-cell:hover,
+.dir-cell.is-active {
+  border-color: var(--lane-color);
+  background: color-mix(in srgb, var(--lane-color) 16%, var(--sunken));
+}
+.dir-cell:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+.dir-cell.is-locked {
+  cursor: pointer;
+}
+.dir-cell > svg {
+  width: 40px;
+  height: 22px;
+  flex: none;
+  pointer-events: none;
+}
+.dir-cell-unset {
+  font: 12px var(--mono);
+  color: var(--muted);
+  pointer-events: none;
+}
+.dir-cell .dir-trim {
+  background: color-mix(in srgb, var(--lane-color) 22%, transparent);
+}
+.dir-view.is-muted .dir-track {
+  opacity: 0.3;
+}
+.dir-beat-mark {
+  position: absolute;
+  top: 50%;
+  width: 1px;
+  height: 7px;
+  margin-top: -3px;
+  background: var(--machined);
+  pointer-events: none;
+}
+.dir-beat-mark.bar {
+  height: 13px;
+  margin-top: -6px;
+  background: var(--camera-light);
+}
+.director .dir-timeline .dir-marker {
+  position: absolute;
+  top: 3px;
+  max-width: 110px;
+  height: 17px;
+  padding: 1px 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font: 8px var(--mono);
+  text-transform: uppercase;
+  border: 0;
+  border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
+  background: var(--camera-light);
+  color: var(--accent-ink);
+  z-index: 1;
+}
+.dir-marker.is-resolved {
+  opacity: 0.5;
+}
+.dir-bar {
+  position: absolute;
+  top: 5px;
+  bottom: 5px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 3px;
+  padding-bottom: 3px;
+  color: var(--lane-color);
+  background: color-mix(in srgb, var(--lane-color) 7%, transparent);
+  border-radius: var(--radius-xs);
+  overflow: hidden;
+}
+.dir-bar i {
+  width: 4px;
+  background: currentColor;
+  border-radius: 1px;
+  opacity: 0.7;
+}
+
+/* The composition's END edge, draggable. */
+.director .dir-timeline .dir-composition-end {
+  position: absolute;
+  top: 28px;
+  bottom: 12px;
+  width: 12px;
+  min-height: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  border: 0;
+  border-left: 2px solid var(--camera-light);
+  border-radius: 0;
+  background: color-mix(in srgb, var(--camera-light) 10%, transparent);
+  cursor: ew-resize;
+  touch-action: none;
+  z-index: 3;
+}
+.dir-composition-end span {
+  writing-mode: vertical-rl;
+  font: 8px var(--mono);
+  color: var(--camera-light);
+  pointer-events: none;
+  padding-top: 8px;
+}
+.dir-composition-end-readout {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  padding: 2px 5px;
+  font: 9px var(--mono);
+  background: var(--badge-bg);
+  color: var(--camera-light);
+  white-space: nowrap;
+}
+.dir-composition-end:focus-visible {
+  outline: 2px solid var(--accent);
+}

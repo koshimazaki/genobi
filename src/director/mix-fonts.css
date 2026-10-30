@@ -1,0 +1,13 @@
+/*
+ * Nokia Cellphone FC (Zeh Fernando), the Dimensions mix's pixel face for
+ * its slams, title and end card. Bundled under its own notice, which allows
+ * free distribution and forbids selling the font:
+ * public/motion/fonts/nokia-fc/nokiafc22.txt (docs/motion-fonts.md).
+ * One weight; the range keeps the browser from synthesising a bold.
+ */
+@font-face {
+  font-family: "Nokia Cellphone FC";
+  src: url("/motion/fonts/nokia-fc/nokiafc22.woff2") format("woff2");
+  font-weight: 400 700;
+  font-display: block;
+}

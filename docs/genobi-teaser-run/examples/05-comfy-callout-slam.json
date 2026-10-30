@@ -1,0 +1,237 @@
+{
+  "example": "Make into Direct: a slam on the break, the Director, then the owner's ComfyUI recording with the Three.js callout (beats 72-92).",
+  "inputs": {
+    "storyboard": [
+      {
+        "text": "DIRECT",
+        "endsAt": 76
+      },
+      {
+        "section": "direct",
+        "from": 76,
+        "to": 81,
+        "shots": [
+          {
+            "asset": "ui-director",
+            "shows": ["play", "play"]
+          }
+        ]
+      },
+      {
+        "section": "direct",
+        "from": 81,
+        "to": 86,
+        "shots": [
+          {
+            "asset": "ui-comfy",
+            "source": 0,
+            "move": {
+              "x": 0.278,
+              "y": 0.506,
+              "zoom": 2.8,
+              "ease": 1,
+              "drift": 0.03,
+              "from": {
+                "x": 0.278,
+                "y": 0.506,
+                "zoom": 2.8
+              }
+            },
+            "callout": {
+              "words": "★ THREE.JS",
+              "size": 96,
+              "y": 0.86
+            }
+          }
+        ]
+      },
+      {
+        "section": "direct",
+        "from": 86,
+        "to": 92,
+        "shots": [
+          {
+            "asset": "ui-comfy",
+            "source": 2.222,
+            "move": {
+              "x": 0.5,
+              "y": 0.5,
+              "zoom": 1,
+              "ease": 3,
+              "drift": 0.02,
+              "from": {
+                "x": 0.278,
+                "y": 0.506,
+                "zoom": 2.8
+              }
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "decisions": [
+    {
+      "id": "d-make-9",
+      "section": "make",
+      "choice": "direct: kinetic DIRECT, beats 74-76, size 225.",
+      "because": "Rule 7: ends at 76; 6 characters, so 2 beats.",
+      "source": "rule"
+    },
+    {
+      "id": "d-direct-1",
+      "section": "direct",
+      "choice": "ui-director 76 for 5 beats from 0.2 s; ui-comfy 81 for 5 beats from 0 s and 86 for 6 beats from 2.222 s with the storyboard's moves; callout-three-js on 81 for 5 beats, size 96, y 0.86, fadeAt 1.922; a small glitch on 76 only.",
+      "because": "Rules 2.1 and 2.2 (the recording has no log, so its source and move are the owner's direction), 4.4 (callout) and 8 (81 and 86 are the owner's timestamps, not required cuts, so no glitch).",
+      "source": "rule"
+    }
+  ],
+  "commands": [
+    "node scripts/teaser-run-helper.mjs slice ui-director play play",
+    "node scripts/teaser-run-helper.mjs move ui-director play",
+    "node scripts/teaser-run-helper.mjs seconds 81"
+  ],
+  "cut": {
+    "shots": [
+      {
+        "asset": "ui-director",
+        "label": "Director · play",
+        "sourceSeconds": 0.2,
+        "startBeat": 76,
+        "beats": 5,
+        "cropY": null,
+        "move": {
+          "x": 0.05,
+          "y": 0.23,
+          "zoom": 1.8,
+          "ease": 2,
+          "drift": 0.03
+        }
+      },
+      {
+        "asset": "ui-comfy",
+        "label": "ComfyUI · from 0 s",
+        "sourceSeconds": 0,
+        "startBeat": 81,
+        "beats": 5,
+        "cropY": null,
+        "move": {
+          "x": 0.278,
+          "y": 0.506,
+          "zoom": 2.8,
+          "ease": 1,
+          "drift": 0.03,
+          "from": {
+            "x": 0.278,
+            "y": 0.506,
+            "zoom": 2.8
+          }
+        }
+      },
+      {
+        "asset": "ui-comfy",
+        "label": "ComfyUI · from 2.222 s",
+        "sourceSeconds": 2.222,
+        "startBeat": 86,
+        "beats": 6,
+        "cropY": null,
+        "move": {
+          "x": 0.5,
+          "y": 0.5,
+          "zoom": 1,
+          "ease": 3,
+          "drift": 0.02,
+          "from": {
+            "x": 0.278,
+            "y": 0.506,
+            "zoom": 2.8
+          }
+        }
+      }
+    ],
+    "layers": [
+      {
+        "id": "direct",
+        "name": "Slam · DIRECT",
+        "module": "kinetic",
+        "kind": "graphics",
+        "lane": "impact",
+        "startBeat": 74,
+        "beats": 2,
+        "opacity": 1,
+        "parameters": {
+          "text": "DIRECT",
+          "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+          "weight": 700,
+          "color": "#f6f8f2",
+          "accent": "#0c0e0c",
+          "bpm": 135,
+          "size": 225,
+          "beats": 2
+        }
+      },
+      {
+        "id": "cursor-76",
+        "name": "Pointer · Director · play",
+        "module": "ui-cursor",
+        "kind": "graphics",
+        "lane": "cursor",
+        "startBeat": 76,
+        "beats": 5,
+        "opacity": 1,
+        "parameters": {
+          "path": "0:0.054,0.233 / 0.429:0.054,0.233",
+          "clicks": "0.429",
+          "fill": "#f6f8f2",
+          "outline": "#0c0e0c",
+          "color": "#d5ff70",
+          "size": 1.25,
+          "view": "24,21,32,0;1,0,0;1.8,0.4,0.4;1.8698,0.4349,0.4349"
+        }
+      },
+      {
+        "id": "callout-three-js",
+        "name": "Callout · ★ THREE.JS",
+        "module": "gen-title",
+        "kind": "graphics",
+        "lane": "callout",
+        "startBeat": 81,
+        "beats": 5,
+        "opacity": 1,
+        "parameters": {
+          "text": "★ THREE.JS",
+          "line": "",
+          "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+          "size": 96,
+          "color": "#d5ff70",
+          "muted": "#eaf2df",
+          "accent": "#d5ff70",
+          "x": 0.5,
+          "y": 0.86,
+          "duration": 0.8,
+          "mode": "trace",
+          "steps": "",
+          "done": "",
+          "fadeAt": 1.922,
+          "plate": 0.82
+        }
+      },
+      {
+        "id": "glitch-76",
+        "name": "Glitch · beat 76",
+        "module": "slice-glitch",
+        "kind": "filter",
+        "lane": "glitch",
+        "startBeat": 76,
+        "beats": 0.5,
+        "opacity": 1,
+        "parameters": {
+          "amount": 0.85,
+          "slices": 18,
+          "seed": 535,
+          "duration": 0.2
+        }
+      }
+    ]
+  }
+}

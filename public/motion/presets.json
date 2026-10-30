@@ -1,0 +1,101 @@
+{
+  "version": 1,
+  "credit": "Construction reveal built upon UI generation by Jakub Antalik / Transitions.dev",
+  "upstreamLicense": "/motion/construction/LICENSE.txt",
+  "presets": [
+    {
+      "id": "ui-build",
+      "name": "UI build",
+      "description": "A measured wireframe build for an app, operating system or instrument interface.",
+      "durationMs": 6000,
+      "buildMs": 3600,
+      "kicker": "FROM AN IDEA TO A WORLD",
+      "ending": "DESIGN / DIRECT / MAKE",
+      "glitches": [
+        900,
+        1860,
+        3100,
+        4220
+      ],
+      "steps": [
+        "Reading the composition",
+        "Drawing the structure",
+        "Setting the visual language",
+        "Resolving the scene"
+      ]
+    },
+    {
+      "id": "teaser",
+      "name": "Signal teaser",
+      "description": "A faster typographic reveal with short signal breaks and a restrained push-in.",
+      "durationMs": 5000,
+      "buildMs": 2400,
+      "kicker": "SOMETHING IS TAKING SHAPE",
+      "ending": "A FIRST LOOK / MORE TO COME",
+      "glitches": [
+        500,
+        1460,
+        2770
+      ],
+      "steps": [
+        "Finding the signal",
+        "Assembling the form",
+        "Bringing it into focus",
+        "First look"
+      ]
+    },
+    {
+      "id": "character-sheet",
+      "name": "Character reveal",
+      "description": "A slower character-sheet reveal; replace the artwork or load a local GLB turntable.",
+      "durationMs": 8000,
+      "buildMs": 4600,
+      "kicker": "ONE CHARACTER / MANY POSSIBILITIES",
+      "ending": "CHARACTER / FORM / MOVEMENT",
+      "glitches": [
+        1200,
+        3300
+      ],
+      "steps": [
+        "Reading the silhouette",
+        "Mapping the proportions",
+        "Defining the character",
+        "Ready for a new story"
+      ]
+    }
+  ],
+  "theme": {
+    "id": "signal",
+    "name": "Signal / Construction",
+    "palette": {
+      "background": "#0c0e0c",
+      "surface": "#151b11",
+      "text": "#eaf2df",
+      "accent": "#d5ff70",
+      "secondary": "#e6a1ff",
+      "muted": "#98aa84"
+    },
+    "typography": {
+      "default": "IBM Plex Mono",
+      "alternative": "Geist",
+      "localOptional": [
+        "Nokia Cellphone",
+        "Retro Gaming",
+        "Explorers",
+        "Arame"
+      ],
+      "licenceNotes": "See docs/motion-fonts.md; local optional fonts are not bundled."
+    },
+    "motion": {
+      "fps": 30,
+      "reducedMotion": "Static composition; no construction, glitches or turntable."
+    },
+    "composition": {
+      "width": 1920,
+      "height": 1080,
+      "specimenWidth": 1000,
+      "specimenHeight": 550
+    },
+    "status": "Built-in manifest defaults; not a backend theme editor."
+  }
+}

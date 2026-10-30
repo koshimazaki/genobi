@@ -1,0 +1,11 @@
+name: hermes-developer
+version: 0.1.4
+description: Hermes Developer reproduces Genobi workflow failures, repairs tools and skills, and validates compatibility.
+hermes_requires: ">=0.21.4"
+author: Koshi
+license: MIT
+distribution_owned:
+  - SOUL.md
+  - config.yaml
+  - skills/
+  - distribution.yaml

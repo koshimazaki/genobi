@@ -1,0 +1,84 @@
+.account-balance {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  color: var(--readout);
+  padding: var(--space-4) 0;
+}
+/* The amount holds the row; the provider label hangs under it, set like the
+   open-source line under the key, so the header stays one line high. */
+.account-balance {
+  position: relative;
+}
+.account-balance__readout {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.account-balance__readout > span {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  left: 0;
+  line-height: 1;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: var(--space-9);
+  letter-spacing: var(--space-1);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+/* In the studio the balance is as tall as the header icons, so its label
+   sits on the same line and size as "Run your own · Open source". */
+.genobi-shell .account-balance {
+  height: 30px;
+  padding: 0;
+}
+.genobi-shell .account-balance__readout > span {
+  top: calc(100% + 3px);
+  font-size: 7px;
+}
+.account-balance__readout strong {
+  font: var(--space-12) var(--mono);
+  font-variant-numeric: tabular-nums;
+}
+.account-balance--error {
+  color: var(--error-text);
+}
+/* On phones the header rows stack, so the label stays in the flow. */
+@media (max-width: 35rem) {
+  .account-balance__readout {
+    gap: var(--space-2);
+  }
+  .account-balance__readout > span {
+    position: static;
+    order: 1;
+  }
+}
+@media (max-width: 35rem) {
+  .topbar:has(.account-balance) {
+    flex-wrap: wrap;
+    height: auto;
+    min-height: calc(80 * var(--unit));
+    padding-block: var(--space-12);
+    gap: var(--space-12);
+  }
+  .topbar:has(.account-balance) .topbar-right {
+    margin-left: auto;
+  }
+}
+/* Both server keys held: each account's readout, side by side. */
+.account-balances {
+  display: flex;
+  align-items: center;
+  gap: var(--space-15);
+}
+/* On a phone the pair keeps the header's rows: the readouts sit closer and
+   drop their refresh glyphs (each readout is still its own refresh button). */
+@media (max-width: 35rem) {
+  .account-balances--pair {
+    gap: var(--space-8);
+  }
+  .account-balances--pair .account-balance > svg {
+    display: none;
+  }
+}

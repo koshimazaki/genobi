@@ -1,0 +1,21 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "genobi",
+  "pages_build_output_dir": ".pages",
+  "compatibility_date": "2026-09-19",
+  "compatibility_flags": ["nodejs_compat"],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "flux-studio-lite",
+      "database_id": "69115f7b-cf28-4e4b-80f1-5aac2e5df24d",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "MEDIA",
+      "bucket_name": "flux-studio-lite-media"
+    }
+  ]
+}

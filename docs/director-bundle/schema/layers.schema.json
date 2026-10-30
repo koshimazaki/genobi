@@ -1,0 +1,567 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://camera-director.invalid/schemas/layers-v1",
+  "definitions": {
+    "layer": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "name",
+            "kind",
+            "startFrame",
+            "durationFrames",
+            "locked",
+            "assetId",
+            "sourceStartFrame",
+            "gain"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]{0,63}$"
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "kind": {
+              "const": "audio"
+            },
+            "startFrame": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "durationFrames": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "locked": {
+              "type": "boolean"
+            },
+            "assetId": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]{0,63}$"
+            },
+            "sourceStartFrame": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "gain": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 2
+            },
+            "muted": {
+              "type": "boolean"
+            },
+            "track": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]{0,63}$"
+            },
+            "prompt": {
+              "$ref": "#/definitions/clipPrompt"
+            },
+            "directions": {
+              "$ref": "#/definitions/directions"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "name",
+            "kind",
+            "startFrame",
+            "durationFrames",
+            "locked",
+            "assetId",
+            "sourceStartFrame",
+            "fit",
+            "opacity",
+            "position",
+            "scale",
+            "rotationDegrees"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]{0,63}$"
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "kind": {
+              "const": "video"
+            },
+            "startFrame": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "durationFrames": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "locked": {
+              "type": "boolean"
+            },
+            "assetId": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]{0,63}$"
+            },
+            "sourceStartFrame": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "fit": {
+              "const": "contain"
+            },
+            "opacity": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "position": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["x", "y"],
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                }
+              }
+            },
+            "scale": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "rotationDegrees": {
+              "type": "number"
+            },
+            "motion": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["scaleTo", "xTo", "yTo", "opacityTo"],
+              "properties": {
+                "scaleTo": {
+                  "type": "number",
+                  "exclusiveMinimum": 0,
+                  "maximum": 10
+                },
+                "xTo": {
+                  "type": "number"
+                },
+                "yTo": {
+                  "type": "number"
+                },
+                "opacityTo": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              }
+            },
+            "muted": {
+              "type": "boolean"
+            },
+            "track": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]{0,63}$"
+            },
+            "prompt": {
+              "$ref": "#/definitions/clipPrompt"
+            },
+            "directions": {
+              "$ref": "#/definitions/directions"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "name",
+            "kind",
+            "startFrame",
+            "durationFrames",
+            "locked",
+            "moduleId",
+            "parameters",
+            "opacity",
+            "position",
+            "scale",
+            "rotationDegrees"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]{0,63}$"
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "kind": {
+              "const": "graphics"
+            },
+            "startFrame": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "durationFrames": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "locked": {
+              "type": "boolean"
+            },
+            "moduleId": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]{0,63}$"
+            },
+            "parameters": {
+              "type": "object",
+              "additionalProperties": {
+                "type": ["number", "string", "boolean"]
+              }
+            },
+            "opacity": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "position": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["x", "y"],
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                }
+              }
+            },
+            "scale": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "rotationDegrees": {
+              "type": "number"
+            },
+            "motion": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["scaleTo", "xTo", "yTo", "opacityTo"],
+              "properties": {
+                "scaleTo": {
+                  "type": "number",
+                  "exclusiveMinimum": 0,
+                  "maximum": 10
+                },
+                "xTo": {
+                  "type": "number"
+                },
+                "yTo": {
+                  "type": "number"
+                },
+                "opacityTo": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              }
+            },
+            "muted": {
+              "type": "boolean"
+            },
+            "track": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]{0,63}$"
+            },
+            "animationOffsetFrames": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "prompt": {
+              "$ref": "#/definitions/clipPrompt"
+            },
+            "directions": {
+              "$ref": "#/definitions/directions"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "name",
+            "kind",
+            "startFrame",
+            "durationFrames",
+            "locked",
+            "moduleId",
+            "parameters",
+            "input"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]{0,63}$"
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "kind": {
+              "const": "filter"
+            },
+            "startFrame": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "durationFrames": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "locked": {
+              "type": "boolean"
+            },
+            "moduleId": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]{0,63}$"
+            },
+            "parameters": {
+              "type": "object",
+              "additionalProperties": {
+                "type": ["number", "string", "boolean"]
+              }
+            },
+            "input": {
+              "const": "composite-below"
+            },
+            "muted": {
+              "type": "boolean"
+            },
+            "track": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]{0,63}$"
+            },
+            "animationOffsetFrames": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "prompt": {
+              "$ref": "#/definitions/clipPrompt"
+            },
+            "directions": {
+              "$ref": "#/definitions/directions"
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "name",
+            "kind",
+            "startFrame",
+            "durationFrames",
+            "locked",
+            "assetId",
+            "fit",
+            "opacity",
+            "position",
+            "scale",
+            "rotationDegrees"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]{0,63}$"
+            },
+            "name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120
+            },
+            "kind": {
+              "const": "image"
+            },
+            "startFrame": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "durationFrames": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "locked": {
+              "type": "boolean"
+            },
+            "assetId": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]{0,63}$"
+            },
+            "fit": {
+              "const": "contain"
+            },
+            "opacity": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "position": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["x", "y"],
+              "properties": {
+                "x": {
+                  "type": "number"
+                },
+                "y": {
+                  "type": "number"
+                }
+              }
+            },
+            "scale": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "rotationDegrees": {
+              "type": "number"
+            },
+            "motion": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["scaleTo", "xTo", "yTo", "opacityTo"],
+              "properties": {
+                "scaleTo": {
+                  "type": "number",
+                  "exclusiveMinimum": 0,
+                  "maximum": 10
+                },
+                "xTo": {
+                  "type": "number"
+                },
+                "yTo": {
+                  "type": "number"
+                },
+                "opacityTo": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              }
+            },
+            "muted": {
+              "type": "boolean"
+            },
+            "track": {
+              "type": "string",
+              "pattern": "^[a-z][a-z0-9-]{0,63}$"
+            },
+            "prompt": {
+              "$ref": "#/definitions/clipPrompt"
+            },
+            "directions": {
+              "$ref": "#/definitions/directions"
+            }
+          }
+        }
+      ]
+    },
+    "clipPrompt": {
+      "description": "This clip's own prompt (shared/director/directions.ts): free text the person or an agent wrote for this clip only. Line breaks kept; no other control characters. Optional and additive; absent means none.",
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 1200,
+      "pattern": "^[^\\u0000-\\u0009\\u000b-\\u001f\\u007f]*$"
+    },
+    "directions": {
+      "description": "This clip's typed directions (shared/director/directions.ts), stored apart from its prompt so a menu change never rewrites authored text. shot and lens are creative labels, not provider parameters or calibrated optics; camera holds Genobi's camera terms (shared/camera.ts), checked by checkReferences. Optional and additive.",
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "shot": {
+          "enum": [
+            "wide",
+            "aerial",
+            "medium",
+            "close-up",
+            "insert",
+            "low-angle",
+            "crane-wide",
+            "pass-by",
+            "heroic-medium"
+          ]
+        },
+        "lens": {
+          "enum": [
+            "14mm",
+            "18mm",
+            "24mm",
+            "35mm",
+            "50mm",
+            "85mm",
+            "100mm",
+            "135mm",
+            "200mm"
+          ]
+        },
+        "camera": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["shot-sizes", "angles", "movements"],
+          "properties": {
+            "shot-sizes": {
+              "type": ["string", "null"],
+              "pattern": "^[a-z][a-z0-9-]{0,63}$"
+            },
+            "angles": {
+              "type": ["string", "null"],
+              "pattern": "^[a-z][a-z0-9-]{0,63}$"
+            },
+            "movements": {
+              "type": ["string", "null"],
+              "pattern": "^[a-z][a-z0-9-]{0,63}$"
+            }
+          }
+        },
+        "action": {
+          "enum": [
+            "forward",
+            "arc",
+            "zigzag",
+            "rise",
+            "accel",
+            "decel",
+            "converge",
+            "hold",
+            "drop",
+            "impact",
+            "infinity",
+            "release"
+          ]
+        }
+      }
+    }
+  }
+}

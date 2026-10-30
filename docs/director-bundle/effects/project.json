@@ -1,0 +1,467 @@
+{
+  "schemaVersion": "director.bundle.v1",
+  "id": "motion-effects",
+  "revision": 1,
+  "name": "Motion effects / anime opening",
+  "composition": {
+    "fps": 30,
+    "durationFrames": 150,
+    "width": 640,
+    "height": 360,
+    "colorSpace": "srgb",
+    "alpha": "straight",
+    "background": "#1a1f2b",
+    "bpm": 120
+  },
+  "assets": {},
+  "modules": {
+    "shake": {
+      "engine": "threejs",
+      "engineVersion": "0.180.0",
+      "mode": "filter",
+      "file": {
+        "path": "graphics/fx-shake.mjs",
+        "sha256": "477ce48d269a2b1d34bcf406e19cddb5dd58c24b4a924b1007713d7e430953db"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["amplitude", "frequency", "seed", "decay"],
+        "properties": {
+          "amplitude": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 64
+          },
+          "frequency": {
+            "type": "number",
+            "minimum": 0.5,
+            "maximum": 30
+          },
+          "seed": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9999
+          },
+          "decay": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 10
+          }
+        }
+      }
+    },
+    "transition": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/fx-transition.mjs",
+        "sha256": "5777a0787deb0c88b67885467e246cb4f56a493aa6dbac9d7a03608aacdb84e1"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "type",
+          "phase",
+          "duration",
+          "direction",
+          "color",
+          "slices"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["cut", "crossfade", "wipe", "slice"]
+          },
+          "phase": {
+            "type": "string",
+            "enum": ["in", "out"]
+          },
+          "duration": {
+            "type": "number",
+            "minimum": 0.01,
+            "maximum": 4
+          },
+          "direction": {
+            "type": "string",
+            "enum": ["left", "right", "up", "down"]
+          },
+          "color": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "slices": {
+            "type": "integer",
+            "minimum": 2,
+            "maximum": 24
+          }
+        }
+      }
+    },
+    "grade": {
+      "engine": "threejs",
+      "engineVersion": "0.180.0",
+      "mode": "filter",
+      "file": {
+        "path": "graphics/fx-grade.mjs",
+        "sha256": "ddafb2e1ff90918c999006d35cdbb08cf3455aae56cc3f04297033a28c4d62e6"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "lift",
+          "gamma",
+          "gain",
+          "contrast",
+          "saturation",
+          "tint",
+          "tintAmount",
+          "amount"
+        ],
+        "properties": {
+          "lift": {
+            "type": "number",
+            "minimum": -0.5,
+            "maximum": 0.5
+          },
+          "gamma": {
+            "type": "number",
+            "minimum": 0.2,
+            "maximum": 5
+          },
+          "gain": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 4
+          },
+          "contrast": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 3
+          },
+          "saturation": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 3
+          },
+          "tint": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "tintAmount": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "amount": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        }
+      }
+    },
+    "speed-lines": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/fx-speed-lines.mjs",
+        "sha256": "8079e0eec1a1c131f16206e29b66dc1261c06a67add9996230dbbfcd9156070c"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "density",
+          "color",
+          "direction",
+          "speed",
+          "thickness",
+          "length",
+          "seed"
+        ],
+        "properties": {
+          "density": {
+            "type": "integer",
+            "minimum": 4,
+            "maximum": 160
+          },
+          "color": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "direction": {
+            "type": "string",
+            "enum": ["radial", "left", "right", "up", "down"]
+          },
+          "speed": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 8
+          },
+          "thickness": {
+            "type": "number",
+            "minimum": 0.5,
+            "maximum": 16
+          },
+          "length": {
+            "type": "number",
+            "minimum": 0.05,
+            "maximum": 1
+          },
+          "seed": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9999
+          }
+        }
+      }
+    },
+    "styled-title": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/fx-title.mjs",
+        "sha256": "fabc3d638161b2412c37793c9f65de457bb5b91bea591a3bf8124bf125084db2"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "text",
+          "font",
+          "color",
+          "accent",
+          "plate",
+          "size",
+          "direction",
+          "ease",
+          "duration"
+        ],
+        "properties": {
+          "text": {
+            "type": "string",
+            "maxLength": 80
+          },
+          "font": {
+            "type": "string",
+            "enum": ["Instrument Sans", "IBM Plex Mono"]
+          },
+          "color": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "accent": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "plate": {
+            "type": "boolean"
+          },
+          "size": {
+            "type": "number",
+            "minimum": 8,
+            "maximum": 160
+          },
+          "direction": {
+            "type": "string",
+            "enum": ["left", "right", "up", "down"]
+          },
+          "ease": {
+            "type": "string",
+            "enum": [
+              "linear",
+              "outQuad",
+              "outCubic",
+              "outQuart",
+              "outExpo",
+              "outCirc",
+              "outBack",
+              "outElastic",
+              "outBounce",
+              "inOutCubic",
+              "inOutExpo"
+            ]
+          },
+          "duration": {
+            "type": "number",
+            "minimum": 0.1,
+            "maximum": 4
+          }
+        }
+      }
+    }
+  },
+  "layers": [
+    {
+      "id": "lines",
+      "name": "Speed lines / focus",
+      "kind": "graphics",
+      "moduleId": "speed-lines",
+      "startFrame": 0,
+      "durationFrames": 150,
+      "locked": false,
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "parameters": {
+        "density": 72,
+        "color": "#f5f5ef",
+        "direction": "radial",
+        "speed": 1,
+        "thickness": 6,
+        "length": 0.45,
+        "seed": 7
+      }
+    },
+    {
+      "id": "title",
+      "name": "Title / slide in",
+      "kind": "graphics",
+      "moduleId": "styled-title",
+      "startFrame": 12,
+      "durationFrames": 138,
+      "locked": false,
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "parameters": {
+        "text": "GENOBI",
+        "font": "Instrument Sans",
+        "color": "#0b0d10",
+        "accent": "#dafa81",
+        "plate": true,
+        "size": 64,
+        "direction": "right",
+        "ease": "outExpo",
+        "duration": 0.8
+      }
+    },
+    {
+      "id": "slice-in",
+      "name": "Slice in",
+      "kind": "graphics",
+      "moduleId": "transition",
+      "startFrame": 0,
+      "durationFrames": 20,
+      "locked": false,
+      "track": "transitions",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "parameters": {
+        "type": "slice",
+        "phase": "in",
+        "duration": 0.6,
+        "direction": "right",
+        "color": "#0b0d10",
+        "slices": 8
+      }
+    },
+    {
+      "id": "flash",
+      "name": "Flash cut",
+      "kind": "graphics",
+      "moduleId": "transition",
+      "startFrame": 75,
+      "durationFrames": 2,
+      "locked": false,
+      "track": "transitions",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "parameters": {
+        "type": "cut",
+        "phase": "in",
+        "duration": 0.06,
+        "direction": "right",
+        "color": "#ffffff",
+        "slices": 2
+      }
+    },
+    {
+      "id": "wipe-out",
+      "name": "Wipe out",
+      "kind": "graphics",
+      "moduleId": "transition",
+      "startFrame": 126,
+      "durationFrames": 24,
+      "locked": false,
+      "track": "transitions",
+      "position": {
+        "x": 0,
+        "y": 0
+      },
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "parameters": {
+        "type": "wipe",
+        "phase": "out",
+        "duration": 0.6,
+        "direction": "left",
+        "color": "#0b0d10",
+        "slices": 2
+      }
+    },
+    {
+      "id": "impact",
+      "name": "Shake / impact",
+      "kind": "filter",
+      "moduleId": "shake",
+      "input": "composite-below",
+      "startFrame": 75,
+      "durationFrames": 30,
+      "locked": false,
+      "parameters": {
+        "amplitude": 12,
+        "frequency": 14,
+        "seed": 3,
+        "decay": 3
+      }
+    },
+    {
+      "id": "grade",
+      "name": "Grade / warm",
+      "kind": "filter",
+      "moduleId": "grade",
+      "input": "composite-below",
+      "startFrame": 0,
+      "durationFrames": 150,
+      "locked": false,
+      "parameters": {
+        "lift": 0.02,
+        "gamma": 1.1,
+        "gain": 1.05,
+        "contrast": 1.15,
+        "saturation": 1.2,
+        "tint": "#ffd9e8",
+        "tintAmount": 0.15,
+        "amount": 1
+      }
+    }
+  ],
+  "generationPlans": [],
+  "generations": []
+}

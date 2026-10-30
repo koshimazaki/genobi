@@ -1,0 +1,35 @@
+{
+  "1": {
+    "class_type": "DirectorSceneCapture",
+    "inputs": {
+      "capture_file": "",
+      "audio_file": "",
+      "recipe_json": "{\"width\": 512, \"height\": 320, \"frames\": 9, \"fov\": 55, \"azimuth\": 25, \"elevation\": 15, \"radius\": 12, \"targetY\": 1.5, \"orbit\": 30, \"dolly\": 0, \"light\": 2, \"patternScale\": 0.13, \"intensity\": 1, \"speed\": 1, \"audioGain\": 2, \"version\": 1, \"scene\": \"stage\", \"fps\": 24, \"prompt\": \"\", \"background\": \"#171e29\", \"audioTarget\": \"scale\", \"envelope\": [], \"objects\": [{\"id\": \"subject\", \"shape\": \"sphere\", \"x\": 0, \"y\": 1.6, \"z\": 0, \"scale\": 1.5, \"spin\": 0, \"color\": \"#e9b86c\", \"prompt\": \"\"}, {\"id\": \"plinth\", \"shape\": \"cylinder\", \"x\": 0, \"y\": 0.3, \"z\": 0, \"scale\": 1.8, \"spin\": 0, \"color\": \"#566371\", \"prompt\": \"\"}]}"
+    }
+  },
+  "2": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "images": ["1", 0],
+      "audio": ["1", 1],
+      "fps": ["1", 2]
+    }
+  },
+  "3": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "video": ["2", 0],
+      "filename_prefix": "WorldBuilder",
+      "format": "mp4",
+      "codec": "h264"
+    }
+  },
+  "4": {
+    "class_type": "DirectorSceneInputs",
+    "inputs": {
+      "images": ["1", 0],
+      "audio": ["1", 1],
+      "fps": ["1", 2]
+    }
+  }
+}

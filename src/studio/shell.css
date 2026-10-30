@@ -1,0 +1,481 @@
+.genobi-shell {
+  max-width: 1680px;
+  margin: auto;
+  padding: 0 28px 28px;
+}
+.genobi-shell > .genobi-host .topbar {
+  padding: 22px 0;
+  border-bottom: 1px solid var(--border);
+}
+.genobi-modebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 0 0;
+}
+.genobi-presets {
+  display: flex;
+  gap: 4px;
+  padding: 5px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--sunken);
+}
+.genobi-presets button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  border-radius: 9px;
+  color: var(--soft);
+  padding: 11px 17px;
+  font: 500 13px inherit;
+  cursor: pointer;
+  transition:
+    background 0.18s,
+    color 0.18s,
+    border-color 0.18s,
+    box-shadow 0.18s,
+    translate 0.12s;
+}
+.genobi-presets button:hover {
+  color: var(--text);
+  background: var(--surface);
+}
+.genobi-presets button[aria-pressed="true"] {
+  color: var(--accent-strong);
+  background: var(--accent-ghost);
+  border-color: color-mix(in srgb, var(--accent) 35%, transparent);
+  box-shadow:
+    inset 0 1px var(--highlight-soft),
+    0 2px 8px var(--shadow-soft);
+}
+.genobi-shell button:active:not(:disabled) {
+  translate: 0 1px;
+}
+.genobi-shell :is(button, a, input, select, textarea):focus-visible {
+  outline: 2px solid var(--accent-strong);
+  outline-offset: 4px;
+}
+
+.genobi-grid {
+  display: grid;
+  grid-template-columns: minmax(200px, 3fr) minmax(0, 6fr) minmax(260px, 4fr);
+  gap: 14px;
+  align-items: start;
+}
+[data-preset="camera"] .genobi-grid {
+  grid-template-areas: "preview preview preview" "composer composer composer" "gallery gallery gallery";
+}
+[data-preset="director"] .genobi-grid {
+  grid-template-areas: "file file" "stage prompt" "templates templates";
+}
+[data-preset="editor"] .genobi-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-areas: "file file" "stage stage" "timeline timeline";
+}
+[data-preset="world"] .genobi-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-areas: "world world";
+}
+[data-preset="dual"] .genobi-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-areas: "dual dual";
+}
+[data-preset="ninja"] .genobi-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.genobi-panel {
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  background: var(--sunken);
+  box-shadow: 0 3px 14px var(--shadow-soft);
+  overflow: clip;
+  transform-origin: 0 0;
+}
+.genobi-panel[hidden] {
+  display: none !important;
+}
+.genobi-panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.genobi-panel-heading h2 {
+  margin: 0;
+  color: var(--soft);
+  font-size: 11px;
+  font-weight: 500;
+}
+.genobi-panel-heading > span {
+  color: var(--muted);
+  font: 9px var(--mono);
+  letter-spacing: 0.1em;
+}
+.genobi-shell .genobi-panel-content {
+  min-width: 0;
+}
+.genobi-shell .genobi-panel-content.director {
+  padding: 0;
+  max-width: none;
+  margin: 0;
+}
+.genobi-shell .genobi-panel-content .dir-remix {
+  margin: 0;
+  padding: 18px;
+  border: 0;
+  background: transparent;
+}
+.genobi-shell .genobi-panel-content .dir-remix-heading {
+  align-items: start;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.genobi-shell .genobi-panel-content .dir-remix h2 {
+  font-size: 23px;
+}
+.genobi-shell .genobi-panel-content .dir-remix p {
+  line-height: 1.6;
+}
+.genobi-shell .genobi-panel-content .dir-template-slots {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+}
+.genobi-shell .genobi-panel-content .dir-stage {
+  margin: 0;
+  padding: 12px;
+  border: 0;
+}
+.genobi-shell .genobi-panel-content .dir-stage canvas {
+  display: block;
+  max-width: 100%;
+  width: auto;
+  height: auto;
+  max-height: 58vh;
+  margin: auto;
+}
+.genobi-shell .genobi-panel-content .dir-simple-play {
+  margin: 0;
+  padding: 12px 12px 0;
+}
+.genobi-shell .genobi-panel-content .dir-heading {
+  padding: 16px 20px;
+  flex-wrap: wrap;
+}
+.genobi-shell .genobi-panel-content .dir-heading h1 {
+  font-size: 19px;
+}
+.genobi-shell .genobi-panel-content .dir-file-actions {
+  flex-wrap: wrap;
+}
+.genobi-panel-file > .genobi-panel-heading {
+  display: none;
+}
+.genobi-shell .genobi-panel-content .dir-console {
+  margin: 0;
+  border: 0;
+}
+.genobi-shell .genobi-panel-content .dir-template-cards {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.genobi-shell .genobi-panel-content .dir-assets {
+  padding: 16px;
+}
+.genobi-shell .genobi-panel-content .dir-assets-launch {
+  flex-wrap: wrap;
+}
+.genobi-shell .genobi-panel-content .dir-assets-launch span {
+  font-size: 11px;
+  line-height: 1.5;
+}
+.genobi-shell .genobi-panel-content .studio {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: none;
+}
+.genobi-shell .genobi-panel-content .featured {
+  margin: 0;
+  border: 0;
+  width: 100%;
+}
+.genobi-shell .genobi-panel-content .gallery {
+  margin: 0;
+  padding: 18px;
+}
+.genobi-shell .genobi-panel-content .composer {
+  box-shadow: none;
+  border: 0;
+  border-radius: 0;
+}
+.genobi-shell .genobi-panel-content .studio-foot {
+  padding: 12px 18px;
+}
+.genobi-shell .genobi-panel-content .wb-app {
+  padding: 12px;
+  max-width: none;
+}
+.genobi-shell .genobi-panel-content .wb-workspace {
+  margin: 0;
+}
+.genobi-shell .genobi-panel-content .wb-viewport {
+  max-height: none;
+}
+.genobi-shell .genobi-panel-content .dual-editor {
+  padding: 18px;
+}
+.genobi-owners {
+  display: contents;
+}
+.genobi-owners > main {
+  display: contents;
+}
+.genobi-owners .dir-workspace {
+  display: contents;
+}
+.genobi-picker {
+  border: 1px solid var(--border);
+  background: var(--sunken);
+  border-radius: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 18px;
+  padding: 16px;
+}
+.genobi-picker legend {
+  font-size: 12px;
+  color: var(--soft);
+  padding: 0 8px;
+}
+.genobi-picker label,
+.genobi-picker button {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  background: var(--surface);
+  color: var(--soft);
+  font-size: 12px;
+  cursor: pointer;
+  transition:
+    background 0.16s,
+    border-color 0.16s;
+}
+.genobi-picker label:has(:checked) {
+  border-color: var(--accent);
+  background: var(--accent-ghost);
+  color: var(--text);
+}
+.genobi-picker input {
+  accent-color: var(--accent);
+}
+.genobi-empty {
+  grid-column: 1/-1;
+  padding: 60px 20px;
+  text-align: center;
+  color: var(--muted);
+}
+.genobi-notice {
+  color: var(--muted);
+  font-size: 12px;
+}
+.genobi-notice:empty {
+  display: none;
+}
+.genobi-project-assets {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 8px;
+  padding: 0 16px 16px;
+}
+.genobi-project-assets button {
+  min-width: 0;
+  padding: 6px !important;
+  text-align: left;
+}
+.genobi-project-assets img {
+  width: 100%;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  border-radius: 5px;
+}
+.genobi-project-assets .genobi-asset-name {
+  display: block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 10px;
+  padding-top: 6px;
+}
+@media (max-width: 1100px) {
+  .genobi-shell {
+    padding: 0 16px 24px;
+  }
+
+  .genobi-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+  [data-preset="camera"] .genobi-grid {
+    grid-template-areas: "preview preview" "composer composer" "gallery gallery";
+  }
+  [data-preset="director"] .genobi-grid {
+    grid-template-areas: "file file" "stage prompt" "templates templates";
+  }
+  [data-preset="editor"] .genobi-grid {
+    grid-template-areas: "file file" "stage stage" "timeline timeline";
+  }
+  [data-preset="world"] .genobi-grid {
+    grid-template-areas: "world world";
+  }
+  [data-preset="dual"] .genobi-grid {
+    grid-template-areas: "dual dual";
+  }
+}
+@media (max-width: 700px) {
+  .genobi-shell {
+    padding: 0 10px 20px;
+  }
+  .genobi-shell > .genobi-host .topbar {
+    padding: 16px 2px;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+  .genobi-shell .topbar-right {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .genobi-modebar {
+    padding-top: 12px;
+  }
+  .genobi-presets {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 3px;
+  }
+  .genobi-presets button {
+    justify-content: center;
+    gap: 6px;
+    padding: 11px 4px;
+    font-size: 11px;
+  }
+
+  .genobi-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .genobi-panel {
+    width: 100%;
+  }
+  .genobi-shell .genobi-panel-content .dir-template-cards {
+    grid-template-columns: 1fr;
+  }
+  .genobi-shell .genobi-panel-content .dir-template-card {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    text-align: left;
+    gap: 6px 12px;
+  }
+  .genobi-shell .genobi-panel-content .dir-template-card video {
+    grid-row: span 2;
+    height: 75px;
+    width: 90px;
+  }
+  .genobi-shell .genobi-panel-content .dir-file-actions {
+    gap: 6px;
+  }
+  .genobi-shell .genobi-panel-content .dir-heading {
+    padding: 14px;
+  }
+  .genobi-shell .genobi-panel-content .dir-remix {
+    padding: 14px;
+  }
+  .genobi-shell .genobi-panel-content .dual-editor {
+    padding: 10px;
+  }
+  .genobi-shell .genobi-panel-content .dir-stage canvas {
+    max-height: 52vh;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .genobi-shell *,
+  .genobi-shell *::before,
+  .genobi-shell *::after {
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important;
+  }
+  .genobi-shell button:active:not(:disabled) {
+    translate: none;
+  }
+}
+
+.genobi-shell > .genobi-host .topbar {
+  margin: 0;
+  height: auto;
+  min-height: 80px;
+}
+.genobi-shell .genobi-panel-content.director {
+  width: 100%;
+  padding: 0;
+}
+.genobi-shell .genobi-panel-content .featured-video {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+}
+.genobi-shell .genobi-panel-content .dir-remix > details:first-child {
+  margin-top: 0;
+  border-top: 0;
+  padding-top: 0;
+}
+.genobi-shell .genobi-panel-content .dir-render-result {
+  padding: 16px;
+}
+.genobi-shell .genobi-panel-content .dir-render-result video {
+  width: 100%;
+  max-height: 60vh;
+}
+
+.genobi-shell .connection-group {
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+.genobi-shell .source-link {
+  position: static;
+  transform: none;
+  flex-direction: row;
+  gap: 6px;
+  font-size: 8px;
+}
+
+[data-preset="tools"] .genobi-grid {
+  grid-template-areas: "tools tools tools";
+  max-width: 1100px;
+  margin-inline: 0;
+}
+@media (max-width: 1100px) {
+  .genobi-presets {
+    flex-wrap: wrap;
+  }
+  [data-preset="tools"] .genobi-grid {
+    grid-template-areas: "tools tools";
+  }
+}
+.genobi-asset-purpose {
+  color: var(--muted);
+  font-size: 11px;
+  margin: 12px 16px;
+}
+.genobi-panel-prompt .project-prompt {
+  margin: 0;
+}

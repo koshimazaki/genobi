@@ -1,0 +1,205 @@
+/* Regenerate's popover is fixed to the window (RegenerateAction places it
+   under its button), outside the panels, so opening it moves nothing and no
+   panel clips it. It sits outside `.director`, so it styles its own buttons. */
+.dir-regenerate-pop {
+  z-index: 66;
+  display: grid;
+  gap: 8px;
+  box-sizing: border-box;
+  overflow: auto;
+  padding: 12px;
+  font: 12px var(--mono);
+  background: var(--raised);
+  color: var(--text);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm, 6px);
+  box-shadow: 0 12px 32px rgb(0 0 0 / 0.28);
+}
+.dir-regenerate-pop label {
+  font-weight: 600;
+}
+.dir-regenerate-pop textarea {
+  width: 100%;
+  min-height: 72px;
+  resize: vertical;
+  box-sizing: border-box;
+  font: inherit;
+  padding: 8px;
+  color: var(--text);
+  background: var(--sunken);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-control, 4px);
+}
+.dir-regenerate-hint,
+.dir-regenerate-note {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.4;
+}
+.dir-regenerate-note[role="alert"] {
+  color: var(--error-text, var(--text));
+}
+.dir-regenerate-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}
+.dir-regenerate-actions button {
+  min-height: 28px;
+  padding: 5px 10px;
+  font: inherit;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm, 6px);
+  cursor: pointer;
+}
+.dir-regenerate-actions button:hover:not(:disabled) {
+  background: var(--raised);
+  border-color: var(--accent);
+}
+.dir-regenerate-actions .dir-primary {
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-color: var(--accent);
+  font-weight: 600;
+}
+.dir-regenerate-actions button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+/* Regenerate and the Send to Genobi buttons: the primary accent, as
+   Render MP4. While a session started on this project works they take
+   Camera's Generate look (the ghost fill and the moving edge from
+   `composer.css`, `generation-edge`), so the main action reads as one. */
+.dir-agent-action {
+  position: relative;
+  isolation: isolate;
+}
+.director .dir-agent-action.is-generating,
+.director .dir-agent-action.is-generating:hover:not(:disabled) {
+  cursor: progress;
+  background: var(--accent-ghost);
+  color: var(--accent);
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+  box-shadow: 0 0 10px color-mix(in srgb, var(--accent) 10%, transparent);
+}
+/* The Global prompt's Send to Genobi, under its field, right-aligned. */
+.dir-global-send {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+}
+.dir-global-send-note {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  font: 11px/1.4 var(--mono);
+  color: var(--muted);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+}
+.dir-global-send-note[role="alert"] {
+  color: var(--error-text, var(--text));
+}
+.dir-global-send button {
+  flex: none;
+  min-height: 28px;
+  padding: 5px 12px;
+  font-size: 12px;
+}
+/* The header's file actions on a phone: a fixed grid of two columns and
+   three rows, so the Director (three buttons, with Go to Editor) and the
+   Editor (five, with Back to Director) keep one toolbar height and
+   switching between them moves nothing below. Labels never wrap a row. */
+@media (max-width: 760px) {
+  .director .dir-file-actions {
+    display: grid;
+    width: 100%;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(3, minmax(36px, auto));
+  }
+  .director .dir-file-actions > * {
+    min-width: 0;
+  }
+  .director .dir-file-actions button {
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+@media (max-width: 700px) {
+  .genobi-shell .director .dir-file-actions {
+    grid-template-rows: repeat(3, minmax(44px, auto));
+  }
+}
+/* The clip inspector's Send to Genobi, right beside its heading: compact so
+   the header row never wraps at the inspector's narrowest width; the engine
+   label gives way (ellipsis) before the button or the heading does. */
+.dir-inspector header {
+  align-items: center;
+  gap: 6px;
+}
+.dir-inspector header > span {
+  white-space: nowrap;
+}
+.dir-inspector header small {
+  margin-left: auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.director .dir-inspector header button.dir-clip-send {
+  flex: none;
+  min-height: 22px;
+  padding: 3px 8px;
+  font: 600 10px/1.2 var(--mono);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+}
+.dir-clip-send:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+.dir-clip-send-note {
+  margin: -4px 0 8px;
+  font: 10px/1.4 var(--mono);
+  color: var(--muted);
+}
+.dir-clip-send-note[role="alert"] {
+  color: var(--error-text, var(--text));
+}
+/* At the inspector's narrowest (240 px docked, 248 px drawer) the engine
+   label steps aside and the row tightens, so "Send to Genobi" still sits
+   on the heading's line. */
+.director .dir-inspector-drawer {
+  container: dir-inspector / inline-size;
+}
+@container dir-inspector (max-width: 280px) {
+  .director .dir-inspector header {
+    gap: 4px;
+  }
+  .director .dir-inspector header > span {
+    letter-spacing: 0;
+    margin-right: auto;
+  }
+  .director .dir-inspector header small {
+    display: none;
+  }
+  .director .dir-inspector header button.dir-clip-send {
+    padding: 3px 6px;
+    letter-spacing: 0;
+  }
+  .director .dir-inspector header button.dir-icon-button {
+    min-width: 0;
+    height: 24px;
+    padding: 3px;
+  }
+}

@@ -1,0 +1,21 @@
+.dir-result-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+.dir-result-actions button {
+  min-height: 44px;
+  padding: 10px;
+}
+.dir-render-result details {
+  margin-top: 16px;
+  overflow-wrap: anywhere;
+}
+.dir-render-result summary {
+  cursor: pointer;
+  padding: 10px 0;
+}
+.dir-render-result li {
+  margin: 8px 0;
+}

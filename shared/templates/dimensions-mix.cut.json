@@ -1,0 +1,458 @@
+{
+  "id": "dimensions-mix",
+  "bpm": 140,
+  "inPointSeconds": 25.55,
+  "fps": 24,
+  "width": 1920,
+  "height": 1080,
+  "designSize": { "width": 960, "height": 540 },
+  "beats": 54,
+  "track": {
+    "asset": "mix-track",
+    "seconds": 23.2
+  },
+  "shots": [
+    {
+      "asset": "mix-03",
+      "label": "Nocthorn \u00b7 slash on the drop",
+      "sourceSeconds": 0.3,
+      "startBeat": 0,
+      "beats": 4,
+      "cropY": 240
+    },
+    {
+      "asset": "mix-01",
+      "label": "Mirebloom \u00b7 splash",
+      "sourceSeconds": 1.0,
+      "startBeat": 4,
+      "beats": 4,
+      "cropY": 200
+    },
+    {
+      "asset": "mix-02",
+      "label": "Duneward \u00b7 eyes ignite (scan)",
+      "sourceSeconds": 1.286,
+      "startBeat": 8,
+      "beats": 6,
+      "cropY": 120
+    },
+    {
+      "asset": "mix-03",
+      "label": "Nocthorn \u00b7 belt flare",
+      "sourceSeconds": 2.2,
+      "startBeat": 14,
+      "beats": 2,
+      "cropY": 200
+    },
+    {
+      "asset": "mix-01",
+      "label": "Mirebloom \u00b7 core opens",
+      "sourceSeconds": 4.0,
+      "startBeat": 16,
+      "beats": 4,
+      "cropY": 160
+    },
+    {
+      "asset": "mix-02",
+      "label": "Duneward \u00b7 parts fly",
+      "sourceSeconds": 5.0,
+      "startBeat": 20,
+      "beats": 4,
+      "cropY": 200
+    },
+    {
+      "asset": "mix-03",
+      "label": "Nocthorn \u00b7 orb head",
+      "sourceSeconds": 4.0,
+      "startBeat": 24,
+      "beats": 4,
+      "cropY": 160
+    },
+    {
+      "asset": "mix-01",
+      "label": "Mirebloom \u00b7 bursts apart",
+      "sourceSeconds": 6.0,
+      "startBeat": 28,
+      "beats": 4,
+      "cropY": 240
+    },
+    {
+      "asset": "mix-01",
+      "label": "Mirebloom \u00b7 reassembled (title hit)",
+      "sourceSeconds": 7.92,
+      "startBeat": 32,
+      "beats": 4,
+      "cropY": 200
+    },
+    {
+      "asset": "mix-02",
+      "label": "Duneward \u00b7 robed form",
+      "sourceSeconds": 8.0,
+      "startBeat": 36,
+      "beats": 4,
+      "cropY": 220
+    },
+    {
+      "asset": "mix-03",
+      "label": "Nocthorn \u00b7 red-ring head",
+      "sourceSeconds": 9.0,
+      "startBeat": 40,
+      "beats": 2,
+      "cropY": 240
+    },
+    {
+      "asset": "mix-02",
+      "label": "Duneward \u00b7 final form",
+      "sourceSeconds": 12.0,
+      "startBeat": 42,
+      "beats": 2,
+      "cropY": 150
+    }
+  ],
+  "layers": [
+    {
+      "id": "end-card",
+      "name": "End card \u00b7 produced by Genobi 2026",
+      "module": "end-card",
+      "kind": "graphics",
+      "lane": "end",
+      "startBeat": 44,
+      "beats": 10,
+      "opacity": 1,
+      "parameters": {
+        "eyebrow": "PRODUCED BY",
+        "title": "GENOBI 2026",
+        "subtitle": "SUPERNATURAL CREATURES",
+        "credit1": "MUSIC \u00b7 DIMENSIONS",
+        "credit2": "KOSHIMAZAKI MIX",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "color": "#d5ff70",
+        "accent": "#e6a1ff",
+        "steps": "Finding the signal / Assembling the form / Bringing it into focus",
+        "done": "First look",
+        "duration": 2.6
+      }
+    },
+    {
+      "id": "wire",
+      "name": "Wireframe scan \u00b7 Duneward",
+      "module": "wire-scan",
+      "kind": "filter",
+      "lane": "wire",
+      "startBeat": 8,
+      "beats": 6,
+      "opacity": 1,
+      "parameters": {
+        "color": "#d5ff70",
+        "amount": 0.9,
+        "sweep": 1.2,
+        "trail": 0.35
+      }
+    },
+    {
+      "id": "glitch-1",
+      "name": "Slice glitch \u00b7 bar 2",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 4,
+      "beats": 0.375,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.7,
+        "slices": 18,
+        "seed": 11,
+        "duration": 0.161
+      }
+    },
+    {
+      "id": "glitch-2",
+      "name": "Slice glitch \u00b7 bar 3",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 8,
+      "beats": 0.375,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.7,
+        "slices": 18,
+        "seed": 18,
+        "duration": 0.161
+      }
+    },
+    {
+      "id": "glitch-3",
+      "name": "Slice glitch \u00b7 bar 4",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 12,
+      "beats": 0.5,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.9,
+        "slices": 18,
+        "seed": 25,
+        "duration": 0.214
+      }
+    },
+    {
+      "id": "glitch-4",
+      "name": "Slice glitch \u00b7 bar 7",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 24,
+      "beats": 0.5,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.9,
+        "slices": 18,
+        "seed": 32,
+        "duration": 0.214
+      }
+    },
+    {
+      "id": "glitch-5",
+      "name": "Slice glitch \u00b7 bar 8",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 28,
+      "beats": 0.375,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.8,
+        "slices": 18,
+        "seed": 39,
+        "duration": 0.161
+      }
+    },
+    {
+      "id": "glitch-6",
+      "name": "Slice glitch \u00b7 bar 9",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 32,
+      "beats": 0.75,
+      "opacity": 1,
+      "parameters": {
+        "amount": 1,
+        "slices": 18,
+        "seed": 46,
+        "duration": 0.321
+      }
+    },
+    {
+      "id": "glitch-7",
+      "name": "Slice glitch \u00b7 bar 12",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 44,
+      "beats": 0.5,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.8,
+        "slices": 18,
+        "seed": 53,
+        "duration": 0.214
+      }
+    },
+    {
+      "id": "hud",
+      "name": "Signal HUD",
+      "module": "hud",
+      "kind": "graphics",
+      "lane": "hud",
+      "startBeat": 0,
+      "beats": 44,
+      "opacity": 1,
+      "parameters": {
+        "color": "#f6f8f2",
+        "accent": "#eaf2df",
+        "bpm": 140,
+        "text": "GENOBI // SUPERNATURAL CREATURES",
+        "credit": "MUSIC / DIMENSIONS",
+        "seconds": 18.857
+      }
+    },
+    {
+      "id": "open",
+      "name": "Screen open",
+      "module": "screen-open",
+      "kind": "graphics",
+      "lane": "open",
+      "startBeat": 0,
+      "beats": 4,
+      "opacity": 1,
+      "parameters": {
+        "color": "#d5ff70",
+        "matte": "#0c0e0c",
+        "duration": 0.857,
+        "glyphs": 28,
+        "seed": 7
+      }
+    },
+    {
+      "id": "caption-1",
+      "name": "Caption \u00b7 Nocthorn",
+      "module": "build-panel",
+      "kind": "graphics",
+      "lane": "captions",
+      "startBeat": 0,
+      "beats": 4,
+      "opacity": 1,
+      "parameters": {
+        "side": "left",
+        "title": "NOCTHORN",
+        "lines": "FOREST / BLADE FORM / SUBJECT 01",
+        "color": "#f6f8f2",
+        "muted": "#c9d2c0",
+        "accent": "#f6f8f2",
+        "bpm": 140,
+        "duration": 0.7
+      }
+    },
+    {
+      "id": "caption-2",
+      "name": "Caption \u00b7 Mirebloom",
+      "module": "build-panel",
+      "kind": "graphics",
+      "lane": "captions",
+      "startBeat": 4,
+      "beats": 4,
+      "opacity": 1,
+      "parameters": {
+        "side": "right",
+        "title": "MIREBLOOM",
+        "lines": "LAKE / BLOOM FORM / SUBJECT 02",
+        "color": "#f6f8f2",
+        "muted": "#c9d2c0",
+        "accent": "#f6f8f2",
+        "bpm": 140,
+        "duration": 0.7
+      }
+    },
+    {
+      "id": "caption-3",
+      "name": "Caption \u00b7 Mirebloom",
+      "module": "build-panel",
+      "kind": "graphics",
+      "lane": "captions",
+      "startBeat": 16,
+      "beats": 8,
+      "opacity": 1,
+      "parameters": {
+        "side": "right",
+        "title": "MIREBLOOM",
+        "lines": "FORM 02 / CORE OPEN / RISING",
+        "color": "#f6f8f2",
+        "muted": "#c9d2c0",
+        "accent": "#f6f8f2",
+        "bpm": 140,
+        "duration": 0.7
+      }
+    },
+    {
+      "id": "caption-4",
+      "name": "Caption \u00b7 Duneward",
+      "module": "build-panel",
+      "kind": "graphics",
+      "lane": "captions",
+      "startBeat": 36,
+      "beats": 8,
+      "opacity": 1,
+      "parameters": {
+        "side": "left",
+        "title": "DUNEWARD",
+        "lines": "FORM 02 / ROBED / AWAKE",
+        "color": "#f6f8f2",
+        "muted": "#c9d2c0",
+        "accent": "#f6f8f2",
+        "bpm": 140,
+        "duration": 0.7
+      }
+    },
+    {
+      "id": "scan",
+      "name": "Scan \u00b7 Duneward",
+      "module": "scan",
+      "kind": "graphics",
+      "lane": "scan",
+      "startBeat": 8,
+      "beats": 6,
+      "opacity": 0.95,
+      "parameters": {
+        "color": "#f6f8f2",
+        "accent": "#d5ff70",
+        "text": "DUNEWARD",
+        "x": 0.5,
+        "y": 0.43,
+        "bpm": 140
+      }
+    },
+    {
+      "id": "hit-ignite",
+      "name": "Impact \u00b7 Ignite",
+      "module": "kinetic",
+      "kind": "graphics",
+      "lane": "impact",
+      "startBeat": 12,
+      "beats": 1,
+      "opacity": 1,
+      "parameters": {
+        "text": "IGNITE",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "weight": 700,
+        "color": "#f6f8f2",
+        "accent": "#0c0e0c",
+        "bpm": 140,
+        "size": 120,
+        "beats": 1
+      }
+    },
+    {
+      "id": "hit-shift",
+      "name": "Impact \u00b7 Shift",
+      "module": "kinetic",
+      "kind": "graphics",
+      "lane": "impact",
+      "startBeat": 24,
+      "beats": 1,
+      "opacity": 1,
+      "parameters": {
+        "text": "SHIFT",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "weight": 700,
+        "color": "#f6f8f2",
+        "accent": "#0c0e0c",
+        "bpm": 140,
+        "size": 130,
+        "beats": 1
+      }
+    },
+    {
+      "id": "title",
+      "name": "Title \u00b7 Supernatural creatures",
+      "module": "kinetic",
+      "kind": "graphics",
+      "lane": "impact",
+      "startBeat": 32,
+      "beats": 4,
+      "opacity": 1,
+      "parameters": {
+        "text": "SUPERNATURAL / CREATURES",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "weight": 400,
+        "color": "#d5ff70",
+        "accent": "#f6f8f2",
+        "bpm": 140,
+        "size": 150,
+        "beats": 4
+      }
+    }
+  ]
+}

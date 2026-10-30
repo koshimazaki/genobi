@@ -1,0 +1,226 @@
+:root {
+  font-family:
+    "Instrument Sans Variable",
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  font-synthesis: none;
+  font-weight: 400;
+  --bg: #101316;
+  --sunken: #171a1e;
+  --surface: #1e2227;
+  --raised: #262b31;
+  --overlay: #31373e;
+  --border: #333a42;
+  --border-strong: #454d57;
+  --machined: #566069;
+  --text: #e4e8ed;
+  --soft: #a4abb4;
+  --muted: #8b929c;
+  --lime-accent: #a8be5c;
+  --lime-readout: #c0d672;
+  --coral-accent: #ea7b7b;
+  --cyan-readout: #b3e9f4;
+  --accent: var(--lime-accent);
+  --accent-strong: var(--lime-readout);
+  --accent-ghost: rgba(168, 190, 92, 0.12);
+  --accent-ink: #14180e;
+  --readout: var(--lime-readout);
+  --intel: #6faab6;
+  /* Acoustic Space only: its button, its switch when on, its prompt line and
+     its selected tile and level. Light blue beside sand, teal and lime. */
+  --acoustic: #8dbce8;
+  --metal: linear-gradient(180deg, #363d45, #262b31 54%, #1b1f24);
+  --mono: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+  --unit: 0.0625rem;
+  --composer-unit: 0.05625rem;
+  --composer-font-size: 0.9rem;
+  --radius-round: 50%;
+  --motion-fast: 0.12s;
+  --motion-control: 0.16s;
+  --motion-enter: 0.22s;
+  --motion-reveal: 0.3s;
+  --motion-pulse: 2s;
+  --error-bg: #2a211b;
+  --error-border: #5e493b;
+  --error-text: #e1b397;
+  --shadow-soft: #0002;
+  --shadow-press: #0003;
+  --shadow-dialog: #0009;
+  --backdrop: #000a;
+  --highlight-subtle: #ffffff06;
+  --highlight-soft: #ffffff08;
+  --highlight-control: #ffffff33;
+  --hover-wash: #ffffff0c;
+  --surface-wash: #ffffff03;
+  --badge-bg: #101316ed;
+  --badge-border: #d2e2bf22;
+  --play-border: #eff4e36b;
+  --play-bg: #171a1ed9;
+  --clip-hide-bg: #00000040;
+  --clip-hide-hover-bg: #00000070;
+  --clip-hide-border: #ffffff26;
+  --clip-hide-ink: #ffffffe0;
+  --status-bg: #10131699;
+  --camera-shot: #cfb897;
+  --camera-angle: var(--intel);
+  --camera-movement: var(--accent);
+  /* The LTX prompt's other parts, beside sand, teal and lime: a candle gold,
+     terracotta, dusty mauve and sage. Audio is the Acoustic Space blue, since
+     the AKUSPACE caption opens the Audio part. Each keeps 5:1 or more on the
+     composer surfaces; scripts/check-ltx-prompt.mjs checks contrast and
+     spacing in both themes. */
+  --camera-light: #ecc85a;
+  --prompt-scene: #dc8f7c;
+  --prompt-character: #c9a0d6;
+  --prompt-action: #76c99a;
+  --prompt-audio: var(--acoustic);
+  --scene-sky: #dfeeee;
+  --scene-ground: var(--sunken);
+  --scene-light: #ffffff;
+  --scene-subject: var(--soft);
+  --scene-accent: var(--accent);
+  --scene-dark: var(--border-strong);
+  --scene-grid-major: var(--machined);
+  --scene-grid-minor: var(--border);
+  --scene-glass: var(--sunken);
+  --scene-emissive: var(--intel);
+  color-scheme: dark;
+}
+:root[data-theme="cyberpunk"] {
+  --accent: var(--coral-accent);
+  --accent-strong: #e46983;
+  --accent-ghost: rgba(234, 123, 123, 0.12);
+  --accent-ink: #201214;
+  --readout: var(--cyan-readout);
+  --intel: #62c4e6;
+  --acoustic: #8e9cf4;
+  --camera-shot: #c3adea;
+  /* Neon yellow, hot pink, orange and mint beside lavender, cyan and coral. */
+  --camera-light: #f2d66b;
+  --prompt-scene: #f28ab8;
+  --prompt-character: #f0a36b;
+  --prompt-action: #6fe0b0;
+}
+:root,
+.studio {
+  --text-small-6: calc(6 * var(--unit) + 0.125rem);
+  --text-small-7: calc(7 * var(--unit) + 0.125rem);
+  --text-small-8: calc(8 * var(--unit) + 0.0625rem);
+  --radius-xs: calc(2 * var(--unit));
+  --radius-sm: calc(3 * var(--unit));
+  --radius-control: calc(4 * var(--unit));
+  --radius-md: calc(6 * var(--unit));
+  --radius-panel: calc(7 * var(--unit));
+  --radius-lg: calc(10 * var(--unit));
+  --radius-dialog: calc(12 * var(--unit));
+  --space-1: calc(1 * var(--unit));
+  --space-2: calc(2 * var(--unit));
+  --space-3: calc(3 * var(--unit));
+  --space-4: calc(4 * var(--unit));
+  --space-5: calc(5 * var(--unit));
+  --space-6: calc(6 * var(--unit));
+  --space-7: calc(7 * var(--unit));
+  --space-8: calc(8 * var(--unit));
+  --space-9: calc(9 * var(--unit));
+  --space-10: calc(10 * var(--unit));
+  --space-11: calc(11 * var(--unit));
+  --space-12: calc(12 * var(--unit));
+  --space-13: calc(13 * var(--unit));
+  --space-14: calc(14 * var(--unit));
+  --space-15: calc(15 * var(--unit));
+  --space-16: calc(16 * var(--unit));
+  --space-17: calc(17 * var(--unit));
+  --space-18: calc(18 * var(--unit));
+  --space-20: calc(20 * var(--unit));
+  --space-21: calc(21 * var(--unit));
+  --space-22: calc(22 * var(--unit));
+  --space-23: calc(23 * var(--unit));
+  --space-24: calc(24 * var(--unit));
+  --space-25: calc(25 * var(--unit));
+  --space-26: calc(26 * var(--unit));
+  --space-28: calc(28 * var(--unit));
+  --space-30: calc(30 * var(--unit));
+  --space-32: calc(32 * var(--unit));
+  --space-36: calc(36 * var(--unit));
+  --space-40: calc(40 * var(--unit));
+  --space-48: calc(48 * var(--unit));
+  --space-56: calc(56 * var(--unit));
+  --space-64: calc(64 * var(--unit));
+}
+
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  min-width: calc(320 * var(--unit));
+}
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+button,
+a,
+input,
+textarea,
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+button {
+  cursor: pointer;
+}
+button {
+  color: inherit;
+}
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+a {
+  color: inherit;
+  text-decoration: none;
+}
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: var(--space-2) solid var(--accent);
+  outline-offset: var(--space-4);
+}
+button {
+  border: 0;
+  background: none;
+}
+svg {
+  flex-shrink: 0;
+}
+button {
+  transition:
+    background var(--motion-control),
+    color var(--motion-control),
+    border-color var(--motion-control);
+}
+button:hover {
+  color: var(--text);
+}
+select {
+  cursor: pointer;
+}
+select option {
+  background: var(--raised);
+}
+.sr-only {
+  position: absolute;
+  width: var(--space-1);
+  height: var(--space-1);
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}

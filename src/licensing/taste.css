@@ -1,0 +1,339 @@
+/* The reference shelf keeps a graphite shell, independent of Signal's artwork. */
+:root:has(.taste-page) {
+  --bg: #101316;
+  background: #101316;
+  color-scheme: dark;
+}
+.taste-dialog {
+  --taste-bg: #101316;
+  --taste-surface: #1e2227;
+  --taste-sunken: #171a1e;
+  --taste-border: #454d57;
+  --taste-rule: #333a42;
+  --taste-text: #e4e8ed;
+  --taste-soft: #a4abb4;
+  --taste-readout: #cbd1d8;
+  accent-color: var(--taste-readout);
+  color: var(--taste-text);
+  background: var(--taste-bg);
+  border: 1px solid var(--taste-border);
+  border-radius: 12px;
+  width: min(1100px, 94vw);
+  max-height: 92vh;
+  padding: 36px;
+  overflow: auto;
+}
+.taste-dialog::backdrop {
+  background: #000b;
+}
+.taste-dialog header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 20px;
+}
+.taste-dialog h1 {
+  font:
+    400 clamp(28px, 4vw, 48px) "Instrument Sans Variable",
+    sans-serif;
+  letter-spacing: -1.5px;
+  margin: 10px 0 20px;
+}
+.taste-dialog h2 {
+  font:
+    500 24px "Instrument Sans Variable",
+    sans-serif;
+  margin: 12px 0;
+}
+.taste-dialog p {
+  line-height: 1.55;
+  color: var(--taste-soft);
+}
+.taste-dialog a {
+  color: var(--taste-readout);
+}
+.taste-dialog button {
+  padding: 9px 14px;
+  background: var(--taste-surface);
+  color: var(--taste-text);
+  border: 1px solid var(--taste-border);
+  border-radius: 5px;
+  cursor: pointer;
+}
+.taste-dialog button:disabled {
+  opacity: 0.4;
+}
+.taste-intro {
+  font-size: 17px;
+  max-width: 800px;
+}
+.taste-preference {
+  margin: 30px 0;
+  padding: 20px;
+  background: var(--taste-surface);
+  border-radius: 8px;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+.taste-preference label {
+  display: grid;
+  gap: 8px;
+  font-size: 13px;
+}
+.taste-preference select {
+  max-width: 100%;
+  padding: 8px;
+  color: var(--taste-readout);
+  background: var(--taste-bg);
+  border: 1px solid var(--taste-border);
+}
+.taste-preference p {
+  width: 100%;
+  font-size: 12px;
+  margin: 0;
+}
+.taste-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+.taste-grid article {
+  border-top: 1px solid var(--taste-rule);
+  padding: 24px 0;
+}
+.taste-tag {
+  font:
+    10px "IBM Plex Mono",
+    monospace;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--taste-soft);
+}
+.taste-author {
+  font-weight: 600;
+  color: var(--taste-readout) !important;
+}
+.taste-use,
+.taste-dialog details,
+.taste-select {
+  font-size: 12px;
+}
+.taste-select {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 18px;
+}
+.taste-dialog summary {
+  cursor: pointer;
+  color: var(--taste-readout);
+}
+.taste-issue {
+  border-left: 2px solid #e3c46b;
+  padding-left: 12px;
+  font-size: 12px;
+}
+.taste-dialog footer {
+  border-top: 1px solid var(--taste-rule);
+  padding-top: 24px;
+  margin-top: 32px;
+}
+.taste-dialog footer p {
+  font-size: 12px;
+}
+@media (max-width: 650px) {
+  .taste-dialog {
+    padding: 20px;
+  }
+  .taste-grid {
+    grid-template-columns: 1fr;
+  }
+  .taste-dialog header button {
+    font-size: 11px;
+  }
+  .taste-preference {
+    padding: 14px;
+    gap: 15px;
+  }
+}
+.taste-page {
+  width: min(1320px, 100%);
+  max-height: none;
+  min-height: 100vh;
+  margin: 0 auto;
+  border: 0;
+  border-radius: 0;
+  padding: 50px 48px;
+  font-family: "Instrument Sans Variable", sans-serif;
+}
+.taste-page > header > div > p {
+  color: var(--taste-readout);
+  letter-spacing: 2px;
+  font:
+    11px "IBM Plex Mono",
+    monospace;
+}
+.taste-page h1 {
+  font-size: clamp(40px, 6vw, 76px);
+  max-width: 800px;
+  line-height: 1;
+  letter-spacing: -3px;
+}
+.taste-page > header > a {
+  white-space: nowrap;
+  font-size: 13px;
+}
+.taste-lineage {
+  max-width: 850px;
+  font-size: 13px;
+}
+.taste-examples {
+  margin: 40px 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+}
+.taste-examples article {
+  min-width: 0;
+}
+.taste-examples video {
+  width: 100%;
+  aspect-ratio: 2;
+  background: var(--taste-sunken);
+  border: 1px solid var(--taste-rule);
+}
+.taste-ascii {
+  width: 100%;
+  aspect-ratio: 2;
+  overflow: hidden;
+  background: var(--taste-bg);
+  border: 1px solid var(--taste-rule);
+}
+.taste-examples p {
+  font-size: 14px;
+}
+.taste-examples .taste-tag {
+  margin-top: 22px;
+  font-size: 10px;
+}
+.taste-examples h2 {
+  font-size: 30px;
+}
+.taste-examples button {
+  float: right;
+  font-size: 10px;
+  margin-top: 5px;
+}
+.taste-next {
+  grid-column: 1 / -1;
+  border-top: 1px solid var(--taste-rule);
+}
+.taste-find {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.taste-find label {
+  display: grid;
+  gap: 8px;
+  font-size: 12px;
+}
+.taste-find input,
+.taste-find select {
+  padding: 12px;
+  background: var(--taste-surface);
+  color: var(--taste-text);
+  border: 1px solid var(--taste-border);
+  border-radius: 5px;
+}
+.taste-find input {
+  width: min(380px, 75vw);
+}
+.taste-find p {
+  font-size: 12px;
+}
+.taste-example-link {
+  font-size: 12px;
+}
+.taste-inspiration {
+  padding-top: 32px;
+  border-top: 1px solid var(--taste-rule);
+  margin-top: 24px;
+}
+.taste-page :focus-visible {
+  outline: 2px solid var(--taste-readout);
+  outline-offset: 4px;
+}
+@media (max-width: 650px) {
+  .taste-page {
+    padding: 28px 20px;
+  }
+  .taste-page header {
+    flex-direction: column-reverse;
+  }
+  .taste-examples {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+}
+
+.taste-shelf {
+  margin: 32px 0;
+  padding: 24px;
+  border: 1px solid var(--taste-rule);
+  border-radius: 8px;
+  background: var(--taste-sunken);
+}
+.taste-shelf-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.taste-custom-form {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+.taste-custom-form label {
+  display: grid;
+  gap: 8px;
+}
+.taste-custom-form input,
+.taste-custom-form textarea {
+  width: 100%;
+  min-width: 0;
+  padding: 12px;
+  color: var(--taste-text);
+  background: var(--taste-bg);
+  border: 1px solid var(--taste-border);
+  border-radius: 5px;
+  font: inherit;
+}
+.taste-custom-form textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+.taste-custom-reference {
+  padding: 16px 0;
+  border-top: 1px solid var(--taste-rule);
+  overflow-wrap: anywhere;
+}
+.taste-settings {
+  margin: 24px 0;
+}
+.taste-select {
+  min-height: 36px;
+}
+.taste-grid > article {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+@media (max-width: 650px) {
+  .taste-shelf {
+    padding: 16px;
+  }
+}

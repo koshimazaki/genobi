@@ -1,0 +1,865 @@
+{
+  "schemaVersion": "director.bundle.v1",
+  "id": "dimensions-mix-v2",
+  "name": "Dimensions mix · v2",
+  "revision": 1,
+  "composition": {
+    "fps": 24,
+    "durationFrames": 555,
+    "width": 960,
+    "height": 540,
+    "colorSpace": "srgb",
+    "alpha": "straight",
+    "background": "#0c0e0c",
+    "bpm": 140,
+    "beatsPerBar": 4
+  },
+  "assets": {
+    "mix-01": {
+      "kind": "video",
+      "use": "production",
+      "origin": "uploaded",
+      "durationSeconds": 13.5,
+      "file": {
+        "path": "media/mix-01.mp4",
+        "sha256": "e7c7afc43122bc5b3947c0651f8c77f9edd38f6684b7ea81c8ef2b95617a1ad7"
+      }
+    },
+    "mix-02": {
+      "kind": "video",
+      "use": "production",
+      "origin": "uploaded",
+      "durationSeconds": 13.5,
+      "file": {
+        "path": "media/mix-02.mp4",
+        "sha256": "b749a9b1ede414a9be563d0d9bcd188296a2e97ec688a105b48c1312a2fda4f4"
+      }
+    },
+    "mix-03": {
+      "kind": "video",
+      "use": "production",
+      "origin": "uploaded",
+      "durationSeconds": 13.5,
+      "file": {
+        "path": "media/mix-03.mp4",
+        "sha256": "d4bbda0fc4f75bf243827c4b50767d240b8c3cb4c6e9b85bf8d52223a9d6fcf9"
+      }
+    },
+    "mix-end": {
+      "kind": "video",
+      "use": "production",
+      "origin": "uploaded",
+      "durationSeconds": 4.25,
+      "file": {
+        "path": "media/mix-end.mp4",
+        "sha256": "159b2fab108cbc4d23838be4a71c978324ad2b5a3765ee43329cde9e4bf51a18"
+      }
+    },
+    "mix-track": {
+      "kind": "audio",
+      "use": "production",
+      "origin": "uploaded",
+      "durationSeconds": 23.2,
+      "file": {
+        "path": "media/mix-track.wav",
+        "sha256": "3528cd7a7b67732faee0f371bbab89de7952e5c3d06722f4a9490f12f9604286"
+      }
+    }
+  },
+  "modules": {
+    "wire-scan": {
+      "engine": "threejs",
+      "engineVersion": "0.180.0",
+      "mode": "filter",
+      "file": {
+        "path": "graphics/mix-wire-scan.mjs",
+        "sha256": "ea23e0a7b8f48a503a65f2e316a612582a489a6eaf14aa8476950eca4bf4b117"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["color", "amount", "sweep", "trail"],
+        "properties": {
+          "color": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "amount": { "type": "number", "minimum": 0, "maximum": 1 },
+          "sweep": { "type": "number", "minimum": 0.1, "maximum": 8 },
+          "trail": { "type": "number", "minimum": 0.05, "maximum": 1 }
+        }
+      }
+    },
+    "slice-glitch": {
+      "engine": "threejs",
+      "engineVersion": "0.180.0",
+      "mode": "filter",
+      "file": {
+        "path": "graphics/mix-slice-glitch.mjs",
+        "sha256": "f1e5a045aae8ae9bc1b7691cd939c783cd078864c9ca7f945f85a17d7ccbb588"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["amount", "slices", "seed", "duration"],
+        "properties": {
+          "amount": { "type": "number", "minimum": 0, "maximum": 1 },
+          "slices": { "type": "integer", "minimum": 2, "maximum": 64 },
+          "seed": { "type": "integer", "minimum": 0, "maximum": 9999 },
+          "duration": { "type": "number", "minimum": 0.02, "maximum": 2 }
+        }
+      }
+    },
+    "hud": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/mix-hud.mjs",
+        "sha256": "623ccbbb6058884a5687b7d84b5e3c57cbcba11859ccb8642c6831c6957d4e2e"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["color", "accent", "bpm", "text", "credit", "seconds"],
+        "properties": {
+          "color": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "accent": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "bpm": { "type": "number", "minimum": 20, "maximum": 300 },
+          "text": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 60,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "credit": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 60,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "seconds": { "type": "number", "minimum": 1, "maximum": 120 }
+        }
+      }
+    },
+    "screen-open": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/mix-screen-open.mjs",
+        "sha256": "396bf3dab13d4f83f60a9790251dcf64cbb632e55b19d651169d70aba886e209"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["color", "matte", "duration", "glyphs", "seed"],
+        "properties": {
+          "color": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "matte": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "duration": { "type": "number", "minimum": 0.1, "maximum": 8 },
+          "glyphs": { "type": "integer", "minimum": 0, "maximum": 64 },
+          "seed": { "type": "integer", "minimum": 0, "maximum": 9999 }
+        }
+      }
+    },
+    "build-panel": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/mix-build-panel.mjs",
+        "sha256": "54c341f37a896d90bdd05e5b854671b5ca90962c65d8a98660cd15cda699beb6"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "side",
+          "title",
+          "lines",
+          "color",
+          "muted",
+          "accent",
+          "bpm",
+          "duration"
+        ],
+        "properties": {
+          "side": { "type": "string", "enum": ["left", "right"] },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "lines": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 200,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "color": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "muted": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "accent": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "bpm": { "type": "number", "minimum": 20, "maximum": 300 },
+          "duration": { "type": "number", "minimum": 0.2, "maximum": 8 }
+        }
+      }
+    },
+    "scan": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/mix-scan.mjs",
+        "sha256": "c55f2da9c34a8064758db970ca3f9f664bc22cf2be9f0c04707f2f09d8d20b50"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["color", "accent", "text", "x", "y", "bpm"],
+        "properties": {
+          "color": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "accent": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 32,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "x": { "type": "number", "minimum": 0, "maximum": 1 },
+          "y": { "type": "number", "minimum": 0, "maximum": 1 },
+          "bpm": { "type": "number", "minimum": 20, "maximum": 300 }
+        }
+      }
+    },
+    "kinetic": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/mix-kinetic.mjs",
+        "sha256": "5352245651b8f5d1b2bb194326eead422ba7afe0c03bac6576b69d6ba4a9a50e"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "text",
+          "font",
+          "weight",
+          "color",
+          "accent",
+          "bpm",
+          "size",
+          "beats"
+        ],
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "font": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120,
+            "pattern": "^[A-Za-z0-9 ,\"'-]+$"
+          },
+          "weight": { "type": "integer", "minimum": 100, "maximum": 900 },
+          "color": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "accent": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "bpm": { "type": "number", "minimum": 20, "maximum": 300 },
+          "size": { "type": "number", "minimum": 8, "maximum": 240 },
+          "beats": { "type": "number", "minimum": 0.25, "maximum": 32 }
+        }
+      }
+    }
+  },
+  "layers": [
+    {
+      "id": "track",
+      "name": "Track · Dimensions",
+      "kind": "audio",
+      "assetId": "mix-track",
+      "sourceStartFrame": 0,
+      "gain": 1,
+      "startFrame": 0,
+      "durationFrames": 555,
+      "locked": false
+    },
+    {
+      "id": "shot-01",
+      "name": "01 Nocthorn · slash on the drop",
+      "kind": "video",
+      "assetId": "mix-03",
+      "sourceStartFrame": 7,
+      "fit": "contain",
+      "track": "shots",
+      "startFrame": 0,
+      "durationFrames": 41,
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.7777777777777777,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 50 }
+    },
+    {
+      "id": "shot-02",
+      "name": "02 Mirebloom · splash",
+      "kind": "video",
+      "assetId": "mix-01",
+      "sourceStartFrame": 24,
+      "fit": "contain",
+      "track": "shots",
+      "startFrame": 41,
+      "durationFrames": 41,
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.7777777777777777,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 76.67 }
+    },
+    {
+      "id": "shot-03",
+      "name": "03 Duneward · eyes ignite (scan)",
+      "kind": "video",
+      "assetId": "mix-02",
+      "sourceStartFrame": 31,
+      "fit": "contain",
+      "track": "shots",
+      "startFrame": 82,
+      "durationFrames": 62,
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.7777777777777777,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 130 }
+    },
+    {
+      "id": "shot-04",
+      "name": "04 Nocthorn · belt flare",
+      "kind": "video",
+      "assetId": "mix-03",
+      "sourceStartFrame": 53,
+      "fit": "contain",
+      "track": "shots",
+      "startFrame": 144,
+      "durationFrames": 21,
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.7777777777777777,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 76.67 }
+    },
+    {
+      "id": "shot-05",
+      "name": "05 Mirebloom · core opens",
+      "kind": "video",
+      "assetId": "mix-01",
+      "sourceStartFrame": 96,
+      "fit": "contain",
+      "track": "shots",
+      "startFrame": 165,
+      "durationFrames": 41,
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.7777777777777777,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 103.33 }
+    },
+    {
+      "id": "shot-06",
+      "name": "06 Duneward · parts fly",
+      "kind": "video",
+      "assetId": "mix-02",
+      "sourceStartFrame": 120,
+      "fit": "contain",
+      "track": "shots",
+      "startFrame": 206,
+      "durationFrames": 41,
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.7777777777777777,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 76.67 }
+    },
+    {
+      "id": "shot-07",
+      "name": "07 Nocthorn · orb head",
+      "kind": "video",
+      "assetId": "mix-03",
+      "sourceStartFrame": 96,
+      "fit": "contain",
+      "track": "shots",
+      "startFrame": 247,
+      "durationFrames": 41,
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.7777777777777777,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 103.33 }
+    },
+    {
+      "id": "shot-08",
+      "name": "08 Mirebloom · bursts apart",
+      "kind": "video",
+      "assetId": "mix-01",
+      "sourceStartFrame": 144,
+      "fit": "contain",
+      "track": "shots",
+      "startFrame": 288,
+      "durationFrames": 41,
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.7777777777777777,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 50 }
+    },
+    {
+      "id": "shot-09",
+      "name": "09 Mirebloom · reassembled (title hit)",
+      "kind": "video",
+      "assetId": "mix-01",
+      "sourceStartFrame": 190,
+      "fit": "contain",
+      "track": "shots",
+      "startFrame": 329,
+      "durationFrames": 41,
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.7777777777777777,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 76.67 }
+    },
+    {
+      "id": "shot-10",
+      "name": "10 Duneward · robed form",
+      "kind": "video",
+      "assetId": "mix-02",
+      "sourceStartFrame": 192,
+      "fit": "contain",
+      "track": "shots",
+      "startFrame": 370,
+      "durationFrames": 41,
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.7777777777777777,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 63.33 }
+    },
+    {
+      "id": "shot-11",
+      "name": "11 Nocthorn · red-ring head",
+      "kind": "video",
+      "assetId": "mix-03",
+      "sourceStartFrame": 216,
+      "fit": "contain",
+      "track": "shots",
+      "startFrame": 411,
+      "durationFrames": 21,
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.7777777777777777,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 50 }
+    },
+    {
+      "id": "shot-12",
+      "name": "12 Duneward · final form",
+      "kind": "video",
+      "assetId": "mix-02",
+      "sourceStartFrame": 288,
+      "fit": "contain",
+      "track": "shots",
+      "startFrame": 432,
+      "durationFrames": 21,
+      "locked": false,
+      "opacity": 1,
+      "scale": 1.7777777777777777,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 110 }
+    },
+    {
+      "id": "shot-13",
+      "name": "13 End card · produced by Genobi 2026",
+      "kind": "video",
+      "assetId": "mix-end",
+      "sourceStartFrame": 0,
+      "fit": "contain",
+      "track": "shots",
+      "startFrame": 453,
+      "durationFrames": 102,
+      "locked": false,
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "wire",
+      "name": "Wireframe scan · Duneward",
+      "moduleId": "wire-scan",
+      "parameters": {
+        "color": "#d5ff70",
+        "amount": 0.9,
+        "sweep": 1.2,
+        "trail": 0.35
+      },
+      "startFrame": 82,
+      "durationFrames": 62,
+      "locked": false,
+      "kind": "filter",
+      "input": "composite-below"
+    },
+    {
+      "id": "glitch-1",
+      "name": "Slice glitch · bar 2",
+      "moduleId": "slice-glitch",
+      "parameters": {
+        "amount": 0.7,
+        "slices": 18,
+        "seed": 11,
+        "duration": 0.161
+      },
+      "startFrame": 41,
+      "durationFrames": 4,
+      "locked": false,
+      "track": "glitch",
+      "kind": "filter",
+      "input": "composite-below"
+    },
+    {
+      "id": "glitch-2",
+      "name": "Slice glitch · bar 3",
+      "moduleId": "slice-glitch",
+      "parameters": {
+        "amount": 0.7,
+        "slices": 18,
+        "seed": 18,
+        "duration": 0.161
+      },
+      "startFrame": 82,
+      "durationFrames": 4,
+      "locked": false,
+      "track": "glitch",
+      "kind": "filter",
+      "input": "composite-below"
+    },
+    {
+      "id": "glitch-3",
+      "name": "Slice glitch · bar 4",
+      "moduleId": "slice-glitch",
+      "parameters": {
+        "amount": 0.9,
+        "slices": 18,
+        "seed": 25,
+        "duration": 0.214
+      },
+      "startFrame": 123,
+      "durationFrames": 6,
+      "locked": false,
+      "track": "glitch",
+      "kind": "filter",
+      "input": "composite-below"
+    },
+    {
+      "id": "glitch-4",
+      "name": "Slice glitch · bar 7",
+      "moduleId": "slice-glitch",
+      "parameters": {
+        "amount": 0.9,
+        "slices": 18,
+        "seed": 32,
+        "duration": 0.214
+      },
+      "startFrame": 247,
+      "durationFrames": 5,
+      "locked": false,
+      "track": "glitch",
+      "kind": "filter",
+      "input": "composite-below"
+    },
+    {
+      "id": "glitch-5",
+      "name": "Slice glitch · bar 8",
+      "moduleId": "slice-glitch",
+      "parameters": {
+        "amount": 0.8,
+        "slices": 18,
+        "seed": 39,
+        "duration": 0.161
+      },
+      "startFrame": 288,
+      "durationFrames": 4,
+      "locked": false,
+      "track": "glitch",
+      "kind": "filter",
+      "input": "composite-below"
+    },
+    {
+      "id": "glitch-6",
+      "name": "Slice glitch · bar 9",
+      "moduleId": "slice-glitch",
+      "parameters": {
+        "amount": 1,
+        "slices": 18,
+        "seed": 46,
+        "duration": 0.321
+      },
+      "startFrame": 329,
+      "durationFrames": 8,
+      "locked": false,
+      "track": "glitch",
+      "kind": "filter",
+      "input": "composite-below"
+    },
+    {
+      "id": "glitch-7",
+      "name": "Slice glitch · bar 12",
+      "moduleId": "slice-glitch",
+      "parameters": {
+        "amount": 0.8,
+        "slices": 18,
+        "seed": 53,
+        "duration": 0.214
+      },
+      "startFrame": 453,
+      "durationFrames": 5,
+      "locked": false,
+      "track": "glitch",
+      "kind": "filter",
+      "input": "composite-below"
+    },
+    {
+      "id": "hud",
+      "name": "Signal HUD",
+      "moduleId": "hud",
+      "parameters": {
+        "color": "#f6f8f2",
+        "accent": "#eaf2df",
+        "bpm": 140,
+        "text": "GENOBI // SUPERNATURAL CREATURES",
+        "credit": "MUSIC / DIMENSIONS",
+        "seconds": 18.857
+      },
+      "startFrame": 0,
+      "durationFrames": 453,
+      "locked": false,
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "open",
+      "name": "Screen open",
+      "moduleId": "screen-open",
+      "parameters": {
+        "color": "#d5ff70",
+        "matte": "#0c0e0c",
+        "duration": 0.857,
+        "glyphs": 28,
+        "seed": 7
+      },
+      "startFrame": 0,
+      "durationFrames": 41,
+      "locked": false,
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "caption-1",
+      "name": "Caption · Nocthorn",
+      "moduleId": "build-panel",
+      "parameters": {
+        "side": "left",
+        "title": "NOCTHORN",
+        "lines": "FOREST / BLADE FORM / SUBJECT 01",
+        "color": "#f6f8f2",
+        "muted": "#c9d2c0",
+        "accent": "#f6f8f2",
+        "bpm": 140,
+        "duration": 0.7
+      },
+      "startFrame": 0,
+      "durationFrames": 41,
+      "locked": false,
+      "track": "captions",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "caption-2",
+      "name": "Caption · Mirebloom",
+      "moduleId": "build-panel",
+      "parameters": {
+        "side": "right",
+        "title": "MIREBLOOM",
+        "lines": "LAKE / BLOOM FORM / SUBJECT 02",
+        "color": "#f6f8f2",
+        "muted": "#c9d2c0",
+        "accent": "#f6f8f2",
+        "bpm": 140,
+        "duration": 0.7
+      },
+      "startFrame": 41,
+      "durationFrames": 41,
+      "locked": false,
+      "track": "captions",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "caption-3",
+      "name": "Caption · Mirebloom",
+      "moduleId": "build-panel",
+      "parameters": {
+        "side": "right",
+        "title": "MIREBLOOM",
+        "lines": "FORM 02 / CORE OPEN / RISING",
+        "color": "#f6f8f2",
+        "muted": "#c9d2c0",
+        "accent": "#f6f8f2",
+        "bpm": 140,
+        "duration": 0.7
+      },
+      "startFrame": 165,
+      "durationFrames": 82,
+      "locked": false,
+      "track": "captions",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "caption-4",
+      "name": "Caption · Duneward",
+      "moduleId": "build-panel",
+      "parameters": {
+        "side": "left",
+        "title": "DUNEWARD",
+        "lines": "FORM 02 / ROBED / AWAKE",
+        "color": "#f6f8f2",
+        "muted": "#c9d2c0",
+        "accent": "#f6f8f2",
+        "bpm": 140,
+        "duration": 0.7
+      },
+      "startFrame": 370,
+      "durationFrames": 83,
+      "locked": false,
+      "track": "captions",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "scan",
+      "name": "Scan · Duneward",
+      "moduleId": "scan",
+      "parameters": {
+        "color": "#f6f8f2",
+        "accent": "#d5ff70",
+        "text": "DUNEWARD",
+        "x": 0.5,
+        "y": 0.43,
+        "bpm": 140
+      },
+      "startFrame": 82,
+      "durationFrames": 62,
+      "locked": false,
+      "kind": "graphics",
+      "opacity": 0.95,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "hit-ignite",
+      "name": "Impact · Ignite",
+      "moduleId": "kinetic",
+      "parameters": {
+        "text": "IGNITE",
+        "font": "\"Retro Gaming\", \"RetroGaming\", \"Pixelify Sans\", monospace",
+        "weight": 700,
+        "color": "#f6f8f2",
+        "accent": "#0c0e0c",
+        "bpm": 140,
+        "size": 120,
+        "beats": 1
+      },
+      "startFrame": 123,
+      "durationFrames": 11,
+      "locked": false,
+      "track": "impact",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "hit-shift",
+      "name": "Impact · Shift",
+      "moduleId": "kinetic",
+      "parameters": {
+        "text": "SHIFT",
+        "font": "\"Retro Gaming\", \"RetroGaming\", \"Pixelify Sans\", monospace",
+        "weight": 700,
+        "color": "#f6f8f2",
+        "accent": "#0c0e0c",
+        "bpm": 140,
+        "size": 130,
+        "beats": 1
+      },
+      "startFrame": 247,
+      "durationFrames": 10,
+      "locked": false,
+      "track": "impact",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "title",
+      "name": "Title · Supernatural creatures",
+      "moduleId": "kinetic",
+      "parameters": {
+        "text": "SUPERNATURAL / CREATURES",
+        "font": "\"Retro Gaming\", \"RetroGaming\", \"Pixelify Sans\", monospace",
+        "weight": 400,
+        "color": "#d5ff70",
+        "accent": "#f6f8f2",
+        "bpm": 140,
+        "size": 150,
+        "beats": 4
+      },
+      "startFrame": 329,
+      "durationFrames": 41,
+      "locked": false,
+      "track": "impact",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    }
+  ],
+  "generationPlans": [],
+  "generations": []
+}

@@ -1,0 +1,190 @@
+.project-prompt {
+  position: relative;
+}
+.prompt-reference-toolbar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 22px;
+}
+.genobi-shell[data-preset="director"] .prompt-reference-toolbar > button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 84px;
+  min-height: 62px;
+  padding: 10px 14px;
+  border-style: dashed;
+  color: var(--soft);
+  background: var(--bg);
+  font: 11px var(--mono);
+}
+.genobi-shell[data-preset="director"]
+  .prompt-reference-toolbar
+  > button[aria-expanded="true"] {
+  border-color: var(--accent);
+  color: var(--accent-strong);
+  background: var(--accent-ghost);
+}
+[data-preset="director"] .prompt-asset-picker {
+  position: absolute;
+  z-index: 10;
+  top: 100px;
+  left: 20px;
+  right: 20px;
+  margin: 0;
+  padding: 14px;
+  max-height: min(480px, calc(100svh - 160px));
+  overflow: auto;
+  border-color: var(--border-strong);
+  box-shadow: 0 12px 32px var(--shadow-soft);
+}
+.prompt-picker-kinds {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 12px;
+}
+.prompt-picker-kinds button[aria-pressed="true"] {
+  color: var(--accent-strong);
+  border-color: var(--accent);
+  background: var(--accent-ghost);
+}
+[data-preset="director"] .prompt-picker-grid {
+  grid-template-columns: minmax(0, 1fr);
+  max-height: 240px;
+  gap: 5px;
+}
+.genobi-shell[data-preset="director"] .prompt-picker-grid button {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  grid-template-rows: auto auto;
+  column-gap: 10px;
+  align-items: center;
+  background: var(--sunken);
+}
+.genobi-shell[data-preset="director"]
+  .prompt-picker-grid
+  button
+  > :first-child {
+  grid-row: 1 / 3;
+  width: 44px;
+  height: 44px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+[data-preset="director"] .prompt-picker-grid strong,
+[data-preset="director"] .prompt-picker-grid small {
+  grid-column: 2;
+}
+[data-preset="director"] .prompt-picker-grid strong {
+  align-self: end;
+}
+[data-preset="director"] .prompt-picker-grid small {
+  align-self: start;
+}
+@media (max-width: 700px) {
+  [data-preset="director"] .prompt-asset-picker {
+    position: static;
+    margin-top: 12px;
+    max-height: 420px;
+  }
+  [data-preset="director"] .prompt-asset-picker button {
+    min-height: 44px;
+  }
+  .prompt-reference-toolbar {
+    gap: 6px;
+  }
+  .genobi-shell[data-preset="director"] .prompt-reference-toolbar > button {
+    flex: 1;
+    min-width: 0;
+    padding-inline: 8px;
+  }
+}
+.prompt-text-surface {
+  min-height: 180px;
+  padding: 12px 0;
+  outline: none;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: 2;
+  font-size: 16px;
+}
+.prompt-text-surface:focus-visible {
+  box-shadow: inset 0 -1px var(--accent);
+}
+.prompt-text-surface[data-empty]::before {
+  content: attr(data-placeholder);
+  color: var(--muted);
+  pointer-events: none;
+}
+.prompt-inline-reference {
+  display: inline-flex;
+  vertical-align: middle;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px 3px 3px;
+  margin: 2px 3px 2px 0;
+  line-height: 1.4;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  background: var(--sunken);
+  font-size: 13px;
+  cursor: pointer;
+  user-select: all;
+}
+.dir-remix
+  .prompt-inline-reference
+  :is(img, video, .prompt-font-sample, .dir-asset-placeholder) {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-control);
+  object-fit: cover;
+}
+.prompt-inline-reference:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.prompt-text-surface[aria-disabled="true"] {
+  opacity: 0.6;
+}
+[data-preset="director"] .prompt-asset-picker[data-inline] {
+  animation: prompt-picker-enter 130ms ease-out;
+}
+@keyframes prompt-picker-enter {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-preset="director"] .prompt-asset-picker[data-inline] {
+    animation: none;
+  }
+}
+@media (max-width: 700px) {
+  [data-preset="director"] .prompt-asset-picker[data-inline] {
+    position: absolute;
+  }
+}
+
+.dir-remix .prompt-inline-reference .prompt-font-sample {
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  flex: none;
+}
+[data-preset="ninja"] .genobi-panel-prompt[data-sized] .prompt-text-editor {
+  flex: 1;
+  min-height: 80px;
+  overflow: auto;
+}
+[data-preset="ninja"] .genobi-panel-prompt[data-sized] .prompt-text-surface {
+  box-sizing: border-box;
+  min-height: 100%;
+}

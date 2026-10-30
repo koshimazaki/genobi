@@ -1,0 +1,80 @@
+/* Director is a prompt-led workspace. Ninja keeps its saved panel layout. */
+[data-preset="director"] .genobi-grid {
+  grid-template-columns: minmax(240px, 4fr) minmax(0, 6fr);
+}
+[data-preset="director"] .dir-simple-play {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+[data-preset="director"] .genobi-panel-prompt .project-prompt {
+  margin: 0;
+  padding: 20px;
+  border: 0;
+  background: transparent;
+}
+[data-preset="director"] .genobi-panel-prompt .project-prompt > textarea {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 360px;
+  height: 360px;
+  margin: 0 0 20px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.7;
+  resize: vertical;
+}
+[data-preset="director"] .project-prompt > textarea::placeholder {
+  color: var(--muted);
+  opacity: 1;
+}
+[data-preset="director"] .prompt-reference-actions {
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+[data-preset="director"] .prompt-reference-actions button {
+  min-height: 32px;
+  padding: 7px 9px;
+  font-size: 10px;
+}
+[data-preset="director"] .prompt-reference-actions button:last-child {
+  margin-left: auto;
+}
+.genobi-shell[data-preset="director"]
+  .genobi-panel-stage:not([data-sized])
+  .dir-stage
+  canvas {
+  height: clamp(240px, 46dvh, 460px) !important;
+}
+@media (min-width: 701px) and (max-width: 1100px) {
+  [data-preset="director"] .genobi-grid {
+    grid-template-columns: minmax(220px, 4fr) minmax(0, 6fr);
+  }
+}
+@media (max-width: 700px) {
+  [data-preset="director"] .genobi-panel-prompt .project-prompt {
+    padding: 16px;
+  }
+  [data-preset="director"] .genobi-panel-prompt .project-prompt > textarea {
+    height: 240px;
+    min-height: 240px;
+  }
+  [data-preset="director"] .prompt-reference-actions button {
+    min-height: 44px;
+  }
+  [data-preset="director"] .dir-simple-play button {
+    min-height: 44px;
+  }
+  .genobi-shell[data-preset="director"]
+    .genobi-panel-stage:not([data-sized])
+    .dir-stage
+    canvas {
+    height: 260px !important;
+  }
+}

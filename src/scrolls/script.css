@@ -1,0 +1,50 @@
+/* The Script: a plain text scroll in the board's footprint. */
+.scroll-script {
+  display: grid;
+  gap: 14px;
+}
+.scroll-script .scroll-paper-heading strong {
+  font-size: 20px;
+  font-weight: 600;
+}
+.scroll-script textarea {
+  width: 100%;
+  resize: vertical;
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid #43483d55;
+  border-radius: 3px;
+  padding: 12px;
+  font: inherit;
+  line-height: 1.5;
+}
+.scroll-script-text {
+  min-height: 220px;
+  font-size: 15px;
+}
+.scroll-script-fill {
+  display: grid;
+  gap: 8px;
+  border-top: 2px solid #43483d;
+  padding-top: 14px;
+}
+.scroll-script-fill label {
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 600;
+}
+.scroll-script-fill p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+}
+.scroll-script-fill textarea {
+  min-height: 90px;
+}
+.scroll-script-fill > button,
+.scroll-script-actions button {
+  justify-self: start;
+}
+.scroll-script .send-director-status {
+  color: var(--ink);
+}

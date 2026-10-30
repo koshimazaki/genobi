@@ -1,0 +1,363 @@
+.image-stage-media {
+  position: relative;
+  overflow: hidden;
+  background: var(--sunken);
+}
+.image-stage-media[data-dragging] {
+  outline: 1px solid var(--accent);
+}
+.image-stage-source {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+@media (max-width: 48rem) {
+  .composer-top__actions[data-boxes] .composer-action-label {
+    display: none;
+  }
+}
+.image-source-drop {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  color: var(--soft);
+}
+.image-source-drop svg {
+  color: var(--accent);
+  opacity: 0.8;
+}
+.image-source-drop strong {
+  font-size: 14px;
+  font-weight: 450;
+}
+.image-source-drop span {
+  font: 10px var(--mono);
+  color: var(--muted);
+}
+.image-stage-tools {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  pointer-events: none;
+  font: 9px var(--mono);
+  color: var(--muted);
+}
+.image-stage-tools > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  pointer-events: auto;
+}
+.image-stage-tools button {
+  font: 10px var(--mono);
+  color: var(--soft);
+}
+.image-stage-tools select {
+  max-width: 130px;
+  font: 10px var(--mono);
+  color: var(--soft);
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+.image-canvas-host {
+  position: absolute;
+  inset: 34px 12px 8px;
+  display: grid;
+  place-items: center;
+}
+.image-region-canvas {
+  position: relative;
+  background: var(--bg);
+  touch-action: none;
+  cursor: crosshair;
+  user-select: none;
+}
+.image-region-canvas > img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  pointer-events: none;
+}
+.image-region-canvas:focus-visible {
+  outline: 1px solid var(--border-strong);
+  outline-offset: 3px;
+}
+.image-canvas-hint {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  font: 11px var(--mono);
+  pointer-events: none;
+}
+.image-region-outline {
+  position: absolute;
+  border: 1px solid var(--region-color, var(--accent));
+  background: color-mix(
+    in srgb,
+    var(--region-color, var(--accent)) 5%,
+    transparent
+  );
+  cursor: move;
+}
+.image-region-outline.is-active {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--region-color) 22%, transparent);
+}
+.image-region-outline.is-target {
+  border-style: dashed;
+  background: transparent;
+}
+.image-region-outline.is-draft {
+  pointer-events: none;
+}
+.region-target-label {
+  position: absolute;
+  bottom: 2px;
+  right: 3px;
+  color: var(--region-color);
+  font: 10px var(--mono);
+}
+.region-handle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border: 1px solid var(--region-color);
+  background: var(--surface);
+  z-index: 1;
+}
+.handle-nw {
+  left: -4px;
+  top: -4px;
+  cursor: nwse-resize;
+}
+.handle-n {
+  left: calc(50% - 4px);
+  top: -4px;
+  cursor: ns-resize;
+}
+.handle-ne {
+  right: -4px;
+  top: -4px;
+  cursor: nesw-resize;
+}
+.handle-e {
+  right: -4px;
+  top: calc(50% - 4px);
+  cursor: ew-resize;
+}
+.handle-se {
+  right: -4px;
+  bottom: -4px;
+  cursor: nwse-resize;
+}
+.handle-s {
+  left: calc(50% - 4px);
+  bottom: -4px;
+  cursor: ns-resize;
+}
+.handle-sw {
+  left: -4px;
+  bottom: -4px;
+  cursor: nesw-resize;
+}
+.handle-w {
+  left: -4px;
+  top: calc(50% - 4px);
+  cursor: ew-resize;
+}
+.region-chip {
+  position: absolute;
+  display: flex;
+  width: 100px;
+  height: 26px;
+  background: var(--surface);
+  border: 1px solid var(--region-color);
+  border-radius: 3px;
+  box-shadow: 0 2px 5px #0003;
+}
+.region-label-grip {
+  width: 16px;
+  cursor: grab;
+  color: var(--muted);
+  touch-action: none;
+  flex-shrink: 0;
+}
+.region-chip-open {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font: 9px var(--mono);
+  color: var(--region-color);
+  padding: 2px;
+}
+.region-chip-open span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.region-chip-open img {
+  width: 20px;
+  height: 20px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.region-card {
+  position: absolute;
+  top: 38px;
+  right: 12px;
+  width: 210px;
+  max-height: calc(100% - 48px);
+  overflow: auto;
+  z-index: 40;
+  padding: 10px;
+  display: grid;
+  gap: 8px;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-control);
+  box-shadow: 0 4px 16px #0003;
+}
+.region-card header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font: 10px var(--mono);
+  color: var(--soft);
+}
+.region-card header strong {
+  font-weight: 400;
+}
+.region-card textarea,
+.region-card select,
+.region-card input {
+  width: 100%;
+  min-width: 0;
+  font-family: inherit;
+  font-size: 11px;
+  color: var(--text);
+  background: var(--sunken);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 5px;
+}
+.region-card textarea {
+  resize: vertical;
+  min-height: 46px;
+}
+.region-card summary,
+.region-card p {
+  color: var(--muted);
+  font: 10px/1.5 var(--mono);
+  margin: 0;
+}
+.region-card summary {
+  cursor: pointer;
+}
+.region-reference-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font: 10px var(--mono);
+  color: var(--soft);
+  text-align: left;
+}
+.region-reference-toggle img {
+  width: 28px;
+  height: 28px;
+  object-fit: cover;
+  border-radius: 3px;
+}
+.region-reference-expanded {
+  display: grid;
+  gap: 6px;
+}
+.region-drop {
+  display: grid;
+  place-items: center;
+  gap: 6px;
+  min-height: 70px;
+  border: 1px dashed var(--border-strong);
+  color: var(--soft);
+  font: 10px/1.4 var(--mono);
+  padding: 8px;
+}
+.region-drop:hover {
+  border-color: var(--accent);
+}
+.region-coordinates {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+  margin-top: 6px;
+}
+.region-coordinates label {
+  font: 9px var(--mono);
+  color: var(--muted);
+}
+.image-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-22);
+}
+.image-controls .select-menu {
+  min-width: 90px;
+}
+/* On a phone the still's row wraps like the video row, two rows at most, so
+   choosing Klein (Run, ratio, tier, camera) does not grow the composer. */
+@media (max-width: 760px) {
+  .image-controls {
+    gap: var(--space-8) var(--space-6);
+  }
+  .image-controls .select-menu {
+    min-width: 80px;
+  }
+}
+.image-controls [aria-checked="true"] {
+  color: var(--accent);
+}
+.still-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+.still-open {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+}
+.lightbox-content > .still-image {
+  max-height: 70vh;
+}
+@media (max-width: 35rem) {
+  .image-stage .featured-caption {
+    font-size: 9px;
+  }
+  .image-stage .featured-caption span:last-child {
+    display: none;
+  }
+  .region-card {
+    width: 180px;
+  }
+  .image-stage-tools {
+    font-size: 8px;
+  }
+  .image-stage-tools > div {
+    gap: 7px;
+  }
+}

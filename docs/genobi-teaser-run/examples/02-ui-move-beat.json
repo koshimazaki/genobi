@@ -1,0 +1,118 @@
+{
+  "example": "A studio shot: Camera's model families, with the pointer, a camera move onto the Upscale family and a box naming the families.",
+  "inputs": {
+    "storyboard": {
+      "asset": "ui-camera",
+      "shows": ["families", "h3 family"],
+      "box": {
+        "on": "upscale family",
+        "words": "MODEL FAMILIES · LTX FLUX H3 UPSCALE"
+      }
+    },
+    "footage": {
+      "asset": "ui-camera",
+      "seconds": 13.625,
+      "labels": [
+        "families@0.651",
+        "upscale family@1.517",
+        "h3 family@3.501",
+        "flux family@5.386",
+        "prompt@7.35",
+        "quote@10.817"
+      ]
+    }
+  },
+  "decisions": [
+    {
+      "id": "d-make-2",
+      "section": "make",
+      "choice": "ui-camera at 43 for 11 beats from 0.2 s, move {\"x\":0.31,\"y\":0.74,\"zoom\":2.2,\"ease\":2,\"drift\":0.03}.",
+      "because": "slice ui-camera families 'h3 family' gives 0.2 s and 11 beats; with the gallery (7) and the prompt (4) the 36-60 segment adds up to 22 beats, so fitting (rule 2.5) gives the 2 missing beats to the prompt shot, the last studio shot that can grow. The move goes onto the box's target: move ui-camera 'upscale family'.",
+      "source": "rule"
+    },
+    {
+      "id": "d-make-3",
+      "section": "make",
+      "choice": "cursor-43 from cursor ui-camera 0.2 11, with view from view cut.json 43.",
+      "because": "Rule 4.1.",
+      "source": "rule"
+    },
+    {
+      "id": "d-make-4",
+      "section": "make",
+      "choice": "focus-43 from beat 45 for 8 beats: focus ui-camera 'upscale family' 'MODEL FAMILIES · LTX FLUX H3 UPSCALE' 8, with view from view cut.json 43 45.",
+      "because": "Rule 4.2: the last 'upscale family' event is at 1.517 s; floor((1.517 - 0.2) / 0.44444) = 2, so it starts at 45 and ends one beat before the shot ends (53).",
+      "source": "rule"
+    }
+  ],
+  "commands": [
+    "node scripts/teaser-run-helper.mjs slice ui-camera families \"h3 family\"",
+    "node scripts/teaser-run-helper.mjs move ui-camera \"upscale family\"",
+    "node scripts/teaser-run-helper.mjs cursor ui-camera 0.2 11",
+    "node scripts/teaser-run-helper.mjs view .local/teaser-runs/a/cut.json 43",
+    "node scripts/teaser-run-helper.mjs focus ui-camera \"upscale family\" \"MODEL FAMILIES · LTX FLUX H3 UPSCALE\" 8",
+    "node scripts/teaser-run-helper.mjs view .local/teaser-runs/a/cut.json 43 45"
+  ],
+  "cut": {
+    "shots": [
+      {
+        "asset": "ui-camera",
+        "label": "Camera · families",
+        "sourceSeconds": 0.2,
+        "startBeat": 43,
+        "beats": 11,
+        "cropY": null,
+        "move": {
+          "x": 0.31,
+          "y": 0.74,
+          "zoom": 2.2,
+          "ease": 2,
+          "drift": 0.03
+        }
+      }
+    ],
+    "layers": [
+      {
+        "id": "cursor-43",
+        "name": "Pointer · Camera · families",
+        "module": "ui-cursor",
+        "kind": "graphics",
+        "lane": "cursor",
+        "startBeat": 43,
+        "beats": 11,
+        "opacity": 1,
+        "parameters": {
+          "path": "0:0.234,0.743 / 0.451:0.234,0.743 / 0.617:0.234,0.743 / 1.317:0.311,0.743 / 2.601:0.311,0.743 / 3.301:0.289,0.743",
+          "clicks": "1.317 / 3.301",
+          "fill": "#f6f8f2",
+          "outline": "#0c0e0c",
+          "color": "#d5ff70",
+          "size": 1.25,
+          "view": "24,21,96,0;1,0,0;2.2,0.418,-0.528;2.4613,0.4676,-0.5907"
+        }
+      },
+      {
+        "id": "focus-43",
+        "name": "Focus · MODEL FAMILIES · LTX FLUX H3 UPSCALE",
+        "module": "ui-focus",
+        "kind": "graphics",
+        "lane": "focus",
+        "startBeat": 45,
+        "beats": 8,
+        "opacity": 1,
+        "parameters": {
+          "x": 0.301,
+          "y": 0.728,
+          "w": 0.02,
+          "h": 0.03,
+          "label": "MODEL FAMILIES · LTX FLUX H3 UPSCALE",
+          "color": "#d5ff70",
+          "dim": 0.45,
+          "draw": 0.3,
+          "fadeAt": 3.206,
+          "view": "24,21,96,21;1,0,0;2.2,0.418,-0.528;2.4613,0.4676,-0.5907"
+        }
+      }
+    ]
+  }
+}

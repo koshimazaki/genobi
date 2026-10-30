@@ -1,0 +1,8 @@
+# ComfyUI reads models from the /data volume, so weights survive a rebuild.
+akuspace:
+  base_path: /data/models
+  diffusion_models: diffusion_models
+  text_encoders: text_encoders
+  vae: vae
+  loras: loras
+  latent_upscale_models: latent_upscale_models

@@ -1,0 +1,477 @@
+.gallery {
+  margin: calc(45 * var(--unit)) auto 0;
+  max-width: 66.25rem;
+}
+.gallery-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: var(--space-24);
+}
+.gallery-heading .section-eyebrow {
+  font-size: var(--text-small-8);
+  letter-spacing: calc(1.2 * var(--unit));
+}
+.gallery-heading h2 {
+  display: flex;
+  gap: var(--space-11);
+  font-size: var(--space-22);
+  font-weight: 450;
+  letter-spacing: calc(-0.6 * var(--unit));
+  margin: var(--space-9) 0 0;
+}
+.gallery-heading h2 span {
+  font-family: var(--mono);
+  font-size: var(--space-10);
+  color: var(--muted);
+  letter-spacing: 0;
+  padding-top: var(--space-3);
+}
+.gallery-filters {
+  display: flex;
+  gap: var(--space-3);
+  padding: var(--space-3);
+  background: var(--sunken);
+  border: var(--space-1) solid var(--border);
+  border-radius: var(--radius-md);
+}
+.gallery-filters button {
+  font-size: var(--space-10);
+  color: var(--soft);
+  padding: var(--space-6) var(--space-11);
+  border-radius: var(--radius-sm);
+}
+.gallery-filters button.active {
+  color: var(--text);
+  background: var(--raised);
+}
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-20);
+}
+.clip-card {
+  min-width: 0;
+  container: clip-card / inline-size;
+  animation: panel-enter var(--motion-reveal) ease-out;
+}
+.clip-media {
+  position: relative;
+  aspect-ratio: 16/10;
+  background: var(--surface);
+  border: var(--space-1) solid var(--border);
+  border-radius: var(--radius-panel);
+  overflow: hidden;
+}
+.clip-media video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  background: var(--sunken);
+}
+.clip-badge {
+  position: absolute;
+  top: var(--space-12);
+  left: var(--space-12);
+  background: var(--badge-bg);
+  border: var(--space-1) solid var(--badge-border);
+  border-radius: var(--radius-sm);
+  padding: var(--space-4) var(--space-6);
+  font-family: var(--mono);
+  font-size: var(--text-small-7);
+  letter-spacing: calc(0.8 * var(--unit));
+  color: var(--text);
+  pointer-events: none;
+}
+/* A take a terminal or an agent made, shown in the studio's gallery. */
+.clip-origin {
+  z-index: 1;
+  text-transform: uppercase;
+}
+.clip-hide-button {
+  position: absolute;
+  z-index: 2;
+  top: var(--space-10);
+  right: var(--space-10);
+  width: max(24px, var(--space-24));
+  height: max(24px, var(--space-24));
+  padding: 0;
+  line-height: 1;
+  display: grid;
+  place-items: center;
+  color: var(--clip-hide-ink);
+  background: var(--clip-hide-bg);
+  border: var(--space-1) solid var(--clip-hide-border);
+  border-radius: var(--radius-round);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity var(--motion-enter),
+    background var(--motion-enter);
+}
+.clip-hide-button svg {
+  display: block;
+}
+.clip-media:hover .clip-hide-button,
+.clip-media:focus-within .clip-hide-button {
+  opacity: 1;
+  pointer-events: auto;
+}
+.clip-hide-button:hover,
+.clip-hide-button:focus-visible {
+  color: var(--clip-hide-ink);
+  background: var(--clip-hide-hover-bg);
+}
+@media (hover: none) {
+  .clip-hide-button {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+.clip-play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border: var(--space-1) solid var(--play-border);
+  background: var(--play-bg);
+  border-radius: var(--radius-round);
+  height: calc(44 * var(--unit));
+  width: calc(44 * var(--unit));
+  display: grid;
+  place-items: center;
+  color: var(--text);
+  backdrop-filter: blur(var(--space-5));
+  opacity: 0.8;
+  transition:
+    background var(--motion-enter),
+    opacity var(--motion-enter);
+}
+.clip-play:hover {
+  background: var(--raised);
+  opacity: 1;
+}
+.clip-play svg {
+  margin-left: var(--space-2);
+}
+.clip-info {
+  padding: var(--space-13) var(--space-1);
+}
+.clip-info h3 {
+  font-size: var(--space-12);
+  line-height: 1.5;
+  letter-spacing: calc(-0.1 * var(--unit));
+  font-weight: 450;
+  margin: 0 0 var(--space-7);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text);
+}
+.clip-meta {
+  display: flex;
+  gap: var(--space-6);
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--mono);
+  font-size: var(--text-small-8);
+  color: var(--muted);
+}
+.clip-card:not(.chain-card) .clip-meta {
+  flex-wrap: nowrap;
+  min-width: 0;
+  gap: var(--space-6);
+}
+.clip-facts {
+  display: flex;
+  align-items: center;
+  flex: 0 1 auto;
+  min-width: 0;
+  white-space: nowrap;
+}
+.clip-facts .clip-model {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.clip-status {
+  margin: var(--space-5) 0 0;
+  color: var(--muted);
+  font: var(--text-small-8) var(--mono);
+}
+.clip-card .clip-actions {
+  flex-wrap: nowrap;
+  gap: var(--space-4);
+}
+.clip-card .clip-actions :is(button, a) {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-4);
+  min-width: 24px;
+  min-height: 24px;
+  flex-shrink: 0;
+}
+/* The card, not the viewport, decides when its action labels fit. */
+@container clip-card (max-width: 22rem) {
+  .clip-actions .clip-action-label {
+    display: none;
+  }
+}
+.clip-meta button {
+  display: flex;
+  gap: var(--space-5);
+  align-items: center;
+  font-size: var(--space-9);
+  color: var(--accent);
+  padding: var(--space-3) 0;
+}
+/* Which model made a clip. Informational, so muted: lime is for controls. */
+.clip-model {
+  display: inline-block;
+  margin-right: var(--space-6);
+  padding: var(--space-1) var(--space-4);
+  border: var(--space-1) solid var(--border);
+  border-radius: var(--radius-xs);
+  color: var(--muted);
+  font: var(--text-small-7) var(--mono);
+  letter-spacing: 0.065em;
+  line-height: 1.4;
+}
+.lightbox-content header .clip-model {
+  margin: 0 0 0 var(--space-8);
+}
+.gallery-footnote {
+  font-family: var(--mono);
+  color: var(--muted);
+  font-size: var(--text-small-8);
+  line-height: 1.7;
+  margin: var(--space-10) 0 0;
+}
+.gallery-empty {
+  min-height: calc(175 * var(--unit));
+  border: var(--space-1) dashed var(--border);
+  border-radius: var(--radius-panel);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: var(--muted);
+  background: var(--sunken);
+}
+.gallery-empty h3 {
+  font-size: var(--space-14);
+  color: var(--accent);
+  font-weight: 400;
+  margin: var(--space-15) 0 0;
+}
+.gallery-empty p {
+  font-size: var(--space-11);
+  color: var(--muted);
+  margin: var(--space-8) 0;
+}
+.job-placeholder {
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+.job-message {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+  align-items: center;
+  justify-content: center;
+  background: var(--status-bg);
+  padding: var(--space-28);
+  text-align: center;
+}
+.job-message strong {
+  font-size: var(--space-13);
+  font-weight: 400;
+}
+.job-message p {
+  font-size: var(--space-10);
+  color: var(--soft);
+  line-height: 1.5;
+  margin: 0;
+}
+.status-dot {
+  height: var(--space-5);
+  width: var(--space-5);
+  background: var(--accent);
+  border-radius: var(--radius-round);
+  margin: var(--space-5);
+}
+.elapsed {
+  font-family: var(--mono);
+  font-size: var(--text-small-8);
+  line-height: 1.7;
+  color: var(--muted);
+  margin-top: var(--space-5);
+}
+
+/* A terminal line: the spinner says the job is alive; the braille bar is
+   shown only when the provider reports real progress, and its fill is that
+   number, never an animation standing in for one. */
+.job-terminal {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: baseline;
+  gap: var(--space-5) var(--space-8);
+  max-width: 100%;
+  margin-top: var(--space-8);
+  font-family: var(--mono);
+  font-size: var(--text-small-8);
+  line-height: 1.4;
+  color: var(--accent);
+  white-space: nowrap;
+}
+.job-terminal-status {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.braille-bar {
+  overflow: hidden;
+  max-width: 100%;
+}
+
+.featured-video {
+  max-width: 52.875rem;
+  margin: 0 auto var(--space-22);
+  scroll-margin-top: var(--space-24);
+}
+.featured-media {
+  width: 100%;
+  position: relative;
+  aspect-ratio: 16 / 9;
+  max-height: calc(380 * var(--unit));
+  border: var(--space-1) solid var(--border-strong);
+  border-radius: var(--radius-panel);
+  background: var(--sunken);
+  overflow: hidden;
+}
+.featured-media video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+.featured-caption {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-12);
+  padding-top: var(--space-10);
+  font: var(--space-9) var(--mono);
+  color: var(--muted);
+}
+.featured-caption > span:first-child {
+  color: var(--soft);
+}
+.clip-title-button {
+  padding: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
+}
+.clip-title-button:hover {
+  color: var(--accent);
+}
+
+.clip-player {
+  position: absolute;
+  inset: 0;
+}
+.expand-video {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: var(--surface);
+  z-index: 3;
+}
+.video-lightbox {
+  border: 0;
+  background: transparent;
+  padding: 24px;
+  width: min(1200px, 96vw);
+  max-width: 96vw;
+  max-height: 96dvh;
+  color: var(--text);
+}
+.video-lightbox video:focus-within {
+  outline: var(--space-2) solid var(--accent);
+  outline-offset: calc(-1 * var(--space-2));
+}
+.video-lightbox::backdrop {
+  background: rgb(0 0 0 / 85%);
+  backdrop-filter: blur(6px);
+}
+.lightbox-content {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.lightbox-content header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 12px 16px;
+}
+.lightbox-content video {
+  display: block;
+  width: 100%;
+  max-height: 60dvh;
+  object-fit: contain;
+  background: #090b0d;
+}
+
+.lightbox-prompt {
+  padding: 16px 20px 20px;
+  border-top: 1px solid var(--border);
+}
+.lightbox-prompt-heading {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 12px;
+  color: var(--muted);
+}
+.lightbox-prompt-heading > span {
+  margin-right: auto;
+}
+.lightbox-prompt-heading .text-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--accent);
+}
+.lightbox-prompt-text {
+  margin: 14px 0 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  font-size: 14px;
+  line-height: 1.6;
+  user-select: text;
+}
+.copy-status {
+  display: block;
+  font-size: 12px;
+  color: var(--accent);
+  margin-top: 8px;
+}
+@media (max-width: 35rem) {
+  .video-lightbox {
+    padding: 8px;
+  }
+  .lightbox-prompt {
+    padding: 12px;
+  }
+}

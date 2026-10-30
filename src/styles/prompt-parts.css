@@ -1,0 +1,226 @@
+/* LTX prompt parts: the gap tabs over the one text area, the gap's chips,
+   the Light picker and the colour-coded preview. Every part colour is a theme
+   token from tokens.css, read through --part-color, so a theme switch
+   recolours them live. Each part keeps a text label beside its colour. */
+
+/* The tab row takes the editor's top padding, so selecting LTX keeps the
+   editor, the toolbar and the gallery where FLUX leaves them. */
+.prompt-editor--ltx {
+  padding-top: 0;
+}
+.prompt-parts {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  min-height: 24px;
+  margin-bottom: var(--space-2);
+}
+.prompt-parts__tabs {
+  display: flex;
+  gap: var(--space-2);
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.prompt-part-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 24px;
+  padding: 0 var(--space-7);
+  border: 0;
+  border-bottom: var(--space-2) solid transparent;
+  border-radius: var(--radius-xs) var(--radius-xs) 0 0;
+  background: transparent;
+  color: var(--part-color);
+  font: var(--text-small-8) var(--mono);
+  letter-spacing: calc(0.8 * var(--unit));
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.prompt-part-tab:hover {
+  background: var(--hover-wash);
+}
+.prompt-part-tab[aria-selected="true"] {
+  border-bottom-color: var(--part-color);
+  background: color-mix(in srgb, var(--part-color) 8%, transparent);
+}
+.prompt-part-tab:focus-visible {
+  outline: var(--space-1) solid var(--part-color);
+  outline-offset: calc(-1 * var(--unit));
+}
+.prompt-part-tab__mark {
+  color: var(--part-color);
+  font-size: calc(7 * var(--unit));
+}
+.prompt-count {
+  margin-left: auto;
+  color: var(--muted);
+  font: var(--text-small-7) var(--mono);
+  white-space: nowrap;
+}
+.prompt-count.is-over {
+  color: var(--error-text);
+}
+.prompt-part-panel.is-gap textarea {
+  caret-color: var(--part-color);
+}
+.prompt-cut {
+  margin: var(--space-6) 0 0;
+  color: var(--error-text);
+  font-size: var(--text-small-8);
+}
+
+/* A gap's hint and chips: one line each, the chips scroll sideways. */
+.slot-chips {
+  margin-top: var(--space-6);
+  min-width: 0;
+}
+.slot-hint {
+  margin: 0 0 var(--space-4);
+  overflow: hidden;
+  color: var(--muted);
+  font-size: var(--text-small-8);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.slot-hint__source {
+  color: var(--part-color);
+  font-family: var(--mono);
+}
+.slot-chips__row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  overflow-x: auto;
+  padding-bottom: var(--space-2);
+  scrollbar-width: thin;
+  scrollbar-color: var(--machined) transparent;
+}
+.slot-chips__group {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex: none;
+}
+.slot-chips__label {
+  margin-left: var(--space-6);
+  color: var(--part-color);
+  font: var(--text-small-6) var(--mono);
+  letter-spacing: calc(0.6 * var(--unit));
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.slot-chip {
+  flex: none;
+  min-height: 24px;
+  padding: 0 var(--space-8);
+  border: var(--space-1) solid
+    color-mix(in srgb, var(--part-color) 35%, transparent);
+  border-radius: var(--radius-control);
+  background: color-mix(in srgb, var(--part-color) 7%, transparent);
+  color: var(--part-color);
+  font-size: var(--text-small-8);
+  white-space: nowrap;
+}
+.slot-chip:hover {
+  background: color-mix(in srgb, var(--part-color) 16%, transparent);
+}
+.slot-chip:focus-visible {
+  outline: var(--space-1) solid var(--part-color);
+  outline-offset: var(--space-1);
+}
+.slot-chip--example {
+  border-style: dashed;
+}
+.slot-chip--acoustic {
+  font-family: var(--mono);
+}
+
+/* The Light tab in the camera panel. */
+.light-picker {
+  display: grid;
+  gap: var(--space-8);
+}
+.light-group {
+  display: grid;
+  gap: var(--space-4);
+}
+.light-group__label {
+  color: var(--camera-light);
+  font: var(--text-small-6) var(--mono);
+  letter-spacing: calc(1 * var(--unit));
+  text-transform: uppercase;
+}
+.light-group__terms {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+}
+.light-term {
+  min-height: calc(28 * var(--unit));
+  padding: 0 var(--space-10);
+  border: var(--space-1) solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--soft);
+  font-size: var(--text-small-8);
+}
+.light-term.selected {
+  border-color: var(--camera-light);
+  color: var(--camera-light);
+  background: color-mix(in srgb, var(--camera-light) 10%, transparent);
+}
+.light-term:focus-visible {
+  outline: var(--space-1) solid var(--camera-light);
+  outline-offset: var(--space-1);
+}
+.light-picker__note {
+  margin-left: auto;
+  color: var(--muted);
+  font-size: var(--text-small-6);
+}
+.light-glyph {
+  display: inline-block;
+  width: calc(10 * var(--unit));
+  height: calc(10 * var(--unit));
+  border-radius: var(--radius-round);
+  background: var(--camera-light);
+  box-shadow: 0 0 var(--space-6) var(--camera-light);
+}
+
+/* The composed paragraph, part by part. */
+.composed-part {
+  color: var(--part-color);
+}
+.composed-part__label {
+  margin-right: var(--space-3);
+  padding: 0 var(--space-3);
+  border: var(--space-1) solid
+    color-mix(in srgb, var(--part-color) 45%, transparent);
+  border-radius: var(--radius-xs);
+  font-size: var(--text-small-6);
+  letter-spacing: calc(0.6 * var(--unit));
+  text-transform: uppercase;
+  vertical-align: 1px;
+}
+.composed-part__cut {
+  color: var(--error-text);
+}
+
+@media (max-width: 35rem) {
+  .prompt-editor--ltx {
+    padding-top: var(--space-4);
+  }
+  .prompt-parts {
+    flex-wrap: wrap;
+    row-gap: 0;
+  }
+  .prompt-part-tab {
+    padding: 0 var(--space-5);
+  }
+}
+/* A chip whose phrase would pass the gap's limit; its name says why. */
+.slot-chip:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}

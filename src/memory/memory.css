@@ -1,0 +1,88 @@
+.memory-panel {
+  margin-block: var(--space-4);
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md, 8px);
+  color: var(--text);
+  background: var(--surface);
+  overflow-wrap: anywhere;
+}
+.memory-panel summary {
+  cursor: pointer;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+.memory-panel p {
+  max-width: 80ch;
+}
+.memory-panel form,
+.memory-panel label {
+  display: grid;
+  gap: var(--space-2);
+}
+.memory-panel form {
+  margin-block: var(--space-3);
+}
+.memory-panel input,
+.memory-panel textarea,
+.memory-panel select {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  color: var(--text);
+  background: var(--surface-2, #24272c);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: var(--space-2);
+  font: inherit;
+}
+.memory-panel button {
+  min-height: 44px;
+  padding: var(--space-2) var(--space-3);
+  font: inherit;
+  color: var(--text);
+  background: var(--surface-2, #24272c);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+}
+.memory-panel button:disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+.memory-panel :is(button, input, textarea, select, summary):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.memory-panel article,
+.memory-events li {
+  padding-block: var(--space-3);
+  border-bottom: 1px solid var(--border);
+}
+.memory-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+.memory-actions {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin-block: var(--space-2);
+}
+.memory-events {
+  padding-left: var(--space-4);
+}
+@media (max-width: 600px) {
+  .memory-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.taste-dialog .memory-panel {
+  --accent: var(--taste-readout);
+  --text: var(--taste-text);
+  --border: var(--taste-border);
+  --surface: var(--taste-surface);
+}

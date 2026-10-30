@@ -1,0 +1,11 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "genobi",
+  "version": "0.1.0",
+  "description": "Drive the local Genobi video studio: models, jobs, takes and paid generation behind a quote step; Director projects in later phases.",
+  "author": { "name": "Koshi" },
+  "homepage": "https://github.com/koshimazaki/Genobi",
+  "repository": "https://github.com/koshimazaki/Genobi",
+  "license": "MIT",
+  "keywords": ["video", "comfyui", "ltx", "flux", "director", "mcp"]
+}

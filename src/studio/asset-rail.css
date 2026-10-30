@@ -1,0 +1,217 @@
+.studio-workspace {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+  margin-top: 8px;
+}
+.studio-workspace[data-assets-open] {
+  grid-template-columns: minmax(0, 1fr) 292px;
+}
+.studio-main {
+  min-width: 0;
+}
+.studio-asset-rail {
+  position: sticky;
+  top: 8px;
+  max-height: calc(100svh - 72px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--sunken);
+  min-width: 0;
+}
+.studio-asset-rail[hidden] {
+  display: none;
+}
+.studio-asset-rail > header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+}
+.studio-asset-rail h2 {
+  font-size: 12px;
+  font-weight: 500;
+  margin: 0;
+}
+.studio-asset-rail > header button {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+}
+.studio-asset-tabs {
+  display: flex;
+  gap: 4px;
+  padding: 0 10px 10px;
+  border-bottom: 1px solid var(--border);
+}
+.studio-asset-tabs button {
+  flex: 1;
+  font-size: 10px;
+  min-height: 32px;
+}
+.studio-asset-tabs [aria-selected="true"] {
+  border-color: var(--accent);
+  color: var(--accent-strong);
+  background: var(--accent-ghost);
+}
+.studio-asset-rail .genobi-project-assets {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.studio-assets-toggle {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+.studio-assets-toggle[aria-expanded="true"] {
+  color: var(--accent-strong);
+  border-color: var(--accent);
+}
+.studio-asset-rail .gallery {
+  padding: 10px !important;
+  border: 0;
+  margin: 0;
+}
+.studio-asset-rail .gallery-heading {
+  display: block;
+}
+.studio-asset-rail .gallery-heading h2 {
+  display: none;
+}
+.studio-asset-rail .gallery-filters {
+  margin: 0 0 10px;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.studio-asset-rail .gallery-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+}
+.studio-asset-rail .clip-actions {
+  flex-wrap: nowrap;
+}
+.studio-asset-rail :is(.clip-media, .clip-media video) {
+  min-height: 0;
+  max-height: 100px;
+}
+.studio-asset-rail .clip-details {
+  padding: 7px;
+}
+.studio-asset-rail .clip-details h3 {
+  font-size: 11px;
+}
+.studio-asset-rail .de-asset-drawer {
+  width: auto;
+  max-height: none;
+  border: 0;
+  background: transparent;
+  padding: 12px;
+}
+.studio-asset-rail .de-source-list {
+  grid-template-columns: 1fr;
+}
+[data-preset="editor"] .genobi-panel[data-editor-resize] {
+  height: var(--editor-panel-height, auto);
+  position: relative;
+  overflow: auto;
+  min-height: 200px;
+}
+.editor-panel-resize {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  z-index: 5;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  cursor: ns-resize;
+  touch-action: none;
+}
+.genobi-shell[data-preset="editor"] .genobi-panel-stage .dir-stage canvas {
+  height: var(--editor-canvas-height, 240px) !important;
+}
+@media (max-width: 1100px) {
+  .studio-workspace[data-assets-open] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .studio-asset-rail {
+    position: fixed;
+    right: 12px;
+    top: 70px;
+    width: min(320px, calc(100% - 24px));
+    z-index: 66;
+    max-height: calc(100svh - 82px);
+    box-shadow: 0 12px 32px var(--shadow-soft);
+  }
+  .studio-assets-toggle span {
+    display: none;
+  }
+  .studio-assets-toggle {
+    width: 36px;
+    height: 36px;
+    justify-content: center;
+    padding: 0;
+  }
+}
+@media (max-width: 700px) {
+  .studio-asset-tabs button,
+  .studio-asset-rail > header button,
+  .studio-assets-toggle {
+    min-height: 44px;
+  }
+  .studio-assets-toggle {
+    min-width: 44px;
+  }
+}
+[data-preset="tools"] .genobi-grid {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "tools";
+}
+.s3d.s3d-controls {
+  display: block;
+}
+.genobi-panel-plateView .s3d {
+  display: block;
+}
+.s3d-fold {
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  min-width: 0;
+}
+.s3d-fold > summary {
+  padding: 10px;
+  cursor: pointer;
+  font-size: 11px;
+  color: var(--soft);
+}
+.s3d-fold-body {
+  padding: 4px 10px 10px;
+  display: grid;
+  gap: 14px;
+}
+.s3d-playblast > .s3d-fold {
+  margin-bottom: 10px;
+}
+.s3d-playblast > .s3d-fold .s3d-playblast-row {
+  padding: 4px 10px 10px;
+}
+/* A single scroll owner for the collection, including the embedded Dual library. */
+.studio-asset-rail .de-source-list {
+  max-height: none;
+  overflow: visible;
+}
+.studio-asset-rail > header,
+.studio-asset-tabs {
+  flex: none;
+}
+.studio-asset-rail > [role="tabpanel"] {
+  min-height: 0;
+}
+/* Classic desktop scrollbars leave less than 320px at the smallest viewport. */
+body:has(.genobi-shell) {
+  min-width: 0;
+}
