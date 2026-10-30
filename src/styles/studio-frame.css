@@ -12,8 +12,8 @@
   min-height: 160px;
 }
 .composer-toolbar {
-  /* Each min-height includes the run-mode tags' 16px row (family-model.css). */
-  min-height: 126px;
+  /* Reserve the 24px model target and run-mode tags (family-model.css). */
+  min-height: 132px;
 }
 .composer-toolbar--balanced {
   align-content: start;
@@ -27,13 +27,13 @@
 }
 @media (max-width: 760px) {
   .composer-toolbar {
-    min-height: 320px;
+    min-height: 326px;
   }
 }
 @media (max-width: 35rem) {
   /* Video's five controls wrap to two rows below about 420px (324px). */
   .composer-toolbar {
-    min-height: 326px;
+    min-height: 332px;
   }
   .composer > .prompt-editor,
   .composer > .upscale-input,
@@ -48,6 +48,6 @@
 @media (max-width: 22.5rem) {
   /* Image and Edit controls also wrap below about 352px (337px). */
   .composer-toolbar {
-    min-height: 338px;
+    min-height: 344px;
   }
 }
