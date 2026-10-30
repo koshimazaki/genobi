@@ -74,6 +74,7 @@ export async function agentStatus(
     if (signal?.aborted)
       throw new Error(
         "Checking your agent timed out. Check the studio connection and try again.",
+        { cause: error },
       );
     if ((error as Error).name === "AbortError") throw error;
     return { available: false, message: HOSTED };
