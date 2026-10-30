@@ -9,6 +9,8 @@ import type { AgentSessionMode } from "../../shared/agent-session";
 import { HermesProfileProgress } from "../setup/HermesProfileProgress";
 import { HermesModel, SetupHarnesses } from "../setup/SetupHarnesses";
 import { openSignIn } from "../setup/connect-api";
+import { RunnerPairing } from "../components/RunnerPairing";
+import { LOCAL_SETUP_URL } from "../voice/availability";
 import type { RunnerOffer, RunnerPick } from "./spawn";
 import {
   cancelSpawn,
@@ -79,6 +81,15 @@ export function SpawnAgentView({
         </button>
       </header>
       {step.kind === "working" && <p role="status">{step.text}</p>}
+      {step.kind === "pairing" && (
+        <>
+          <p role="status">{step.text}</p>
+          <a href={LOCAL_SETUP_URL} target="_blank" rel="noopener noreferrer">
+            Set up the local studio ↗
+          </a>
+          <RunnerPairing />
+        </>
+      )}
       {step.kind === "choose" && (
         <RunnerChooser offer={step.offer} onChoose={onChoose} />
       )}

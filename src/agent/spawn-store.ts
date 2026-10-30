@@ -17,6 +17,7 @@ import type {
 } from "../../shared/agent-runner-setting";
 import { studioStore } from "../studio/store";
 import {
+  HostedRunnerRequired,
   PromptWithheld,
   spawnAgent,
   type RunnerOffer,
@@ -31,6 +32,7 @@ export type SpawnStep =
   | { kind: "profile"; state?: HermesProfileSetupState }
   | { kind: "sign-in"; runner: SetupRunner; rows: readonly HarnessSignIn[] }
   | { kind: "mode" }
+  | { kind: "pairing"; text: string }
   | { kind: "failed"; text: string };
 
 /** The person closed the dialog: no message, nothing started. */
@@ -175,7 +177,10 @@ export function spawnFromStudio(
           show({ kind: "closed" });
           throw error;
         }
-        show({ kind: "failed", text: error.message });
+        show({
+          kind: error instanceof HostedRunnerRequired ? "pairing" : "failed",
+          text: error.message,
+        });
         throw error;
       },
     )

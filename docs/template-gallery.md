@@ -350,7 +350,9 @@ The drawer's Link/Embed tabs copy the watch URL or an iframe for `/embed/<id>`.
 All seven gallery IDs resolve on both routes, including Bloom, Adaptive reverb,
 Forest guardian and Toy creatures. Sheet to shot shows **Preview coming soon**
 until footage exists. Video pages have a Genobi footer and download; a template
-links to its editable Director project and a generation links back to Gallery.
+opens its editable project in Editor from both **Make your own** and the
+footer’s **Open** link. Embed **Open** uses the same Editor destination in a new
+tab. Generation-only cards return to Gallery; they do not claim an editable cut.
 
 Only known catalogue IDs resolve. These routes never read a visitor session,
 job, key or private R2 object. Sharing a person's own generated outputs,

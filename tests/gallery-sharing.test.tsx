@@ -6,6 +6,8 @@ import { existsSync } from "node:fs";
 import { galleryTemplates, galleryMedia } from "../shared/gallery/catalogue";
 import { galleryPage, embedMarkup } from "../shared/gallery/page";
 import ShareLink from "../src/template-gallery/ShareLink";
+import { initialPreset } from "../src/studio/presets";
+import { directorRoute } from "../src/director/route-template";
 
 (
   globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }
@@ -29,6 +31,19 @@ it.each(galleryTemplates)(
       expect(page).toBeDefined();
       expect(page.body).toContain(template.name);
       expect(page.body).not.toContain("/api/");
+      const doc = new DOMParser().parseFromString(page.body, "text/html");
+      const actions = [...doc.querySelectorAll<HTMLAnchorElement>("a")].filter(
+        (a) => a.textContent === "Make your own" || a.textContent === "Open ↗",
+      );
+      expect(actions.length).toBeGreaterThan(0);
+      for (const action of actions) {
+        const target = new URL(action.href, "https://studio.test");
+        expect(initialPreset(target.pathname, target.search)).toBe(
+          template.generation ? "gallery" : "editor",
+        );
+        if (!template.generation)
+          expect(directorRoute(target.search).id).toBe(template.id);
+      }
       expect(page.headers["Content-Security-Policy"]).toContain(
         route === "embed" ? "frame-ancestors *" : "frame-ancestors 'none'",
       );
