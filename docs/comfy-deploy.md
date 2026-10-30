@@ -16,7 +16,7 @@ endpoint and run these two GPU workflows from Camera.
 | `akuspace`        | `ltx-i2v-a2v-akuspace.json`              | GPU; image + track → LTX-2.5 with learned room sound       |
 | `cpu-reverb`      | `world-builder-adaptive-reverb-cpu.json` | Local CPU/Mac; scene recipe + track → IR and wet mix       |
 
-The [workflow instructions](https://github.com/koshimazaki/Genobi/blob/main/workflows/README.md#key-adaptive-reverb-workflows)
+The [workflow instructions](https://github.com/koshimazaki/Genobi/blob/main/workflows/README.md#demo-workflows)
 and [endpoint manifest](https://github.com/koshimazaki/Genobi/blob/main/workflows/ltx-world-builder.endpoints.json)
 are the catalogue. Layout-to-video's `--preset studio` only changes guide and
 mask dimensions; it shares the same endpoint and models.
@@ -33,6 +33,32 @@ Attach the selected graph's files and, for Layout-to-video, its matching capture
 recipe. Inputs stage on that endpoint through the SDK. Local ownership tickets
 last two hours and expire on server restart; reattach then. The graphs keep their
 fixed eight-second, 24 fps geometry. CPU reverb remains a separate local workflow.
+
+### Scene Builder to picture and sound in one job
+
+Layout-to-video already includes CPU reverb: the capture's recipe feeds both
+Acoustics (room/prompt information) and Reverb; its colour take guides LTX
+Layout-to-Render. The original track conditions both LTX sampler stages with
+audio noise mask zero. The final video uses Reverb's wet/dry mix, not generated
+AKUSPACE audio. IR and wet audio are saved alongside it. Two sampler stages are
+internal to one submitted job, not two generation requests or an audio rerun.
+
+In local 3D → Capture, choose **Layout-to-video capture preset** (1024 × 576,
+193 frames, 24 fps), load your track and capture. **Use take in Layout-to-video**
+opens Camera with the frozen capture recipe and scene prompt. **Attach captured
+scene** explicitly stages its colour/depth take, first frame and matching WAV
+on the registered endpoint. The first frame is the initial look reference;
+replace it with your styled still at the same camera angle when needed. If the
+scene had no track, attach one in Camera. Review all inputs before Generate.
+Manual recipe upload accepts both **Save recipe** JSON and the **Capture receipt**.
+Switching away from deployment models while attachment is in progress discards
+that attempt's result and keeps the captured scene pending. Switch back and
+choose **Attach captured scene** again to stage it for the selected model.
+
+The audio-only `cpu-reverb` graph is optional: redo a soundtrack without paying
+to regenerate its picture. A single L2R clip uses one static room IR. A cut
+through multiple rooms still needs its room treatments sequenced/crossfaded
+(as in the final demo); this graph does not automate time-varying room changes.
 
 Generate requests a quote, then asks for confirmation of paid GPU time, with no
 fixed price or cost cap. Only confirmation submits once. The reservation is

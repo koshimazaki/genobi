@@ -61,4 +61,6 @@ colour blobs required trimming the final party shot to six seconds. The CPU
 branch uses one static room IR per clip; its wet signal can be quiet. Use
 [whole-track room reverb](room-reverb.README.md) for levelled transitions.
 L2R with the AKUSPACE LoRA remains untried. Private media is not included.
-These API graphs are explicit submissions, with no registered studio slots.
+The local Camera registers these graph slots after you register a deployment.
+See [Scene Builder to picture and sound in one job](../docs/comfy-deploy.md#scene-builder-to-picture-and-sound-in-one-job).
+The audio-only CPU workflow is optional, not a required second pass.

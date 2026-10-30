@@ -153,7 +153,7 @@ next generation step; consult its provenance notes.
 
 The worked LTX / World Builder graphs now have a shared
 [deployment recipe](docs/comfy-deploy.md) and
-[23 workflow templates](workflows/ltx-world-builder.README.md). The recipe
+[three key workflow paths](workflows/README.md#demo-workflows). The recipe
 passes offline validation; a live Comfy Developer Platform deployment and
 paid endpoint runs still need separate verification.
 

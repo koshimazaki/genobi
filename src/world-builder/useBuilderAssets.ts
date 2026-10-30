@@ -16,7 +16,11 @@ import { TOO_LARGE } from "./send-take";
  * and Camera can both use it. Embedded as a scene adapter (no `onAsset`), the
  * session's postMessage hand-off is kept. Nothing here starts a generation.
  */
-export function useBuilderAssets(s: BuilderSession, onAsset?: AddAsset) {
+export function useBuilderAssets(
+  s: BuilderSession,
+  onAsset?: AddAsset,
+  onLayoutTake?: (take: Take) => Promise<void>,
+) {
   const [saving, setSaving] = useState<"" | "take" | "frame" | "room">("");
   const [result, setResult] = useState("");
   const encoding = useRef<AbortController | null>(null);
@@ -124,6 +128,11 @@ export function useBuilderAssets(s: BuilderSession, onAsset?: AddAsset) {
     saving,
     result,
     canSend: Boolean(onAsset) || s.canSendToDirector,
+    toLayout: onLayoutTake
+      ? async () => {
+          if (s.take) await onLayoutTake(s.take);
+        }
+      : undefined,
     toAssets: Boolean(onAsset),
   };
 }

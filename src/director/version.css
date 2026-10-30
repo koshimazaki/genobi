@@ -46,6 +46,7 @@
 }
 .dir-version-panel label {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 6px;
   margin: 8px 0;
 }
@@ -77,6 +78,10 @@
 }
 .dir-version-panel input[type="checkbox"] {
   min-height: auto;
+}
+.dir-version-panel input[type="file"] {
+  min-width: 0;
+  width: 100%;
 }
 .dir-version-panel button {
   cursor: pointer;

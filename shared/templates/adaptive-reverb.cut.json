@@ -14,7 +14,7 @@
     "asset": "reverb-track",
     "seconds": 30.65
   },
-  "trackName": "Track · the take's own sound (LTX-2.5 + AKUSPACE)",
+  "trackName": "Track · original music with scene-derived CPU reverb",
   "shots": [
     {
       "asset": "reverb-ltx",
@@ -26,7 +26,7 @@
     },
     {
       "asset": "reverb-ltx",
-      "label": "Room 1 · cathedral (AKUSPACE cathedral)",
+      "label": "Room 1 · cathedral (scene-derived CPU reverb)",
       "sourceSeconds": 8.0,
       "startBeat": 16,
       "beats": 16,
@@ -34,7 +34,7 @@
     },
     {
       "asset": "reverb-ltx",
-      "label": "Room 2 · crowded hall (AKUSPACE medium room)",
+      "label": "Room 2 · crowded hall (scene-derived CPU reverb)",
       "sourceSeconds": 16.0,
       "startBeat": 32,
       "beats": 13,
@@ -42,7 +42,7 @@
     },
     {
       "asset": "reverb-ltx",
-      "label": "Room 3 · small wooden studio (AKUSPACE small room)",
+      "label": "Room 3 · small wooden studio (scene-derived CPU reverb)",
       "sourceSeconds": 22.5,
       "startBeat": 45,
       "beats": 15.5,
@@ -247,7 +247,7 @@
     },
     {
       "id": "workflow",
-      "name": "Workflow graph · world-builder-akuspace-ltx.json (diagram from the JSON; swap reverb-workflow.jpg)",
+      "name": "Alternative AKUSPACE workflow · reference diagram (swap reverb-workflow.jpg)",
       "module": "space-hud",
       "kind": "graphics",
       "lane": "cards",
@@ -315,7 +315,7 @@
         "eyebrow": "GENOBI // 3D + LTX",
         "title": "ADAPTIVE REVERB",
         "subtitle": "LTX-2.5 · OPEN WEIGHTS",
-        "credit1": "AKUSPACE ROOMS",
+        "credit1": "SCENE-DERIVED CPU REVERB",
         "credit2": "WORLD BUILDER 3D · KOSHIMAZAKI",
         "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
         "color": "#62f2e4",

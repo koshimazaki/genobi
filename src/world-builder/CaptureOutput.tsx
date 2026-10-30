@@ -12,6 +12,7 @@ import { Fold } from "./FloatingPanel";
 import { Parameters } from "./Controls";
 import { StatusDot } from "./CapturePrimitives";
 import { takeSeconds } from "./take-duration";
+import CaptureLayout from "./CaptureLayout";
 
 /** What a take will carry. Depth is always rendered; its range is editable in Shot. */
 export function CapturePasses({
@@ -65,6 +66,7 @@ export function CaptureOutput({
   return (
     <section className="wb-capture-section" aria-label="Output">
       <span className="wb-capture-label">Output</span>
+      <CaptureLayout s={s} send={a.toLayout} />
       <div className="wb-panel-actions">
         {a.canSend && (
           <button

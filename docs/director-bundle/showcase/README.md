@@ -16,7 +16,7 @@ theirs, and an agent can continue from one.
 | [Dimensions mix](dimensions-mix/README.md)   | v1 to v4 | Dimensions mix  |
 | [Genobi teaser](genobi-teaser/README.md)     | v1 to v3 | Genobi teaser   |
 | [Bloom](bloom-teaser/README.md)              | v1       | Bloom           |
-| [Adaptive reverb](adaptive-reverb/README.md) | v1 to v2 | Adaptive reverb |
+| [Adaptive reverb](adaptive-reverb/README.md) | v1 to v3 | Adaptive reverb |
 
 ## What a folder holds
 

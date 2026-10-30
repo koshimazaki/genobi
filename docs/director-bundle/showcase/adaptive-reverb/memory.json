@@ -3,7 +3,7 @@
   "project": "adaptive-reverb",
   "name": "Adaptive reverb",
   "template": "adaptive-reverb",
-  "summary": "The 3D + LTX template: one LTX-2.5 (open weights) + AKUSPACE LoRA take through a cathedral, a crowded hall and a small wooden studio, its own sound changing with each room and kept as the track, under a room-scan surveillance look, with the workflow's node diagram and an editable end card. Nothing is generated.",
+  "summary": "The 3D + LTX template: LTX-2.5 (open weights) layout footage through a cathedral, a crowded hall and a small wooden studio, with scene-derived CPU reverb on the original track, under a room-scan surveillance look, with a reference workflow diagram and an editable end card. AKUSPACE is a separate experimental route. Earlier versions retain their original labels. Nothing is generated.",
   "versions": [
     {
       "version": 1,
@@ -48,6 +48,24 @@
       "eventIds": ["reverb-v2-review", "reverb-v2-recordings"],
       "file": "project-v2.json",
       "projectId": "adaptive-reverb-v2",
+      "layers": 20,
+      "durationFrames": 726
+    },
+    {
+      "version": 3,
+      "date": "2026-10-30T22:12:59Z",
+      "by": ["agent"],
+      "title": "Scene-derived CPU reverb credits",
+      "summary": "Records the corrected soundtrack provenance from the current template: scene-derived CPU reverb on the original track, with AKUSPACE kept as a separate reference workflow. Earlier versions remain as recorded.",
+      "changes": [
+        "Track and room shot labels identify scene-derived CPU reverb",
+        "End-card credit reads SCENE-DERIVED CPU REVERB",
+        "Workflow layer is labelled as an alternative AKUSPACE reference diagram",
+        "Same media, timing and original 1280 × 720 composition; v1 and v2 preserved"
+      ],
+      "eventIds": ["reverb-v3-provenance"],
+      "file": "project-v3.json",
+      "projectId": "adaptive-reverb-v3",
       "layers": 20,
       "durationFrames": 726
     }
@@ -231,6 +249,16 @@
           "topic": "Adaptive reverb · own recordings",
           "value": "The workflow card is one file swap: replace reverb-workflow.jpg (or point the layer's still at a new file); a moving recording needs a shot slot, not in v2."
         }
+      },
+      {
+        "id": "reverb-v3-provenance",
+        "kind": "note",
+        "objectIds": [],
+        "reason": "Interpretation of the review correction: \"the soundtrack is scene-derived CPU reverb, not AKUSPACE\" and \"Do NOT revert the corrected labels.\" Record the current committed template as a new showcase version while preserving v1 and v2.",
+        "source": "interpretation",
+        "actor": "agent",
+        "at": "2026-10-30T22:12:59Z",
+        "version": 3
       }
     ],
     "checkpoints": [
@@ -255,6 +283,17 @@
         "status": "done",
         "at": "2026-10-30T15:45:00Z",
         "version": 2
+      },
+      {
+        "id": "reverb-v3",
+        "sessionId": "showcase-v3",
+        "summary": "Version 3 records the template at da411132 using the offline showcase recorder: corrected CPU-reverb labels, unchanged media and timing, 726 frames at 24 fps and 1280 × 720. No media rendered or generated.",
+        "eventIds": ["reverb-v3-provenance"],
+        "unresolved": [],
+        "nextSteps": [],
+        "status": "done",
+        "at": "2026-10-30T22:12:59Z",
+        "version": 3
       }
     ]
   }
