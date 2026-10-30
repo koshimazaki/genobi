@@ -144,6 +144,12 @@ Finished videos and job records remain in D1/R2 under the anonymous browser cook
 
 Set `CLOUDFLARE_ACCOUNT_ID` and run `npm run deploy:pages`. `scripts/build-pages.mjs` builds `.pages/_worker.js` (leaving `node:*` imports external for `nodejs_compat`, which `@comfyorg/sdk` needs) and writes the standard configuration into ignored `.pages-project/`; Pages rejects custom configuration paths and `account_id` in its config. The deployment script supplies the account through the CLI environment. Local Pages smoke check: `npx wrangler pages dev ../.pages --cwd .pages-project --port 4322` after `npm run build:pages`. No paid provider request is part of deployment.
 
+Public static videos follow [Pages' documented range behavior](https://developers.cloudflare.com/pages/configuration/serving-pages/):
+a `Range` request currently receives the full asset with `200`, rather than
+`206` partial content. The Worker's private `/api/clips/*` delivery has its own
+byte-range handling. A healthy public video URL does not verify seeking on
+every device.
+
 Pages routes `/watch/*` and `/embed/*` through the Worker for server-rendered
 preview metadata and a branded player. The routes accept only catalogue IDs
 and use bundled public clips, including explicitly labelled demo footage under
