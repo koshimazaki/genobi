@@ -16,8 +16,10 @@ FILES = {"TAKE_WEBM", "DEPTH_WEBM", "REFERENCE_PNG", "FIRST_FRAME_PNG", "TRACK_A
 
 def validate_value(name, value):
     if name in SEEDS:
-        if type(value) is not int or not 0 <= value < 2**64:
-            raise ValueError(f"{name} must be an unsigned 64-bit JSON integer")
+        # DirectorSceneReverb takes a 32-bit seed; the samplers take 64-bit seeds.
+        bits = 32 if name == "REVERB_SEED" else 64
+        if type(value) is not int or not 0 <= value < 2**bits:
+            raise ValueError(f"{name} must be an unsigned {bits}-bit JSON integer")
         return
     if not isinstance(value, str) or len(value.encode()) > (64000 if name == "RECIPE_JSON" else 12000):
         raise ValueError(f"{name} must be a bounded string")

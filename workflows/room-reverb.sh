@@ -50,6 +50,7 @@ while [ "$i" -le "$n" ]; do
   [ ! -f "$tmp/raw$i.wav" ] || set -- "$@" -i "$tmp/raw$i.wav"
   i=$((i + 1))
 done
+total=$(LC_ALL=C printf "%.3f" "$total")  # bc can print ".5"; FFmpeg needs "0.500"
 graph="$graph${mix}amix=inputs=$k:normalize=0,atrim=0:$total,alimiter=limit=0.9,loudnorm=I=-14:TP=-1.5"
 ffmpeg -v error -nostdin -y "$@" -filter_complex "$graph" -ar 48000 "$out"
 echo "wrote output: spaces $segs seconds from ${start}s"
