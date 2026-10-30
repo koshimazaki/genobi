@@ -70,10 +70,14 @@ async function open(width, theme, hosted = false) {
       },
     }),
   );
-  if (hosted)
+  if (hosted) {
+    await page.route("**/api/health", (route) =>
+      route.fulfill({ json: { ok: true, hosted: true, hasServerKey: false } }),
+    );
     await page.route("**/api/runner/status", (route) =>
       route.fulfill({ json: { available: false, paired: false } }),
     );
+  }
   await page.goto(base);
   return page;
 }
@@ -135,6 +139,9 @@ try {
     await dialog
       .getByText("Pair hosted and local Genobi", { exact: true })
       .waitFor();
+    const pairing = dialog.getByRole("button", { name: "Create pairing code" });
+    await pairing.waitFor();
+    assert.equal(await pairing.isEnabled(), true);
     assert.equal(
       await dialog
         .getByRole("link", { name: /Set up the local studio/ })
