@@ -9,6 +9,7 @@ import ClipActions from "./ClipActions";
 import VideoLightbox, { type ViewingClip } from "./VideoLightbox";
 import Icon from "./Icon";
 import JobMedia, { statusLabel } from "./JobMedia";
+import DeploymentLink from "./DeploymentLink";
 import ModelTag from "./ModelTag";
 import ChainCard from "./ChainCard";
 import type { ChainEntry } from "../chain-state";
@@ -183,6 +184,12 @@ export default function Gallery({
                   {job.description || "Untitled study"}
                 </button>
               </h3>
+              {job.deployment && <DeploymentLink deployment={job.deployment} />}
+              {job.companions?.map((file) => (
+                <a key={file.url} href={file.url} download>
+                  {file.label}
+                </a>
+              ))}
               <div className="clip-meta">
                 <span className="clip-facts">
                   <ModelTag {...modelSignature(job)} />
@@ -277,6 +284,7 @@ export default function Gallery({
                     source.label
                   )}
                 </h3>
+
                 <div className="clip-meta">
                   <span className="clip-facts">
                     <ModelTag {...librarySignature(source)} />

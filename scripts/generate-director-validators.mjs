@@ -17,10 +17,14 @@ for (const name of ["layers", "resources", "project"])
 const project = await json("docs/director-bundle/schema/project.schema.json");
 const registry = await json("docs/director-bundle/example/studio.json");
 const effects = await json("docs/director-bundle/effects/project.json");
+const versionMedia = await json(
+  "docs/director-bundle/version-media/modules.json",
+);
 const exports = { project: project.$id };
 for (const module of [
   ...Object.values(registry.modules),
   ...Object.values(effects.modules),
+  ...Object.values(versionMedia),
 ]) {
   const name = `module_${module.file.sha256}`;
   ajv.addSchema(module.parameterSchema, name);

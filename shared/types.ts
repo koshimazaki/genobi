@@ -20,6 +20,7 @@ export type Generator = "video" | "upscale" | "image" | "edit" | "audio";
  * (`shared/comfy/seedvr2.ts`), upscale only.
  */
 export type VideoModel =
+  | import("./comfy/deploy-catalogue").DeployModel
   | "flux-3"
   | "flux-3-i2v"
   | "minimax-h3"
@@ -101,6 +102,8 @@ export interface GenerateInput {
   projectRevision?: number;
   /** The Openjutsu character swap's own settings; that model only. */
   swap?: SwapSettings;
+  /** Deployment inputs name session-owned, already uploaded assets. No keys. */
+  deploy?: import("./comfy/deploy-input").DeployInput;
 }
 
 /**
@@ -165,6 +168,8 @@ export interface DurationEstimate {
 }
 
 export interface Job extends GenerateInput {
+  /** The endpoint recorded at reservation, independent of later settings. */
+  deployment?: { url: string; name: string };
   mediaType?: "video" | "image" | "audio";
   imageReferenceCount?: number;
   resultContentType?: string;
@@ -178,6 +183,7 @@ export interface Job extends GenerateInput {
   /** Comfy credits a Router run reported in its result header. */
   costCredits?: number;
   resultUrl?: string;
+  companions?: { label: string; url: string }[];
   /** False when retention or quota kept the run record but removed its media. */
   mediaAvailable?: false;
   error?: string;

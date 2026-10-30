@@ -1,3 +1,5 @@
+import { ComfySdkWorkflows } from "./comfy-sdk";
+import { parseWorkflowDestination } from "../shared/comfy/destination";
 import type { ProviderResult } from "../shared/provider";
 import {
   notConfigured,
@@ -17,6 +19,7 @@ export type OwningClient = WorkflowClient & { owns(value: string): boolean };
 /** The clients beside Comfy Cloud, each optional. */
 export interface OtherDestinations {
   local?: LocalComfyWorkflows;
+  fetcher?: typeof fetch;
   /** The server's Comfy API deployment (`GENOBI_DEPLOYMENT_URL`). */
   deployment?: OwningClient;
 }
@@ -42,6 +45,13 @@ export class WorkflowDestinations implements WorkflowClient {
     const { local, deployment } = this.others;
     if (local?.owns(value)) return local;
     if (deployment?.owns(value)) return deployment;
+    try {
+      const url = new URL(value);
+      const dynamic = this.deployment(url.origin);
+      if (dynamic.owns(value)) return dynamic;
+    } catch {
+      /* Other URLs belong to Cloud or signed storage; never authenticate them here. */
+    }
     return this.cloud;
   }
 
@@ -52,7 +62,9 @@ export class WorkflowDestinations implements WorkflowClient {
     options: WorkflowRunOptions,
   ): Promise<string> {
     const location = options.location ?? "cloud";
-    const client = this.client(location);
+    const client = options.deployment
+      ? this.deployment(options.deployment.url)
+      : this.client(location);
     if (!client) throw notConfigured({ kind: location });
     return client.run(template, values, key, options);
   }
@@ -69,8 +81,20 @@ export class WorkflowDestinations implements WorkflowClient {
   }
 
   /** Whether this server has a client for the location (`GENOBI_DEPLOYMENT_URL`). */
-  serves(location: DestinationKind) {
-    return Boolean(this.client(location));
+  serves(
+    location: DestinationKind,
+    deployment?: { url: string; name: string },
+  ) {
+    return Boolean(
+      deployment ? this.deployment(deployment.url) : this.client(location),
+    );
+  }
+
+  private deployment(url: string) {
+    return new ComfySdkWorkflows({
+      destination: parseWorkflowDestination("deployment", url),
+      fetcher: this.others.fetcher,
+    });
   }
 
   poll(

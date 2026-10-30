@@ -1,3 +1,4 @@
+import { deployEntries } from "./deploy-registry";
 import {
   h3VideoControls,
   h3RouterControls,
@@ -50,6 +51,7 @@ export const registry: Entry[] = [
     videoModel: "ltx-2.5",
     controls: ltxVideoControls,
   },
+  ...deployEntries,
   {
     // MiniMax H3 through Comfy Router, from two reference images and no
     // guide video: the character sheet, then the storyboard. See
@@ -357,6 +359,7 @@ export const entryLabel = (entry: Entry) =>
 export interface MenuFilter {
   openOnly?: boolean;
   hosted?: boolean;
+  deploymentRegistered?: boolean;
   /** With Local ticked, only what can run on the local ComfyUI is kept. */
   keep?: (entry: Entry) => boolean;
 }
@@ -367,7 +370,12 @@ export interface MenuFilter {
  */
 export const entriesFor = (
   family: Family,
-  { openOnly = false, hosted = false, keep }: MenuFilter = {},
+  {
+    openOnly = false,
+    hosted = false,
+    keep,
+    deploymentRegistered = false,
+  }: MenuFilter = {},
   entries = registry,
 ) =>
   entries.filter(
@@ -376,6 +384,7 @@ export const entriesFor = (
       !e.runOf &&
       (!openOnly || e.open) &&
       !(hosted && e.localOnly) &&
+      (!e.deploymentOnly || deploymentRegistered) &&
       (!keep || keep(e)),
   );
 

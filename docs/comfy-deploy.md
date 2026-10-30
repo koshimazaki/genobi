@@ -7,7 +7,8 @@ summary: The three key adaptive-reverb workflows, one remote-model LTX build wit
 
 One shared deployment, **genobi-ltx-world**, serves two GPU workflow selectors.
 The CPU reverb workflow stays local. These are API-format graphs; selecting a
-name fills a graph, not a new HTTP service or a registered studio generator.
+name fills a graph on that shared service. The local studio can register its
+endpoint and run these two GPU workflows from Camera.
 
 | Selector          | Workflow                                 | Runtime                                                    |
 | ----------------- | ---------------------------------------- | ---------------------------------------------------------- |
@@ -19,6 +20,35 @@ The [workflow instructions](https://github.com/koshimazaki/Genobi/blob/main/work
 and [endpoint manifest](https://github.com/koshimazaki/Genobi/blob/main/workflows/ltx-world-builder.endpoints.json)
 are the catalogue. Layout-to-video's `--preset studio` only changes guide and
 mask dimensions; it shares the same endpoint and models.
+
+## Use it from Camera
+
+Run Genobi locally and connect your Comfy key. In Settings → Generation setup,
+register the deployment's `https://<deployment>.run.comfy.app` URL. Registration
+saves the endpoint for this session, not the key, and submits nothing. Camera's
+LTX menu then offers **Comfy Deploy · layout-to-video** and **Comfy Deploy ·
+akuspace**. Layout-to-video also offers Party and Studio input presets.
+
+Attach the selected graph's files and, for Layout-to-video, its matching capture
+recipe. Inputs stage on that endpoint through the SDK. Local ownership tickets
+last two hours and expire on server restart; reattach then. The graphs keep their
+fixed eight-second, 24 fps geometry. CPU reverb remains a separate local workflow.
+
+Generate requests a quote, then asks for confirmation of paid GPU time, with no
+fixed price or cost cap. Only confirmation submits once. The reservation is
+saved first; recovery never repeats an uncertain submission. A changed endpoint,
+workflow or input invalidates the quote. Polling uses the recorded endpoint even
+if Settings changes later. Ready video and companion IR/wet/audio files are
+saved under the studio session's ownership and linked from the result card.
+
+MCP/CLI generation does not yet expose deployment input staging. Their model
+discovery omits these Camera-only entries; use Camera for this route. Director
+agent handoffs keep their existing quoted generation tools.
+
+The Cloudflare studio has no deployment registry or staging route. It hides these
+entries and refuses direct deployment requests before provider work, explaining
+that Comfy Deploy runs from the local studio. Registering a deployment does not
+make the hosted Worker a GPU proxy.
 
 ## Exact shared build
 
@@ -139,7 +169,7 @@ check the account state before deletion. Standard/Creator jobs have a
 
 The two GPU families ran on a rented 96 GB GPU, not on the Developer Platform.
 The local CPU template ran in seconds on a Mac. This port performs offline
-checks only: no build, release, deploy or paid generation. There is no new
-studio handoff, live endpoint, or managed Comfy Cloud availability claim.
+checks only: no build, release, deploy or paid generation. The Camera handoff is implemented and checked with mocked provider responses;
+this does not verify a live Camera generation or managed Comfy Cloud availability.
 [Adaptive reverb](adaptive-reverb.md#how-to-regenerate-a-room) distinguishes the
 v5 scene-derived CPU soundtrack from the separate AKUSPACE experiment.

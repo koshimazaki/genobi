@@ -35,7 +35,10 @@ const CAUSES: { test: RegExp; words: string; hint?: string }[] = [
 ];
 
 /** A user-facing line for a failed run, or undefined for the generic one. */
-export function runFailure(error: RunFailure | null | undefined) {
+export function runFailure(
+  error: RunFailure | null | undefined,
+  provider = "Comfy Cloud",
+) {
   if (!error || typeof error !== "object") return undefined;
   const text = [error.code, error.message]
     .filter((part): part is string => typeof part === "string")
@@ -48,6 +51,6 @@ export function runFailure(error: RunFailure | null | undefined) {
   if (!cause && !node) return undefined;
   const at = node ? ` at the ${node} node` : "";
   return cause
-    ? `Comfy Cloud ${cause.words}${at}.${cause.hint ?? ""}`
-    : `Comfy Cloud stopped this run${at}. Nothing was saved.`;
+    ? `${provider} ${cause.words}${at}.${cause.hint ?? ""}`
+    : `${provider} stopped this run${at}. Nothing was saved.`;
 }

@@ -1,3 +1,8 @@
+import {
+  DEPLOY_ENDPOINTS,
+  type DeployModel,
+  isDeployModel,
+} from "../shared/comfy/deploy-catalogue";
 import { isH3 } from "../shared/h3";
 import { isH3Router } from "../shared/comfy/h3-router";
 import type { Generator, VideoModel } from "../shared/types";
@@ -51,6 +56,12 @@ export const videoModels: Record<
   >,
   { model: string; label: string; icon: string; open: boolean }
 > = {
+  ...(Object.fromEntries(
+    DEPLOY_ENDPOINTS.map((name) => [
+      `ltx-deploy-${name}`,
+      video(`ltx-deploy-${name}`),
+    ]),
+  ) as Record<DeployModel, ReturnType<typeof video>>),
   "ltx-2.5": video("ltx-2.5"),
   "ltx-2.5-pro": video("ltx-2.5-pro"),
   "ltx-2.5-open": video("ltx-2.5-open"),
@@ -132,7 +143,7 @@ export function modelSignature(job: {
         ? "MUSIC"
         : isH3(job.model) || isH3Router(job.model)
           ? "H3"
-          : isLtx(job.model)
+          : isLtx(job.model) || isDeployModel(job.model)
             ? "LTX-2.5"
             : isKlein(job.model)
               ? "KLEIN"

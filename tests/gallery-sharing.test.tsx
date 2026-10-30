@@ -32,6 +32,9 @@ it.each(galleryTemplates)(
       expect(page.body).toContain(template.name);
       expect(page.body).not.toContain("/api/");
       const doc = new DOMParser().parseFromString(page.body, "text/html");
+      expect(
+        doc.querySelector('link[type="image/svg+xml"]')?.getAttribute("href"),
+      ).toBe("/favicon.svg?v=genobi-011");
       const actions = [...doc.querySelectorAll<HTMLAnchorElement>("a")].filter(
         (a) => a.textContent === "Make your own" || a.textContent === "Open ↗",
       );

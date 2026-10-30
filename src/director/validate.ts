@@ -1,6 +1,7 @@
 import { COMPOSITION_MAX_PIXELS } from "../../shared/director/resolution";
 import validators from "./generated-validators.mjs";
 import knownProject from "../../docs/director-bundle/example/studio.json";
+import versionMedia from "../../docs/director-bundle/version-media/modules.json";
 import { effectModules } from "./effect-modules";
 const canonical = (v: unknown): string =>
   JSON.stringify(
@@ -54,6 +55,7 @@ function checkProject(p: Project) {
     const trusted = [
       ...Object.values(knownProject.modules),
       ...Object.values(effectModules),
+      ...Object.values(versionMedia),
     ].find(
       (k) =>
         k.file.sha256 === m.file.sha256 &&

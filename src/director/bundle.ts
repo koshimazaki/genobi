@@ -45,10 +45,28 @@ const sampleText = import.meta.glob(
   "../../docs/director-bundle/example/**/*.{json,mjs,svg}",
   { query: "?raw", import: "default", eager: true },
 ) as Record<string, string>;
-export async function loadExample(): Promise<Bundle> {
+function exampleText() {
   const files = new Map<string, Uint8Array<ArrayBuffer>>();
   for (const [path, text] of Object.entries(sampleText))
     files.set(path.split("/example/")[1], new TextEncoder().encode(text));
+  return files;
+}
+/** Graphics recipes alone, without downloading unrelated starter media. */
+export function loadExampleModules() {
+  const text = exampleText();
+  const project = validateProject(
+    JSON.parse(new TextDecoder().decode(text.get("studio.json"))),
+  );
+  const files = new Map<string, Uint8Array<ArrayBuffer>>();
+  for (const module of Object.values(project.modules)) {
+    const bytes = text.get(module.file.path);
+    if (!bytes) throw new Error(`Missing recipe: ${module.file.path}`);
+    files.set(module.file.path, bytes);
+  }
+  return { project: { modules: project.modules }, files };
+}
+export async function loadExample(): Promise<Bundle> {
+  const files = exampleText();
   await Promise.all(
     Object.entries(sampleUrls).map(async ([path, url]) => {
       const response = await fetch(url);

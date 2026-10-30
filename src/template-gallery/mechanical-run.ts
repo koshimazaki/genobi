@@ -57,7 +57,7 @@ const MIME = Object.fromEntries(
 ) as Record<string, string>;
 
 /** The Camera's quote: the same route, headers and body as a submission. */
-async function quoteRoute(input: GenerateInput, key: string) {
+export async function quoteRoute(input: GenerateInput, key: string) {
   const { quote } = await request<{ quote: Quote }>("/api/quotes", {
     method: "POST",
     headers: {

@@ -1,3 +1,8 @@
+import { isDeployModel } from "../shared/comfy/deploy-catalogue";
+import {
+  readDeployInput,
+  requireDeployGeometry,
+} from "../shared/comfy/deploy-input";
 import { isH3, takesVideoReferences } from "../shared/h3";
 import { isH3Router } from "../shared/comfy/h3-router";
 import { validateVideoReferences } from "./validate-h3";
@@ -112,8 +117,11 @@ export function validateInput(value: unknown): GenerateInput {
     typeof body.draft !== "boolean"
   )
     throw new AppError(400, "Invalid camera or draft setting.");
+  if (isDeployModel(body.model))
+    requireDeployGeometry(body as unknown as GenerateInput);
   const model = body.model === undefined ? "flux-3" : body.model;
   if (
+    !isDeployModel(model) &&
     model !== "flux-3" &&
     model !== "flux-3-i2v" &&
     model !== "ltx-2.5" &&
@@ -132,6 +140,7 @@ export function validateInput(value: unknown): GenerateInput {
   if (model === "seedvr2-upscale" && body.generator !== "upscale")
     throw new AppError(400, "SeedVR2 upscales video only.");
   if (
+    !isDeployModel(model) &&
     model !== "flux-3" &&
     model !== "seedvr2-upscale" &&
     body.generator !== "video"
@@ -252,6 +261,7 @@ export function validateInput(value: unknown): GenerateInput {
       : { upscalePrompt: (body.upscalePrompt as string).trim() }),
     upscaleFactor: body.upscaleFactor,
     upscaleCreativity: model === "seedvr2-upscale" ? 0 : upscaleCreativity,
+    ...(isDeployModel(model) ? { deploy: readDeployInput(body.deploy) } : {}),
     ...revision,
   };
 }

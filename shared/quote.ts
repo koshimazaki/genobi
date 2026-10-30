@@ -1,3 +1,4 @@
+import { isDeployModel } from "./comfy/deploy-catalogue";
 import { isH3, h3EstimateCredits } from "./h3";
 import { isSwap } from "./openjutsu";
 import { readyEntry } from "./registry";
@@ -60,7 +61,7 @@ export function estimateRunUsd(
   const model = input.model ?? "flux-3";
   if (isImage(input.generator)) return estimateImageUsd(input);
   // Billed per GPU second by its host, at a rate Genobi does not know.
-  if (isSwap(model)) return 0;
+  if (isSwap(model) || isDeployModel(model)) return 0;
   if (isMusic(input.generator)) return MUSIC_ESTIMATE_CREDITS / CREDITS_PER_USD;
   if (isH3(model)) return h3EstimateCredits(model) / CREDITS_PER_USD;
   if (isH3Router(model))
@@ -104,7 +105,11 @@ export function newQuote(
 
 /** The billing line for a recipe whose host bills by GPU time; see `Quote`. */
 export function billingOf(recipe: TakeRecipe): string | undefined {
-  if (!isSwap(readyEntry(recipe.id)?.videoModel)) return undefined;
+  if (
+    recipe.location !== "deployment" &&
+    !isSwap(readyEntry(recipe.id)?.videoModel)
+  )
+    return undefined;
   return "Comfy deployment GPU time, billed by Comfy to the deployment's workspace";
 }
 

@@ -17,6 +17,28 @@ do not follow it. Each workflow entry also runs a **template**, a graph under
 `workflows/`, which a session can swap for another template that serves the
 same capability.
 
+## Comfy Deploy
+
+The local Settings panel also registers an existing Developer Platform endpoint
+as **Comfy Deploy**. Only `https://<deployment>.run.comfy.app` is accepted,
+without a port, path, credentials, query or fragment. The URL persists; a key
+never enters these settings. Registering selects the deployment run location
+and reveals the worked LTX/World Builder entries under LTX. Each is pinned to
+its own manifest workflow and uses the registered deployment even when the
+session later selects another default location. The Local tick hides them.
+
+Camera stages each required input through the deployment's SDK asset API,
+then quotes and explicitly confirms GPU-time billing. Session-owned tickets
+expire after two hours or process restart. Quotes bind the endpoint URL;
+recorded jobs continue polling their original endpoint after settings change.
+A lost submission is never resent. Video, IR and audio downloads become private
+studio media, with the original deployment link on the take card.
+
+The hosted Worker has a fixed Comfy Cloud client and no deployment registry.
+It hides these models and refuses their quotes/submissions with
+`deployment_local_only`: **Comfy Deploy runs from the local studio**.
+[Exact Camera steps and workflow limits](comfy-deploy.md#use-it-from-camera).
+
 ## Where it is set
 
 | Who      | How                                                                                                                                            |

@@ -14,6 +14,7 @@ import { modelOptions } from "./GenerationControls";
 import { SelectOptionRow } from "./SelectMenu";
 import Icon from "./Icon";
 import { useHostedStudio } from "../hosted-studio";
+import { useSettingsStore } from "../settings-store";
 import LocalTick from "./LocalTick";
 import { hiddenNote, useLocalFilter } from "../local-menu";
 
@@ -36,7 +37,10 @@ export default function FamilyModelSelector({
   const hosted = useHostedStudio();
   // Local ticked: only what the local ComfyUI can run (`runsLocally`).
   const keep = useLocalFilter();
-  const filter = { openOnly, hosted, keep };
+  const deploymentRegistered = useSettingsStore((s) =>
+    Boolean(s.runLocation?.deployment),
+  );
+  const filter = { openOnly, hosted, keep, deploymentRegistered };
   const [openFamily, setOpenFamily] = useState<Family | null>(null);
   const [active, setActive] = useState(0);
   const root = useRef<HTMLDivElement>(null);
@@ -45,7 +49,13 @@ export default function FamilyModelSelector({
   // A second run of a model is shown under the model's own row.
   const row = menuId(selected);
   const family = openFamily ?? selected.family;
-  const options = modelOptions(family, openOnly, hosted, keep);
+  const options = modelOptions(
+    family,
+    openOnly,
+    hosted,
+    keep,
+    deploymentRegistered,
+  );
   const open = openFamily !== null;
   function close(restore = false) {
     setOpenFamily(null);
@@ -63,9 +73,13 @@ export default function FamilyModelSelector({
     setActive(
       Math.max(
         0,
-        modelOptions(next, openOnly, hosted, keep).findIndex(
-          (o) => o.value === row,
-        ),
+        modelOptions(
+          next,
+          openOnly,
+          hosted,
+          keep,
+          deploymentRegistered,
+        ).findIndex((o) => o.value === row),
       ),
     );
     setOpenFamily(next);

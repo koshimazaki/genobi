@@ -232,3 +232,11 @@ Personal selection persistence and agent context are local-studio features.
 Project decisions and scoped reusable preferences are available in the local
 Director under **Project memory & taste**. See [shared project memory](taste-memory.md)
 for agent checkpoints, private exports and the reference-import boundary.
+
+## Make your own version
+
+Opening an editable template brings up [Generate my version](director-generate.md).
+Reuse current assets, upload replacements or request generated inputs.
+Apply swaps is undoable; generation goes through your linked agent and paid
+approval in the bubble. Hosted users save the project ZIP and import it into
+local Genobi for agent access to its media.

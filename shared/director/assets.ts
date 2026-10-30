@@ -1,4 +1,5 @@
 import { laneId, laneNeighbours } from "./tracks";
+import { recipeAssetIds } from "./recipe-assets";
 import {
   checkReferences,
   LAYER_LIMIT,
@@ -12,6 +13,9 @@ export function assetUses(project: Project, id: string): string[] {
   return [
     ...project.layers
       .filter((l) => "assetId" in l && l.assetId === id)
+      .map((l) => l.name),
+    ...project.layers
+      .filter((l) => recipeAssetIds(project, l).includes(id))
       .map((l) => l.name),
     ...project.generationPlans
       .filter(

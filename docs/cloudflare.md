@@ -12,6 +12,9 @@ The hosted app uses your own BFL key. Connect it in the header: the balance chec
 ## Runtime
 
 - Pages static frontend + advanced-mode Worker: same-origin API with the existing D1/R2 bindings.
+- Comfy Deploy runs from the local studio. Hosted quote and job routes return
+  `501 deployment_local_only` for its models before validating generation inputs
+  or calling a provider; deployment registration and input staging stay local.
 - D1: session-owned jobs, unique submission IDs, copy leases, source metadata and temporary input links.
 - R2: private uploaded/generated MP4s. The public library is not in R2: its clips are static assets under `/media`, listed in `public/media/gallery.json`. Recorded runs carry their prompt, camera terms, settings and confirmed cost; supplied clips carry model provenance without an invented setup. Cards use separate small previews; imports and upscales keep the full files ([media preparation](media-previews.md)).
 - Icons: `public/favicon.svg` is the Genobi mask from `src/components/GenobiMark.tsx` with its colours fixed (lime outline and band, dark face), so it reads on light and dark tabs. `npm run favicon` renders it into `public/favicon.ico` (one 32 px PNG in an ICO container) and the 180 px `public/apple-touch-icon.png` with the Playwright Chromium the browser checks use; rerun it after changing the SVG. Pages serves all three as static assets outside `_routes.json`, and the local server serves them from `public/` (Vite) or `dist/` (production).

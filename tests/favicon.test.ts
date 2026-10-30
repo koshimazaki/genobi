@@ -36,13 +36,13 @@ describe("the favicon files", () => {
   it("ship in public/ and the studio page links all three", async () => {
     const html = await readFile(path.join(root, "index.html"), "utf8");
     expect(html).toContain(
-      '<link rel="icon" href="/favicon.svg" type="image/svg+xml" />',
+      '<link rel="icon" href="/favicon.svg?v=genobi-011" type="image/svg+xml" />',
     );
     expect(html).toContain(
-      '<link rel="icon" href="/favicon.ico" sizes="32x32" />',
+      '<link rel="icon" href="/favicon.ico?v=genobi-011" sizes="32x32" />',
     );
     expect(html).toContain(
-      '<link rel="apple-touch-icon" href="/apple-touch-icon.png" />',
+      '<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=genobi-011" />',
     );
 
     const svg = await readFile(path.join(root, "public/favicon.svg"), "utf8");

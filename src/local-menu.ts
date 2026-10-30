@@ -20,6 +20,7 @@ export const runsLocally =
     entry.status === "ready" &&
     entry.route === "workflow" &&
     entry.open &&
+    !entry.deploymentOnly &&
     !hosts[workflows[entry.id] ?? entry.model.slice("workflow/".length)];
 
 /**

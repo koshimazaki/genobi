@@ -15,7 +15,7 @@ export type ApiGraph = Record<string, ApiNode>;
 export interface WorkflowSlot {
   /** `nodeId.inputName` inside the API-format JSON. */
   path: string;
-  kind: "text" | "number" | "boolean" | "image" | "video" | "model";
+  kind: "text" | "number" | "boolean" | "image" | "video" | "model" | "asset";
   /**
    * An optional input, and what a run without a value for it removes: `drop`
    * names nodes (`anchor_fit`) or inputs (`803.anchor`) to delete, `set` the
@@ -51,11 +51,16 @@ const mismatch = () =>
     "cloud_unavailable",
   );
 const fits = (kind: WorkflowSlot["kind"], value: unknown) =>
-  kind === "number"
-    ? typeof value === "number" && Number.isFinite(value)
-    : kind === "boolean"
-      ? typeof value === "boolean"
-      : typeof value === "string";
+  kind === "asset"
+    ? typeof value === "string" ||
+      (!!value &&
+        typeof value === "object" &&
+        (value as { __type?: string }).__type === "core/ASSET")
+    : kind === "number"
+      ? typeof value === "number" && Number.isFinite(value)
+      : kind === "boolean"
+        ? typeof value === "boolean"
+        : typeof value === "string";
 
 /**
  * A copy of `graph` with each value written at its slot's path. The source is

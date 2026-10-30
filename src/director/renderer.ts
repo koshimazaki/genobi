@@ -1,3 +1,4 @@
+import { versionPictureParameters } from "./version-pictures";
 import { recipeResolution } from "./recipe-resolution";
 import type { Bundle } from "./bundle";
 import { digest } from "./bundle";
@@ -40,9 +41,14 @@ export class DirectorRenderer {
     this.composite = canvas(width, height);
     this.filter = new FilterHost(this.composite);
   }
+  private checkLive() {
+    if (this.disposed)
+      throw new DOMException("Preview cancelled", "AbortError");
+  }
   async init() {
     try {
       await document.fonts.ready;
+      this.checkLive();
       await preloadBundledFonts(
         this.bundle.project.layers.flatMap((l) =>
           "parameters" in l && typeof l.parameters.weight === "number"
@@ -56,6 +62,7 @@ export class DirectorRenderer {
           hash: await digest(new TextEncoder().encode(r.source)),
         })),
       );
+      this.checkLive();
       const resolved = new Map<string, (typeof approved)[number]>();
       for (const [id, m] of Object.entries(this.bundle.project.modules)) {
         const r = approved.find(
@@ -81,6 +88,7 @@ export class DirectorRenderer {
         const bytes = this.bundle.files.get(a.file.path)!;
         if (a.kind === "audio") {
           const b = await this.audio.decodeAudioData(bytes.slice().buffer);
+          this.checkLive();
           if (b.duration + 0.02 < (a.durationSeconds ?? 0))
             throw new Error(`Audio duration mismatch: ${id}`);
           this.buffers.set(id, b);
@@ -88,25 +96,31 @@ export class DirectorRenderer {
         }
         if (a.kind === "image" && !/\.(png|jpe?g|webp)$/i.test(a.file.path))
           throw new Error("Production images must be PNG, JPEG or WebP");
+        if (a.kind !== "image") continue;
         const url = URL.createObjectURL(new Blob([bytes]));
         this.urls.push(url);
         if (a.kind === "image") {
           const img = new Image();
           img.src = url;
           await img.decode();
+          this.checkLive();
           if (img.width * img.height > 16000000)
             throw new Error("Image exceeds 16 megapixels");
           this.images.set(id, img);
         }
       }
       for (const l of this.bundle.project.layers) {
-        if (l.kind === "video") {
+        if (l.kind === "video" && !this.videos.has(l.assetId)) {
           const a = this.bundle.project.assets[l.assetId];
           const video = await openVideo(
             this.bundle.files.get(a.file.path)!,
             l.name,
           );
-          this.videos.set(l.id, video);
+          if (this.disposed) {
+            video.dispose();
+            this.checkLive();
+          }
+          this.videos.set(l.assetId, video);
           if (
             video.duration + 0.02 < (a.durationSeconds ?? 0) ||
             !Number.isFinite(video.duration)
@@ -114,7 +128,12 @@ export class DirectorRenderer {
             throw new Error(`Video duration mismatch: ${l.name}`);
         }
         if ("moduleId" in l) {
-          let parameters = recipeResolution(this.bundle.project, l);
+          let parameters = versionPictureParameters(
+            this.bundle,
+            l,
+            recipeResolution(this.bundle.project, l),
+            (url) => this.urls.push(url),
+          );
           const request = fontRequest(
             parameters,
             this.bundle.project.modules[l.moduleId].parameterSchema,
@@ -125,6 +144,7 @@ export class DirectorRenderer {
               request.weight,
               request.text,
             );
+            this.checkLive();
             this.fonts.set(l.id, r);
             parameters = { ...parameters, font: r.stack };
           }
@@ -136,6 +156,10 @@ export class DirectorRenderer {
             libraries,
             renderer: this.filter.renderer,
           });
+          if (this.disposed) {
+            instance.dispose();
+            this.checkLive();
+          }
           if (instance.output instanceof HTMLCanvasElement)
             instance.output.remove();
           this.graphics.set(l.id, instance);
@@ -171,6 +195,7 @@ export class DirectorRenderer {
         const g = this.graphics.get(l.id)!;
         this.filter.texture.needsUpdate = true;
         await g.render({ timeSeconds, inputTexture: this.filter.texture });
+        if (this.disposed) return;
         const result = this.filter.output(g.output as Texture);
         ctx.clearRect(0, 0, width, height);
         ctx.drawImage(result, 0, 0);
@@ -181,7 +206,7 @@ export class DirectorRenderer {
         sh = height;
       if (l.kind === "video") {
         const v = await this.videos
-          .get(l.id)!
+          .get(l.assetId)!
           .at(timeSeconds + l.sourceStartFrame / fps);
         if (this.disposed) return;
         source = v;
@@ -332,7 +357,14 @@ export class DirectorRenderer {
     for (const g of this.graphics.values()) g.dispose();
     for (const v of this.videos.values()) v.dispose();
     for (const url of this.urls) URL.revokeObjectURL(url);
+    this.graphics.clear();
+    this.videos.clear();
+    this.images.clear();
+    this.buffers.clear();
+    this.fonts.clear();
+    this.urls = [];
+    this.composite.width = this.composite.height = 1;
     this.filter.dispose();
-    void this.audio.close();
+    void this.audio.close().catch(() => {});
   }
 }

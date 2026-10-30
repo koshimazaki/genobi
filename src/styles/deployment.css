@@ -1,0 +1,45 @@
+.deployment-endpoint,
+.deployment-inputs label {
+  display: grid;
+  gap: 0.3rem;
+  min-width: 0;
+}
+.deployment-endpoint input {
+  width: 100%;
+  min-width: 0;
+}
+.deployment-inputs {
+  overflow: auto;
+  display: grid;
+  max-height: 140px;
+  font-size: 0.75rem;
+  gap: 0.5rem;
+}
+.deployment-inputs input,
+.deployment-inputs textarea {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  color: inherit;
+  background: var(--surface);
+  font: inherit;
+}
+.deployment-inputs p {
+  margin: 0;
+}
+.deployment-link {
+  font-size: 0.65rem;
+  color: inherit;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 68rem) {
+  .deployment-inputs {
+    max-height: 190px;
+  }
+}
+@media (max-width: 35rem) {
+  .deployment-inputs {
+    max-height: 110px;
+  }
+}

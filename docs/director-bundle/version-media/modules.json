@@ -1,0 +1,234 @@
+{
+  "version-end-card-still": {
+    "engine": "animejs",
+    "engineVersion": "4.5.0",
+    "mode": "overlay",
+    "file": {
+      "path": "graphics/version-mix-end-card-still.mjs",
+      "sha256": "d6cc6c848ec9b333676c16c43318cd9ebf24b25ebaec6aee4cd6c3be975a649b"
+    },
+    "parameterSchema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "eyebrow",
+        "title",
+        "subtitle",
+        "credit1",
+        "credit2",
+        "font",
+        "color",
+        "accent",
+        "steps",
+        "done",
+        "duration",
+        "still"
+      ],
+      "properties": {
+        "eyebrow": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 32,
+          "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 24,
+          "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+        },
+        "subtitle": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 36,
+          "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+        },
+        "credit1": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 50,
+          "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+        },
+        "credit2": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 50,
+          "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+        },
+        "font": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120,
+          "pattern": "^[A-Za-z0-9 ,\"'-]+$"
+        },
+        "color": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$"
+        },
+        "accent": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$"
+        },
+        "steps": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 160,
+          "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+        },
+        "done": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40,
+          "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+        },
+        "duration": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 8
+        },
+        "still": {
+          "type": "string",
+          "maxLength": 120,
+          "pattern": "^(asset:[a-z][a-z0-9-]{0,63}|/media/[a-z0-9][a-z0-9/_-]*\\.(jpg|png|webp))$"
+        }
+      }
+    }
+  },
+  "version-gen-image": {
+    "engine": "animejs",
+    "engineVersion": "4.5.0",
+    "mode": "overlay",
+    "file": {
+      "path": "graphics/version-teaser-gen-image.mjs",
+      "sha256": "4817e4d2645e0d8b2032707f2e018b2bf77a412ed354e7414c06e06a001e4162"
+    },
+    "parameterSchema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "still",
+        "matte",
+        "accent",
+        "inset",
+        "duration",
+        "mode",
+        "steps",
+        "done",
+        "fadeAt"
+      ],
+      "properties": {
+        "still": {
+          "type": "string",
+          "maxLength": 120,
+          "pattern": "^(asset:[a-z][a-z0-9-]{0,63}|/media/[a-z0-9][a-z0-9/_-]*\\.(jpg|png|webp))$"
+        },
+        "matte": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$"
+        },
+        "accent": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$"
+        },
+        "inset": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 0.3
+        },
+        "duration": {
+          "type": "number",
+          "minimum": 0.8,
+          "maximum": 8
+        },
+        "mode": {
+          "type": "string",
+          "enum": ["trace", "trace-texts"]
+        },
+        "steps": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 160,
+          "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+        },
+        "done": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40,
+          "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+        },
+        "fadeAt": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 60
+        }
+      }
+    }
+  },
+  "version-space-hud": {
+    "engine": "animejs",
+    "engineVersion": "4.5.0",
+    "mode": "overlay",
+    "file": {
+      "path": "graphics/version-teaser-space.mjs",
+      "sha256": "acc5c8e5f55f5fd1d303cea3f57a10508c20750bda64645b4a16ace9f81edb41"
+    },
+    "parameterSchema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "still",
+        "color",
+        "label",
+        "credit",
+        "targets",
+        "interval",
+        "dim",
+        "fadeAt"
+      ],
+      "properties": {
+        "still": {
+          "type": "string",
+          "maxLength": 120,
+          "pattern": "^(asset:[a-z][a-z0-9-]{0,63}|/media/[a-z0-9][a-z0-9/_-]*\\.(jpg|png|webp))$"
+        },
+        "color": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 32,
+          "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+        },
+        "credit": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 40,
+          "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+        },
+        "targets": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 200,
+          "pattern": "^[0-9., /]*$"
+        },
+        "interval": {
+          "type": "number",
+          "minimum": 0.05,
+          "maximum": 2
+        },
+        "dim": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "fadeAt": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 60
+        }
+      }
+    }
+  }
+}

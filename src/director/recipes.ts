@@ -17,6 +17,7 @@ import captionSource from "../../docs/director-bundle/example/graphics/anime-cap
 import { effectRecipes } from "./effects";
 import { mixRecipes } from "./mix-recipes";
 import { teaserRecipes } from "./teaser-recipes";
+import { versionMediaRecipes } from "./version-media-recipes";
 export const libraries = { p5, animejs, threejs };
 export const recipes: {
   source: string;
@@ -70,4 +71,5 @@ export const recipes: {
   ...effectRecipes,
   ...mixRecipes,
   ...teaserRecipes,
+  ...versionMediaRecipes,
 ];

@@ -39,6 +39,7 @@ export function parseSelection(value: unknown): SelectionPreference {
 /** Static capability, not evidence that credentials, models or a GPU are ready. */
 export function runLocations(entry: Entry): ("local" | "cloud")[] {
   if (entry.status !== "ready") return [];
+  if (entry.deploymentOnly) return ["cloud"];
   return entry.route === "workflow" ? ["local", "cloud"] : ["cloud"];
 }
 /**

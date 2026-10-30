@@ -1,3 +1,4 @@
+import { submitWithDeploymentApproval } from "./deployment-approval";
 import { estimateSeedvr2Usd, isSeedvr2 } from "../shared/comfy/seedvr2";
 import ComposerWorkspace from "./components/ComposerWorkspace";
 import { useScrollsBridge } from "./scrolls/bridge";
@@ -252,16 +253,15 @@ export default function App() {
     }
     setSubmitting(true);
     try {
-      await generate(
-        {
-          ...composerInput({ ...state, sourceId }),
-          description:
-            generator === "upscale"
-              ? source?.label || "Upscale"
-              : composerInput(state).description,
-        },
-        undefined,
-        state,
+      const input = {
+        ...composerInput({ ...state, sourceId }),
+        description:
+          generator === "upscale"
+            ? source?.label || "Upscale"
+            : composerInput(state).description,
+      };
+      await submitWithDeploymentApproval(input, key, (input, approval) =>
+        generate(input, approval, state),
       );
     } catch (e) {
       setError(

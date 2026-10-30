@@ -81,31 +81,35 @@ const readTools: ToolDefinition[] = [
     annotations: { readOnlyHint: true, idempotentHint: true },
     async run(_api, args) {
       const selection = parseSelection(args.selection ?? {});
-      return registry
-        .filter((e) => !args.status || e.status === args.status)
-        .filter((e) => matchesSelection(e, selection))
-        .map((e) =>
-          e.status === "ready"
-            ? {
-                id: e.id,
-                label: e.label,
-                task: e.task ?? null,
-                family: e.family,
-                open: e.open,
-                status: e.status,
-                route: e.route,
-                runLocations: runLocations(e),
-                model: e.model,
-              }
-            : {
-                id: e.id,
-                label: e.label,
-                family: e.family,
-                open: e.open,
-                status: e.status,
-                note: e.note,
-              },
-        );
+      return (
+        registry
+          // Camera stages deployment inputs; this adapter has no staging tool.
+          .filter((e) => e.status !== "ready" || !e.deploymentOnly)
+          .filter((e) => !args.status || e.status === args.status)
+          .filter((e) => matchesSelection(e, selection))
+          .map((e) =>
+            e.status === "ready"
+              ? {
+                  id: e.id,
+                  label: e.label,
+                  task: e.task ?? null,
+                  family: e.family,
+                  open: e.open,
+                  status: e.status,
+                  route: e.route,
+                  runLocations: runLocations(e),
+                  model: e.model,
+                }
+              : {
+                  id: e.id,
+                  label: e.label,
+                  family: e.family,
+                  open: e.open,
+                  status: e.status,
+                  note: e.note,
+                },
+          )
+      );
     },
   },
   {

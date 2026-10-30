@@ -76,8 +76,15 @@ const isCatalogue = (value: unknown): value is WorkflowCatalogue =>
 
 export const readRunLocation = (signal?: AbortSignal) =>
   send("/api/settings/run-location", undefined, isLocation, signal);
-export const saveRunLocation = (location: RunLocation) =>
-  send("/api/settings/run-location", { location }, isLocation);
+export const saveRunLocation = (
+  location: RunLocation,
+  deploymentUrl?: string,
+) =>
+  send(
+    "/api/settings/run-location",
+    { location, ...(deploymentUrl === undefined ? {} : { deploymentUrl }) },
+    isLocation,
+  );
 export const readWorkflows = (signal?: AbortSignal) =>
   send("/api/settings/workflows", undefined, isCatalogue, signal);
 export const selectWorkflow = (entry: string, template: string) =>

@@ -53,6 +53,7 @@ interface Common {
    * hosted studio neither lists nor offers it.
    */
   localOnly?: true;
+  deploymentOnly?: true;
   /**
    * Set on an entry the composer cannot build a request for: where it runs
    * from instead. The Model menu shows the row disabled with this as its

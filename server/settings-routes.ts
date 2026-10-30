@@ -30,9 +30,13 @@ export function settingsRouter(
   });
   router.post("/run-location", body, async (request, response) => {
     limit("edit", response.locals.sessionId);
-    const { location } = fields(request.body);
+    const { location, deploymentUrl } = fields(request.body);
     response.json(
-      await settings.setLocation(response.locals.sessionId, location),
+      await settings.setLocation(
+        response.locals.sessionId,
+        location,
+        deploymentUrl,
+      ),
     );
   });
   router.get("/workflows", async (request, response) => {

@@ -1,6 +1,8 @@
+import { AppError } from "./errors";
 import { entryFor, readyEntry, type Entry } from "../shared/registry";
 import type { Generator, VideoModel } from "../shared/types";
 import {
+  parseWorkflowDestination,
   DEFAULT_DESTINATION,
   type DestinationKind,
   type WorkflowDestination,
@@ -27,6 +29,7 @@ import { requireExpected } from "./settings-expectation";
 export interface SettingsSnapshot {
   location: DestinationKind | "both";
   workflows: Record<string, string>;
+  deployment?: { url: string };
 }
 
 /** Sessions whose choices are kept; the oldest go first past this. */
@@ -97,6 +100,9 @@ export class WorkflowSettings {
     return {
       location: this.mode(sessionId),
       workflows: { ...this.record(sessionId)?.workflows },
+      ...(this.deployment(sessionId)
+        ? { deployment: { url: this.deployment(sessionId)!.url } }
+        : {}),
     };
   }
 
@@ -112,6 +118,17 @@ export class WorkflowSettings {
     } catch {
       location = undefined;
     }
+    let deployment: { url: string } | undefined;
+    try {
+      const parsed =
+        snapshot.deployment &&
+        parseWorkflowDestination("deployment", snapshot.deployment.url);
+      if (parsed?.kind === "deployment") deployment = { url: parsed.url };
+    } catch {
+      /* Invalid inherited settings grant no destination. */
+    }
+    if (location === "deployment" && !deployment && !this.deployment(sessionId))
+      location = undefined;
     const workflows: Record<string, string> = {};
     for (const [entry, template] of Object.entries(snapshot.workflows))
       try {
@@ -124,6 +141,7 @@ export class WorkflowSettings {
       sessionId,
       (record) => {
         if (location) record.location = location;
+        if (deployment) record.deployment = deployment;
         record.workflows = { ...record.workflows, ...workflows };
       },
       () => {},
@@ -148,6 +166,7 @@ export class WorkflowSettings {
     const revision = this.revision;
     const location = this.location(sessionId);
     const mode = this.mode(sessionId);
+    const deployment = this.deployment(sessionId);
     const source = this.record(sessionId)?.location ? "session" : "server";
     const local = this.options.localStatus
       ? await this.options.localStatus()
@@ -157,6 +176,7 @@ export class WorkflowSettings {
       location,
       mode,
       label: LOCATION_LABEL[location],
+      ...(deployment ? { deployment } : {}),
       source,
       fixed: false,
       choices: [...RUN_LOCATIONS],
@@ -168,27 +188,68 @@ export class WorkflowSettings {
             ? "Workflows run on the ComfyUI on this machine, with its own models. Nothing is charged."
             : location === "cloud"
               ? "Workflows run on Comfy Cloud with your Comfy key, and each run is charged to it."
-              : "Workflows run on the server's Comfy API deployment with your Comfy key, and each run is charged to it.",
+              : "Workflows run on your Comfy deployment. GPU time is billed by Comfy to its workspace.",
     };
   }
 
   /** Answers with the state this write made, whatever lands while it saves. */
-  async setLocation(sessionId: string, value: unknown) {
+  async setLocation(sessionId: string, value: unknown, url?: unknown) {
     const location = parseRunLocation(value);
+    const destination =
+      url === undefined
+        ? undefined
+        : parseWorkflowDestination("deployment", url);
+    const deployment =
+      destination?.kind === "deployment"
+        ? {
+            url: destination.url,
+            name: new URL(destination.url).hostname.split(".")[0],
+          }
+        : undefined;
+    if (location === "deployment" && !deployment && !this.deployment(sessionId))
+      throw new AppError(
+        400,
+        "Register a Comfy deployment endpoint first.",
+        "invalid_destination",
+      );
     let answer!: Promise<RunLocationState>;
     await this.change(
       sessionId,
       (record) => {
         record.location = location;
+        if (deployment) record.deployment = { url: deployment.url };
       },
       () => (answer = this.state(sessionId)),
     );
     return answer;
   }
 
+  deployment(sessionId: string) {
+    const saved = this.record(sessionId)?.deployment;
+    if (saved) {
+      const parsed = parseWorkflowDestination("deployment", saved.url);
+      if (parsed.kind === "deployment")
+        return {
+          url: parsed.url,
+          name: new URL(parsed.url).hostname.split(".")[0],
+        };
+    }
+    return this.destination.kind === "deployment"
+      ? {
+          url: this.destination.url,
+          name: new URL(this.destination.url).hostname.split(".")[0],
+        }
+      : undefined;
+  }
+
   catalogue(sessionId: string) {
     const chosen = { ...this.record(sessionId)?.workflows };
-    return workflowCatalogue((entry) => chosen[entry], false, this.revision);
+    return workflowCatalogue(
+      (entry) => chosen[entry],
+      false,
+      this.revision,
+      Boolean(this.deployment(sessionId)),
+    );
   }
 
   /** Answers with the catalogue this write made, whatever lands while it saves. */
@@ -229,7 +290,20 @@ export class WorkflowSettings {
     } catch {
       choice = requireTemplateFor(entry.id).choice;
     }
-    return { workflow: choice.id, location: this.hostFor(choice, sessionId) };
+    const location = this.hostFor(choice, sessionId);
+    const deployment =
+      location === "deployment" ? this.deployment(sessionId) : undefined;
+    if (entry.deploymentOnly && !deployment)
+      throw new AppError(
+        400,
+        "Register your Comfy deployment in Settings → run location.",
+        "invalid_destination",
+      );
+    return {
+      workflow: choice.id,
+      location,
+      ...(deployment ? { deployment } : {}),
+    };
   }
 
   /**
@@ -255,7 +329,9 @@ export class WorkflowSettings {
     if (!entry || entry.route !== "workflow") return true;
     const plan = this.plan(sessionId, entry);
     return (
-      recipe.workflow === plan.workflow && recipe.location === plan.location
+      recipe.workflow === plan.workflow &&
+      recipe.location === plan.location &&
+      recipe.deployment?.url === plan.deployment?.url
     );
   }
 }

@@ -58,3 +58,42 @@ FLUX 3 image to video's camera terms and the toolbar across model switches.
 
 The Editor's timeline, transport, channel column, direction pickers and the
 global prompt beside Program are described in [Editor timeline](editor-timeline.md).
+
+## Start here and local setup
+
+The question-mark guide introduces Genobi with “Build the scene. Shape the
+sound. Make the cut.” It connects World Builder, scene-derived acoustics,
+AKUSPACE experiments, Camera, Director/Editor, Dual Swords and project memory.
+It links to the remixable submission video and acoustic demo in new tabs, so
+opening an example does not replace the current project. It also links to the
+public GitHub repository with clone/install/run instructions for forks.
+
+The guide distinguishes hosted editing from locally running Hermes: start the
+local studio, then use Settings → Pair hosted and local Genobi on the hosted
+site. It explains generation confirmation, project ZIP saving and third-party
+licences. The Genobi logo favicon is linked by the studio, watch and embed
+pages with a versioned URL so previously cached icons can refresh.
+
+## Preview resources
+
+Director and Editor share the project’s actual asset bytes. Repeated video
+layers reuse one decoder per asset; frames are drawn serially before that
+single-frame decoder advances. Only images get renderer blob URLs. Switching
+projects or canvases disposes the old renderer immediately, including while
+initialization is pending; late decoder or graphics initialization also
+releases its resources.
+
+Mix templates load their own real media and the graphics recipes they need,
+without fetching unrelated starter-project footage. Concurrent loads of the
+same template share an in-flight request, released on either success or
+failure. Open projects remain in the existing project store; this change does
+not evict unsaved work or add a persistent media cache.
+
+## Generate a version in Director
+
+[Generate my version](director-generate.md) opens with an editable template and
+from either workspace's header. It lists declared inputs with current media,
+previews, uploads and project-asset choices. Apply swaps is undoable. Generation
+always goes through the linked agent, with each paid step approved in the bubble.
+Hosted editing offers a project ZIP/local-studio handoff; pairing does not
+synchronize media. Existing files remain until approved replacements are ready.

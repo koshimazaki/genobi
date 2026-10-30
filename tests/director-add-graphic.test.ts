@@ -186,17 +186,41 @@ describe("recipes an agent can add", () => {
       brief: null,
     });
     expect(summary.recipes.map((r) => r.moduleId)).not.toContain("crt");
+    expect(summary.recipes.map((r) => r.moduleId)).toEqual(
+      Object.keys(withoutCrt().modules),
+    );
+    const others = [
+      "crt",
+      "version-end-card-still",
+      "version-gen-image",
+      "version-space-hud",
+    ];
+    expect(summary.registryRecipes.map((r) => r.moduleId)).toEqual(others);
+    for (const moduleId of others) {
+      expect(summary.recipes.map((r) => r.moduleId)).not.toContain(moduleId);
+      const recipe = TRUSTED_RECIPES[moduleId];
+      expect(
+        summary.registryRecipes.find((r) => r.moduleId === moduleId),
+      ).toEqual({
+        moduleId,
+        mode: recipe.mode,
+        parameters: recipe.parameterSchema.properties,
+        required: recipe.parameterSchema.required,
+      });
+    }
     expect(summary.recipes.find((r) => r.moduleId === "caption")).toMatchObject(
       { mode: "overlay", required: ["text", "color", "size", "bpm"] },
     );
-    expect(summary.registryRecipes).toEqual([
-      {
-        moduleId: "crt",
-        mode: "filter",
-        parameters: TRUSTED_RECIPES.crt.parameterSchema.properties,
-        required: ["amount", "curvature", "rgb", "vignette"],
-      },
-    ]);
+    expect(summary.registryRecipes.filter((r) => r.moduleId === "crt")).toEqual(
+      [
+        {
+          moduleId: "crt",
+          mode: "filter",
+          parameters: TRUSTED_RECIPES.crt.parameterSchema.properties,
+          required: ["amount", "curvature", "rgb", "vignette"],
+        },
+      ],
+    );
   });
 });
 

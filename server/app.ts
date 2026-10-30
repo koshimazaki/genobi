@@ -1,3 +1,4 @@
+import { DeploymentAssets } from "./deployment-assets";
 import { ActivityStore } from "./activity";
 import { mountDevelopment, type DevOptions } from "./development-routes";
 import { RunnerConnection } from "./runner-connection";
@@ -100,6 +101,7 @@ export interface AppOptions extends DevOptions {
    * unless a test injects one.
    */
   workflows?: WorkflowClient;
+  deploymentFetcher?: typeof fetch;
   /** The default run location (`GENOBI_WORKFLOW_DESTINATION`) and the local ComfyUI. */
   runLocation?: {
     destination?: WorkflowDestination;
@@ -145,6 +147,11 @@ export async function createApp(options: AppOptions) {
     destination: options.runLocation?.destination,
     localStatus: local && (() => local.status()),
   });
+  const deploymentAssets = new DeploymentAssets(
+    settings,
+    keys,
+    options.deploymentFetcher,
+  );
   const service = new JobService(
     store,
     options.publicDirectory,
@@ -152,6 +159,7 @@ export async function createApp(options: AppOptions) {
     providers,
     options.workflows,
     settings,
+    deploymentAssets,
   );
   const tools = new MediaTools(
     store,
@@ -433,6 +441,7 @@ export async function createApp(options: AppOptions) {
   );
   // Local only, like voice: the hosted Worker has no audio analysis route.
   app.use("/api/audio", audioRouter(audio, limit));
+  app.use("/api/settings", deploymentAssets.router(limit));
   app.use("/api/settings", settingsRouter(settings, limit, local));
   // Local only: hosted visitors keep layouts in the browser (layout-routes.ts).
   const layouts = new LocalLayouts(options.directory);

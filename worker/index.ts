@@ -1,6 +1,7 @@
 import { defaultProviders, providerFor } from "../server/providers";
 import { HOSTED_RUN_LOCATION } from "../shared/comfy/run-location";
 import { workflowCatalogue } from "../shared/comfy/workflows";
+import { refuseHostedDeployment } from "../shared/comfy/deploy-catalogue";
 import { AppError, requireKey } from "../server/errors";
 import {
   validateIdempotencyKey,
@@ -51,6 +52,14 @@ async function readJson(request: Request): Promise<unknown> {
     offset += chunk.length;
   }
   return JSON.parse(new TextDecoder().decode(combined));
+}
+
+/** Local deployment staging is unavailable here, even for incomplete inputs. */
+async function readInput(request: Request) {
+  const body = await readJson(request);
+  if (body && typeof body === "object" && "model" in body)
+    refuseHostedDeployment(body.model);
+  return validateInput(body);
 }
 
 export default {
@@ -168,7 +177,7 @@ export default {
         ctx.waitUntil(sweep(env).catch(() => {}));
         response = json(await history(env, session));
       } else if (post && url.pathname === "/api/jobs") {
-        const input = validateInput(await readJson(request));
+        const input = await readInput(request);
         response = json(
           {
             job: await submit(
@@ -187,12 +196,7 @@ export default {
         // Counted with the paid writes above: a quote prices a paid run.
         response = json(
           {
-            quote: await quote(
-              env,
-              validateInput(await readJson(request)),
-              session,
-              key!,
-            ),
+            quote: await quote(env, await readInput(request), session, key!),
           },
           201,
         );
