@@ -147,6 +147,7 @@
       "meaning": "3D Ninja, World Builder and scenes",
       "pages": [
         "3d-tab.md",
+        "adaptive-reverb-proof.md",
         "falling-room.md",
         "scene-builder.md",
         "scene-examples.md",
@@ -165,6 +166,7 @@
     "sound": {
       "meaning": "Audio, soundtracks and Acoustic Space",
       "pages": [
+        "adaptive-reverb-proof.md",
         "adaptive-reverb.md",
         "akuspace-docker.md",
         "anime-teaser-template.md",
@@ -269,7 +271,8 @@
         "adaptive-reverb.md",
         "anime-teaser-template.md",
         "bloom-teaser.md",
-        "falling-room.md"
+        "falling-room.md",
+        "media-previews.md"
       ]
     },
     "backend": {
@@ -300,6 +303,7 @@
       "pages": [
         "architecture.md",
         "cloudflare.md",
+        "media-previews.md",
         "runner-pairing.md",
         "template-gallery.md"
       ]
@@ -461,6 +465,7 @@
     "verification": {
       "meaning": "What was run and what it showed",
       "pages": [
+        "adaptive-reverb-proof.md",
         "director-remix-verification.md",
         "director-working-version.md",
         "dual-editor.md",
@@ -574,6 +579,7 @@
       "links": [
         "3d-tab.md",
         "activity-settings.md",
+        "adaptive-reverb-proof.md",
         "adaptive-reverb.md",
         "agent-approvals.md",
         "agent-bubble.md",
@@ -661,6 +667,7 @@
         "layout-to-render-status.md",
         "licence-strategy.md",
         "machine-check.md",
+        "media-previews.md",
         "media-space.md",
         "minimax-h3-camera.md",
         "motion-fonts.md",
@@ -716,6 +723,13 @@
       "tags": ["agents", "studio", "architecture"],
       "summary": "Optional operational tool history, its evidence boundaries, and independent bubble controls.",
       "links": ["agent-setup.md", "runner-pairing.md"]
+    },
+    {
+      "title": "Adaptive reverb: one scene guides picture and sound",
+      "path": "adaptive-reverb-proof.md",
+      "tags": ["verification", "3d", "sound"],
+      "summary": "The 30 October adaptive-reverb runs, connecting Three.js scenes, Klein stills, LTX Layout-to-Render and scene-derived CPU reverb; separate AKUSPACE experiments and remaining deployment gaps.",
+      "links": []
     },
     {
       "title": "Adaptive reverb: the 3D + LTX template",
@@ -786,6 +800,7 @@
         "hermes-open-route.md",
         "hermes-runs.md",
         "run-location.md",
+        "runner-pairing.md",
         "supervisor.md",
         "voice-mode.md",
         "voice-setup.md"
@@ -916,7 +931,6 @@
         "camera-wording.md",
         "cloudflare.md",
         "comfy-cloud-inventory.md",
-        "comfy-deploy.md",
         "comfy-deployment.md",
         "dimensions-mix.md",
         "director-agent-tools.md",
@@ -973,7 +987,7 @@
       "path": "cloudflare.md",
       "tags": ["architecture", "cloudflare", "backend"],
       "summary": "Hosted deployment on Cloudflare Pages, with the runtime, D1 and R2 limits, lifecycle, reproduction and deployment.",
-      "links": ["runner-pairing.md", "template-gallery.md"]
+      "links": ["media-previews.md", "runner-pairing.md", "template-gallery.md"]
     },
     {
       "title": "Comfy Cloud inventory",
@@ -983,7 +997,7 @@
       "links": ["architecture.md", "machine-check.md"]
     },
     {
-      "title": "Deploy the worked LTX / World Builder workflows",
+      "title": "Deploy the key LTX and World Builder workflows",
       "path": "comfy-deploy.md",
       "tags": [
         "workflows",
@@ -993,8 +1007,8 @@
         "sound",
         "world-builder"
       ],
-      "summary": "Offline recipe and endpoint catalogue for the worked LTX and World Builder workflows, with owner-run build, linux/nvidia release and shared deployment steps, costs and remaining platform checks.",
-      "links": ["comfy-deployment.md"]
+      "summary": "The three key adaptive-reverb workflows, one remote-model LTX build with two GPU endpoints, local CPU reverb, comfy-cli 1.24 commands and scale-to-zero costs.",
+      "links": ["adaptive-reverb.md"]
     },
     {
       "title": "Comfy Developer Platform deployment",
@@ -1014,13 +1028,8 @@
       "title": "Credits and lineage",
       "path": "credits.md",
       "tags": ["licences", "bfl"],
-      "summary": "Genobi’s shared tools, new studio work, creator credits and model documentation sources.",
-      "links": [
-        "camera-wording.md",
-        "credits/README.md",
-        "minimax-h3-camera.md",
-        "world-builder-acoustics.md"
-      ]
+      "summary": "Design lineage, licence, attributions and the BFL documentation the studio follows.",
+      "links": ["camera-wording.md", "credits/README.md"]
     },
     {
       "title": "The taste layer: people, tools and lineage",
@@ -1595,7 +1604,7 @@
       "path": "layout-to-render-status.md",
       "tags": ["backend", "camera"],
       "summary": "Exact LTX Layout-to-Render node and model availability on Comfy Cloud, with input rules and integration gaps.",
-      "links": ["comfy-deploy.md"]
+      "links": ["adaptive-reverb-proof.md"]
     },
     {
       "title": "Licence-aware direction",
@@ -1614,6 +1623,13 @@
         "comfy-cloud-inventory.md",
         "voice-mode.md"
       ]
+    },
+    {
+      "title": "Gallery and Camera media preparation",
+      "path": "media-previews.md",
+      "tags": ["templates", "cloudflare"],
+      "summary": "How gallery and Camera library cards load light previews while projects, watch pages and downloads keep the original media.",
+      "links": ["cloudflare.md"]
     },
     {
       "title": "Space: a room on a clip's sound",
@@ -1908,6 +1924,7 @@
       "tags": ["vision", "verification"],
       "summary": "The Open Source Higgsfield submission dossier - the prose for the form, how we read the challenge, where the innovation is, what was built per section, how each example video was made, what is verified locally and deployed.",
       "links": [
+        "adaptive-reverb-proof.md",
         "agent-approvals.md",
         "agent-sessions.md",
         "akuspace-docker.md",
@@ -1921,7 +1938,6 @@
         "falling-room.md",
         "hermes-runs.md",
         "hermes-runs/2026-10-27-claude-anime-teaser.md",
-        "layout-to-render-status.md",
         "machine-check.md",
         "media-space.md",
         "run-location.md",
@@ -1992,6 +2008,7 @@
         "dimensions-mix.md",
         "falling-room.md",
         "genobi-teaser.md",
+        "media-previews.md",
         "project-assets.md",
         "templates.md",
         "voice-mode.md"

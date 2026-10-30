@@ -1,6 +1,6 @@
 """Fill a named LTX endpoint offline. Writes API JSON; never submits a job.
 
-python3 workflows/materialize-ltx.py --endpoint party --values values.json --output /tmp/party.api.json
+python3 workflows/materialize-ltx.py --endpoint layout-to-video --values values.json --output /tmp/layout.api.json
 Values are an object keyed by token name without the surrounding double underscores.
 """
 import argparse
@@ -14,7 +14,7 @@ SEEDS = {"SEED_STAGE_1", "SEED_STAGE_2", "REVERB_SEED"}
 FILES = {"TAKE_WEBM", "DEPTH_WEBM", "REFERENCE_PNG", "FIRST_FRAME_PNG", "TRACK_AUDIO"}
 
 
-def validate_value(name, value):
+def validate_value(name, value, captured=True):
     if name in SEEDS:
         # DirectorSceneReverb takes a 32-bit seed; the samplers take 64-bit seeds.
         bits = 32 if name == "REVERB_SEED" else 64
@@ -33,18 +33,23 @@ def validate_value(name, value):
     if name == "RECIPE_JSON":
         recipe = json.loads(value)
         expected = {"version": 1, "fps": 24, "width": 1024, "height": 576, "frames": 193}
-        if not isinstance(recipe, dict) or any(type(recipe.get(k)) is not int or recipe.get(k) != v for k, v in expected.items()):
+        if not isinstance(recipe, dict) or recipe.get("version") != 1 or not isinstance(recipe.get("objects"), list):
+            raise ValueError("RECIPE_JSON must be a v1 World Builder scene with objects")
+        if captured and any(type(recipe.get(k)) is not int or recipe.get(k) != v for k, v in expected.items()):
             raise ValueError("RECIPE_JSON must describe the captured v1, 24 fps, 1024×576, 193-frame take")
     if TOKEN.search(value):
         raise ValueError(f"{name} still contains a placeholder")
 
 
 def materialize(graph, values):
+    if not isinstance(values, dict):
+        raise ValueError("values must be a JSON object")
     needed = {match[1] for match in TOKEN.finditer(json.dumps(graph))}
     if set(values) != needed:
         raise ValueError(f"missing values: {sorted(needed - set(values))}; unknown values: {sorted(set(values) - needed)}")
+    captured = any(n["class_type"] == "DirectorSceneCapture" for n in graph.values())
     for name, value in values.items():
-        validate_value(name, value)
+        validate_value(name, value, captured)
 
     def fill(value):
         if isinstance(value, str) and (match := TOKEN.fullmatch(value)):
@@ -63,13 +68,19 @@ def main():
     parser.add_argument("--endpoint", required=True)
     parser.add_argument("--values", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--preset", choices=["studio"], help="input preset of layout-to-video")
     args = parser.parse_args()
     manifest = json.loads((HERE / "ltx-world-builder.endpoints.json").read_text())
     endpoint = next((e for e in manifest["endpoints"] if e["name"] == args.endpoint), None)
     if endpoint is None:
         parser.error(f"unknown endpoint {args.endpoint}")
     try:
-        graph = json.loads((HERE / endpoint["workflow"]).read_text())
+        workflow = endpoint["workflow"]
+        if args.preset:
+            workflow = endpoint.get("presets", {}).get(args.preset)
+            if workflow is None:
+                raise ValueError(f"endpoint {args.endpoint} has no {args.preset} preset")
+        graph = json.loads((HERE / workflow).read_text())
         values = json.loads(args.values.read_text())
         if not isinstance(values, dict):
             raise ValueError("values must be a JSON object")

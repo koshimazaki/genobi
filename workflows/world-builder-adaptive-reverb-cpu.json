@@ -1,0 +1,66 @@
+{
+  "40": {
+    "class_type": "LoadAudio",
+    "inputs": {
+      "audio": "__TRACK_AUDIO__"
+    }
+  },
+  "1": {
+    "class_type": "PrimitiveStringMultiline",
+    "inputs": {
+      "value": "__RECIPE_JSON__"
+    }
+  },
+  "2": {
+    "class_type": "DirectorSceneAcoustics",
+    "inputs": {
+      "recipe": ["1", 0]
+    }
+  },
+  "3": {
+    "class_type": "PreviewAny",
+    "inputs": {
+      "source": ["2", 3]
+    }
+  },
+  "4": {
+    "class_type": "PreviewAny",
+    "inputs": {
+      "source": ["10", 2]
+    }
+  },
+  "10": {
+    "class_type": "DirectorSceneReverb",
+    "inputs": {
+      "size_scale": 1.0,
+      "decay_scale": 1.0,
+      "damping_high": 0.3,
+      "pre_delay_ms": 0.0,
+      "early_late_balance": 0.5,
+      "wet": 0.8,
+      "dry": 0.7,
+      "material_override": "none",
+      "max_ir_seconds": 6.0,
+      "seed": "__REVERB_SEED__",
+      "output_gain_db": 0.0,
+      "source_position": "",
+      "listener_position": "",
+      "audio": ["40", 0],
+      "recipe": ["1", 0]
+    }
+  },
+  "11": {
+    "class_type": "SaveAudio",
+    "inputs": {
+      "filename_prefix": "__IR_PREFIX__",
+      "audio": ["10", 1]
+    }
+  },
+  "13": {
+    "class_type": "SaveAudio",
+    "inputs": {
+      "filename_prefix": "__WET_PREFIX__",
+      "audio": ["10", 0]
+    }
+  }
+}

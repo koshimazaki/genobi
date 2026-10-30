@@ -31,6 +31,9 @@ import {
   restoreSetupSession,
 } from "./session-draft";
 import "./setup.css";
+import { useHostedStudioDetection } from "../hosted-studio";
+import { HostedAgentPairing } from "../agent/HostedAgentPairing";
+import { SETUP_RUNNERS } from "../../shared/agent-runner-setting";
 
 export default function StartupConfigurator() {
   const dialog = useRef<HTMLDialogElement>(null);
@@ -48,8 +51,13 @@ export default function StartupConfigurator() {
   const [voiceCheck, setVoiceCheck] = useState(0);
   const install = useVoiceInstall();
   const start = useSetupStart();
+  const hosted = useHostedStudioDetection();
+  const chosenRunner = SETUP_RUNNERS.find((r) => r === draft.selection.agent);
   // The configured harness's status and sign-in, read on the summary step.
-  const agent = useSetupAgent(open && step === SUMMARY_STEP, draft);
+  const agent = useSetupAgent(
+    open && step === SUMMARY_STEP && (hosted === false || hosted === "failed"),
+    draft,
+  );
   // Reading status never installs or asks for the microphone. A finished
   // install (VOICE_READY) reads it again so the summary says connected.
   useEffect(() => {
@@ -188,19 +196,23 @@ export default function StartupConfigurator() {
                   onChange={setDraft}
                   voiceStatus={voice}
                 />
-                <SetupAgentView
-                  draft={draft}
-                  installVoice={offersVoiceInstall(draft, voice, install)}
-                  readiness={agent.readiness}
-                  rows={agent.rows}
-                  start={start}
-                  message={agent.message}
-                  onSignIn={() => void agent.signIn()}
-                  onCheck={agent.recheck}
-                  checked={agent.checked}
-                  profile={agent.profile}
-                  onSetUpHermes={() => void agent.setUpHermes()}
-                />
+                {hosted === true ? (
+                  chosenRunner && <HostedAgentPairing runner={chosenRunner} />
+                ) : (
+                  <SetupAgentView
+                    draft={draft}
+                    installVoice={offersVoiceInstall(draft, voice, install)}
+                    readiness={agent.readiness}
+                    rows={agent.rows}
+                    start={start}
+                    message={agent.message}
+                    onSignIn={() => void agent.signIn()}
+                    onCheck={agent.recheck}
+                    checked={agent.checked}
+                    profile={agent.profile}
+                    onSetUpHermes={() => void agent.setUpHermes()}
+                  />
+                )}
               </>
             ) : (
               <SetupChoices

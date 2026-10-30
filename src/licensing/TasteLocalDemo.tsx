@@ -154,12 +154,12 @@ export default function TasteLocalDemo({ id }: { id: string }) {
       playsInline
       muted
       loop
-      preload="metadata"
-      poster="/media/template-gallery/signal-taste-poster.jpg"
+      preload="none"
+      poster="/media/template-gallery/signal-taste-reel.preview.jpg"
       aria-label="Genobi construction study using Transitions.dev"
     >
       <source
-        src="/media/template-gallery/signal-taste-reel.mp4"
+        src="/media/template-gallery/signal-taste-reel.preview.mp4"
         type="video/mp4"
       />
     </video>

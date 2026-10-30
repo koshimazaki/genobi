@@ -9,11 +9,11 @@ export default function TasteExamples() {
         <video
           controls
           preload="none"
-          poster="/media/template-gallery/signal-taste-poster.jpg"
+          poster="/media/template-gallery/signal-taste-reel.preview.jpg"
           aria-label="Signal motion preset showcase"
         >
           <source
-            src="/media/template-gallery/signal-taste-reel.mp4"
+            src="/media/template-gallery/signal-taste-reel.preview.mp4"
             type="video/mp4"
           />
         </video>

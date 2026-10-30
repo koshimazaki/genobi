@@ -4,6 +4,7 @@ import {
 } from "../../shared/agent-session";
 import { COPY_ID } from "../../shared/director/commands";
 import { AGENT_REQUEST_HEADER } from "../../shared/agent-session-events";
+import { readHostedStudio } from "../hosted-studio";
 
 /**
  * The studio's side of the project prompt (issue #23): ask the local server
@@ -75,6 +76,7 @@ export async function openCopyId(
   fetcher: typeof fetch = fetch,
 ): Promise<string | undefined> {
   if (!projectId) return undefined;
+  if ((await readHostedStudio()) === true) return undefined;
   try {
     const response = await fetcher("/api/projects");
     const body = (await response.json()) as { projects?: unknown };

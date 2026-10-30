@@ -136,6 +136,9 @@ export interface Source {
   label: string;
   url: string;
   poster?: string;
+  /** Lightweight catalogue playback only; `url` remains the full import/upscale source. */
+  preview?: string;
+  previewPoster?: string;
   width: number;
   height: number;
   duration: number;

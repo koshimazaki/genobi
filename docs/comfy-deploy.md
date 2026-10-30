@@ -1,170 +1,145 @@
 ---
 tags: [workflows, comfy, backend, models, sound, world-builder]
-summary: Offline recipe and endpoint catalogue for the worked LTX and World Builder workflows, with owner-run build, linux/nvidia release and shared deployment steps, costs and remaining platform checks.
+summary: The three key adaptive-reverb workflows, one remote-model LTX build with two GPU endpoints, local CPU reverb, comfy-cli 1.24 commands and scale-to-zero costs.
 ---
 
-# Deploy the worked LTX / World Builder workflows
+# Deploy the key LTX and World Builder workflows
 
-The 30 October 2026 GPU session proved the graph families, on a rented RTX PRO
-6000 (96 GB), ComfyUI 0.41.0. It did not prove a Comfy Developer Platform build
-or deployment. The owner starts the paid build, release, deployment and test
-jobs. This change performs offline preparation and checks only.
+One shared deployment, **genobi-ltx-world**, serves two GPU workflow selectors.
+The CPU reverb workflow stays local. These are API-format graphs; selecting a
+name fills a graph, not a new HTTP service or a registered studio generator.
 
-The [workflow catalogue](https://github.com/koshimazaki/Genobi/blob/main/workflows/ltx-world-builder.README.md)
+| Selector          | Workflow                                 | Runtime                                                    |
+| ----------------- | ---------------------------------------- | ---------------------------------------------------------- |
+| `layout-to-video` | `world-builder-l2r-a2v.json`             | GPU; World Builder take + track → LTX-2.5 Layout-to-Render |
+| `akuspace`        | `ltx-i2v-a2v-akuspace.json`              | GPU; image + track → LTX-2.5 with learned room sound       |
+| `cpu-reverb`      | `world-builder-adaptive-reverb-cpu.json` | Local CPU/Mac; scene recipe + track → IR and wet mix       |
+
+The [workflow instructions](https://github.com/koshimazaki/Genobi/blob/main/workflows/README.md#key-adaptive-reverb-workflows)
 and [endpoint manifest](https://github.com/koshimazaki/Genobi/blob/main/workflows/ltx-world-builder.endpoints.json)
-keep every successful variant. Each graph has its own input/result README.
-The [existing deployment reference](comfy-deployment.md) explains the pinned
-comfy-cli v1.23.0 syntax used below. No new CLI or pricing lookup was made.
+are the catalogue. Layout-to-video's `--preset studio` only changes guide and
+mask dimensions; it shares the same endpoint and models.
 
-## One shared deployment
+## Exact shared build
 
-Build `genobi-ltx-world` with sets **world-builder-l2r** and **ltx-i2v**.
-It carries exactly nine model files, 109.464 GB in decimal units, with three
-shared VAE/upscaler files deduplicated. Of these, 109.301 GB are gated and
-must be present locally for upload; the AKUSPACE LoRA is public and hash-pinned.
-No Klein, Union Control, SeedVR2, swap weights or Gemma e2b enhancer is included.
-A reference is an owner-supplied still, made outside these endpoints.
+`comfy-build/models/ltx-world-key.txt` carries exactly **nine model files,
+109.464 GB** (decimal). It combines the BF16 L2R transformer/encoder and int8
+AKUSPACE transformer/encoder, shared video/audio VAEs and ×2 upscaler, plus the
+L2R and AKUSPACE LoRAs. All models are remote `sourceUri` + SHA-256 + size;
+**zero local model uploads**. Eight source URLs/hashes/sizes came from verified
+`comfy build refs resolve` results on 30 October 2026. The AKUSPACE LoRA keeps
+its existing pinned Hugging Face URL and SHA-256. Resolver URLs using `main`
+are byte-pinned by their checksums: changed upstream bytes must fail validation.
+The older, broader sets remain separate recipes; do not combine them with this set.
 
-Sources are pinned in `comfy-build/sources.lock`: ComfyUI `98cc0bf…`,
-ComfyUI-LTXVideo `220e1d4…`, Koshi-Nodes `6f3351e…`, and this repository's
-World Builder pack at `9f6d2eb…` plus `patches/world_builder.patch`. That
-patch carries the box's 2 GiB Capture cap and Inputs preview downscale;
-the same changes are in the current node source. The subfolder pack is
-uploaded as `source: local`; the other packs use their pinned Git refs.
-The graph's Storyboard fix is 448 × 256, already set in every L2R template.
+ComfyUI is pinned to `98cc0bf84b7cb1383654c5b402e7612d875d6d22` (0.41.0).
+The only custom packs are ComfyUI-LTXVideo (`220e1d45…`, git), Koshi-Nodes
+(`6f3351e7…`, git; used in both graphs), and `director_world_builder` from
+this checkout (`source: local`). Only that local node pack is zipped/uploaded.
+Its Python changes include the 2 GiB Capture cap and bounded Inputs preview
+downscale. The saved-take API graphs require no browser frontend build.
 
-The table's endpoint names select workflows on **one** deployment. They are
-catalogue names, not additional HTTP services: materialize by `--endpoint`,
-then submit the resulting graph through `comfy deploy run`. The manifest is
-the complete mapping, including earlier party/studio and two text/narration
-candidates per brief.
+## Generate and check offline
 
-| Endpoint                                         | Workflow file                       | Room / role                                        |
-| ------------------------------------------------ | ----------------------------------- | -------------------------------------------------- |
-| `dive`                                           | `world-builder-l2r-dive.json`       | Empty dive between towers                          |
-| `cathedral`                                      | `world-builder-l2r-cathedral.json`  | L2R cathedral, reference at take angle             |
-| `party`                                          | `world-builder-l2r-a2v.json`        | L2R + track + CPU Reverb; medium_room geometry     |
-| `studio`                                         | `world-builder-l2r-a2v-studio.json` | L2R + track + CPU Reverb; small_room geometry      |
-| `medium_room`                                    | `ltx-i2v-dive-medium-room.json`     | Empty big-room dive, scene IR applied separately   |
-| `small_room`                                     | `ltx-i2v-dive-small-room.json`      | Empty small-room dive, scene IR applied separately |
-| `cathedral_i2v`                                  | `ltx-i2v-dive-cathedral.json`       | Empty cathedral dive                               |
-| `studio_cpu`                                     | `ltx-i2v-a2v.json`                  | Track latent mask 0; external CPU room treatment   |
-| `studio_akuspace`                                | `ltx-i2v-a2v-akuspace.json`         | Track latent mask 0.5; learned small-room audio    |
-| `chain_cathedral`, `chain_party`, `chain_studio` | `ltx-i2v-chain-*.json`              | Previous last frame → next stage                   |
-
-Room names do not rewrite a recipe or switch a model preset. L2R reads the
-uploaded recipe's geometry; the i2v dives have `space_mode Off` and generate
-audio, so their room reverb is an external IR step. Party maps to medium_room,
-studio to small_room; neither is a new AKUSPACE trained preset. Only the
-AKUSPACE endpoint actively sets Room / small_room / Heavy / high.
-
-## Offline preparation and validation
-
-No `comfy build validate` command is assumed; it is unavailable in the target
-CLI. These checks generate a spec and exercise the repo's validator without
-fetching sources, weights, schemas or GPU compute:
+From the repo root, with Python 3.10+:
 
 ```sh
-PYTHONDONTWRITEBYTECODE=1 python3 comfy-build/scripts/comfy_build_spec.py --name genobi-ltx-world --sets world-builder-l2r ltx-i2v --check-workflows > /tmp/genobi-comfy-build.yaml
-PYTHONDONTWRITEBYTECODE=1 python3 -I comfy-build/tests/test_comfy_spec.py
-PYTHONDONTWRITEBYTECODE=1 python3 -I comfy-build/tests/test_ltx_workflows.py
+PYTHONDONTWRITEBYTECODE=1 python3 comfy-build/scripts/comfy_build_spec.py --name genobi-ltx-world --sets ltx-world-key --check-workflows > ./comfy-build.yaml
+python3 -B -I -m unittest discover -s comfy-build/tests -v
 ```
 
-The validator checks graph links, exact model coverage, the absence of the
-enhancer branch, and Storyboard cells. Tests cover template filling and
-cross-stage audio wiring. This does not verify the platform's build schema,
-runtime node imports, FFmpeg availability or uploaded media resolution.
+The generated root YAML is local operator state, excluded from the proposed
+commit. Keep the push-written build id/revision for subsequent commands;
+regenerating over it would discard its remote-state tracking. Tests verify
+exact model coverage, graph links, the studio-only input differences, both
+samplers' audio wiring, native integer seed bounds, and no local models.
+These checks neither build nor deploy nor run GPU inference.
 
-## Owner: build → linux/nvidia release → deploy
+## Owner commands: push, release, deploy
 
-The commands below use the recipe's existing CLI syntax and deliberately
-remain unexecuted. Confirm the installed CLI's `comfy build --help` and
-`comfy deploy --help` before spending; don't substitute an unavailable validate
-command. First accept LTX-2.5 and Layout-to-Render model licences with the
-Hugging Face account used to download gated files. Keep authentication in the
-environment or CLI's private store, never in this repository.
+Syntax checked against the installed **comfy-cli 1.24.0** source
+([build commands](https://github.com/Comfy-Org/comfy-cli/blob/v1.24.0/comfy_cli/command/build.py),
+[deploy commands](https://github.com/Comfy-Org/comfy-cli/blob/v1.24.0/comfy_cli/command/deploy.py)).
+The [platform guide](https://docs.comfy.org/development/serverless/overview)
+explains releases and deployments. Authenticate using the CLI's private store
+or environment. The commands below are owner-run steps, not evidence they ran.
 
-From the repository root, with enough model disk space:
-
-```sh
-sh comfy-build/scripts/prepare-comfy-build.sh ./comfy-work world-builder-l2r ltx-i2v
-HF_TOKEN="$HF_TOKEN" python3 comfy-build/scripts/models.py --gated-only ./comfy-work/ComfyUI/models comfy-build/models/world-builder-l2r.txt comfy-build/models/ltx-i2v.txt
-```
-
-Preparation fetches source code and applies the World Builder patch; it does
-not build or deploy. It writes the default combined-set name in the spec;
-regenerate it with the shared deployment's chosen name, then authenticate:
+With the root spec generated, no local weights or prepared ComfyUI checkout
+are needed. From the repo root:
 
 ```sh
-python3 comfy-build/scripts/comfy_build_spec.py --name genobi-ltx-world --sets world-builder-l2r ltx-i2v --check-workflows > ./comfy-work/ComfyUI/comfy-build.yaml
-comfy setup --where cloud
-cd comfy-work/ComfyUI
-comfy build refs resolve akuspace-ltx25-v0.5.safetensors
-comfy build push --dry-run --models-dir ./models --custom-nodes-dir ./custom_nodes
-comfy build push --release --target linux/nvidia --models-dir ./models --custom-nodes-dir ./custom_nodes
-comfy build status
+comfy build push --custom-nodes-dir ./custom_nodes
+comfy build release create --target linux/nvidia --watch
 comfy deploy refs compute
-comfy deploy up . --gpu <GPU_ID> --region <REGION> --min 0 --max 1 --create --name genobi-ltx-world
+comfy deploy up . --gpu <id> --region <r> --min 0 --max 1 --create --name genobi-ltx-world
 ```
 
-Replace GPU_ID and REGION from `refs compute`; start with an RTX PRO 6000
-96 GB, matching the successful box. Review the dry-run upload list: eight
-gated weights plus the patched World Builder pack, with the public LoRA as
-a source URI. Do not upload input media or credentials in the build. The
-release target is **linux/nvidia**. A new deployment needs both GPU and region.
+Stop after push if it reports model-link warnings; resolve them before
+`release create`. Choose the GPU id and region from `refs compute`; start with a 96 GB RTX PRO
+6000 to match the recorded successful GPU session. The remote model fetches
+still need to succeed under the platform's access rules and model licences.
+Verified resolver results are not proof of a completed remote build; a fetch
+failure is a release blocker, not permission to silently upload local weights.
 
-The generated spec follows the existing recipe; the platform installs core
-and each node pack's requirements and owns torch. Before accepting the build,
-verify that the worker provides **FFmpeg and FFprobe** on PATH. The rented box
-installed them as OS packages; this YAML generator does not provision OS
-packages. Missing binaries or unsupported NVIDIA architecture are release
-blockers for WebM Capture. No browser or World Builder frontend bundle is
-needed to run the captured-take API graphs.
+**FFmpeg and FFprobe must exist on the worker's PATH for WebM Capture.**
+The YAML generator does not install OS packages. Check the release worker's
+binaries before accepting it for Layout-to-video. CPU-only local reverb does
+not decode a take and has no Capture dependency.
 
-## Owner: one test generation per endpoint
+## Owner commands: materialize and run
 
-First fill a template with the [offline materializer](https://github.com/koshimazaki/Genobi/blob/main/workflows/ltx-world-builder.README.md#fill-a-template).
-Put all its named media in the prepared ComfyUI `input/` directory. For example,
-from `comfy-work/ComfyUI`, with the filled graph copied there as `party.api.json`:
+Prepare a values JSON containing exactly the tokens in the chosen workflow's
+README. The helper never submits a job:
 
 ```sh
-comfy deploy run . --workflow party.api.json --deployment <DEPLOYMENT_ID> --asset-root ./input --output-dir ./results --timeout 1800
+python3 workflows/materialize-ltx.py --endpoint layout-to-video --values /tmp/layout-values.json --output /tmp/layout.api.json
+python3 workflows/materialize-ltx.py --endpoint akuspace --values /tmp/akuspace-values.json --output /tmp/akuspace.api.json
 ```
 
-Use the actual deployment id returned by the owner-run deployment. Inspect
-the CLI's upload list before approving a run: it must include the filenames
-inside `DirectorSceneCapture`, LoadImage and LoadAudio. Platform resolution
-of custom-node string filenames into `input/` remains unverified; if the CLI
-does not discover them, stage assets explicitly using the installed CLI/API
-and verify the resolved names before submitting. Do not treat a missing asset
-as a reason to retry a paid request. There is no automatic endpoint rollout
-or automatic retry in this repository.
+Put your named inputs in `./input/`. Use the actual deployment id returned by
+`deploy up`. Each `run` below is a new billed generation; run only when ready:
 
-Check every manifest endpoint, including earlier candidates: model loads,
-uploaded take/recipe alignment, the video, audio and IR outputs, room sound,
-and peak VRAM/time. Party needs 1280 × 704 sampling followed by ×2 upscale;
-the earlier successful example used 87 GB and 12.5 minutes. Freeze/cylinder
-artefacts remain possible. Listen against the dry original. An AKUSPACE test
-must explicitly accept that audio mask 0.5 changes the music. L2R + AKUSPACE
-and cathedral a2v are still untried combinations, not additional endpoints.
+```sh
+comfy deploy run . --workflow /tmp/layout.api.json --deployment <deployment-id> --asset-root ./input --output-dir /tmp/layout-results --timeout 1800
+comfy deploy run . --workflow /tmp/akuspace.api.json --deployment <deployment-id> --asset-root ./input --output-dir /tmp/akuspace-results --timeout 1800
+```
 
-## Costs, scale to zero and stopping
+Check that the asset upload list includes the Capture colour/depth files as
+well as LoadImage and LoadAudio. Resolution of custom-node filename strings
+remains unverified on the platform; if missing, stage them with the platform's
+asset API and verify the resolved names before submitting. An uncertain paid
+submission must be recovered by its existing job id, never automatically retried.
+Listen against the dry track: AKUSPACE mask 0.5 changes the music. Inspect
+reference/take alignment and late party colour artefacts before accepting a cut.
 
-The [deployment reference](comfy-deployment.md) records 27 October 2026 rates:
-RTX PRO 6000 **$3.49/hour**, H100 **$6.23/hour**, staged-model storage
-**$0.20/GB-month**. At those recorded rates, this shared model set is roughly
-**$21.89/month** of model storage; 12.5 minutes of RTX PRO 6000 execution alone
-is about **$0.73**. These are dated planning numbers, not a live quote;
-build charges, startup time, storage policy and current account limits must
-be checked by the owner before starting the paid build or deploy.
+For CPU reverb, use the
+[local template and builder](https://github.com/koshimazaki/Genobi/blob/main/workflows/world-builder-adaptive-reverb-cpu.README.md)
+on a local ComfyUI with this repo's node pack. It needs no GPU deployment.
+The [whole-track helper](https://github.com/koshimazaki/Genobi/blob/main/workflows/room-reverb.README.md)
+levels and crossfades exported scene IRs.
 
-`--min 0 --max 1` requests scale to zero with at most one worker. It avoids
-keeping a warm minimum worker but does not delete model storage or guarantee
-zero cost immediately after a job. Confirm the live worker count reaches
-zero after the endpoint smoke tests. To stop service, disable or remove the
-deployment in the account's deployment controls, and confirm no workers or
-queued jobs remain; remove its staged models/builds separately if storage is
-no longer wanted. Consult the installed `comfy deploy --help` for the actual
-stop/removal command rather than assuming a `stop` or `down` verb. The older
-reference records 30-minute lower-plan job limits and account-specific beta
-access; verify both for this release.
+## Costs and scale to zero
+
+[Comfy API pricing](https://www.comfy.org/pricing), checked 30 October 2026:
+RTX PRO 6000 96 GB **$3.49/hour**, H100 80 GB **$6.23/hour**; network model
+storage **$0.20/GB-month**. For this set, storage is about **$21.89/month**;
+12.5 minutes of RTX PRO 6000 compute is about **$0.73**, before startup/other
+billable worker time. Recheck availability and the account's rates before use.
+
+`--min 0 --max 1` requests scale to zero with at most one worker. Confirm the
+worker count returns to zero after jobs; it does not eliminate persistent
+model storage. The platform guide says storage starts at deployment and
+continues while paused. Builds/releases without deployments are stored free.
+To pause compute, use `comfy deploy stop --deployment <deployment-id>` and
+verify status. Removing storage requires removing the relevant deployment;
+check the account state before deletion. Standard/Creator jobs have a
+30-minute ceiling, Pro one hour; account limits and beta access still apply.
+
+## Evidence and limits
+
+The two GPU families ran on a rented 96 GB GPU, not on the Developer Platform.
+The local CPU template ran in seconds on a Mac. This port performs offline
+checks only: no build, release, deploy or paid generation. There is no new
+studio handoff, live endpoint, or managed Comfy Cloud availability claim.
+[Adaptive reverb](adaptive-reverb.md#how-to-regenerate-a-room) distinguishes the
+v5 scene-derived CPU soundtrack from the separate AKUSPACE experiment.

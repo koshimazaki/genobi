@@ -204,7 +204,7 @@ class DirectorSceneInputs:
         uid = "director-" + uuid.uuid4().hex
         ui = {}
         if images is not None:
-            if images.ndim != 4 or images.shape[-1] != 3 or len(images) > 241:
+            if images.ndim != 4 or images.shape[-1] != 3 or not 1 <= len(images) <= 241 or min(images.shape[1:3]) < 1:
                 raise ValueError("Use a bounded RGB image batch (at most 241 frames)")
             if not 1 <= fps <= 60:
                 raise ValueError("FPS must be 1–60")

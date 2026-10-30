@@ -156,6 +156,14 @@ follows the same rule. Leaving the card, hiding the tab or scrolling
 it offscreen pauses and mutes it. Reduced-motion visitors keep the poster;
 page load never starts playback. A click opens "Make your own".
 
+Cards play a separate `.preview.mp4` and show its `.preview.jpg` poster with
+`preload="none"`. The catalogue's `preview` and `previewPoster` fields are for
+cards; `video`, `poster` and the measured dimensions still describe the full
+file used in the drawer, watch/embed players and downloads. The Camera library
+uses the same split (`preview` versus `url`), including its featured clip.
+Editor/project imports continue to fetch original project media. See
+[media preparation](media-previews.md) for budgets, regeneration and checks.
+
 ## Make your own
 
 The gallery is the fast mode; the Director stays the advanced one. The

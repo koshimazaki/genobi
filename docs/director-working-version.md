@@ -14,7 +14,14 @@ rearrangement, Builder state migration and hosted generation remain separate.
 
 Open **Director composer** at `/director` or from the studio shell's Editor
 preset. Switching to another preset and back keeps the editable project in
-memory; refreshing still clears it.
+memory, including an imported bundle opened over an explicit template URL.
+Only a changed template route selects another project; failed or cancelled
+loads retry when the workspace reopens. Gallery defers full
+project media loading until Director, Editor or Project Tools is opened;
+Project Tools can initialize the project on its own, while timeline shortcuts
+stay disabled until the stage or timeline is visible. Leaving both panels
+pauses preview playback; an explicit export continues. Refreshing still clears
+unsaved work.
 The UI follows Holo's Timeline · Automation structure: a stable stage, transport,
 time ruler, stacked clip lanes, audio waveform and selection-driven inspector.
 The bundle model replaces the source application's world/avatar state. Full 3D

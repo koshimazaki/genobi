@@ -7,6 +7,7 @@ import sys
 import tempfile
 import types
 import unittest
+from unittest.mock import patch
 import wave
 
 import numpy as np
@@ -62,6 +63,37 @@ class WorldBuilderNodes(unittest.TestCase):
         before=cls.IS_CHANGED('frame.png','',self.recipe)
         Image.new('RGB',(256,256),'blue').save(self.root/'frame.png')
         self.assertNotEqual(before,cls.IS_CHANGED('frame.png','',self.recipe))
+
+    def test_final_take_fits_but_two_gib_guard_remains(self):
+        recipe = {'version': 1, 'fps': 24, 'width': 1024, 'height': 576, 'frames': 193}
+        self.assertEqual(self.node.recipe_data(json.dumps(recipe)), recipe)
+        with self.assertRaisesRegex(ValueError, '2 GiB'):
+            self.node.recipe_data(json.dumps({**recipe, 'width': 1280, 'height': 704, 'frames': 201}))
+
+    def test_inputs_downscale_over_budget_preview_without_mutating_source(self):
+        images = torch.ones((1, 256, 256, 3))
+        # Simulate a large decoded batch's value count without allocating gigabytes.
+        with patch.object(torch.Tensor, 'numel', return_value=4 * 320 * 1024 * 1024):
+            result = self.node.DirectorSceneInputs().prepare(24, images)
+        ref = result['ui']['world_inputs'][0]['screen'][0]
+        with Image.open(self.root / ref['filename']) as image:
+            self.assertEqual(image.size, (128, 128))
+        self.assertEqual(tuple(images.shape), (1, 256, 256, 3))
+        self.assertEqual(float(images.mean()), 1)
+        for invalid in (torch.empty((0,256,256,3)), torch.empty((242,2,2,3)), torch.empty((1,0,256,3))):
+            with self.assertRaises(ValueError):
+                self.node.DirectorSceneInputs().prepare(24, invalid)
+
+    @unittest.skipUnless(FFMPEG,'FFmpeg unavailable')
+    def test_downscaled_video_preview_is_decodable(self):
+        images = torch.ones((9, 512, 512, 3))
+        with patch.object(torch.Tensor, 'numel', return_value=4 * 320 * 1024 * 1024):
+            result = self.node.DirectorSceneInputs().prepare(24, images)
+        ref = result['ui']['world_inputs'][0]['screen'][0]
+        frames = self.node.read_frames(self.root / ref['filename'], json.loads(self.recipe))
+        self.assertEqual(tuple(frames.shape), (9, 256, 256, 3))
+        self.assertGreater(float(frames.mean()), 0.9)
+        self.assertEqual(tuple(images.shape), (9, 512, 512, 3))
 
     @unittest.skipUnless(FFMPEG,'FFmpeg unavailable')
     def test_generated_audio_video_round_trip(self):

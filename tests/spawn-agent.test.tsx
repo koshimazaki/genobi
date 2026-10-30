@@ -60,6 +60,13 @@ const rows = (): HarnessSignIn[] => [
 ];
 const server = vi.fn(async (url: string, init?: RequestInit) => {
   const method = init?.method ?? "GET";
+  if (url === "/api/settings/run-location")
+    return json({
+      revision: 0,
+      location: "cloud",
+      choices: ["cloud"],
+      fixed: !local,
+    });
   if (url === "/api/agent/status") return json(status());
   if (url === "/api/settings/agent-runner") {
     if (!local) return json({ error: "API route not found." }, 404);
@@ -231,6 +238,7 @@ describe("spawnAgent", () => {
       "POST /api/agent/hermes-profile",
       "GET /api/agent/status",
       "GET /api/agent/sign-in",
+      "GET /api/settings/run-location",
       "GET /api/projects",
       "POST /api/agent/sessions",
     ]);

@@ -66,7 +66,7 @@ export default function Clip({
         ref={ref}
         src={url}
         poster={poster}
-        preload={preload ?? (poster ? "none" : "metadata")}
+        preload={preload ?? "none"}
         muted
         playsInline
         loop

@@ -1,9 +1,0 @@
-# Worked i2v, a2v and text/narration graphs: six loader files.
-# Pins copied from akuspace.txt; the Gemma e2b enhancer is not in these graphs.
-# <folder> <repository> <revision> <path> <bytes> <sha256 or ->
-diffusion_models Lightricks/LTX-2.5 49b093a39c19169a8a81721dcc541e07e945232f diffusion_models/ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors 21504034224 -
-text_encoders Lightricks/LTX-2.5 49b093a39c19169a8a81721dcc541e07e945232f text_encoders/gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors 15372969374 -
-vae Lightricks/LTX-2.5 49b093a39c19169a8a81721dcc541e07e945232f vae/ltx-2.5-video-vae-bf16.safetensors 1472223346 -
-vae Lightricks/LTX-2.5 49b093a39c19169a8a81721dcc541e07e945232f vae/ltx-2.5-audio-vae-bf16.safetensors 364866540 -
-latent_upscale_models Lightricks/LTX-2.5 49b093a39c19169a8a81721dcc541e07e945232f latent_upscale_models/ltx-2.5-latent-spatial-upscaler-x2-bf16-1.0.safetensors 995778752 -
-loras KoshiMazaki/akuspace-ltx25 244c6e3b8c8a4afee3fd895389fc10290f6b56f9 akuspace-ltx25-v0.5.safetensors 163714520 623a32970c0984a80af5364d5257d1d3a7fa0c8fc112caee427d7aa631b3e361

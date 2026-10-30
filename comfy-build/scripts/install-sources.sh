@@ -17,6 +17,13 @@ grep -v '^[[:space:]]*\(#\|$\)' "$lock" > "$root/.sources.tmp"
 while read -r set dest repo commit sub patch; do
   case "$wanted" in *" $set "*) ;; *) continue ;; esac
   case "$done_list" in *" $dest "*) continue ;; esac
+  if [ "$repo" = local ]; then
+    mkdir -p "$(dirname "$root/$dest")"
+    rm -rf "${root:?}/$dest"
+    cp -R "$here/$sub" "$root/$dest"
+    done_list="$done_list$dest "
+    continue
+  fi
   echo "source $dest @ $commit ($set)"
   tmp="$root/.fetch-$$"
   rm -rf "$tmp"

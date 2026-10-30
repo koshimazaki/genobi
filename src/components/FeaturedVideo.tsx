@@ -67,8 +67,8 @@ export default function FeaturedVideo({
           // lightbox. Passing onOpen is what switches Clip into that mode.
           <Clip
             key={source.id}
-            url={source.url}
-            poster={source.poster}
+            url={source.preview ?? source.url}
+            poster={source.previewPoster ?? source.poster}
             label={source.label}
             onOpen={() =>
               setViewing({

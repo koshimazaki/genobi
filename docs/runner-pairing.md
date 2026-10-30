@@ -10,6 +10,13 @@ existing configured Hermes or Claude runner. No inbound port, tunnel, public
 local API, arbitrary shell command or cloud copy of the model login is added.
 The local server must remain running. This does not install Hermes.
 
+First-run hosted setup offers this same pairing flow for Hermes, Claude Code
+and Codex, with local setup instructions in Connect and the summary. The local
+studio runs Hermes or Claude Code; Codex remains an external plugin choice.
+Choosing an agent does not start a session or install it. If another agent is
+paired, setup explains which one and asks you to configure the chosen one
+locally before starting.
+
 ## Connect and use
 
 1. Run the candidate Genobi local server, authenticate your runner outside
@@ -19,7 +26,7 @@ The local server must remain running. This does not install Hermes.
    Confirm that the named hosted studio may start the configured runner. Agent
    inference may use your subscription or incur model costs.
 4. Back in hosted Settings, wait for the runner to appear online. Enter a prompt
-   and press **Start paired runner**, or use the explicit setup-review action.
+   and press **Start paired runner**, or use **Start Genobi** in the bubble.
 5. Open the Genobi bubble for session progress and Stop. **Open local session**
    opens that session on the original machine, where assets and paid approvals
    remain available. The same local browser profile must still own its cookie.

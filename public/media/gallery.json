@@ -9,7 +9,9 @@
     "duration": 15.041667,
     "bytes": 22824518,
     "model": "minimax-h3-router",
-    "description": "A moss-grown robot creature trains among biting flowers in overgrown ruins at dusk: whip spins, a leap, then a wide pull-back to it meditating. Machine generated with MiniMax H3 (open weights) and upscaled, outside Camera; no prompt is on record."
+    "description": "A moss-grown robot creature trains among biting flowers in overgrown ruins at dusk: whip spins, a leap, then a wide pull-back to it meditating. Machine generated with MiniMax H3 (open weights) and upscaled, outside Camera; no prompt is on record.",
+    "preview": "/media/library-05.preview.mp4",
+    "previewPoster": "/media/library-05.preview.jpg"
   },
   {
     "id": "library-06",
@@ -21,7 +23,9 @@
     "duration": 15.041667,
     "bytes": 19633049,
     "model": "minimax-h3-router",
-    "description": "A cloaked forest spirit fights, then unfolds into a petal-headed creature with one glowing eye among floating orbs. Machine generated with MiniMax H3 (open weights) and upscaled, outside Camera; no prompt is on record."
+    "description": "A cloaked forest spirit fights, then unfolds into a petal-headed creature with one glowing eye among floating orbs. Machine generated with MiniMax H3 (open weights) and upscaled, outside Camera; no prompt is on record.",
+    "preview": "/media/library-06.preview.mp4",
+    "previewPoster": "/media/library-06.preview.jpg"
   },
   {
     "id": "library-07",
@@ -33,7 +37,9 @@
     "duration": 15.041667,
     "bytes": 24207733,
     "model": "minimax-h3-router",
-    "description": "An antlered water spirit raises rings of pink light orbs in a painted forest lake; the camera circles it. Machine generated with MiniMax H3 (open weights) and upscaled, outside Camera; no prompt is on record."
+    "description": "An antlered water spirit raises rings of pink light orbs in a painted forest lake; the camera circles it. Machine generated with MiniMax H3 (open weights) and upscaled, outside Camera; no prompt is on record.",
+    "preview": "/media/library-07.preview.mp4",
+    "previewPoster": "/media/library-07.preview.jpg"
   },
   {
     "id": "library-02",
@@ -67,7 +73,9 @@
       "prompt": "A sculptural chrome chair in a quiet concrete gallery. Soft afternoon light falls across the floor.\n\nClose-up of the subject.\n\nHigh angle looking down at the subject.\n\nSlow orbit around the subject.",
       "costUsd": 0.85,
       "generatedAt": "2026-09-19T20:42:38.485Z"
-    }
+    },
+    "preview": "/media/library-02.preview.mp4",
+    "previewPoster": "/media/library-02.preview.jpg"
   },
   {
     "id": "library-04",
@@ -101,6 +109,8 @@
       "prompt": "A solitary red cabin on a rocky island. Early morning mist, still water and a soft overcast sky.\n\nMacro detail of the subject's surface.\n\nWorm's eye view from ground level.\n\nDolly in toward the subject.",
       "costUsd": 0.3,
       "generatedAt": "2026-09-19T20:46:09.015Z"
-    }
+    },
+    "preview": "/media/library-04.preview.mp4",
+    "previewPoster": "/media/library-04.preview.jpg"
   }
 ]

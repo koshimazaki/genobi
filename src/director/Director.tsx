@@ -41,7 +41,13 @@ import "./editor-layout.css";
 // After editor-layout.css: its stacked grid must give way to these.
 import "./program-fit.css";
 
-export default function Director({ active = true }: { active?: boolean }) {
+export default function Director({
+  active = true,
+  initializeProject = active,
+}: {
+  active?: boolean;
+  initializeProject?: boolean;
+}) {
   const shell = useShell();
   const { bundle, history, drafts } = useStudio((s) => s.director);
   const { advanced, selected, addTrackOpen } = useStudio((s) => s.workspace);
@@ -62,7 +68,7 @@ export default function Director({ active = true }: { active?: boolean }) {
   const setWorkingFile = (workingFile: boolean) =>
     actions.operations({ workingFile });
   const connection = usePageKey();
-  const directorRuntime = useDirectorRuntime(bundle, active);
+  const directorRuntime = useDirectorRuntime(bundle, active, initializeProject);
   const {
     canvas,
     runtime,

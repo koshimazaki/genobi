@@ -31,7 +31,3 @@ test/ltx/
 
 # TypeScript incremental build state
 *.tsbuildinfo
-
-# Python bytecode from the comfy-build and workflow helpers
-__pycache__/
-*.pyc

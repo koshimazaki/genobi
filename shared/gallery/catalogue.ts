@@ -133,8 +133,9 @@ export const NOT_IN_GALLERY: ReadonlySet<string> = new Set([
 ]);
 
 /**
- * A mix preview that is not at its cut's size: the Dimensions mix card plays
- * the owner's upscaled render (30 October 2026), at 1920 × 1080.
+ * A full gallery render that is not at its cut's size: Dimensions mix uses
+ * the owner's upscaled render (30 October 2026), at 1920 × 1080. These are
+ * watch/embed dimensions, independent of the lightweight card encode.
  */
 const MIX_PREVIEW_SIZE: Readonly<
   Record<string, { width: number; height: number }>
@@ -153,6 +154,17 @@ function frameOf(aspect: AspectRatio) {
  * footage until the owner records the image and prompt that made it.
  */
 export function galleryMedia(template: HouseTemplate) {
+  const media = fullGalleryMedia(template);
+  if (!media) return undefined;
+  return {
+    ...media,
+    preview: media.video.replace(/\.mp4$/, ".preview.mp4"),
+    previewPoster: media.video.replace(/\.mp4$/, ".preview.jpg"),
+  };
+}
+
+/** Full files and measured dimensions stay canonical for sharing and imports. */
+function fullGalleryMedia(template: HouseTemplate) {
   const generation = template.generation;
   if (generation) {
     const clip = previews[generation.clip];

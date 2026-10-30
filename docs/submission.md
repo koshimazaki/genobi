@@ -14,45 +14,52 @@ holds to the repository.
 
 ## For the form
 
-Genobi is an open-source video studio for AI ninjas: the kind of workflow
-Higgsfield sells as a closed product, rebuilt so that the models, the agent
-and the 3D guidance can run on your own machine through Comfy, with paid cloud
-routes as an option rather than a requirement. One interface links a World
-Builder that turns a Three.js set and camera move into colour, depth and sound
-guidance, a camera panel that writes each model's own prompt language, FLUX 3
-Image Klein box edits, LTX-2.5 with our AKUSPACE acoustic-space LoRA so the
-soundtrack carries the room, a frame-accurate Editor timeline and the Dual
-Swords frame editor, all over one editable project that exports as a bundle.
+**Genobi — build the scene, shape the sound, make the cut.**
 
-It is built for agents as much as for people. The studio's operations are 44
-MCP tools, a terminal CLI and 17 skills, with a capability map that tells an
-agent what runs free on the machine, what needs a local open model, what runs
-on Comfy Cloud and what costs money. Hermes, held to open models, or the
-person's own Claude Code, works the same project the person edits, reads their changes
-back before its next pass, and spends nothing until the person approves a
-quote. The repository says what was verified and on which date, what is only
-built, and how each example was made: https://github.com/koshimazaki/Genobi
+Genobi is an open-source video studio built around ComfyUI, with MIT-licensed
+original code, downloadable workflows and an open-weight local path. Direct
+shots with model-specific camera controls; build Three.js worlds inside our
+custom ComfyUI nodes; turn their captures into LTX video; and shape the sound
+from the same scene's geometry and materials. Edit the result with an agent
+on a shared, editable timeline, then correct its timing and send your changes
+back for the next pass.
+
+The new adaptive-reverb demonstration connects agent-built Three.js scenes,
+local FLUX 3 Image Klein look frames, LTX-2.5 Layout-to-Render and our CPU
+acoustics/reverb nodes. The camera travels through different spaces while the
+music takes on their estimated acoustics. Our separately trained AKUSPACE
+LoRA explores another route: room-conditioned generated sound. These are
+separate audio options, with comparison results and limitations recorded in
+[the 30 October evidence](adaptive-reverb-proof.md).
+
+Director and the frame-accurate Editor, Dual Swords, the Taste reference
+library, licence information, project memory and the MCP/CLI agent tools make
+this a reusable studio. Hermes can use a local open model; Claude Code and
+Codex are optional harnesses. Comfy Cloud, Comfy Router and BFL provide
+optional hosted routes, with explicit approval before paid agent operations.
+The hosted client and local studio have different capabilities; the local
+studio provides the local model, voice and agent integrations.
+
+Original application code is open source. Model weights, third-party
+components and example assets retain their own licences. API-generated or
+API-upscaled examples are identified separately from open-workflow evidence.
 
 ## How we read the competition
 
 The challenge facts below are the ones this wiki recorded when it read the
 official pages; nothing here is a rule we inferred.
 
-- **Categories.** Comfy's revised brief of 15 October (page checked 16
-  October) has two main categories, **Most Innovative** and **Most Viral**,
-  alongside **Open Weights Only**, plus model-provider bonus categories; its
-  FAQ says an entry can be considered for a main category and a provider
-  bonus. Winning several main prizes or several bonuses is not established.
-  The Most Viral rule text is "delightfully shareable".
-- **Open Weights Only.** It excludes partner nodes and APIs. A Comfy
-  team member confirmed on 19 October that non-commercial weights such as
-  LTX-2.5 qualify, and so do regionally restricted ones such as H3: "the only
-  thing that matters is that you can download the models and run them
-  locally". So for this category
-  the open path is a Comfy workflow of an open model, on a local ComfyUI or on
-  Comfy Cloud; an open model called through Comfy Router is still an API call.
-  The capability map marks every route and every model's weights for this
-  reason.
+- **Categories, checked live 30 October.** The official page now lists
+  **Best Overall** (every entry is automatically considered), **Most
+  Innovative**, **Most Viral**, **Open Weights Only**, and ten runner-up
+  awards. Its ecosystem bonuses are **VFX Workflow Built with LTX**,
+  **Built with FLUX**, and **Built with MiniMax H3**. Do not assume that one
+  submission can win every category or bonus.
+- **Open Weights Only.** The current wording is "No partner nodes or
+  closed-source APIs, open-weights models only." Present the local ComfyUI
+  demonstration and its actual provenance as the evidence. Optional Router,
+  BFL and hosted-agent examples are not evidence of an entirely local open
+  route. Downloadable weights still retain their own model licences.
 - **The LTX bonus.** LTX VFX is a $2,000 cash bonus and requires LTX as the
   core video model. In Genobi,
   LTX-2.5 is the video model of the Product video, Character piece and
@@ -63,21 +70,26 @@ official pages; nothing here is a rule we inferred.
   We add that, because Comfy already has shader and 3D nodes,
   novelty has to rest on the demonstrated integration, not a single node.
   The next section is that explanation.
-- **App requirements**, as the official page listed them on 19 October:
-  built with the Comfy Developer Platform (Router and/or SDK); an open-source
-  licence and enough setup detail to run it locally; other tools explained in
-  the demo video; lawful, SFW, no unlicensed IP or likenesses; permission for
-  the sponsors to feature the work; one submission per person. The full page,
-  checked 16 October, also asks for a demo of at most two minutes, workflows
-  and local setup instructions in the repository and a social post tagged
-  `#OpenSourceHiggsfield`, and encourages a hosted link.
+- **App requirements, checked live 30 October.** The work must be built
+  with ComfyUI and may run entirely locally, on Comfy Cloud, the Developer
+  Platform, Comfy Router, the Comfy SDK, or a mix. Developer Platform hosting
+  is no longer mandatory in the live wording. The public repository must
+  include the code, workflow files, an open-source licence and local setup
+  instructions. Other tools and techniques must be explained in the demo.
+  The entry must be lawful and SFW, with no unlicensed IP or likenesses;
+  submission permits the sponsors to feature it with credit. One entry per
+  person. A demo of at most two minutes and a social post tagged
+  `#OpenSourceHiggsfield` are required; a hosted link is encouraged.
+
+Source: [official challenge page](https://comfy.org/open-source-higgsfield).
+The [submission form](https://form.typeform.com/to/V1dSQrkS) asks for a demo
+under two minutes and says to expect 5–10 runs if supplying a judging link.
 
 ## Where the innovation is
 
 What we read as new is not one model but the links between the parts, each of
-which an agent can drive. The edge is volume and combination: each part below
-is new on its own, with its own interface, and together they make a studio
-that is both practical and new:
+which an agent can drive. The case for innovation is the combination and the interfaces that make it
+usable; we do not claim that no other tool has any individual component:
 
 - **The Editor and the loop.** A frame-accurate timeline where an agent and
   the person edit the same project, and the agent reads back the person's
@@ -91,8 +103,8 @@ that is both practical and new:
   on LTX-2.5, with custom ComfyUI nodes built for them.
 - **The camera in each model's words**, as an interface and as part of every
   workflow (below).
-- **The whole Comfy platform.** Comfy Cloud, a Developer Platform deployment
-  and Comfy Router inside the studio, alongside BFL's API, chosen per
+- **The whole Comfy platform.** Comfy Cloud and Comfy Router inside the studio, plus
+  a Developer Platform deployment target, alongside BFL's API, chosen per
   workflow ([run location](capabilities.md#run-location-and-workflow-swap)).
 
 The five links below are where those parts meet.
@@ -104,13 +116,13 @@ The five links below are where those parts meet.
    AKUSPACE preset LTX should use, and convolve a voice with the same room
    (run once on a local ComfyUI on 29 October, no GPU model involved). The
    [scene builder](capabilities.md#scenes-as-data-and-room-acoustics) maps
-   agent-built rooms to those presets (verified 24 October). Feeding a capture
-   into LTX through Layout-to-Render is [planned](capabilities.md#layout-to-render-from-a-world-builder-take);
-   the adapter is not in the Comfy Cloud catalogue yet
-   ([status](layout-to-render-status.md)).
-2. **AKUSPACE sound.** Our LoRA on LTX-2.5 generates the shot's sound in the
-   room it is set in ([Acoustic Space](capabilities.md#ltx-25-open-workflow-and-acoustic-space),
-   implemented). [Space](capabilities.md#space-an-akuspace-room-on-existing-sound)
+   agent-built rooms to those presets (verified 24 October). The 30 October GPU runs now demonstrate capture → Klein look frame →
+   LTX Layout-to-Render, with scene-derived CPU reverb in the graph
+   ([evidence](adaptive-reverb-proof.md)). This verifies the external ComfyUI
+   workflow, not the one-click studio route or a Cloud deployment.
+2. **AKUSPACE sound.** Our LoRA on LTX-2.5 explores room-conditioned sound. Separate
+   i2v/audio experiments ran on 30 October ([evidence](adaptive-reverb-proof.md));
+   combining that LoRA with Layout-to-Render remains untested. [Space](capabilities.md#space-an-akuspace-room-on-existing-sound)
    puts the same rooms on sound that already exists, in timed segments,
    measured within 2% of each preset's RT60 (verified 24 October).
 3. **The agent-driven studio.** One plugin serves Hermes, Claude Code and
@@ -154,7 +166,7 @@ person or agent never has to learn each one's prompt dialect:
 
 ### The camera, in each model's own words
 
-The camera panel is the part no other tool has. A camera choice is written
+The camera panel makes the model-specific guidance accessible in one interface. A camera choice is written
 into the prompt in the wording each model's own documentation asks for, and
 the same wording goes into the studio's requests and into the ComfyUI
 workflows (`composePrompt` writes it for both adapters). Each guide was read
@@ -163,9 +175,9 @@ and is cited, with the date checked, in [camera wording](camera-wording.md):
 - **FLUX 3 image and FLUX 3 video** follow BFL's camera prompting guide. The
   Three.js diagram beside the panel illustrates each shot size, angle and move.
 - **LTX-2.5** follows the LTX-2.5 prompt guide. The World Builder's 3D scene
-  adds guidance for composition and camera beyond words; feeding a capture
-  through Layout-to-Render is
-  [planned](capabilities.md#layout-to-render-from-a-world-builder-take).
+  adds guidance for composition and camera beyond words; a capture
+  through Layout-to-Render ran in the external ComfyUI workflow on 30 October
+  ([evidence](adaptive-reverb-proof.md)); the studio handoff remains separate.
 - **MiniMax H3** follows MiniMax's base prompt guide (section 4.3, camera
   motion), pinned to a commit. H3 gets no 3D guidance of its own, only the
   camera panel.
@@ -203,13 +215,16 @@ Each line names the capability rows; their status is in
   and without AKUSPACE, FLUX 3 Image Klein, MiniMax H3 and Music 3, plus
   Hermes on an open model served on this machine
   ([local Hermes](capabilities.md#hermes-on-a-local-model-server)). Router, BFL
-  and Nous routes call hosted APIs and do not count, whatever the model's
-  licence; the capability map marks them `api`. These workflow routes are implemented; none has a dated successful
-  run inside the studio yet (see [what works](#what-works)).
+  and Nous examples are kept separate from this local-route evidence; the
+  capability map marks those routes `api`. The 30 October adaptive-reverb run provides local-weight Klein and LTX
+  evidence outside the studio; a complete Hermes pass with a local model and
+  only open generation remains unverified (see [what works](#what-works)).
 - **LTX bonus.** LTX-2.5 is the core video model of three house templates
   ([templates](capabilities.md#product-video-character-piece-and-audio-visual))
   and of [Acoustic Space](capabilities.md#ltx-25-open-workflow-and-acoustic-space);
   the camera panel speaks the LTX prompt guide's wording.
+- **Best Overall.** The complete creative loop: generation, scene guidance,
+  sound, editing, agent feedback and reusable projects.
 - **Most Innovative.** The five points above.
 - **Most Viral.** The [gallery](capabilities.md#template-gallery) with watch and
   embed pages, the [Dimensions mix](capabilities.md#dimensions-mix), remixable
@@ -278,9 +293,14 @@ outside the repository; only the first ran open weights:
   [World Builder nodes](capabilities.md#world-builder-nodes-in-comfyui) on a
   local ComfyUI.
 
-The same 26 October campaign recorded two failures, not resubmitted: Comfy
-Cloud rejected the open Klein workflow's model filename, and Acoustic Space
-returned success with no output.
+- 30 October: external ComfyUI GPU runs of Three.js capture → local Klein
+  → LTX-2.5 Layout-to-Render, CPU room reverb in the graphs, and separate
+  AKUSPACE i2v/audio experiments ([evidence](adaptive-reverb-proof.md)).
+
+The 26 October campaign recorded two failures, not resubmitted in that
+campaign: Comfy Cloud rejected the open Klein workflow's model filename, and
+Acoustic Space returned success with no output. The later external GPU
+success does not establish that those Cloud routes have been repaired.
 
 ### Deployed behaviour
 
@@ -297,6 +317,9 @@ returned success with no output.
 
 ### Implemented, not yet shown working
 
+The capability map records studio-route status; external ComfyUI proof does
+not automatically verify those adapters. The 30 October evidence above
+supersedes older GPU-run statements for the external workflow only.
 The capability map lists every feature marked implemented. The ones that
 carry the entry: the house templates and the anime teaser, the Falling room's
 Klein still, the open LTX-2.5 and Acoustic Space workflows, Klein, MiniMax H3

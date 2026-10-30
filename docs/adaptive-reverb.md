@@ -43,8 +43,7 @@ tried. Do not attribute the CPU cut's sound to the LoRA.
 
 The older showcase overlays, preset RT60 labels and node diagram illustrate
 AKUSPACE concepts; they are not a trace of the graph that made this CPU cut.
-For the actual positive/negative prompts, seeds, four-shot mapping and all 23
-worked graph selectors, see the
+For the historical positive/negative prompts, seeds and four-shot mapping, see the
 [worked examples](https://github.com/koshimazaki/genobi/blob/main/examples/ltx-world/README.md).
 The examples distinguish recorded GPU evidence from the still-unverified
 Developer Platform deployment and studio generation handoff.
@@ -126,39 +125,30 @@ The project's media is about 16 MiB, each file under 25 MiB.
 
 ## How to regenerate a room
 
-The template generates nothing. The reusable [worked API collection](https://github.com/koshimazaki/Genobi/blob/main/workflows/ltx-world-builder.README.md)
-now separates the sound routes and retains the actual GPU graph settings.
-Use the [shared deployment guide](comfy-deploy.md) and its endpoint catalogue;
-those endpoints have not been tested on the Developer Platform.
-
-| Room / endpoint                 | Workflow                                                                                                                                                                                                                         | Sound route                                                       |
-| ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------- |
-| `cathedral`                     | [L2R cathedral](https://github.com/koshimazaki/Genobi/blob/main/workflows/world-builder-l2r-cathedral.README.md)                                                                                                                 | Original track → scene IR → CPU Reverb                            |
-| `party` (medium_room geometry)  | [L2R + a2v party](https://github.com/koshimazaki/Genobi/blob/main/workflows/world-builder-l2r-a2v.README.md)                                                                                                                     | Track in both sampler latents, original track through CPU Reverb  |
-| `studio` (small_room geometry)  | [L2R + a2v studio](https://github.com/koshimazaki/Genobi/blob/main/workflows/world-builder-l2r-a2v-studio.README.md)                                                                                                             | Same CPU path                                                     |
-| `medium_room`, `small_room`     | [Medium-room dive](https://github.com/koshimazaki/Genobi/blob/main/workflows/ltx-i2v-dive-medium-room.README.md), [small-room dive](https://github.com/koshimazaki/Genobi/blob/main/workflows/ltx-i2v-dive-small-room.README.md) | i2v picture and generated audio; scene IR applied separately      |
-| `studio_cpu`, `studio_akuspace` | [i2v + track](https://github.com/koshimazaki/Genobi/blob/main/workflows/ltx-i2v-a2v.README.md), [AKUSPACE variant](https://github.com/koshimazaki/Genobi/blob/main/workflows/ltx-i2v-a2v-akuspace.README.md)                     | Mask 0 / external CPU treatment, or mask 0.5 / learned room audio |
+The template generates nothing, but it records where each room came from, so
+an agent can make one again:
 
 1. Read `REVERB_ROUTE` in `shared/templates/adaptive-reverb.ts` and the
-   [showcase record](director-bundle/showcase/adaptive-reverb/memory.json)
-   for the room, timing and intended preset. Party and studio are scene names,
-   mapped to medium_room and small_room; they are not new trained presets.
-2. Build and capture the matching room, keeping the full recipe. For L2R use
-   1024 × 576, 193 frames at 24 fps; create the look still from the take's
-   first frame at the same angle. Supply your own track slice and media.
-3. Fill a new API template with its documented placeholders. Use the CPU
-   L2R path first: its Acoustics → Reverb branch saves the scene IR and wet
-   audio. For whole-track transitions use [room-reverb.sh](https://github.com/koshimazaki/Genobi/blob/main/workflows/room-reverb.README.md),
-   which levels the weak IRs against the original dry track. The i2v CPU
-   graph requires that room treatment separately.
-4. Quote generation and get the owner's approval before running it
-   ([Quote, approve, then spend](capabilities.md#quote-approve-then-spend)).
-   The owner also starts the paid build/deploy. Do not retry an uncertain
-   submission. AKUSPACE at mask 0.5 can change the music, so use the original
-   track when preserving it matters; this is different from CPU convolution.
-5. Replace the slice in the Editor, or swap picture and soundtrack together,
-   update `durationSeconds`, listen against the dry source and check the cut
-   with `checkMix`.
+   [showcase record](director-bundle/showcase/adaptive-reverb/memory.json):
+   the room, its seconds in the cut, its preset, its trained RT60 and its
+   World Builder example set.
+2. Open that set in the 3D tab (or load it in World Builder's ComfyUI nodes)
+   and capture a take.
+3. Choose from the [three key workflows](comfy-deploy.md):
+   [Layout-to-video](https://github.com/koshimazaki/Genobi/blob/main/workflows/world-builder-l2r-a2v.README.md)
+   takes the capture, matching look reference and track; its studio variant is
+   an input preset of the same endpoint. For the demonstrated CPU soundtrack,
+   use the [local CPU reverb template](https://github.com/koshimazaki/Genobi/blob/main/workflows/world-builder-adaptive-reverb-cpu.README.md)
+   with the scene recipe and original track, then level/crossfade the exported
+   IRs with [room-reverb.sh](https://github.com/koshimazaki/Genobi/blob/main/workflows/room-reverb.README.md).
+   The separate [AKUSPACE i2v/a2v alternative](https://github.com/koshimazaki/Genobi/blob/main/workflows/ltx-i2v-a2v-akuspace.README.md)
+   learns room sound but partially regenerates the music at mask 0.5; it is
+   not the CPU cut's soundtrack. The two GPU workflows share one deployment;
+   CPU reverb runs locally. Quote and obtain owner approval before a paid
+   generation ([Quote, approve, then spend](capabilities.md#quote-approve-then-spend)).
+4. Replace the slice in the Editor, or swap `reverb-ltx.mp4` and
+   `reverb-track.mp3` together (the sound belongs to the picture), set their
+   `durationSeconds`, and check the cut with `checkMix`.
 
 ## How to repeat it
 
@@ -174,7 +164,7 @@ those endpoints have not been tested on the Developer Platform.
    the grid. Space.js targets take their centre; target boxes their top-left
    corner.
 6. **Render** with the in-page renderer:
-   `TEASER_URL="$LOCAL_STUDIO_URL" TEASER_EXAMPLE=adaptive-reverb TEASER_MBPS=24 node scripts/render-genobi-teaser.mjs out/`
+   `TEASER_URL=http://127.0.0.1:4317 TEASER_EXAMPLE=adaptive-reverb TEASER_MBPS=24 node scripts/render-genobi-teaser.mjs out/`
    (the master stays out of the repository), then a gallery copy under
    25 MiB and a cathedral room-scan poster at 10 seconds (native 1280 × 720).
 7. **Showcase.** Add a version to the record and run

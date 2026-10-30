@@ -21,6 +21,8 @@ import {
 import { SetupHarnesses, type HermesFields } from "./SetupHarnesses";
 import { SERVER_KEYS_CHANGED, type SetupDraft } from "./state";
 import "./connect.css";
+import { retryHostedStudio, useHostedStudioDetection } from "../hosted-studio";
+import { HostedAgentPairing } from "../agent/HostedAgentPairing";
 
 const SLOTS: readonly [KeyKind, string, string][] = [
   ["comfy", "Comfy API key", "comfyui-…"],
@@ -142,7 +144,50 @@ export const saveOnContinue = (local: boolean, choice: AgentRunnerChoice) =>
  * (`POST /api/settings/agent-runner`) on Sign in and on Continue. "Decide
  * later" with nothing saved before leaves the server's setting as it is.
  */
-export default function SetupConnect({
+export default function SetupConnect(
+  props: Parameters<typeof LocalSetupConnect>[0],
+) {
+  const hosted = useHostedStudioDetection();
+  const [localSetup, setLocalSetup] = useState(false);
+  if (hosted === "pending")
+    return <p role="status">Checking studio connection…</p>;
+  if (hosted === "failed")
+    return (
+      <div className="setup-connect">
+        <p role="status">
+          Could not check the studio connection. Retry, or continue with local
+          setup.
+        </p>
+        <button type="button" onClick={() => void retryHostedStudio()}>
+          Retry
+        </button>
+        {localSetup ? (
+          <LocalSetupConnect {...props} />
+        ) : (
+          <button
+            className="setup-primary"
+            type="button"
+            onClick={() => setLocalSetup(true)}
+          >
+            Continue with local setup
+          </button>
+        )}
+      </div>
+    );
+  if (!hosted) return <LocalSetupConnect {...props} />;
+  const runner = SETUP_RUNNERS.find((r) => r === props.draft.selection.agent);
+  return (
+    <div className="setup-connect">
+      <ConnectKeys keys={null} onKeys={() => {}} />
+      {runner && <HostedAgentPairing runner={runner} />}
+      <button className="setup-primary" type="button" onClick={props.next}>
+        Continue <span aria-hidden="true">↗</span>
+      </button>
+    </div>
+  );
+}
+
+function LocalSetupConnect({
   draft,
   onHermes,
   next,

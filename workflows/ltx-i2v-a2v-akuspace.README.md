@@ -1,48 +1,54 @@
-# LTX image + track + AKUSPACE
+# AKUSPACE: LTX-2.5 image + track to video
 
-`ltx-i2v-a2v-akuspace.json` is an API-format template. Reference image → two-stage LTX-2.5 sampling and ×2 latent upscale → video and generated audio. The supplied track is encoded into the audio latent before both samplers.
+## What it makes
 
-## Inputs
+`ltx-i2v-a2v-akuspace.json` uses a reference still and track in two-stage
+LTX-2.5 i2v/a2v sampling with ×2 latent upscale. The AKUSPACE acoustic-space
+LoRA gives the model its learned room sound. The track is encoded into the
+audio latent; mask 0.5 permits partial regeneration before both samplers.
+The video and a separate FLAC contain the model's decoded audio.
 
-Fill every token with the offline [materializer](ltx-world-builder.README.md#fill-a-template) before queueing. Seeds must become JSON numbers, not strings.
+## Inputs and placeholders
 
-| Placeholder           | Node.input           | Required value                                                                                            |
-| --------------------- | -------------------- | --------------------------------------------------------------------------------------------------------- |
-| `__PROMPT__`          | `12.text`            | Your scene/action/audio description; preserve the intended continuous camera move.                        |
-| `__NEGATIVE_PROMPT__` | `13.text`            | Your exclusions, including cuts, shot changes, artefacts and unwanted figures as appropriate.             |
-| `__TRACK_AUDIO__`     | `40.audio`           | Uploaded audio filename. L2R/a2v need a slice at least 193/24 seconds long; no private media is included. |
-| `__SEED_STAGE_1__`    | `50.noise_seed`      | JSON integer noise seed for the first sampler.                                                            |
-| `__VIDEO_PREFIX__`    | `65.filename_prefix` | Relative output prefix for the encoded video.                                                             |
-| `__AUDIO_PREFIX__`    | `66.filename_prefix` | Relative output prefix for decoded model audio.                                                           |
-| `__SEED_STAGE_2__`    | `80.noise_seed`      | JSON integer noise seed for the second sampler.                                                           |
-| `__REFERENCE_PNG__`   | `90.image`           | Uploaded owner-supplied still; for L2R, make it from the take’s first frame at the same angle.            |
+Use endpoint `akuspace` with the [offline materializer](README.md#fill-a-key-workflow).
+All media filenames are relative to ComfyUI `input/`; supply your own media.
 
-## Models and nodes
+| Token (surrounded by `__`)     | Input                                         |
+| ------------------------------ | --------------------------------------------- |
+| `REFERENCE_PNG`                | Reference still for the vocalist/room         |
+| `TRACK_AUDIO`                  | Track slice at least 193/24 seconds long      |
+| `PROMPT`, `NEGATIVE_PROMPT`    | Scene/action/audio description and exclusions |
+| `SEED_STAGE_1`, `SEED_STAGE_2` | Unsigned 64-bit JSON integers                 |
+| `VIDEO_PREFIX`, `AUDIO_PREFIX` | Relative output prefixes                      |
 
-Build set: `comfy-build/models/ltx-i2v.txt`. Model filenames and all sampling/widget values from the successful graph are retained:
+Sampling is 832 × 464, output 1664 × 928; 193 frames at 24 fps. The tested
+conditioning stays Room / small_room / Heavy / high, LoRA strength 1.0.
 
-- `akuspace-ltx25-v0.5.safetensors`
-- `gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors`
+## Models
+
+The shared [ltx-world-key set](../comfy-build/models/ltx-world-key.txt) pins:
+
 - `ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors`
+- `gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors`
+- `ltx-2.5-video-vae-bf16.safetensors`
 - `ltx-2.5-audio-vae-bf16.safetensors`
 - `ltx-2.5-latent-spatial-upscaler-x2-bf16-1.0.safetensors`
-- `ltx-2.5-video-vae-bf16.safetensors`
+- `akuspace-ltx25-v0.5.safetensors` (existing pinned Hugging Face revision and hash)
 
-Packs: Koshi-Nodes and ComfyUI-LTXVideo, plus ComfyUI core. Text-only graphs use core nodes only; the shared set also serves i2v. The video latent is 832 × 464, with 1664 × 928 output; 193 frames at 24 fps.
+Needs ComfyUI, pinned Koshi-Nodes and ComfyUI-LTXVideo. No World Builder
+Capture or CPU Reverb node is in this graph.
 
-## Run evidence, 30 October 2026
+## Recorded result
 
-The supplied GPU session’s WORKFLOWS.md lists `a2v-vocalist-akuspace` under **Worked**. The wooden studio vocalist turned and smiled. CPU and AKUSPACE versions gave the same picture. Evidence is from a rented RTX PRO 6000 (96 GB), ComfyUI 0.41.0; it has not been rerun here or on the Developer Platform. Private captures, stills and audio are not redistributed.
+On 30 October 2026, `a2v-vocalist-akuspace` produced the wooden-studio vocalist
+turning and smiling. The CPU and AKUSPACE experiments gave the same picture;
+AKUSPACE was the separate learned-audio alternative to the final v5 CPU
+comparison. Evidence is from an RTX PRO 6000 96 GB, ComfyUI 0.41.0.
+This port has not rerun it or verified a Developer Platform deployment.
 
-## Known limits
+## Limits
 
-- Audio mask 0.5, Room / small_room / Heavy / high are the tested values. AKUSPACE partially regenerates the music; it is not a transparent reverb effect. Only 0.5 was tried; 0.3 and 0.7 remain untried.
-- These are API templates for ComfyUI or the named Developer Platform deployment, not registered studio slots or proof of managed Comfy Cloud availability. L2R + AKUSPACE, cathedral a2v, Union Control and final-cut SeedVR2 upscale remain untried.
-
-## Fixes this depends on
-
-No Capture, Storyboard or Inputs node is in this graph, so the box’s 448 × 256 storyboard, 2 GiB Capture cap and Inputs downscale fixes do not gate it. Those fixes are included for the shared build’s L2R graphs.
-
-## How to repeat it
-
-Prepare the inputs above, fill the template, then follow the [shared deployment plan](../docs/comfy-deploy.md). Endpoint name: `studio_akuspace`. The owner starts every paid build, deploy and test generation.
+Mask 0.5 changes the music as well as the room sound; this is not transparent
+reverb processing. Other mask strengths and L2R stacked with AKUSPACE remain
+untried. The final CPU cut is not evidence that AKUSPACE made its soundtrack.
+No private media is included, and this API graph is not a registered studio slot.

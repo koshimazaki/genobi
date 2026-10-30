@@ -86,9 +86,13 @@ This directory is self-contained: Python imports only its own modules,
 and every class is prefixed `Director`. Tests: `python3 test_nodes.py` and `python3 test_reverb.py`.
 
 The Capture node decodes only uploaded PNG/WebM and matching PCM WAV files.
-It restricts paths to Comfy's input directory, bounds decoded memory, and hashes
+It restricts paths to Comfy's input directory, caps decoded takes at 2 GiB
+(including 193 frames at 1024 × 576), and hashes
 file contents for cache invalidation. Exported visual WebM and WAV are separate;
 use the combine node to mux a soundtrack. No audio file produces silence.
+Inputs shrinks large image batches to the 320M-value preview budget, keeping
+full-resolution source tensors unchanged; it still allows at most 241 RGB frames.
+FFprobe must accompany FFmpeg for WebM metadata checks.
 
 Comfy Cloud uses the external World Builder's downloads with supported Load
 Image/Load Video/Load Audio nodes. This custom node is for local installations;
@@ -102,18 +106,24 @@ Other frontend versions still need a smoke test.
 
 ## Comfy Developer Platform build and run
 
-The recipe in `comfy-build/` now installs this pack automatically for the
-`world-builder-l2r` set, from a pinned repository subfolder plus the reviewed
-`comfy-build/patches/world_builder.patch`. Combine it with `ltx-i2v` for the
-worked LTX family; follow `docs/comfy-deploy.md` for the shared deployment.
-No manual YAML append or scene-adapter build is needed for API execution.
+The recipe in `docs/comfy-deployment.md` writes `comfy-build.yaml` from
+`docker/runware-comfy/sources.lock`; it does not include this directory yet.
+After `sh docker/runware-comfy/scripts/prepare-comfy-build.sh ./comfy-work akuspace`:
 
-Capture allows a bounded **2 GiB** decoded RGB take, so 193 frames at
-1024 × 576 fit. Inputs downscales return previews over the 320M-value
-budget instead of refusing them; generated images are unchanged. These are
-the two GPU-session fixes, applied in this source and the pinned build patch.
-Storyboard's successful L2R cells are **448 × 256**, already in the new API
-templates. Tests: `python3 custom_nodes/director_world_builder/test_inputs.py`.
+1. `node scripts/build-scene-adapter.mjs` (only needed for the in-graph editor;
+   a headless run needs the Python files and `acoustics.json`).
+2. `cp -R custom_nodes/director_world_builder ./comfy-work/ComfyUI/custom_nodes/`
+3. Append under `definition.customNodes` in `./comfy-work/ComfyUI/comfy-build.yaml`:
+
+   ```yaml
+   - name: "director_world_builder"
+     source: "local"
+     localPath: "director_world_builder"
+   ```
+
+4. `cd ./comfy-work/ComfyUI && comfy build validate .`, then
+   `comfy build push --dry-run --models-dir ./models --custom-nodes-dir ./custom_nodes`
+   (the dry-run total should grow by this folder's zip only).
 
 To submit a job with a captured take, put the files under the install's
 `input/` folder at the paths the API workflow names, for example

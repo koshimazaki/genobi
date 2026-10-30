@@ -246,8 +246,8 @@ export default function Gallery({
             >
               <div className="clip-media">
                 <Clip
-                  url={source.url}
-                  poster={source.poster}
+                  url={source.preview ?? source.url}
+                  poster={source.previewPoster ?? source.poster}
                   label={source.label}
                   onOpen={() =>
                     setViewing({
