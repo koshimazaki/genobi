@@ -155,9 +155,9 @@
     {
       "id": "ltx-open-akuspace", "name": "LTX-2.5 open workflow and Acoustic Space", "status": "implemented",
       "where": "Camera · Model menu, LTX-2.5 · Open workflow and LTX-2.5 · Acoustic Space",
-      "description": "Comfy's LTX-2.5 graph as an open workflow, and the same graph with the AKUSPACE LoRA so the sound carries the room. Separate reusable i2v + track templates preserve audio mask 0 for external CPU room treatment or 0.5 for AKUSPACE, which can alter the music.",
+      "description": "Comfy's LTX-2.5 graph as an open workflow, and the same graph with the AKUSPACE LoRA so the sound carries the room.",
       "mcp": ["genobi_quote", "genobi_submit"], "cli": ["quote", "submit"],
-      "skills": ["genobi-akuspace", "audio-visual"], "docs": ["workflows/ltx-2-5-akuspace-t2v.README.md", "docs/camera-wording.md", "workflows/ltx-i2v-a2v.README.md", "workflows/ltx-i2v-a2v-akuspace.README.md", "docs/comfy-deploy.md"],
+      "skills": ["genobi-akuspace", "audio-visual"], "docs": ["workflows/ltx-2-5-akuspace-t2v.README.md", "docs/camera-wording.md"],
       "runs": [{ "route": "comfy-cloud", "models": ["ltx-2-5", "akuspace-lora"] }, { "route": "local-model", "models": ["ltx-2-5", "akuspace-lora"] }]
     },
     {
@@ -237,7 +237,7 @@
       "where": "3D · /world-builder and the 3D workspace",
       "description": "Build or edit a set from presets and primitives, frame a camera move, and capture colour, depth and sound as guidance for a video model.",
       "mcp": [], "cli": [],
-      "skills": ["genobi-3d", "world-builder"], "docs": ["docs/world-builder.md", "docs/world-builder-capture.md", "docs/world-builder-verification.md", "workflows/ltx-world-builder.README.md", "docs/comfy-deploy.md"],
+      "skills": ["genobi-3d", "world-builder"], "docs": ["docs/world-builder.md", "docs/world-builder-capture.md", "docs/world-builder-verification.md"],
       "runs": [{ "route": "local-free" }]
     },
     {
@@ -283,9 +283,9 @@
     {
       "id": "world-builder-nodes", "name": "World Builder nodes in ComfyUI", "status": "verified", "evidence": "2026-10-29 workflows/world-builder-acoustics.api.README.md#run-evidence-29-october-2026",
       "where": "Comfy · the director_world_builder pack in a local ComfyUI",
-      "description": "Capture, Acoustics, Storyboard and Reverb nodes: a take's frames, depth and canny, the room's AKUSPACE caption and a reverb from its geometry. The worked L2R release carries the 2 GiB Capture cap and large-preview downscale fixes.",
+      "description": "Capture, Acoustics, Storyboard and Reverb nodes: a take's frames, depth and canny, the room's AKUSPACE caption and a reverb from its geometry.",
       "mcp": [], "cli": [],
-      "skills": ["world-builder"], "docs": ["workflows/world-builder-acoustics.api.README.md", "docs/world-builder.md", "workflows/ltx-world-builder.README.md", "docs/comfy-deploy.md"],
+      "skills": ["world-builder"], "docs": ["workflows/world-builder-acoustics.api.README.md", "docs/world-builder.md"],
       "runs": [{ "route": "local-free" }]
     },
     {
@@ -465,12 +465,12 @@
       "runs": [{ "route": "paid-api", "models": ["flux-3-t2v"] }]
     },
     {
-      "id": "layout-to-render", "name": "Layout-to-Render from a World Builder take", "status": "verified", "evidence": "2026-10-30 workflows/world-builder-l2r-dive.README.md#run-evidence-30-october-2026",
+      "id": "layout-to-render", "name": "Layout-to-Render from a World Builder take", "status": "planned",
       "where": "3D · capture, then a Comfy workflow",
-      "description": "A World Builder colour take and matching look still drove LTX-2.5 Layout-to-Render on a rented GPU; reusable dive, cathedral and track-latent API graphs are saved. Studio registration and Developer Platform execution remain unverified.",
+      "description": "A Three.js playblast drives LTX-2.5 with the Layout-to-Render IC-LoRA from an art-directed first frame; no registered run yet.",
       "mcp": [], "cli": [],
-      "skills": [], "docs": ["docs/layout-to-render-status.md", "workflows/ltx-world-builder.README.md", "docs/comfy-deploy.md"],
-      "runs": [{ "route": "local-model", "models": ["ltx-2-5", "layout-ic-lora"] }, { "route": "comfy-cloud", "models": ["ltx-2-5", "layout-ic-lora"] }]
+      "skills": [], "docs": ["docs/layout-to-render-status.md"],
+      "runs": [{ "route": "comfy-cloud", "models": ["ltx-2-5", "layout-ic-lora"] }]
     },
     {
       "id": "genmod", "name": "Gen-Mod: edit frame 0, carry it through", "status": "planned",

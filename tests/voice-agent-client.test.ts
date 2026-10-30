@@ -1,6 +1,9 @@
 // The project prompt's client (issue #23): the agent status check, the open
 // project's copy handle and the session request, against stand-in fetches.
 import { describe, expect, it, vi } from "vitest";
+vi.mock("../src/hosted-studio", () => ({
+  readHostedStudio: async () => false,
+}));
 import {
   AGENT_HEADER,
   agentStatus,

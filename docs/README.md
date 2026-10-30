@@ -50,6 +50,8 @@ user action through every layer.
 - [Adaptive reverb](adaptive-reverb.md) — the fourth mix template, the 3D +
   LTX template: one LTX-2.5 (open weights) + AKUSPACE LoRA take through three
   rooms, its reverb changing with each, and Acoustic Space end to end.
+- [Adaptive reverb proof](adaptive-reverb-proof.md) — the 30 October runs: one
+  Three.js scene guiding LTX Layout-to-Render picture and scene-derived reverb.
 - [Showcase projects](director-bundle/showcase/README.md) — finished cuts kept
   version by version, with the memory behind each change:
   [Dimensions mix](director-bundle/showcase/dimensions-mix/README.md) v1 to v4,
@@ -99,11 +101,10 @@ user action through every layer.
 - [AKUSPACE ComfyUI in Docker](akuspace-docker.md) — a pinned GPU image with the
   Koshi AKUSPACE nodes and ComfyUI-LTXVideo, and its text-to-video,
   audio-to-audio and image-to-video workflows.
+- [Key LTX / World Builder deployment](comfy-deploy.md) — the exact two GPU
+  workflows, local CPU reverb, remote model sources and comfy-cli 1.24 commands.
 - [Comfy Developer Platform deployment](comfy-deployment.md) — the pins in
   `comfy-build/` as a `comfy build` recipe, how push treats weights, and one build versus several.
-
-- [Worked LTX / World Builder deployment](comfy-deploy.md) — reusable API
-  endpoints, offline checks, linux/nvidia release, costs and owner-run smoke tests.
 
 ## Camera
 
@@ -127,6 +128,8 @@ user action through every layer.
 - [Falling room](falling-room.md) — the owner's generated loop: a brief, the
   World Builder's falling take, one Klein still, the room sound, an edit kept
   through a revision, and the bundle. No longer a gallery card.
+- [Gallery and Camera media previews](media-previews.md) — light previews for cards;
+  the originals stay for projects, watch pages and downloads.
 - [Template gallery and sharing](template-gallery.md) — the first view: preview
   cards with model badges and the Open only toggle, the watch and embed pages, their link previews and headers.
 - [Studio shell](director-studio-shell.md) — the approved shell: one project,

@@ -3,18 +3,20 @@ model sets, so every Comfy build is made from one set of pins.
 
   python3 scripts/comfy_build_spec.py --name genobi-swap --sets swap > comfy-build.yaml
 
-The spec follows comfy-cli v1.23.0's format (its comfy-build-authoring skill):
+The spec follows comfy-cli v1.24.0's format:
 - baseComfyVersion is the ComfyUI commit in sources.lock.
 - A node pack with a patch is `source: local` (push zips and uploads the patched
   folder from custom_nodes/); every other pack is `repository` + `gitRef`.
-- A hash-pinned public model is a `sourceUri` at its pinned Hugging Face
-  revision with its SHA-256, which the builder fetches itself: nothing is
+- A hash-pinned model is a verified `sourceUri` (or pinned Hugging Face
+  revision) with its SHA-256, which the builder fetches itself: nothing is
   downloaded or uploaded from this machine.
 - A size-only (gated) model is `source: local`: the builder fetches anonymously
   and cannot reach a gated file, so push uploads it from models/, which must
   hold it first (models.py --gated-only).
 - pipDependencies is left empty: the builder installs ComfyUI's and each pack's
   requirements.txt and owns torch.
+- ltx-world-key requires remote, hash-pinned models and checks exact graph
+  coverage on every generation. Its World Builder node pack comes from this repo.
 """
 
 import argparse
@@ -46,7 +48,7 @@ def read_lock(path, sets):
 
 def node_entry(row):
     name = row["dest"].rsplit("/", 1)[-1]
-    if row["patch"] != "-" or row["sub"] != ".":
+    if row["repo"] == "local" or row["patch"] != "-" or row["sub"] != ".":
         return {"name": name, "source": "local", "localPath": name}
     return {"name": name, "repository": row["repo"], "gitRef": row["commit"], "source": "git"}
 
@@ -67,6 +69,13 @@ def build_spec(name, sets, lock=None, model_dir=None):
         raise ValueError("sources.lock needs exactly one core ComfyUI row")
     model_dir = model_dir or os.path.join(ROOT, "models")
     wanted = models.load_sets([os.path.join(model_dir, f"{name_}.txt") for name_ in sets])
+    if "ltx-world-key" in sets:
+        if sets != ["ltx-world-key"]:
+            raise ValueError("ltx-world-key is an exact standalone set")
+        if any(not model.sha256 for model in wanted):
+            raise ValueError("ltx-world-key requires remote models with SHA-256; local uploads are forbidden")
+        from workflow_checks import check_workflows
+        check_workflows(sets, model_dir)
     return {
         "schema": "comfy-build/1",
         "id": None,
@@ -108,7 +117,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--name", required=True)
     parser.add_argument("--sets", nargs="+", required=True)
-    parser.add_argument("--check-workflows", action="store_true", help="check worked API links and exact model coverage offline")
+    parser.add_argument("--check-workflows", action="store_true", help="check key graph links and exact model coverage offline")
     args = parser.parse_args()
     for name in args.sets:
         if not os.path.exists(os.path.join(ROOT, "models", f"{name}.txt")):

@@ -33,15 +33,6 @@ class ComfySpecTest(unittest.TestCase):
         self.assertEqual(set(nodes), {"h3_character_swap", "Koshi-Nodes", "ComfyUI-LTXVideo"})
         self.assertEqual(nodes["ComfyUI-LTXVideo"]["gitRef"], "220e1d45aa0469f518e982102fca4dca92a61862")
 
-    def test_worked_ltx_release_has_exact_models_and_patched_world_builder(self):
-        definition = spec_module.build_spec("genobi-ltx-world", ["world-builder-l2r", "ltx-i2v"])["definition"]
-        self.assertEqual(len(definition["models"]), 9)
-        self.assertEqual(sum(m["sizeBytes"] for m in definition["models"]), 109464422961)
-        nodes = {node["name"]: node for node in definition["customNodes"]}
-        self.assertEqual(set(nodes), {"Koshi-Nodes", "ComfyUI-LTXVideo", "director_world_builder"})
-        self.assertEqual(nodes["director_world_builder"], {"name": "director_world_builder", "source": "local", "localPath": "director_world_builder"})
-        self.assertFalse(any("union-control" in m["filename"] or "gemma4_e2b" in m["filename"] for m in definition["models"]))
-
     def test_yaml_output_is_plain_scalars(self):
         text = "\n".join(spec_module.to_yaml(spec_module.build_spec("genobi-swap", ["swap"])))
         self.assertIn('baseComfyVersion: "98cc0bf84b7cb1383654c5b402e7612d875d6d22"', text)

@@ -3,8 +3,13 @@ import { startAgentSession } from "../agent/api";
 import { showAgentSession } from "../agent/useAgentSession";
 import { AGENT_REQUEST_HEADER } from "../../shared/agent-session-events";
 import { RELAY_ID, RELAY_SECRET } from "../../shared/runner-relay";
+import {
+  SETUP_RUNNER_NAMES,
+  type SetupRunner,
+} from "../../shared/agent-runner-setting";
 interface Status {
   paired: boolean;
+  runner?: SetupRunner;
   available?: boolean;
   origin?: string;
   message?: string;
@@ -23,7 +28,7 @@ async function send(path: string, method = "GET", body?: unknown) {
   if (!r.ok) throw new Error(value.error || "Pairing request failed.");
   return value;
 }
-export function RunnerPairing() {
+export function RunnerPairing({ runner }: { runner?: SetupRunner } = {}) {
   const [hosted, setHosted] = useState<boolean>();
   const [status, setStatus] = useState<Status>();
   const [ticket, setTicket] = useState("");
@@ -32,6 +37,7 @@ export function RunnerPairing() {
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
   const [prompt, setPrompt] = useState("");
+  const matches = !runner || runner === status?.runner;
   const pendingStart = useRef<{ id: string; prompt: string } | undefined>(
     undefined,
   );
@@ -97,7 +103,7 @@ export function RunnerPairing() {
       </p>
       {hosted === true ? (
         <>
-          {status?.available && (
+          {status?.available && matches && (
             <>
               <label>
                 Prompt for your paired runner
@@ -263,6 +269,13 @@ export function RunnerPairing() {
         <p>Checking studio…</p>
       )}
       {status?.origin && <p>Hosted studio: {status.origin}</p>}
+      {status?.available && !matches && runner && (
+        <p role="alert">
+          {runner === "codex"
+            ? "Codex cannot run studio sessions yet. Choose Hermes or Claude Code in setup to start sessions through this pairing."
+            : `The paired studio runs ${status.runner ? SETUP_RUNNER_NAMES[status.runner] : "another agent"}. Choose ${SETUP_RUNNER_NAMES[runner]} in local setup to use it here.`}
+        </p>
+      )}
       {status?.message && <p role="status">{status.message}</p>}
       {message && <p role="status">{message}</p>}
     </section>

@@ -278,7 +278,7 @@ it.skipIf(!hasFfprobe)(
         "stream=codec_type",
         "-of",
         "json",
-        `public${media.video}`,
+        `public${media.preview}`,
       ]);
       if (JSON.parse(result.toString()).streams.length)
         audible.push(template.id);

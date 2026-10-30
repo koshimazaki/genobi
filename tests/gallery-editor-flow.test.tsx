@@ -7,31 +7,53 @@ import type { Project } from "../shared/director/types";
 import { mixTemplates } from "../shared/templates/catalogue";
 import { studioStore } from "../src/studio/store";
 import { useStudio } from "../src/studio/useStudio";
-import { StudioPanel } from "../src/studio/ShellContext";
+import { StudioPanel, useShell } from "../src/studio/ShellContext";
 import StudioShell from "../src/studio/StudioShell";
+import { useDirectorRuntime } from "../src/director/useDirectorRuntime";
+import { loadMixTemplate } from "../src/director/mix-template";
 
 // Keep the real shell, gallery, drawer, actions, store and URL navigation.
 // Media loaders stand in for network/decoders, which jsdom cannot run.
-vi.mock("../src/App", () => ({ default: () => null }));
+vi.mock("../src/App", () => ({
+  default: () => (
+    <StudioPanel id="header">{useShell()?.navigation}</StudioPanel>
+  ),
+}));
 vi.mock("../src/scrolls/Scrolls", () => ({ default: () => null }));
+vi.mock("../src/director/useProjectCopy", () => ({ useProjectCopy: () => {} }));
+vi.mock("../src/director/renderer", () => ({ DirectorRenderer: class {} }));
 vi.mock("../src/director/Director", () => ({
-  default: () => {
+  default: ({
+    active,
+    initializeProject,
+  }: {
+    active: boolean;
+    initializeProject: boolean;
+  }) => {
     const state = useStudio((s) => s);
+    useDirectorRuntime(state.director.bundle, active, initializeProject);
     return (
-      <StudioPanel id="stage">
-        <output
-          data-open-project={state.director.bundle?.project.id}
-          data-editor={state.workspace.advanced}
-        />
-      </StudioPanel>
+      <>
+        <StudioPanel id="stage">
+          <output
+            data-open-project={state.director.bundle?.project.id}
+            data-editor={state.workspace.advanced}
+          />
+        </StudioPanel>
+        {state.director.bundle && (
+          <StudioPanel id="tools">
+            <p>Project tools ready</p>
+          </StudioPanel>
+        )}
+      </>
     );
   },
 }));
 vi.mock("../src/director/mix-template", () => ({
-  loadMixTemplate: async (t: { id: string }) => ({
+  loadMixTemplate: vi.fn(async (t: { id: string }) => ({
     project: { ...structuredClone(studio), id: t.id } as unknown as Project,
     files: new Map(),
-  }),
+  })),
 }));
 vi.mock("../src/director/showcase", async (original) => ({
   ...(await original<typeof import("../src/director/showcase")>()),
@@ -83,8 +105,34 @@ afterEach(() => {
   root = undefined;
   document.body.replaceChildren();
   vi.restoreAllMocks();
+  vi.clearAllMocks();
   vi.unstubAllGlobals();
 });
+
+it.each(["/?workspace=tools", "/"])(
+  "initializes Project Tools on a fresh visit from %s, deferring media on Gallery",
+  async (url) => {
+    history.replaceState(null, "", url);
+    root = createRoot(document.body.appendChild(document.createElement("div")));
+    await act(async () => root!.render(<StudioShell />));
+    if (url === "/") {
+      expect(loadMixTemplate).not.toHaveBeenCalled();
+      expect(studioStore.getState().director.bundle).toBeUndefined();
+      await act(async () =>
+        document
+          .querySelector<HTMLButtonElement>('[data-preset-button="tools"]')!
+          .click(),
+      );
+    }
+    expect(loadMixTemplate).toHaveBeenCalledOnce();
+    expect(studioStore.getState().director.bundle?.project.id).toBe(
+      "dimensions-mix",
+    );
+    expect(
+      document.querySelector('[data-panel="tools"]')!.textContent,
+    ).toContain("Project tools ready");
+  },
+);
 async function drawer(name: string) {
   root = createRoot(document.body.appendChild(document.createElement("div")));
   await act(async () => root!.render(<StudioShell />));

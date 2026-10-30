@@ -45,7 +45,7 @@ export default function DrawerOutput({
             src={result}
             controls
             playsInline
-            preload="metadata"
+            preload="none"
             aria-label={`Your ${template.name} result`}
           />
         ) : media ? (
@@ -55,7 +55,7 @@ export default function DrawerOutput({
             poster={media.poster}
             controls={!line}
             playsInline
-            preload="metadata"
+            preload="none"
             aria-label={`${template.name} preview`}
           />
         ) : (

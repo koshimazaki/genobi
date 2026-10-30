@@ -8,6 +8,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { AgentSession } from "../shared/agent-session";
 import { REGENERATE_INSTRUCTION_MAX } from "../shared/director/regenerate";
 import { base } from "./house-template-fixtures";
+vi.mock("../src/hosted-studio", () => ({
+  readHostedStudio: async () => false,
+}));
 
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), {

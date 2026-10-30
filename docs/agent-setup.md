@@ -11,7 +11,16 @@ verification record are on that page.
 
 Off unless configured, in setup or in the environment.
 
-**From setup.** The studio's setup has a Connect step: the provider keys, one
+**Hosted setup.** Choosing Hermes, Claude Code or Codex opens pairing in both
+Connect and the summary, with **Open local studio** and the README's **Run
+locally** instructions. Choose and sign in to that agent locally, create a code
+here, then paste and confirm it in local Settings → **Pair hosted and local
+Genobi**. Keep that studio running. Codex uses its external plugin; studio
+sessions support Hermes and Claude Code. A different paired agent is identified
+before offering a start. Cloud generation needs no pairing. See
+[runner pairing](runner-pairing.md).
+
+**From local setup.** The studio's setup has a Connect step: the provider keys, one
 row per harness (Claude Code, Hermes, Codex) saying whether it is installed and
 signed in, and a **Sign in** button that opens the harness's own login in macOS
 Terminal (`claude auth login`, `codex login`, or

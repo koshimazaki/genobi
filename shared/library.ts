@@ -36,6 +36,8 @@ function readClip(entry: unknown): Source | null {
     label,
     url,
     poster,
+    preview,
+    previewPoster,
     width,
     height,
     duration,
@@ -77,6 +79,12 @@ function readClip(entry: unknown): Source | null {
     origin: "sample",
     ...(typeof poster === "string" && poster.startsWith("/media/")
       ? { poster }
+      : {}),
+    ...(typeof preview === "string" && preview.startsWith("/media/")
+      ? { preview }
+      : {}),
+    ...(typeof previewPoster === "string" && previewPoster.startsWith("/media/")
+      ? { previewPoster }
       : {}),
     ...(setup && typeof setup === "object" && !Array.isArray(setup)
       ? { setup: readSetup(setup as LibrarySetup) }

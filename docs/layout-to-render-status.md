@@ -11,6 +11,15 @@ using a Three.js playblast as the driver and an art-directed image derived
 from its first frame. This is separate from text-to-video and from the older
 pose/Union Control Gen-Mod graphs.
 
+## Update: external GPU proof, 30 October
+
+The workflow has now run in an independently configured ComfyUI on a rented
+96 GB GPU: World Builder capture → local Klein look frame → LTX-2.5
+Layout-to-Render, including scene-derived CPU reverb and two shots with music
+in the audio latent. See [the evidence and limits](adaptive-reverb-proof.md).
+This supersedes the pending external GPU run below, but does not resolve the
+26 October Cloud catalogue gap or verify Genobi's automatic studio handoff.
+
 ## Exact supplied workflow
 
 `LTX-2.5_ICLoRA_Layout_To_Render_Two_Stage_Distilled.json` contains seven
@@ -59,13 +68,3 @@ The existing Docker image pins the LTX node pack to
 check. It still needs this adapter and a task-specific API graph. Its earlier
 verification was on CPU; a GPU run on a Comfy deployment built from
 `comfy-build/` (the `layout-to-render` set) is pending. No new Layout-to-Render GPU submission was made during this check.
-
-## Worked API graphs, 30 October 2026
-
-The later rented-GPU session succeeded with the enhancer omitted, the exact
-BF16 Layout-to-Render weights and references matched to the take's angle.
-The [reusable dive graph](https://github.com/koshimazaki/Genobi/blob/main/workflows/world-builder-l2r-dive.README.md#run-evidence-30-october-2026)
-records that evidence; the [deployment plan](comfy-deploy.md) includes the
-cathedral and L2R + audio-latent variants. This updates GPU-workflow status,
-not the earlier authenticated Cloud catalogue result. Studio registration,
-managed Cloud availability and Developer Platform execution remain unverified.

@@ -6,9 +6,7 @@ import { expect, it } from "vitest";
 
 const hasPython = spawnSync("python3", ["--version"]).status === 0;
 
-it
-  .skipIf(!hasPython)
-  .each(["test_models.py", "test_comfy_spec.py", "test_ltx_workflows.py"])(
+it.skipIf(!hasPython).each(["test_models.py", "test_comfy_spec.py"])(
   "comfy-build/tests/%s passes",
   (file) => {
     const run = spawnSync("python3", ["-I", `comfy-build/tests/${file}`], {

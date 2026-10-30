@@ -49,6 +49,15 @@ def model(sha=SHA, size=len(DATA)):
 
 
 class ModelsTest(unittest.TestCase):
+    def test_verified_remote_source_uri_is_preserved_and_requires_hash(self):
+        url = "https://huggingface.co/org/repo/resolve/main/sub/file.safetensors?download=true"
+        row = f"loras org/repo {REV} sub/file.safetensors {len(DATA)} {SHA} {url}"
+        self.assertEqual(models.parse_models(row)[0].url, url)
+        for bad in (row.replace(SHA, "-"), row.replace("https://", "http://"),
+                    row.replace("huggingface.co", "other.invalid"), row.replace("/org/repo/resolve/", "/other/repo/resolve/")):
+            with self.assertRaises(ValueError):
+                models.parse_models(bad)
+
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.root = self.tmp.name

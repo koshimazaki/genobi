@@ -71,10 +71,10 @@ afterEach(() => {
   vi.clearAllMocks();
   vi.unstubAllGlobals();
 });
-async function mount(withCanvas = false) {
-  function Harness() {
+async function mount(withCanvas = false, active = true) {
+  function Harness({ active }: { active: boolean }) {
     const current = useStudio((s) => s.director.bundle);
-    const runtime = useDirectorRuntime(current, false);
+    const runtime = useDirectorRuntime(current, active);
     const transport = useDirectorTransport(runtime, current);
     return (
       <>
@@ -86,8 +86,30 @@ async function mount(withCanvas = false) {
     );
   }
   root = createRoot(document.body.appendChild(document.createElement("div")));
-  await act(async () => root!.render(<Harness />));
+  await act(async () => root!.render(<Harness active={active} />));
+  return async (active: boolean) => {
+    await act(async () => root!.render(<Harness active={active} />));
+  };
 }
+
+it("fetches no hidden project media on Gallery, then loads the full project on opening Editor", async () => {
+  const activate = await mount(false, false);
+  expect(loadMixTemplate).not.toHaveBeenCalled();
+  expect(studioStore.getState().director.bundle).toBeUndefined();
+  // Inactive history changes defer their media too, keeping the latest URL.
+  await act(async () => go(editorLink("bloom-teaser")));
+  expect(loadMixTemplate).not.toHaveBeenCalled();
+  await activate(true);
+  expect(loadMixTemplate).toHaveBeenCalledExactlyOnceWith(
+    findMixTemplate("bloom-teaser"),
+  );
+  expect(studioStore.getState().director.bundle!.project.id).toBe(
+    "bloom-teaser",
+  );
+  await activate(false);
+  await activate(true);
+  expect(loadMixTemplate).toHaveBeenCalledTimes(1);
+});
 
 it("loads Dimensions mix on a fresh shared runtime", async () => {
   await mount();
@@ -95,6 +117,73 @@ it("loads Dimensions mix on a fresh shared runtime", async () => {
     "dimensions-mix",
   );
 });
+
+it.each(["failed", "cancelled"])(
+  "retries a %s template load when returning to Editor with a project already open",
+  async (outcome) => {
+    const activate = await mount();
+    const before = studioStore.getState().director.bundle;
+    let finish!: (value: Bundle) => void;
+    let fail!: (error: Error) => void;
+    vi.mocked(loadMixTemplate).mockImplementationOnce(
+      () =>
+        new Promise((resolve, reject) => {
+          finish = resolve;
+          fail = reject;
+        }),
+    );
+    await act(async () => go(editorLink("bloom-teaser")));
+    if (outcome === "failed") {
+      await act(async () => fail(new Error("Media unavailable")));
+      expect(document.querySelector("p")!.textContent).toBe(
+        "Media unavailable",
+      );
+      await activate(false);
+    } else {
+      // Gallery cancels this request even if the fetch eventually succeeds.
+      await activate(false);
+      await act(async () => finish(bundle("bloom-teaser")));
+    }
+    expect(studioStore.getState().director.bundle).toBe(before);
+    await activate(true);
+    expect(loadMixTemplate).toHaveBeenCalledTimes(3);
+    expect(studioStore.getState().director.bundle!.project.id).toBe(
+      "bloom-teaser",
+    );
+  },
+);
+
+it.each([editorLink("bloom-teaser"), showcaseLink("bloom-teaser", 1)])(
+  "keeps an imported project when reactivating the same template route: %s",
+  async (url) => {
+    history.replaceState(null, "", url);
+    const activate = await mount();
+    await act(async () => {
+      const state = studioStore.getState();
+      // Bundle import commits a different project without changing the URL.
+      state.actions.commit(bundle("imported-project"), state.director.bundle);
+    });
+    const imported = studioStore.getState().director.bundle;
+    await activate(false);
+    const address = new URL(location.href);
+    address.searchParams.set("workspace", "director");
+    history.replaceState(null, "", address);
+    await activate(true);
+    expect(studioStore.getState().director.bundle).toBe(imported);
+    expect(
+      vi.mocked(loadMixTemplate).mock.calls.length +
+        vi.mocked(loadShowcase).mock.calls.length,
+    ).toBe(1);
+    // A real template selection still wins, including while Gallery is open.
+    await activate(false);
+    await act(async () => go(editorLink("adaptive-reverb")));
+    expect(studioStore.getState().director.bundle).toBe(imported);
+    await activate(true);
+    expect(studioStore.getState().director.bundle!.project.id).toBe(
+      "adaptive-reverb",
+    );
+  },
+);
 
 it("honours an editor template URL after the Director is already mounted, including back navigation", async () => {
   await mount();
@@ -155,6 +244,28 @@ it("does not overwrite work with an earlier template load that finishes late", a
   expect(studioStore.getState().director.bundle!.project.id).toBe(
     "bloom-teaser",
   );
+});
+
+it("keeps an import that superseded a pending template load when the workspace reopens", async () => {
+  let resolve!: (b: ReturnType<typeof bundle>) => void;
+  const activate = await mount();
+  vi.mocked(loadMixTemplate).mockImplementationOnce(
+    () =>
+      new Promise((done) => {
+        resolve = done;
+      }),
+  );
+  await act(async () => go(editorLink("bloom-teaser")));
+  await act(async () => {
+    const state = studioStore.getState();
+    state.actions.commit(bundle("imported-project"), state.director.bundle);
+  });
+  const imported = studioStore.getState().director.bundle;
+  await act(async () => resolve(bundle("bloom-teaser")));
+  expect(studioStore.getState().director.bundle).toBe(imported);
+  await activate(false);
+  await activate(true);
+  expect(studioStore.getState().director.bundle).toBe(imported);
 });
 
 it("refuses a slow route load if an export started meanwhile, without aborting it", async () => {

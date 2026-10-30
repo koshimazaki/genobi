@@ -11,6 +11,7 @@ import type { RenderReport } from "../../shared/licensing/render-report";
 export function useDirectorRuntime(
   bundle: Bundle | undefined,
   active: boolean,
+  initializeProject = active,
 ) {
   const [status, setStatus] = useState("Loading example…"),
     [error, setError] = useState("");
@@ -32,6 +33,8 @@ export function useDirectorRuntime(
   const runtime = useRef<DirectorRenderer | null>(null),
     playback = useRef<Playback | null>(null),
     abort = useRef<AbortController | null>(null);
+  const seenRoute = useRef<string | undefined>(undefined);
+  const handledRoute = useRef<string | undefined>(undefined);
   const stop = useCallback(() => {
     playback.current?.cancel();
     abort.current?.abort();
@@ -41,15 +44,29 @@ export function useDirectorRuntime(
   // The local server's copy of this project, and agents' commands on it.
   useProjectCopy(bundle, setError);
   useEffect(() => {
+    // The shell mounts Director behind Gallery. Fetch full project media
+    // only when its workspace is opened, never during a poster-only visit.
+    if (!initializeProject) return;
     let request = 0;
     const navigate = async () => {
-      const ticket = ++request;
+      const search = location.search;
+      // Workspace switches change the URL too, but do not select a template.
+      // An imported project owns this workspace until a different route is chosen.
+      const params = new URLSearchParams(search);
+      params.delete("workspace");
+      const routeSearch = params.toString();
+      const changed = seenRoute.current !== routeSearch;
+      seenRoute.current = routeSearch;
       const state = studioStore.getState();
       const before = state.director.bundle;
+      if (before && !changed && handledRoute.current === routeSearch) return;
+      const ticket = ++request;
       try {
-        const route = directorRoute(location.search);
-        if (before && (!route.explicit || before.project.id === route.id))
+        const route = directorRoute(search);
+        if (before && (!route.explicit || before.project.id === route.id)) {
+          handledRoute.current = routeSearch;
           return;
+        }
         if (Object.values(state.operations).some(Boolean))
           throw new Error(
             "Wait for playback, import or export to finish first.",
@@ -57,11 +74,13 @@ export function useDirectorRuntime(
         const saved = state.director.drafts[route.id]?.bundle;
         const opened = saved ? { bundle: saved, note: "" } : await route.load();
         // A newer route or an edit while media loaded wins over this result.
-        if (
-          ticket !== request ||
-          studioStore.getState().director.bundle !== before
-        )
+        if (ticket !== request) return;
+        if (studioStore.getState().director.bundle !== before) {
+          // An import or edit superseded this load on purpose: the person's
+          // document owns the route now, so reopening must not retry it.
+          handledRoute.current = routeSearch;
           return;
+        }
         // An export or playback started during the fetch owns this renderer.
         // Replacing its bundle would dispose it and abort that operation.
         if (Object.values(studioStore.getState().operations).some(Boolean))
@@ -70,6 +89,9 @@ export function useDirectorRuntime(
           );
         if (before) state.actions.commit(opened.bundle, before);
         else state.actions.initialize(opened.bundle);
+        // A failed or cancelled load stays retryable on workspace reactivation.
+        // Once handled, the same URL must not replace a later bundle import.
+        handledRoute.current = routeSearch;
         if (opened.note) report(opened.note);
       } catch (e) {
         if (ticket === request) report(e);
@@ -83,7 +105,7 @@ export function useDirectorRuntime(
       request++;
       window.removeEventListener("popstate", navigate);
     };
-  }, []);
+  }, [initializeProject]);
   useEffect(() => {
     if (!bundle || !element) return;
     let cancelled = false;

@@ -74,8 +74,8 @@ export default function GalleryCard({
           onClick={(e) => onOpen(e.currentTarget)}
         >
           <PreviewVideo
-            video={media?.video}
-            poster={media?.poster}
+            video={media?.preview}
+            poster={media?.previewPoster}
             title={template.name}
             active={playing}
             sound={unmuted}

@@ -73,8 +73,9 @@ export default function JobMedia({
             key={attempt}
             url={job.resultUrl}
             label={job.description || "Your latest generation"}
-            // The reveal waits on the first frame, which metadata alone is not.
-            preload="auto"
+            // A new result's reveal needs its first frame. Revisiting saved
+            // results must not download every video before interaction.
+            preload={arrivedHere.current ? "auto" : "none"}
             onReady={() => setDecoded(true)}
             onError={() => setMediaError(true)}
             onOpen={onOpen}

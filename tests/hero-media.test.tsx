@@ -38,11 +38,11 @@ describe("the hero treats a finished job like a library clip", () => {
     expect(library).not.toContain("controls");
   });
 
-  it("still waits on the first frame, not just metadata, so the reveal ends", () => {
+  it("does not preload a saved result when revisiting the page", () => {
     const generated = renderToStaticMarkup(
       <JobMedia job={finished} onOpen={() => {}} />,
     );
-    expect(generated).toContain('preload="auto"');
+    expect(generated).toContain('preload="none"');
   });
 
   it("shows no player while the job is still running", () => {

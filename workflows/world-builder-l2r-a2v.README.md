@@ -1,56 +1,64 @@
-# Layout-to-Render + track, party
+# Layout-to-video: World Builder + LTX-2.5 + track
 
-`world-builder-l2r-a2v.json` is an API-format template. Colour take + reference look → Layout-to-Render → two-stage sampling and ×2 latent upscale. Capture → Acoustics → Reverb processes the original track independently and saves the IR and wet mix. The supplied track is encoded into the audio latent before both samplers.
+## What it makes
 
-## Inputs
+`world-builder-l2r-a2v.json` follows a World Builder colour take and a matching
+look reference through two-stage Layout-to-Render and ×2 latent upscale.
+The track enters the audio latent before both samplers with noise mask 0.
+A separate CPU Acoustics/Reverb branch processes the original track, saves the
+IR and wet mix, and supplies the video's soundtrack. No AKUSPACE LoRA is loaded;
+the Koshi prompt node uses the scene's acoustic description.
 
-Fill every token with the offline [materializer](ltx-world-builder.README.md#fill-a-template) before queueing. Seeds must become JSON numbers, not strings.
+## Inputs and placeholders
 
-| Placeholder           | Node.input           | Required value                                                                                                      |
-| --------------------- | -------------------- | ------------------------------------------------------------------------------------------------------------------- |
-| `__TRACK_AUDIO__`     | `40.audio`           | Uploaded audio filename. L2R/a2v need a slice at least 193/24 seconds long; no private media is included.           |
-| `__TAKE_WEBM__`       | `1.capture_file`     | Uploaded colour take filename relative to ComfyUI input/.                                                           |
-| `__RECIPE_JSON__`     | `1.recipe_json`      | The complete captured recipe as a JSON string: v1, 24 fps, 1024 × 576, 193 frames; keep the matching room geometry. |
-| `__DEPTH_WEBM__`      | `1.depth_file`       | Matching uploaded depth filename, or an empty string to omit depth.                                                 |
-| `__REFERENCE_PNG__`   | `8.image`            | Uploaded owner-supplied still; for L2R, make it from the take’s first frame at the same angle.                      |
-| `__PROMPT__`          | `30.value`           | Your scene/action/audio description; preserve the intended continuous camera move.                                  |
-| `__REVERB_SEED__`     | `10.seed`            | JSON integer seed for the scene IR.                                                                                 |
-| `__IR_PREFIX__`       | `11.filename_prefix` | Relative output prefix for the impulse response.                                                                    |
-| `__WET_PREFIX__`      | `13.filename_prefix` | Relative output prefix for the CPU wet/dry mix.                                                                     |
-| `__NEGATIVE_PROMPT__` | `32.text`            | Your exclusions, including cuts, shot changes, artefacts and unwanted figures as appropriate.                       |
-| `__SEED_STAGE_1__`    | `80.noise_seed`      | JSON integer noise seed for the first sampler.                                                                      |
-| `__SEED_STAGE_2__`    | `90.noise_seed`      | JSON integer noise seed for the second sampler.                                                                     |
-| `__VIDEO_PREFIX__`    | `61.filename_prefix` | Relative output prefix for the encoded video.                                                                       |
+Use endpoint `layout-to-video` with the [offline materializer](README.md#fill-a-key-workflow).
+All media filenames are relative to ComfyUI `input/`; upload your own files.
 
-## Models and nodes
+| Token (surrounded by `__`)                | Input                                                                                  |
+| ----------------------------------------- | -------------------------------------------------------------------------------------- |
+| `TAKE_WEBM`                               | Colour take: 1024 × 576, 193 frames, 24 fps                                            |
+| `RECIPE_JSON`                             | Complete matching v1 recipe, encoded as a JSON string; preserve room objects/materials |
+| `DEPTH_WEBM`                              | Matching depth take filename, or `""`                                                  |
+| `REFERENCE_PNG`                           | Look still made at the take's first-frame camera angle                                 |
+| `TRACK_AUDIO`                             | Track slice at least 193/24 seconds long                                               |
+| `PROMPT`, `NEGATIVE_PROMPT`               | Scene/action/audio description and exclusions                                          |
+| `SEED_STAGE_1`, `SEED_STAGE_2`            | Unsigned 64-bit JSON integers                                                          |
+| `REVERB_SEED`                             | Unsigned 32-bit JSON integer                                                           |
+| `IR_PREFIX`, `WET_PREFIX`, `VIDEO_PREFIX` | Relative output prefixes                                                               |
 
-Build set: `comfy-build/models/world-builder-l2r.txt`. Model filenames and all sampling/widget values from the successful graph are retained:
+The default guide is 1280 × 704, output 2560 × 1408. The
+[studio input preset](world-builder-l2r-a2v-studio.README.md) uses a
+1024 × 576 guide and 2048 × 1152 output; it is the same workflow.
 
-- `gemma4-12b-with-proj-ltx-2.5-bf16.safetensors`
+## Models
+
+The shared [ltx-world-key set](../comfy-build/models/ltx-world-key.txt) pins:
+
 - `ltx-2.5-22b-distilled-transformer-bf16.safetensors`
-- `ltx-2.5-22b-ic-lora-layout-to-render-1.0.safetensors`
+- `gemma4-12b-with-proj-ltx-2.5-bf16.safetensors`
+- `ltx-2.5-video-vae-bf16.safetensors`
 - `ltx-2.5-audio-vae-bf16.safetensors`
 - `ltx-2.5-latent-spatial-upscaler-x2-bf16-1.0.safetensors`
-- `ltx-2.5-video-vae-bf16.safetensors`
+- `ltx-2.5-22b-ic-lora-layout-to-render-1.0.safetensors`
 
-Packs: director_world_builder, ComfyUI-LTXVideo and Koshi-Nodes, plus ComfyUI core. Capture is 1024 × 576; the guide is 1280 × 704 and the output 2560 × 1408.
+Needs ComfyUI, pinned ComfyUI-LTXVideo and Koshi-Nodes, and this repo's
+`director_world_builder`. Capture accepts the 193-frame take under its 2 GiB
+budget; storyboard cells are 448 × 256. WebM requires FFmpeg and FFprobe.
 
-## Run evidence, 30 October 2026
+## Recorded result
 
-The supplied GPU session’s WORKFLOWS.md lists `l2r9-party-a2v` under **Worked**. The final party graph used a reference without drinks and appeared in the v5 cuts. The party was trimmed before stand-in colour blobs in later cuts. Evidence is from a rented RTX PRO 6000 (96 GB), ComfyUI 0.41.0; it has not been rerun here or on the Developer Platform. Private captures, stills and audio are not redistributed.
+On 30 October 2026, `l2r9-party-a2v` produced the final party shot used in the
+adaptive-reverb v5 cuts, using a reference without drinks. The recorded GPU
+was an RTX PRO 6000, 96 GB, with ComfyUI 0.41.0. An earlier same-resolution
+party run took 12.5 minutes and about 87 GB VRAM. This port has not rerun the
+GPU graph or verified it on the [Developer Platform](../docs/comfy-deploy.md).
 
-## Known limits
+## Limits
 
-- Match the reference’s camera angle to the take. An eye-level cathedral reference produced a static shot in the unsuccessful earlier test.
-- Empty references and a negative prompt excluding the mannequin mattered for the no-person dives; a hidden head in a follow-camera take produced a folded pose.
-- The scene supplies one static IR per clip, not a moving listener. IR mean levels of −46 to −55 dB made wet sound quiet; use the [whole-track script](room-reverb.README.md) for levelled room transitions.
-- A standing crowd reference can override the track: the party i2v + audio tests stood and mingled. Frozen crowds, drinks and late stand-in colour blobs remain known limits; the final cut trimmed the party to 6 seconds.
-- These are API templates for ComfyUI or the named Developer Platform deployment, not registered studio slots or proof of managed Comfy Cloud availability. L2R + AKUSPACE, cathedral a2v, Union Control and final-cut SeedVR2 upscale remain untried.
-
-## Fixes this depends on
-
-Storyboard 448 × 256 cells are already set in this graph, satisfying the node’s multiples-of-64 rule. Capture’s 2 GiB cap and Inputs preview downscale are now in `custom_nodes/director_world_builder/__init__.py`; the build applies the same fixes to its pinned pack via `comfy-build/patches/world_builder.patch`. The original local cap was 1.25 GiB and rejected a 193-frame 1024 × 576 take. This graph has no Inputs return node, but the downscale is needed if you attach one to a large render.
-
-## How to repeat it
-
-Prepare the inputs above, fill the template, then follow the [shared deployment plan](../docs/comfy-deploy.md). Endpoint name: `party`. The owner starts every paid build, deploy and test generation.
+Reference angle can override the camera path; an eye-level cathedral reference
+previously made a static shot. Standing crowds can stay frozen. Late stand-in
+colour blobs required trimming the final party shot to six seconds. The CPU
+branch uses one static room IR per clip; its wet signal can be quiet. Use
+[whole-track room reverb](room-reverb.README.md) for levelled transitions.
+L2R with the AKUSPACE LoRA remains untried. Private media is not included.
+These API graphs are explicit submissions, with no registered studio slots.

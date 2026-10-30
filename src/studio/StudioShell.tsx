@@ -441,6 +441,9 @@ export default function StudioShell() {
           <Suspense fallback={<p role="status">Opening project tools…</p>}>
             <Director
               active={visible.some((id) => ["stage", "timeline"].includes(id))}
+              initializeProject={visible.some((id) =>
+                ["stage", "timeline", "tools"].includes(id),
+              )}
             />
           </Suspense>
           {hasWorld && (

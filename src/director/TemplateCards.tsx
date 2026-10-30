@@ -1,4 +1,5 @@
 import { mixTemplates } from "../../shared/templates/catalogue";
+import { galleryMedia } from "../../shared/gallery/catalogue";
 
 /** A card in the Director's template list. */
 export interface TemplateCard {
@@ -18,8 +19,8 @@ export const templateCards: readonly TemplateCard[] = [
     id: t.id,
     name: t.name,
     description: t.description,
-    video: t.examples[0].video,
-    poster: t.examples[0].poster,
+    video: galleryMedia(t)!.preview,
+    poster: galleryMedia(t)!.previewPoster,
   })),
 ];
 

@@ -74,7 +74,7 @@ export default function SetupNext({
           <h3>Start your local studio</h3>
           <p>
             Local generation, voice and agents run from the local studio. This
-            website does not install or connect a desktop runner.
+            website connects to your agent through the pairing step below.
           </p>
           <LocalRunInstructions expanded />
         </>

@@ -2,7 +2,8 @@
 
 A set is a file in models/ (swap.txt, akuspace.txt, ...). Each line is
   <folder> <repository> <revision> <path in repository> <bytes> <sha256 or ->
-and the file lands at <root>/<folder>/<basename of path>; a file named by two
+An optional seventh field preserves a verified resolver sourceUri (requires a
+SHA-256). The file lands at <root>/<folder>/<basename of path>; a file named by two
 sets is fetched once. A file already there with the right size and a matching
 .sha256 marker is kept without rehashing; one with the right size and no marker
 is hashed once. "-" (a gated repository hides the hash) means size only.
@@ -37,6 +38,7 @@ class Model:
     path: str
     size: int
     sha256: str | None
+    source_uri: str | None = None
 
     def dest(self, root):
         return os.path.join(root, self.folder, os.path.basename(self.path))
@@ -47,6 +49,8 @@ class Model:
 
     @property
     def url(self):
+        if self.source_uri:
+            return self.source_uri
         return (
             f"https://huggingface.co/{self.repo}/resolve/{self.revision}/"
             f"{urllib.parse.quote(self.path)}"
@@ -64,10 +68,16 @@ def parse_models(text):
         if not line or line.startswith("#"):
             continue
         parts = line.split()
-        if len(parts) != 6:
-            raise ValueError(f"models line {number}: expected 6 fields")
-        folder, repo, revision, path, size, sha256 = parts
+        if len(parts) not in (6, 7):
+            raise ValueError(f"models line {number}: expected 6 or 7 fields")
+        folder, repo, revision, path, size, sha256 = parts[:6]
+        source_uri = parts[6] if len(parts) == 7 else None
         sha256 = None if sha256 == "-" else sha256
+        if source_uri:
+            parsed = urllib.parse.urlsplit(source_uri)
+            if (not sha256 or parsed.scheme != "https" or parsed.netloc != "huggingface.co"
+                    or parsed.fragment or not parsed.path.startswith(f"/{repo}/resolve/")):
+                raise ValueError(f"models line {number}: invalid resolved sourceUri or missing hash")
         bad = (
             ".." in folder.split("/")
             or ".." in path.split("/")
@@ -78,7 +88,7 @@ def parse_models(text):
         )
         if bad:
             raise ValueError(f"models line {number}: bad folder, path, size, hash or revision")
-        models.append(Model(folder, repo, revision, path, int(size), sha256))
+        models.append(Model(folder, repo, revision, path, int(size), sha256, source_uri))
     return models
 
 

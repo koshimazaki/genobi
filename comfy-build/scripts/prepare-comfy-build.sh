@@ -35,8 +35,8 @@ done
 
 cat <<EOF
 
-Next, for the owner to run with comfy-cli installed:
-Build, release, deploy and test jobs require the owner to approve the spend.
+Next, on a machine with comfy-cli (pip install comfy-cli; nothing here is paid
+until the owner starts remote operations):
 
   comfy setup --where cloud
   cd "$work/ComfyUI"
@@ -51,10 +51,10 @@ EOF
 fi
 cat <<EOF
 
-  # No comfy build validate command is assumed; run the offline recipe tests.
   comfy build refs resolve <filename>   # each hand-pinned model URL, once
   comfy build push --dry-run --models-dir ./models --custom-nodes-dir ./custom_nodes
-  comfy build push --release --target linux/nvidia --models-dir ./models --custom-nodes-dir ./custom_nodes
+  comfy build push --models-dir ./models --custom-nodes-dir ./custom_nodes
+  comfy build release create --target linux/nvidia --watch
   comfy build status
   comfy deploy refs compute
   comfy deploy up . --gpu <RTX PRO 6000 id from refs compute> --region <region from refs compute> \\

@@ -11,6 +11,7 @@ import {
   type PromptBrief,
 } from "./prompt-brief";
 import { carryWorldFiles } from "./world-files";
+import { readHostedStudio } from "../hosted-studio";
 
 // The studio's side of the project copy on the local server: push the open
 // bundle at its revision, read the copy back after a conflict, and apply a
@@ -46,6 +47,7 @@ async function failure(response: Response) {
  * bare Vite preview answers it with the page, so the shape is checked too.
  */
 export async function copyAvailable(fetcher: typeof fetch = fetch) {
+  if ((await readHostedStudio()) === true) return false;
   try {
     const response = await fetcher("/api/projects");
     const body = (await response.json()) as { projects?: unknown };
