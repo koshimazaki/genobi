@@ -24,6 +24,12 @@ this home does not link, or a stale index.
 New to the code? Read [the read-through](read-through.md) first; it follows one
 user action through every layer.
 
+## Start here
+
+- [Getting started](getting-started.md) — choose hosted or local, connect providers and make your first edit.
+- [Studio guide](studio-guide.md) — detailed controls, editors, workspaces and Taste.
+- [Troubleshooting](troubleshooting.md) — workflow limitations, dated provider checks and recovery guides.
+
 ## Vision
 
 - [Vision](vision.md) — what Genobi is for: an open-source video studio for AI

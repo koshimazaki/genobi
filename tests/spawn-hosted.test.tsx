@@ -35,6 +35,9 @@ it("offers pairing for an unpaired hosted runner without reading local setup", a
   );
   expect(html).toContain("Pair hosted and local Genobi");
   expect(html).toContain("Set up the local studio");
+  expect(html).toContain('href="http://127.0.0.1:4317"');
+  expect(html).toContain("Open local studio");
+  expect(html).toContain("npm run dev");
 });
 
 it("starts a paired hosted runner without local settings, sign-in or project lookups", async () => {

@@ -64,7 +64,8 @@
         "3d-tab.md",
         "camera-wording.md",
         "layout-to-render-status.md",
-        "minimax-h3-camera.md"
+        "minimax-h3-camera.md",
+        "studio-guide.md"
       ]
     },
     "director": {
@@ -130,6 +131,7 @@
         "project-assets.md",
         "runs/anime-teaser.md",
         "scrolls.md",
+        "studio-guide.md",
         "taste-memory.md",
         "template-gallery.md",
         "templates.md",
@@ -250,7 +252,12 @@
     },
     "setup": {
       "meaning": "First-run setup, keys, harness sign-in and onboarding",
-      "pages": ["agent-setup.md", "teachings.md"]
+      "pages": [
+        "agent-setup.md",
+        "getting-started.md",
+        "teachings.md",
+        "troubleshooting.md"
+      ]
     },
     "voice": {
       "meaning": "Voice mode: installer, transcription, mic and dictionary",
@@ -307,10 +314,12 @@
         "comfy-deployment.md",
         "director-comfy.md",
         "director-remix-verification.md",
+        "getting-started.md",
         "minimax-h3-camera.md",
         "openjutsu-swap.md",
         "run-location.md",
         "seedvr2-upscale.md",
+        "troubleshooting.md",
         "upscaling.md",
         "workflow-reference-library.md",
         "world-builder-acoustics.md",
@@ -386,9 +395,11 @@
         "director-working-version.md",
         "editor-timeline.md",
         "genobi-deck.md",
+        "getting-started.md",
         "project-assets.md",
         "read-through.md",
         "run-location.md",
+        "studio-guide.md",
         "studio-interface.md",
         "supervised-workflow-checks.md",
         "supervisor.md",
@@ -463,6 +474,7 @@
         "hermes-runs/2026-10-28-hermes-audio-visual-library-dry-run.md",
         "hermes-runs/2026-10-28-hermes-audio-visual-library-review.md",
         "submission.md",
+        "troubleshooting.md",
         "verification.md",
         "world-builder-verification.md"
       ]
@@ -638,6 +650,7 @@
         "genobi-teaser-run/decision-table.md",
         "genobi-teaser-run/run-log-template.md",
         "genobi-teaser.md",
+        "getting-started.md",
         "hermes-open-route.md",
         "hermes-profiles.md",
         "hermes-runs.md",
@@ -665,6 +678,7 @@
         "scene-examples.md",
         "scrolls.md",
         "seedvr2-upscale.md",
+        "studio-guide.md",
         "studio-interface.md",
         "submission.md",
         "supervised-workflow-checks.md",
@@ -674,6 +688,7 @@
         "teachings.md",
         "template-gallery.md",
         "templates.md",
+        "troubleshooting.md",
         "upscaling.md",
         "verification.md",
         "vfx-recipes/README.md",
@@ -706,13 +721,12 @@
       "title": "Adaptive reverb: the 3D + LTX template",
       "path": "adaptive-reverb.md",
       "tags": ["director", "sound", "templates", "world-builder"],
-      "summary": "Adaptive reverb, the 3D + LTX mix template - one LTX-2.5 (open weights) + AKUSPACE LoRA take through a cathedral, a crowded hall and a small studio, its own sound changing with each room, under a room-scan look; and Acoustic Space end to end, from a World Builder room to the sound in it, and how to regenerate a room.",
+      "summary": "Adaptive reverb, the editable 3D and LTX mix template, with scene-derived CPU reverb, separate AKUSPACE experiments and the recorded workflow inputs.",
       "links": [
         "capabilities.md",
         "comfy-deploy.md",
         "director-bundle/showcase/adaptive-reverb/README.md",
-        "templates.md",
-        "world-builder-acoustics.md"
+        "templates.md"
       ]
     },
     {
@@ -1000,8 +1014,13 @@
       "title": "Credits and lineage",
       "path": "credits.md",
       "tags": ["licences", "bfl"],
-      "summary": "Design lineage, licence, attributions and the BFL documentation the studio follows.",
-      "links": ["camera-wording.md", "credits/README.md"]
+      "summary": "Genobi’s shared tools, new studio work, creator credits and model documentation sources.",
+      "links": [
+        "camera-wording.md",
+        "credits/README.md",
+        "minimax-h3-camera.md",
+        "world-builder-acoustics.md"
+      ]
     },
     {
       "title": "The taste layer: people, tools and lineage",
@@ -1490,6 +1509,25 @@
       ]
     },
     {
+      "title": "Get started with Genobi",
+      "path": "getting-started.md",
+      "tags": ["setup", "studio", "comfy"],
+      "summary": "Choose hosted or local Genobi, connect providers, set up an agent and optional voice, and keep your first project.",
+      "links": [
+        "activity-settings.md",
+        "agent-setup.md",
+        "cloudflare.md",
+        "hermes-profiles.md",
+        "openjutsu-swap.md",
+        "run-location.md",
+        "runner-pairing.md",
+        "studio-guide.md",
+        "troubleshooting.md",
+        "voice-mode.md",
+        "voice-setup.md"
+      ]
+    },
+    {
       "title": "The Hermes open route",
       "path": "hermes-open-route.md",
       "tags": ["agents", "models", "mcp"],
@@ -1832,6 +1870,32 @@
       ]
     },
     {
+      "title": "Studio guide",
+      "path": "studio-guide.md",
+      "tags": ["studio", "camera", "director"],
+      "summary": "Detailed image and video controls, workspace presets, editors, gallery behavior and Taste references.",
+      "links": [
+        "agent-bubble.md",
+        "arena.md",
+        "construction-motion.md",
+        "credits.md",
+        "credits/README.md",
+        "director-resolution.md",
+        "director-working-version.md",
+        "dual-editor.md",
+        "genobi-cli.md",
+        "getting-started.md",
+        "licence-strategy.md",
+        "scene-examples.md",
+        "supervisor.md",
+        "taste-memory.md",
+        "template-gallery.md",
+        "templates.md",
+        "voice-mode.md",
+        "world-builder-interface.md"
+      ]
+    },
+    {
       "title": "Studio interface",
       "path": "studio-interface.md",
       "tags": ["studio"],
@@ -1947,6 +2011,23 @@
         "hermes-runs.md",
         "template-gallery.md",
         "vision.md"
+      ]
+    },
+    {
+      "title": "Troubleshooting and workflow limits",
+      "path": "troubleshooting.md",
+      "tags": ["setup", "verification", "comfy"],
+      "summary": "Provider and workflow limitations, dated Cloud checks, and setup or recovery guides.",
+      "links": [
+        "agent-setup.md",
+        "capabilities.md",
+        "comfy-deploy.md",
+        "getting-started.md",
+        "layout-to-render-status.md",
+        "run-location.md",
+        "runner-pairing.md",
+        "verification.md",
+        "voice-setup.md"
       ]
     },
     {
