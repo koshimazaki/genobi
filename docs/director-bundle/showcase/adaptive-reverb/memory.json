@@ -33,6 +33,23 @@
       "projectId": "adaptive-reverb-v1",
       "layers": 21,
       "durationFrames": 726
+    },
+    {
+      "version": 2,
+      "date": "2026-10-30T15:45:00Z",
+      "by": ["owner", "agent"],
+      "title": "One cathedral readout, on the cut",
+      "summary": "The owner's review of v1: the cathedral keeps one crisp readout, its scanlines and HUD start on the cut into the cathedral, and the workflow card says it is the workflow graph drawn from its JSON. The hall and studio are unchanged.",
+      "changes": [
+        "The cathedral's build-panel removed; the scan readout RT60 ~4.8 S is the one readout",
+        "Scanlines, HUD and glitch on the cut at 7.9 s (beat 15.75); the scan from 8 s, the measure box from 12 s; the hall's glitch on its cut at 15.9 s",
+        "Workflow card labelled WORKFLOW GRAPH · FROM THE JSON, credit world-builder-akuspace-ltx.json, documented as a one-file swap"
+      ],
+      "eventIds": ["reverb-v2-review", "reverb-v2-recordings"],
+      "file": "project-v2.json",
+      "projectId": "adaptive-reverb-v2",
+      "layers": 20,
+      "durationFrames": 726
     }
   ],
   "media": {
@@ -186,6 +203,34 @@
         "actor": "agent",
         "at": "2026-10-30T15:30:00Z",
         "version": 1
+      },
+      {
+        "id": "reverb-v2-review",
+        "kind": "note",
+        "objectIds": [],
+        "source": "interpretation",
+        "actor": "agent",
+        "at": "2026-10-30T15:45:00Z",
+        "version": 2,
+        "reason": "Owner review, 30 Oct 2026: around 0:11 in the cathedral two of the same room panels overlap and one looks ghosted: leave one crisp panel. The AKUSPACE / CATHEDRAL label and the room scan readouts should sit in time with the cathedral, a bit earlier, on the cut. The workflow card stays, labelled unambiguously as the workflow graph from world-builder-akuspace-ltx.json. Keep the hall and studio as they are.",
+        "guidance": {
+          "topic": "Adaptive reverb · review v2",
+          "value": "One crisp cathedral readout (the build-panel removed); scanlines and HUD from the cut at 7.9 s, the scan readout from 8 s, the measure box after it; the workflow card labelled WORKFLOW GRAPH · FROM THE JSON with the file name as its credit; hall and studio unchanged."
+        }
+      },
+      {
+        "id": "reverb-v2-recordings",
+        "kind": "note",
+        "objectIds": [],
+        "source": "interpretation",
+        "actor": "agent",
+        "at": "2026-10-30T15:45:00Z",
+        "version": 2,
+        "reason": "Owner, 30 Oct 2026: he would rather show the actual workflow and the actual World Builder Three.js scene, and will record them himself and slot them in. Keep the diagram for now with the honest label, as one replaceable asset (reverb-workflow.jpg), documented under Swap in your own recordings in docs/adaptive-reverb.md, so his recordings drop in without re-timing.",
+        "guidance": {
+          "topic": "Adaptive reverb · own recordings",
+          "value": "The workflow card is one file swap: replace reverb-workflow.jpg (or point the layer's still at a new file); a moving recording needs a shot slot, not in v2."
+        }
       }
     ],
     "checkpoints": [
@@ -199,6 +244,17 @@
         "status": "done",
         "at": "2026-10-30T15:30:00Z",
         "version": 1
+      },
+      {
+        "id": "reverb-v2",
+        "sessionId": "showcase-v2",
+        "summary": "Version 2 built on fix/adaptive-reverb-polish from the owner's review of v1: 726 frames at 24 fps, re-rendered for the gallery card and the master.",
+        "eventIds": ["reverb-v2-review", "reverb-v2-recordings"],
+        "unresolved": [],
+        "nextSteps": [],
+        "status": "done",
+        "at": "2026-10-30T15:45:00Z",
+        "version": 2
       }
     ]
   }

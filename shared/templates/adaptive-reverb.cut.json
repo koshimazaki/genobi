@@ -93,7 +93,7 @@
       "module": "wire-scan",
       "kind": "filter",
       "lane": "wire",
-      "startBeat": 13,
+      "startBeat": 12.75,
       "beats": 3,
       "opacity": 1,
       "parameters": {
@@ -105,11 +105,11 @@
     },
     {
       "id": "glitch-1",
-      "name": "Slice glitch · beat 16",
+      "name": "Slice glitch · the cut into the cathedral",
       "module": "slice-glitch",
       "kind": "filter",
       "lane": "glitch",
-      "startBeat": 16,
+      "startBeat": 15.75,
       "beats": 0.5,
       "opacity": 1,
       "parameters": {
@@ -125,7 +125,7 @@
       "module": "crt",
       "kind": "filter",
       "lane": "crt",
-      "startBeat": 16,
+      "startBeat": 15.75,
       "beats": 16,
       "opacity": 1,
       "parameters": {
@@ -141,7 +141,7 @@
       "module": "hud",
       "kind": "graphics",
       "lane": "hud",
-      "startBeat": 16,
+      "startBeat": 15.75,
       "beats": 16,
       "opacity": 1,
       "parameters": {
@@ -159,7 +159,7 @@
       "module": "ui-focus",
       "kind": "graphics",
       "lane": "focus",
-      "startBeat": 17,
+      "startBeat": 24,
       "beats": 5,
       "opacity": 1,
       "parameters": {
@@ -181,7 +181,7 @@
       "module": "scan",
       "kind": "graphics",
       "lane": "scan",
-      "startBeat": 22,
+      "startBeat": 16,
       "beats": 8,
       "opacity": 0.95,
       "parameters": {
@@ -191,26 +191,6 @@
         "x": 0.36,
         "y": 0.6,
         "bpm": 120
-      }
-    },
-    {
-      "id": "caption-1",
-      "name": "Readout · cathedral",
-      "module": "build-panel",
-      "kind": "graphics",
-      "lane": "captions",
-      "startBeat": 20,
-      "beats": 10,
-      "opacity": 1,
-      "parameters": {
-        "side": "right",
-        "title": "ROOM · CATHEDRAL",
-        "lines": "RT60 ~4.8 S / AKUSPACE PRESET / CATHEDRAL",
-        "color": "#f6f8f2",
-        "muted": "#cfd6d2",
-        "accent": "#f2b84b",
-        "bpm": 120,
-        "duration": 0.6
       }
     },
     {
@@ -231,11 +211,11 @@
     },
     {
       "id": "glitch-2",
-      "name": "Slice glitch · beat 32",
+      "name": "Slice glitch · the cut into the hall",
       "module": "slice-glitch",
       "kind": "filter",
       "lane": "glitch",
-      "startBeat": 32,
+      "startBeat": 31.75,
       "beats": 0.5,
       "opacity": 1,
       "parameters": {
@@ -267,7 +247,7 @@
     },
     {
       "id": "workflow",
-      "name": "The built room in the workflow · node diagram",
+      "name": "Workflow graph · world-builder-akuspace-ltx.json (diagram from the JSON; swap reverb-workflow.jpg)",
       "module": "space-hud",
       "kind": "graphics",
       "lane": "cards",
@@ -277,8 +257,8 @@
       "parameters": {
         "still": "/media/director-templates/adaptive-reverb/reverb-workflow.jpg",
         "color": "#62f2e4",
-        "label": "WORKFLOW · 3D ROOM → LTX",
-        "credit": "AKUSPACE LORA · OPEN WEIGHTS",
+        "label": "WORKFLOW GRAPH · FROM THE JSON",
+        "credit": "world-builder-akuspace-ltx.json",
         "targets": "0.31,0.17,0.07,0.09 / 0.72,0.63,0.07,0.11 / 0.45,0.15,0.06,0.09 / 0.385,0.35,0.06,0.12 / 0.385,0.15,0.06,0.06 / 0.385,0.61,0.07,0.17",
         "interval": 0.2,
         "dim": 0.1,

@@ -88,20 +88,40 @@ Every overlay is an existing trusted recipe:
 - **The drop** (0–8 s): the screen open, a `build-panel` caption (DROP,
   OUTSIDE / BETWEEN TOWERS / ROOM AHEAD) and a `wire-scan` sweep into the
   cut, which a `slice-glitch` marks.
-- **The cathedral, a room scan** (8–16 s): `crt` surveillance scanlines, the
-  `hud` reading `● REC CAM 01 // ROOM SCAN` and `AKUSPACE / CATHEDRAL`, a
-  `ui-focus` measure box on the nave, a `scan` readout
-  `RT60 ~4.8 S` and a `build-panel` with the preset.
+- **The cathedral, a room scan** (7.9–15.9 s): from the cut itself (7.9 s,
+  beat 15.75), `crt` surveillance scanlines and the `hud` reading
+  `● REC CAM 01 // ROOM SCAN` and `AKUSPACE / CATHEDRAL`, with the `scan`
+  readout `RT60 ~4.8 S` from 8 s, then a `ui-focus` measure box on the nave.
+  One readout only: v2 dropped the cathedral's `build-panel`, which doubled
+  the scan readout and read as ghosted under the scanlines.
 - **The hall** (16–22.5 s): a wireframe sweep and a glitch into it, and its
   readout panel (RT60 ~1.9 S, MEDIUM ROOM).
 - **The built room in the workflow** (20–22.5 s): `space-hud` over the node
-  diagram, its trackers locking onto World Builder capture, Acoustics, the
+  diagram, labelled WORKFLOW GRAPH · FROM THE JSON and
+  `world-builder-akuspace-ltx.json` (the label allows 32 characters, so the
+  file name is the credit line), its trackers locking onto World Builder capture, Acoustics, the
   AKUSPACE prompt, the Reverb, the AKUSPACE text encode and the LoRA route's
   save, then a glitch into the studio.
 - **The studio** (22.5–27 s): its readout panel (RT60 ~0.67 S, SMALL ROOM).
 - **End card** (27–30.25 s, `end-card-still` over a frame of the studio):
   GENOBI // 3D + LTX, ADAPTIVE REVERB, LTX-2.5 · OPEN WEIGHTS, AKUSPACE
   ROOMS, WORLD BUILDER 3D · KOSHIMAZAKI. Every word is a parameter.
+
+## Swap in your own recordings
+
+The workflow card is one replaceable still: `reverb-workflow.jpg` in
+`public/media/director-templates/adaptive-reverb/`, shown by the `workflow`
+layer from 20 to 22.5 s. To show the actual ComfyUI graph or the World
+Builder Three.js scene instead, save a frame of your recording as a
+16:9 JPEG (or PNG / WebP) and replace that file under the same name; nothing
+is re-timed, and the card keeps its slot. To keep the old diagram too, add
+your file next to it (`reverb-world-builder.jpg`, say), point the layer's
+`still` at it in the Editor or in the cut, and set its `label` and `credit`
+to say what it is. Then re-render and update the gallery card.
+
+The slot takes a still, not a moving clip: `space-hud` only shows images. A
+moving recording would need its own shot slot in the cut, which is not in
+this version.
 
 ## The media
 

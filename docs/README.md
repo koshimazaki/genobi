@@ -49,7 +49,7 @@ user action through every layer.
   [Dimensions mix](director-bundle/showcase/dimensions-mix/README.md) v1 to v4,
   [Genobi teaser](director-bundle/showcase/genobi-teaser/README.md) v1 and v2,
   [Bloom](director-bundle/showcase/bloom-teaser/README.md) v1 and
-  [Adaptive reverb](director-bundle/showcase/adaptive-reverb/README.md) v1;
+  [Adaptive reverb](director-bundle/showcase/adaptive-reverb/README.md) v1 and v2;
   each version opens in the Editor from its gallery card.
 - [Anime teaser template](anime-teaser-template.md) — intake, generated sheet,
   storyboard and track, two H3 shots, the cut to the beat.

@@ -13,9 +13,10 @@ Acoustic Space end to end are described in
 [Adaptive reverb](../../../adaptive-reverb.md); this page is its history. The
 record is [`memory.json`](memory.json).
 
-| Version | Source | Date (UTC)    | What changed                  | Shaped by    |
-| ------- | ------ | ------------- | ----------------------------- | ------------ |
-| v1      | #254   | 30 Oct, 15:30 | The first cut, the whole take | owner, agent |
+| Version | Source | Date (UTC)    | What changed                      | Shaped by    |
+| ------- | ------ | ------------- | --------------------------------- | ------------ |
+| v1      | #254   | 30 Oct, 15:30 | The first cut, the whole take     | owner, agent |
+| v2      | #255   | 30 Oct, 15:45 | One cathedral readout, on the cut | owner, agent |
 
 ## v1: the first cut
 
@@ -37,10 +38,23 @@ come from `shared/akuspace-presets.json` (cathedral ~4.8 s, medium room
 room so an agent can regenerate one after a quote and the owner's approval.
 The workflow appears as a node diagram drawn from its JSON.
 
+## v2: one cathedral readout, on the cut
+
+The owner's review of v1: around 0:11 two of the same room panels overlapped
+in the cathedral and one looked ghosted, and the cathedral's label and
+readouts came in late. v2 keeps one crisp readout (the scan, RT60 ~4.8 S),
+starts the scanlines and HUD on the cut into the cathedral (7.9 s) and the
+hall's glitch on its cut (15.9 s), and labels the workflow card WORKFLOW GRAPH
+· FROM THE JSON with `world-builder-akuspace-ltx.json` as its credit. The
+owner will record the actual workflow and World Builder scene himself; the
+card is a one-file swap, see
+[Swap in your own recordings](../../../adaptive-reverb.md#swap-in-your-own-recordings).
+The hall and studio are unchanged.
+
 ## How to repeat it
 
-Open v1 from the Adaptive reverb card's "How it was made" list ("Open v1 in
-the editor"); it opens as `adaptive-reverb-v1`, an editable project of its
+Open v1 or v2 from the Adaptive reverb card's "How it was made" list ("Open v2 in
+the editor"); it opens as `adaptive-reverb-v2`, an editable project of its
 own. To make the next piece like it, follow
 [How to repeat it](../../../adaptive-reverb.md#how-to-repeat-it), and to make
 a room again, [How to regenerate a room](../../../adaptive-reverb.md#how-to-regenerate-a-room).
