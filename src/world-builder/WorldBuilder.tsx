@@ -31,6 +31,7 @@ import { dropOnScene } from "./sound-drop";
 import { SceneLibrary } from "./SceneLibrary";
 import { togglePlay } from "./example-track";
 import { useSceneLibrary } from "./useSceneLibrary";
+import type { Take } from "./export-take";
 const panels = [
   { key: "camera", label: "Camera", icon: "camera" },
   { key: "audio", label: "Sound", icon: "acoustic" },
@@ -41,16 +42,18 @@ export default function WorldBuilder({
   active = true,
   onAsset,
   projectAudio,
+  onLayoutTake,
 }: {
   active?: boolean;
   /** The studio's project-assets path; takes and first frames land there. */
   onAsset?: AddAsset;
   /** The open project's audio assets, listed in the Sound tab. */
   projectAudio?: RecentAudio[];
+  onLayoutTake?: (take: Take) => Promise<void>;
 }) {
   const shell = useShell();
   const s = useBuilderSession(),
-    a = useBuilderAssets(s, onAsset),
+    a = useBuilderAssets(s, onAsset, onLayoutTake),
     e = useWorldEditor(s),
     lib = useSceneLibrary(s, e, a, onAsset),
     { dock, dispatch, pip } = useDockedPanels(!!shell);

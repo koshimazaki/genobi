@@ -34,6 +34,14 @@ describe("Adaptive reverb, the 3D + LTX template", () => {
     });
     expect(adaptiveReverb.description).toMatch(/World Builder 3D rooms/);
     expect(adaptiveReverb.description).toMatch(/LTX-2\.5 \(open weights\)/);
+    expect(adaptiveReverb.description).toContain("scene-derived CPU reverb");
+    expect(adaptiveReverb.description).toContain(
+      "AKUSPACE is a separate experiment",
+    );
+    expect(cut.trackName).toContain("CPU reverb");
+    expect(REVERB_ROUTE.workflow).toBe(
+      "workflows/world-builder-adaptive-reverb-cpu.json",
+    );
   });
 
   it("plays the whole take at its native size, over its own sound", () => {
@@ -63,7 +71,7 @@ describe("Adaptive reverb, the 3D + LTX template", () => {
     expect(end.parameters).toMatchObject({
       title: "ADAPTIVE REVERB",
       subtitle: "LTX-2.5 · OPEN WEIGHTS",
-      credit1: "AKUSPACE ROOMS",
+      credit1: "SCENE-DERIVED CPU REVERB",
     });
   });
 

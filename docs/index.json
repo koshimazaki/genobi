@@ -1304,7 +1304,7 @@
       "title": "Adaptive reverb: how it was made",
       "path": "director-bundle/showcase/adaptive-reverb/README.md",
       "tags": ["director", "sound", "memory", "world-builder"],
-      "summary": "How Adaptive reverb, the 3D + LTX template, was made - v1, the whole LTX-2.5 + AKUSPACE take over its own sound - and how to recreate it or regenerate a room.",
+      "summary": "Adaptive reverb's version history, including the scene-derived CPU reverb credit correction in v3, and how to recreate it or regenerate a room.",
       "links": ["adaptive-reverb.md"]
     },
     {

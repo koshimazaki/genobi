@@ -1,0 +1,797 @@
+{
+  "schemaVersion": "director.bundle.v1",
+  "id": "adaptive-reverb-v3",
+  "name": "Adaptive reverb · v3",
+  "revision": 1,
+  "composition": {
+    "fps": 24,
+    "durationFrames": 726,
+    "width": 1280,
+    "height": 720,
+    "designSize": { "width": 960, "height": 540 },
+    "colorSpace": "srgb",
+    "alpha": "straight",
+    "background": "#0c0e0c",
+    "bpm": 120,
+    "beatsPerBar": 4
+  },
+  "assets": {
+    "reverb-ltx": {
+      "kind": "video",
+      "use": "production",
+      "origin": "uploaded",
+      "durationSeconds": 30.458,
+      "file": {
+        "path": "media/reverb-ltx.mp4",
+        "sha256": "d8c7e053a1a3123f9f5e1b1541903275f8bfd88306f234b120020c9025ccb183"
+      }
+    },
+    "reverb-track": {
+      "kind": "audio",
+      "use": "production",
+      "origin": "uploaded",
+      "durationSeconds": 30.65,
+      "file": {
+        "path": "media/reverb-track.mp3",
+        "sha256": "223b08fc60fa4c22da6ddbd5bbe41c1782ad32b18d0a68e4dd9a88cc899645e8"
+      }
+    }
+  },
+  "modules": {
+    "screen-open": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/mix-screen-open.mjs",
+        "sha256": "396bf3dab13d4f83f60a9790251dcf64cbb632e55b19d651169d70aba886e209"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["color", "matte", "duration", "glyphs", "seed"],
+        "properties": {
+          "color": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "matte": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "duration": { "type": "number", "minimum": 0.1, "maximum": 8 },
+          "glyphs": { "type": "integer", "minimum": 0, "maximum": 64 },
+          "seed": { "type": "integer", "minimum": 0, "maximum": 9999 }
+        }
+      }
+    },
+    "build-panel": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/mix-build-panel.mjs",
+        "sha256": "54c341f37a896d90bdd05e5b854671b5ca90962c65d8a98660cd15cda699beb6"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "side",
+          "title",
+          "lines",
+          "color",
+          "muted",
+          "accent",
+          "bpm",
+          "duration"
+        ],
+        "properties": {
+          "side": { "type": "string", "enum": ["left", "right"] },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 40,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "lines": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 200,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "color": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "muted": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "accent": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "bpm": { "type": "number", "minimum": 20, "maximum": 300 },
+          "duration": { "type": "number", "minimum": 0.2, "maximum": 8 }
+        }
+      }
+    },
+    "wire-scan": {
+      "engine": "threejs",
+      "engineVersion": "0.180.0",
+      "mode": "filter",
+      "file": {
+        "path": "graphics/mix-wire-scan.mjs",
+        "sha256": "ea23e0a7b8f48a503a65f2e316a612582a489a6eaf14aa8476950eca4bf4b117"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["color", "amount", "sweep", "trail"],
+        "properties": {
+          "color": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "amount": { "type": "number", "minimum": 0, "maximum": 1 },
+          "sweep": { "type": "number", "minimum": 0.1, "maximum": 8 },
+          "trail": { "type": "number", "minimum": 0.05, "maximum": 1 }
+        }
+      }
+    },
+    "slice-glitch": {
+      "engine": "threejs",
+      "engineVersion": "0.180.0",
+      "mode": "filter",
+      "file": {
+        "path": "graphics/mix-slice-glitch.mjs",
+        "sha256": "f1e5a045aae8ae9bc1b7691cd939c783cd078864c9ca7f945f85a17d7ccbb588"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["amount", "slices", "seed", "duration"],
+        "properties": {
+          "amount": { "type": "number", "minimum": 0, "maximum": 1 },
+          "slices": { "type": "integer", "minimum": 2, "maximum": 64 },
+          "seed": { "type": "integer", "minimum": 0, "maximum": 9999 },
+          "duration": { "type": "number", "minimum": 0.02, "maximum": 2 }
+        }
+      }
+    },
+    "crt": {
+      "engine": "threejs",
+      "engineVersion": "0.180.0",
+      "mode": "filter",
+      "file": {
+        "path": "graphics/three-crt.mjs",
+        "sha256": "dfc0f65e04232e7de2822a6da3adb15e606a5843a962e1db585831131a253513"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["amount", "curvature", "rgb", "vignette"],
+        "properties": {
+          "amount": { "type": "number", "minimum": 0, "maximum": 1 },
+          "curvature": { "type": "number", "minimum": 0, "maximum": 0.3 },
+          "rgb": { "type": "number", "minimum": 0, "maximum": 10 },
+          "vignette": { "type": "number", "minimum": 0, "maximum": 1 }
+        }
+      }
+    },
+    "hud": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/mix-hud.mjs",
+        "sha256": "623ccbbb6058884a5687b7d84b5e3c57cbcba11859ccb8642c6831c6957d4e2e"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["color", "accent", "bpm", "text", "credit", "seconds"],
+        "properties": {
+          "color": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "accent": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "bpm": { "type": "number", "minimum": 20, "maximum": 300 },
+          "text": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 60,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "credit": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 60,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "seconds": { "type": "number", "minimum": 1, "maximum": 120 }
+        }
+      }
+    },
+    "ui-focus": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/teaser-focus.mjs",
+        "sha256": "904b427c4360cf1acd891efe34c602472a828e736102ea35c274cb0a33013b3e"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "x",
+          "y",
+          "w",
+          "h",
+          "label",
+          "color",
+          "dim",
+          "draw",
+          "fadeAt",
+          "view"
+        ],
+        "properties": {
+          "x": { "type": "number", "minimum": 0, "maximum": 1 },
+          "y": { "type": "number", "minimum": 0, "maximum": 1 },
+          "w": { "type": "number", "minimum": 0, "maximum": 1 },
+          "h": { "type": "number", "minimum": 0, "maximum": 1 },
+          "label": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 40,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "color": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "dim": { "type": "number", "minimum": 0, "maximum": 1 },
+          "draw": { "type": "number", "minimum": 0.1, "maximum": 4 },
+          "fadeAt": { "type": "number", "minimum": 0, "maximum": 60 },
+          "view": {
+            "type": "string",
+            "maxLength": 160,
+            "pattern": "^$|^[0-9]+,[0-9]+,[0-9]+,[0-9]+(;[0-9.]+,-?[0-9.]+,-?[0-9.]+){3}$"
+          }
+        }
+      }
+    },
+    "scan": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/mix-scan.mjs",
+        "sha256": "c55f2da9c34a8064758db970ca3f9f664bc22cf2be9f0c04707f2f09d8d20b50"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["color", "accent", "text", "x", "y", "bpm"],
+        "properties": {
+          "color": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "accent": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 32,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "x": { "type": "number", "minimum": 0, "maximum": 1 },
+          "y": { "type": "number", "minimum": 0, "maximum": 1 },
+          "bpm": { "type": "number", "minimum": 20, "maximum": 300 }
+        }
+      }
+    },
+    "space-hud": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/teaser-space.mjs",
+        "sha256": "33f3c5d049a6ef1de996ff7a63da347b39ca092c16ace5ef4ddafcf8fe29855e"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "still",
+          "color",
+          "label",
+          "credit",
+          "targets",
+          "interval",
+          "dim",
+          "fadeAt"
+        ],
+        "properties": {
+          "still": {
+            "type": "string",
+            "maxLength": 120,
+            "pattern": "^/media/[a-z0-9][a-z0-9/_-]*\\.(jpg|png|webp)$"
+          },
+          "color": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "label": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 32,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "credit": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 40,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "targets": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 200,
+            "pattern": "^[0-9., /]*$"
+          },
+          "interval": { "type": "number", "minimum": 0.05, "maximum": 2 },
+          "dim": { "type": "number", "minimum": 0, "maximum": 1 },
+          "fadeAt": { "type": "number", "minimum": 0, "maximum": 60 }
+        }
+      }
+    },
+    "end-card-still": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/mix-end-card-still.mjs",
+        "sha256": "1a9c3dd024156211a0ad4c4acc39dabe79e7d87be90c6aecc9f397048f64ab5c"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "eyebrow",
+          "title",
+          "subtitle",
+          "credit1",
+          "credit2",
+          "font",
+          "color",
+          "accent",
+          "steps",
+          "done",
+          "duration",
+          "still"
+        ],
+        "properties": {
+          "eyebrow": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 32,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 24,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "subtitle": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 36,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "credit1": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 50,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "credit2": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 50,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "font": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120,
+            "pattern": "^[A-Za-z0-9 ,\"'-]+$"
+          },
+          "color": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "accent": { "type": "string", "pattern": "^#[0-9a-fA-F]{6}$" },
+          "steps": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 160,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "done": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 40,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "duration": { "type": "number", "minimum": 1, "maximum": 8 },
+          "still": {
+            "type": "string",
+            "maxLength": 120,
+            "pattern": "^/media/[a-z0-9][a-z0-9/_-]*\\.(jpg|png|webp)$"
+          }
+        }
+      }
+    }
+  },
+  "layers": [
+    {
+      "id": "track",
+      "name": "Track · original music with scene-derived CPU reverb",
+      "kind": "audio",
+      "assetId": "reverb-track",
+      "sourceStartFrame": 0,
+      "gain": 1,
+      "startFrame": 0,
+      "durationFrames": 726,
+      "locked": false
+    },
+    {
+      "kind": "video",
+      "assetId": "reverb-ltx",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "id": "shot-01",
+      "name": "01 Drop · between the skyscrapers",
+      "sourceStartFrame": 0,
+      "startFrame": 0,
+      "durationFrames": 192,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "kind": "video",
+      "assetId": "reverb-ltx",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "id": "shot-02",
+      "name": "02 Room 1 · cathedral (scene-derived CPU reverb)",
+      "sourceStartFrame": 192,
+      "startFrame": 192,
+      "durationFrames": 192,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "kind": "video",
+      "assetId": "reverb-ltx",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "id": "shot-03",
+      "name": "03 Room 2 · crowded hall (scene-derived CPU reverb)",
+      "sourceStartFrame": 384,
+      "startFrame": 384,
+      "durationFrames": 156,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "kind": "video",
+      "assetId": "reverb-ltx",
+      "fit": "contain",
+      "track": "shots",
+      "locked": false,
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "id": "shot-04",
+      "name": "04 Room 3 · small wooden studio (scene-derived CPU reverb)",
+      "sourceStartFrame": 540,
+      "startFrame": 540,
+      "durationFrames": 186,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "open",
+      "name": "Screen open",
+      "moduleId": "screen-open",
+      "parameters": {
+        "color": "#62f2e4",
+        "matte": "#0b0d0c",
+        "duration": 0.6,
+        "glyphs": 28,
+        "seed": 7
+      },
+      "startFrame": 0,
+      "durationFrames": 24,
+      "locked": false,
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "caption-0",
+      "name": "Caption · the drop",
+      "moduleId": "build-panel",
+      "parameters": {
+        "side": "left",
+        "title": "DROP",
+        "lines": "OUTSIDE / BETWEEN TOWERS / ROOM AHEAD",
+        "color": "#f6f8f2",
+        "muted": "#cfd6d2",
+        "accent": "#f2b84b",
+        "bpm": 120,
+        "duration": 0.6
+      },
+      "startFrame": 36,
+      "durationFrames": 108,
+      "locked": false,
+      "track": "captions",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "caption-2",
+      "name": "Readout · crowded hall",
+      "moduleId": "build-panel",
+      "parameters": {
+        "side": "left",
+        "title": "ROOM · HALL",
+        "lines": "RT60 ~1.9 S / AKUSPACE PRESET / MEDIUM ROOM",
+        "color": "#f6f8f2",
+        "muted": "#cfd6d2",
+        "accent": "#f2b84b",
+        "bpm": 120,
+        "duration": 0.6
+      },
+      "startFrame": 396,
+      "durationFrames": 84,
+      "locked": false,
+      "track": "captions",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "caption-3",
+      "name": "Readout · small studio",
+      "moduleId": "build-panel",
+      "parameters": {
+        "side": "right",
+        "title": "ROOM · STUDIO",
+        "lines": "RT60 ~0.67 S / AKUSPACE PRESET / SMALL ROOM",
+        "color": "#f6f8f2",
+        "muted": "#cfd6d2",
+        "accent": "#f2b84b",
+        "bpm": 120,
+        "duration": 0.6
+      },
+      "startFrame": 552,
+      "durationFrames": 84,
+      "locked": false,
+      "track": "captions",
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "wire-1",
+      "name": "Wireframe sweep · the drop into the cathedral",
+      "moduleId": "wire-scan",
+      "parameters": {
+        "color": "#62f2e4",
+        "amount": 0.8,
+        "sweep": 1.4,
+        "trail": 0.35
+      },
+      "startFrame": 153,
+      "durationFrames": 36,
+      "locked": false,
+      "track": "wire",
+      "kind": "filter",
+      "input": "composite-below"
+    },
+    {
+      "id": "wire-2",
+      "name": "Wireframe sweep · cathedral to hall",
+      "moduleId": "wire-scan",
+      "parameters": {
+        "color": "#62f2e4",
+        "amount": 0.8,
+        "sweep": 1.4,
+        "trail": 0.35
+      },
+      "startFrame": 360,
+      "durationFrames": 36,
+      "locked": false,
+      "track": "wire",
+      "kind": "filter",
+      "input": "composite-below"
+    },
+    {
+      "id": "glitch-1",
+      "name": "Slice glitch · the cut into the cathedral",
+      "moduleId": "slice-glitch",
+      "parameters": {
+        "amount": 0.9,
+        "slices": 18,
+        "seed": 11,
+        "duration": 0.25
+      },
+      "startFrame": 189,
+      "durationFrames": 6,
+      "locked": false,
+      "track": "glitch",
+      "kind": "filter",
+      "input": "composite-below"
+    },
+    {
+      "id": "glitch-2",
+      "name": "Slice glitch · the cut into the hall",
+      "moduleId": "slice-glitch",
+      "parameters": {
+        "amount": 0.9,
+        "slices": 18,
+        "seed": 18,
+        "duration": 0.25
+      },
+      "startFrame": 381,
+      "durationFrames": 6,
+      "locked": false,
+      "track": "glitch",
+      "kind": "filter",
+      "input": "composite-below"
+    },
+    {
+      "id": "glitch-3",
+      "name": "Slice glitch · beat 45",
+      "moduleId": "slice-glitch",
+      "parameters": {
+        "amount": 0.9,
+        "slices": 18,
+        "seed": 25,
+        "duration": 0.25
+      },
+      "startFrame": 540,
+      "durationFrames": 6,
+      "locked": false,
+      "track": "glitch",
+      "kind": "filter",
+      "input": "composite-below"
+    },
+    {
+      "id": "crt",
+      "name": "Surveillance scanlines · cathedral",
+      "moduleId": "crt",
+      "parameters": {
+        "amount": 0.55,
+        "curvature": 0.04,
+        "rgb": 1.5,
+        "vignette": 0.45
+      },
+      "startFrame": 189,
+      "durationFrames": 192,
+      "locked": false,
+      "kind": "filter",
+      "input": "composite-below"
+    },
+    {
+      "id": "hud",
+      "name": "Room scan HUD · REC / CAM",
+      "moduleId": "hud",
+      "parameters": {
+        "color": "#f6f8f2",
+        "accent": "#f2b84b",
+        "bpm": 120,
+        "text": "● REC  CAM 01 // ROOM SCAN",
+        "credit": "AKUSPACE / CATHEDRAL",
+        "seconds": 8
+      },
+      "startFrame": 189,
+      "durationFrames": 192,
+      "locked": false,
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "target-1",
+      "name": "Room measure · nave",
+      "moduleId": "ui-focus",
+      "parameters": {
+        "x": 0.3,
+        "y": 0.2,
+        "w": 0.4,
+        "h": 0.7,
+        "label": "MEASURE · NAVE",
+        "color": "#62f2e4",
+        "dim": 0.25,
+        "draw": 0.3,
+        "fadeAt": 2.2,
+        "view": ""
+      },
+      "startFrame": 288,
+      "durationFrames": 60,
+      "locked": false,
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "scan",
+      "name": "Scan · cathedral",
+      "moduleId": "scan",
+      "parameters": {
+        "color": "#f6f8f2",
+        "accent": "#62f2e4",
+        "text": "RT60 ~4.8 S",
+        "x": 0.36,
+        "y": 0.6,
+        "bpm": 120
+      },
+      "startFrame": 192,
+      "durationFrames": 96,
+      "locked": false,
+      "kind": "graphics",
+      "opacity": 0.95,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "workflow",
+      "name": "Alternative AKUSPACE workflow · reference diagram (swap reverb-workflow.jpg)",
+      "moduleId": "space-hud",
+      "parameters": {
+        "still": "/media/director-templates/adaptive-reverb/reverb-workflow.jpg",
+        "color": "#62f2e4",
+        "label": "WORKFLOW GRAPH · FROM THE JSON",
+        "credit": "world-builder-akuspace-ltx.json",
+        "targets": "0.31,0.17,0.07,0.09 / 0.72,0.63,0.07,0.11 / 0.45,0.15,0.06,0.09 / 0.385,0.35,0.06,0.12 / 0.385,0.15,0.06,0.06 / 0.385,0.61,0.07,0.17",
+        "interval": 0.2,
+        "dim": 0.1,
+        "fadeAt": 0
+      },
+      "startFrame": 480,
+      "durationFrames": 60,
+      "locked": false,
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    },
+    {
+      "id": "end-card",
+      "name": "End card · Adaptive reverb",
+      "moduleId": "end-card-still",
+      "parameters": {
+        "eyebrow": "GENOBI // 3D + LTX",
+        "title": "ADAPTIVE REVERB",
+        "subtitle": "LTX-2.5 · OPEN WEIGHTS",
+        "credit1": "SCENE-DERIVED CPU REVERB",
+        "credit2": "WORLD BUILDER 3D · KOSHIMAZAKI",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "color": "#62f2e4",
+        "accent": "#f2b84b",
+        "steps": "Building the room / Measuring the decay / Rendering it in LTX-2.5",
+        "done": "Open weights",
+        "duration": 2.4,
+        "still": "/media/director-templates/adaptive-reverb/reverb-end-card.jpg"
+      },
+      "startFrame": 648,
+      "durationFrames": 78,
+      "locked": false,
+      "kind": "graphics",
+      "opacity": 1,
+      "scale": 1,
+      "rotationDegrees": 0,
+      "position": { "x": 0, "y": 0 }
+    }
+  ],
+  "generationPlans": [],
+  "generations": []
+}

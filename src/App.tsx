@@ -1,4 +1,5 @@
 import { submitWithDeploymentApproval } from "./deployment-approval";
+import { useLayoutTakeComposer } from "./useLayoutTakeComposer";
 import { estimateSeedvr2Usd, isSeedvr2 } from "../shared/comfy/seedvr2";
 import ComposerWorkspace from "./components/ComposerWorkspace";
 import { useScrollsBridge } from "./scrolls/bridge";
@@ -104,6 +105,7 @@ export default function App() {
   } = useJobs(key);
   useJobActivity(jobs);
   useScrollsBridge(key, generate, jobs, update);
+  useLayoutTakeComposer(update, () => setActiveCatalogueId(null));
   const { hasServerKey, slots, connection, keysChanged } =
     useServerKey(setError);
   const { hiddenIds, hide, restoreAll } = useHiddenJobs();

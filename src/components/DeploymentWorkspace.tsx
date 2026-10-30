@@ -1,6 +1,12 @@
 import DeploymentPreset from "./DeploymentPreset";
+import {
+  clearLayoutTake,
+  layoutRecipe,
+  stageLayoutTake,
+  useLayoutTake,
+} from "../layout-take";
 import { useSettingsStore } from "../settings-store";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   deployEndpoint,
   isDeployModel,
@@ -31,7 +37,20 @@ export default function DeploymentWorkspace({
   onOpenAcoustic: () => void;
 }) {
   const [busy, setBusy] = useState(false);
+  const [note, setNote] = useState("");
+  const captured = useLayoutTake((s) => s.pending);
   const inFlight = useRef(false);
+  const mounted = useRef(false);
+  const busyCallback = useRef(onBusy);
+  busyCallback.current = onBusy;
+  useEffect(() => {
+    mounted.current = true;
+    return () => {
+      // ComposerWorkspace unmounts us when switching to a non-deployment model.
+      mounted.current = false;
+      if (inFlight.current) busyCallback.current(false);
+    };
+  }, []);
   const current = useRef(state);
   current.current = state;
   const model = state.model;
@@ -70,7 +89,8 @@ export default function DeploymentWorkspace({
       if (token === "RECIPE_JSON") {
         if (file.size > 64000)
           throw new Error("Choose a capture recipe under 64 KB.");
-        const recipe = await file.text();
+        const recipe = layoutRecipe(await file.text());
+        if (!mounted.current) return;
         if (current.current.model === model) change({ recipe });
         return;
       }
@@ -98,18 +118,61 @@ export default function DeploymentWorkspace({
           body: file,
         },
       );
+      if (!mounted.current) return;
       if (current.current.model === model)
         change({
           assets: { ...(current.current.deploy?.assets ?? {}), [token]: id },
         });
     } catch (error) {
-      onError(
-        error instanceof Error ? error.message : "Could not attach that input.",
-      );
+      if (mounted.current)
+        onError(
+          error instanceof Error
+            ? error.message
+            : "Could not attach that input.",
+        );
     } finally {
       inFlight.current = false;
-      setBusy(false);
-      onBusy(false);
+      if (mounted.current) {
+        setBusy(false);
+        onBusy(false);
+      }
+    }
+  }
+  async function attachScene() {
+    if (inFlight.current || !captured) return;
+    inFlight.current = true;
+    setBusy(true);
+    onBusy(true);
+    setNote("");
+    onError("");
+    try {
+      const next = await stageLayoutTake(captured, apiKey);
+      if (!mounted.current) return;
+      if (
+        current.current.model !== model ||
+        useLayoutTake.getState().pending !== captured
+      )
+        throw new Error(
+          "The selected take or model changed. Attach the scene again when ready.",
+        );
+      change(next);
+      clearLayoutTake(captured.id);
+      setNote(
+        "Captured scene attached. Its first frame is the initial look reference; replace it if you want another look. Review the track and prompt, then Generate for a quote. Nothing was generated.",
+      );
+    } catch (error) {
+      if (mounted.current)
+        onError(
+          error instanceof Error
+            ? error.message
+            : "Could not attach the captured scene.",
+        );
+    } finally {
+      inFlight.current = false;
+      if (mounted.current) {
+        setBusy(false);
+        onBusy(false);
+      }
     }
   }
   return (
@@ -132,6 +195,25 @@ export default function DeploymentWorkspace({
             : "AKUSPACE learned-audio experiment"}{" "}
           · {state.duration}s at 24 fps
         </p>
+        {model === "ltx-deploy-layout-to-video" && captured && (
+          <div>
+            <p>
+              Captured scene: {captured.name}. Attaching uploads its
+              colour/depth take, first frame and matching audio to your
+              registered deployment.
+            </p>
+            <button disabled={busy} onClick={() => void attachScene()}>
+              Attach captured scene
+            </button>
+            <button
+              disabled={busy}
+              onClick={() => clearLayoutTake(captured.id)}
+            >
+              Discard captured scene handoff
+            </button>
+          </div>
+        )}
+        {note && <p role="status">{note}</p>}
         {tokens
           .filter((token) => /(_WEBM|_PNG|_AUDIO|RECIPE_JSON)$/.test(token))
           .map((token) => (
