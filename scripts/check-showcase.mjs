@@ -26,13 +26,15 @@ const template = {
   "dimensions-mix": "Dimensions mix",
   "genobi-teaser": "Genobi teaser",
   "bloom-teaser": "Bloom",
+  "adaptive-reverb": "Adaptive reverb",
 };
 // A frame worth looking at in each: the end card, the teaser's first drop
-// and Bloom's title.
+// Bloom's title and Adaptive reverb's cathedral scan.
 const FRAME = {
   "dimensions-mix": 554,
   "genobi-teaser": 420,
   "bloom-teaser": 300,
+  "adaptive-reverb": 300,
 };
 
 const browser = await chromium.launch({

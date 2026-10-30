@@ -1,0 +1,205 @@
+{
+  "schema": "genobi.showcase.v1",
+  "project": "adaptive-reverb",
+  "name": "Adaptive reverb",
+  "template": "adaptive-reverb",
+  "summary": "The 3D + LTX template: one LTX-2.5 (open weights) + AKUSPACE LoRA take through a cathedral, a crowded hall and a small wooden studio, its own sound changing with each room and kept as the track, under a room-scan surveillance look, with the workflow's node diagram and an editable end card. Nothing is generated.",
+  "versions": [
+    {
+      "version": 1,
+      "date": "2026-10-30T15:30:00Z",
+      "by": ["owner", "agent"],
+      "title": "The first cut, the whole take",
+      "summary": "The fourth mix template: the whole take on one track slot over its own sound, a wireframe sweep and slice glitch at each room change, a room scan in the cathedral (scanlines, REC / CAM HUD, measure box, RT60 readouts), the workflow as a node diagram before the studio, and the construction end card over a frame of the studio.",
+      "changes": [
+        "The take encoded once at its native 1280 × 720, CRF 18, no sound",
+        "Its own sound as the track, AAC to MP3 320 kb/s, otherwise untouched; 60.5 beats at 120 BPM, 726 frames",
+        "No new recipe: screen-open, build-panel, wire-scan, slice-glitch, crt, hud, ui-focus, scan, space-hud and end-card-still",
+        "Gallery: Adaptive reverb (3D · LTX template) takes the Audio-visual card's place"
+      ],
+      "eventIds": [
+        "reverb-brief",
+        "reverb-look",
+        "reverb-transitions",
+        "reverb-workflow",
+        "reverb-end-card",
+        "reverb-labels",
+        "reverb-gallery",
+        "reverb-rooms",
+        "reverb-regenerate",
+        "reverb-docs"
+      ],
+      "file": "project-v1.json",
+      "projectId": "adaptive-reverb-v1",
+      "layers": 21,
+      "durationFrames": 726
+    }
+  ],
+  "media": {
+    "d8c7e053a1a3123f9f5e1b1541903275f8bfd88306f234b120020c9025ccb183": {
+      "path": "media/reverb-ltx.mp4",
+      "url": "/media/director-templates/adaptive-reverb/reverb-ltx.mp4"
+    },
+    "223b08fc60fa4c22da6ddbd5bbe41c1782ad32b18d0a68e4dd9a88cc899645e8": {
+      "path": "media/reverb-track.mp3",
+      "url": "/media/director-templates/adaptive-reverb/reverb-track.mp3"
+    }
+  },
+  "memory": {
+    "events": [
+      {
+        "id": "reverb-brief",
+        "kind": "note",
+        "objectIds": [],
+        "reason": "Owner, 30 Oct 2026: an \"Adaptive reverb\" template, \"proof that this is made with LTX-2.5 (open weights) + our AKUSPACE acoustic-space LoRA, open source\". The source video has its own audio, and the reverb changes per room: a drop between skyscrapers into a cathedral, then a crowded hall, then a small wooden studio with drums and keys. \"Keep the video's own audio as the track (do not replace it); use its full length.\"",
+        "source": "interpretation",
+        "guidance": {
+          "topic": "Adaptive reverb · brief",
+          "value": "Owner, 30 Oct 2026: an \"Adaptive reverb\" template, \"proof that this is made with LTX-2.5 (open weights) + our AKUSPACE acoustic-space LoRA, open source\". The source video has its own audio, and the reverb changes per room: a drop between skyscrapers into a cathedral, then a crowded hall, then a small wooden studio with drums and keys. \"Keep the video's own audio as the track (do not replace it); use its full length.\""
+        },
+        "actor": "agent",
+        "at": "2026-10-30T15:30:00Z",
+        "version": 1
+      },
+      {
+        "id": "reverb-look",
+        "kind": "note",
+        "objectIds": [],
+        "reason": "Owner, 30 Oct 2026: an editable Director mix template like Bloom, the source clip on the base track plus graphics layers. In the cathedral a camera-surveillance / ROOM SCAN look: scan lines, a wireframe / room-measure overlay, readouts like \"ROOM · CATHEDRAL · RT60 ~x s · AKUSPACE preset\", with the real RT60 / preset values from the repo's acoustics docs, never invented.",
+        "source": "interpretation",
+        "guidance": {
+          "topic": "Adaptive reverb · look",
+          "value": "Owner, 30 Oct 2026: an editable Director mix template like Bloom, the source clip on the base track plus graphics layers. In the cathedral a camera-surveillance / ROOM SCAN look: scan lines, a wireframe / room-measure overlay, readouts like \"ROOM · CATHEDRAL · RT60 ~x s · AKUSPACE preset\", with the real RT60 / preset values from the repo's acoustics docs, never invented."
+        },
+        "actor": "agent",
+        "at": "2026-10-30T15:30:00Z",
+        "version": 1
+      },
+      {
+        "id": "reverb-transitions",
+        "kind": "note",
+        "objectIds": [],
+        "reason": "Owner, 30 Oct 2026: at the room transitions (skyscraper to cathedral drop, cathedral to hall, hall to studio) smoother transitions with effects: a wireframe of the building or room, a surveillance scan sweep, slice glitch, reusing existing recipes (space-hud, scan, slice-glitch, screen-open, build-panel, end-card-still) where possible.",
+        "source": "interpretation",
+        "guidance": {
+          "topic": "Adaptive reverb · transitions",
+          "value": "Owner, 30 Oct 2026: at the room transitions (skyscraper to cathedral drop, cathedral to hall, hall to studio) smoother transitions with effects: a wireframe of the building or room, a surveillance scan sweep, slice glitch, reusing existing recipes (space-hud, scan, slice-glitch, screen-open, build-panel, end-card-still) where possible."
+        },
+        "actor": "agent",
+        "at": "2026-10-30T15:30:00Z",
+        "version": 1
+      },
+      {
+        "id": "reverb-workflow",
+        "kind": "note",
+        "objectIds": [],
+        "reason": "Owner, 30 Oct 2026: towards the end, between the bigger room and the small room, show \"the built room in the workflow\": the World Builder room set and / or the ComfyUI graph of workflows/world-builder-akuspace-ltx.json; if real ComfyUI cannot be captured, render the graph as a clean node diagram from the workflow JSON and label it as the workflow, not a screenshot.",
+        "source": "interpretation",
+        "guidance": {
+          "topic": "Adaptive reverb · the built room",
+          "value": "v1 shows the workflow as a node diagram drawn from its JSON (reverb-workflow.jpg), labelled as the workflow. No 3D-tab recording in v1."
+        },
+        "actor": "agent",
+        "at": "2026-10-30T15:30:00Z",
+        "version": 1
+      },
+      {
+        "id": "reverb-end-card",
+        "kind": "note",
+        "objectIds": [],
+        "reason": "Owner, 30 Oct 2026: an editable end card (end-card-still): \"ADAPTIVE REVERB\" / \"LTX-2.5 · OPEN WEIGHTS\" / \"AKUSPACE ROOMS\" / credits as the repo records them.",
+        "source": "interpretation",
+        "guidance": {
+          "topic": "Adaptive reverb · end card",
+          "value": "Owner, 30 Oct 2026: an editable end card (end-card-still): \"ADAPTIVE REVERB\" / \"LTX-2.5 · OPEN WEIGHTS\" / \"AKUSPACE ROOMS\" / credits as the repo records them."
+        },
+        "actor": "agent",
+        "at": "2026-10-30T15:30:00Z",
+        "version": 1
+      },
+      {
+        "id": "reverb-labels",
+        "kind": "note",
+        "objectIds": [],
+        "reason": "Owner, 30 Oct 2026: footage \"LTX-2.5 (open weights) + AKUSPACE LoRA\", the badge honest about what the template runs (the existing LTX + AKUSPACE workflow route). The video is 720p: encode once at CRF ~18 at native size, never upscale; project media at most 150 MiB, each file at most 25 MiB.",
+        "source": "interpretation",
+        "guidance": {
+          "topic": "Adaptive reverb · provenance",
+          "value": "Owner, 30 Oct 2026: footage \"LTX-2.5 (open weights) + AKUSPACE LoRA\", the badge honest about what the template runs (the existing LTX + AKUSPACE workflow route). The video is 720p: encode once at CRF ~18 at native size, never upscale; project media at most 150 MiB, each file at most 25 MiB."
+        },
+        "actor": "agent",
+        "at": "2026-10-30T15:30:00Z",
+        "version": 1
+      },
+      {
+        "id": "reverb-gallery",
+        "kind": "note",
+        "objectIds": [],
+        "reason": "Owner, 30 Oct 2026: the gallery card replaces the Audio-visual card's position (the Audio-visual template stays, its card dropped via NOT_IN_GALLERY); order: Genobi teaser, Dimensions mix, Bloom, Adaptive reverb, then the rest. Later the same day: \"this should go as the new template for 3D and LTX\", so the card reads 3D · LTX template and the description names World Builder 3D rooms, LTX-2.5 (open weights) and AKUSPACE acoustics.",
+        "source": "interpretation",
+        "guidance": {
+          "topic": "Adaptive reverb · gallery",
+          "value": "Owner, 30 Oct 2026: the gallery card replaces the Audio-visual card's position (the Audio-visual template stays, its card dropped via NOT_IN_GALLERY); order: Genobi teaser, Dimensions mix, Bloom, Adaptive reverb, then the rest. Later the same day: \"this should go as the new template for 3D and LTX\", so the card reads 3D · LTX template and the description names World Builder 3D rooms, LTX-2.5 (open weights) and AKUSPACE acoustics."
+        },
+        "actor": "agent",
+        "at": "2026-10-30T15:30:00Z",
+        "version": 1
+      },
+      {
+        "id": "reverb-rooms",
+        "kind": "note",
+        "objectIds": [],
+        "reason": "Owner, 30 Oct 2026: take the RT60 / preset values for the cathedral, medium and small rooms from the repo. v1 maps cathedral → cathedral (~4.8 s), crowded hall → medium_room (~1.9 s), small wooden studio → small_room (~0.67 s): each preset's estimated_rt60 in shared/akuspace-presets.json, the decay it was trained on, not a measurement of the take.",
+        "source": "interpretation",
+        "guidance": {
+          "topic": "Adaptive reverb · rooms",
+          "value": "REVERB_ROUTE in shared/templates/adaptive-reverb.ts records each room's seconds, preset, trained RT60 and World Builder example set."
+        },
+        "actor": "agent",
+        "at": "2026-10-30T15:30:00Z",
+        "version": 1
+      },
+      {
+        "id": "reverb-regenerate",
+        "kind": "note",
+        "objectIds": [],
+        "reason": "Owner, 30 Oct 2026: the template should be ready for later regeneration: record the LTX + AKUSPACE workflow and room presets it came from, so an agent can regenerate a room, but make no generation now. The 3D route: a World Builder room set → Acoustics (RT60 → AKUSPACE preset) → workflows/world-builder-akuspace-ltx.json (LTX-2.5 + AKUSPACE LoRA); workflows/world-builder-layout-to-render.json for layout to picture. Any regeneration is a paid run: quote first and get the owner's approval.",
+        "source": "interpretation",
+        "guidance": {
+          "topic": "Adaptive reverb · regenerate",
+          "value": "Owner, 30 Oct 2026: the template should be ready for later regeneration: record the LTX + AKUSPACE workflow and room presets it came from, so an agent can regenerate a room, but make no generation now. The 3D route: a World Builder room set → Acoustics (RT60 → AKUSPACE preset) → workflows/world-builder-akuspace-ltx.json (LTX-2.5 + AKUSPACE LoRA); workflows/world-builder-layout-to-render.json for layout to picture. Any regeneration is a paid run: quote first and get the owner's approval."
+        },
+        "actor": "agent",
+        "at": "2026-10-30T15:30:00Z",
+        "version": 1
+      },
+      {
+        "id": "reverb-docs",
+        "kind": "note",
+        "objectIds": [],
+        "reason": "Owner, 30 Oct 2026: document the acoustic-space piece properly: docs/adaptive-reverb.md explains Acoustic Space end to end (World Builder room → measured RT60 / preset → AKUSPACE LoRA on LTX-2.5 → the generated sound in that room), how rooms change across the cut and how to regenerate a room, links the workflow README and capability rows, and links the rendered video (gallery card and /watch page).",
+        "source": "interpretation",
+        "guidance": {
+          "topic": "Adaptive reverb · docs",
+          "value": "Owner, 30 Oct 2026: document the acoustic-space piece properly: docs/adaptive-reverb.md explains Acoustic Space end to end (World Builder room → measured RT60 / preset → AKUSPACE LoRA on LTX-2.5 → the generated sound in that room), how rooms change across the cut and how to regenerate a room, links the workflow README and capability rows, and links the rendered video (gallery card and /watch page)."
+        },
+        "actor": "agent",
+        "at": "2026-10-30T15:30:00Z",
+        "version": 1
+      }
+    ],
+    "checkpoints": [
+      {
+        "id": "reverb-v1",
+        "sessionId": "showcase-v1",
+        "summary": "Version 1 built on feat/adaptive-reverb-template: 726 frames at 24 fps and 1280 × 720, rendered by Render MP4 for the gallery card and a master.",
+        "eventIds": ["reverb-brief", "reverb-rooms"],
+        "unresolved": [],
+        "nextSteps": [],
+        "status": "done",
+        "at": "2026-10-30T15:30:00Z",
+        "version": 1
+      }
+    ]
+  }
+}

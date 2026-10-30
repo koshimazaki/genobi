@@ -41,11 +41,15 @@ user action through every layer.
 - [Bloom](bloom-teaser.md) — the third mix template, the anime teaser: the
   owner's two MiniMax H3 (open weights) takes of Bloom under a character-scan
   and surveillance look, cut to the owner's track at 140 BPM.
+- [Adaptive reverb](adaptive-reverb.md) — the fourth mix template, the 3D +
+  LTX template: one LTX-2.5 (open weights) + AKUSPACE LoRA take through three
+  rooms, its reverb changing with each, and Acoustic Space end to end.
 - [Showcase projects](director-bundle/showcase/README.md) — finished cuts kept
   version by version, with the memory behind each change:
   [Dimensions mix](director-bundle/showcase/dimensions-mix/README.md) v1 to v4,
-  [Genobi teaser](director-bundle/showcase/genobi-teaser/README.md) v1 and v2
-  and [Bloom](director-bundle/showcase/bloom-teaser/README.md) v1;
+  [Genobi teaser](director-bundle/showcase/genobi-teaser/README.md) v1 and v2,
+  [Bloom](director-bundle/showcase/bloom-teaser/README.md) v1 and
+  [Adaptive reverb](director-bundle/showcase/adaptive-reverb/README.md) v1;
   each version opens in the Editor from its gallery card.
 - [Anime teaser template](anime-teaser-template.md) — intake, generated sheet,
   storyboard and track, two H3 shots, the cut to the beat.

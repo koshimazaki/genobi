@@ -71,6 +71,9 @@ const MIX_FOOTAGE: Readonly<Record<string, string[]>> = {
   // Bloom (30 October 2026): the owner's two MiniMax H3 (open weights)
   // takes of the Bloom character sheet, nothing else.
   "bloom-teaser": ["minimax-h3"],
+  // Adaptive reverb (30 October 2026): one LTX-2.5 (open weights) take with
+  // the AKUSPACE LoRA, nothing else.
+  "adaptive-reverb": ["ltx-2-5-akuspace"],
 };
 
 /**
@@ -92,7 +95,8 @@ export function footageEntries(template: HouseTemplate): string[] {
  * teaser (the product teaser), the Dimensions mix (the music video) and
  * Bloom (the anime teaser) first, then the Character piece, Audio-visual and
  * Sheet to shot, then the generation cards. Bloom replaced the Neon bloom
- * card the same day. Ids not listed keep
+ * card the same day. Adaptive reverb (the 3D + LTX template) took the
+ * Audio-visual card's place that evening. Ids not listed keep
  * their catalogue order after these. The template arrays themselves keep
  * their order: agents, MCP tools and the Director read them.
  */
@@ -100,8 +104,8 @@ export const GALLERY_ORDER: readonly string[] = [
   "genobi-teaser",
   "dimensions-mix",
   "bloom-teaser",
+  "adaptive-reverb",
   "character-piece",
-  "audio-visual",
   "sheet-to-shot",
   "character-piece-generation",
   "product-video-generation",
@@ -116,6 +120,7 @@ export const GALLERY_SUBTITLE: Readonly<Record<string, string>> = {
   "genobi-teaser": "Product teaser",
   "dimensions-mix": "Music video",
   "bloom-teaser": "Anime teaser",
+  "adaptive-reverb": "3D · LTX template",
 };
 
 /**
@@ -128,12 +133,15 @@ export const GALLERY_SUBTITLE: Readonly<Record<string, string>> = {
  * skills, agents, MCP tools and Director links still open them. The Neon
  * bloom generation card (`audio-visual-generation`) left it on 30 October
  * 2026 for Bloom, the anime teaser; its watch page and links still open.
+ * The Audio-visual card left it the same day for Adaptive reverb, the 3D +
+ * LTX template; the template, its skill and its links stay.
  */
 export const NOT_IN_GALLERY: ReadonlySet<string> = new Set([
   "falling-room",
   "anime-teaser",
   "product-video",
   "audio-visual-generation",
+  "audio-visual",
 ]);
 
 /**

@@ -42,8 +42,8 @@ describe("gallery card order", () => {
       "Genobi teaser",
       "Dimensions mix",
       "Bloom",
+      "Adaptive reverb",
       "Character piece",
-      "Audio-visual",
       "Sheet to shot",
       "Forest guardian",
       "Toy creatures",
@@ -81,6 +81,7 @@ describe("gallery card order", () => {
       "genobi-teaser": "Product teaser",
       "dimensions-mix": "Music video",
       "bloom-teaser": "Anime teaser",
+      "adaptive-reverb": "3D · LTX template",
     });
     expect(card("bloom-teaser").name).toBe("Bloom");
     // The Dimensions mix keeps its id and name, so links and showcases hold.
@@ -105,6 +106,7 @@ describe("gallery card order", () => {
       matchesFilters(t, { ...emptyFilters, open: "open" }),
     );
     expect(open.map((t) => t.id).sort()).toEqual([
+      "adaptive-reverb",
       "bloom-teaser",
       "dimensions-mix",
       "genobi-teaser",
@@ -124,7 +126,7 @@ describe("model badges", () => {
       "Character piece": "LTX-2.5 · open weights",
       "Dimensions mix": "MiniMax H3 · open weights",
       Bloom: "MiniMax H3 · open weights",
-      "Audio-visual": "LTX-2.5 · open weights",
+      "Adaptive reverb": "LTX-2.5 · open weights",
       "Sheet to shot": "MiniMax H3 · open weights",
       "Forest guardian": "FLUX 3 video · API",
       "Toy creatures": "FLUX 3 video · API",
@@ -183,7 +185,7 @@ describe("footage lines", () => {
       "Dimensions mix": null,
       Bloom: null,
       "Character piece": "Preview footage · FLUX 3 video",
-      "Audio-visual": "Preview footage · MiniMax H3",
+      "Adaptive reverb": null,
       "Sheet to shot": null,
       "Forest guardian": null,
       "Toy creatures": "Preview footage · FLUX 3 video",

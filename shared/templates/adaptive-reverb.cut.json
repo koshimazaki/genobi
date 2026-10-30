@@ -1,0 +1,350 @@
+{
+  "id": "adaptive-reverb",
+  "bpm": 120,
+  "inPointSeconds": 0,
+  "fps": 24,
+  "width": 1280,
+  "height": 720,
+  "designSize": {
+    "width": 960,
+    "height": 540
+  },
+  "beats": 60.5,
+  "track": {
+    "asset": "reverb-track",
+    "seconds": 30.65
+  },
+  "trackName": "Track · the take's own sound (LTX-2.5 + AKUSPACE)",
+  "shots": [
+    {
+      "asset": "reverb-ltx",
+      "label": "Drop · between the skyscrapers",
+      "sourceSeconds": 0.0,
+      "startBeat": 0,
+      "beats": 16,
+      "cropY": null
+    },
+    {
+      "asset": "reverb-ltx",
+      "label": "Room 1 · cathedral (AKUSPACE cathedral)",
+      "sourceSeconds": 8.0,
+      "startBeat": 16,
+      "beats": 16,
+      "cropY": null
+    },
+    {
+      "asset": "reverb-ltx",
+      "label": "Room 2 · crowded hall (AKUSPACE medium room)",
+      "sourceSeconds": 16.0,
+      "startBeat": 32,
+      "beats": 13,
+      "cropY": null
+    },
+    {
+      "asset": "reverb-ltx",
+      "label": "Room 3 · small wooden studio (AKUSPACE small room)",
+      "sourceSeconds": 22.5,
+      "startBeat": 45,
+      "beats": 15.5,
+      "cropY": null
+    }
+  ],
+  "layers": [
+    {
+      "id": "open",
+      "name": "Screen open",
+      "module": "screen-open",
+      "kind": "graphics",
+      "lane": "open",
+      "startBeat": 0,
+      "beats": 2,
+      "opacity": 1,
+      "parameters": {
+        "color": "#62f2e4",
+        "matte": "#0b0d0c",
+        "duration": 0.6,
+        "glyphs": 28,
+        "seed": 7
+      }
+    },
+    {
+      "id": "caption-0",
+      "name": "Caption · the drop",
+      "module": "build-panel",
+      "kind": "graphics",
+      "lane": "captions",
+      "startBeat": 3,
+      "beats": 9,
+      "opacity": 1,
+      "parameters": {
+        "side": "left",
+        "title": "DROP",
+        "lines": "OUTSIDE / BETWEEN TOWERS / ROOM AHEAD",
+        "color": "#f6f8f2",
+        "muted": "#cfd6d2",
+        "accent": "#f2b84b",
+        "bpm": 120,
+        "duration": 0.6
+      }
+    },
+    {
+      "id": "wire-1",
+      "name": "Wireframe sweep · the drop into the cathedral",
+      "module": "wire-scan",
+      "kind": "filter",
+      "lane": "wire",
+      "startBeat": 13,
+      "beats": 3,
+      "opacity": 1,
+      "parameters": {
+        "color": "#62f2e4",
+        "amount": 0.8,
+        "sweep": 1.4,
+        "trail": 0.35
+      }
+    },
+    {
+      "id": "glitch-1",
+      "name": "Slice glitch · beat 16",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 16,
+      "beats": 0.5,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.9,
+        "slices": 18,
+        "seed": 11,
+        "duration": 0.25
+      }
+    },
+    {
+      "id": "crt",
+      "name": "Surveillance scanlines · cathedral",
+      "module": "crt",
+      "kind": "filter",
+      "lane": "crt",
+      "startBeat": 16,
+      "beats": 16,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.55,
+        "curvature": 0.04,
+        "rgb": 1.5,
+        "vignette": 0.45
+      }
+    },
+    {
+      "id": "hud",
+      "name": "Room scan HUD · REC / CAM",
+      "module": "hud",
+      "kind": "graphics",
+      "lane": "hud",
+      "startBeat": 16,
+      "beats": 16,
+      "opacity": 1,
+      "parameters": {
+        "color": "#f6f8f2",
+        "accent": "#f2b84b",
+        "bpm": 120,
+        "text": "● REC  CAM 01 // ROOM SCAN",
+        "credit": "AKUSPACE / CATHEDRAL",
+        "seconds": 8
+      }
+    },
+    {
+      "id": "target-1",
+      "name": "Room measure · nave",
+      "module": "ui-focus",
+      "kind": "graphics",
+      "lane": "focus",
+      "startBeat": 17,
+      "beats": 5,
+      "opacity": 1,
+      "parameters": {
+        "x": 0.3,
+        "y": 0.2,
+        "w": 0.4,
+        "h": 0.7,
+        "label": "MEASURE · NAVE",
+        "color": "#62f2e4",
+        "dim": 0.25,
+        "draw": 0.3,
+        "fadeAt": 2.2,
+        "view": ""
+      }
+    },
+    {
+      "id": "scan",
+      "name": "Scan · cathedral",
+      "module": "scan",
+      "kind": "graphics",
+      "lane": "scan",
+      "startBeat": 22,
+      "beats": 8,
+      "opacity": 0.95,
+      "parameters": {
+        "color": "#f6f8f2",
+        "accent": "#62f2e4",
+        "text": "RT60 ~4.8 S",
+        "x": 0.36,
+        "y": 0.6,
+        "bpm": 120
+      }
+    },
+    {
+      "id": "caption-1",
+      "name": "Readout · cathedral",
+      "module": "build-panel",
+      "kind": "graphics",
+      "lane": "captions",
+      "startBeat": 20,
+      "beats": 10,
+      "opacity": 1,
+      "parameters": {
+        "side": "right",
+        "title": "ROOM · CATHEDRAL",
+        "lines": "RT60 ~4.8 S / AKUSPACE PRESET / CATHEDRAL",
+        "color": "#f6f8f2",
+        "muted": "#cfd6d2",
+        "accent": "#f2b84b",
+        "bpm": 120,
+        "duration": 0.6
+      }
+    },
+    {
+      "id": "wire-2",
+      "name": "Wireframe sweep · cathedral to hall",
+      "module": "wire-scan",
+      "kind": "filter",
+      "lane": "wire",
+      "startBeat": 30,
+      "beats": 3,
+      "opacity": 1,
+      "parameters": {
+        "color": "#62f2e4",
+        "amount": 0.8,
+        "sweep": 1.4,
+        "trail": 0.35
+      }
+    },
+    {
+      "id": "glitch-2",
+      "name": "Slice glitch · beat 32",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 32,
+      "beats": 0.5,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.9,
+        "slices": 18,
+        "seed": 18,
+        "duration": 0.25
+      }
+    },
+    {
+      "id": "caption-2",
+      "name": "Readout · crowded hall",
+      "module": "build-panel",
+      "kind": "graphics",
+      "lane": "captions",
+      "startBeat": 33,
+      "beats": 7,
+      "opacity": 1,
+      "parameters": {
+        "side": "left",
+        "title": "ROOM · HALL",
+        "lines": "RT60 ~1.9 S / AKUSPACE PRESET / MEDIUM ROOM",
+        "color": "#f6f8f2",
+        "muted": "#cfd6d2",
+        "accent": "#f2b84b",
+        "bpm": 120,
+        "duration": 0.6
+      }
+    },
+    {
+      "id": "workflow",
+      "name": "The built room in the workflow · node diagram",
+      "module": "space-hud",
+      "kind": "graphics",
+      "lane": "cards",
+      "startBeat": 40,
+      "beats": 5,
+      "opacity": 1,
+      "parameters": {
+        "still": "/media/director-templates/adaptive-reverb/reverb-workflow.jpg",
+        "color": "#62f2e4",
+        "label": "WORKFLOW · 3D ROOM → LTX",
+        "credit": "AKUSPACE LORA · OPEN WEIGHTS",
+        "targets": "0.31,0.17,0.07,0.09 / 0.72,0.63,0.07,0.11 / 0.45,0.15,0.06,0.09 / 0.385,0.35,0.06,0.12 / 0.385,0.15,0.06,0.06 / 0.385,0.61,0.07,0.17",
+        "interval": 0.2,
+        "dim": 0.1,
+        "fadeAt": 0
+      },
+      "card": true
+    },
+    {
+      "id": "glitch-3",
+      "name": "Slice glitch · beat 45",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 45,
+      "beats": 0.5,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.9,
+        "slices": 18,
+        "seed": 25,
+        "duration": 0.25
+      }
+    },
+    {
+      "id": "caption-3",
+      "name": "Readout · small studio",
+      "module": "build-panel",
+      "kind": "graphics",
+      "lane": "captions",
+      "startBeat": 46,
+      "beats": 7,
+      "opacity": 1,
+      "parameters": {
+        "side": "right",
+        "title": "ROOM · STUDIO",
+        "lines": "RT60 ~0.67 S / AKUSPACE PRESET / SMALL ROOM",
+        "color": "#f6f8f2",
+        "muted": "#cfd6d2",
+        "accent": "#f2b84b",
+        "bpm": 120,
+        "duration": 0.6
+      }
+    },
+    {
+      "id": "end-card",
+      "name": "End card · Adaptive reverb",
+      "module": "end-card-still",
+      "kind": "graphics",
+      "lane": "end",
+      "startBeat": 54,
+      "beats": 6.5,
+      "opacity": 1,
+      "parameters": {
+        "eyebrow": "GENOBI // 3D + LTX",
+        "title": "ADAPTIVE REVERB",
+        "subtitle": "LTX-2.5 · OPEN WEIGHTS",
+        "credit1": "AKUSPACE ROOMS",
+        "credit2": "WORLD BUILDER 3D · KOSHIMAZAKI",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "color": "#62f2e4",
+        "accent": "#f2b84b",
+        "steps": "Building the room / Measuring the decay / Rendering it in LTX-2.5",
+        "done": "Open weights",
+        "duration": 2.4,
+        "still": "/media/director-templates/adaptive-reverb/reverb-end-card.jpg"
+      }
+    }
+  ]
+}

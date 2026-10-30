@@ -57,7 +57,7 @@ describe("template gallery", () => {
     const short = galleryTemplates.filter((t) =>
       matchesFilters(t, { ...emptyFilters, kind: "template", length: "short" }),
     );
-    expect(short.map((t) => t.id)).toEqual(["audio-visual", "sheet-to-shot"]);
+    expect(short.map((t) => t.id)).toEqual(["sheet-to-shot"]);
     expect(short.every((t) => templateSeconds(t) <= 10)).toBe(true);
     // FLUX 3 is closed, so only the generation cards are Premium.
     expect(
@@ -77,6 +77,7 @@ describe("template gallery", () => {
       "anime-teaser",
       "product-video",
       "audio-visual-generation",
+      "audio-visual",
     ]);
     expect(galleryTemplates.map((t) => t.id)).not.toContain("falling-room");
     expect(findGalleryTemplate("falling-room")).toBeUndefined();
@@ -120,6 +121,7 @@ describe("template gallery", () => {
       "genobi-teaser",
       "dimensions-mix",
       "bloom-teaser",
+      "adaptive-reverb",
       "sheet-to-shot",
     ]);
     expect(shown.every(openOnly)).toBe(true);

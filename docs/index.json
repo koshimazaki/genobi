@@ -69,6 +69,7 @@
     "director": {
       "meaning": "The Director composer, its templates, editor and evidence",
       "pages": [
+        "adaptive-reverb.md",
         "agent-workspace.md",
         "anime-teaser-template.md",
         "bloom-teaser.md",
@@ -102,6 +103,7 @@
         "director-bundle/README.md",
         "director-bundle/motion-effects.md",
         "director-bundle/showcase/README.md",
+        "director-bundle/showcase/adaptive-reverb/README.md",
         "director-bundle/showcase/bloom-teaser/README.md",
         "director-bundle/showcase/dimensions-mix/README.md",
         "director-bundle/showcase/genobi-teaser/README.md",
@@ -159,12 +161,14 @@
     "sound": {
       "meaning": "Audio, soundtracks and Acoustic Space",
       "pages": [
+        "adaptive-reverb.md",
         "akuspace-docker.md",
         "anime-teaser-template.md",
         "audio-analysis.md",
         "bloom-teaser.md",
         "camera-wording.md",
         "dimensions-mix.md",
+        "director-bundle/showcase/adaptive-reverb/README.md",
         "director-bundle/showcase/bloom-teaser/README.md",
         "director-bundle/showcase/dimensions-mix/README.md",
         "director-bundle/showcase/genobi-teaser/README.md",
@@ -251,6 +255,7 @@
     "templates": {
       "meaning": "House templates, their inputs, intake and skills",
       "pages": [
+        "adaptive-reverb.md",
         "anime-teaser-template.md",
         "bloom-teaser.md",
         "falling-room.md"
@@ -396,6 +401,8 @@
     "world-builder": {
       "meaning": "World Builder and Scene Adapter",
       "pages": [
+        "adaptive-reverb.md",
+        "director-bundle/showcase/adaptive-reverb/README.md",
         "project-assets.md",
         "world-builder-acoustics.md",
         "world-builder-capture.md",
@@ -523,6 +530,7 @@
       "meaning": "Project evidence, session checkpoints and reusable taste",
       "pages": [
         "director-bundle/showcase/README.md",
+        "director-bundle/showcase/adaptive-reverb/README.md",
         "director-bundle/showcase/bloom-teaser/README.md",
         "director-bundle/showcase/dimensions-mix/README.md",
         "director-bundle/showcase/genobi-teaser/README.md"
@@ -545,6 +553,7 @@
       "links": [
         "3d-tab.md",
         "activity-settings.md",
+        "adaptive-reverb.md",
         "agent-approvals.md",
         "agent-bubble.md",
         "agent-context.md",
@@ -594,6 +603,7 @@
         "director-bundle/README.md",
         "director-bundle/motion-effects.md",
         "director-bundle/showcase/README.md",
+        "director-bundle/showcase/adaptive-reverb/README.md",
         "director-bundle/showcase/bloom-teaser/README.md",
         "director-bundle/showcase/dimensions-mix/README.md",
         "director-bundle/showcase/genobi-teaser/README.md",
@@ -680,6 +690,18 @@
       "tags": ["agents", "studio", "architecture"],
       "summary": "Optional operational tool history, its evidence boundaries, and independent bubble controls.",
       "links": ["agent-setup.md", "runner-pairing.md"]
+    },
+    {
+      "title": "Adaptive reverb: the 3D + LTX template",
+      "path": "adaptive-reverb.md",
+      "tags": ["director", "sound", "templates", "world-builder"],
+      "summary": "Adaptive reverb, the 3D + LTX mix template - one LTX-2.5 (open weights) + AKUSPACE LoRA take through a cathedral, a crowded hall and a small studio, its own sound changing with each room, under a room-scan look; and Acoustic Space end to end, from a World Builder room to the sound in it, and how to regenerate a room.",
+      "links": [
+        "capabilities.md",
+        "director-bundle/showcase/adaptive-reverb/README.md",
+        "templates.md",
+        "world-builder-acoustics.md"
+      ]
     },
     {
       "title": "Confirm before spending",
@@ -1204,10 +1226,18 @@
       "tags": ["director", "bundle", "agents", "memory"],
       "summary": "Showcase projects - finished cuts kept version by version as Director project files, with the memory that explains each change, so any version opens in the Editor, can be recreated, and an agent can continue from it.",
       "links": [
+        "director-bundle/showcase/adaptive-reverb/README.md",
         "director-bundle/showcase/bloom-teaser/README.md",
         "director-bundle/showcase/dimensions-mix/README.md",
         "director-bundle/showcase/genobi-teaser/README.md"
       ]
+    },
+    {
+      "title": "Adaptive reverb: how it was made",
+      "path": "director-bundle/showcase/adaptive-reverb/README.md",
+      "tags": ["director", "sound", "memory", "world-builder"],
+      "summary": "How Adaptive reverb, the 3D + LTX template, was made - v1, the whole LTX-2.5 + AKUSPACE take over its own sound - and how to recreate it or regenerate a room.",
+      "links": ["adaptive-reverb.md"]
     },
     {
       "title": "Bloom: how it was made",
@@ -1859,6 +1889,7 @@
       "tags": ["studio", "director", "cloudflare"],
       "summary": "The Gallery-first studio view, its card order, its model badges (named from the registry) and Open only toggle, its \"Make your own\" drawer (mechanical templates generated in place, agent templates started in a session), its FLUX 3 generation cards, its preview clips, and the public watch and embed pages with their link-preview metadata and security headers.",
       "links": [
+        "adaptive-reverb.md",
         "bloom-teaser.md",
         "dimensions-mix.md",
         "falling-room.md",

@@ -15,18 +15,20 @@ length. Tool labels describe recipe steps, not how demo footage was made.
 
 The cards follow `GALLERY_ORDER` (`shared/gallery/catalogue.ts`), the owner's
 order since 30 October 2026: the [Genobi teaser](genobi-teaser.md), the
-[Dimensions mix](dimensions-mix.md) and [Bloom](bloom-teaser.md) first, then
-Character piece, Audio-visual, Sheet to shot and the generation cards (Forest
-guardian, Toy creatures). Bloom replaced the Neon bloom card the same day;
-Neon bloom (`audio-visual-generation`) is in `NOT_IN_GALLERY`, its template
-and links kept. The template arrays in
+[Dimensions mix](dimensions-mix.md), [Bloom](bloom-teaser.md) and
+[Adaptive reverb](adaptive-reverb.md) first, then Character piece, Sheet to
+shot and the generation cards (Forest guardian, Toy creatures). Bloom
+replaced the Neon bloom card the same day, and Adaptive reverb (the 3D + LTX
+template) the Audio-visual card; Neon bloom (`audio-visual-generation`) and
+Audio-visual (`audio-visual`) are in `NOT_IN_GALLERY`, their templates and
+links kept. The template arrays in
 `shared/templates/catalogue.ts` keep their order, since the Director's list,
 the agent tools and the MCP server read them; only the gallery reorders.
 
-The three mixes carry a second line saying what each piece is for
+The four mixes carry a second line saying what each piece is for
 (`GALLERY_SUBTITLE`): "Genobi teaser · Product teaser", "Dimensions mix ·
-Music video" and "Bloom · Anime teaser", on the card and in the drawer's
-title. The Dimensions mix
+Music video", "Bloom · Anime teaser" and "Adaptive reverb · 3D · LTX
+template", on the card and in the drawer's title. The Dimensions mix
 keeps its name and id, so its links, watch page and showcases are unchanged.
 The Genobi teaser's poster is its GENOBI title frame (4.7 s into the v3
 render, the wordmark fully drawn), 1920 × 1080 like the cut.
@@ -54,6 +56,7 @@ or "open + API" when both appear.
 | Genobi teaser                              | MiniMax H3 + FLUX 3 video · open + API | Studio screen recordings; its generated footage is the owner's MiniMax H3 creatures and one FLUX 3 run (v3) |
 | Character piece, Audio-visual              | LTX-2.5 · open weights                 | Their recipes' video model; Klein is the image step                                                         |
 | Dimensions mix                             | MiniMax H3 · open weights              | Its three clips are the owner's MiniMax H3 outputs                                                          |
+| Adaptive reverb                            | LTX-2.5 · open weights                 | Its one take is the owner's LTX-2.5 + AKUSPACE LoRA run (`ltx-2-5-akuspace`)                                |
 | Sheet to shot                              | MiniMax H3 · open weights              | One H3 shot through Router                                                                                  |
 | Forest guardian, Toy creatures, Neon bloom | FLUX 3 video · API                     | FLUX 3 image to video                                                                                       |
 

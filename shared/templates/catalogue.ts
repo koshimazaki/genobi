@@ -1,3 +1,4 @@
+import { adaptiveReverb } from "./adaptive-reverb";
 import { animeTeaser } from "./anime-teaser";
 import { bloomTeaser } from "./bloom-teaser";
 import { dimensionsMix } from "./dimensions-mix";
@@ -355,6 +356,7 @@ export const mixTemplates: readonly HouseTemplate[] = [
   dimensionsMix,
   genobiTeaser,
   bloomTeaser,
+  adaptiveReverb,
 ];
 export const findMixTemplate = (id: string | null | undefined) =>
   mixTemplates.find((t) => t.id === id);

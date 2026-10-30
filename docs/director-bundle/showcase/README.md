@@ -11,11 +11,12 @@ and a README that tells the story. Every version opens in the Editor as an
 editable project of its own, so a person can take any version and make it
 theirs, and an agent can continue from one.
 
-| Project                                    | Versions | Gallery card   |
-| ------------------------------------------ | -------- | -------------- |
-| [Dimensions mix](dimensions-mix/README.md) | v1 to v4 | Dimensions mix |
-| [Genobi teaser](genobi-teaser/README.md)   | v1 to v3 | Genobi teaser  |
-| [Bloom](bloom-teaser/README.md)            | v1       | Bloom          |
+| Project                                      | Versions | Gallery card    |
+| -------------------------------------------- | -------- | --------------- |
+| [Dimensions mix](dimensions-mix/README.md)   | v1 to v4 | Dimensions mix  |
+| [Genobi teaser](genobi-teaser/README.md)     | v1 to v3 | Genobi teaser   |
+| [Bloom](bloom-teaser/README.md)              | v1       | Bloom           |
+| [Adaptive reverb](adaptive-reverb/README.md) | v1       | Adaptive reverb |
 
 ## What a folder holds
 
