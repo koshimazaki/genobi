@@ -39,6 +39,7 @@
         "akuspace-docker.md",
         "arena.md",
         "comfy-cloud-inventory.md",
+        "comfy-deploy.md",
         "comfy-deployment.md",
         "director-comfy.md",
         "genmod.md",
@@ -168,6 +169,7 @@
         "audio-analysis.md",
         "bloom-teaser.md",
         "camera-wording.md",
+        "comfy-deploy.md",
         "dimensions-mix.md",
         "director-bundle/showcase/adaptive-reverb/README.md",
         "director-bundle/showcase/bloom-teaser/README.md",
@@ -273,6 +275,7 @@
         "audio-analysis.md",
         "bfl-key-reuse.md",
         "cloudflare.md",
+        "comfy-deploy.md",
         "comfy-deployment.md",
         "genobi-cli.md",
         "layout-to-render-status.md",
@@ -300,6 +303,7 @@
         "akuspace-docker.md",
         "camera-wording.md",
         "comfy-cloud-inventory.md",
+        "comfy-deploy.md",
         "comfy-deployment.md",
         "director-comfy.md",
         "director-remix-verification.md",
@@ -404,6 +408,7 @@
       "meaning": "World Builder and Scene Adapter",
       "pages": [
         "adaptive-reverb.md",
+        "comfy-deploy.md",
         "director-bundle/showcase/adaptive-reverb/README.md",
         "project-assets.md",
         "world-builder-acoustics.md",
@@ -509,6 +514,7 @@
         "akuspace-docker.md",
         "capabilities.md",
         "comfy-cloud-inventory.md",
+        "comfy-deploy.md",
         "comfy-deployment.md",
         "hermes-open-route.md",
         "hermes-runs.md",
@@ -574,6 +580,7 @@
         "capabilities.md",
         "cloudflare.md",
         "comfy-cloud-inventory.md",
+        "comfy-deploy.md",
         "comfy-deployment.md",
         "construction-motion.md",
         "credits.md",
@@ -702,6 +709,7 @@
       "summary": "Adaptive reverb, the 3D + LTX mix template - one LTX-2.5 (open weights) + AKUSPACE LoRA take through a cathedral, a crowded hall and a small studio, its own sound changing with each room, under a room-scan look; and Acoustic Space end to end, from a World Builder room to the sound in it, and how to regenerate a room.",
       "links": [
         "capabilities.md",
+        "comfy-deploy.md",
         "director-bundle/showcase/adaptive-reverb/README.md",
         "templates.md",
         "world-builder-acoustics.md"
@@ -894,6 +902,7 @@
         "camera-wording.md",
         "cloudflare.md",
         "comfy-cloud-inventory.md",
+        "comfy-deploy.md",
         "comfy-deployment.md",
         "dimensions-mix.md",
         "director-agent-tools.md",
@@ -960,11 +969,25 @@
       "links": ["architecture.md", "machine-check.md"]
     },
     {
+      "title": "Deploy the worked LTX / World Builder workflows",
+      "path": "comfy-deploy.md",
+      "tags": [
+        "workflows",
+        "comfy",
+        "backend",
+        "models",
+        "sound",
+        "world-builder"
+      ],
+      "summary": "Offline recipe and endpoint catalogue for the worked LTX and World Builder workflows, with owner-run build, linux/nvidia release and shared deployment steps, costs and remaining platform checks.",
+      "links": ["comfy-deployment.md"]
+    },
+    {
       "title": "Comfy Developer Platform deployment",
       "path": "comfy-deployment.md",
       "tags": ["workflows", "comfy", "backend", "models", "research"],
       "summary": "A Comfy Developer Platform build recipe for the Openjutsu swap, AKUSPACE and Layout-to-Render from one set of pins in comfy-build/; how comfy build push treats weights, the shared ComfyUI version, sizes per workflow and one build versus several.",
-      "links": ["akuspace-docker.md"]
+      "links": ["akuspace-docker.md", "comfy-deploy.md"]
     },
     {
       "title": "Signal: construction video workflows",
@@ -1534,7 +1557,7 @@
       "path": "layout-to-render-status.md",
       "tags": ["backend", "camera"],
       "summary": "Exact LTX Layout-to-Render node and model availability on Comfy Cloud, with input rules and integration gaps.",
-      "links": []
+      "links": ["comfy-deploy.md"]
     },
     {
       "title": "Licence-aware direction",

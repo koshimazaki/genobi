@@ -96,6 +96,9 @@ user action through every layer.
 - [Comfy Developer Platform deployment](comfy-deployment.md) — the pins in
   `comfy-build/` as a `comfy build` recipe, how push treats weights, and one build versus several.
 
+- [Worked LTX / World Builder deployment](comfy-deploy.md) — reusable API
+  endpoints, offline checks, linux/nvidia release, costs and owner-run smoke tests.
+
 ## Camera
 
 - [Camera wording and examples](camera-wording.md) — the camera terms the studio

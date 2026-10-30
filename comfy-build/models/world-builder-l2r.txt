@@ -1,0 +1,9 @@
+# Worked World Builder L2R and L2R+a2v graphs: exactly six loader files.
+# Pins copied from layout-to-render.txt; Union Control is untried and excluded.
+# <folder> <repository> <revision> <path> <bytes> <sha256 or ->
+diffusion_models Lightricks/LTX-2.5 49b093a39c19169a8a81721dcc541e07e945232f diffusion_models/ltx-2.5-22b-distilled-transformer-bf16.safetensors 42018190584 -
+text_encoders Lightricks/LTX-2.5 49b093a39c19169a8a81721dcc541e07e945232f text_encoders/gemma4-12b-with-proj-ltx-2.5-bf16.safetensors 26263858182 -
+vae Lightricks/LTX-2.5 49b093a39c19169a8a81721dcc541e07e945232f vae/ltx-2.5-video-vae-bf16.safetensors 1472223346 -
+vae Lightricks/LTX-2.5 49b093a39c19169a8a81721dcc541e07e945232f vae/ltx-2.5-audio-vae-bf16.safetensors 364866540 -
+latent_upscale_models Lightricks/LTX-2.5 49b093a39c19169a8a81721dcc541e07e945232f latent_upscale_models/ltx-2.5-latent-spatial-upscaler-x2-bf16-1.0.safetensors 995778752 -
+loras Lightricks/LTX-2.5-22b-IC-LoRA-Layout-To-Render bd765d5592f0ae78457162852a353b6a375cb00f ltx-2.5-22b-ic-lora-layout-to-render-1.0.safetensors 1308787439 -
