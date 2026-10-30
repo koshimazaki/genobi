@@ -32,6 +32,12 @@ Agents need your approval before paid operations. See [setup and keys](docs/gett
 
 ## One scene guides picture and sound
 
+[![Watch the Acoustic Space demo: falling between rooms](docs/media/acoustic-space-demo.jpg)](docs/media/acoustic-space-demo.mp4?raw=true)
+
+**[Watch with sound · 30 seconds](docs/media/acoustic-space-demo.mp4?raw=true).**
+As the character falls through different spaces, the reverb changes with the room.
+Three.js scenes inside ComfyUI guide the visuals and the scene-derived CPU reverb.
+
 **Acoustic Space connects the room you build to the sound you hear.** Build a
 Three.js set yourself or with an agent in World Builder, also available inside
 ComfyUI through Genobi’s custom nodes. Capture layouts and camera moves to guide
