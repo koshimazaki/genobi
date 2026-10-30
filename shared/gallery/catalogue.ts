@@ -90,36 +90,22 @@ export function footageEntries(template: HouseTemplate): string[] {
   return previews[houseClip(template.id)]?.made ?? [];
 }
 
-/**
- * The gallery's card order (30 October 2026, the owner's): the Genobi
- * teaser (the product teaser), the Dimensions mix (the music video) and
- * Bloom (the anime teaser) first, then the Character piece, Audio-visual and
- * Sheet to shot, then the generation cards. Bloom replaced the Neon bloom
- * card the same day. Adaptive reverb (the 3D + LTX template) took the
- * Audio-visual card's place that evening. Ids not listed keep
- * their catalogue order after these. The template arrays themselves keep
- * their order: agents, MCP tools and the Director read them.
- */
+/** The owner's gallery order; Director and agent catalogues keep their order. */
 export const GALLERY_ORDER: readonly string[] = [
   "genobi-teaser",
   "dimensions-mix",
   "bloom-teaser",
   "adaptive-reverb",
-  "character-piece",
-  "sheet-to-shot",
   "character-piece-generation",
   "product-video-generation",
+  "sheet-to-shot",
 ];
 
-/**
- * A card's second line, what the piece is for (the owner's, 30 October
- * 2026): the Genobi teaser is the product teaser, the Dimensions mix the
- * music video and Bloom the anime teaser. Gallery wording only; the template keeps its name.
- */
+/** What each finished piece is for, on cards and drawer titles. */
 export const GALLERY_SUBTITLE: Readonly<Record<string, string>> = {
   "genobi-teaser": "Product teaser",
-  "dimensions-mix": "Music video",
-  "bloom-teaser": "Anime teaser",
+  "dimensions-mix": "Anime teaser",
+  "bloom-teaser": "Sheet to shot",
   "adaptive-reverb": "3D · LTX template",
 };
 
@@ -134,7 +120,8 @@ export const GALLERY_SUBTITLE: Readonly<Record<string, string>> = {
  * bloom generation card (`audio-visual-generation`) left it on 30 October
  * 2026 for Bloom, the anime teaser; its watch page and links still open.
  * The Audio-visual card left it the same day for Adaptive reverb, the 3D +
- * LTX template; the template, its skill and its links stay.
+ * LTX template; the template, its skill and its links stay. Character piece
+ * also left: its FLUX 3 footage is represented by Forest guardian.
  */
 export const NOT_IN_GALLERY: ReadonlySet<string> = new Set([
   "falling-room",
@@ -142,6 +129,7 @@ export const NOT_IN_GALLERY: ReadonlySet<string> = new Set([
   "product-video",
   "audio-visual-generation",
   "audio-visual",
+  "character-piece",
 ]);
 
 /**
@@ -208,6 +196,15 @@ export function galleryMedia(template: HouseTemplate) {
     height: preview.height,
   };
 }
+
+/** Bundled previews with audio tracks, verified from their streams. */
+export const GALLERY_AUDIO: ReadonlySet<string> = new Set([
+  "genobi-teaser",
+  "dimensions-mix",
+  "bloom-teaser",
+  "adaptive-reverb",
+  "character-piece-generation",
+]);
 
 export const templateSeconds = (template: HouseTemplate) =>
   template.mix
@@ -307,5 +304,7 @@ export const findGalleryTemplate = (id: string | null | undefined) =>
   galleryTemplates.find((t) => t.id === id);
 export const directorLink = (id: string) =>
   `/director?example=${encodeURIComponent(id)}`;
+export const editorLink = (id: string) =>
+  `${directorLink(id)}&workspace=editor`;
 export const watchLink = (id: string) => `/watch/${encodeURIComponent(id)}`;
 export const embedLink = (id: string) => `/embed/${encodeURIComponent(id)}`;

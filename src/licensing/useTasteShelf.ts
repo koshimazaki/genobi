@@ -5,12 +5,16 @@ import {
 } from "../../shared/licensing/taste-shelf";
 import type { TasteProfile } from "../../shared/memory/schema";
 import { memoryRequest, readProfile } from "../memory/client";
+import { useHostedStudioState } from "../hosted-studio";
 
 export function useTasteShelf() {
+  const hosted = useHostedStudioState();
+  const readOnly = hosted !== false;
   const [profile, setProfile] = useState<TasteProfile>();
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("Loading your selection…");
   useEffect(() => {
+    if (readOnly) return;
     let active = true;
     readProfile()
       .then((p) => {
@@ -28,9 +32,9 @@ export function useTasteShelf() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [readOnly]);
   async function save(shelf: TasteShelf) {
-    if (!profile || busy) return false;
+    if (readOnly || !profile || busy) return false;
     setBusy(true);
     try {
       const next = await memoryRequest<TasteProfile>("taste/shelf", {
@@ -55,7 +59,8 @@ export function useTasteShelf() {
   }
   return {
     shelf: profile?.shelf ?? defaultTasteShelf(),
-    disabled: !profile || busy,
+    readOnly,
+    disabled: readOnly || !profile || busy,
     message,
     save,
   };

@@ -121,6 +121,8 @@ export interface AgentMessageRequest {
 /** What GET /api/agent/status answers: booleans and names only, never paths. */
 export interface AgentRunnerStatus {
   available: boolean;
+  /** Present on the hosted relay, including false before a runner is paired. */
+  paired?: boolean;
   runner?: AgentRunner;
   message?: string;
   /** What setup can do about it: set up Hermes' `genobi` profile. */

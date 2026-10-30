@@ -12,6 +12,8 @@ import { BRIEF_MAX, startPrompt } from "./spawn";
 import { spawnFromStudio } from "./spawn-store";
 import { OPEN_BUBBLE } from "./useAgentSession";
 import { TeachingNote } from "../teachings/TeachingNote";
+import { useHostedStudio } from "../hosted-studio";
+import { HostedVoiceNotice } from "../voice/HostedVoiceNotice";
 import {
   AgentConversation,
   conversationOf,
@@ -73,6 +75,7 @@ export function AgentBubble({
   /** A step waits for the person: the bubble opens if it was tucked away. */
   attention?: boolean;
 }) {
+  const hosted = useHostedStudio();
   const preferences = useActivity();
   const [open, setOpen] = useState(
     defaultOpen ?? (!!session && preferences.showBubble),
@@ -189,6 +192,7 @@ export function AgentBubble({
             )}
             {/* Idle only: a session's own text always takes the space. */}
             {!session && <TeachingNote className="agent-teaching" />}
+            {!session && hosted && <HostedVoiceNotice />}
             {!session && (
               <label className="agent-brief">
                 <span>Brief (optional)</span>

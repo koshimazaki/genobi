@@ -3,11 +3,13 @@ import { LocalRunInstructions } from "../voice/LocalRunInstructions";
 import type { VoiceStatus } from "../voice/api";
 import { SetupVoice } from "./SetupVoice";
 import { setupRoute, type SetupDraft } from "./state";
+import { useHostedStudio } from "../hosted-studio";
+import { HostedVoiceNotice } from "../voice/HostedVoiceNotice";
 
 /**
  * The summary step's choices, the run location in a line, and voice. The
- * agent section (`SetupAgent.tsx`) follows it. No documentation links: the
- * harness choice and its sign-in are the setup, and Save & set up starts it.
+ * agent section (`SetupAgent.tsx`) follows it. Local setup happens inline;
+ * hosted voice links to the local studio instead of offering installation.
  */
 export default function SetupNext({
   draft,
@@ -19,6 +21,7 @@ export default function SetupNext({
   /** Read by the dialog, which also decides the footer's "Save & set up". */
   voiceStatus?: VoiceStatus;
 }) {
+  const hosted = useHostedStudio();
   const voice = draft.voice ?? false;
   const route = setupRoute(draft.selection);
   const localServer = status && status.maxSeconds > 0;
@@ -76,35 +79,41 @@ export default function SetupNext({
           <LocalRunInstructions expanded />
         </>
       )}
-      <label className="setup-voice-choice">
-        <input
-          type="checkbox"
-          checked={voice}
-          onChange={(event) =>
-            onChange({ ...draft, voice: event.target.checked })
-          }
-        />
-        Add local voice, too
-        <small>
-          Optional. Nothing installs until you choose Save &amp; set up.
-        </small>
-      </label>
-      {!voice && (
-        <p role="status">
-          Continue with typed prompts or your local agent harness. Voice is
-          optional and can be added later.
-        </p>
-      )}
-      {voice && (
-        <SetupVoice
-          status={status}
-          // The local section above already shows them on other routes.
-          instructions={route === "cloud"}
-          folder={draft.voiceFolder ?? ""}
-          onFolder={(voiceFolder) => onChange({ ...draft, voiceFolder })}
-          model={draft.voiceModel}
-          onModel={(voiceModel) => onChange({ ...draft, voiceModel })}
-        />
+      {hosted ? (
+        <HostedVoiceNotice />
+      ) : (
+        <>
+          <label className="setup-voice-choice">
+            <input
+              type="checkbox"
+              checked={voice}
+              onChange={(event) =>
+                onChange({ ...draft, voice: event.target.checked })
+              }
+            />
+            Add local voice, too
+            <small>
+              Optional. Nothing installs until you choose Save &amp; set up.
+            </small>
+          </label>
+          {!voice && (
+            <p role="status">
+              Continue with typed prompts or your local agent harness. Voice is
+              optional and can be added later.
+            </p>
+          )}
+          {voice && (
+            <SetupVoice
+              status={status}
+              // The local section above already shows them on other routes.
+              instructions={route === "cloud"}
+              folder={draft.voiceFolder ?? ""}
+              onFolder={(voiceFolder) => onChange({ ...draft, voiceFolder })}
+              model={draft.voiceModel}
+              onModel={(voiceModel) => onChange({ ...draft, voiceModel })}
+            />
+          )}
+        </>
       )}
     </>
   );

@@ -1,6 +1,20 @@
 import { findHouseTemplate, findMixTemplate } from "../templates/catalogue";
 import { footageMadeWith } from "./badges";
-import { directorLink, embedLink, galleryMedia, watchLink } from "./catalogue";
+import {
+  editorLink,
+  embedLink,
+  findGalleryTemplate,
+  galleryMedia,
+  watchLink,
+} from "./catalogue";
+
+import { generationTemplates } from "./generations";
+import { pendingPage } from "./pending-page";
+
+const findPublicTemplate = (id: string) =>
+  findHouseTemplate(id) ??
+  findMixTemplate(id) ??
+  generationTemplates.find((t) => t.id === id);
 
 const escape = (s: string) =>
   s.replace(
@@ -15,18 +29,23 @@ const escape = (s: string) =>
 export function galleryPage(path: string, origin: string) {
   const match = /^\/(watch|embed)\/([a-z0-9-]+)\/?$/.exec(path);
   if (!match) return undefined;
-  const template = findHouseTemplate(match[2]) ?? findMixTemplate(match[2]);
+  const template = findPublicTemplate(match[2]);
   const media = template && galleryMedia(template);
-  if (!template || !media) return undefined;
+  if (!template || (!media && !findGalleryTemplate(template.id)))
+    return undefined;
   const embedded = match[1] === "embed";
   const absolute = (path: string) => escape(new URL(path, origin).href);
   const secure = new URL(origin).protocol === "https:";
-  const player = playerSize(media);
+  const player = playerSize(media ?? { width: 1280, height: 720 });
   const title = escape(template.name);
-  const note = media.demo
+  const note = media?.demo
     ? `Preview footage${footageMadeWith(template) ? `, ${footageMadeWith(template)}` : ""}. This clip is not a generated result of the template.`
     : escape(template.description);
-  const body = `<!doctype html><html lang="en"><head>
+  const editLink = template.generation
+    ? "/?workspace=gallery"
+    : editorLink(template.id);
+  const body = media
+    ? `<!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${title} · Genobi</title>
 <meta name="description" content="${note}">
@@ -55,9 +74,15 @@ a{color:inherit;text-decoration:none}a:focus-visible{outline:2px solid #c0d672;o
 p{color:#a4abb4;line-height:1.5}.action{display:inline-block;padding:10px 16px;border-radius:5px;background:#c0d672;color:#14180e}nav{display:flex;align-items:center;gap:20px}
 </style></head><body><main><div class="player">
 <video controls playsinline preload="metadata" poster="${escape(media.poster)}" src="${escape(media.video)}" aria-label="${title}"></video>
-<footer><a class="brand" href="${absolute("/")}" target="_blank" rel="noopener">Genobi</a><span>${title}</span><a href="${absolute(watchLink(template.id))}" target="_blank" rel="noopener" aria-label="Open video in Genobi">Open ↗</a></footer></div>
-${embedded ? "" : `<p>${note}</p><nav><a class="action" href="${absolute(directorLink(template.id))}">Make your own</a><a href="${escape(media.video)}" download>Download video</a></nav>`}
-</main></body></html>`;
+<footer><a class="brand" href="${absolute("/")}" target="_blank" rel="noopener">Genobi</a><span>${title}</span><a href="${absolute(editLink)}" target="_blank" rel="noopener" aria-label="${template.generation ? "Open gallery" : "Open in Editor"}">Open ↗</a></footer></div>
+${embedded ? "" : `<p>${note}</p><nav><a class="action" href="${absolute(editLink)}">Make your own</a><a href="${escape(media.video)}" download>Download video</a></nav>`}
+</main></body></html>`
+    : pendingPage(
+        title,
+        absolute(watchLink(template.id)),
+        absolute(editLink),
+        embedded,
+      );
   return {
     body,
     headers: {
@@ -78,9 +103,10 @@ const playerSize = (media: { width: number; height: number }) => ({
 });
 
 export function embedMarkup(id: string, origin: string) {
-  const template = findHouseTemplate(id) ?? findMixTemplate(id);
+  const template = findPublicTemplate(id);
   const media = template && galleryMedia(template);
-  if (!media) throw new Error("Unknown template");
-  const { width, height } = playerSize(media);
+  if (!template || (!media && !findGalleryTemplate(id)))
+    throw new Error("Unknown template");
+  const { width, height } = playerSize(media ?? { width: 1280, height: 720 });
   return `<iframe src="${escape(new URL(embedLink(id), origin).href)}" title="Genobi video" width="${width}" height="${height}" style="max-width:100%;border:0" allow="fullscreen" allowfullscreen loading="lazy"></iframe>`;
 }

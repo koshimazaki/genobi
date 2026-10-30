@@ -174,7 +174,7 @@ describe("curated Taste shelf", () => {
     expect(
       context.tasteShelf.references.map((r: { id: string }) => r.id),
     ).not.toContain("three");
-    const api = new GenobiApi(new URL(h.base));
+    const api = new GenobiApi(new URL(h.base), fetch, true);
     const { code } = await h.send(h.cookie, `/${h.project.id}/link`, "POST");
     await api.post("/api/projects/link", { code });
     const linked = await api.get<{ tasteShelf: { references: unknown[] } }>(

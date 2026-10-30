@@ -50,8 +50,9 @@ The skill also warns that a hand-written URL is "the same mistake" as one from
 memory, preferring `comfy build refs resolve`. These URLs are not guesses: each
 is the repository and revision Openjutsu pins, with the SHA-256 from Hugging
 Face's LFS metadata at that revision. Run `comfy build refs resolve <filename>`
-for each hand-pinned file and `comfy build validate --remote .` before every
-push: they check the URLs and hashes against the builder.
+for each hand-pinned public file before an owner-run push. The target CLI
+does not provide `comfy build validate`; use the repo spec tests offline,
+then review the CLI dry-run and build status.
 
 ## The recipe
 
@@ -81,9 +82,7 @@ Then, with comfy-cli installed (`pip install comfy-cli`):
 ```sh
 comfy setup --where cloud
 cd comfy-work/ComfyUI
-comfy build validate .
 comfy build refs resolve <filename>    # each hand-pinned model URL
-comfy build validate --remote .
 comfy build push --dry-run --models-dir ./models --custom-nodes-dir ./custom_nodes
 comfy build push --release --target linux/nvidia --models-dir ./models --custom-nodes-dir ./custom_nodes
 comfy build status
@@ -111,6 +110,11 @@ $0.20 per GB-month for a deployment's staged models (the swap's 46.3 GB is about
 $9 a month). Job timeout is 30 minutes on Standard and Creator, an hour on Pro;
 two workers and two deployments on the lower plans. The platform may still be a
 limited beta for some accounts (`build_not_enabled`).
+
+For the worked 30 October LTX / World Builder API graphs, use the dedicated
+[shared deployment plan](comfy-deploy.md): nine exact model files, the
+patched World Builder pack, stable room endpoint names and offline validation.
+That plan is prepared, not deployed; it does not change the swap build.
 
 ## One ComfyUI version
 

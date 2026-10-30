@@ -16,6 +16,44 @@ Not a studio template, kept here for the Comfy side: [`world-builder-acoustics.a
 
 Also not templates, for opening in the ComfyUI editor (UI format, laid out with groups and Note nodes): three end-to-end World Builder graphs from a Capture take to a saved clip, with the take's room as sound. [`world-builder-akuspace-ltx.json`](world-builder-akuspace-ltx.README.md) (LTX-2.5 with the AKUSPACE LoRA loaded), [`world-builder-layout-to-render.json`](world-builder-layout-to-render.README.md) (the take as the Layout-to-Render layout video) and [`world-builder-canny-depth.json`](world-builder-canny-depth.README.md) (the take's depth or canny pass through the Union Control IC-LoRA). `node scripts/check-ui-workflows.mjs --object-info <ComfyUI URL> <file>` validates one against a running ComfyUI without queueing it.
 
+## Worked LTX / World Builder API templates
+
+The [30 October GPU workflow collection](ltx-world-builder.README.md) preserves
+successful graphs with explicit input placeholders. These are standalone API
+templates, not studio-registered slots. Fill them with `materialize-ltx.py`;
+the [shared build and deployment plan](../docs/comfy-deploy.md) uses the named
+endpoint catalogue below. GPU-session results are documented per graph;
+Developer Platform execution remains unverified.
+
+| Workflow                                                                          | Endpoint          | Build set           |
+| --------------------------------------------------------------------------------- | ----------------- | ------------------- |
+| [`world-builder-l2r-dive.json`](world-builder-l2r-dive.README.md)                 | `dive`            | `world-builder-l2r` |
+| [`world-builder-l2r-cathedral.json`](world-builder-l2r-cathedral.README.md)       | `cathedral`       | `world-builder-l2r` |
+| [`world-builder-l2r-a2v-party-v8.json`](world-builder-l2r-a2v-party-v8.README.md) | `party_v8`        | `world-builder-l2r` |
+| [`world-builder-l2r-a2v.json`](world-builder-l2r-a2v.README.md)                   | `party`           | `world-builder-l2r` |
+| [`world-builder-l2r-a2v-studio.json`](world-builder-l2r-a2v-studio.README.md)     | `studio`          | `world-builder-l2r` |
+| [`world-builder-l2r-party.json`](world-builder-l2r-party.README.md)               | `party_base`      | `world-builder-l2r` |
+| [`world-builder-l2r-studio.json`](world-builder-l2r-studio.README.md)             | `studio_base`     | `world-builder-l2r` |
+| [`ltx-i2v-a2v.json`](ltx-i2v-a2v.README.md)                                       | `studio_cpu`      | `ltx-i2v`           |
+| [`ltx-i2v-a2v-akuspace.json`](ltx-i2v-a2v-akuspace.README.md)                     | `studio_akuspace` | `ltx-i2v`           |
+| [`ltx-i2v-dive-cathedral.json`](ltx-i2v-dive-cathedral.README.md)                 | `cathedral_i2v`   | `ltx-i2v`           |
+| [`ltx-i2v-dive-medium-room.json`](ltx-i2v-dive-medium-room.README.md)             | `medium_room`     | `ltx-i2v`           |
+| [`ltx-i2v-dive-small-room.json`](ltx-i2v-dive-small-room.README.md)               | `small_room`      | `ltx-i2v`           |
+| [`ltx-i2v-party.json`](ltx-i2v-party.README.md)                                   | `party_i2v`       | `ltx-i2v`           |
+| [`ltx-i2v-vocalist.json`](ltx-i2v-vocalist.README.md)                             | `vocalist_i2v`    | `ltx-i2v`           |
+| [`ltx-i2v-chain-cathedral.json`](ltx-i2v-chain-cathedral.README.md)               | `chain_cathedral` | `ltx-i2v`           |
+| [`ltx-i2v-chain-party.json`](ltx-i2v-chain-party.README.md)                       | `chain_party`     | `ltx-i2v`           |
+| [`ltx-i2v-chain-studio.json`](ltx-i2v-chain-studio.README.md)                     | `chain_studio`    | `ltx-i2v`           |
+| [`ltx-fall15-t2v-s1.json`](ltx-fall15-t2v-s1.README.md)                           | `fall15_t2v_s1`   | `ltx-i2v`           |
+| [`ltx-fall15-t2v-s2.json`](ltx-fall15-t2v-s2.README.md)                           | `fall15_t2v_s2`   | `ltx-i2v`           |
+| [`ltx-fall15-voice-s1.json`](ltx-fall15-voice-s1.README.md)                       | `fall15_voice_s1` | `ltx-i2v`           |
+| [`ltx-fall15-voice-s2.json`](ltx-fall15-voice-s2.README.md)                       | `fall15_voice_s2` | `ltx-i2v`           |
+| [`ltx-vo-female-s1.json`](ltx-vo-female-s1.README.md)                             | `vo_female_s1`    | `ltx-i2v`           |
+| [`ltx-vo-female-s2.json`](ltx-vo-female-s2.README.md)                             | `vo_female_s2`    | `ltx-i2v`           |
+
+[Whole-track room reverb](room-reverb.README.md) is the accompanying CPU script;
+its inputs are the scene IRs saved by the L2R graphs. It uses no model or account.
+
 A template lists its slots (including a `model` slot for every loader input, which a local ComfyUI's model map fills), the node types it needs and the model files Comfy Cloud must hold. To add one: put the API-format graph here with a README, add its template and values beside the others in `shared/`, add a row to `workflowTemplates` with the capabilities it serves, and let `tests/workflow-templates.test.ts` check its links, slots and loaders.
 
-Planned next: LTX image-to-video (needs image upload), the LTX-2.5 latent spatial upscaler ×2, and `FluxVideoUpscaleNode`. Each file lists the nodes and models it needs; `tests/workflow.test.ts` and `tests/klein-workflow.test.ts` check that every link names a node the graph holds and every slot names a literal.
+Planned next in the studio registry: LTX image-to-video (the standalone API graphs above already accept uploaded images), the LTX-2.5 latent spatial upscaler ×2, and `FluxVideoUpscaleNode`. Each file lists the nodes and models it needs; `tests/workflow.test.ts` and `tests/klein-workflow.test.ts` check that every link names a node the graph holds and every slot names a literal.

@@ -2,20 +2,14 @@ import { createPortal } from "react-dom";
 import { useRef, useState } from "react";
 import {
   galleryTemplates,
-  galleryMedia,
-  gallerySeconds,
   matchesFilters,
   emptyFilters,
-  directorLink,
-  KIND_LABEL,
-  GALLERY_SUBTITLE,
 } from "../../shared/gallery/catalogue";
-import { footageLabel, galleryBadge } from "../../shared/gallery/badges";
 import type { HouseTemplate } from "../../shared/templates/types";
-import Icon from "../components/Icon";
 import { useShell } from "../studio/ShellContext";
 import GalleryFilters from "./GalleryFilters";
-import PreviewVideo from "./PreviewVideo";
+import GalleryCard from "./GalleryCard";
+import { useSoundGesture } from "./useSoundGesture";
 import TemplateDrawer, { type DrawerBusy } from "./TemplateDrawer";
 import type { TemplatePicks } from "./open-template";
 import {
@@ -39,7 +33,8 @@ export const GALLERY_LEGEND =
 export default function TemplateGallery({ active }: { active: boolean }) {
   const shell = useShell();
   const [filters, setFilters] = useState({ ...emptyFilters });
-  const [hover, setHover] = useState("");
+  const soundAllowed = useSoundGesture();
+  const [previewId, setPreviewId] = useState<string>();
   const [selected, setSelected] = useState<HouseTemplate>();
   const [busy, setBusy] = useState<DrawerBusy>("");
   const [message, setMessage] = useState("");
@@ -99,16 +94,6 @@ export default function TemplateGallery({ active }: { active: boolean }) {
       await takeToEditor(template, {}, chosen);
       leave();
     });
-  async function copyTemplate(id: string) {
-    try {
-      await navigator.clipboard.writeText(
-        new URL(directorLink(id), location.origin).href,
-      );
-      setMessage("Template link copied.");
-    } catch {
-      setMessage("Open the template details to select and copy its link.");
-    }
-  }
   return (
     <div className="template-gallery" hidden={!active}>
       {active &&
@@ -133,97 +118,29 @@ export default function TemplateGallery({ active }: { active: boolean }) {
         <p>{GALLERY_LEGEND}</p>
       </div>
       <div className="template-cards" inert={!!selected}>
-        {shown.map((template, index) => {
-          const media = galleryMedia(template);
-          const badge = galleryBadge(template);
-          return (
-            <article
-              className="template-card"
-              key={template.id}
-              data-featured={
-                index === 0 && !Object.values(filters).some(Boolean)
-              }
-            >
-              <button
-                className="template-card-preview"
-                aria-label={`View ${template.name}`}
-                onPointerEnter={(e) => {
-                  if (e.pointerType === "mouse") setHover(template.id);
-                }}
-                onPointerLeave={() => setHover("")}
-                onFocus={() => setHover(template.id)}
-                onBlur={() => setHover("")}
-                onClick={(e) => {
-                  trigger.current = e.currentTarget;
-                  setHover("");
-                  setSelected(template);
-                }}
-              >
-                <PreviewVideo
-                  video={media?.video}
-                  poster={media?.poster}
-                  title={template.name}
-                  active={active && !selected && hover === template.id}
-                />
-                <span className="template-duration">
-                  {Math.round(gallerySeconds(template))}s
-                </span>
-                {media?.demo && (
-                  <span className="template-preview-label">
-                    {footageLabel(template)}
-                  </span>
-                )}
-              </button>
-              <div className="template-card-caption">
-                <button
-                  onClick={(e) => {
-                    trigger.current = e.currentTarget;
-                    setSelected(template);
-                  }}
-                >
-                  {template.name}
-                  {GALLERY_SUBTITLE[template.id] && (
-                    <span className="template-subtitle">
-                      {" "}
-                      · {GALLERY_SUBTITLE[template.id]}
-                    </span>
-                  )}
-                </button>
-                <span
-                  className="template-tier"
-                  data-tier={badge.tier}
-                  title={badge.detail}
-                >
-                  {badge.label}
-                  <span className="sr-only">: {badge.detail}</span>
-                </span>
-                {template.generation ? (
-                  // One run in place: no Director recipe and no template link.
-                  <span
-                    className="template-kind"
-                    title="One generation, run here"
-                  >
-                    {KIND_LABEL.generation}
-                  </span>
-                ) : (
-                  <>
-                    <span title="Director recipe" className="template-tool">
-                      <Icon name="film" size={14} />
-                      <span className="sr-only">Director recipe</span>
-                    </span>
-                    <button
-                      title="Copy template link"
-                      aria-label={`Copy ${template.name} template link`}
-                      onClick={() => void copyTemplate(template.id)}
-                    >
-                      <Icon name="link" size={16} />
-                    </button>
-                  </>
-                )}
-              </div>
-            </article>
-          );
-        })}
+        {shown.map((template, index) => (
+          <GalleryCard
+            key={template.id}
+            template={template}
+            featured={index === 0 && !Object.values(filters).some(Boolean)}
+            active={active && !selected}
+            previewing={previewId === template.id}
+            onPreview={(playing) =>
+              setPreviewId((current) =>
+                playing
+                  ? template.id
+                  : current === template.id
+                    ? undefined
+                    : current,
+              )
+            }
+            soundAllowed={soundAllowed}
+            onOpen={(button) => {
+              trigger.current = button;
+              setSelected(template);
+            }}
+          />
+        ))}
         {!shown.length && (
           <div className="template-empty">
             <p>No templates match these filters.</p>

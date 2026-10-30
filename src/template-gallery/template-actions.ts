@@ -15,7 +15,8 @@
  * person approves it in the studio.
  */
 import type { AgentSession } from "../../shared/agent-session";
-import { directorLink } from "../../shared/gallery/catalogue";
+import { directorLink, editorLink } from "../../shared/gallery/catalogue";
+export { editorLink } from "../../shared/gallery/catalogue";
 import { intakePrompt } from "../../shared/templates/intake";
 import { readInputs } from "../../shared/templates/plan";
 import type { HouseTemplate } from "../../shared/templates/types";
@@ -29,9 +30,6 @@ export function go(url: string) {
   history.pushState(null, "", url);
   window.dispatchEvent(new PopStateEvent("popstate"));
 }
-
-export const editorLink = (id: string) =>
-  `${directorLink(id)}&workspace=editor`;
 
 /** How long Generate now waits for the project copy before it starts anyway. */
 export const COPY_WAIT_MS = 5000;

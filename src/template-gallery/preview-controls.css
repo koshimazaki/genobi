@@ -1,0 +1,49 @@
+.template-card-media {
+  position: relative;
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+.template-sound {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  padding: 5px 8px;
+  border: 1px solid #ffffff60;
+  border-radius: 4px;
+  background: #101316cc;
+  color: #fff;
+  font: 11px var(--mono);
+}
+.template-card-share {
+  position: relative;
+  flex: none;
+}
+.template-card-share > [role="status"]:not(:empty),
+.template-copy-fallback {
+  position: absolute;
+  right: 0;
+  z-index: 3;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--sunken);
+  color: var(--text);
+  white-space: nowrap;
+}
+.template-card-share > [role="status"]:not(:empty) {
+  bottom: 100%;
+}
+.template-copy-fallback {
+  top: 100%;
+  display: grid;
+  gap: 8px;
+  width: min(280px, 70vw);
+}
+.template-copy-fallback input {
+  width: 100%;
+}
+.template-card-share > button:first-child {
+  margin: 0;
+}

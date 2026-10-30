@@ -64,3 +64,9 @@ it("does not impose the read timeout on an installation POST", async () => {
   finish(Response.json({ phase: "environment" }));
   await expect(pending).resolves.toEqual({ phase: "environment" });
 });
+
+// These fixtures exercise local voice; hosted detection is covered separately.
+vi.mock("../src/hosted-studio", () => ({
+  readHostedStudio: async () => false,
+  useHostedStudio: () => false,
+}));

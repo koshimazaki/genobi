@@ -1,4 +1,10 @@
 import { withBrowserActivity } from "../activity/store";
+import { readHostedStudio } from "../hosted-studio";
+import {
+  HOSTED_VOICE_MESSAGE,
+  requireLocalVoice,
+  VOICE_UNCONFIRMED_MESSAGE,
+} from "./availability";
 import {
   isVoiceLanguage,
   type VoiceLanguage,
@@ -20,6 +26,14 @@ const HOSTED =
   "Voice mode runs on the local Genobi server only; this studio cannot transcribe.";
 
 export async function voiceStatus(signal?: AbortSignal): Promise<VoiceStatus> {
+  const hosted = await readHostedStudio();
+  if (hosted !== false)
+    return {
+      available: false,
+      maxSeconds: 0,
+      setup: hosted ? HOSTED_VOICE_MESSAGE : VOICE_UNCONFIRMED_MESSAGE,
+    };
+  signal?.throwIfAborted();
   try {
     const response = await fetch("/api/voice/status", { signal });
     const body = response.ok ? await response.json() : undefined;
@@ -44,18 +58,21 @@ export async function voiceStatus(signal?: AbortSignal): Promise<VoiceStatus> {
 }
 
 /** Loads the model while the person speaks; failure only costs the head start. */
-export function prewarmVoice() {
-  void fetch("/api/voice/prewarm", { method: "POST" }).catch(() => {});
+export async function prewarmVoice() {
+  if ((await readHostedStudio()) !== false) return;
+  await fetch("/api/voice/prewarm", { method: "POST" }).catch(() => {});
 }
 
 /**
  * A discarded recording frees the model its prewarm started loading.
  * `keepalive`, so it still goes when the tab is closing.
  */
-export function cancelPrewarm() {
-  void fetch("/api/voice/prewarm", { method: "DELETE", keepalive: true }).catch(
-    () => {},
-  );
+export async function cancelPrewarm() {
+  if ((await readHostedStudio()) !== false) return;
+  await fetch("/api/voice/prewarm", {
+    method: "DELETE",
+    keepalive: true,
+  }).catch(() => {});
 }
 
 /**
@@ -83,6 +100,7 @@ async function transcribeImpl(
   signal: AbortSignal,
   language: VoiceLanguage,
 ): Promise<Transcript> {
+  await requireLocalVoice(signal);
   const query = new URLSearchParams({ language });
   const response = await fetch(`/api/voice/transcribe?${query}`, {
     method: "POST",

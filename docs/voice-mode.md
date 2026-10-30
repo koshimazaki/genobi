@@ -11,6 +11,18 @@ Console's voice worker approach, **the same look** as X Console's voice mode,
 the WIE-style LED waveform, in Genobi's colours, **one click, two
 destinations**, and **voice goes where it is meant**.
 
+## On the hosted studio
+
+Voice mode runs in the local studio — speech is transcribed on your own machine.
+On the hosted site, the header mic, Genobi bubble and setup explain this and link
+to [local setup](https://github.com/koshimazaki/Genobi/blob/main/README.md#run-locally). Typed prompts remain available. The
+hosted studio sends no `/api/voice` requests, never asks for the microphone and
+keeps `Permissions-Policy: microphone=()`. No cloud speech service is used.
+If the studio cannot confirm where it runs, voice stays unavailable and asks
+you to check the connection and reload.
+
+## In the local studio
+
 Press the mic (**Voice**) in the studio header, beside the theme and the key,
 in any section. A thin pill opens under the header on the right (Stop, the LED
 waveform, a chevron and close) and it is already recording. Speak, then press

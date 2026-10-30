@@ -5,6 +5,10 @@ summary: Evidence for the Director remix proof, from automated checks and media 
 
 # Director remix verification
 
+Historical evidence below. Since 30 October 2026, Character intro, Outfit
+reveal and Poster in motion are retired from the picker. Director and Editor
+share Dimensions mix as their default; see [the gallery guide](template-gallery.md).
+
 Local proof verified on 17 October 2026; hosted browser smoke added during the 17–18 October session. The draft PR remains unmerged. Deployment and API evidence are separated below.
 
 ## Automated checks

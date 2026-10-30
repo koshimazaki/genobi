@@ -8,12 +8,14 @@ import { downloadMemory } from "../memory/client";
 
 type Props = {
   shelf: TasteShelf;
+  readOnly: boolean;
   disabled: boolean;
   message: string;
   save: (shelf: TasteShelf) => Promise<boolean>;
 };
 export default function TasteShelfControls({
   shelf,
+  readOnly,
   disabled,
   message,
   save,
@@ -25,6 +27,20 @@ export default function TasteShelfControls({
   const count = [...tasteSources, ...shelf.custom].filter(
     (r) => !shelf.excluded.includes(r.id),
   ).length;
+  if (readOnly)
+    return (
+      <section className="taste-shelf" aria-label="Curated taste collection">
+        <h2>Explore the curated taste layer.</h2>
+        <p>{count} public references · browse the credits and demos below.</p>
+        <p>
+          Your own taste profile and project memory live in the local studio
+          {" · "}
+          <a href="https://github.com/koshimazaki/Genobi#run-locally">
+            Set up the local studio ↗
+          </a>
+        </p>
+      </section>
+    );
   async function add() {
     const result = tasteShelfSchema.safeParse({
       ...shelf,

@@ -99,45 +99,51 @@ function TastePage() {
       </p>
       <TasteExamples />
       <TasteShelfControls {...taste} />
-      <TastePreferences />
-      <details className="taste-settings" id="setup">
-        <summary>Model defaults &amp; licence planning</summary>
-        <SelectionControls />
-        <section className="taste-preference" aria-label="Intended use">
-          <label>
-            What are you making?
-            <ThemedSelect
-              value={purpose}
-              onChange={(e) => change(e.target.value as typeof purpose, policy)}
-            >
-              <option value="">Choose when needed</option>
-              {purposes.map((id) => (
-                <option key={id} value={id}>
-                  {purposeNames[id]}
-                </option>
-              ))}
-            </ThemedSelect>
-          </label>
-          <label>
-            Component preference
-            <ThemedSelect
-              value={policy}
-              onChange={(e) => change(purpose, e.target.value as typeof policy)}
-            >
-              {policies.map((id) => (
-                <option key={id} value={id}>
-                  {policyNames[id]}
-                </option>
-              ))}
-            </ThemedSelect>
-          </label>
-          <p>
-            Saved for new agent briefs. Your prompt can override it. This checks
-            selected components; it does not certify every dependency, model or
-            uploaded asset.
-          </p>
-        </section>
-      </details>
+      {!taste.readOnly && <TastePreferences />}
+      {!taste.readOnly && (
+        <details className="taste-settings" id="setup">
+          <summary>Model defaults &amp; licence planning</summary>
+          <SelectionControls />
+          <section className="taste-preference" aria-label="Intended use">
+            <label>
+              What are you making?
+              <ThemedSelect
+                value={purpose}
+                onChange={(e) =>
+                  change(e.target.value as typeof purpose, policy)
+                }
+              >
+                <option value="">Choose when needed</option>
+                {purposes.map((id) => (
+                  <option key={id} value={id}>
+                    {purposeNames[id]}
+                  </option>
+                ))}
+              </ThemedSelect>
+            </label>
+            <label>
+              Component preference
+              <ThemedSelect
+                value={policy}
+                onChange={(e) =>
+                  change(purpose, e.target.value as typeof policy)
+                }
+              >
+                {policies.map((id) => (
+                  <option key={id} value={id}>
+                    {policyNames[id]}
+                  </option>
+                ))}
+              </ThemedSelect>
+            </label>
+            <p>
+              Saved for new agent briefs. Your prompt can override it. This
+              checks selected components; it does not certify every dependency,
+              model or uploaded asset.
+            </p>
+          </section>
+        </details>
+      )}
       <h2 id="libraries">Libraries &amp; projects to build with.</h2>
       <section className="taste-find" aria-label="Browse the taste layer">
         <label>
@@ -268,6 +274,7 @@ function TastePage() {
                   <label className="taste-select">
                     <input
                       type="checkbox"
+                      disabled={taste.readOnly}
                       checked={selected.includes(item.id)}
                       onChange={(e) =>
                         setSelected(

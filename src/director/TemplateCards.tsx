@@ -1,5 +1,4 @@
 import { mixTemplates } from "../../shared/templates/catalogue";
-import { templates } from "./template-catalogue";
 
 /** A card in the Director's template list. */
 export interface TemplateCard {
@@ -12,8 +11,7 @@ export interface TemplateCard {
 
 /**
  * The Director's template list: the mix templates first (finished cuts of
- * bundled media, `shared/templates/dimensions-mix.ts`), then the local
- * remix templates. A card plays its muted preview on hover or focus.
+ * bundled media, `shared/templates/dimensions-mix.ts`). A card plays its muted preview on hover or focus.
  */
 export const templateCards: readonly TemplateCard[] = [
   ...mixTemplates.map((t) => ({
@@ -22,13 +20,6 @@ export const templateCards: readonly TemplateCard[] = [
     description: t.description,
     video: t.examples[0].video,
     poster: t.examples[0].poster,
-  })),
-  ...templates.map((t) => ({
-    id: t.id,
-    name: t.name,
-    description: t.description,
-    video: `/media/director-templates/${t.id}.mp4`,
-    poster: t.preview,
   })),
 ];
 

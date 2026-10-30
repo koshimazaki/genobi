@@ -24,6 +24,7 @@ import type { TemplatePicks } from "./open-template";
 import { AgentFields, MechanicalFields } from "./RecipeFields";
 import MixFields from "./MixFields";
 import ShowcaseVersions from "./ShowcaseVersions";
+import { copyText } from "./copy-text";
 import { editorLink } from "./template-actions";
 import TemplateIntake, { useTemplateIntake } from "./TemplateIntake";
 import { useMechanicalRun } from "./useMechanicalRun";
@@ -131,12 +132,14 @@ export default function TemplateDrawer({
       });
   }, [spawning, session]);
   async function copy() {
-    try {
-      await navigator.clipboard.writeText(value);
-      setMessage("Copied.");
-    } catch {
-      setMessage("Select the text below and copy it.");
-    }
+    const copied = await copyText(value);
+    setMessage(
+      copied
+        ? share === "link"
+          ? "Link copied"
+          : "Embed copied"
+        : "Select the text below and copy it.",
+    );
   }
   return (
     <aside
@@ -288,42 +291,40 @@ export default function TemplateDrawer({
               ? "Opens the finished cut in the Director or the editor. Nothing is generated and nothing is paid."
               : "Generate now starts your agent on this template with these references. It quotes every paid step and waits for your approval.")}
       </p>
-      {/* Watch and embed pages are the house templates' alone. */}
-      {media && !generation && (
-        <section className="template-share" aria-label="Share preview">
-          <div className="template-share-tabs">
-            <button
-              aria-pressed={share === "link"}
-              onClick={() => setShare("link")}
-            >
-              Link
-            </button>
-            <button
-              aria-pressed={share === "embed"}
-              onClick={() => setShare("embed")}
-            >
-              Embed
-            </button>
-            <button onClick={() => void copy()}>
-              <Icon name="copy" size={14} />
-              Copy {share}
-            </button>
-          </div>
-          <textarea
-            aria-label={
-              share === "embed" ? "Embed code" : "Public preview link"
-            }
-            value={value}
-            readOnly
-            onFocus={(e) => e.target.select()}
-            rows={share === "embed" ? 3 : 2}
-          />
+      {/* Every curated card has a public page, including pending previews. */}
+      <section className="template-share" aria-label="Share preview">
+        <div className="template-share-tabs">
+          <button
+            aria-pressed={share === "link"}
+            onClick={() => setShare("link")}
+          >
+            Link
+          </button>
+          <button
+            aria-pressed={share === "embed"}
+            onClick={() => setShare("embed")}
+          >
+            Embed
+          </button>
+          <button onClick={() => void copy()}>
+            <Icon name="copy" size={14} />
+            Copy {share}
+          </button>
+        </div>
+        <textarea
+          aria-label={share === "embed" ? "Embed code" : "Public preview link"}
+          value={value}
+          readOnly
+          onFocus={(e) => e.target.select()}
+          rows={share === "embed" ? 3 : 2}
+        />
+        {media && (
           <a href={media.video} download>
             Download preview
           </a>
-          <span role="status">{message}</span>
-        </section>
-      )}
+        )}
+        <span role="status">{message}</span>
+      </section>
     </aside>
   );
 }

@@ -35,12 +35,11 @@ done
 
 cat <<EOF
 
-Next, on a machine with comfy-cli (pip install comfy-cli; nothing here is paid
-until a deployment runs):
+Next, for the owner to run with comfy-cli installed:
+Build, release, deploy and test jobs require the owner to approve the spend.
 
   comfy setup --where cloud
   cd "$work/ComfyUI"
-  comfy build validate .
 EOF
 if [ -n "$gated" ]; then
   cat <<EOF
@@ -52,8 +51,8 @@ EOF
 fi
 cat <<EOF
 
+  # No comfy build validate command is assumed; run the offline recipe tests.
   comfy build refs resolve <filename>   # each hand-pinned model URL, once
-  comfy build validate --remote .
   comfy build push --dry-run --models-dir ./models --custom-nodes-dir ./custom_nodes
   comfy build push --release --target linux/nvidia --models-dir ./models --custom-nodes-dir ./custom_nodes
   comfy build status

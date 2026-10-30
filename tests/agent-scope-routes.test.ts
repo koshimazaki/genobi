@@ -89,6 +89,8 @@ const NOT_SCOPED: Record<string, string> = {
     "World has explicit, ephemeral pairing and owner-only browser dispatch.",
   "GET /api/memory/taste": "owner profile only; marked agents refused",
   "POST /api/memory/taste": "explicit owner action; marked agents refused",
+  "POST /api/memory/taste/shelf":
+    "explicit owner action; marked agents refused",
   "GET /api/memory/projects/:id/context":
     "project link scope, active runner bound to one project",
   "POST /api/memory/projects/:id/decisions":

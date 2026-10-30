@@ -215,6 +215,11 @@
   flex-shrink: 0;
   white-space: nowrap;
 }
+.studio-foot > .text-button {
+  /* A stable line box across labels, with room for a finger-sized target. */
+  min-height: 24px;
+  line-height: 1.6;
+}
 .studio-foot > span i {
   width: var(--space-2);
   height: var(--space-2);
