@@ -1,6 +1,10 @@
+
 # Genobi
 
 A camera-first video studio on the Comfy Developer Platform. One camera panel writes the shot for the model you pick: LTX-2.5 (open weights, native audio) or FLUX 3, both through [Comfy Router](https://docs.comfy.org) with one Comfy key. The FLUX Video Upscale runs through Router on the same key; a BFL key still runs FLUX 3 and upscales direct.
+
+https://github.com/user-attachments/assets/b2665e97-2836-4e02-8b38-4694a5c6b6c7
+
 
 Forked from [FLUX Studio Lite](https://github.com/koshimazaki/Flux-Studio-Lite) (MIT) at `023477b`: the composer, the editable camera directions, the Three.js guide, the gallery and the job queue carry over. The camera wording follows [BFL's camera guide](https://docs.bfl.ai/guides/prompting_video_camera_terms) for FLUX 3 and the [LTX-2.5 prompt guide](https://ltx.io/blog/ltx-2-5-prompt-guide) for LTX; see [docs/camera-wording.md](docs/camera-wording.md) for what the studio does and does not claim.
 
