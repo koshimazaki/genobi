@@ -1,7 +1,16 @@
 import { useEffect, useState } from "react";
 import { readRunLocation } from "./run-settings";
 
-let answer: Promise<boolean> | undefined;
+let answer: Promise<boolean | undefined> | undefined;
+
+/** Shared detection: undefined on failure, so local-only clients can refuse access. */
+export function readHostedStudio(): Promise<boolean | undefined> {
+  answer ??= readRunLocation().then(
+    (state) => state?.fixed,
+    () => undefined,
+  );
+  return answer;
+}
 
 /**
  * Whether the hosted Worker serves this page: its run location is the fixed
@@ -10,14 +19,15 @@ let answer: Promise<boolean> | undefined;
  * local studio never loses an entry to a slow read.
  */
 export function useHostedStudio(): boolean {
-  const [hosted, setHosted] = useState(false);
+  return useHostedStudioState() ?? false;
+}
+
+/** Undefined until confirmed, or if unavailable: local-only calls must wait. */
+export function useHostedStudioState(): boolean | undefined {
+  const [hosted, setHosted] = useState<boolean>();
   useEffect(() => {
     let live = true;
-    answer ??= readRunLocation().then(
-      (state) => state?.fixed === true,
-      () => false,
-    );
-    void answer.then((value) => {
+    void readHostedStudio().then((value) => {
       if (live) setHosted(value);
     });
     return () => {

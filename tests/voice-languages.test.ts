@@ -153,3 +153,9 @@ finally:
       expect(run(bad)).toBe("invalid_language");
   });
 });
+
+// These fixtures exercise local voice; hosted detection is covered separately.
+vi.mock("../src/hosted-studio", () => ({
+  readHostedStudio: async () => false,
+  useHostedStudio: () => false,
+}));

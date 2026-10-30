@@ -20,3 +20,12 @@ akuspace ComfyUI/custom_nodes/ComfyUI-LTXVideo https://github.com/Lightricks/Com
 # Layout-to-Render's LTXICLoRALoaderModelOnly and LTXAddVideoICLoRAGuide (and the
 # optional GemmaAPITextEncode) are in ComfyUI-LTXVideo at the same commit.
 layout-to-render ComfyUI/custom_nodes/ComfyUI-LTXVideo https://github.com/Lightricks/ComfyUI-LTXVideo 220e1d45aa0469f518e982102fca4dca92a61862 . -
+
+# Worked LTX / World Builder families, 30 October 2026. The Director pack is
+# this repository at its public v0.1 commit, with the box fixes carried as a
+# reviewable patch. Subfolder + patch is uploaded as a local pack by push.
+world-builder-l2r ComfyUI/custom_nodes/ComfyUI-LTXVideo https://github.com/Lightricks/ComfyUI-LTXVideo 220e1d45aa0469f518e982102fca4dca92a61862 . -
+world-builder-l2r ComfyUI/custom_nodes/Koshi-Nodes https://github.com/koshimazaki/ComfyUI-Koshi-Nodes 6f3351e7854d3dc2a17deea977937b3427fcaadd . -
+ltx-i2v ComfyUI/custom_nodes/ComfyUI-LTXVideo https://github.com/Lightricks/ComfyUI-LTXVideo 220e1d45aa0469f518e982102fca4dca92a61862 . -
+ltx-i2v ComfyUI/custom_nodes/Koshi-Nodes https://github.com/koshimazaki/ComfyUI-Koshi-Nodes 6f3351e7854d3dc2a17deea977937b3427fcaadd . -
+world-builder-l2r ComfyUI/custom_nodes/director_world_builder https://github.com/koshimazaki/Genobi 9f6d2ebe6df7d1c6c6e27d6db573d3e5be8a23bb custom_nodes/director_world_builder patches/world_builder.patch

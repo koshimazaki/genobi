@@ -102,6 +102,9 @@ user action through every layer.
 - [Comfy Developer Platform deployment](comfy-deployment.md) — the pins in
   `comfy-build/` as a `comfy build` recipe, how push treats weights, and one build versus several.
 
+- [Worked LTX / World Builder deployment](comfy-deploy.md) — reusable API
+  endpoints, offline checks, linux/nvidia release, costs and owner-run smoke tests.
+
 ## Camera
 
 - [Camera wording and examples](camera-wording.md) — the camera terms the studio
@@ -130,6 +133,7 @@ user action through every layer.
   six workspaces, Project Tools, layouts and build order.
 - [Outputs into project assets](project-assets.md) — the one path every 3D,
   Dual Swords, render and saved-video output takes into the project's assets.
+- [Director project copy](director-bundle/project-copy.md) — local synchronization and commands.
 - [Director bundle v1](director-bundle/README.md) — the interchange format: JSON
   manifest, media files, graphics modules and their schemas.
 - [Prompts and directions](director-prompts.md) — the global prompt, each

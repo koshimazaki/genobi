@@ -1,0 +1,145 @@
+{
+  "schema": "genobi-ltx-endpoints/1",
+  "deployment": "genobi-ltx-world",
+  "model_sets": ["world-builder-l2r", "ltx-i2v"],
+  "endpoints": [
+    {
+      "name": "dive",
+      "workflow": "world-builder-l2r-dive.json",
+      "model_set": "world-builder-l2r",
+      "room": null
+    },
+    {
+      "name": "cathedral",
+      "workflow": "world-builder-l2r-cathedral.json",
+      "model_set": "world-builder-l2r",
+      "room": "cathedral"
+    },
+    {
+      "name": "party_v8",
+      "workflow": "world-builder-l2r-a2v-party-v8.json",
+      "model_set": "world-builder-l2r",
+      "room": "medium_room"
+    },
+    {
+      "name": "party",
+      "workflow": "world-builder-l2r-a2v.json",
+      "model_set": "world-builder-l2r",
+      "room": "medium_room"
+    },
+    {
+      "name": "studio",
+      "workflow": "world-builder-l2r-a2v-studio.json",
+      "model_set": "world-builder-l2r",
+      "room": "small_room"
+    },
+    {
+      "name": "party_base",
+      "workflow": "world-builder-l2r-party.json",
+      "model_set": "world-builder-l2r",
+      "room": "medium_room"
+    },
+    {
+      "name": "studio_base",
+      "workflow": "world-builder-l2r-studio.json",
+      "model_set": "world-builder-l2r",
+      "room": "small_room"
+    },
+    {
+      "name": "studio_cpu",
+      "workflow": "ltx-i2v-a2v.json",
+      "model_set": "ltx-i2v",
+      "room": "small_room"
+    },
+    {
+      "name": "studio_akuspace",
+      "workflow": "ltx-i2v-a2v-akuspace.json",
+      "model_set": "ltx-i2v",
+      "room": "small_room"
+    },
+    {
+      "name": "cathedral_i2v",
+      "workflow": "ltx-i2v-dive-cathedral.json",
+      "model_set": "ltx-i2v",
+      "room": "cathedral"
+    },
+    {
+      "name": "medium_room",
+      "workflow": "ltx-i2v-dive-medium-room.json",
+      "model_set": "ltx-i2v",
+      "room": "medium_room"
+    },
+    {
+      "name": "small_room",
+      "workflow": "ltx-i2v-dive-small-room.json",
+      "model_set": "ltx-i2v",
+      "room": "small_room"
+    },
+    {
+      "name": "party_i2v",
+      "workflow": "ltx-i2v-party.json",
+      "model_set": "ltx-i2v",
+      "room": "medium_room"
+    },
+    {
+      "name": "vocalist_i2v",
+      "workflow": "ltx-i2v-vocalist.json",
+      "model_set": "ltx-i2v",
+      "room": "small_room"
+    },
+    {
+      "name": "chain_cathedral",
+      "workflow": "ltx-i2v-chain-cathedral.json",
+      "model_set": "ltx-i2v",
+      "room": "cathedral"
+    },
+    {
+      "name": "chain_party",
+      "workflow": "ltx-i2v-chain-party.json",
+      "model_set": "ltx-i2v",
+      "room": "medium_room"
+    },
+    {
+      "name": "chain_studio",
+      "workflow": "ltx-i2v-chain-studio.json",
+      "model_set": "ltx-i2v",
+      "room": "small_room"
+    },
+    {
+      "name": "fall15_t2v_s1",
+      "workflow": "ltx-fall15-t2v-s1.json",
+      "model_set": "ltx-i2v",
+      "room": null
+    },
+    {
+      "name": "fall15_t2v_s2",
+      "workflow": "ltx-fall15-t2v-s2.json",
+      "model_set": "ltx-i2v",
+      "room": null
+    },
+    {
+      "name": "fall15_voice_s1",
+      "workflow": "ltx-fall15-voice-s1.json",
+      "model_set": "ltx-i2v",
+      "room": null
+    },
+    {
+      "name": "fall15_voice_s2",
+      "workflow": "ltx-fall15-voice-s2.json",
+      "model_set": "ltx-i2v",
+      "room": null
+    },
+    {
+      "name": "vo_female_s1",
+      "workflow": "ltx-vo-female-s1.json",
+      "model_set": "ltx-i2v",
+      "room": null
+    },
+    {
+      "name": "vo_female_s2",
+      "workflow": "ltx-vo-female-s2.json",
+      "model_set": "ltx-i2v",
+      "room": null
+    }
+  ]
+}

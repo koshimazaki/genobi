@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from "react";
-import type { VoiceStatus } from "./api";
+import { prewarmVoice, type VoiceStatus } from "./api";
 import {
   readFoundVoiceModels,
   readVoiceSetup,
@@ -181,6 +181,6 @@ async function poll() {
 }
 /** Prewarm, then let every voice surface read the new status. */
 async function connected() {
-  await fetch("/api/voice/prewarm", { method: "POST" }).catch(() => {});
+  await prewarmVoice();
   window.dispatchEvent(new Event(VOICE_READY));
 }

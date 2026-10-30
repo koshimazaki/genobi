@@ -1,0 +1,379 @@
+{
+  "1": {
+    "class_type": "UNETLoader",
+    "inputs": {
+      "unet_name": "ltx-2.5-22b-distilled-transformer-comfy-int8-convrot.safetensors",
+      "weight_dtype": "default"
+    }
+  },
+  "2": {
+    "class_type": "LoraLoaderModelOnly",
+    "inputs": {
+      "lora_name": "akuspace-ltx25-v0.5.safetensors",
+      "strength_model": 1.0,
+      "model": ["1", 0]
+    }
+  },
+  "3": {
+    "class_type": "CLIPLoader",
+    "inputs": {
+      "clip_name": "gemma4-12b-with-proj-ltx-2.5-comfy-int8-convrot.safetensors",
+      "type": "ltxv"
+    }
+  },
+  "4": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "ltx-2.5-video-vae-bf16.safetensors"
+    }
+  },
+  "5": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "ltx-2.5-audio-vae-bf16.safetensors"
+    }
+  },
+  "12": {
+    "class_type": "Koshi_AKUSPACETextEncode",
+    "inputs": {
+      "clip": ["3", 0],
+      "text": "__PROMPT__",
+      "space_mode": "Room",
+      "application": "Heavy",
+      "room_preset": "small_room",
+      "effect_level": "high",
+      "outdoor_time": "day",
+      "sfx_level": "low",
+      "source_type": "female spoken voice"
+    }
+  },
+  "13": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "__NEGATIVE_PROMPT__",
+      "clip": ["3", 0]
+    }
+  },
+  "15": {
+    "class_type": "LTXVConditioning",
+    "inputs": {
+      "frame_rate": ["31", 0],
+      "positive": ["12", 0],
+      "negative": ["13", 0]
+    }
+  },
+  "26": {
+    "class_type": "PrimitiveInt",
+    "inputs": {
+      "value": 832
+    }
+  },
+  "27": {
+    "class_type": "PrimitiveInt",
+    "inputs": {
+      "value": 464
+    }
+  },
+  "30": {
+    "class_type": "PrimitiveInt",
+    "inputs": {
+      "value": 193
+    }
+  },
+  "31": {
+    "class_type": "PrimitiveFloat",
+    "inputs": {
+      "value": 24
+    }
+  },
+  "35": {
+    "class_type": "EmptyLTXVLatentVideo",
+    "inputs": {
+      "width": ["26", 0],
+      "height": ["27", 0],
+      "length": ["30", 0],
+      "batch_size": 1
+    }
+  },
+  "39": {
+    "class_type": "LTXVConcatAVLatent",
+    "inputs": {
+      "video_latent": ["93", 0],
+      "audio_latent": ["a3", 0]
+    }
+  },
+  "40": {
+    "class_type": "LoadAudio",
+    "inputs": {
+      "audio": "__TRACK_AUDIO__"
+    }
+  },
+  "41": {
+    "class_type": "TrimAudioDuration",
+    "inputs": {
+      "start_index": 0.0,
+      "duration": 8.041666666666666,
+      "audio": ["40", 0]
+    }
+  },
+  "42": {
+    "class_type": "AKUSPACEReferenceAudioAligned",
+    "inputs": {
+      "reference_guidance_scale": 0.0,
+      "model": ["2", 0],
+      "positive": ["15", 0],
+      "negative": ["15", 1],
+      "reference_audio": ["41", 0],
+      "audio_vae": ["5", 0]
+    }
+  },
+  "45": {
+    "class_type": "LTXVEmptyLatentAudio",
+    "inputs": {
+      "frames_number": ["30", 0],
+      "frame_rate": ["31", 0],
+      "batch_size": 1,
+      "audio_vae": ["5", 0]
+    }
+  },
+  "50": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": "__SEED_STAGE_1__"
+    }
+  },
+  "51": {
+    "class_type": "LTXVDualCFGGuider",
+    "inputs": {
+      "video_cfg": 1.0,
+      "audio_cfg": 1.0,
+      "model": ["42", 0],
+      "positive": ["m1", 0],
+      "negative": ["m1", 1]
+    }
+  },
+  "52": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "euler_ancestral"
+    }
+  },
+  "53": {
+    "class_type": "ManualSigmas",
+    "inputs": {
+      "sigmas": "1.0, 0.99375, 0.9875, 0.98125, 0.975, 0.909375, 0.725, 0.421875, 0.0"
+    }
+  },
+  "54": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": ["50", 0],
+      "guider": ["51", 0],
+      "sampler": ["52", 0],
+      "sigmas": ["53", 0],
+      "latent_image": ["m1", 2]
+    }
+  },
+  "60": {
+    "class_type": "LTXVSeparateAVLatent",
+    "inputs": {
+      "av_latent": ["54", 0]
+    }
+  },
+  "62": {
+    "class_type": "VAEDecodeTiled",
+    "inputs": {
+      "tile_size": 512,
+      "overlap": 64,
+      "temporal_size": 64,
+      "temporal_overlap": 8,
+      "samples": ["85", 0],
+      "vae": ["4", 0]
+    }
+  },
+  "63": {
+    "class_type": "LTXVAudioVAEDecode",
+    "inputs": {
+      "samples": ["85", 1],
+      "audio_vae": ["5", 0]
+    }
+  },
+  "64": {
+    "class_type": "CreateVideo",
+    "inputs": {
+      "bit_depth": 8,
+      "fps": ["31", 0],
+      "images": ["62", 0],
+      "audio": ["63", 0]
+    }
+  },
+  "65": {
+    "class_type": "SaveVideo",
+    "inputs": {
+      "filename_prefix": "__VIDEO_PREFIX__",
+      "format": "auto",
+      "codec": "auto",
+      "video": ["64", 0]
+    }
+  },
+  "66": {
+    "class_type": "SaveAudioAdvanced",
+    "inputs": {
+      "filename_prefix": "__AUDIO_PREFIX__",
+      "format": "flac",
+      "audio": ["63", 0]
+    }
+  },
+  "70": {
+    "class_type": "LatentUpscaleModelLoader",
+    "inputs": {
+      "model_name": "ltx-2.5-latent-spatial-upscaler-x2-bf16-1.0.safetensors"
+    }
+  },
+  "71": {
+    "class_type": "LTXVLatentUpsampler",
+    "inputs": {
+      "samples": ["60", 0],
+      "upscale_model": ["70", 0],
+      "vae": ["4", 0]
+    }
+  },
+  "72": {
+    "class_type": "LTXVConcatAVLatent",
+    "inputs": {
+      "video_latent": ["94", 0],
+      "audio_latent": ["60", 1]
+    }
+  },
+  "80": {
+    "class_type": "RandomNoise",
+    "inputs": {
+      "noise_seed": "__SEED_STAGE_2__"
+    }
+  },
+  "81": {
+    "class_type": "LTXVDualCFGGuider",
+    "inputs": {
+      "video_cfg": 1.0,
+      "audio_cfg": 1.0,
+      "model": ["42", 0],
+      "positive": ["m2", 0],
+      "negative": ["m2", 1]
+    }
+  },
+  "82": {
+    "class_type": "KSamplerSelect",
+    "inputs": {
+      "sampler_name": "euler_ancestral"
+    }
+  },
+  "83": {
+    "class_type": "ManualSigmas",
+    "inputs": {
+      "sigmas": "0.85, 0.7250, 0.4219, 0.0"
+    }
+  },
+  "84": {
+    "class_type": "SamplerCustomAdvanced",
+    "inputs": {
+      "noise": ["80", 0],
+      "guider": ["81", 0],
+      "sampler": ["82", 0],
+      "sigmas": ["83", 0],
+      "latent_image": ["m2", 2]
+    }
+  },
+  "85": {
+    "class_type": "LTXVSeparateAVLatent",
+    "inputs": {
+      "av_latent": ["84", 0]
+    }
+  },
+  "90": {
+    "class_type": "LoadImage",
+    "inputs": {
+      "image": "__REFERENCE_PNG__"
+    }
+  },
+  "91": {
+    "class_type": "ResizeImageMaskNode",
+    "inputs": {
+      "resize_type": "scale longer dimension",
+      "resize_type.longer_size": 1536,
+      "scale_method": "lanczos",
+      "input": ["90", 0]
+    }
+  },
+  "92": {
+    "class_type": "LTXVPreprocess",
+    "inputs": {
+      "img_compression": 18,
+      "image": ["91", 0]
+    }
+  },
+  "93": {
+    "class_type": "LTXVImgToVideoInplace",
+    "inputs": {
+      "strength": 0.7,
+      "bypass": false,
+      "vae": ["4", 0],
+      "image": ["92", 0],
+      "latent": ["35", 0]
+    }
+  },
+  "94": {
+    "class_type": "LTXVImgToVideoInplace",
+    "inputs": {
+      "strength": 1.0,
+      "bypass": false,
+      "vae": ["4", 0],
+      "image": ["92", 0],
+      "latent": ["71", 0]
+    }
+  },
+  "a3": {
+    "class_type": "LTXVAudioVAEEncode",
+    "inputs": {
+      "audio": ["41", 0],
+      "audio_vae": ["5", 0]
+    }
+  },
+  "m1": {
+    "class_type": "LTXVSetAudioVideoMaskByTime",
+    "inputs": {
+      "av_latent": ["39", 0],
+      "positive": ["42", 1],
+      "negative": ["42", 2],
+      "model": ["42", 0],
+      "vae": ["4", 0],
+      "audio_vae": ["5", 0],
+      "start_time": 0.041666666666666664,
+      "end_time": 8.041666666666666,
+      "video_fps": 24.0,
+      "mask_video": true,
+      "mask_audio": false,
+      "mask_init_value_video": 0.0,
+      "mask_init_value_audio": 0.5,
+      "slope_len": 3
+    }
+  },
+  "m2": {
+    "class_type": "LTXVSetAudioVideoMaskByTime",
+    "inputs": {
+      "av_latent": ["72", 0],
+      "positive": ["42", 1],
+      "negative": ["42", 2],
+      "model": ["42", 0],
+      "vae": ["4", 0],
+      "audio_vae": ["5", 0],
+      "start_time": 0.041666666666666664,
+      "end_time": 8.041666666666666,
+      "video_fps": 24.0,
+      "mask_video": true,
+      "mask_audio": false,
+      "mask_init_value_video": 0.0,
+      "mask_init_value_audio": 0.5,
+      "slope_len": 3
+    }
+  }
+}

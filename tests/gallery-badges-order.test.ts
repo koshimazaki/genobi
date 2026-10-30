@@ -37,16 +37,15 @@ const hasFfprobe = (() => {
 const card = (id: string) => galleryTemplates.find((t) => t.id === id)!;
 
 describe("gallery card order", () => {
-  it("follows the owner's order: the submission pieces first, the generation cards last", () => {
+  it("follows the owner's order, with the pending preview last", () => {
     expect(galleryTemplates.map((t) => t.name)).toEqual([
       "Genobi teaser",
       "Dimensions mix",
       "Bloom",
       "Adaptive reverb",
-      "Character piece",
-      "Sheet to shot",
       "Forest guardian",
       "Toy creatures",
+      "Sheet to shot",
     ]);
     // Every listed id is a card, and every card is listed.
     expect(galleryTemplates.map((t) => t.id)).toEqual(GALLERY_ORDER);
@@ -55,7 +54,7 @@ describe("gallery card order", () => {
   it("drops the Anime teaser and Product video cards, but not their templates", () => {
     // The Dimensions mix is the anime teaser; the Genobi teaser is the
     // product video (the owner, 30 October 2026).
-    for (const id of ["anime-teaser", "product-video"]) {
+    for (const id of ["anime-teaser", "product-video", "character-piece"]) {
       expect(NOT_IN_GALLERY.has(id)).toBe(true);
       expect(findGalleryTemplate(id)).toBeUndefined();
       expect(findHouseTemplate(id)).toBeDefined();
@@ -79,8 +78,8 @@ describe("gallery card order", () => {
   it("says what the teasers are for", () => {
     expect(GALLERY_SUBTITLE).toEqual({
       "genobi-teaser": "Product teaser",
-      "dimensions-mix": "Music video",
-      "bloom-teaser": "Anime teaser",
+      "dimensions-mix": "Anime teaser",
+      "bloom-teaser": "Sheet to shot",
       "adaptive-reverb": "3D · LTX template",
     });
     expect(card("bloom-teaser").name).toBe("Bloom");
@@ -99,6 +98,32 @@ describe("gallery card order", () => {
       1920, 1080,
     ]);
     expect(jpg.length).toBeLessThan(200 * 1024);
+  });
+
+  it("shares the cathedral poster on Adaptive reverb's watch and embed pages", () => {
+    const media = galleryMedia(card("adaptive-reverb"))!;
+    expect(media).toMatchObject({
+      width: 1280,
+      height: 720,
+      poster: "/media/template-gallery/adaptive-reverb.jpg",
+    });
+    const jpg = readFileSync(`public${media.poster}`);
+    const sof = jpg.indexOf(Buffer.from([0xff, 0xc0]));
+    expect([jpg.readUInt16BE(sof + 7), jpg.readUInt16BE(sof + 5)]).toEqual([
+      1280, 720,
+    ]);
+    for (const route of ["watch", "embed"]) {
+      const page = galleryPage(
+        `/${route}/adaptive-reverb`,
+        "https://studio.test",
+      )!;
+      expect(page.body).toContain(
+        'property="og:image" content="https://studio.test/media/template-gallery/adaptive-reverb.jpg"',
+      );
+      expect(page.body).toContain(
+        'name="twitter:image" content="https://studio.test/media/template-gallery/adaptive-reverb.jpg"',
+      );
+    }
   });
 
   it("leaves the Open only toggle's cards as they were", () => {
@@ -123,7 +148,6 @@ describe("model badges", () => {
       ),
     ).toEqual({
       "Genobi teaser": "MiniMax H3 + FLUX 3 video · open + API",
-      "Character piece": "LTX-2.5 · open weights",
       "Dimensions mix": "MiniMax H3 · open weights",
       Bloom: "MiniMax H3 · open weights",
       "Adaptive reverb": "LTX-2.5 · open weights",
@@ -184,14 +208,13 @@ describe("footage lines", () => {
       "Genobi teaser": null,
       "Dimensions mix": null,
       Bloom: null,
-      "Character piece": "Preview footage · FLUX 3 video",
       "Adaptive reverb": null,
       "Sheet to shot": null,
       "Forest guardian": null,
       "Toy creatures": "Preview footage · FLUX 3 video",
     });
     for (const t of [
-      card("character-piece"),
+      findHouseTemplate("character-piece")!,
       findHouseTemplate("product-video")!,
     ])
       expect(footageMadeWith(t)).toBe("made with FLUX 3 video (API)");
@@ -214,10 +237,10 @@ describe("footage lines", () => {
 
   it("leave the badges and Open only on the recipe", () => {
     // The footage is FLUX 3, the recipe LTX-2.5: the badge keeps the recipe.
-    expect(galleryBadge(card("character-piece")).label).toBe(
+    expect(galleryBadge(findHouseTemplate("character-piece")!).label).toBe(
       "LTX-2.5 · open weights",
     );
-    expect(openOnly(card("character-piece"))).toBe(false);
+    expect(openOnly(findHouseTemplate("character-piece")!)).toBe(false);
   });
 });
 

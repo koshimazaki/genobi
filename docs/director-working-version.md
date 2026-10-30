@@ -202,6 +202,8 @@ prompts.
    `1 / fps`. The audio mix is encoded as AAC. Export stays in the browser with
    no uploads, API keys or render server. Progress counts completed frames;
    **Cancel render** releases encoders and never offers a partial file.
+   If a history-navigation template load finishes during an export, playback
+   or import, it is refused and the current project keeps its renderer.
 8. The ruler uses the upscaler fader's machined minor ticks and taller accents.
    A single grid spans every lane. Frame ticks, labels, clip edges and playhead
    use the same whole-pixel frame scale, avoiding fractional tile drift. Zoom

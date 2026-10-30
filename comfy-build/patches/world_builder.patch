@@ -1,0 +1,44 @@
+--- a/__init__.py
++++ b/__init__.py
+@@ -42,8 +42,8 @@
+     for key in ("loop", "screen"):
+         if key in data and type(data[key]) is not bool:
+             raise ValueError(f"Recipe {key} must be true or false")
+-    if data["width"] * data["height"] * n * 12 > 1280 * 1024 * 1024:
+-        raise ValueError("Decoded take exceeds 1.25 GiB; reduce size or frames")
++    if data["width"] * data["height"] * n * 12 > 2 * 1024 * 1024 * 1024:
++        raise ValueError("Decoded take exceeds 2 GiB; reduce size or frames")
+     return data
+ 
+ 
+@@ -204,18 +204,27 @@
+         uid = "director-" + uuid.uuid4().hex
+         ui = {}
+         if images is not None:
+-            if images.ndim != 4 or images.shape[-1] != 3 or images.numel() > 320 * 1024 * 1024 or len(images) > 241:
++            if images.ndim != 4 or images.shape[-1] != 3 or len(images) > 241:
+                 raise ValueError("Use a bounded RGB image batch (at most 241 frames)")
+             if not 1 <= fps <= 60:
+                 raise ValueError("FPS must be 1–60")
++            # The screen is a preview: a full-size render (145 frames at
++            # 2048×1152 is ~1G values) is shrunk to the 320M-value budget, not refused.
++            scale = min(1.0, (320 * 1024 * 1024 / images.numel()) ** 0.5)
++            size = (max(2, int(images.shape[2] * scale) // 2 * 2), max(2, int(images.shape[1] * scale) // 2 * 2))
++
++            def still(frame):
++                image = Image.fromarray((frame.detach().cpu().clamp(0, 1).numpy() * 255).astype(np.uint8))
++                return image if scale == 1.0 else image.resize(size, Image.LANCZOS)
++
+             if len(images) == 1:
+                 name = uid + ".png"
+-                Image.fromarray((images[0].detach().cpu().clamp(0, 1).numpy() * 255).astype(np.uint8)).save(root / name)
++                still(images[0]).save(root / name)
+             else:
+                 name = uid + ".webm"
+                 with tempfile.TemporaryDirectory(prefix="director-input-") as temp:
+                     for i, frame in enumerate(images):
+-                        Image.fromarray((frame.detach().cpu().clamp(0, 1).numpy() * 255).astype(np.uint8)).save(Path(temp) / f"{i:04d}.png")
++                        still(frame).save(Path(temp) / f"{i:04d}.png")
+                     ffmpeg(["-framerate", str(fps), "-i", str(Path(temp) / "%04d.png"), "-c:v", "libvpx", "-b:v", "4M", "-an", str(root / name)])
+             ui["screen"] = [{"filename": name, "subfolder": "", "type": "temp"}]
+         if audio is not None:
