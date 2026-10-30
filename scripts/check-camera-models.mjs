@@ -120,7 +120,14 @@ async function cameraLine(page, what) {
     .evaluate((element) => {
       const editor = element.closest(".prompt-editor").getBoundingClientRect();
       const style = getComputedStyle(element);
+      const text = element.textContent;
+      // The current camera may fit. Exercise truncation with a long sentence,
+      // then restore React's text before any interaction or screenshot.
+      element.textContent = `${text} `.repeat(20);
+      const longOverflowing = element.scrollWidth > element.clientWidth;
+      element.textContent = text;
       return {
+        longOverflowing,
         right: element.getBoundingClientRect().right,
         column: editor.right,
         overflowing: element.scrollWidth > element.clientWidth,
@@ -133,7 +140,7 @@ async function cameraLine(page, what) {
     `${what}: camera line ends at ${line.right}, past the prompt column at ${line.column}`,
   );
   assert(
-    line.overflowing && line.ellipsis && line.nowrap,
+    line.longOverflowing && line.ellipsis && line.nowrap,
     `${what}: camera line shows no ellipsis (${JSON.stringify(line)})`,
   );
 }
