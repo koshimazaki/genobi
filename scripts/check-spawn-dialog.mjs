@@ -139,6 +139,12 @@ try {
     await dialog
       .getByText("Pair hosted and local Genobi", { exact: true })
       .waitFor();
+    assert.equal(
+      await dialog
+        .getByRole("link", { name: /Open local studio/ })
+        .getAttribute("href"),
+      "http://127.0.0.1:4317",
+    );
     const pairing = dialog.getByRole("button", { name: "Create pairing code" });
     await pairing.waitFor();
     assert.equal(await pairing.isEnabled(), true);

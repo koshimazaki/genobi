@@ -84,6 +84,18 @@ export function SpawnAgentView({
       {step.kind === "pairing" && (
         <>
           <p role="status">{step.text}</p>
+          <a
+            href="http://127.0.0.1:4317"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Open local studio ↗
+          </a>
+          <p>
+            If it does not open, start Genobi locally with npm run dev, then
+            open Settings → Pair hosted and local Genobi. Return here to create
+            the pairing code. Hermes runs on your machine.
+          </p>
           <a href={LOCAL_SETUP_URL} target="_blank" rel="noopener noreferrer">
             Set up the local studio ↗
           </a>

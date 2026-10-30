@@ -1,0 +1,243 @@
+{
+  "schema": "genobi-ltx-example-prompts/1",
+  "evidence": "Prompts and seeds transcribed from the recorded 30 October 2026 ComfyUI GPU runs. Not a fresh run or a Comfy Developer Platform deployment test.",
+  "examples": [
+    {
+      "endpoint": "dive",
+      "workflow": "world-builder-l2r-dive.json",
+      "values": {
+        "PROMPT": "The camera itself free-falls face down between glass skyscrapers in golden morning light, diving faster and faster. Far below, the open roof of a gothic stone cathedral rushes up and the camera plunges through it into the vast nave. No people, no figure, nobody: only the empty spaces rushing past. Shot on 35mm film, photorealistic, cinematic.",
+        "REVERB_SEED": 0,
+        "NEGATIVE_PROMPT": "cut, shot change, scene change, warped face, deformed hands, extra fingers, text, captions, watermark, distorted, clipped, metallic, person, man, figure, body, mannequin, limbs",
+        "SEED_STAGE_1": 42,
+        "SEED_STAGE_2": 42
+      }
+    },
+    {
+      "endpoint": "cathedral",
+      "workflow": "world-builder-l2r-cathedral.json",
+      "values": {
+        "PROMPT": "The camera itself free-falls through the open roof of a vast gothic cathedral and dives down the nave between two rows of massive stone columns, over rows of wooden pews towards a stone altar, coloured light from stained-glass windows. No people, nobody: only the empty cathedral rushing past. Shot on 35mm film, photorealistic, cinematic.",
+        "REVERB_SEED": 0,
+        "NEGATIVE_PROMPT": "cut, shot change, scene change, warped face, deformed hands, extra fingers, text, captions, watermark, distorted, clipped, metallic, mannequin, yellow figure, falling man, skydiver",
+        "SEED_STAGE_1": 42,
+        "SEED_STAGE_2": 42
+      }
+    },
+    {
+      "endpoint": "party_v8",
+      "workflow": "world-builder-l2r-a2v-party-v8.json",
+      "values": {
+        "PROMPT": "The camera itself free-falls from high above into an open-topped old plaster-walled room packed wall to wall with a daytime party. Everyone is dancing to the beat of the music: about a hundred young people bouncing on their feet, swaying their hips and shoulders, nodding their heads in time, stepping side to side, some holding cocktails, hands down at their sides, a DJ at the turntables by the far wall, sunlight and haze. The whole crowd moves in rhythm the entire time. The camera dives down into the dancing crowd. Shot on 35mm film, photorealistic, cinematic, energetic.",
+        "REVERB_SEED": 0,
+        "NEGATIVE_PROMPT": "cut, shot change, scene change, warped face, deformed hands, extra fingers, text, captions, watermark, distorted, clipped, metallic, mannequin, yellow figure, falling man, skydiver, standing still, frozen, motionless, hands in the air, raised arms",
+        "SEED_STAGE_1": 42,
+        "SEED_STAGE_2": 42
+      }
+    },
+    {
+      "endpoint": "party",
+      "workflow": "world-builder-l2r-a2v.json",
+      "values": {
+        "PROMPT": "The camera itself free-falls from high above into an open-topped old plaster-walled room packed wall to wall with a daytime party. Everyone is dancing to the beat of the music: about a hundred young people bouncing on their feet, swaying their hips and shoulders, nodding their heads in time, stepping side to side, a DJ at the turntables by the far wall, sunlight and haze. The camera dives down into the dancing crowd. Shot on 35mm film, photorealistic, cinematic.",
+        "REVERB_SEED": 0,
+        "NEGATIVE_PROMPT": "cut, shot change, scene change, warped face, deformed hands, extra fingers, text, captions, watermark, distorted, clipped, metallic, mannequin, yellow figure, falling man, skydiver, standing still, frozen, motionless, drinks, cups, glasses, cocktails, bottles",
+        "SEED_STAGE_1": 42,
+        "SEED_STAGE_2": 42
+      }
+    },
+    {
+      "endpoint": "studio",
+      "workflow": "world-builder-l2r-a2v-studio.json",
+      "values": {
+        "PROMPT": "The camera itself falls from above into an open-topped small warm recording room with wooden panelled walls, a drum kit and a mixing console, and slows behind a female vocalist with long dark hair and large studio headphones at a condenser microphone with a pop filter. She listens to the music, not singing, her mouth closed, then near the end turns her head over her shoulder, looks into the camera and smiles warmly. Shot on 35mm film, photorealistic, cinematic, warm light.",
+        "REVERB_SEED": 0,
+        "NEGATIVE_PROMPT": "cut, shot change, scene change, warped face, deformed hands, extra fingers, text, captions, watermark, distorted, clipped, metallic, mannequin, yellow figure, falling man, skydiver, standing still, frozen, motionless, hands in the air, raised arms",
+        "SEED_STAGE_1": 42,
+        "SEED_STAGE_2": 42
+      }
+    },
+    {
+      "endpoint": "party_base",
+      "workflow": "world-builder-l2r-party.json",
+      "values": {
+        "PROMPT": "The camera itself free-falls from high above into an open-topped old plaster-walled room packed with a daytime rave: dozens of young people dance hard, hands in the air, a DJ at the turntables by the far wall, sunlight and haze. The camera dives down into the crowd. Shot on 35mm film, photorealistic, cinematic, energetic.",
+        "REVERB_SEED": 0,
+        "NEGATIVE_PROMPT": "cut, shot change, scene change, warped face, deformed hands, extra fingers, text, captions, watermark, distorted, clipped, metallic, mannequin, yellow figure, falling man, skydiver",
+        "SEED_STAGE_1": 42,
+        "SEED_STAGE_2": 42
+      }
+    },
+    {
+      "endpoint": "studio_base",
+      "workflow": "world-builder-l2r-studio.json",
+      "values": {
+        "PROMPT": "The camera itself falls from above into an open-topped small recording studio lined with grey acoustic foam and slows behind a female vocalist with her back to the camera, wearing large studio headphones, singing into a condenser microphone with a pop filter. We see only her back and hair, never her face. Shot on 35mm film, photorealistic, cinematic, warm studio light.",
+        "REVERB_SEED": 0,
+        "NEGATIVE_PROMPT": "cut, shot change, scene change, warped face, deformed hands, extra fingers, text, captions, watermark, distorted, clipped, metallic, mannequin, yellow figure, falling man, skydiver",
+        "SEED_STAGE_1": 42,
+        "SEED_STAGE_2": 42
+      }
+    },
+    {
+      "endpoint": "studio_cpu",
+      "workflow": "ltx-i2v-a2v.json",
+      "values": {
+        "PROMPT": "The camera descends slowly behind a female vocalist in a small warm recording room with wooden panelled walls, a drum kit on the left and a mixing console on the right. She stands at a condenser microphone with a pop filter, wearing large studio headphones, listening to the music, not singing, her mouth closed. Near the end she slowly turns her head over her shoulder, looks straight into the camera and smiles warmly. Smooth continuous camera motion, no cuts. Photorealistic, shot on 35mm film, warm light.",
+        "NEGATIVE_PROMPT": "cut, shot change, scene change, static camera, hands in the air, raised arms, warped face, deformed hands, extra limbs, extra fingers, text, captions, watermark, distorted, singing, open mouth",
+        "SEED_STAGE_1": 558811532553686,
+        "SEED_STAGE_2": 42
+      }
+    },
+    {
+      "endpoint": "studio_akuspace",
+      "workflow": "ltx-i2v-a2v-akuspace.json",
+      "values": {
+        "PROMPT": "The camera descends slowly behind a female vocalist in a small warm recording room with wooden panelled walls, a drum kit on the left and a mixing console on the right. She stands at a condenser microphone with a pop filter, wearing large studio headphones, listening to the music, not singing, her mouth closed. Near the end she slowly turns her head over her shoulder, looks straight into the camera and smiles warmly. Smooth continuous camera motion, no cuts. Photorealistic, shot on 35mm film, warm light.",
+        "NEGATIVE_PROMPT": "cut, shot change, scene change, static camera, hands in the air, raised arms, warped face, deformed hands, extra limbs, extra fingers, text, captions, watermark, distorted, singing, open mouth",
+        "SEED_STAGE_1": 558811532553686,
+        "SEED_STAGE_2": 42
+      }
+    },
+    {
+      "endpoint": "cathedral_i2v",
+      "workflow": "ltx-i2v-dive-cathedral.json",
+      "values": {
+        "PROMPT": "The camera itself keeps diving smoothly downward and forward into the vast nave of a gothic stone cathedral, past stained-glass windows, stone columns and coloured light shafts through dust, down towards the stone floor, as if falling through the space. Continuous forward and downward camera motion, no cuts. No people, no figure, nobody: only the empty space. Soft wind. Photorealistic, shot on 35mm film, cinematic, natural light.",
+        "NEGATIVE_PROMPT": "cut, shot change, scene change, person, man, woman, figure, body, mannequin, text, captions, watermark, distorted, music, singing, speech",
+        "SEED_STAGE_1": 558811532553686,
+        "SEED_STAGE_2": 42
+      }
+    },
+    {
+      "endpoint": "medium_room",
+      "workflow": "ltx-i2v-dive-medium-room.json",
+      "values": {
+        "PROMPT": "The camera itself keeps diving smoothly downward and forward into a big old plaster-walled rehearsal room with tall windows, down towards its worn wooden floor, as if falling through the space. Continuous forward and downward camera motion, no cuts. No people, no figure, nobody: only the empty space. Soft wind. Photorealistic, shot on 35mm film, cinematic, natural light.",
+        "NEGATIVE_PROMPT": "cut, shot change, scene change, person, man, woman, figure, body, mannequin, text, captions, watermark, distorted, music, singing, speech",
+        "SEED_STAGE_1": 558811532553686,
+        "SEED_STAGE_2": 42
+      }
+    },
+    {
+      "endpoint": "small_room",
+      "workflow": "ltx-i2v-dive-small-room.json",
+      "values": {
+        "PROMPT": "The camera itself keeps diving smoothly downward and forward into a small white photo studio with a softbox on a stand, down towards its pale floor, as if falling through the space. Continuous forward and downward camera motion, no cuts. No people, no figure, nobody: only the empty space. Soft wind. Photorealistic, shot on 35mm film, cinematic, natural light.",
+        "NEGATIVE_PROMPT": "cut, shot change, scene change, person, man, woman, figure, body, mannequin, text, captions, watermark, distorted, music, singing, speech",
+        "SEED_STAGE_1": 558811532553686,
+        "SEED_STAGE_2": 42
+      }
+    },
+    {
+      "endpoint": "party_i2v",
+      "workflow": "ltx-i2v-party.json",
+      "values": {
+        "PROMPT": "The camera dives down from above into a packed daytime after-party in a big old plaster-walled room in New York: dozens of young people rave and dance hard to the music, jumping, hands in the air, hair flying, a DJ working the turntables by the far wall, haze glowing in the sunlight from the tall windows. Continuous downward and forward camera motion, no cuts. Energetic, joyful, photorealistic, shot on 35mm film.",
+        "NEGATIVE_PROMPT": "cut, shot change, scene change, warped face, deformed hands, extra fingers, extra limbs, text, captions, watermark, distorted",
+        "SEED_STAGE_1": 558811532553686,
+        "SEED_STAGE_2": 42
+      }
+    },
+    {
+      "endpoint": "vocalist_i2v",
+      "workflow": "ltx-i2v-vocalist.json",
+      "values": {
+        "PROMPT": "The camera slowly descends towards a female vocalist in a small recording studio lined with grey acoustic foam. She stands with her back to the camera, wearing large studio headphones, singing passionately into a condenser microphone with a pop filter, swaying gently, one hand on the headphones. We see only her back and hair, never her face. Smooth continuous camera motion, no cuts. Photorealistic, shot on 35mm film, warm studio light.",
+        "NEGATIVE_PROMPT": "cut, shot change, scene change, warped face, deformed hands, extra fingers, extra limbs, text, captions, watermark, distorted",
+        "SEED_STAGE_1": 558811532553686,
+        "SEED_STAGE_2": 42
+      }
+    },
+    {
+      "endpoint": "chain_cathedral",
+      "workflow": "ltx-i2v-chain-cathedral.json",
+      "values": {
+        "PROMPT": "The camera keeps free-falling straight down, looking down, through the vast nave of a gothic cathedral, past stained-glass windows, stone columns and coloured light shafts, rushing towards the stone floor, which cracks open, and the camera falls through it. Continuous downward camera motion, no cuts, no people. Photorealistic, shot on 35mm film.",
+        "NEGATIVE_PROMPT": "cut, shot change, scene change, static camera, warped face, deformed hands, extra limbs, text, captions, watermark, distorted",
+        "SEED_STAGE_1": 558811532553686,
+        "SEED_STAGE_2": 42
+      }
+    },
+    {
+      "endpoint": "chain_party",
+      "workflow": "ltx-i2v-chain-party.json",
+      "values": {
+        "PROMPT": "The camera keeps falling straight down out of a hole in the ceiling into a big old plaster-walled room in New York packed with a daytime after-party: dozens of young people raving and dancing below, hands in the air, a DJ at the turntables, haze in the sunlight from tall windows. The camera falls through the dancers and through the wooden floor. Continuous downward camera motion, no cuts. Photorealistic, shot on 35mm film.",
+        "NEGATIVE_PROMPT": "cut, shot change, scene change, static camera, warped face, deformed hands, extra limbs, text, captions, watermark, distorted",
+        "SEED_STAGE_1": 558811532553686,
+        "SEED_STAGE_2": 42
+      }
+    },
+    {
+      "endpoint": "chain_studio",
+      "workflow": "ltx-i2v-chain-studio.json",
+      "values": {
+        "PROMPT": "The camera keeps falling down through the ceiling into a small recording studio lined with grey acoustic foam and slows to a gentle descent behind a female vocalist with her back to the camera, wearing large studio headphones, singing into a condenser microphone with a pop filter. We see only her back and hair, never her face. Continuous camera motion, no cuts. Photorealistic, shot on 35mm film, warm studio light.",
+        "NEGATIVE_PROMPT": "cut, shot change, scene change, static camera, warped face, deformed hands, extra limbs, text, captions, watermark, distorted",
+        "SEED_STAGE_1": 558811532553686,
+        "SEED_STAGE_2": 42
+      }
+    },
+    {
+      "endpoint": "fall15_t2v_s1",
+      "workflow": "ltx-fall15-t2v-s1.json",
+      "values": {
+        "PROMPT": "One continuous shot with no cuts. The camera falls with a man, seen from above and behind: we see only his back and the back of his head, never his face. He holds a stable belly-down skydiving arch, arms spread wide and bent at the elbows, knees slightly bent, his dark denim jacket rippling in the wind. At first he falls between glass skyscrapers in golden morning light. Then he drops through the open roof of a vast gothic cathedral and keeps falling down the nave, past stained-glass windows and stone vaults. Then the stone floor opens and he falls into a big plaster-walled rehearsal room with tall windows. Then its wooden floor opens and he falls into a small white photo studio with a softbox. He keeps falling endlessly downward through each space, steady and graceful. Shot on 35mm film, photorealistic, cinematic, natural light.",
+        "NEGATIVE_PROMPT": "pc game, console game, video game, cartoon, childish, ugly",
+        "SEED_STAGE_1": 2001,
+        "SEED_STAGE_2": 3001
+      }
+    },
+    {
+      "endpoint": "fall15_t2v_s2",
+      "workflow": "ltx-fall15-t2v-s2.json",
+      "values": {
+        "PROMPT": "One continuous shot with no cuts. The camera falls with a man, seen from above and behind: we see only his back and the back of his head, never his face. He holds a stable belly-down skydiving arch, arms spread wide and bent at the elbows, knees slightly bent, his dark denim jacket rippling in the wind. At first he falls between glass skyscrapers in golden morning light. Then he drops through the open roof of a vast gothic cathedral and keeps falling down the nave, past stained-glass windows and stone vaults. Then the stone floor opens and he falls into a big plaster-walled rehearsal room with tall windows. Then its wooden floor opens and he falls into a small white photo studio with a softbox. He keeps falling endlessly downward through each space, steady and graceful. Shot on 35mm film, photorealistic, cinematic, natural light.",
+        "NEGATIVE_PROMPT": "pc game, console game, video game, cartoon, childish, ugly",
+        "SEED_STAGE_1": 2002,
+        "SEED_STAGE_2": 3002
+      }
+    },
+    {
+      "endpoint": "fall15_voice_s1",
+      "workflow": "ltx-fall15-voice-s1.json",
+      "values": {
+        "PROMPT": "One continuous shot with no cuts. The camera falls with a man, seen from above and behind: we see his back and the back of his head, never his face. He holds a stable belly-down skydiving arch, arms spread wide, his dark denim jacket rippling. For the first two seconds he falls between glass skyscrapers in golden morning light and shouts excitedly: \"Genobi lets you match the reverb to the space!\" Then he drops through the open roof of a vast gothic cathedral and keeps falling down the nave past stained-glass windows, shouting: \"I am entering the cathedral... hear that?\" Then the stone floor opens and he falls into a big plaster-walled rehearsal room with tall windows, shouting: \"And now... the big room!\" Then its floor opens and he falls into a small white photo studio with a softbox, saying: \"Now the small room. Can you hear the difference? It is mad!\" He keeps falling endlessly downward. His voice is a clean, dry, close-miked male voice with no echo, plus soft wind. Shot on 35mm film, photorealistic, cinematic, natural light.",
+        "NEGATIVE_PROMPT": "pc game, console game, video game, cartoon, childish, ugly",
+        "SEED_STAGE_1": 4001,
+        "SEED_STAGE_2": 5001
+      }
+    },
+    {
+      "endpoint": "fall15_voice_s2",
+      "workflow": "ltx-fall15-voice-s2.json",
+      "values": {
+        "PROMPT": "One continuous shot with no cuts. The camera falls with a man, seen from above and behind: we see his back and the back of his head, never his face. He holds a stable belly-down skydiving arch, arms spread wide, his dark denim jacket rippling. For the first two seconds he falls between glass skyscrapers in golden morning light and shouts excitedly: \"Genobi lets you match the reverb to the space!\" Then he drops through the open roof of a vast gothic cathedral and keeps falling down the nave past stained-glass windows, shouting: \"I am entering the cathedral... hear that?\" Then the stone floor opens and he falls into a big plaster-walled rehearsal room with tall windows, shouting: \"And now... the big room!\" Then its floor opens and he falls into a small white photo studio with a softbox, saying: \"Now the small room. Can you hear the difference? It is mad!\" He keeps falling endlessly downward. His voice is a clean, dry, close-miked male voice with no echo, plus soft wind. Shot on 35mm film, photorealistic, cinematic, natural light.",
+        "NEGATIVE_PROMPT": "pc game, console game, video game, cartoon, childish, ugly",
+        "SEED_STAGE_1": 4002,
+        "SEED_STAGE_2": 5002
+      }
+    },
+    {
+      "endpoint": "vo_female_s1",
+      "workflow": "ltx-vo-female-s1.json",
+      "values": {
+        "PROMPT": "A woman narrator in her thirties sits in a quiet, acoustically treated recording booth and speaks to the camera in a warm, clear, confident voice, at an even documentary narration pace, without pausing: \"As the character falls through different spaces, the sound changes with them. The reverb adapts to the acoustics of each room. Every scene was built by agents in Three.js, inside ComfyUI, and brought to life through our custom nodes and workflow.\" Static medium close-up, soft key light. Clean, dry, close-miked female voice with no echo and no room sound, no music, no background noise. Photorealistic.",
+        "NEGATIVE_PROMPT": "pc game, console game, video game, cartoon, childish, ugly",
+        "SEED_STAGE_1": 6001,
+        "SEED_STAGE_2": 7001
+      }
+    },
+    {
+      "endpoint": "vo_female_s2",
+      "workflow": "ltx-vo-female-s2.json",
+      "values": {
+        "PROMPT": "A woman narrator in her thirties sits in a quiet, acoustically treated recording booth and speaks to the camera in a warm, clear, confident voice, at an even documentary narration pace, without pausing: \"As the character falls through different spaces, the sound changes with them. The reverb adapts to the acoustics of each room. Every scene was built by agents in Three.js, inside ComfyUI, and brought to life through our custom nodes and workflow.\" Static medium close-up, soft key light. Clean, dry, close-miked female voice with no echo and no room sound, no music, no background noise. Photorealistic.",
+        "NEGATIVE_PROMPT": "pc game, console game, video game, cartoon, childish, ugly",
+        "SEED_STAGE_1": 6002,
+        "SEED_STAGE_2": 7002
+      }
+    }
+  ]
+}

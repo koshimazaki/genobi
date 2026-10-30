@@ -36,7 +36,7 @@ Agents need your approval before paid operations. See [setup and keys](docs/gett
 [![Watch the Acoustic Space demo: falling between rooms](docs/media/acoustic-space-demo.jpg)](docs/media/acoustic-space-demo.mp4?raw=true)
 
 **[Watch with sound · 30 seconds](docs/media/acoustic-space-demo.mp4?raw=true).**
-As the character falls through different spaces, the reverb changes with the room.
+As the camera falls through different spaces, the reverb changes with the room.
 Three.js scenes inside ComfyUI guide the visuals and the scene-derived CPU reverb.
 
 **Acoustic Space connects the room you build to the sound you hear.** Build a
@@ -51,6 +51,9 @@ so an edit can move from a small room to a club or cathedral with a different
 sound for each space. This is an approximate room model, with inspectable inputs
 and reusable workflows. **AKUSPACE**, my trained LTX LoRA, is a separate
 experimental route for room-conditioned generated audio/video.
+
+[3D/acoustics workflow examples and original prompts](examples/ltx-world/README.md)
+· [Open the editable example](https://genobi.pages.dev/director?example=adaptive-reverb&workspace=editor)
 
 [World Builder](docs/world-builder.md) ·
 [Acoustics and reverb](docs/world-builder-acoustics.md) ·

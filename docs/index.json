@@ -721,13 +721,12 @@
       "title": "Adaptive reverb: the 3D + LTX template",
       "path": "adaptive-reverb.md",
       "tags": ["director", "sound", "templates", "world-builder"],
-      "summary": "Adaptive reverb, the 3D + LTX mix template - one LTX-2.5 (open weights) + AKUSPACE LoRA take through a cathedral, a crowded hall and a small studio, its own sound changing with each room, under a room-scan look; and Acoustic Space end to end, from a World Builder room to the sound in it, and how to regenerate a room.",
+      "summary": "Adaptive reverb, the editable 3D and LTX mix template, with scene-derived CPU reverb, separate AKUSPACE experiments and the recorded workflow inputs.",
       "links": [
         "capabilities.md",
         "comfy-deploy.md",
         "director-bundle/showcase/adaptive-reverb/README.md",
-        "templates.md",
-        "world-builder-acoustics.md"
+        "templates.md"
       ]
     },
     {
