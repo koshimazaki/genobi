@@ -108,11 +108,17 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--name", required=True)
     parser.add_argument("--sets", nargs="+", required=True)
+    parser.add_argument("--check-workflows", action="store_true", help="check worked API links and exact model coverage offline")
     args = parser.parse_args()
     for name in args.sets:
         if not os.path.exists(os.path.join(ROOT, "models", f"{name}.txt")):
             raise SystemExit(f"no model set {name}")
-    print("\n".join(to_yaml(build_spec(args.name, args.sets))))
+    spec = build_spec(args.name, args.sets)
+    if args.check_workflows:
+        from workflow_checks import check_workflows
+        count = check_workflows(args.sets, os.path.join(ROOT, "models"))
+        print(f"Offline workflow coverage: {count} templates", file=sys.stderr)
+    print("\n".join(to_yaml(spec)))
 
 
 if __name__ == "__main__":
