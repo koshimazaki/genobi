@@ -1,5 +1,6 @@
 import { AGENT_REQUEST_HEADER } from "../../shared/agent-session-events";
 import { INSTALL_PHASES, type InstallState } from "../../shared/voice-install";
+import { requireLocalVoice } from "./availability";
 
 export interface VoiceInstallState extends InstallState {
   busy: boolean;
@@ -41,6 +42,8 @@ export async function setupRequest<T>(
         }, 20_000)
       : undefined;
   try {
+    // Inside the bound: a stalled hosted check times out or aborts too.
+    await requireLocalVoice(controller.signal);
     const response = await fetch(`/api/voice/setup${url}`, {
       method,
       signal: controller.signal,
@@ -101,6 +104,7 @@ export async function readVoiceSetup(
 export async function readFoundVoiceModels(
   signal?: AbortSignal,
 ): Promise<FoundVoiceModel[]> {
+  await requireLocalVoice(signal);
   const response = await fetch("/api/voice/setup/found", {
     cache: "no-store",
     signal,

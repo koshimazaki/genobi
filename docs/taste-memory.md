@@ -65,7 +65,13 @@ revision-checked `POST /api/memory/taste/shelf`. Only the owner can change it;
 linked agents read `tasteShelf` through project context. Built-in sessions receive
 the same selection even without an open project. Old profiles default to the full
 collection without rewriting learned preferences. An explicitly empty selection
-stays empty. Hosted visitors can browse previews; saving requires the local studio.
+stays empty. Hosted visitors browse the bundled public shelf, creator credits and
+interactive demos read-only. The existing run-location setting confirms the
+adapter before any profile request: only a confirmed local studio reads or
+writes `/api/memory`. While detection is pending or unavailable, the public
+collection remains browsable. Hosted mode hides personal profile, custom-reference
+and model-default controls and disables selection writes, with a link to the
+README's local setup. No project memory is loaded there.
 
 The page introduces the Taste layer as Genobi’s code-based mood board, linking
 visual examples, creator credits and intended-use checks. The UI supports review

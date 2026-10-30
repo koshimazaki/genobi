@@ -1,13 +1,12 @@
-# Director offline template previews
+# Director mix media
 
-These videos were exported from Director's browser renderer on 18 October 2026,
-then transcoded to smaller H.264/AAC previews. Each is six seconds, 360 × 640,
-30 fps / 180 frames. ZIP files are the corresponding editable Director bundles.
-All artwork is an original deterministic illustration, not a model generation.
-Outfit reveal shows two prepared looks; no garment transfer is implied.
+The offered templates are Dimensions mix, Genobi teaser, Bloom and Adaptive
+reverb. Their folders contain the media the editable cuts use; gallery renders
+and posters live beside them under `public/media/template-gallery/`.
 
-The editable templates are assembled by `src/director/remix-template.ts` using
-`template-catalogue.ts`, the registered caption recipe and supplied pulse audio.
-The artwork generator is `scripts/generate-director-template-art.py` (Pillow).
-To refresh a preview, open the matching template, export MP4 and save its editable
-project. Verify decoded duration/frames and text before replacing these files.
+The earlier Character intro, Outfit reveal and Poster in motion placeholders
+were retired on 30 October 2026. Their unused preview MP4s, editable ZIPs and
+builder were removed. Original PNG fixtures and legacy slot metadata remain
+for house-template examples, tests and media replacement in saved projects.
+
+See `docs/template-gallery.md` for the current order, default and sharing routes.

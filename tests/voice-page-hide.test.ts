@@ -17,13 +17,19 @@ describe("a recording on a closing page", () => {
     expect(hide).toHaveBeenCalledTimes(1);
   });
 
-  it("sends the cancel with keepalive, so it outlives the page", () => {
+  it("sends the cancel with keepalive, so it outlives the page", async () => {
     const fetch = vi.fn().mockResolvedValue(new Response(null));
     vi.stubGlobal("fetch", fetch);
-    cancelPrewarm();
+    await cancelPrewarm();
     expect(fetch).toHaveBeenCalledWith("/api/voice/prewarm", {
       method: "DELETE",
       keepalive: true,
     });
   });
 });
+
+// These fixtures exercise local voice; hosted detection is covered separately.
+vi.mock("../src/hosted-studio", () => ({
+  readHostedStudio: async () => false,
+  useHostedStudio: () => false,
+}));

@@ -62,3 +62,9 @@ it("reads the search fresh and keeps only well-formed answers", async () => {
     }),
   );
 });
+
+// These fixtures exercise local voice; hosted detection is covered separately.
+vi.mock("../src/hosted-studio", () => ({
+  readHostedStudio: async () => false,
+  useHostedStudio: () => false,
+}));

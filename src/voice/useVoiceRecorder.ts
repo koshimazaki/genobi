@@ -3,6 +3,7 @@ import type { VoiceLanguage } from "../../shared/voice-languages";
 import { cancelPrewarm, onPageHide, prewarmVoice } from "./api";
 import { deliverNote, openCapture, type Capture } from "./capture";
 import { LED_COUNT, ledLevel, measure, METER_HZ, pushLevel } from "./levels";
+import { requireLocalVoice } from "./availability";
 
 export type VoicePhase =
   "idle" | "starting" | "recording" | "transcribing" | "done" | "error";
@@ -106,13 +107,22 @@ export function useVoiceRecorder(maxSeconds: number, language: VoiceLanguage) {
     setMessage("");
     setTranscript("");
     setSeconds(0);
+    const mine = ++attempt.current;
+    try {
+      await requireLocalVoice();
+    } catch (error) {
+      if (mine !== attempt.current) return;
+      setMessage((error as Error).message);
+      setPhase("error");
+      return;
+    }
+    if (mine !== attempt.current) return;
     if (!navigator.mediaDevices?.getUserMedia || !window.MediaRecorder) {
       setMessage("This browser cannot record audio here.");
       setPhase("error");
       return;
     }
     setPhase("starting");
-    const mine = ++attempt.current;
     let stream: MediaStream;
     try {
       stream = await navigator.mediaDevices.getUserMedia({

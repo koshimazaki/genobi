@@ -78,9 +78,8 @@ describe("generation cards", () => {
     expect(generationTemplates.map((t) => t.generation!.clip)).toEqual(
       Object.keys(generationRecords),
     );
-    // The shown ones close the gallery (GALLERY_ORDER); Neon bloom left it
-    // for Bloom on 30 October 2026.
-    expect(galleryTemplates.slice(-2)).toEqual(shownGenerations);
+    // The generation cards precede the pending Sheet to shot preview.
+    expect(galleryTemplates.slice(-3, -1)).toEqual(shownGenerations);
     for (const t of generationTemplates) {
       expect(() => checkTemplate(t)).not.toThrow();
       expect(isMechanical(t)).toBe(true);
@@ -94,7 +93,7 @@ describe("generation cards", () => {
       expect(existsSync(`public${media.poster}`)).toBe(true);
       expect(gallerySeconds(t)).toBeGreaterThan(19);
       expect(templateTools(t)).toEqual(["Camera"]);
-      // Gallery cards only: never a Director example or a watch page.
+      // Generation cards open Camera, not a Director recipe.
       expect(findHouseTemplate(t.id)).toBeUndefined();
     }
     expect(houseTemplates.some((t) => t.generation)).toBe(false);

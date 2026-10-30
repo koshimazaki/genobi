@@ -21,8 +21,7 @@ import { tierOf } from "../shared/templates/plan";
 import { embedMarkup, galleryPage } from "../shared/gallery/page";
 import { initialPreset } from "../src/studio/presets";
 
-// Watch and embed pages are the house templates' alone; the generation
-// cards are tests/gallery-generations.test.ts.
+// Every curated gallery card has watch/embed pages; no visitor media resolves.
 const previewed = houseTemplates.filter((t) => galleryMedia(t));
 
 describe("template gallery", () => {
@@ -78,6 +77,7 @@ describe("template gallery", () => {
       "product-video",
       "audio-visual-generation",
       "audio-visual",
+      "character-piece",
     ]);
     expect(galleryTemplates.map((t) => t.id)).not.toContain("falling-room");
     expect(findGalleryTemplate("falling-room")).toBeUndefined();

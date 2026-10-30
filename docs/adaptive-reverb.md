@@ -172,7 +172,7 @@ an agent can make one again:
 6. **Render** with the in-page renderer:
    `TEASER_URL=http://127.0.0.1:4317 TEASER_EXAMPLE=adaptive-reverb TEASER_MBPS=24 node scripts/render-genobi-teaser.mjs out/`
    (the master stays out of the repository), then a gallery copy under
-   25 MiB and a title-frame poster.
+   25 MiB and a cathedral room-scan poster at 10 seconds (native 1280 × 720).
 7. **Showcase.** Add a version to the record and run
    `node --import tsx scripts/showcase-versions.mjs adaptive-reverb`.
 

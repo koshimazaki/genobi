@@ -1,10 +1,6 @@
-
 # Genobi
 
 A camera-first video studio on the Comfy Developer Platform. One camera panel writes the shot for the model you pick: LTX-2.5 (open weights, native audio) or FLUX 3, both through [Comfy Router](https://docs.comfy.org) with one Comfy key. The FLUX Video Upscale runs through Router on the same key; a BFL key still runs FLUX 3 and upscales direct.
-
-https://github.com/user-attachments/assets/b2665e97-2836-4e02-8b38-4694a5c6b6c7
-
 
 Forked from [FLUX Studio Lite](https://github.com/koshimazaki/Flux-Studio-Lite) (MIT) at `023477b`: the composer, the editable camera directions, the Three.js guide, the gallery and the job queue carry over. The camera wording follows [BFL's camera guide](https://docs.bfl.ai/guides/prompting_video_camera_terms) for FLUX 3 and the [LTX-2.5 prompt guide](https://ltx.io/blog/ltx-2-5-prompt-guide) for LTX; see [docs/camera-wording.md](docs/camera-wording.md) for what the studio does and does not claim.
 
@@ -161,7 +157,7 @@ separately with `npm run supervisor`.
 
 ## Director: local template remixes
 
-Open Director for Character intro, Outfit reveal or Poster in motion. Normal
+Open Director with Dimensions mix, Genobi teaser, Bloom or Adaptive reverb. Normal
 and advanced mode share one project, edits and Undo history. **Project media**
 separates Assets from Inspirations: import files first, then choose a slot or
 layer explicitly. The drawer also works as a phone-sized sheet. Local media
@@ -260,6 +256,9 @@ Their role instructions and skills live in the repository and can be updated
 from Hermes after review.
 
 Requires Node 22+. Optional: `ffmpeg` and `ffprobe` on `PATH` (or `FFMPEG_PATH` / `FFPROBE_PATH`) for the local media tools — trim, frames, join and crossfade; everything else runs without them. Voice mode also needs a local Qwen3-ASR worker; see [voice mode](docs/voice-mode.md).
+
+On the hosted studio, Voice explains how to [run locally](#run-locally);
+it does not request the microphone or send speech to a cloud service.
 
 ```sh
 npm ci
@@ -364,10 +363,10 @@ Working on the code, as a person or an agent? Start with [AGENTS.md](AGENTS.md).
 ## Director composer
 
 Open **Director composer** at `/director` or from the studio's Editor preset.
-Start with Character intro, Outfit reveal or Poster in motion. Assign media in the
+Start with Dimensions mix, Genobi teaser, Bloom or Adaptive reverb. Assign media in the
 prompt, swap prepared media through Assets and export without an API key. Editor
 opens the same JSON, timeline, layers and text controls. Template drafts stay in page memory; save an editable ZIP
-before closing. Outfit uses prepared before/after looks, not automatic garment transfer.
+before closing. Director and Editor share a loader that defaults to Dimensions mix.
 
 Use `/director?example=studio` for the mixed-media composer example with audio,
 video, images, p5/Anime graphics and Three.js filters. The three house-style
@@ -397,6 +396,9 @@ The page’s visual presentation takes inspiration from [Uncommon Web / Teknium]
 See [credits and provenance](docs/credits/README.md) for the integrated, recommended
 and reference libraries. The local route is `/taste`; the live demo gains it only
 after a separate deployment.
+
+Hosted Taste is a read-only public collection with interactive demos and credits.
+To save your own taste profile and project memory, [run the local studio](#run-locally).
 
 Project decisions and scoped reusable preferences are available in the local
 Director under **Project memory & taste**. See [shared project memory](docs/taste-memory.md)

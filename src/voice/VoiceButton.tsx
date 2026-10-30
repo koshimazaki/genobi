@@ -5,6 +5,8 @@ import { trackPromptFocus } from "./prompt-target";
 import { VoiceOverlay } from "./VoiceOverlay";
 import { micPanel, onVoiceReady, useVoiceInstall } from "./install-store";
 import "./voice.css";
+import { useHostedStudio } from "../hosted-studio";
+import { HostedVoicePanel } from "./HostedVoiceNotice";
 
 /**
  * Voice mode's mic in the studio header (issue #23), beside the theme and the
@@ -15,6 +17,7 @@ import "./voice.css";
  * opening it moves nothing.
  */
 export default function VoiceButton() {
+  const hosted = useHostedStudio();
   const [open, setOpen] = useState(false);
   const [status, setStatus] = useState<VoiceStatus>();
   const [ready, setReady] = useState(0);
@@ -52,11 +55,13 @@ export default function VoiceButton() {
         data-available={status ? status.available : undefined}
         data-installing={installing || undefined}
         title={
-          installing
-            ? "Installing Voice Mode: click to see progress"
-            : unavailable
-              ? "Install Voice Mode"
-              : "Voice: click to record, again to stop; transcribed on this machine"
+          hosted
+            ? "Voice mode runs in the local studio"
+            : installing
+              ? "Installing Voice Mode: click to see progress"
+              : unavailable
+                ? "Install Voice Mode"
+                : "Voice: click to record, again to stop; transcribed on this machine"
         }
         onClick={() => {
           if (open && mic.current?.()) return;
@@ -76,7 +81,16 @@ export default function VoiceButton() {
           <path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21" />
         </svg>
       </button>
-      {micPanel(open, status) === "setup" ? (
+      {hosted ? (
+        open && (
+          <HostedVoicePanel
+            onClose={() => {
+              setOpen(false);
+              button.current?.focus();
+            }}
+          />
+        )
+      ) : micPanel(open, status) === "setup" ? (
         <VoiceSetup
           onReady={() => {
             void voiceStatus().then(setStatus);

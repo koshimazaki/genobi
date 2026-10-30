@@ -2,9 +2,9 @@ import ProjectTools from "../arena/ProjectTools";
 import { StudioPanel, useShell } from "../studio/ShellContext";
 import { useRef, useState } from "react";
 import { download, digest, validateFiles, type Bundle } from "./bundle";
-import { loadRemix } from "./remix-template";
-import { findTemplate, type TemplateId } from "./template-catalogue";
+import { findTemplate } from "./template-catalogue";
 import TemplateCards from "./TemplateCards";
+import { templateAddress } from "./route-template";
 import MixPlan from "./MixPlan";
 import {
   DIRECTOR_PROJECT_BYTES,
@@ -72,13 +72,11 @@ export default function RemixPanel({
       : remixShots;
   async function choose(id: string) {
     const mix = findMixTemplate(id);
+    if (!mix) throw new Error("This template is unavailable.");
     await locked(async (before) => {
       const saved = studioStore.getState().director.drafts[id]?.bundle;
       const next =
-        saved ??
-        (mix
-          ? await (await import("./mix-template")).loadMixTemplate(mix)
-          : await loadRemix(id as TemplateId));
+        saved ?? (await (await import("./mix-template")).loadMixTemplate(mix));
       if (current.current !== before)
         throw new Error("Project changed; choose the template again");
       const updated = {
@@ -87,19 +85,12 @@ export default function RemixPanel({
       };
       current.current = updated;
       commit(updated);
-      if (location.pathname.replace(/\/$/, "") === "/director") {
-        const url = new URL(location.href);
-        // A mix opens at its example link; a remix at its template link.
-        url.searchParams.set(mix ? "example" : "template", id);
-        url.searchParams.delete(mix ? "template" : "example");
-        window.history.replaceState(null, "", url);
-      }
+      const url = templateAddress(id, location.href);
+      window.history.replaceState(null, "", url);
       setNotice(
         saved
           ? "Your draft is restored."
-          : mix
-            ? "The cut is open. Play it, or open the editor to change it."
-            : "Sample ready. Add your media or try an export.",
+          : "The cut is open. Play it, or open the editor to change it.",
       );
     });
   }
@@ -357,8 +348,8 @@ export default function RemixPanel({
             onChoose={(id) => void choose(id).catch(report)}
           />
           <p className="dir-template-note">
-            Local remix · no account needed. Samples are illustrations, not AI
-            swap results. Template drafts stay here until you close or reload.
+            Finished cuts · no account needed. Template drafts stay here until
+            you close or reload.
           </p>
         </div>
       </StudioPanel>

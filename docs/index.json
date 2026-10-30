@@ -102,6 +102,7 @@
         "director-agent-tools.md",
         "director-bundle/README.md",
         "director-bundle/motion-effects.md",
+        "director-bundle/project-copy.md",
         "director-bundle/showcase/README.md",
         "director-bundle/showcase/adaptive-reverb/README.md",
         "director-bundle/showcase/bloom-teaser/README.md",
@@ -203,6 +204,7 @@
         "director-agent-tools.md",
         "director-bundle/README.md",
         "director-bundle/motion-effects.md",
+        "director-bundle/project-copy.md",
         "director-bundle/showcase/README.md",
         "director-prompts.md",
         "director-references.md",
@@ -419,6 +421,7 @@
         "director-agent-tools.md",
         "director-bundle/README.md",
         "director-bundle/motion-effects.md",
+        "director-bundle/project-copy.md",
         "director-bundle/showcase/README.md",
         "director-prompts.md"
       ]
@@ -602,6 +605,7 @@
         "director-agent-tools.md",
         "director-bundle/README.md",
         "director-bundle/motion-effects.md",
+        "director-bundle/project-copy.md",
         "director-bundle/showcase/README.md",
         "director-bundle/showcase/adaptive-reverb/README.md",
         "director-bundle/showcase/bloom-teaser/README.md",
@@ -1208,7 +1212,7 @@
       "links": [
         "dimensions-mix.md",
         "director-bundle/motion-effects.md",
-        "director-prompts.md",
+        "director-bundle/project-copy.md",
         "director-working-version.md",
         "templates.md"
       ]
@@ -1219,6 +1223,13 @@
       "tags": ["director", "bundle", "agents"],
       "summary": "The five registered motion-effect recipes (shake, transition, grade, speed lines, styled title), their parameters and how agents use them.",
       "links": ["dimensions-mix.md", "director-bundle/README.md"]
+    },
+    {
+      "title": "project-copy",
+      "path": "director-bundle/project-copy.md",
+      "tags": ["director", "bundle", "agents"],
+      "summary": "Local project-copy synchronization, Director commands and live feedback.",
+      "links": ["director-bundle/README.md", "director-prompts.md"]
     },
     {
       "title": "Showcase projects",
@@ -1297,7 +1308,7 @@
       "path": "director-remix-verification.md",
       "tags": ["director", "verification", "comfy"],
       "summary": "Evidence for the Director remix proof, from automated checks and media evidence to the hosted smoke.",
-      "links": ["project-assets.md"]
+      "links": ["project-assets.md", "template-gallery.md"]
     },
     {
       "title": "Composition resolution and monitors",

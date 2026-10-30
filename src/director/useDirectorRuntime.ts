@@ -1,15 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { Bundle } from "./bundle";
-import { loadExample } from "./bundle";
-import { loadRemix } from "./remix-template";
-import { findTemplate } from "./template-catalogue";
-import { loadHouseTemplate } from "./house-template";
-import {
-  findHouseTemplate,
-  findMixTemplate,
-} from "../../shared/templates/catalogue";
-import { loadMixTemplate } from "./mix-template";
-import { loadShowcase } from "./showcase";
+import { directorRoute } from "./route-template";
 import { DirectorRenderer } from "./renderer";
 import type { Playback } from "./playback";
 import { studioStore } from "../studio/store";
@@ -50,37 +41,47 @@ export function useDirectorRuntime(
   // The local server's copy of this project, and agents' commands on it.
   useProjectCopy(bundle, setError);
   useEffect(() => {
-    if (studioStore.getState().director.bundle) return;
-    let cancelled = false;
-    const params = new URLSearchParams(location.search),
-      example = params.get("example"),
-      house = findHouseTemplate(example),
-      mix = findMixTemplate(example),
-      showcase = params.get("showcase");
-    void (
-      showcase
-        ? loadShowcase(showcase, Number(params.get("version"))).then(
-            ({ bundle, note }) => {
-              if (note && !cancelled) setTimeout(() => report(note), 0);
-              return bundle;
-            },
-          )
-        : example === "studio"
-          ? loadExample()
-          : mix
-            ? loadMixTemplate(mix)
-            : house
-              ? loadHouseTemplate(house, location.search)
-              : loadRemix(findTemplate(params.get("template"))?.id)
-    )
-      .then((b) => {
-        if (!cancelled) studioStore.getState().actions.initialize(b);
-      })
-      .catch((e) => {
-        if (!cancelled) report(e);
-      });
+    let request = 0;
+    const navigate = async () => {
+      const ticket = ++request;
+      const state = studioStore.getState();
+      const before = state.director.bundle;
+      try {
+        const route = directorRoute(location.search);
+        if (before && (!route.explicit || before.project.id === route.id))
+          return;
+        if (Object.values(state.operations).some(Boolean))
+          throw new Error(
+            "Wait for playback, import or export to finish first.",
+          );
+        const saved = state.director.drafts[route.id]?.bundle;
+        const opened = saved ? { bundle: saved, note: "" } : await route.load();
+        // A newer route or an edit while media loaded wins over this result.
+        if (
+          ticket !== request ||
+          studioStore.getState().director.bundle !== before
+        )
+          return;
+        // An export or playback started during the fetch owns this renderer.
+        // Replacing its bundle would dispose it and abort that operation.
+        if (Object.values(studioStore.getState().operations).some(Boolean))
+          throw new Error(
+            "Wait for playback, import or export to finish first.",
+          );
+        if (before) state.actions.commit(opened.bundle, before);
+        else state.actions.initialize(opened.bundle);
+        if (opened.note) report(opened.note);
+      } catch (e) {
+        if (ticket === request) report(e);
+      }
+    };
+    void navigate();
+    // The runtime stays mounted across workspaces. Read new URLs on history
+    // navigation too; a mount-only loader kept the previous template open.
+    window.addEventListener("popstate", navigate);
     return () => {
-      cancelled = true;
+      request++;
+      window.removeEventListener("popstate", navigate);
     };
   }, []);
   useEffect(() => {
