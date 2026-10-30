@@ -1517,10 +1517,12 @@
       "links": [
         "activity-settings.md",
         "agent-setup.md",
+        "cloudflare.md",
         "hermes-profiles.md",
         "openjutsu-swap.md",
         "run-location.md",
         "runner-pairing.md",
+        "studio-guide.md",
         "troubleshooting.md",
         "voice-mode.md",
         "voice-setup.md"
@@ -2020,6 +2022,7 @@
       "links": [
         "agent-setup.md",
         "capabilities.md",
+        "comfy-deploy.md",
         "getting-started.md",
         "layout-to-render-status.md",
         "run-location.md",

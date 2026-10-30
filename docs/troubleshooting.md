@@ -29,6 +29,29 @@ The checks below describe the named Cloud routes on 26 October. They do not
 claim that all later external ComfyUI experiments failed or that every
 account has the same model catalogue.
 
+## Hosted links and agent startup
+
+Public template pages open Editor from both **Make your own** and **Open**.
+Generation-only cards return to Gallery. If an older tab still opens Director,
+use the README’s explicit Editor link or reload after saving your project.
+
+On Cloudflare, **Start Genobi** needs an online paired local runner. The dialog
+offers local setup and pairing; status and local setup reads time out instead
+of waiting indefinitely. Pairing authorizes agent inference, while voice,
+local project files and paid approvals remain in the local studio.
+
+A healthy `/api/health` verifies the studio API, not provider generation.
+Local-only endpoints such as `/api/voice/status`, `/api/projects` and
+`/api/settings/agent-runner` return 404 on the hosted adapter by design.
+
+## Comfy Developer Platform status
+
+The [worked workflow release](comfy-deploy.md) provides 23 templates and an
+offline-validated shared build recipe. That does not establish a deployed GPU
+service. Verify the build/release, endpoint address, model and asset loading,
+FFmpeg/FFprobe and an explicitly approved test run before calling it live.
+The hosted studio’s fixed workflow destination remains Comfy Cloud.
+
 ## Known issues — 26 October 2026
 
 **3D → LTX Layout-to-Render.** The exact supplied graph needs a LoRA absent

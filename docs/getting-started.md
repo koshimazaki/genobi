@@ -22,13 +22,17 @@ when generation uses a cloud provider.
 The hosted site does not run local voice transcription, the local Arena or
 Music 3. Hosted agent use requires pairing a separately running local runner;
 it does not install or host a harness. See [runner pairing](runner-pairing.md)
-and [run location](run-location.md).
+and [run location](run-location.md). **Start Genobi** offers the pairing
+controls directly when a local runner is not connected. The local studio must
+remain running; Cloudflare cannot launch a process on your machine.
 
 ## Make your first edit
 
 1. Open a mix template from the Gallery, such as the Genobi teaser or Dimensions
    mix. Choose an editable version where the card offers one.
-2. Open Editor. Change a title, move or trim a clip, then preview the result.
+2. Choose **Take it to the editor**. On a public watch page, **Make your own**
+   and **Open** also load that template in Editor. Change a title, move or trim
+   a clip, then preview the result.
 3. Export an MP4 to share and an editable project ZIP to keep working later.
 
 Editing bundled media needs no model key. Generation templates may require
@@ -165,8 +169,8 @@ project. Missing provenance is shown as needing review, never as legal clearance
 
 ## Next steps
 
-- [Studio guide](https://github.com/koshimazaki/genobi/blob/main/studio-guide.md): image controls, timelines, workspaces and Taste.
-- [Agent setup](https://github.com/koshimazaki/genobi/blob/main/agent-setup.md) and [local voice setup](https://github.com/koshimazaki/genobi/blob/main/voice-setup.md).
-- [Local ComfyUI and workflow selection](https://github.com/koshimazaki/genobi/blob/main/run-location.md).
+- [Studio guide](studio-guide.md): image controls, timelines, workspaces and Taste.
+- [Agent setup](agent-setup.md) and [local voice setup](voice-setup.md).
+- [Local ComfyUI and workflow selection](run-location.md).
 - [Licences](https://github.com/koshimazaki/genobi/blob/main/LICENCES.md): model, software and asset terms.
-- [Cloudflare hosting](https://github.com/koshimazaki/genobi/blob/main/cloudflare.md): deploy your own instance after configuring its resources.
+- [Cloudflare hosting](cloudflare.md): deploy your own instance after configuring its resources.

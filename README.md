@@ -13,6 +13,7 @@ or connect cloud models, and bring the agent harness that fits your project.
 
 [Try Genobi](https://genobi.pages.dev) ·
 [Watch the teaser](https://genobi.pages.dev/watch/genobi-teaser) ·
+[Open it in Editor](https://genobi.pages.dev/director?example=genobi-teaser&workspace=editor) ·
 [Get started](docs/getting-started.md) ·
 [Documentation](docs/README.md)
 
@@ -139,6 +140,12 @@ Open-weight workflows are available alongside API models such as FLUX 3 video.
 Comfy Router handles supported model API calls; the official Comfy SDK handles
 workflow jobs. Example footage may use different models from a template's
 next generation step; consult its provenance notes.
+
+The worked LTX / World Builder graphs now have a shared
+[deployment recipe](docs/comfy-deploy.md) and
+[23 workflow templates](workflows/ltx-world-builder.README.md). The recipe
+passes offline validation; a live Comfy Developer Platform deployment and
+paid endpoint runs still need separate verification.
 
 [Workflow files and requirements](workflows/README.md) ·
 [World Builder ComfyUI nodes](custom_nodes/director_world_builder/README.md) ·
