@@ -22,7 +22,7 @@ const browser = await chromium.launch({ headless: true });
 const errors = [];
 let starts = 0;
 
-async function open(width, theme) {
+async function open(width, theme, hosted = false) {
   const page = await browser.newPage({ viewport: { width, height: 900 } });
   // The first-run setup guide would cover the page: mark it seen.
   await page.addInitScript((t) => {
@@ -36,7 +36,9 @@ async function open(width, theme) {
     const method = route.request().method();
     if (url.pathname === "/api/agent/status")
       return route.fulfill({
-        json: { available: true, runner: "claude", terminal: true },
+        json: hosted
+          ? { available: false, paired: false }
+          : { available: true, runner: "claude", terminal: true },
       });
     if (url.pathname === "/api/agent/sign-in")
       return route.fulfill({
@@ -68,6 +70,10 @@ async function open(width, theme) {
       },
     }),
   );
+  if (hosted)
+    await page.route("**/api/runner/status", (route) =>
+      route.fulfill({ json: { available: false, paired: false } }),
+    );
   await page.goto(base);
   return page;
 }
@@ -121,9 +127,35 @@ try {
       await page.close();
     }
   }
+  for (const width of [1440, 390]) {
+    const page = await open(width, "blackstone-lime", true);
+    await page.locator(".agent-launcher").first().click();
+    await page.getByRole("button", { name: "Start Genobi" }).click();
+    const dialog = page.getByRole("dialog", { name: "Start Genobi" });
+    await dialog
+      .getByText("Pair hosted and local Genobi", { exact: true })
+      .waitFor();
+    assert.equal(
+      await dialog
+        .getByRole("link", { name: /Set up the local studio/ })
+        .isVisible(),
+      true,
+    );
+    assert.equal(
+      await dialog.evaluate((node) => node.scrollWidth <= node.clientWidth + 1),
+      true,
+      `Hosted pairing fits at ${width}`,
+    );
+    await page.screenshot({ path: `${output}/spawn-hosted-${width}.png` });
+    await page.keyboard.press("Escape");
+    await dialog.waitFor({ state: "hidden" });
+    await page.close();
+  }
   assert.equal(starts, 0, "Nothing started");
   assert.deepEqual(errors, []);
-  console.log(`Start Genobi dialog: fits at 1440 and 390, both themes.`);
+  console.log(
+    `Start Genobi: local chooser and hosted pairing fit at 1440 and 390.`,
+  );
 } finally {
   await browser.close();
 }
