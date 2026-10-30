@@ -304,5 +304,7 @@ export const findGalleryTemplate = (id: string | null | undefined) =>
   galleryTemplates.find((t) => t.id === id);
 export const directorLink = (id: string) =>
   `/director?example=${encodeURIComponent(id)}`;
+export const editorLink = (id: string) =>
+  `${directorLink(id)}&workspace=editor`;
 export const watchLink = (id: string) => `/watch/${encodeURIComponent(id)}`;
 export const embedLink = (id: string) => `/embed/${encodeURIComponent(id)}`;

@@ -111,6 +111,14 @@ reason and never reaches "started".
 
 ## Spawn the agent
 
+On the hosted studio, **Start Genobi** reads the paired runner status first.
+Without an online runner, its dialog offers local setup and **Pair hosted and
+local Genobi** directly. It does not probe local harness settings or sign-in
+routes. An online paired runner starts in the bubble, without a local project
+lookup or Terminal request; project files and paid approvals remain local.
+Agent status, runner settings and sign-in reads have ten-second deadlines, so
+an unavailable server cannot leave the initial check waiting indefinitely.
+
 One client action, `spawnAgent` (`src/agent/spawn.ts`), starts Genobi
 wherever the studio has no session to hand work to: setup's summary, the voice
 panel's **Do it in a session**, the Genobi bubble's **Start Genobi** when no

@@ -33,6 +33,7 @@ async function send<T>(path: string, init: RequestInit = {}): Promise<T> {
     headers: { ...HEADERS, ...init.headers },
   });
   const body = await response.json().catch(() => undefined);
+  init.signal?.throwIfAborted();
   if (!response.ok)
     throw new AgentRefusal(
       typeof body?.error === "string"
@@ -70,6 +71,10 @@ export async function agentStatus(
       return { available: false, message: HOSTED };
     return body;
   } catch (error) {
+    if (signal?.aborted)
+      throw new Error(
+        "Checking your agent timed out. Check the studio connection and try again.",
+      );
     if ((error as Error).name === "AbortError") throw error;
     return { available: false, message: HOSTED };
   }

@@ -1,7 +1,7 @@
 import { findHouseTemplate, findMixTemplate } from "../templates/catalogue";
 import { footageMadeWith } from "./badges";
 import {
-  directorLink,
+  editorLink,
   embedLink,
   findGalleryTemplate,
   galleryMedia,
@@ -43,7 +43,7 @@ export function galleryPage(path: string, origin: string) {
     : escape(template.description);
   const editLink = template.generation
     ? "/?workspace=gallery"
-    : directorLink(template.id);
+    : editorLink(template.id);
   const body = media
     ? `<!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -74,7 +74,7 @@ a{color:inherit;text-decoration:none}a:focus-visible{outline:2px solid #c0d672;o
 p{color:#a4abb4;line-height:1.5}.action{display:inline-block;padding:10px 16px;border-radius:5px;background:#c0d672;color:#14180e}nav{display:flex;align-items:center;gap:20px}
 </style></head><body><main><div class="player">
 <video controls playsinline preload="metadata" poster="${escape(media.poster)}" src="${escape(media.video)}" aria-label="${title}"></video>
-<footer><a class="brand" href="${absolute("/")}" target="_blank" rel="noopener">Genobi</a><span>${title}</span><a href="${absolute(watchLink(template.id))}" target="_blank" rel="noopener" aria-label="Open video in Genobi">Open ↗</a></footer></div>
+<footer><a class="brand" href="${absolute("/")}" target="_blank" rel="noopener">Genobi</a><span>${title}</span><a href="${absolute(editLink)}" target="_blank" rel="noopener" aria-label="${template.generation ? "Open gallery" : "Open in Editor"}">Open ↗</a></footer></div>
 ${embedded ? "" : `<p>${note}</p><nav><a class="action" href="${absolute(editLink)}">Make your own</a><a href="${escape(media.video)}" download>Download video</a></nav>`}
 </main></body></html>`
     : pendingPage(

@@ -176,6 +176,9 @@ export function pickChoice(
 
 const status = () => agentStatus(AbortSignal.timeout(10_000));
 
+/** Hosted starts need a local runner; the dialog offers the existing pairing flow. */
+export class HostedRunnerRequired extends Error {}
+
 /** Spawns the agent; throws an Error whose message is safe to show. */
 export async function spawnAgent(
   request: SpawnRequest,
@@ -183,7 +186,21 @@ export async function spawnAgent(
 ): Promise<AgentSession> {
   ui.phase?.("checking");
   let current = await status();
-  const setting = await readRunnerSetting().catch(() => undefined);
+  if (typeof current.paired === "boolean") {
+    if (request.setup || !current.available)
+      throw new HostedRunnerRequired(
+        "Start Genobi needs your local studio. Pair it below, then start your paired runner. Voice and project files stay local.",
+      );
+    return start(request, "headless", ui, false, false);
+  }
+  const checking = AbortSignal.timeout(10_000);
+  const setting = await readRunnerSetting(checking).catch(() => {
+    if (checking.aborted)
+      throw new Error(
+        "Checking your agent timed out. Check the studio connection and try again.",
+      );
+    return undefined;
+  });
   // The hosted studio has no setup routes: a paired runner still takes a
   // typed prompt in the bubble, but setup never starts there.
   if (!setting) {
@@ -209,7 +226,7 @@ export async function spawnAgent(
   let mode: AgentSessionMode | undefined;
   let signInThere = false;
   for (;;) {
-    const rows = await readSignIn();
+    const rows = await readSignIn(AbortSignal.timeout(10_000));
     const readiness = agentReadiness(
       { selection: { agent: request.runner ?? runner } },
       current,
@@ -273,7 +290,9 @@ async function pickRunner(setting: AgentRunnerSettingState, ui: SpawnUi) {
     throw new Error(
       setting.saved.runner === "codex" ? CODEX_SAVED : NO_SAVED_RUNNER,
     );
-  const pick = await ui.choose(runnerOffer(await readSignIn()));
+  const pick = await ui.choose(
+    runnerOffer(await readSignIn(AbortSignal.timeout(10_000))),
+  );
   ui.phase?.("saving");
   await saveRunnerSetting(pickChoice(pick, setting.saved));
   return pick.runner;
@@ -287,6 +306,7 @@ async function start(
   mode: AgentSessionMode,
   ui: SpawnUi,
   signIn = false,
+  local = true,
 ) {
   let prompt = request.prompt;
   if (request.writePrompt) {
@@ -295,7 +315,7 @@ async function start(
   }
   ui.phase?.(signIn ? "terminal-sign-in" : "starting");
   // After the prompt: a first save may be what creates the copy.
-  const copyId = await openCopyId(request.projectId);
+  const copyId = local ? await openCopyId(request.projectId) : undefined;
   // Closed while the project's copy was looked up: nothing starts.
   ui.go?.();
   const session = await startAgentSession({
