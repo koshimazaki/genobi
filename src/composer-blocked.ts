@@ -1,3 +1,11 @@
+import {
+  isDeployModel,
+  deployEndpoint,
+} from "../shared/comfy/deploy-catalogue";
+import {
+  deployTemplates,
+  deployValues,
+} from "../shared/comfy/deploy-workflows";
 import { isH3 } from "../shared/h3";
 import { isH3Router } from "../shared/comfy/h3-router";
 import { IMAGE_DESCRIPTION_LIMIT, isImage, isKlein } from "../shared/image";
@@ -20,6 +28,19 @@ export function composerBlocked(
 ): boolean {
   const { generator } = state;
   if (entryFor(generator, state.model).outsideComposer) return true;
+  if (isDeployModel(state.model)) {
+    try {
+      const template = deployTemplates.find(
+        (t) =>
+          t.file ===
+          `workflows/${deployEndpoint(state.model as import("../shared/comfy/deploy-catalogue").DeployModel).workflow}`,
+      )!;
+      deployValues(template, state, composed);
+      return !composed.trim();
+    } catch {
+      return true;
+    }
+  }
   if (generator === "upscale") return !sourceId;
   if (generator === "audio") return musicBlocked(state);
   if (isH3(state.model) || isH3Router(state.model))

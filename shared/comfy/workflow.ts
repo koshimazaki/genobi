@@ -17,6 +17,7 @@ export type { WorkflowSlot } from "./slots";
 export interface WorkflowOutput {
   nodeId: string;
   media: "video" | "image" | "audio";
+  companions?: { nodeId: string; label: string }[];
 }
 /** Every shipped video graph ends in SaveVideo node `75`. */
 export const VIDEO_OUTPUT: WorkflowOutput = { nodeId: "75", media: "video" };
@@ -53,6 +54,7 @@ export interface WorkflowRunOptions {
    * Absent: Comfy Cloud, as on the hosted Worker.
    */
   location?: DestinationKind;
+  deployment?: { url: string; name: string };
   /** Files for the template's `image` and `video` slots, by slot name. */
   files?: Record<string, WorkflowFile>;
 }
@@ -85,7 +87,10 @@ export interface WorkflowClient {
    * so an unset destination refuses before anything is reserved. Absent on a
    * single client, which takes whatever it is handed.
    */
-  serves?(location: DestinationKind): boolean;
+  serves?(
+    location: DestinationKind,
+    deployment?: { url: string; name: string },
+  ): boolean;
 }
 
 /** Said when a run reaches the stub: nothing left the server, so nothing was charged. */

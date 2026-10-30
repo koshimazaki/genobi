@@ -64,6 +64,7 @@ export function canonicalInput(input: Partial<GenerateInput>): string {
   // the same.
   if (value.lyrics !== undefined) values.push(["lyrics", value.lyrics]);
   if (value.swap !== undefined) values.push(stable(value.swap));
+  if (value.deploy !== undefined) values.push(stable(value.deploy));
   return JSON.stringify(values);
 }
 

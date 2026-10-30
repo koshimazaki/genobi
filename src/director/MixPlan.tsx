@@ -29,7 +29,7 @@ export default function MixPlan({ project }: { project: Project }) {
   return (
     <div className="dir-template-plan" aria-label={`${template.name} cut`}>
       <p className="dir-eyebrow">
-        Mix · {template.style.name} · {bpm ?? cut.bpm} BPM · nothing to generate
+        Mix · {template.style.name} · {bpm ?? cut.bpm} BPM · editable mix
       </p>
       <p>{template.description}</p>
       <h3>Cut</h3>

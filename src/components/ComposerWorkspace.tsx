@@ -1,3 +1,5 @@
+import DeploymentWorkspace from "./DeploymentWorkspace";
+import { isDeployModel } from "../../shared/comfy/deploy-catalogue";
 import { isSeedvr2 } from "../../shared/comfy/seedvr2";
 import { isImage } from "../../shared/image";
 import { takesVideoReferences } from "../../shared/h3";
@@ -39,6 +41,7 @@ export default function ComposerWorkspace(props: {
   const picked = sources.find((source) => source.id === props.sourceId);
   const location = useSettingsStore((settings) => settings.location);
   const offer = picked && splitOffer(picked, state.model, location);
+  if (isDeployModel(state.model)) return <DeploymentWorkspace {...props} />;
   if (isImage(state.generator)) return <ImageWorkspace {...props} />;
   if (state.generator === "audio")
     return <MusicWorkspace state={state} update={update} />;

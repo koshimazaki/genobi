@@ -23,6 +23,8 @@ describe("Arena run requests", () => {
       "minimax-h3-combined",
       "minimax-h3-router",
       "flux-3-i2v",
+      "ltx-deploy-layout-to-video",
+      "ltx-deploy-akuspace",
     ])
       expect(entries).not.toContain(id);
     for (const id of entries) {
@@ -57,6 +59,9 @@ describe("Arena run requests", () => {
   it("refuses edits, unknown entries and an empty prompt", () => {
     expect(() => arenaRunInput("flux-3-edit", "x")).toThrow("video or image");
     expect(() => arenaRunInput("nope", "x")).toThrow("video or image");
+    expect(() => arenaRunInput("ltx-deploy-akuspace", "x")).toThrow(
+      "video or image",
+    );
     expect(() => arenaRunInput("ltx-2-5-fast", "  ")).toThrow("prompt");
   });
 });

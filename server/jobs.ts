@@ -1,3 +1,7 @@
+import { WorkflowDestinations } from "./workflow-destinations";
+import { pollJob } from "./job-poll";
+import { DeploymentAssets } from "./deployment-assets";
+import { isDeployModel } from "../shared/comfy/deploy-catalogue";
 import { takesVideoReferences } from "../shared/h3";
 import { clipFiles, isSwap, readsSourceClip } from "../shared/openjutsu";
 import { swapSource } from "./swap-source";
@@ -11,12 +15,9 @@ import {
   isVideoSource,
   type GenerateInput,
   type JobOrigin,
-  type JobStatus,
 } from "../shared/types";
 import { AppError, requireKey } from "./errors";
 import { requireQuote } from "./take";
-import { providerUrl } from "./bfl";
-import { CREDITS_PER_USD } from "../shared/comfy/ltx";
 import { isComfyKey, requireRoute } from "../shared/provider";
 import {
   estimateRunUsd,
@@ -25,7 +26,7 @@ import {
   settingsHash,
 } from "../shared/quote";
 import { startTake } from "../shared/take";
-import { workflowOutput, workflowRun } from "../shared/comfy/runs";
+import { workflowRun } from "../shared/comfy/runs";
 import {
   handleJobId,
   isUnsent,
@@ -43,13 +44,11 @@ import { demoBudget, requireBudget } from "./budget";
 import { sessionSource, validateUpscaleSource } from "./media";
 import { historyOf } from "./shared-takes";
 import { sweepJobs } from "./job-sweep";
-import { saveResult } from "./job-output";
 import { Store, type StoredJob } from "./store";
 import {
   checkDuplicate,
   hashReferences,
   providerBody,
-  providerStatuses,
   replayOf,
 } from "./job-request";
 import { requireApprovalPayer, type ApprovalTerms } from "./agent-approvals";
@@ -64,7 +63,6 @@ export interface Made {
   origin?: JobOrigin;
   sourceSession?: string;
 }
-
 export class JobService {
   private locks = new Map<string, Promise<StoredJob>>();
   constructor(
@@ -72,8 +70,11 @@ export class JobService {
     readonly publicDirectory: string,
     private keys: ServerKeys = new ServerKeys(),
     private providers: Providers = defaultProviders(),
-    private workflows: WorkflowClient = new ComfySdkWorkflows(),
+    private workflows: WorkflowClient = new WorkflowDestinations(
+      new ComfySdkWorkflows(),
+    ),
     readonly settings = new WorkflowSettings(store),
+    readonly deploymentAssets = new DeploymentAssets(settings, keys),
   ) {
     // Fill only fields introduced after the first local jobs were recorded.
     for (const job of store.data.jobs) {
@@ -127,10 +128,21 @@ export class JobService {
   ) {
     const model = input.model ?? "flux-3";
     const plan = this.settings.planFor(sessionId, input.generator, model);
-    // A location with no client here (a deployment host and no
-    // GENOBI_DEPLOYMENT_URL) refuses now, before a quote or a reservation.
-    if (plan.location && this.workflows.serves?.(plan.location) === false)
+    if (
+      plan.location &&
+      this.workflows.serves?.(plan.location, plan.deployment) === false
+    )
       throw notConfigured({ kind: plan.location });
+    if (isDeployModel(model)) {
+      this.deploymentAssets.validate(input, sessionId, plan.deployment!.url);
+      workflowRun(
+        entryFor(input.generator, model).model,
+        input,
+        composePrompt(input),
+        plan.workflow,
+        plan.location,
+      );
+    }
     const local = plan.location === "local"; // free: no provider key needed
     if (!local) requireRoute(input.generator, model, key);
     const source = readsSourceClip(input)
@@ -148,7 +160,10 @@ export class JobService {
           );
     if (metadata && isSeedvr2(model))
       requireSeedvr2Fit(metadata, input.upscaleFactor);
-    const estimate = local ? 0 : estimateRunUsd(input, metadata);
+    const estimate =
+      local || plan.location === "deployment"
+        ? 0
+        : estimateRunUsd(input, metadata);
     const take = await startTake(input, isComfyKey(key), source?.sha256, plan);
     return { model, source, estimate, take };
   }
@@ -205,6 +220,12 @@ export class JobService {
       key,
       terms?.sourceSession ?? made.sourceSession,
     );
+    if (take.recipe.location === "deployment" && quoteId === undefined)
+      throw new AppError(
+        400,
+        "Quote and confirm this deployment run first.",
+        "quote_missing",
+      );
     // Under the same key lock that chose the credential: the approved payer.
     if (terms) requireApprovalPayer(terms, mode, take.recipe.location);
     // A duplicate can arrive while an upscale source is being probed.
@@ -252,6 +273,7 @@ export class JobService {
       keyMode: mode,
       ...(made.origin ? { origin: made.origin } : {}),
       take,
+      ...(take.recipe.deployment ? { deployment: take.recipe.deployment } : {}),
     };
     if (quote) quote.jobId = job.id;
     this.store.data.jobs.push(job);
@@ -301,9 +323,19 @@ export class JobService {
           take.recipe.workflow,
           take.recipe.location,
         );
-        const handle = await this.workflows.run(template, values, key, {
+        const filled =
+          take.recipe.deployment && isDeployModel(model)
+            ? this.deploymentAssets.values(
+                values,
+                input,
+                sessionId,
+                take.recipe.deployment.url,
+              )
+            : values;
+        const handle = await this.workflows.run(template, filled, key, {
           idempotencyKey: job.id,
           location: take.recipe.location,
+          deployment: take.recipe.deployment,
           ...(source
             ? {
                 files: clipFiles(
@@ -374,108 +406,15 @@ export class JobService {
     const existing = this.locks.get(id);
     if (existing) return { job: await existing };
     if (Date.now() - (job.lastPolledAt ?? 0) < 4_000) return { job };
-    const promise = this.pollOnce(job, key).finally(() =>
-      this.locks.delete(id),
-    );
+    const promise = pollJob(
+      this.store,
+      this.workflows,
+      this.provider(key),
+      job,
+      key,
+    ).finally(() => this.locks.delete(id));
     this.locks.set(id, promise);
     return { job: await promise };
-  }
-
-  private async pollOnce(job: StoredJob, key: string) {
-    job.lastPolledAt = Date.now();
-    // A workflow polls and downloads through the workflow client, by entry.
-    const entry = entryFor(job.generator, job.model);
-    const workflow = entry.route === "workflow";
-    try {
-      if (job.status !== "copying" || !job.resultRemoteUrl) {
-        const result = workflow
-          ? await this.workflows.poll(
-              job.pollingUrl!,
-              key,
-              workflowOutput(entry.model, job.take?.recipe.workflow),
-            )
-          : await this.provider(key).poll(job.pollingUrl!, key);
-        if (isTerminal(job.status)) return job;
-        if (typeof result.cost === "number" && Number.isFinite(result.cost))
-          job.costActualUsd = result.cost / 100;
-        if (
-          typeof result.credits === "number" &&
-          Number.isFinite(result.credits)
-        ) {
-          job.costCredits = result.credits;
-          job.costActualUsd = result.credits / CREDITS_PER_USD;
-        }
-        if (
-          typeof result.progress === "number" &&
-          Number.isFinite(result.progress)
-        )
-          job.progress = result.progress;
-        if (result.estimate) job.estimate = result.estimate;
-        if (result.status === "Ready" && result.result?.sample) {
-          // A workflow client checks its own delivery URLs (a local one is http).
-          if (!workflow) providerUrl(result.result.sample, "media");
-          job.resultRemoteUrl = result.result.sample;
-          job.status = "copying";
-          await this.store.save();
-        } else if (providerStatuses.has(result.status as JobStatus)) {
-          job.status = result.status as JobStatus;
-          if (isTerminal(job.status))
-            job.error =
-              job.status === "Error"
-                ? (result.error ?? "The provider could not finish this run.")
-                : "This request was stopped by the provider's moderation.";
-        } else if (result.status === "stopped") {
-          job.status = "stopped";
-          job.error = "The run was cancelled on Comfy Cloud.";
-        } else if (result.status === "Task not found") {
-          job.status = "expired";
-          job.error =
-            "The provider no longer has this job. Check your usage before starting another.";
-        }
-      }
-      if (job.status === "copying" && job.resultRemoteUrl) {
-        // Saved, then measured by the shared readers (`server/job-output.ts`).
-        const { file, mediaType, metadata } = await saveResult(
-          this.store.directory,
-          job,
-          await (workflow
-            ? this.workflows.download(job.resultRemoteUrl, key)
-            : this.provider(key).download(job.resultRemoteUrl)),
-        );
-        if (isTerminal(job.status)) return job;
-        if (mediaType !== "video" && metadata.contentType)
-          job.resultContentType = metadata.contentType;
-        job.resultUrl = `/api/clips/${job.id}`;
-        if (!this.store.data.sources.some((source) => source.id === job.id))
-          this.store.data.sources.push({
-            id: job.id,
-            sessionId: job.sessionId,
-            filePath: file,
-            url: job.resultUrl,
-            label:
-              job.description.slice(0, 100) ||
-              (mediaType === "audio" ? "Generated music" : "Upscaled video"),
-            origin: "generated",
-            ...(mediaType === "video" ? {} : { mediaType }),
-            ...metadata,
-          });
-        job.status = "Ready";
-        delete job.error;
-        delete job.resultRemoteUrl;
-      }
-    } catch (error) {
-      if (isTerminal(job.status)) return job;
-      // Poll and copy failures are retryable; never repeat the generation request.
-      job.error =
-        error instanceof AppError
-          ? error.message
-          : "Connection interrupted. This job will be checked again.";
-      if (error instanceof AppError && error.code === "delivery_expired")
-        job.status = "expired";
-    }
-    job.updatedAt = new Date().toISOString();
-    await this.store.save();
-    return job;
   }
 
   /** The local mirror of the Worker sweep (`server/job-sweep.ts`). */

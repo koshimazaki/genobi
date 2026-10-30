@@ -140,3 +140,32 @@ keyframes at an explicit duration. Keep reference order. Do not claim Router
 supports this input path: the current Genobi adapter uses BFL direct.
 
 Use the [BFL camera wording guide](https://docs.bfl.ai/guides/prompting_video_camera_terms) for the FLUX camera clauses.
+
+## Comfy Deploy Camera routes
+
+These two entries run from **Camera in the local studio** after the owner
+registers the deployment and stages inputs. The current MCP/CLI generation
+schema does not expose deployment staging, so `genobi_models` omits these
+Camera-only entries. Do not try to submit them with `genobi_quote`/`submit`,
+borrow browser tickets, or remove an agent mark. Ask the person to use Camera.
+CPU adaptive reverb remains a separate local workflow.
+
+### LTX Comfy Deploy · Layout-to-video (`ltx-deploy-layout-to-video`)
+
+| Field   | Value                                                                                                                                                                                                                                                          |
+| ------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Request | `"generator": "video", "model": "ltx-deploy-layout-to-video"`; fixed `duration: 8`, `resolution: "hd"`, `aspectRatio: "16:9"`, `draft: false`; `deploy` contains seed, negative prompt, matching recipe and owned take/reference/track tickets, optional depth |
+| Route   | `workflow`, `workflow/world-builder-l2r-a2v` on the registered Comfy deployment; Studio selects `world-builder-l2r-a2v-studio`                                                                                                                                 |
+| Camera  | LTX wording: https://ltx.io/blog/ltx-2-5-prompt-guide; the captured scene carries its camera guidance                                                                                                                                                          |
+| Cost    | Quote first. GPU time billed by Comfy; no fixed price or cost cap. The person confirms one run in Camera; never retry an uncertain submission                                                                                                                  |
+| Source  | `workflows/world-builder-l2r-a2v.json`; `docs/comfy-deploy.md#use-it-from-camera`; video plus the scene-derived IR and wet mix                                                                                                                                 |
+
+### LTX Comfy Deploy · AKUSPACE (`ltx-deploy-akuspace`)
+
+| Field   | Value                                                                                                                                                                                                                   |
+| ------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Request | `"generator": "video", "model": "ltx-deploy-akuspace"`; fixed `duration: 8`, `resolution: "hd"`, `aspectRatio: "16:9"`, `draft: false`; `deploy` contains seed, negative prompt and owned reference-image/track tickets |
+| Route   | `workflow`, `workflow/ltx-i2v-a2v-akuspace` on the registered Comfy deployment                                                                                                                                          |
+| Camera  | LTX wording: https://ltx.io/blog/ltx-2-5-prompt-guide; describe motion and the intended room sound without claiming an exact acoustic simulation                                                                        |
+| Cost    | Quote first. GPU time billed by Comfy; no fixed price or cost cap. The person confirms one run in Camera; never retry an uncertain submission                                                                           |
+| Source  | `workflows/ltx-i2v-a2v-akuspace.json`; `docs/comfy-deploy.md#use-it-from-camera`; learned room-conditioned audio changes the music at mask 0.5                                                                          |

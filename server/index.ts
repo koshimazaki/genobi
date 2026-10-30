@@ -17,9 +17,9 @@ const port = Number(process.env.PORT ?? 4317);
 if (!Number.isInteger(port) || port < 1024 || port > 65535)
   throw new Error("Invalid local port.");
 // The default run location: Comfy Cloud unless the operator names a local
-// ComfyUI (http on 127.0.0.1 or localhost) or a Comfy API deployment (https,
-// which refuses unsent in this build). Each session may switch between Local
-// and Cloud (server/workflow-settings.ts); Local uses GENOBI_WORKFLOW_URL when
+// ComfyUI (http on 127.0.0.1 or localhost) or a Comfy deployment. Sessions
+// may register their own deployment in Settings or switch Local/Cloud/Both
+// (server/workflow-settings.ts); Local uses GENOBI_WORKFLOW_URL when
 // it is the default, and ComfyUI's own default address otherwise.
 const destination = parseWorkflowDestination(
   process.env.GENOBI_WORKFLOW_DESTINATION,

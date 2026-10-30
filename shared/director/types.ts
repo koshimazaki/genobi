@@ -2,6 +2,7 @@ import { checkNotes } from "./notes";
 import { checkTracks } from "./tracks";
 import { checkDirections, type LayerDirections } from "./directions";
 import type { TemplateInputs } from "../templates/types";
+import { recipeAssetIds } from "./recipe-assets";
 import type { CameraSelection } from "../camera";
 export type Parameters = Record<string, string | number | boolean>;
 export interface Asset {
@@ -284,6 +285,9 @@ export function checkReferences(p: Project) {
       fail(`Unexpected generation ${id}`);
   }
   const plans = new Set<string>();
+  for (const layer of p.layers)
+    for (const id of recipeAssetIds(p, layer))
+      if (p.assets[id]?.kind !== "image") fail("Missing recipe image asset");
   for (const g of p.generationPlans) {
     if (plans.has(g.id)) fail("Duplicate generation plan");
     plans.add(g.id);

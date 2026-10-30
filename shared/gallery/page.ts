@@ -48,6 +48,9 @@ export function galleryPage(path: string, origin: string) {
     ? `<!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${title} · Genobi</title>
+<link rel="icon" href="/favicon.svg?v=genobi-011" type="image/svg+xml">
+<link rel="icon" href="/favicon.ico?v=genobi-011" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=genobi-011">
 <meta name="description" content="${note}">
 <meta property="og:type" content="video.other"><meta property="og:site_name" content="Genobi">
 <meta property="og:title" content="${title}"><meta property="og:description" content="${note}">

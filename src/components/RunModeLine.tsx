@@ -1,3 +1,4 @@
+import DeploymentLink from "./DeploymentLink";
 import { entryFor } from "../../shared/registry";
 import type { KeyKind } from "../../shared/provider";
 import type { Generator, VideoModel } from "../../shared/types";
@@ -36,6 +37,7 @@ export default function RunModeLine({
   // Only a graph that will run on this machine asks the local ComfyUI.
   const localGraph =
     entry.route === "workflow" &&
+    !entry.deploymentOnly &&
     state?.location === "local" &&
     !state.fixed &&
     !hosts;
@@ -51,6 +53,12 @@ export default function RunModeLine({
         title: "Saving where this runs…",
       }
     : runModeLine({ entry, state, template, hosts, keyKind, check });
+  if (entry.deploymentOnly && state?.deployment && !saving)
+    return (
+      <p className="run-mode">
+        <DeploymentLink deployment={state.deployment} />
+      </p>
+    );
   return (
     <p className="run-mode" title={line.title} aria-label={line.title}>
       {line.tags.map((tag) => (

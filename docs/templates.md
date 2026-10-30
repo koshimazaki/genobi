@@ -134,7 +134,7 @@ mechanical.
 | ------------ | --------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `mechanical` | One generation its recipe fully describes: the prompt, the references, the model and its controls                                       | Swaps the person's files into the recipe and runs it in place through the Camera's paid path: a quote, the person confirms the price, one submission ([gallery](template-gallery.md#generate-in-place-mechanical)) |
 | `agent`      | Editing steps: several shots, references made first, ffmpeg trims or slices, stitching to a track, a cut. The default, and the teaser's | **Generate now**: the project with the references, the copy saved, then one agent session ([below](#asset-intake-and-starting-from-the-gallery))                                                                   |
-| `mix`        | A finished edit of bundled media: nothing to generate                                                                                   | No Generate: **Take it to Director** and **Take it to the editor** open the cut as it is ([mix templates](#mix-templates))                                                                                         |
+| `mix`        | A finished edit of bundled media, with optional replacement generation                                                                  | No Generate: **Take it to Director** and **Take it to the editor** open the cut as it is ([mix templates](#mix-templates))                                                                                         |
 
 `checkTemplate` calls `checkRunKind`, which refuses a `run` other than these
 two and a mechanical template that is not one self-contained run: exactly
@@ -445,3 +445,10 @@ checked by `npm run check:worker`),
 `src/director/TemplatePlan.tsx` and `src/template-gallery/` (drawer, intake,
 actions, the mechanical run). See also the
 [first working composer](director-working-version.md).
+
+## Make a version in Director
+
+Every editable template opens [Generate my version](director-generate.md), with
+its declared media inputs and current assets. Apply swaps locally or ask the
+linked agent to prepare replacements; every paid step retains approval in the
+bubble. The Gallery's mechanical Generate stays independent of this agent flow.

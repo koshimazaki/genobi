@@ -111,6 +111,7 @@
         "director-bundle/showcase/dimensions-mix/README.md",
         "director-bundle/showcase/genobi-teaser/README.md",
         "director-comfy.md",
+        "director-generate.md",
         "director-prompts.md",
         "director-references.md",
         "director-remix-research.md",
@@ -212,6 +213,7 @@
         "director-bundle/motion-effects.md",
         "director-bundle/project-copy.md",
         "director-bundle/showcase/README.md",
+        "director-generate.md",
         "director-prompts.md",
         "director-references.md",
         "dual-editor.md",
@@ -271,6 +273,7 @@
         "adaptive-reverb.md",
         "anime-teaser-template.md",
         "bloom-teaser.md",
+        "director-generate.md",
         "falling-room.md",
         "media-previews.md"
       ]
@@ -637,6 +640,7 @@
         "director-bundle/showcase/dimensions-mix/README.md",
         "director-bundle/showcase/genobi-teaser/README.md",
         "director-comfy.md",
+        "director-generate.md",
         "director-prompts.md",
         "director-references.md",
         "director-remix-research.md",
@@ -850,9 +854,11 @@
         "agent-sessions.md",
         "arena.md",
         "cloudflare.md",
+        "comfy-deploy.md",
         "comfy-deployment.md",
         "construction-motion.md",
         "director-bundle/README.md",
+        "director-generate.md",
         "director-resolution.md",
         "director-studio-shell.md",
         "director-working-version.md",
@@ -1328,6 +1334,13 @@
       "tags": ["workflows", "director", "comfy", "ltx"],
       "summary": "Clean Director MP4 export into the pinned LTX workflow, the Comfy Cloud adapter and the asset and render node notes.",
       "links": ["director-remix-verification.md"]
+    },
+    {
+      "title": "Generate your version",
+      "path": "director-generate.md",
+      "tags": ["director", "templates", "agents"],
+      "summary": "Reuse or replace declared template media, apply undoable swaps, and ask a linked agent to prepare generation with paid approval.",
+      "links": []
     },
     {
       "title": "Prompts and directions",
@@ -1829,7 +1842,7 @@
       "path": "run-location.md",
       "tags": ["workflows", "comfy", "backend", "studio", "mcp"],
       "summary": "Run location (Local ComfyUI or Comfy Cloud), the local ComfyUI client, workflow swapping and the local model map.",
-      "links": ["openjutsu-swap.md"]
+      "links": ["comfy-deploy.md", "openjutsu-swap.md"]
     },
     {
       "title": "Hosted runner pairing",
@@ -1896,6 +1909,7 @@
         "construction-motion.md",
         "credits.md",
         "credits/README.md",
+        "director-generate.md",
         "director-resolution.md",
         "director-working-version.md",
         "dual-editor.md",
@@ -1916,7 +1930,7 @@
       "path": "studio-interface.md",
       "tags": ["studio"],
       "summary": "Shared tool headings, workspace alignment, menus and finishing controls.",
-      "links": ["editor-timeline.md", "run-location.md"]
+      "links": ["director-generate.md", "editor-timeline.md", "run-location.md"]
     },
     {
       "title": "Genobi: submission dossier",
@@ -2023,6 +2037,7 @@
         "anime-teaser-template.md",
         "camera-wording.md",
         "dimensions-mix.md",
+        "director-generate.md",
         "director-working-version.md",
         "falling-room.md",
         "hermes-runs.md",

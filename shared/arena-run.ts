@@ -93,12 +93,13 @@ export const draftSettings = (
  * Acoustic Space and open LTX workflows) and stills (FLUX 3 Image on Router,
  * Klein as a workflow on the run location, Klein on BFL's API). An approach
  * carries only a prompt and still references, so models that need a guide
- * video or a start image (H3, FLUX 3 image-to-video) are not offered.
+ * video, a start image or staged deployment inputs are not offered.
  */
 export const arenaRunEntries = (): ReadyEntry[] =>
   registry.filter(
     (e): e is ReadyEntry =>
       e.status === "ready" &&
+      !e.deploymentOnly &&
       (e.generator === "video" || e.generator === "image") &&
       !needsSourceMedia(e.videoModel),
   );
@@ -126,8 +127,8 @@ export function arenaRunInput(
   settings: ArenaSettings = {},
   references: string[] = [],
 ): GenerateInput {
-  const entry = readyEntry(entryId);
-  if (!entry || (entry.generator !== "video" && entry.generator !== "image"))
+  const entry = arenaRunEntries().find((e) => e.id === entryId);
+  if (!entry)
     throw new Error("Choose a video or image model for this approach.");
   const description = prompt.trim();
   if (!description) throw new Error("Write a prompt before running.");

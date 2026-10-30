@@ -1,3 +1,6 @@
+import { useSettingsStore } from "../settings-store";
+import { isDeployModel } from "../../shared/comfy/deploy-catalogue";
+import { deployGeometry } from "../../shared/comfy/deploy-workflows";
 import { useEffect, useRef, useState } from "react";
 import type {
   AspectRatio,
@@ -66,43 +69,47 @@ export function modelOptions(
   openOnly: boolean,
   hosted = false,
   keep?: MenuFilter["keep"],
+  deploymentRegistered = false,
 ) {
-  return entriesFor(family, { openOnly, hosted, keep }).map(
-    (entry): SelectOption => ({
-      value: entry.id,
-      label: entryLabel(entry),
-      icon: (
-        <Icon
-          name={
-            entry.status !== "ready"
-              ? "camera"
-              : entry.generator === "image" || entry.generator === "edit"
-                ? "image"
-                : entry.generator === "upscale"
-                  ? "expand"
-                  : entry.generator === "audio"
-                    ? "sound"
-                    : entry.controls.kind === "video" && entry.controls.acoustic
-                      ? "acoustic"
-                      : "camera"
-          }
-          size={13}
-        />
-      ),
-      ...(entry.status === "coming" && {
-        disabled: true,
-        note: entry.note,
-        tag: "soon",
-      }),
-      // A row the composer cannot send says where it runs instead.
-      ...(entry.status === "ready" &&
-        entry.outsideComposer && {
-          disabled: true,
-          note: entry.outsideComposer,
-          tag: "agent",
-        }),
+  return entriesFor(family, {
+    openOnly,
+    hosted,
+    keep,
+    deploymentRegistered,
+  }).map((entry): SelectOption => ({
+    value: entry.id,
+    label: entryLabel(entry),
+    icon: (
+      <Icon
+        name={
+          entry.status !== "ready"
+            ? "camera"
+            : entry.generator === "image" || entry.generator === "edit"
+              ? "image"
+              : entry.generator === "upscale"
+                ? "expand"
+                : entry.generator === "audio"
+                  ? "sound"
+                  : entry.controls.kind === "video" && entry.controls.acoustic
+                    ? "acoustic"
+                    : "camera"
+        }
+        size={13}
+      />
+    ),
+    ...(entry.status === "coming" && {
+      disabled: true,
+      note: entry.note,
+      tag: "soon",
     }),
-  );
+    // A row the composer cannot send says where it runs instead.
+    ...(entry.status === "ready" &&
+      entry.outsideComposer && {
+        disabled: true,
+        note: entry.outsideComposer,
+        tag: "agent",
+      }),
+  }));
 }
 
 /**
@@ -127,6 +134,7 @@ export default function GenerationControls({
   onAcousticChange = () => {},
   frameLock,
 }: Props) {
+  const workflow = useSettingsStore((s) => s.workflows[model]);
   const selected = entryFor(generator, model);
   const acoustic = acousticSwitch(selected);
   // The row is the held entry's controls: what it shows and what each offers.
@@ -149,7 +157,7 @@ export default function GenerationControls({
     );
   if (controls.kind !== "video") return null;
   const ltx = isLtx(model);
-  const native = ltx && selected.route === "workflow";
+  const native = (ltx || isDeployModel(model)) && selected.route === "workflow";
   const frameDetail = native
     ? `${ltxFrames(duration)} frames at 24 fps · 8n+1 · ${(ltxFrames(duration) / 24).toFixed(2)}s encoded`
     : ltx
@@ -198,15 +206,19 @@ export default function GenerationControls({
           disabled={draft || Boolean(frameLock)}
           options={controls.resolutions.map((value) => ({
             value,
-            label: ltx
-              ? native
-                ? Object.values(ltxWorkflowSize(aspectRatio, value)).join(" × ")
-                : ltxResolution(aspectRatio, value).replace("x", " × ")
-              : isH3Router(model)
-                ? h3RouterResolution(value)
-                : value === "fhd"
-                  ? "Full HD"
-                  : value.toUpperCase(),
+            label: isDeployModel(model)
+              ? deployGeometry(model, workflow)
+              : ltx
+                ? native
+                  ? Object.values(ltxWorkflowSize(aspectRatio, value)).join(
+                      " × ",
+                    )
+                  : ltxResolution(aspectRatio, value).replace("x", " × ")
+                : isH3Router(model)
+                  ? h3RouterResolution(value)
+                  : value === "fhd"
+                    ? "Full HD"
+                    : value.toUpperCase(),
           }))}
           onChange={(value) => onResolutionChange(value as VideoResolution)}
         />

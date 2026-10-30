@@ -3,7 +3,7 @@
   max-height: calc(100svh - 24px);
   overflow: auto;
 }
-.startup-guide ol {
+.startup-guide ul {
   padding: 0 0 0 22px;
   margin: 20px 0;
 }
@@ -31,4 +31,16 @@
     min-height: 44px;
     min-width: 44px;
   }
+}
+
+.startup-guide h3 {
+  margin: 24px 0 8px;
+  font-size: 14px;
+}
+.startup-guide .startup-commands {
+  overflow-x: auto;
+  padding: 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  font: 12px/1.7 var(--mono);
 }

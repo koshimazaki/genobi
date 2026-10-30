@@ -16,7 +16,7 @@ describe("run location", () => {
       location: "cloud",
       source: "server",
       fixed: false,
-      choices: ["local", "cloud", "both"],
+      choices: ["local", "cloud", "both", "deployment"],
       local: { reachable: true, version: "0.3.99" },
     });
     const set = await send("/api/settings/run-location", { location: "local" });

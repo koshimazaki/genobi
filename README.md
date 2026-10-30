@@ -111,6 +111,13 @@ custom ComfyUI graphs and the studio's one-click integrations have different
 setup and verification requirements. See [getting started](docs/getting-started.md)
 and [current limitations](docs/troubleshooting.md).
 
+Editable templates open **Generate my version** in Director or Editor: reuse
+assets, upload replacements, apply undoable swaps, or ask your linked agent to
+prepare new media. Paid generation waits for approval in the bubble. See
+[the version guide](docs/director-generate.md). Local Camera can also register
+[a Comfy deployment](docs/comfy-deploy.md#use-it-from-camera) for Layout-to-video
+and AKUSPACE; hosted visits keep their existing Cloud routes.
+
 ### Run locally
 
 Install [Node.js 22 or newer](https://nodejs.org), then:

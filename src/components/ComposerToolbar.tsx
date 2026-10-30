@@ -1,3 +1,5 @@
+import { isDeployModel } from "../../shared/comfy/deploy-catalogue";
+import { useSettingsStore } from "../settings-store";
 import ImageControls from "./ImageControls";
 import type { ReactNode } from "react";
 import type { ComposerState } from "../useComposer";
@@ -39,6 +41,11 @@ export default function ComposerToolbar({
   keyKind?: KeyKind | null;
 }) {
   const { generator, model } = state;
+  const location = useSettingsStore((s) => s.location);
+  const deployment =
+    isDeployModel(model) ||
+    (entryFor(generator, model).route === "workflow" &&
+      location === "deployment");
   return (
     <div className="composer-toolbar composer-toolbar--balanced">
       <FamilyModelSelector
@@ -91,12 +98,21 @@ export default function ComposerToolbar({
         )}
       </div>
       <div className="toolbar-action">{action}</div>
-      <Cost
-        estimate={estimate}
-        credits={estimateCredits}
-        // A graph's key is the run location's, named by the run-mode line.
-        payer={entryFor(generator, model).route === "workflow" ? null : keyKind}
-      />
+      {deployment ? (
+        <div className="cost">
+          <strong>GPU time</strong>
+          <span>BILLED BY COMFY · QUOTE FIRST</span>
+        </div>
+      ) : (
+        <Cost
+          estimate={estimate}
+          credits={estimateCredits}
+          // A graph's key is the run location's, named by the run-mode line.
+          payer={
+            entryFor(generator, model).route === "workflow" ? null : keyKind
+          }
+        />
+      )}
     </div>
   );
 }

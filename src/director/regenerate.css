@@ -114,8 +114,8 @@
   font-size: 12px;
 }
 /* The header's file actions on a phone: a fixed grid of two columns and
-   three rows, so the Director (three buttons, with Go to Editor) and the
-   Editor (five, with Back to Director) keep one toolbar height and
+   three rows, so the Director (four buttons, with Generate my version) and
+   Editor (six, with Generate my version) keep one toolbar height and
    switching between them moves nothing below. Labels never wrap a row. */
 @media (max-width: 760px) {
   .director .dir-file-actions {

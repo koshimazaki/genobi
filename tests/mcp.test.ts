@@ -96,7 +96,9 @@ describe("tools", () => {
       status: "ready",
     })) as { id: string; route: string }[];
     expect(ready.map((m) => m.id)).toEqual(
-      registry.filter((e) => e.status === "ready").map((e) => e.id),
+      registry
+        .filter((e) => e.status === "ready" && !e.deploymentOnly)
+        .map((e) => e.id),
     );
     expect(
       ready.every((m) => ["router", "workflow", "bfl"].includes(m.route)),

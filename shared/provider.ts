@@ -1,3 +1,4 @@
+import { isDeployModel } from "./comfy/deploy-catalogue";
 import { isH3 } from "./h3";
 import { isH3Router } from "./comfy/h3-router";
 import { isSwap } from "./openjutsu";
@@ -19,6 +20,7 @@ export interface ProviderSubmission {
   cost?: number | null;
 }
 export interface ProviderResult {
+  companions?: { nodeId: string; url: string; label: string }[];
   id: string;
   status: string;
   progress?: number | null;
@@ -86,6 +88,12 @@ export function requireRoute(
 
 function routeRefusal(generator: Generator, model: VideoModel, kind: KeyKind) {
   const comfy = kind === "comfy";
+  if (isDeployModel(model) && !comfy)
+    return new AppError(
+      400,
+      "Comfy Deploy needs a Comfy key.",
+      "unsupported_model",
+    );
   if (isH3(model) && !comfy)
     return new AppError(
       400,
@@ -204,6 +212,7 @@ export function payingKeyKind(
 export function requiredKeyKind(model: VideoModel): KeyKind | "either" {
   if (model === "flux-3-klein-api" || model === "flux-3-i2v") return "bfl";
   if (
+    isDeployModel(model) ||
     isH3(model) ||
     isH3Router(model) ||
     isLtx(model) ||

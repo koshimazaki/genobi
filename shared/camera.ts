@@ -68,7 +68,8 @@ const LTX_NAMES: Partial<Record<CameraTermId, string>> = {
   "pull-back": "Dolly out",
 };
 export const isLtxModel = (model: VideoModel | undefined) =>
-  model !== undefined && LTX_MODELS.includes(model);
+  model !== undefined &&
+  (model.startsWith("ltx-deploy-") || LTX_MODELS.includes(model));
 /** The name a term goes by in the chosen model's guide. */
 export const termName = (term: CameraTerm, model: VideoModel = "flux-3") =>
   (isH3CameraModel(model) && h3Name(term.id)) ||

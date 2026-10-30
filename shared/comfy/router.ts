@@ -28,6 +28,7 @@ export const ROUTER_BASE = "https://api.comfy.org";
 const ROUTES: Record<
   Exclude<
     VideoModel,
+    | import("./deploy-catalogue").DeployModel
     | "ltx-2.5-open"
     | "ltx-2.5-akuspace"
     | "flux-3-klein"

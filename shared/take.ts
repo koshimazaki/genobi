@@ -29,9 +29,13 @@ export interface TakeRecipe {
   workflow?: string;
   /** A `workflow` entry's run location on the local server. */
   location?: DestinationKind;
+  deployment?: { url: string; name: string };
 }
 /** What the local server adds to a `workflow` entry's recipe. */
-export type WorkflowPlan = Pick<TakeRecipe, "workflow" | "location">;
+export type WorkflowPlan = Pick<
+  TakeRecipe,
+  "workflow" | "location" | "deployment"
+>;
 
 export type TakeInput =
   /** SHA-256 of the canonical settings, the same string replay compares. */
@@ -111,6 +115,7 @@ export async function startTake(
       ...(entry.route === "workflow" && plan.workflow
         ? { workflow: plan.workflow }
         : {}),
+      ...(plan.deployment ? { deployment: plan.deployment } : {}),
       ...(entry.route === "workflow" && plan.location
         ? { location: plan.location }
         : {}),

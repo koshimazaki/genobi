@@ -2,6 +2,7 @@ import { useShell } from "../studio/ShellContext";
 import { WorkspaceHeading } from "../studio/WorkspaceHeading";
 import ThemePicker from "../components/ThemePicker";
 import RegenerateAction from "./RegenerateAction";
+import GenerateVersionAction from "./GenerateVersionAction";
 
 /**
  * The Director's and Editor's title row. Its file actions end with the way
@@ -65,6 +66,7 @@ export default function ComposerHeader({
           project={name}
         />
         <div className="dir-file-actions">
+          <GenerateVersionAction disabled={transportBusy} />
           <button disabled={transportBusy} onClick={open}>
             {simple ? "Open saved project" : "Open bundle"}
           </button>

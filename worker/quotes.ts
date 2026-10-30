@@ -1,3 +1,4 @@
+import { refuseHostedDeployment } from "../shared/comfy/deploy-catalogue";
 import { isH3, takesVideoReferences } from "../shared/h3";
 import { isSwap } from "../shared/openjutsu";
 import { isSeedvr2, requireSeedvr2Fit } from "../shared/comfy/seedvr2";
@@ -40,6 +41,7 @@ export async function price(
   key: string,
   provider: Provider,
 ) {
+  refuseHostedDeployment(input.model);
   // The swap needs a custom node pack only its own Comfy deployment holds;
   // the hosted studio does not run it.
   if (isSwap(input.model))

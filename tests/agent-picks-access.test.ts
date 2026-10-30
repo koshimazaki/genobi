@@ -5,10 +5,13 @@
 import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import type { Project } from "../shared/director/types";
 import { base } from "./house-template-fixtures";
 import { ServerKeys } from "../server/keys";
+import { LocalComfyWorkflows } from "../server/comfy-local";
+import { ComfySdkWorkflows } from "../server/comfy-sdk";
+import { WorkflowDestinations } from "../server/workflow-destinations";
 import { agentStudio } from "./agent-harness";
 import { input } from "./server-harness";
 
@@ -95,8 +98,16 @@ describe("an agent session and the person's picks", () => {
   });
 
   it("quotes under the person's run location", async () => {
+    const fetcher = vi.fn(() => {
+      throw new Error("A quote must not call a workflow provider.");
+    });
+    const localClient = new LocalComfyWorkflows({ fetcher });
     const studio = await agentStudio({
       app: {
+        workflows: new WorkflowDestinations(
+          new ComfySdkWorkflows({ fetcher }),
+          localClient,
+        ),
         keys: new ServerKeys({
           comfy: "comfyui-test-key-0012",
           bfl: "test-server-key",
@@ -125,6 +136,7 @@ describe("an agent session and the person's picks", () => {
     expect(quote.recipe.location).toBe("local");
     expect(quote.estimateUsd).toBe(0);
     expect(studio.bfl.submissions).toBe(0);
+    expect(fetcher).not.toHaveBeenCalled();
   });
 
   it("imports a picked take into the agent's linked project, and no other", async () => {

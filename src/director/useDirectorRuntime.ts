@@ -109,7 +109,6 @@ export function useDirectorRuntime(
   useEffect(() => {
     if (!bundle || !element) return;
     let cancelled = false;
-    let initialized = false;
     setReady(false);
     setFirstFrame(true);
     setStatus("Preparing layers…");
@@ -125,7 +124,6 @@ export function useDirectorRuntime(
     void r
       .init()
       .then(async () => {
-        initialized = true;
         if (cancelled) {
           r.dispose();
           return;
@@ -150,7 +148,7 @@ export function useDirectorRuntime(
       cancelled = true;
       stop();
       runtime.current = null;
-      if (initialized) r.dispose();
+      r.dispose();
     };
   }, [bundle, element, stop]);
   // A finished render belongs to the project it was made from: cleared (and

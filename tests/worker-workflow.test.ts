@@ -209,3 +209,35 @@ describe("Cloudflare adapter: the workflow route through the Comfy SDK", () => {
     );
   });
 });
+
+describe("hosted Comfy Deploy boundary", () => {
+  it("states local-only and refuses a deployment quote before any provider call", async () => {
+    const before = cloudRequests.length;
+    const location = await call("/api/settings/run-location", {
+      headers: { cookie: newSession() },
+    });
+    expect(((await location.json()) as { note: string }).note).toContain(
+      "Comfy Deploy runs from the local studio",
+    );
+    for (const model of ["ltx-deploy-layout-to-video", "ltx-deploy-akuspace"])
+      for (const route of ["/api/quotes", "/api/jobs"]) {
+        const result = await call(route, {
+          method: "POST",
+          headers: {
+            cookie: newSession(),
+            "x-byo-key": key,
+            "Content-Type": "application/json",
+          },
+          // Incomplete input must report the hosted boundary before validation
+          // (including the missing deployment tickets and job request key).
+          body: JSON.stringify({ model }),
+        });
+        expect(result.status).toBe(501);
+        expect(await result.json()).toMatchObject({
+          code: "deployment_local_only",
+          error: "Comfy Deploy runs from the local studio",
+        });
+      }
+    expect(cloudRequests.length).toBe(before);
+  });
+});

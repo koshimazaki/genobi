@@ -336,3 +336,5 @@ from GitHub:
 - [Transitions.dev / UI generation](credits/libraries/transitions-ui-generation/README.md)
 
 - [Shared project memory and taste](taste-memory.md) — local evidence, agent checkpoints, preferences and privacy.
+
+- [Generate your version](director-generate.md): template inputs, local swaps and agent generation.

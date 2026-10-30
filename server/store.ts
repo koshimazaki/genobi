@@ -12,6 +12,7 @@ export interface StoredJob extends Job {
   providerId?: string;
   pollingUrl?: string;
   resultRemoteUrl?: string;
+  companionDownloads?: { nodeId: string; label: string; url: string }[];
   lastPolledAt?: number;
   /** Private: input hashes stay out of public jobs. Absent on older runs. */
   take?: TakeStart;
@@ -81,7 +82,8 @@ export interface StoredPartSet {
 /** A session's run location and workflow choices (`server/workflow-settings.ts`). */
 export interface StoredSettings {
   sessionId: string;
-  location?: "local" | "cloud" | "both";
+  location?: "local" | "cloud" | "both" | "deployment";
+  deployment?: { url: string };
   /** Template id by workflow entry id. */
   workflows: Record<string, string>;
   updatedAt: string;
@@ -130,7 +132,7 @@ export class Store {
       if (job.status === "submitting") {
         job.status = "Error";
         job.error =
-          "Submission was interrupted. Check your BFL usage before starting another generation.";
+          "Submission was interrupted. Check your provider usage before starting another generation.";
       }
     }
     await this.save();
@@ -158,8 +160,10 @@ export function publicJob(job: StoredJob): Job {
     providerId: _provider,
     pollingUrl: _poll,
     resultRemoteUrl: _result,
+    companionDownloads: _downloads,
     lastPolledAt: _last,
     take: _take,
+    deploy: _deploy,
     ...visible
   } = job;
   return visible;

@@ -1,6 +1,11 @@
 import { mixProject, type MixMedia } from "../../shared/templates/mix";
 import type { HouseTemplate } from "../../shared/templates/types";
-import { digest, loadExample, validateFiles, type Bundle } from "./bundle";
+import {
+  digest,
+  loadExampleModules,
+  validateFiles,
+  type Bundle,
+} from "./bundle";
 
 /**
  * A mix template as a Director project (`shared/templates/mix.ts`): its
@@ -10,7 +15,7 @@ import { digest, loadExample, validateFiles, type Bundle } from "./bundle";
  */
 export async function buildMixBundle(
   template: HouseTemplate,
-  base: Bundle,
+  base: ReturnType<typeof loadExampleModules>,
   bytes: Record<string, Uint8Array<ArrayBuffer>>,
 ): Promise<Bundle> {
   const mix = template.mix;
@@ -43,7 +48,18 @@ export async function buildMixBundle(
 }
 
 /** `/director?example=<id>` for a mix: fetch its media and build it. */
-export async function loadMixTemplate(template: HouseTemplate) {
+const loading = new WeakMap<HouseTemplate, Promise<Bundle>>();
+/** Share only concurrent requests; the project store owns opened media. */
+export function loadMixTemplate(template: HouseTemplate) {
+  const pending = loading.get(template);
+  if (pending) return pending;
+  const request = fetchMixTemplate(template).finally(() =>
+    loading.delete(template),
+  );
+  loading.set(template, request);
+  return request;
+}
+async function fetchMixTemplate(template: HouseTemplate) {
   const mix = template.mix;
   if (!mix) throw new Error(`${template.name} is not a mix`);
   const entries = await Promise.all(
@@ -55,7 +71,7 @@ export async function loadMixTemplate(template: HouseTemplate) {
   );
   return buildMixBundle(
     template,
-    await loadExample(),
+    loadExampleModules(),
     Object.fromEntries(entries),
   );
 }

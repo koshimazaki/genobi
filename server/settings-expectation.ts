@@ -34,7 +34,7 @@ export function expectationOf(headers: IncomingHttpHeaders): Expectation {
   )
     throw new AppError(
       400,
-      "The expected run location must be local or cloud.",
+      "The expected run location must be local, cloud or deployment.",
       "invalid_run_location",
     );
   if (workflow !== undefined && !TEMPLATE.test(workflow))

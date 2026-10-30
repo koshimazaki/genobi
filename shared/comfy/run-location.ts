@@ -8,7 +8,7 @@ import type { DestinationKind } from "./destination";
  * default from `GENOBI_WORKFLOW_DESTINATION` and keeps a per-session choice
  * the studio and agents share; the hosted Worker is always Comfy Cloud.
  */
-export const RUN_LOCATIONS = ["local", "cloud", "both"] as const;
+export const RUN_LOCATIONS = ["local", "cloud", "both", "deployment"] as const;
 export type RunLocation = (typeof RUN_LOCATIONS)[number];
 
 export const LOCATION_LABEL: Record<DestinationKind, string> = {
@@ -18,10 +18,16 @@ export const LOCATION_LABEL: Record<DestinationKind, string> = {
 };
 
 export function parseRunLocation(value: unknown): RunLocation {
-  if (value === "local" || value === "cloud" || value === "both") return value;
+  if (
+    value === "local" ||
+    value === "cloud" ||
+    value === "both" ||
+    value === "deployment"
+  )
+    return value;
   throw new AppError(
     400,
-    "The run location must be local, cloud or both.",
+    "The run location must be local, cloud, both or deployment.",
     "invalid_run_location",
   );
 }
@@ -60,6 +66,7 @@ export interface RunLocationState {
   choices: RunLocation[];
   /** The local ComfyUI, where the adapter has one to ask. */
   local: LocalComfyStatus | null;
+  deployment?: { url: string; name: string };
   note: string;
 }
 
@@ -71,5 +78,5 @@ export const HOSTED_RUN_LOCATION: RunLocationState = {
   fixed: true,
   choices: ["cloud"],
   local: null,
-  note: "The hosted studio runs every workflow on Comfy Cloud. Run the studio on your own machine to use a local ComfyUI.",
+  note: "The hosted studio runs every workflow on Comfy Cloud. Run the studio on your own machine to use a local ComfyUI. Comfy Deploy runs from the local studio.",
 };

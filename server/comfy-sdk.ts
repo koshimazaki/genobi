@@ -176,6 +176,27 @@ export class ComfySdkWorkflows implements WorkflowClient {
       : this.connect(key, destinationFetch(origin, this.fetcher));
   }
 
+  /** Upload only: no generation is submitted or retried. */
+  async upload(
+    bytes: Uint8Array,
+    contentType: string,
+    key?: string,
+  ): Promise<object> {
+    if (!key) throw unsent("Connect a Comfy key before uploading.");
+    const assets = this.client(key).assets;
+    if (!assets) throw unsent("This client cannot upload inputs.");
+    try {
+      return await assets
+        .fromBytes(bytes, {
+          filename: `genobi-${crypto.randomUUID()}.${({ "video/webm": "webm", "audio/wav": "wav", "audio/flac": "flac", "audio/mpeg": "mp3", "image/png": "png", "image/jpeg": "jpg", "image/webp": "webp" } as Record<string, string>)[contentType] ?? "bin"}`,
+          contentType,
+        })
+        .asReference(AbortSignal.timeout(90_000));
+    } catch {
+      throw unsent("The deployment input upload failed.");
+    }
+  }
+
   async run(
     template: WorkflowTemplate,
     values: Record<string, unknown>,
@@ -226,7 +247,12 @@ export class ComfySdkWorkflows implements WorkflowClient {
     const progress =
       typeof value === "number" && value >= 0 && value <= 1 ? value : undefined;
     if (status === "Error") {
-      const error = runFailure(job.error);
+      const error = runFailure(
+        job.error,
+        this.destination.kind === "deployment"
+          ? "Comfy deployment"
+          : "Comfy Cloud",
+      );
       return error ? { id, status, error } : { id, status };
     }
     if (status !== "Ready")
@@ -245,7 +271,24 @@ export class ComfySdkWorkflows implements WorkflowClient {
       throw failure;
     }
     try {
-      return { id, status: "Ready", result: { sample: mediaUrl(url).href } };
+      const companions = await Promise.all(
+        (expected.companions ?? []).map(async ({ nodeId, label }) => {
+          const audio = job.outputs.find(
+            (o) => o.nodeId === nodeId && o.type === "audio",
+          );
+          if (!audio) return [];
+          const { url } = await audio.getDownloadUrl();
+          return [{ nodeId, label, url: mediaUrl(url).href }];
+        }),
+      );
+      return {
+        id,
+        status: "Ready",
+        result: { sample: mediaUrl(url).href },
+        ...(expected.companions?.length
+          ? { companions: companions.flat() }
+          : {}),
+      };
     } catch {
       throw new AppError(
         502,

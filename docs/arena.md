@@ -63,6 +63,8 @@ through Comfy Router, FLUX 3 Image Klein on BFL's API, or Klein as a workflow on
 run location, which costs nothing on a local ComfyUI. **Record only** keeps the load
 as a manual result. Models that need a guide video or a start image (H3, FLUX 3
 image to video) are not offered: a load carries only a prompt and still references.
+Comfy Deploy entries are not offered either: Arena cannot stage their required
+deployment inputs. Use local Camera for those runs and attach the finished result.
 
 The Model menu is the studio's own list menu, not a text field with suggestions:
 choosing a row sets the model at once, whatever the load held before. (The earlier

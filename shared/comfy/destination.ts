@@ -41,7 +41,7 @@ const invalid = (message: string) =>
   new AppError(400, message, "invalid_destination");
 
 /**
- * Reads a destination setting. A deployment URL must be https on a public
+ * Reads a destination setting. A deployment URL must be https on its documented Comfy
  * host; a local URL must be http on 127.0.0.1 or localhost. Neither may carry
  * credentials, a query or a fragment, and the URL is returned in its parsed,
  * normalised form without a trailing slash.
@@ -83,16 +83,16 @@ export function parseWorkflowDestination(
         "A local destination must be http://127.0.0.1 or http://localhost.",
       );
   } else if (
+    !/^https:\/\/[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.run\.comfy\.app\/?$/i.test(
+      url,
+    ) ||
     parsed.protocol !== "https:" ||
-    LOOPBACK.has(host) ||
-    !host.includes(".") ||
-    /^\d+\.\d+\.\d+\.\d+$/.test(host) ||
-    host.startsWith("[") ||
-    host.endsWith(".local") ||
-    host.endsWith(".internal")
+    !/^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.run\.comfy\.app$/.test(host) ||
+    parsed.port !== "" ||
+    parsed.pathname !== "/"
   )
     throw invalid(
-      "A deployment destination must be an https URL on a public host.",
+      "A Comfy deployment must be https://<deployment>.run.comfy.app with no port or path.",
     );
   const normalised = `${parsed.origin}${parsed.pathname}`.replace(/\/+$/, "");
   return { kind, url: normalised };

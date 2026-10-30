@@ -4,6 +4,7 @@
 // joins the project's modules exactly as the registry defines it, so the
 // importer's recipe check (`src/director/validate.ts`) still holds.
 import registry from "../../docs/director-bundle/example/studio.json";
+import versionMedia from "../../docs/director-bundle/version-media/modules.json";
 import { checkParameters, refuse } from "./layer-commands";
 import type { GraphicsModule, Parameters, Project } from "./types";
 
@@ -11,10 +12,10 @@ import type { GraphicsModule, Parameters, Project } from "./types";
  * The trusted recipes, by id: the registry every bundle's modules are checked
  * against, and the only recipes an agent can bring into a project.
  */
-export const TRUSTED_RECIPES = registry.modules as Record<
-  string,
-  GraphicsModule
->;
+export const TRUSTED_RECIPES = {
+  ...registry.modules,
+  ...versionMedia,
+} as Record<string, GraphicsModule>;
 
 /** The names a recipe's parameter schema requires. */
 export const requiredParameters = (module: GraphicsModule): string[] => {

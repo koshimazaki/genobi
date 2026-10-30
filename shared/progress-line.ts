@@ -1,3 +1,4 @@
+import { isDeployModel } from "./comfy/deploy-catalogue";
 import type { DurationEstimate, Generator, Job, VideoModel } from "./types";
 
 /**
@@ -47,7 +48,7 @@ const VERB: Record<string, string> = {
   Generating: "GENERATING",
   copying: "SAVING",
 };
-const MODEL: Record<VideoModel, string> = {
+const MODEL: Partial<Record<VideoModel, string>> = {
   "minimax-h3": "H3",
   "minimax-h3-canny": "H3 Canny",
   "minimax-h3-depth": "H3 Depth",
@@ -78,7 +79,12 @@ export function jobStage(
   job: Pick<Job, "status" | "generator" | "model">,
 ): string {
   const verb = VERB[job.status] ?? job.status.toUpperCase();
-  const model = job.generator === "upscale" ? "" : MODEL[job.model!];
+  const model =
+    job.generator === "upscale"
+      ? ""
+      : isDeployModel(job.model)
+        ? "LTX DEPLOY"
+        : MODEL[job.model!];
   return [verb, model, MEDIA[job.generator]].filter(Boolean).join(" ");
 }
 

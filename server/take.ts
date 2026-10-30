@@ -73,7 +73,8 @@ export function requireQuotedRun(quote: QuoteRecord, recipe: TakeRecipe) {
     );
   if (
     quote.recipe.workflow !== recipe.workflow ||
-    quote.recipe.location !== recipe.location
+    quote.recipe.location !== recipe.location ||
+    quote.recipe.deployment?.url !== recipe.deployment?.url
   )
     throw new AppError(
       409,
