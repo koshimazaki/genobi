@@ -66,6 +66,7 @@ export const isComfyKey = (key: string) => key.startsWith("comfyui-");
 
 /** Which provider a key belongs to, by the same prefix rule. */
 export type KeyKind = "comfy" | "bfl";
+export type ProviderChoice = KeyKind | "auto";
 export const keyKind = (key: string): KeyKind =>
   isComfyKey(key) ? "comfy" : "bfl";
 
@@ -168,11 +169,12 @@ export function chooseKey(
   generator: Generator,
   model: VideoModel,
   keys: Partial<Record<KeyKind, string>>,
+  preference: ProviderChoice = "auto",
 ): string | undefined {
   const kind = chooseKeyKind(generator, model, {
     comfy: Boolean(keys.comfy),
     bfl: Boolean(keys.bfl),
-  });
+  }, preference);
   return kind && keys[kind];
 }
 
@@ -185,7 +187,12 @@ export function chooseKeyKind(
   generator: Generator,
   model: VideoModel,
   held: Partial<Record<KeyKind, boolean>>,
+  preference: ProviderChoice = "auto",
 ): KeyKind | undefined {
+  if (preference !== "auto")
+    return held[preference] && !routeRefusal(generator, model, preference)
+      ? preference
+      : undefined;
   if (held.comfy && held.bfl)
     return routeRefusal(generator, model, "bfl") ? "comfy" : "bfl";
   return held.comfy ? "comfy" : held.bfl ? "bfl" : undefined;
@@ -199,8 +206,9 @@ export function payingKeyKind(
   generator: Generator,
   model: VideoModel,
   held: Partial<Record<KeyKind, boolean>>,
+  preference: ProviderChoice = "auto",
 ): KeyKind | undefined {
-  const kind = chooseKeyKind(generator, model, held);
+  const kind = chooseKeyKind(generator, model, held, preference);
   return kind && !routeRefusal(generator, model, kind) ? kind : undefined;
 }
 
