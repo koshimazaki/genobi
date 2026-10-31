@@ -28,6 +28,12 @@ export function validateImage(
   const model = (body.model ?? "flux-3") as GenerateInput["model"];
   if (typeof model !== "string" || !IMAGE_MODELS.has(model))
     throw new AppError(400, "Images run on FLUX 3 or FLUX 3 Image Klein.");
+  const preference = body.imageProvider ?? "auto";
+  if (
+    !["auto", "bfl", "comfy"].includes(String(preference)) ||
+    (model !== "flux-3" && preference !== "auto")
+  )
+    throw new AppError(400, "Choose a supported image provider.");
   const controls = entryFor(generator, model).controls;
   if (controls.kind !== "image")
     throw new AppError(400, "Choose supported image settings.");
@@ -105,6 +111,7 @@ export function validateImage(
   return {
     generator,
     model,
+    imageProvider: preference as GenerateInput["imageProvider"],
     description: body.description.trim(),
     imageReferences: refs as string[],
     imageResolution: resolution as GenerateInput["imageResolution"],
