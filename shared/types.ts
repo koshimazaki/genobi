@@ -58,6 +58,8 @@ export interface GenerateInput {
   generator: Generator;
   imageAspectRatio?: ImageAspectRatio;
   imageResolution?: ImageResolution;
+  /** Image-only provider choice. Auto keeps the compatible-key routing. */
+  imageProvider?: "auto" | "bfl" | "comfy";
   imageGrounding?: boolean;
   imageSafetyTolerance?: number;
   /** Request-only image data URLs; persisted jobs contain no reference bytes. */
