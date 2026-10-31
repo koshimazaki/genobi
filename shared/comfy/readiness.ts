@@ -38,7 +38,7 @@ export function isObjectInfo(value: unknown): value is ObjectInfo {
 }
 
 /** ComfyUI lists combo inputs in both its original and COMBO schemas. */
-function comboOptions(info: ObjectInfo, type: string, input: string) {
+export function comboOptions(info: ObjectInfo, type: string, input: string) {
   const inputs = info[type]?.input;
   const spec = inputs?.required?.[input] ?? inputs?.optional?.[input];
   if (!Array.isArray(spec)) return undefined;
