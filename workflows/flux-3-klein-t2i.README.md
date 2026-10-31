@@ -29,7 +29,7 @@ verbatim into `18:14`).
 | `9`           | `SaveImage` prefix `image/FLUX3-Klein_t2i`                                                            |
 | `18:7`        | Seed is a slot; the template's own seed is not kept                                                   |
 | `18:17`       | The template's caption replaced by a placeholder (a slot)                                             |
-| `18:1`        | `unet_name` is Cloud's catalogue alias, not the template's hyphenated filename (see Models)           |
+| `18:1`        | `unet_name` keeps the official filename; Cloud preflight selects it or a listed legacy alias (see Models)           |
 
 **Boxes are prompt coordinates.** BFL writes boxes into the prompt as a JSON
 array after the caption, `[top, left, bottom, right]` in integers from 0 to
@@ -61,7 +61,7 @@ prompt is not in the template; using it is later work.
 | `width`     | `18:6.width`     | From the ratio and tier, a multiple of 16 (`kleinSize`)                    |
 | `height`    | `18:6.height`    | The same                                                                   |
 | `seed`      | `18:7.seed`      | A fresh random seed                                                        |
-| `unet_name` | `18:1.unet_name` | Only on a local ComfyUI with `GENOBI_KLEIN_MODEL` set; otherwise unchanged |
+| `unet_name` | `18:1.unet_name` | On Cloud, resolved against the live UNETLoader catalogue; locally operator-configured |
 
 `text_encoder` (`18:2.clip_name`), `upsampler_encoder` (`18:12.clip_name`) and
 `vae` (`18:3.vae_name`) are model slots too: a local ComfyUI's model map
@@ -79,7 +79,7 @@ ratios only, and a box layout is square unless a ratio is chosen.
 
 | File                                                 | Folder             |
 | ---------------------------------------------------- | ------------------ |
-| `flux3_image_klein_sd_int8_convrot.safetensors`      | `diffusion_models` |
+| `flux3-image-klein-int8-convrot.safetensors`      | `diffusion_models` |
 | `qwen3vl_4b_int8_convrot.safetensors`                | `text_encoders`    |
 | `qwen3.5_9b_flux3_prompt_upsampler_w4a8.safetensors` | `text_encoders`    |
 | `flux2-vae.safetensors`                              | `vae`              |
@@ -88,16 +88,18 @@ The weights come from BFL's gated
 [flux-3-image-klein-comfy](https://huggingface.co/black-forest-labs/flux-3-image-klein-comfy)
 repository, under the FLUX Kommunity License ([LICENCES.md](../LICENCES.md)).
 
-**Which diffusion filename.** The graph names
-`flux3_image_klein_sd_int8_convrot.safetensors`, the Comfy Cloud catalogue
-alias. It is the only Klein filename recorded as accepted by Cloud: on 17
-October Cloud rejected the repository's hyphenated name,
-`flux3-image-klein-int8-convrot.safetensors`, and accepted the alias. The
-official template has since moved to the hyphenated name, but neither the
-[Cloud inventory](../docs/comfy-cloud-inventory.md) nor any public catalogue
-shows Cloud accepting it, and Cloud's `/api/object_info` answers 401 without a
-key (checked 21 October), so the alias stays until a keyed read or a first
-Cloud run says otherwise. The other three files keep the template's names.
+**Which diffusion filename.** The pinned graph now follows the official
+Comfy workflow's `flux3-image-klein-int8-convrot.safetensors`. Comfy Cloud
+previously accepted `flux3_image_klein_sd_int8_convrot.safetensors` (October
+2026) and rejected the hyphenated filename then. Since the account's available
+model names can change, Genobi reads its authenticated `/api/object_info`
+before every Klein Cloud submission, selects the official name when present or
+the recorded alias if explicitly listed, and checks the graph's remaining
+node/model compatibility. If the necessary model or catalogue is unavailable,
+the request fails **before** uploading references or submitting a paid GPU job.
+No speculative model renaming, no automatic provider switch, and no retry after
+a failed paid submission. Select **BFL API** from the chevron beside Generate
+to use BFL's hosted Klein endpoint instead; that requires a BFL key.
 
 **A local ComfyUI.** A local install holds the repository's own filenames, so
 set `GENOBI_KLEIN_MODEL` to the diffusion model's name as ComfyUI lists it,
@@ -105,7 +107,7 @@ relative to its `models/diffusion_models` folder (or a folder
 `extra_model_paths.yaml` adds), for example
 `GENOBI_KLEIN_MODEL=flux3-image-klein-int8-convrot.safetensors` or
 `flux3/flux3-image-klein-bf16.safetensors`. Unset, a local run asks for the
-Cloud alias. The server
+pinned official filename. The server
 checks it is a plain relative `.safetensors` or `.gguf` name (no leading slash,
 drive, `..` or backslash; `parseModelFile` in `shared/comfy/destination.ts`)
 and never prints it. It replaces `unet_name` on the local destination only.
