@@ -29,7 +29,9 @@ you to check the connection and reload.
 
 Press **Voice** in any section, or **Speak to agent** in the Genobi bubble or
 activity deck. The pill opens and records immediately. Stop ends the note and
-transcribes it. **To** remains visible while the transcript panel is folded.
+transcribes it. Record and Stop share a position on the right of the waveform,
+beside the transcript chevron. The header microphone also stops the recording
+when pressed again. **To** remains visible while the transcript panel is folded.
 
 **Agent is the default destination.** A new transcript goes to the configured
 agent even when its words resemble a Camera generation request. If no session

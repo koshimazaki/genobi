@@ -84,7 +84,7 @@
   letter-spacing: 0.08em;
   color: var(--readout);
 }
-/* 48 LEDs between Record and the chevron, as X Console draws them. */
+/* The waveform flexes; Record/Stop stays on the right beside the chevron. */
 .voice-led {
   display: block;
   flex: 1 1 auto;

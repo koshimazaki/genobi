@@ -161,6 +161,11 @@ export function VoiceOverlay({
       data-expanded={expanded || undefined}
     >
       <div className="voice-pill">
+        <VoiceLEDWaveform
+          levels={voice.levels}
+          mode={phase === "transcribing" ? "working" : "listening"}
+        />
+        <VoiceDestinationPicker disabled={working} />
         <button
           ref={record}
           className="voice-record"
@@ -177,11 +182,6 @@ export function VoiceOverlay({
         >
           <span aria-hidden="true" />
         </button>
-        <VoiceLEDWaveform
-          levels={voice.levels}
-          mode={phase === "transcribing" ? "working" : "listening"}
-        />
-        <VoiceDestinationPicker disabled={working} />
         <button
           className="voice-chevron"
           aria-label={expanded ? "Hide transcript" : "Show transcript"}
