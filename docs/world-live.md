@@ -103,8 +103,10 @@ preset's own (`Move · fall-cathedral`, `Fall · big room`, a saved one) or a
 move-library file name without `.json` (`fall-cathedral`), and its result
 carries the loaded `recipe` beside `name`, `scene`, `frames` and `seconds`.
 `recipe` returns the current recipe as `getRecipe()` gives it, at most 64 KB
-of JSON, to read back what a preset, a hand-off or the person left in the
-scene. `takes` lists the tab's library takes. A recorded clip also lands in
+of JSON, plus its live `revision`. Read both before sending a guarded
+`genobi_world_recipe` handoff with `expectedRevision`; a human edit invalidates
+that token. The token belongs to this mounted tab and is not a saved recipe
+field or the Director project revision. `takes` lists the tab's library takes. A recorded clip also lands in
 that library.
 
 ## Send a take to the project

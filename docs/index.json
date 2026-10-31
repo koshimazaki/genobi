@@ -168,7 +168,8 @@
         "world-builder-sound.md",
         "world-builder-verification.md",
         "world-builder.md",
-        "world-live.md"
+        "world-live.md",
+        "world-recipe-handoff.md"
       ]
     },
     "sound": {
@@ -262,7 +263,8 @@
         "voice-mode.md",
         "workflow-reference-library.md",
         "world-builder.md",
-        "world-live.md"
+        "world-live.md",
+        "world-recipe-handoff.md"
       ]
     },
     "setup": {
@@ -454,7 +456,8 @@
         "world-builder-interface.md",
         "world-builder-sound.md",
         "world-builder-verification.md",
-        "world-builder.md"
+        "world-builder.md",
+        "world-recipe-handoff.md"
       ]
     },
     "bundle": {
@@ -744,7 +747,8 @@
         "world-builder-sound.md",
         "world-builder-verification.md",
         "world-builder.md",
-        "world-live.md"
+        "world-live.md",
+        "world-recipe-handoff.md"
       ]
     },
     {
@@ -1869,7 +1873,8 @@
         "upscaling.md",
         "voice-mode.md",
         "world-builder.md",
-        "world-live.md"
+        "world-live.md",
+        "world-recipe-handoff.md"
       ]
     },
     {
@@ -1922,7 +1927,8 @@
         "upscaling.md",
         "voice-mode.md",
         "world-builder.md",
-        "world-live.md"
+        "world-live.md",
+        "world-recipe-handoff.md"
       ]
     },
     {
@@ -2336,7 +2342,8 @@
         "world-builder-interface.md",
         "world-builder-sound.md",
         "world-builder-verification.md",
-        "world-live.md"
+        "world-live.md",
+        "world-recipe-handoff.md"
       ]
     },
     {
@@ -2345,6 +2352,13 @@
       "tags": ["3d", "agents", "mcp"],
       "summary": "Walk, switch characters, animate the local creature, and record camera and character movement through World, API or CLI.",
       "links": ["world-builder.md"]
+    },
+    {
+      "title": "World Builder recipe handoffs",
+      "path": "world-recipe-handoff.md",
+      "tags": ["3d", "world-builder", "agents"],
+      "summary": "Revision-checked agent recipe handoffs, concurrent human edits, target tabs and ephemeral live scene guards.",
+      "links": []
     }
   ]
 }

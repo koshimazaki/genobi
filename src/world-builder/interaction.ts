@@ -9,6 +9,7 @@ import { Octree } from "three/addons/math/Octree.js";
 import { createWalker } from "./walking";
 import type { Playground } from "./playground";
 import { readAvatarPose } from "./avatar-pose";
+import { createEditLock } from "./edit-lock";
 import type { Recipe } from "./recipe";
 export type Tool = "translate" | "rotate" | "scale";
 export type Mode = "shot" | "edit" | "walk";
@@ -43,6 +44,15 @@ export function createInteraction(
     last = 0,
     time = 0,
     dragged = false;
+  const editLock = createEditLock((locked) => {
+    if (locked && gizmo.dragging) {
+      gizmo.reset();
+      gizmo.dragging = false;
+      gizmo.axis = null;
+    }
+    editsLocked = locked;
+    gizmo.enabled = mode === "edit" && !locked;
+  });
   let input: WorldControl | undefined,
     inputUntil = 0;
   let cameraMode: "follow" | "orbit" | "shot" = "follow";
@@ -241,14 +251,10 @@ export function createInteraction(
   const api = {
     /** Match the inspector's pause-to-edit rule, including an in-flight drag. */
     lockEdits(locked: boolean) {
-      if (locked && gizmo.dragging) {
-        gizmo.reset();
-        gizmo.dragging = false;
-        gizmo.axis = null;
-      }
-      editsLocked = locked;
-      gizmo.enabled = mode === "edit" && !editsLocked;
+      editLock.set(locked);
     },
+    /** An async guarded edit stays locked even if playback is stopped meanwhile. */
+    holdEdits: editLock.hold,
     control(next: WorldControl) {
       if (mode !== "walk") api.setMode("walk");
       input = next;
@@ -293,6 +299,10 @@ export function createInteraction(
     onMode: (_mode: Mode) => {},
     get mode() {
       return mode;
+    },
+    /** A live transform is not a committed recipe edit yet. */
+    get dragging() {
+      return gizmo.dragging;
     },
     onSelect: (_id: string) => {},
     get selection() {

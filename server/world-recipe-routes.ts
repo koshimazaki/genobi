@@ -10,10 +10,16 @@ import { namedTakeRecipe } from "../src/world-builder/named-takes";
 import { AppError } from "./errors";
 import { GENOBI_CLIENT_HEADER } from "../shared/agent-session-events";
 import type { ProjectCopies } from "./projects";
+import {
+  RECIPE_REVISION_REQUIRED,
+  validRecipeRevision,
+} from "../shared/world-recipe-revision";
 
 export interface RecipeHandoff {
   /** Counts up per copy; 0 before anything was sent. */
   sequence: number;
+  /** Live mounted-scene token; independent of the durable project revision. */
+  expectedRevision: string | null;
   state: "none" | "waiting" | "applied" | "refused";
   recipe: Recipe | null;
   /** The named take it came from (`named-takes.ts`), or null. */
@@ -32,6 +38,7 @@ export interface RecipeHandoff {
 
 const none: RecipeHandoff = {
   sequence: 0,
+  expectedRevision: null,
   state: "none",
   recipe: null,
   take: null,
@@ -79,7 +86,16 @@ export function worldRecipeRouter(
 
   router.get("/:id/world-recipe", (request, response) => {
     limit("history", session(response));
-    response.json(handoffs.get(copyOf(request, response)) ?? none);
+    const handoff = handoffs.get(copyOf(request, response)) ?? none;
+    // Older tabs apply every waiting payload without a precondition. Do not
+    // deliver one until the poller explicitly supports the revision guard.
+    if (handoff.state === "waiting" && request.query.guarded !== "1")
+      throw new AppError(
+        428,
+        "Refresh World Builder and update the Genobi plugin. Read guarded handoffs with ?guarded=1 and enforce expectedRevision before applying.",
+        "recipe_client_update_required",
+      );
+    response.json(handoff);
   });
   router.post(
     "/:id/world-recipe",
@@ -90,13 +106,21 @@ export function worldRecipeRouter(
       const body: unknown = request.body;
       if (
         !plain(body) ||
-        Object.keys(body).some((k) => k !== "recipe" && k !== "take") ||
+        Object.keys(body).some(
+          (k) => !["recipe", "take", "expectedRevision"].includes(k),
+        ) ||
         (body.recipe === undefined) === (body.take === undefined)
       )
         throw new AppError(
           400,
           "Send a recipe, or a take by its id, not both.",
           "invalid_recipe",
+        );
+      if (!validRecipeRevision(body.expectedRevision))
+        throw new AppError(
+          428,
+          RECIPE_REVISION_REQUIRED,
+          "recipe_revision_required",
         );
       let recipe: Recipe;
       try {
@@ -109,6 +133,7 @@ export function worldRecipeRouter(
       }
       const next: RecipeHandoff = {
         sequence: (handoffs.get(copy)?.sequence ?? 0) + 1,
+        expectedRevision: body.expectedRevision,
         state: "waiting",
         recipe,
         take: typeof body.take === "string" ? body.take : null,
@@ -121,7 +146,7 @@ export function worldRecipeRouter(
       response.status(202).json({
         ...next,
         recipe: undefined,
-        next: "The person's open World Builder applies it within a few seconds; read this route until state is applied or refused. Never resend a waiting recipe.",
+        next: "The addressed World Builder tab checks expectedRevision before applying. Read with ?guarded=1 until applied or refused. Another tab leaves it waiting. If the addressed tab was reloaded, read its new recipe/revision and explicitly replace the handoff. Never blindly resend a waiting recipe.",
       });
     },
   );
@@ -156,6 +181,12 @@ export function worldRecipeRouter(
           409,
           "That recipe is no longer waiting.",
           "recipe_stale",
+        );
+      if (body.expectedRevision !== current.expectedRevision)
+        throw new AppError(
+          428,
+          "Report the guarded handoff's expectedRevision. Refresh World Builder if it cannot enforce the revision guard.",
+          "recipe_client_update_required",
         );
       const next: RecipeHandoff = {
         ...current,
