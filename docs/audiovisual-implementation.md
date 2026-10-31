@@ -220,7 +220,8 @@ The final release requires:
 - Source and generated audio are labeled accurately; CPU tails/transitions
   and any optional AKUSPACE mode pass their own listening/technical checks.
 - Managed jobs finish after the initiating tab closes and attach companions
-  once to the correct compatible shot; uncertain submission never pays twice.
+  once to the correct compatible shot. Reconcile uncertain submissions before
+  retrying; never create a second submission or reservation automatically.
 - Two authorized browsers reopen the same project and retained revisions;
   viewer access cannot spend and a restore preserves later history.
 - A capable browser completes capture and desktop/phone/keyboard UI checks.
