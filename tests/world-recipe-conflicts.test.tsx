@@ -325,3 +325,145 @@ it("commits a named take and its dry sound together, and reports post-commit pre
     { sequence: 1, expectedRevision: before, ok: true },
   ]);
 });
+
+it.each(["network", "http"])(
+  "retries only the receipt after a %s acknowledgement failure",
+  async (failure) => {
+    const api = await mount();
+    queued(api.getRecipeRevision());
+    vi.mocked(fetch).mockImplementation(async (_url, init) => {
+      if (init?.method !== "POST") return Response.json(handoff);
+      reports.push(JSON.parse(String(init.body)));
+      if (reports.length === 1) {
+        if (failure === "network") throw new Error("Connection interrupted");
+        return new Response(null, { status: 503 });
+      }
+      return Response.json({});
+    });
+    await tick();
+    expect(reports).toHaveLength(1);
+    expect(reports[0].ok).toBe(true);
+    await act(async () => {
+      await session.change({ prompt: "Human edit after agent applied" });
+    });
+    const revision = api.getRecipeRevision();
+    const configured = scene.world.configure.mock.calls.length;
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(2000);
+    });
+    expect(reports).toHaveLength(2);
+    expect(reports[1]).toEqual(reports[0]);
+    expect(api.getRecipe().prompt).toBe("Human edit after agent applied");
+    expect(api.getRecipeRevision()).toBe(revision);
+    expect(scene.world.configure).toHaveBeenCalledTimes(configured);
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(2000);
+    });
+    expect(reports).toHaveLength(2);
+  },
+);
+
+it("recognizes an accepted acknowledgement after its response is lost", async () => {
+  const api = await mount();
+  queued(api.getRecipeRevision());
+  vi.mocked(fetch).mockImplementation(async (_url, init) => {
+    if (init?.method !== "POST") return Response.json(handoff);
+    reports.push(JSON.parse(String(init.body)));
+    handoff = { ...handoff, state: "applied" };
+    throw new Error("Response lost after acceptance");
+  });
+  await tick();
+  const revision = api.getRecipeRevision();
+  const configured = scene.world.configure.mock.calls.length;
+  await act(async () => {
+    await vi.advanceTimersByTimeAsync(4000);
+  });
+  expect(reports).toHaveLength(1);
+  expect(api.getRecipeRevision()).toBe(revision);
+  expect(scene.world.configure).toHaveBeenCalledTimes(configured);
+});
+
+it("keeps a failed receipt with its project and resumes it only when reopened", async () => {
+  const api = await mount();
+  queued(api.getRecipeRevision());
+  const read = vi.mocked(fetch).getMockImplementation()!;
+  vi.mocked(fetch).mockImplementation(async (url, init) => {
+    if (String(url).includes("/another-project/"))
+      return Response.json({ state: "none" });
+    if (init?.method === "POST" && !reports.length) {
+      reports.push(JSON.parse(String(init.body)));
+      return new Response(null, { status: 503 });
+    }
+    return read(url, init);
+  });
+  await tick();
+  const original = studioStore.getState().director.bundle!;
+  const revision = api.getRecipeRevision();
+  let finish!: (response: Response) => void;
+  vi.mocked(fetch).mockImplementationOnce(
+    () => new Promise((resolve) => (finish = resolve)),
+  );
+  await act(async () => {
+    await vi.advanceTimersByTimeAsync(2000);
+  });
+  await act(async () => {
+    studioStore.getState().actions.commit(bundle("another-project"));
+    finish(Response.json(handoff));
+  });
+  expect(reports).toHaveLength(1);
+  await act(async () => {
+    studioStore.getState().actions.commit(original);
+    await vi.advanceTimersByTimeAsync(2000);
+  });
+  expect(reports).toHaveLength(2);
+  expect(reports[1]).toEqual(reports[0]);
+  expect(api.getRecipeRevision()).toBe(revision);
+  const posts = vi
+    .mocked(fetch)
+    .mock.calls.filter(([, init]) => init?.method === "POST");
+  expect(posts.map(([url]) => url)).toEqual([
+    `/api/projects/${project.id}/world-recipe/applied`,
+    `/api/projects/${project.id}/world-recipe/applied`,
+  ]);
+});
+
+it("does not send an old receipt after the server replaces its handoff", async () => {
+  const api = await mount();
+  queued(api.getRecipeRevision());
+  vi.mocked(fetch).mockImplementation(async (_url, init) => {
+    if (init?.method !== "POST") return Response.json(handoff);
+    reports.push(JSON.parse(String(init.body)));
+    return new Response(null, { status: reports.length === 1 ? 503 : 200 });
+  });
+  await tick();
+  queued(api.getRecipeRevision());
+  handoff = {
+    ...handoff,
+    sequence: 2,
+    recipe: { ...api.getRecipe(), prompt: "Replacement handoff" },
+  };
+  await act(async () => {
+    await vi.advanceTimersByTimeAsync(2000);
+  });
+  expect(reports.map((r) => r.sequence)).toEqual([1, 2]);
+  expect(api.getRecipe().prompt).toBe("Replacement handoff");
+});
+
+it("stops pending receipt retries when World Builder closes", async () => {
+  const api = await mount();
+  queued(api.getRecipeRevision());
+  vi.mocked(fetch).mockImplementation(async (_url, init) => {
+    if (init?.method !== "POST") return Response.json(handoff);
+    reports.push(JSON.parse(String(init.body)));
+    return new Response(null, { status: 503 });
+  });
+  await tick();
+  await act(async () => root.unmount());
+  const calls = vi.mocked(fetch).mock.calls.length;
+  await act(async () => {
+    await vi.advanceTimersByTimeAsync(6000);
+  });
+  expect(fetch).toHaveBeenCalledTimes(calls);
+  expect(reports).toHaveLength(1);
+  root = createRoot(document.body.appendChild(document.createElement("div")));
+});

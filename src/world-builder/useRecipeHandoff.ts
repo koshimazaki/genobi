@@ -22,6 +22,12 @@ interface Handoff {
   recipe: unknown;
   take: string | null;
 }
+interface Receipt {
+  sequence: number;
+  expectedRevision: unknown;
+  ok: boolean;
+  error?: string;
+}
 const route = (id: string) =>
   `/api/projects/${encodeURIComponent(id)}/world-recipe`;
 
@@ -39,15 +45,20 @@ export function useRecipeHandoff(s: BuilderSession, enabled: boolean) {
   useEffect(() => {
     if (!enabled) return;
     const handled = new Map<string, number>();
+    const receipts = new Map<string, Receipt>();
     let stopped = false,
       timer: ReturnType<typeof setTimeout>;
     let pending: AbortController | undefined;
-    const report = (id: string, body: unknown) =>
-      fetch(`${route(id)}/applied`, {
+    async function report(id: string, body: Receipt) {
+      if (stopped) return;
+      receipts.set(id, body);
+      const response = await fetch(`${route(id)}/applied`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       }).catch(() => undefined);
+      if (response?.ok && receipts.get(id) === body) receipts.delete(id);
+    }
     async function apply(id: string, handoff: Handoff) {
       const s = session.current;
       const api = s.api.current;
@@ -122,18 +133,39 @@ export function useRecipeHandoff(s: BuilderSession, enabled: boolean) {
     async function tick() {
       const id = studioStore.getState().director.bundle?.project.id;
       const s = session.current;
-      if (id && s.ready && !s.busy && !s.playing && !s.capturing) {
+      if (
+        id &&
+        s.ready &&
+        (receipts.has(id) || (!s.busy && !s.playing && !s.capturing))
+      ) {
         // The flag keeps old pollers from receiving a recipe they apply unguarded.
         const handoff = await fetch(`${route(id)}?guarded=1`)
           .then((r) => (r.ok ? (r.json() as Promise<Handoff>) : undefined))
           .catch(() => undefined);
         if (
           !stopped &&
-          handoff?.state === "waiting" &&
-          typeof handoff.sequence === "number" &&
-          handled.get(id) !== handoff.sequence
-        )
-          await apply(id, handoff);
+          handoff &&
+          studioStore.getState().director.bundle?.project.id === id
+        ) {
+          const receipt = receipts.get(id);
+          if (
+            receipt &&
+            (handoff.state !== "waiting" ||
+              handoff.sequence !== receipt.sequence ||
+              handoff.expectedRevision !== receipt.expectedRevision)
+          )
+            receipts.delete(id);
+          if (
+            handoff.state === "waiting" &&
+            typeof handoff.sequence === "number"
+          ) {
+            // A failed/lost acknowledgement must never replay the scene edit.
+            const waiting = receipts.get(id);
+            if (waiting) await report(id, waiting);
+            else if (handled.get(id) !== handoff.sequence)
+              await apply(id, handoff);
+          }
+        }
       }
       if (!stopped) timer = setTimeout(() => void tick(), HANDOFF_POLL_MS);
     }

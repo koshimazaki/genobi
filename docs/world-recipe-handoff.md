@@ -54,6 +54,12 @@ acknowledgement receives HTTP 428 with instructions to refresh World Builder or
 update the plugin. Older tabs never receive a waiting recipe they would apply
 without its guard.
 
+If reporting an outcome fails, the open project retries only that receipt on
+the usual two-second poll, without applying the scene again. A later poll that
+already shows completion or a replacement handoff discards the pending receipt.
+Switching projects pauses that project's receipt retries until it is reopened;
+closing World Builder stops them.
+
 The handoff remains in memory only; a server restart forgets it. It never
 captures or submits a generation. Capture uses `genobi_world` or the person's
 Capture take button. This remains local only, like the linked project copy;
