@@ -116,6 +116,12 @@ export function captureLoopSnapshot(
         ? { instances: source.motion.instances }
         : {}),
       ...(evaluated.room ? { room: evaluated.room } : {}),
+      ...(source.motion?.acousticZones
+        ? {
+            acousticZones: source.motion.acousticZones,
+            acousticListener: source.motion.acousticListener ?? "camera",
+          }
+        : {}),
       stateKeys: [
         {
           id: "snapshot",

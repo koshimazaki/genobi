@@ -1,3 +1,5 @@
+import type { AvatarKey } from "./avatar-path";
+
 /**
  * A camera move's duration and the take's frame grid. A take is 8k + 1
  * frames at 24 fps, from 9 to 721 frames, so a move lasts 0.375 s to about
@@ -26,7 +28,9 @@ type Durations = {
   seconds: number | null;
   motion?: { stateKeys: { frame: number }[] };
   cameraMotion?: { keys: { frame: number }[] };
-  avatarPath?: { frame: number }[];
+  avatarPath?: AvatarKey[];
+  avatarMotion?: string | { clip: string; seconds: number }[];
+  loop?: boolean;
 };
 
 function retimeKeys<T extends { frame: number }>(
@@ -34,21 +38,96 @@ function retimeKeys<T extends { frame: number }>(
   before: number,
   after: number,
   firstFrame = 0,
+  lastFrame = after - 1,
 ) {
-  if (keys.length > after - firstFrame)
+  if (keys.length > lastFrame - firstFrame + 1)
     throw new Error("The take needs at least one frame per animation key.");
   let last = firstFrame - 1;
   return keys.map((key, index) => {
     const frame = Math.max(
       last + 1,
       Math.min(
-        after - keys.length + index,
+        lastFrame + 1 - keys.length + index,
         Math.round((key.frame * (after - 1)) / (before - 1)),
       ),
     );
     last = frame;
     return { ...key, frame };
   });
+}
+
+function clipStarts(steps: { seconds: number }[]) {
+  let elapsed = 0;
+  return steps.map((step) => {
+    const frame = Math.round(elapsed * TAKE_FPS);
+    elapsed += step.seconds;
+    return { frame };
+  });
+}
+
+function sharedFrameMap(
+  keys: { frame: number }[],
+  before: number,
+  after: number,
+) {
+  const times = [
+    ...new Set([0, before - 1, ...keys.map((key) => key.frame)]),
+  ].sort((a, b) => a - b);
+  const current = times
+    .filter((frame) => frame < before)
+    .map((frame) => ({ frame }));
+  const future = times
+    .filter((frame) => frame >= before)
+    .map((frame) => ({ frame }));
+  const changed = retimeKeys(current, before, after);
+  if (future.length)
+    changed.push(
+      ...retimeKeys(
+        future,
+        before,
+        after,
+        after,
+        Math.max(
+          after + future.length - 1,
+          Math.round((future.at(-1)!.frame * (after - 1)) / (before - 1)),
+        ),
+      ),
+    );
+  return new Map(times.map((frame, index) => [frame, changed[index].frame]));
+}
+
+function retimeClips(
+  steps: { clip: string; seconds: number }[],
+  ratio: number,
+  loop: boolean,
+  frameMap: Map<number, number>,
+  frames: number,
+) {
+  const keys = loop
+    ? clipStarts(steps.map((step) => ({ seconds: step.seconds * ratio }))).map(
+        (key) => key.frame,
+      )
+    : clipStarts(steps).map((key) => frameMap.get(key.frame)!);
+  // Steps beyond the captured take cannot affect it. Retaining a stretched
+  // unreachable step can exceed the per-step duration contract unnecessarily.
+  const visible = steps.filter((_, index) => keys[index] < frames);
+  return visible.map((step, index) => ({
+    ...step,
+    // Event boundaries follow the path's sampled endpoints; retain at least one
+    // sample for landing/dance even when shrinking to the shortest LTX take.
+    seconds:
+      index + 1 < visible.length
+        ? loop
+          ? Math.max(
+              1 / TAKE_FPS,
+              Math.min(MOVE_SECONDS.max, step.seconds * ratio),
+            )
+          : (keys[index + 1] - keys[index]) / TAKE_FPS
+        : Math.max(
+            1 / TAKE_FPS,
+            Math.min(MOVE_SECONDS.max, step.seconds * ratio),
+          ),
+  }));
 }
 
 /**
@@ -71,60 +150,79 @@ export function reconcileDuration(previous: Durations, input: unknown) {
     typeof next.seconds === "number"
       ? framesForSeconds(next.seconds)
       : next.frames;
-  // Only retime an existing sequence that the caller left unchanged. Imported
-  // sequences keep their explicit frames and still fail ordinary validation.
   if (
-    previous.motion &&
-    next.motion &&
-    typeof frames === "number" &&
-    Number.isInteger(frames) &&
-    frames >= TAKE_FRAMES.min &&
-    frames <= TAKE_FRAMES.max &&
-    frames !== previous.frames &&
-    JSON.stringify(next.motion) === JSON.stringify(previous.motion)
-  ) {
+    typeof frames !== "number" ||
+    !Number.isInteger(frames) ||
+    frames < TAKE_FRAMES.min ||
+    frames > TAKE_FRAMES.max ||
+    frames === previous.frames
+  )
+    return next;
+  // Imported/explicitly edited tracks retain their authored timing. Unchanged
+  // tracks share one map so rounding collisions cannot split a landing event.
+  const unchanged = (a: unknown, b: unknown) =>
+    a !== undefined &&
+    b !== undefined &&
+    JSON.stringify(a) === JSON.stringify(b);
+  const sameMotion = unchanged(previous.motion, next.motion),
+    sameCamera = unchanged(previous.cameraMotion, next.cameraMotion),
+    // A path beyond the old take describes a deliberately cropped longer move.
+    // Keep its times and exclude its keys from the shared collision slots.
+    samePath =
+      previous.avatarPath?.every((key) => key.frame < previous.frames) ===
+        true && unchanged(previous.avatarPath, next.avatarPath),
+    sameClips =
+      Array.isArray(previous.avatarMotion) &&
+      Array.isArray(next.avatarMotion) &&
+      unchanged(previous.avatarMotion, next.avatarMotion);
+  const loop = next.loop === true;
+  const frameMap = sharedFrameMap(
+    [
+      ...(sameMotion ? next.motion!.stateKeys : []),
+      ...(sameCamera ? next.cameraMotion!.keys : []),
+      ...(samePath ? next.avatarPath! : []),
+      ...(sameClips && !loop
+        ? clipStarts(next.avatarMotion as { seconds: number }[])
+        : []),
+    ],
+    previous.frames,
+    frames,
+  );
+  const retime = <T extends { frame: number }>(keys: T[]) =>
+    keys.map((key) => ({ ...key, frame: frameMap.get(key.frame)! }));
+  if (sameMotion) {
     next = {
       ...next,
       motion: {
-        ...next.motion,
-        stateKeys: retimeKeys(next.motion.stateKeys, previous.frames, frames),
+        ...next.motion!,
+        stateKeys: retime(next.motion!.stateKeys),
       },
     };
   }
-  if (
-    previous.cameraMotion &&
-    next.cameraMotion &&
-    typeof frames === "number" &&
-    Number.isInteger(frames) &&
-    frames >= TAKE_FRAMES.min &&
-    frames <= TAKE_FRAMES.max &&
-    frames !== previous.frames &&
-    JSON.stringify(next.cameraMotion) === JSON.stringify(previous.cameraMotion)
-  ) {
+  if (sameCamera) {
     next = {
       ...next,
       cameraMotion: {
-        ...next.cameraMotion,
-        keys: retimeKeys(next.cameraMotion.keys, previous.frames, frames),
+        ...next.cameraMotion!,
+        keys: retime(next.cameraMotion!.keys),
       },
     };
   }
-  // The character's frame-zero pose is implicit. Keep paths that deliberately
-  // extend beyond the old take untouched: those describe a cropped longer move.
-  if (
-    previous.avatarPath &&
-    next.avatarPath &&
-    previous.avatarPath.every((key) => key.frame < previous.frames) &&
-    typeof frames === "number" &&
-    Number.isInteger(frames) &&
-    frames >= TAKE_FRAMES.min &&
-    frames <= TAKE_FRAMES.max &&
-    frames !== previous.frames &&
-    JSON.stringify(next.avatarPath) === JSON.stringify(previous.avatarPath)
-  )
+  if (samePath)
     next = {
       ...next,
-      avatarPath: retimeKeys(next.avatarPath, previous.frames, frames, 1),
+      avatarPath: retime(next.avatarPath!),
+    };
+  if (Array.isArray(next.avatarMotion) && sameClips)
+    next = {
+      ...next,
+      avatarMotion: retimeClips(
+        next.avatarMotion,
+        loop ? frames / previous.frames : (frames - 1) / (previous.frames - 1),
+        loop,
+        frameMap,
+        frames,
+      ),
     };
   return next;
 }

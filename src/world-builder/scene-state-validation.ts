@@ -2,7 +2,17 @@ import type { Recipe } from "./recipe";
 import { MOD_SOURCES } from "./mod-routes";
 import { validTransform } from "./scene-contract";
 import { motionInstances } from "./scene-instances";
-import { roomPointInside } from "./scene-room";
+import {
+  roomPointInside,
+  ROOM_DIMENSION_RANGE,
+  ROOM_WALL_THICKNESS_RANGE,
+} from "./scene-room";
+import {
+  WORLD_POSITION_LIMIT,
+  PRIMITIVE_SCALE_RANGE,
+  INSTANCE_SPACING_RANGE,
+} from "./scene-bounds";
+import { validateSceneAcousticZones } from "./scene-acoustic-zones";
 import { validateMorphControl } from "./scene-morph-validation";
 import { validateStateAudio } from "./scene-state-audio";
 import { validateSceneRotation } from "./scene-rotation";
@@ -48,14 +58,14 @@ function validateRoom(input: unknown): asserts input is SceneRoom {
       "cutaway",
     ]) ||
     !id(input.id) ||
-    !vector(input.dimensions, 1, 32) ||
-    !vector(input.center, -40, 40) ||
-    !vector(input.source, -40, 40) ||
-    !vector(input.listener, -40, 40) ||
+    !vector(input.dimensions, ...ROOM_DIMENSION_RANGE) ||
+    !vector(input.center, -WORLD_POSITION_LIMIT, WORLD_POSITION_LIMIT) ||
+    !vector(input.source, -WORLD_POSITION_LIMIT, WORLD_POSITION_LIMIT) ||
+    !vector(input.listener, -WORLD_POSITION_LIMIT, WORLD_POSITION_LIMIT) ||
     !roomPointInside(input.source, input.dimensions) ||
     !roomPointInside(input.listener, input.dimensions) ||
     !integer(input.seed, 0, 0xffffffff) ||
-    !finite(input.wallThickness, 0.02, 0.5) ||
+    !finite(input.wallThickness, ...ROOM_WALL_THICKNESS_RANGE) ||
     typeof input.visible !== "boolean" ||
     (input.cutaway !== undefined && typeof input.cutaway !== "boolean") ||
     !fields(input.absorption, [...ROOM_FACES]) ||
@@ -87,13 +97,15 @@ export function validateSceneMotion(
       "mappings",
       "intensity",
       "room",
+      "acousticZones",
+      "acousticListener",
       "morphControl",
       "stateAudio",
       "rotation",
       "transitionStyle",
     ]) ||
     input.version !== 1 ||
-    !vector(input.pivot, -40, 40) ||
+    !vector(input.pivot, -WORLD_POSITION_LIMIT, WORLD_POSITION_LIMIT) ||
     !finite(input.intensity, 0, 2)
   )
     fail("Invalid scene motion version, pivot or intensity.");
@@ -124,8 +136,8 @@ export function validateSceneMotion(
       !integer(g.seed, 0, 0xffffffff) ||
       !integer(g.count, 1, MAX_SCENE_INSTANCES) ||
       !integer(g.columns, 1, 8) ||
-      !finite(g.spacing, 0.1, 3) ||
-      !finite(g.size, 0.1, 3) ||
+      !finite(g.spacing, ...INSTANCE_SPACING_RANGE) ||
+      !finite(g.size, ...PRIMITIVE_SCALE_RANGE) ||
       !Array.isArray(g.palette) ||
       !g.palette.length ||
       g.palette.length > 8 ||
@@ -135,7 +147,11 @@ export function validateSceneMotion(
         `Invalid voxel generator: use 1 to ${MAX_SCENE_INSTANCES} bounded instances.`,
       );
     for (const p of motionInstances(g)) {
-      if (![p.x, p.y, p.z].every((n) => finite(n, -40, 40)))
+      if (
+        ![p.x, p.y, p.z].every((n) =>
+          finite(n, -WORLD_POSITION_LIMIT, WORLD_POSITION_LIMIT),
+        )
+      )
         fail("Voxel lattice exceeds the scene bounds.");
       if (authoredIds.includes(p.id))
         fail("Voxel and authored object IDs must be distinct.");
@@ -147,6 +163,22 @@ export function validateSceneMotion(
     if (authoredIds.some((value) => value.startsWith("scene-room-")))
       fail("The scene-room- object prefix is reserved for derived surfaces.");
   }
+  if (motion.acousticZones !== undefined) {
+    if (motion.room)
+      fail("Use one acoustic room or explicit acoustic zones, not both.");
+    motion.acousticZones = validateSceneAcousticZones(
+      motion.acousticZones,
+      fail,
+    );
+  }
+  if (
+    motion.acousticListener !== undefined &&
+    (!motion.acousticZones ||
+      !["camera", "avatar"].includes(motion.acousticListener))
+  )
+    fail(
+      "Acoustic listener requires explicit zones and a camera or avatar target.",
+    );
   if (
     !Array.isArray(motion.stateKeys) ||
     !motion.stateKeys.length ||
@@ -214,9 +246,9 @@ export function validateSceneMotion(
           "scaleZ",
         ]) ||
         ![transform.x, transform.y, transform.z].every((v) =>
-          finite(v, -40, 40),
+          finite(v, -WORLD_POSITION_LIMIT, WORLD_POSITION_LIMIT),
         ) ||
-        !finite(transform.scale, 0.1, 8) ||
+        !finite(transform.scale, ...PRIMITIVE_SCALE_RANGE) ||
         (transform.color !== undefined &&
           (typeof transform.color !== "string" ||
             !/^#[0-9a-f]{6}$/i.test(transform.color))) ||
@@ -240,9 +272,19 @@ export function validateSceneMotion(
       if (
         !motion.room ||
         !fields(key.room, ["dimensions", "source", "listener"]) ||
-        !vector(key.room.dimensions, 1, 32) ||
-        (key.room.source !== undefined && !vector(key.room.source, -40, 40)) ||
-        (key.room.listener !== undefined && !vector(key.room.listener, -40, 40))
+        !vector(key.room.dimensions, ...ROOM_DIMENSION_RANGE) ||
+        (key.room.source !== undefined &&
+          !vector(
+            key.room.source,
+            -WORLD_POSITION_LIMIT,
+            WORLD_POSITION_LIMIT,
+          )) ||
+        (key.room.listener !== undefined &&
+          !vector(
+            key.room.listener,
+            -WORLD_POSITION_LIMIT,
+            WORLD_POSITION_LIMIT,
+          ))
       )
         fail("Scene room state requires one valid acoustic enclosure.");
     }

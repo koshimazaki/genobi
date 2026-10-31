@@ -4,6 +4,22 @@ import type { Recipe, Shape } from "./recipe";
 import { png } from "./export-take";
 import { withAddedSceneObject } from "./scene-editing";
 
+/** Audio tuning stays live; structural edits settle playback before applying. */
+export function builderEdits(
+  adapter: () => SceneAdapter,
+  recipe: () => Recipe,
+  run: (work: () => Promise<unknown>) => Promise<boolean>,
+  stopping: <T>(work: () => Promise<T>) => () => Promise<T>,
+) {
+  const configure = (patch: Partial<Recipe>) => () =>
+    adapter().configure({ ...recipe(), ...patch });
+  return {
+    tune: (patch: Partial<Recipe>) => run(configure(patch)),
+    change: (patch: Partial<Recipe>) => run(stopping(configure(patch))),
+    add: (shape: Shape) => addBuilderPrimitive(adapter(), recipe(), shape),
+  };
+}
+
 export async function addBuilderPrimitive(
   adapter: SceneAdapter,
   recipe: Recipe,

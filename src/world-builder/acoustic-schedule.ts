@@ -1,8 +1,12 @@
-import { evaluateScene } from "./evaluate-scene";
 import { validateRecipe, type Recipe } from "./recipe";
-import { TAKE_FPS, TAKE_FRAMES } from "./take-duration";
+import { TAKE_FRAMES } from "./take-duration";
+import {
+  evaluateAcousticEnvironment,
+  type AcousticZoneEvidence,
+} from "./evaluate-acoustic-environment";
 import {
   ROOM_SAMPLING_TOLERANCE_METERS,
+  acousticBoundaryKey,
   selectAcousticSnapshots,
   validateAcousticApproximation,
   type AcousticApproximation,
@@ -16,7 +20,11 @@ import {
 
 export interface AcousticSnapshot {
   frame: number;
-  room: AcousticRoom;
+  /** Explicit dry outside space has no enclosed-room IR or RT60. */
+  room: AcousticRoom | null;
+  zone?: AcousticZoneEvidence;
+  /** Hold the previous environment until this exact boundary frame. */
+  transition?: "hold";
 }
 export interface AcousticSchedule {
   version: 1;
@@ -24,14 +32,12 @@ export interface AcousticSchedule {
   treatment: "static" | "dynamic";
   /** Exactly the picture's frame grid, including its final frame duration. */
   frames: number;
-  fps: typeof TAKE_FPS;
+  fps: 24;
   duration: number;
-  /** Initial uniform spacing; adaptive snapshots can add or replace knots. */
   sampleEveryFrames: number;
   maxIRSeconds: number;
   interpolation: "linear-wet-crossfade";
   controlAudio: "frozen-recipe-envelopes";
-  /** Present on builder-created schedules; older explicit schedules may omit it. */
   approximation?: AcousticApproximation;
   snapshots: AcousticSnapshot[];
 }
@@ -39,27 +45,27 @@ export interface AcousticScheduleOptions {
   sampleEveryFrames?: number;
   maxSnapshots?: number;
   maxIRSeconds?: number;
-  /** A static treatment uses frame zero, including its authored control value. */
   static?: boolean;
 }
 export const MAX_ACOUSTIC_SNAPSHOTS = 24;
 
-/**
- * Each room comes from the preview/capture evaluator after authored animation
- * and bounded control audio. Decorative voxels are never guessed into a room.
- */
+/** Same world geometry and listener clock as the picture; no inferred rooms. */
 export function buildAcousticSchedule(
   input: Recipe,
   options: AcousticScheduleOptions = {},
 ): AcousticSchedule {
   const recipe = validateRecipe(input);
+  if (!recipe.motion?.room && !recipe.motion?.acousticZones)
+    throw new Error(
+      "Choose a preset with an explicit acoustic room or acoustic zones.",
+    );
   const requested = options.sampleEveryFrames ?? 12;
   const max = options.maxSnapshots ?? MAX_ACOUSTIC_SNAPSHOTS;
   const maxIRSeconds = options.maxIRSeconds ?? 4;
   if (
     !Number.isInteger(requested) ||
     requested < 1 ||
-    requested >= TAKE_FRAMES.max ||
+    requested > TAKE_FRAMES.max - 1 ||
     !Number.isInteger(max) ||
     max < 2 ||
     max > MAX_ACOUSTIC_SNAPSHOTS ||
@@ -76,30 +82,26 @@ export function buildAcousticSchedule(
     frames.push(recipe.frames - 1);
   }
   const snapshotAt = (frame: number): AcousticSnapshot => {
-    const evaluated = evaluateScene(recipe, frame).room;
-    if (!evaluated)
-      throw new Error(
-        "Choose a preset with an explicit acoustic room or add one to the scene.",
-      );
-    const room: AcousticRoom = structuredClone({
-      id: evaluated.id,
-      dimensions: evaluated.dimensions,
-      center: evaluated.center,
-      source: evaluated.source,
-      listener: evaluated.listener,
-      absorption: evaluated.absorption,
-      seed: evaluated.seed,
-    });
-    validateAcousticRoom(room);
-    return { frame, room };
+    const environment = evaluateAcousticEnvironment(recipe, frame);
+    if (environment.room) validateAcousticRoom(environment.room);
+    return { frame, room: environment.room, zone: environment.zone };
   };
   const all = options.static
     ? [snapshotAt(0)]
     : Array.from({ length: recipe.frames }, (_, frame) => snapshotAt(frame));
-  const firstKey = roomGeometryKey(all[0].room);
-  // Compare the complete grid before collapsing: uniform samples can alias bass.
-  const staticRoom = all.every((s) => roomGeometryKey(s.room) === firstKey);
-  const authored = recipe.motion?.stateKeys.map((key) => key.frame) ?? [];
+  const key = (snapshot: AcousticSnapshot) =>
+    acousticBoundaryKey(snapshot) +
+    (snapshot.room ? roomGeometryKey(snapshot.room) : "dry");
+  const firstKey = key(all[0]);
+  const staticRoom = all.every((snapshot) => key(snapshot) === firstKey);
+  const authored = [
+    ...new Set([
+      ...(recipe.motion?.stateKeys.map((entry) => entry.frame) ?? []),
+      ...(recipe.motion?.acousticZones
+        ? (recipe.cameraMotion?.keys.map((entry) => entry.frame) ?? [])
+        : []),
+    ]),
+  ];
   const sampled =
     options.static || staticRoom
       ? {
@@ -115,6 +117,8 @@ export function buildAcousticSchedule(
             budgetLimited: false,
             authoredFramesRetained: authored.includes(0) ? 1 : 0,
             authoredFramesTotal: authored.length,
+            boundaryFramesRetained: 0,
+            boundaryFramesTotal: 0,
           },
         }
       : selectAcousticSnapshots(all, frames, authored, max);
@@ -134,25 +138,25 @@ export function buildAcousticSchedule(
   };
 }
 
-/** Validate before allocating render buffers, also for restored/exported JSON. */
+/** Validate external receipts before allocating IR or PCM buffers. */
 export function validateAcousticSchedule(schedule: AcousticSchedule) {
   if (
     !schedule ||
     schedule.version !== 1 ||
     schedule.engine !== ROOM_AUDIO_ENGINE ||
     !["static", "dynamic"].includes(schedule.treatment) ||
-    schedule.fps !== TAKE_FPS ||
+    schedule.fps !== 24 ||
     !Number.isInteger(schedule.frames) ||
     schedule.frames < TAKE_FRAMES.min ||
     schedule.frames > TAKE_FRAMES.max ||
-    (schedule.frames - 1) % TAKE_FRAMES.step !== 0 ||
+    (schedule.frames - 1) % 8 !== 0 ||
     schedule.duration !== schedule.frames / schedule.fps ||
     !Number.isFinite(schedule.maxIRSeconds) ||
     schedule.maxIRSeconds < 0.1 ||
     schedule.maxIRSeconds > 6 ||
     !Number.isInteger(schedule.sampleEveryFrames) ||
     schedule.sampleEveryFrames < 1 ||
-    schedule.sampleEveryFrames >= TAKE_FRAMES.max ||
+    schedule.sampleEveryFrames > TAKE_FRAMES.max - 1 ||
     schedule.interpolation !== "linear-wet-crossfade" ||
     schedule.controlAudio !== "frozen-recipe-envelopes" ||
     !Array.isArray(schedule.snapshots) ||
@@ -166,12 +170,42 @@ export function validateAcousticSchedule(schedule: AcousticSchedule) {
       !snapshot ||
       !Number.isInteger(snapshot.frame) ||
       snapshot.frame <= previous ||
-      snapshot.frame >= schedule.frames
+      snapshot.frame >= schedule.frames ||
+      (snapshot.transition !== undefined && snapshot.transition !== "hold")
     )
       throw new Error(
         "Acoustic snapshots must follow the picture's ordered frame grid.",
       );
-    validateAcousticRoom(snapshot.room);
+    if (snapshot.room) validateAcousticRoom(snapshot.room);
+    else if (
+      !snapshot.zone ||
+      !["outdoor", "outside"].includes(snapshot.zone.kind)
+    )
+      throw new Error(
+        "Dry acoustic snapshots need an explicit outdoor or outside zone.",
+      );
+    const zone = snapshot.zone;
+    if (
+      zone &&
+      (!["room", "outdoor", "outside"].includes(zone.kind) ||
+        typeof zone.label !== "string" ||
+        !zone.label.trim() ||
+        zone.label.length > 72 ||
+        (zone.kind === "outside"
+          ? zone.id !== null
+          : typeof zone.id !== "string" ||
+            !/^[a-zA-Z0-9][\w-]{0,47}$/.test(zone.id)) ||
+        (zone.kind === "room"
+          ? !snapshot.room || zone.id !== snapshot.room.id
+          : snapshot.room !== null ||
+            zone.approximation !== undefined ||
+            zone.openingsAreaM2 !== undefined) ||
+        (zone.approximation !== undefined &&
+          !["shoebox", "open-shaft-proxy"].includes(zone.approximation)) ||
+        (zone.openingsAreaM2 !== undefined &&
+          (!Number.isFinite(zone.openingsAreaM2) || zone.openingsAreaM2 < 0)))
+    )
+      throw new Error("Invalid acoustic zone evidence.");
     previous = snapshot.frame;
   }
   if (
@@ -181,16 +215,27 @@ export function validateAcousticSchedule(schedule: AcousticSchedule) {
     (schedule.treatment === "static" && schedule.snapshots.length !== 1)
   )
     throw new Error("Acoustic schedule must cover the complete scene.");
-  if (
-    schedule.snapshots.some((s) => s.room.id !== schedule.snapshots[0].room.id)
-  )
-    throw new Error(
-      "Changing acoustic enclosure identity is not supported in one schedule.",
-    );
+  for (let i = 1; i < schedule.snapshots.length; i++) {
+    const from = schedule.snapshots[i - 1],
+      to = schedule.snapshots[i];
+    if ((!from.zone || !to.zone) && from.room?.id !== to.room?.id)
+      throw new Error(
+        "Changing acoustic enclosure identity needs explicit zone evidence.",
+      );
+    if (
+      acousticBoundaryKey(from) !== acousticBoundaryKey(to) &&
+      to.transition !== "hold"
+    )
+      throw new Error(
+        "Acoustic zone and material boundaries must hold until their exact frame.",
+      );
+  }
   if (schedule.approximation !== undefined) {
     validateAcousticApproximation(schedule.approximation, schedule.frames);
     if (
       schedule.approximation.authoredFramesRetained >
+        schedule.snapshots.length ||
+      (schedule.approximation.boundaryFramesRetained ?? 0) >
         schedule.snapshots.length ||
       (schedule.approximation.method === "frame-zero" &&
         schedule.treatment !== "static")
@@ -202,17 +247,28 @@ export function validateAcousticSchedule(schedule: AcousticSchedule) {
   return schedule;
 }
 
-/** Adjacent wet outputs always sum to one, including the final decay hold. */
+export function acousticMixAt(
+  from: AcousticSnapshot,
+  to: AcousticSnapshot,
+  frame: number,
+) {
+  return to.transition === "hold"
+    ? frame >= to.frame
+      ? 1
+      : 0
+    : (frame - from.frame) / (to.frame - from.frame);
+}
+
+/** Wet weights preserve final tails; explicit dry snapshots contribute no IR. */
 export function acousticWeightsAt(schedule: AcousticSchedule, seconds: number) {
   const frames = schedule.snapshots;
   if (frames.length === 1 || seconds <= 0) return [{ index: 0, weight: 1 }];
-  const frame = seconds * schedule.fps;
-  const last = frames.length - 1;
+  const frame = seconds * schedule.fps,
+    last = frames.length - 1;
   if (frame >= frames[last].frame) return [{ index: last, weight: 1 }];
-  const right = frames.findIndex((entry) => entry.frame > frame);
-  const left = Math.max(0, right - 1);
-  const mix =
-    (frame - frames[left].frame) / (frames[right].frame - frames[left].frame);
+  const right = frames.findIndex((entry) => entry.frame > frame),
+    left = Math.max(0, right - 1);
+  const mix = acousticMixAt(frames[left], frames[right], frame);
   return [
     { index: left, weight: 1 - mix },
     { index: right, weight: mix },

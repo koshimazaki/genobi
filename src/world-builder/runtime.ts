@@ -26,6 +26,7 @@ import { routedMotionAt } from "./character-audio";
 import { CHARACTER_MODELS } from "../../shared/scene/character-catalog";
 import { createDarkGrid } from "./dark-grid";
 import { shotCameraPatch } from "./shot-camera-edit";
+import { refreshSkinnedPose } from "./skinned-pose";
 
 export function createWorld(
   canvas: HTMLCanvasElement,
@@ -111,6 +112,7 @@ export function createWorld(
   let playground: Playground | undefined;
   // Audio routes to the character move this rig, not the avatar itself.
   const avatarRig = new T.Group();
+  world.onBeforeRender = () => refreshSkinnedPose(avatarRig);
   const worldMods = createWorldMods();
   let editor: ReturnType<typeof createInteraction> | undefined;
   const media = createSceneMedia();

@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "check": "node scripts/check-world-room-audio.mjs",
+  "engine": "genobi-browser-shoebox-v1",
+  "scope": {
+    "consumer": "Chrome OfflineAudioContext",
+    "pageNetworkBlocked": true,
+    "modelRequests": 0,
+    "roomMeasurement": false
+  },
+  "convolutionOracle": {
+    "frames": 3799,
+    "sampleRate": 8000,
+    "channels": 2,
+    "irs": 3,
+    "maxError": 2.5586451291026435e-9,
+    "stereoError": 0,
+    "tailEnergy": 0.009999999079888277,
+    "wavBytes": 15240
+  },
+  "story": {
+    "preset": "endless-descent",
+    "view": "first-person",
+    "pictureFrames": 385,
+    "snapshots": 9,
+    "boundaryFrames": [193, 289, 337],
+    "irs": 7,
+    "truncatedIRs": 2,
+    "outdoorError": 0,
+    "tailEnergy": 0.0007839998327404728,
+    "finite": true
+  },
+  "outdoorOnly": {
+    "preset": "bass-avenue",
+    "irs": 0,
+    "tailSeconds": 0,
+    "finite": true
+  }
+}

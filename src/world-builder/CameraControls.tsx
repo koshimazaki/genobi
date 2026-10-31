@@ -9,6 +9,8 @@ import { MotionView } from "./MotionView";
 import { MoveSeconds, TakeLength } from "./TakeLength";
 import { LoopControl } from "./LoopControl";
 import { SceneCameraControls } from "./SceneCameraControls";
+import { DescentCameraControls } from "./DescentViewControls";
+import { getDescentView } from "./story-camera";
 import { BUILDER_CHARACTER_MODELS as CHARACTER_MODELS } from "./character-catalog";
 export function CameraControls({
   s,
@@ -33,7 +35,7 @@ export function CameraControls({
           s.recipe.avatarPose.z,
         ] as [number, number, number])
       : undefined;
-  return (
+  const otherControls = (
     <>
       {s.recipe.avatar && (
         <button
@@ -170,6 +172,16 @@ export function CameraControls({
       <SceneCameraControls s={s} e={e} expanded={compact ? false : undefined} />
       {e.mode === "edit" && (
         <button onClick={e.useView}>Use viewport as shot</button>
+      )}
+    </>
+  );
+  return (
+    <>
+      <DescentCameraControls s={s} e={e} />
+      {getDescentView(s.recipe) ? (
+        <Fold title="More camera settings">{otherControls}</Fold>
+      ) : (
+        otherControls
       )}
     </>
   );

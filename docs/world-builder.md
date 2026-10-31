@@ -22,7 +22,9 @@ Comfy node's menu leaves out the **Neuro shader**: it is a full-frame sky with
 no set, character or depth to carry into a graph. It stays in the studio; its
 code is MIT, from Holodeck, so nothing in its licence restricts it.
 
-Thirteen [scene motion presets](world-builder-motion.md) add editable state sequences, enclosed architecture at three block densities, city-to-loft camera travel and independent spectral morph targets. Save A and B in the global Loop panel to combine complete views. The optional **Library → Presets → Build a morph** combines two to four authored forms with configurable movement paths. The dark grid stage and expandable viewport use the same scene evaluator as RGB/depth capture. Open **More settings → Scene** for advanced state editing. The gallery also contains the [editable effects catalogue](effects-catalogue.md).
+Fifteen [scene motion presets](world-builder-motion.md) add editable state sequences, enclosed architecture at three block densities, city-to-loft camera travel and independent spectral morph targets. Save A and B in the global Loop panel to combine complete views. The optional **Library → Presets → Build a morph** combines two to four authored forms with configurable movement paths. The dark grid stage and expandable viewport use the same scene evaluator as RGB/depth capture. Open **More settings → Scene** for advanced state editing. The gallery also contains the [editable effects catalogue](effects-catalogue.md).
+
+The [human-scale story templates](world-builder-stories.md) connect full-size architecture, camera travel, a 1.8 m mannequin and explicit acoustic zones. **Scene size** resizes authored Stage geometry and room data together; **Room sound · CPU** previews a separate dry source through the changing spaces.
 
 For the current interface and detailed controls, see [the interface pass](world-builder-interface.md).
 

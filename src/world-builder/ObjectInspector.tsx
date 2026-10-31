@@ -5,6 +5,11 @@ import type { WorldEditor } from "./useWorldEditor";
 import { NumberControl } from "./Controls";
 import { faces, playgroundIds, scaledAxes } from "./scene-contract";
 import { Fold } from "./FloatingPanel";
+import {
+  factorPrimitiveScale,
+  primitiveAxisSizeRange,
+  WORLD_POSITION_LIMIT,
+} from "./scene-bounds";
 export function ObjectInspector({
   s,
   e,
@@ -15,6 +20,7 @@ export function ObjectInspector({
   const [face, setFace] = useState("all");
   const t = e.transform,
     box = e.prop?.shape === "box";
+  const size = t ? scaledAxes({ ...t, presence: 1 }) : ([1, 1, 1] as const);
   const surface = e.selected
     ? `${e.selected.startsWith("prop:") ? e.selected : `world:${e.selected}`}/${box ? face : "all"}`
     : "screen/all";
@@ -46,14 +52,14 @@ export function ObjectInspector({
       {t ? (
         <>
           <div className="wb-transform-grid">
-            <span>Position</span>
+            <span>Position m</span>
             {(["x", "y", "z"] as const).map((axis) => (
               <NumberControl
                 key={axis}
                 label={`Position ${axis.toUpperCase()}`}
                 value={t[axis]}
-                min={-40}
-                max={40}
+                min={-WORLD_POSITION_LIMIT}
+                max={WORLD_POSITION_LIMIT}
                 step={0.1}
                 change={(v) => e.patchObject({ [axis]: v })}
               />
@@ -65,19 +71,13 @@ export function ObjectInspector({
               <NumberControl
                 key={axis}
                 label={`Size ${"XYZ"[i]}`}
-                value={t.scale * (t[axis] ?? 1)}
-                min={0.1}
-                max={8}
+                value={size[i]}
+                {...primitiveAxisSizeRange(size, i)}
                 step={0.1}
                 change={(v) => {
-                  const [scaleX, scaleY, scaleZ] = scaledAxes(t);
-                  e.patchObject({
-                    scale: 1,
-                    scaleX,
-                    scaleY,
-                    scaleZ,
-                    [axis]: v,
-                  });
+                  const next: [number, number, number] = [...size];
+                  next[i] = v;
+                  e.patchObject(factorPrimitiveScale(next, t.scale));
                 }}
               />
             ))}

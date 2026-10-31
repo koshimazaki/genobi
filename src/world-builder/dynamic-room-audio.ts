@@ -1,5 +1,6 @@
 import { audioWav, type AudioTrack } from "./audio";
 import {
+  acousticMixAt,
   validateAcousticSchedule,
   type AcousticSchedule,
 } from "./acoustic-schedule";
@@ -152,8 +153,7 @@ function addWet(
     if (right >= knots.length) weight = keys[keys.length - 1] === key ? 1 : 0;
     else {
       const left = right - 1;
-      const mix =
-        (frame - knots[left].frame) / (knots[right].frame - knots[left].frame);
+      const mix = acousticMixAt(knots[left], knots[right], frame);
       if (keys[left] === key) weight += 1 - mix;
       if (keys[right] === key) weight += mix;
     }
@@ -200,15 +200,20 @@ export async function renderDynamicRoomAudio(
   const keys: string[] = [];
   for (const { room } of schedule.snapshots) {
     checkAbort(options.signal);
+    if (!room) {
+      keys.push("dry");
+      continue;
+    }
     const key = roomImpulseKey(room, sampleRate, schedule.maxIRSeconds);
     keys.push(key);
     if (!cache.has(key))
       cache.set(key, buildRoomImpulse(room, sampleRate, schedule.maxIRSeconds));
   }
-  const finalImpulse = cache.get(keys[keys.length - 1])!;
+  const finalImpulse = cache.get(keys[keys.length - 1]);
   const sourceLength = source[0].length;
   const length =
-    sourceLength + (tail === "extend" ? finalImpulse.samples.length - 1 : 0);
+    sourceLength +
+    (tail === "extend" && finalImpulse ? finalImpulse.samples.length - 1 : 0);
   const output = source.map((channel) => {
     const out = new Float32Array(length);
     for (let i = 0; i < sourceLength; i++) out[i] = channel[i] * dry;

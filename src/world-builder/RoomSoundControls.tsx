@@ -4,6 +4,7 @@ import ThemedSelect from "../components/ThemedSelect";
 import type { BuilderSession } from "./useBuilderSession";
 import { useRoomSound } from "./useRoomSound";
 import { RoomAcousticControls } from "./RoomAcousticControls";
+import { RoomAcousticReadout } from "./RoomAcousticReadout";
 import { ROOM_AUDIO_LABEL } from "./scene-room-ir";
 import { download } from "./session-io";
 import "./room-sound.css";
@@ -16,7 +17,9 @@ export function RoomSoundControls({
   folded?: boolean;
 }) {
   const sound = useRoomSound(s);
-  const available = !!s.recipe.motion?.room;
+  const available = !!(
+    s.recipe.motion?.room || s.recipe.motion?.acousticZones?.length
+  );
   const disabled = !s.ready || s.busy || s.capturing;
   return (
     <div className="wb-room-sound" hidden={folded}>
@@ -26,11 +29,12 @@ export function RoomSoundControls({
         </p>
         {!available ? (
           <p className="wb-hint">
-            Choose Apartment / loft or Cathedral / street in Scene motion to
-            hear a changing room.
+            Load Endless descent from the gallery to hear outdoor space become a
+            cathedral, club and small studio.
           </p>
         ) : (
           <>
+            <RoomAcousticReadout s={s} />
             <p className="wb-hint">
               Control music moves the scene. Choose the dry sound emitted inside
               the room separately. An independent soundtrack can be added in
@@ -142,7 +146,7 @@ export function RoomSoundControls({
                 }
                 onClick={() => void sound.render()}
               >
-                Render room sound
+                Prepare room sound
               </button>
               {sound.rendering && (
                 <button type="button" onClick={sound.cancel}>

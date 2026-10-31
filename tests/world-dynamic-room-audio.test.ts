@@ -119,10 +119,10 @@ describe("frozen acoustic schedules", () => {
     ]);
     for (const snapshot of rendered.snapshots)
       expect(evaluateScene(input, snapshot.frame).room!).toMatchObject(
-        snapshot.room,
+        snapshot.room!,
       );
     input.motion!.room!.dimensions[0] = 31;
-    expect(rendered.snapshots[0].room.dimensions[0]).toBe(4);
+    expect(rendered.snapshots[0].room!.dimensions[0]).toBe(4);
   });
   it("bounds schedule work and explicitly supports frame-zero static treatment", () => {
     const small = buildAcousticSchedule(recipe(), {
@@ -140,6 +140,12 @@ describe("frozen acoustic schedules", () => {
     expect(() => buildAcousticSchedule(validateRecipe({}))).toThrow(
       /explicit acoustic room/,
     );
+    const long = recipe();
+    long.frames = 721;
+    long.motion!.stateKeys[1].frame = 720;
+    const sparse = buildAcousticSchedule(long, { maxSnapshots: 2 });
+    expect(sparse.sampleEveryFrames).toBe(720);
+    expect(validateAcousticSchedule(sparse)).toBe(sparse);
   });
   it("uses frozen control-band offsets after state interpolation, without replacing the control track", () => {
     const input = recipe();
@@ -156,19 +162,19 @@ describe("frozen acoustic schedules", () => {
     input.bandEnvelopes.low = Array(input.frames).fill(0.5);
     const driven = buildAcousticSchedule(input);
     for (let i = 0; i < driven.snapshots.length; i++) {
-      expect(driven.snapshots[i].room.dimensions[0]).toBeCloseTo(
-        base.snapshots[i].room.dimensions[0] + 0.5,
+      expect(driven.snapshots[i].room!.dimensions[0]).toBeCloseTo(
+        base.snapshots[i].room!.dimensions[0] + 0.5,
       );
       expect(
         evaluateScene(input, driven.snapshots[i].frame).room,
-      ).toMatchObject(driven.snapshots[i].room);
+      ).toMatchObject(driven.snapshots[i].room!);
     }
     expect(input.bandEnvelopes.low).toEqual(Array(input.frames).fill(0.5));
     expect(input.envelope).toEqual([]);
   });
   it("rejects changing room identity, missing endpoints and invalid allocation inputs", () => {
     const invalid = schedule();
-    invalid.snapshots[1].room.id = "another-room";
+    invalid.snapshots[1].room!.id = "another-room";
     expect(() => validateAcousticSchedule(invalid)).toThrow(/identity/);
     expect(() =>
       validateAcousticSchedule({ ...schedule(), frames: 9999 }),
@@ -251,7 +257,7 @@ describe("scheduled full-history convolution", () => {
     expect(seen).toHaveLength(3);
     expect(seen.every((v) => v > 0)).toBe(true);
     const impulses = s.snapshots.map(
-      (entry) => buildRoomImpulse(entry.room, rate, 0.1).samples,
+      (entry) => buildRoomImpulse(entry.room!, rate, 0.1).samples,
     );
     for (let sample = 1300; sample < 2100; sample++) {
       const expected = acousticWeightsAt(s, sample / rate).reduce(

@@ -1,4 +1,5 @@
 import type { Recipe } from "./recipe";
+import { CAMERA_POSITION_LIMIT } from "./scene-bounds";
 import type { SceneVector } from "./scene-state";
 import { MOD_SOURCES, type ModSource } from "./mod-routes";
 import { cameraPoseAtKeys, linkedCameraPose } from "./scene-camera-blend";
@@ -40,7 +41,9 @@ const object = (v: unknown): v is Record<string, unknown> =>
 const number = (v: unknown, min: number, max: number): v is number =>
   typeof v === "number" && Number.isFinite(v) && v >= min && v <= max;
 const vector = (v: unknown): v is SceneVector =>
-  Array.isArray(v) && v.length === 3 && v.every((n) => number(n, -80, 80));
+  Array.isArray(v) &&
+  v.length === 3 &&
+  v.every((n) => number(n, -CAMERA_POSITION_LIMIT, CAMERA_POSITION_LIMIT));
 const only = (v: Record<string, unknown>, names: string[]) =>
   Object.keys(v).every((key) => names.includes(key));
 

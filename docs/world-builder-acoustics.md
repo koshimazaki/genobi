@@ -9,8 +9,10 @@ Part of [World Builder and Scene Adapter](world-builder.md).
 
 For animated `motion` recipes, use [changing room sound](world-builder-dynamic-sound.md)
 in the browser's Sound panel. It evaluates an explicit enclosure along the same
-timeline as the visual guide. The native nodes described below remain static and
-reject animated recipes instead of guessing a room from their geometry.
+timeline as the visual guide. Connected metre-scale stories use
+[acoustic zones](world-builder-acoustic-zones.md). The native nodes described
+below remain static and reject animated recipes instead of guessing a room
+from their geometry.
 
 ## Acoustics
 

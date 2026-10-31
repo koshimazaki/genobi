@@ -2,6 +2,8 @@ import { Euler, PerspectiveCamera, Vector3 } from "three";
 import { cameraAt, cameraTargetAt, cameraFovAt, type Recipe } from "./recipe";
 import { evaluateScene } from "./evaluate-scene";
 import { scaledAxes } from "./scene-contract";
+import { mannequinGuide } from "./mannequin-guide";
+import { clipProjectionFace } from "./projection-clipping";
 
 const corners = [
   [-1, -1, -1],
@@ -62,8 +64,11 @@ export function projectSceneGeometry(
   audio = true,
 ) {
   const camera = sceneProjectionCamera(recipe, frame, width, height, audio);
-  return evaluateScene(recipe, frame, { audio })
-    .objects.flatMap((p) => {
+  return [
+    ...evaluateScene(recipe, frame, { audio }).objects,
+    ...mannequinGuide(recipe, frame),
+  ]
+    .flatMap((p) => {
       if (p.presence === 0) return [];
       const size = scaledAxes(p);
       const rotation = new Euler(
@@ -79,26 +84,27 @@ export function projectSceneGeometry(
         )
           .applyEuler(rotation)
           .add(new Vector3(p.x, p.y, p.z));
-        const depth = point.clone().applyMatrix4(camera.matrixWorldInverse).z;
-        point.project(camera);
-        return {
-          x: ((point.x + 1) * width) / 2,
-          y: ((1 - point.y) * height) / 2,
-          depth,
-        };
+        return point.applyMatrix4(camera.matrixWorldInverse);
       });
       return faces.flatMap((face, i) => {
-        const vertices = face.map((n) => points[n]);
-        if (
-          vertices.some((v) => v.depth >= -0.05 || !Number.isFinite(v.x + v.y))
-        )
-          return [];
+        const clipped = clipProjectionFace(face.map((n) => points[n]));
+        if (clipped.length < 3) return [];
+        const vertices = clipped.map((point) => {
+          const projected = point.clone().applyMatrix4(camera.projectionMatrix);
+          return {
+            x: ((projected.x + 1) * width) / 2,
+            y: ((1 - projected.y) * height) / 2,
+            depth: point.z,
+          };
+        });
+        if (vertices.some((v) => !Number.isFinite(v.x + v.y))) return [];
         return [
           {
             id: `${p.id}-${i}`,
             color: p.color,
             shade: [0.22, 0.02, 0.34, 0, 0.26, 0.1][i],
-            depth: vertices.reduce((sum, v) => sum + v.depth, 0) / 4,
+            depth:
+              vertices.reduce((sum, v) => sum + v.depth, 0) / vertices.length,
             vertices,
           },
         ];

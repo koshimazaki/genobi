@@ -50,6 +50,8 @@ Architecture offers **64 / 128 / 256 blocks**. Increasing that count adds masonr
 roof and facade detail while preserving an enclosed silhouette. The five-state
 fruit example has four equally spaced transitions on the same saved clock.
 
+The catalogue also includes [Endless descent and Bass avenue](world-builder-stories.md): connected metre-scale sets, a fixed 1.8 m mannequin, distinct tower/taxi poses and explicit acoustic zones. Their whole-scene size control sits in the Loop sidebar.
+
 ## Choose forms, then choose how they move
 
 **Build a morph** is a separate gallery action. Select two to four forms and
@@ -338,7 +340,7 @@ transformer rigs remain future work; the current examples are authored shapes.
 The local duration controls accept up to **721 frames at 24 fps** on the existing
 `8k + 1` grid. Entering **30 seconds** gives 721 frames: the last sample is frame
 720 at exactly 30 seconds, and the encoded clip lasts `721 / 24`, approximately
-30.0417 seconds. Scene and camera keys retime together when their duration changes.
+30.0417 seconds. Unchanged scene, camera and character events retime together when their duration changes.
 This is the local guide format; it does not extend a hosted model's offered
 durations or the fixed combined deployment endpoint.
 
@@ -376,7 +378,8 @@ The current combined Layout-to-video deployment graph uses native **static**
 acoustic nodes. Animated recipes are refused before deployment submission and by
 those native nodes, so they cannot silently become a static room or open sky.
 Use the exported guides for a custom motion experiment, with a separately
-rendered sound track. LTX motion adherence, image-conditioned fruit transitions,
+rendered soundtrack. The browser [Room sound · CPU](world-builder-acoustic-zones.md)
+now prepares that changing-room WAV locally from explicit enclosures or zones. LTX motion adherence, image-conditioned fruit transitions,
 native dynamic acoustic-node support and generated-video quality still require
 their own workflow implementation/qualification.
 

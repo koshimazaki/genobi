@@ -11,6 +11,7 @@ import { shotCameraPatch } from "../src/world-builder/shot-camera-edit";
 import type { SceneCameraPose } from "../src/world-builder/scene-camera-blend";
 import { defaultStateAudio } from "../src/world-builder/scene-state-audio";
 import { defaultMorphControl } from "../src/world-builder/scene-morph-control";
+import { CAMERA_POSITION_LIMIT } from "../src/world-builder/scene-bounds";
 
 function keyed(): Recipe {
   const recipe = presetRecipe("Studio");
@@ -209,8 +210,27 @@ describe("authored Shot camera gestures", () => {
     expect(() =>
       validateRecipe({
         ...recipe,
-        ...shotCameraPatch(recipe, 10, { ...view, position: [100, 2, 1] }),
+        ...shotCameraPatch(recipe, 10, {
+          ...view,
+          position: [CAMERA_POSITION_LIMIT + 0.01, 2, 1],
+        }),
       }),
     ).toThrow(/Camera keys/);
+  });
+
+  it("preserves manually seeded views at both exact camera bounds", () => {
+    const recipe = presetRecipe("Studio");
+    for (const sign of [-1, 1]) {
+      const view: SceneCameraPose = {
+        position: [sign * CAMERA_POSITION_LIMIT, 2, 1],
+        target: [0, 2, 0],
+        fov: 55,
+      };
+      const next = validateRecipe({
+        ...recipe,
+        ...shotCameraPatch(recipe, 10, view),
+      });
+      expectPose(pose(next, 10), view);
+    }
   });
 });

@@ -87,6 +87,22 @@
   color: var(--coral-accent);
   font-size: 11px;
 }
+.wb-room-readout {
+  display: grid;
+  gap: 5px;
+  padding: 11px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--sunken);
+  font: 11px/1.5 var(--mono);
+}
+.wb-room-readout strong {
+  color: var(--accent-strong);
+}
+.wb-room-readout small {
+  color: var(--muted);
+  font-size: 10px;
+}
 @media (max-width: 420px) {
   .wb-room-sound-grid {
     grid-template-columns: 1fr;

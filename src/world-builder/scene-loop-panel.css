@@ -2,6 +2,7 @@
   min-width: 0;
   padding: 13px;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 10px;
   background: var(--surface);
   font: 11px var(--mono);

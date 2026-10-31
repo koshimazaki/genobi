@@ -1,5 +1,14 @@
 import { CAMERA_MOVE_BY_KEY, type CameraMoveKey } from "./camera-moves";
-import type { Recipe } from "./recipe";
+import { parameterSchema, type Recipe } from "./recipe";
+
+const boundedTarget = (
+  axis: "targetX" | "targetY" | "targetZ",
+  value: number,
+) =>
+  Math.max(
+    parameterSchema[axis].min,
+    Math.min(parameterSchema[axis].max, value),
+  );
 /**
  * Same shot vocabulary as Holodeck; trajectories replay on the fixed frame
  * grid. `seconds`, when given, is the move's duration (the take's frames
@@ -30,9 +39,9 @@ export function shotPatch(
     azimuth: (Math.atan2(offset[0], offset[2]) * 180) / Math.PI,
     elevation: (Math.asin(offset[1] / radius) * 180) / Math.PI,
     radius: Math.max(2, radius),
-    targetX: subject[0] + target[0],
-    targetY: Math.min(40, subject[1] + target[1]),
-    targetZ: subject[2] + target[2],
+    targetX: boundedTarget("targetX", subject[0] + target[0]),
+    targetY: boundedTarget("targetY", subject[1] + target[1]),
+    targetZ: boundedTarget("targetZ", subject[2] + target[2]),
     orbit: move.kind === "orbit" ? move.degrees : 0,
     dolly: 0,
     elevationEnd: null,

@@ -1,4 +1,5 @@
 import type { SceneMotion, SceneTransform } from "./scene-state";
+import { WORLD_POSITION_LIMIT } from "./scene-bounds";
 import {
   clampSceneValue as clamp,
   mixSceneTransform,
@@ -71,8 +72,8 @@ export function transitionTransform(
     result.z += (motion.pivot[2] - result.z) * pulse * 0.85;
     result.scale = Math.max(0.1, result.scale * (1 - pulse * 0.82));
   }
-  result.x = clamp(result.x, -40, 40);
-  result.y = clamp(result.y, -40, 40);
-  result.z = clamp(result.z, -40, 40);
+  result.x = clamp(result.x, -WORLD_POSITION_LIMIT, WORLD_POSITION_LIMIT);
+  result.y = clamp(result.y, -WORLD_POSITION_LIMIT, WORLD_POSITION_LIMIT);
+  result.z = clamp(result.z, -WORLD_POSITION_LIMIT, WORLD_POSITION_LIMIT);
   return result;
 }

@@ -1,5 +1,11 @@
 import { MathUtils, Spherical, Vector3 } from "three";
-import { cameraAt, cameraFovAt, cameraTargetAt, type Recipe } from "./recipe";
+import {
+  cameraAt,
+  cameraFovAt,
+  cameraTargetAt,
+  parameterSchema,
+  type Recipe,
+} from "./recipe";
 import type { createInteraction } from "./interaction";
 import type { SceneCameraPose } from "./scene-camera-blend";
 import type { SceneVector } from "./scene-state";
@@ -117,7 +123,11 @@ export function createGeometryCamera(
     const target = new Vector3(...view.target),
       offset = new Vector3(...view.position).sub(target);
     offset.setLength(
-      MathUtils.clamp(offset.length() * Math.exp(event.deltaY * 0.001), 2, 60),
+      MathUtils.clamp(
+        offset.length() * Math.exp(event.deltaY * 0.001),
+        parameterSchema.radius.min,
+        parameterSchema.radius.max,
+      ),
     );
     view.position = target.add(offset).toArray() as SceneVector;
     redraw();

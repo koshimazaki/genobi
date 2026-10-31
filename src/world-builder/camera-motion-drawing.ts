@@ -4,6 +4,11 @@ import {
   type CameraMove,
   type CameraMoveKey,
 } from "./camera-moves";
+import {
+  cameraRadarBounds,
+  projectRadarPose as projectPose,
+  type CameraRadarBounds,
+} from "./camera-radar-bounds";
 
 export type Pose = {
   x: number;
@@ -22,8 +27,6 @@ type LayerTrace = {
 
 type ViewMode = "top" | "side";
 
-const WORLD_RANGE = 28;
-const HEIGHT_RANGE = 26;
 const ORIGIN_POSE: Pose = { x: 0, y: 0, z: 0, key: "origin", label: "Subject" };
 const LAYER_COLORS = [
   "rgba(136,219,244,0.72)",
@@ -45,11 +48,15 @@ export function drawRadar(
   const h = canvas.clientHeight || 132;
   const cx = w / 2;
   const cy = mode === "top" ? h / 2 : h - 20;
+  const bounds = cameraRadarBounds([
+    ...Object.values(poseState),
+    ...layers.flatMap((layer) => [layer.pose, layer.current]),
+  ]);
 
   ctx.clearRect(0, 0, w, h);
 
   if (mode === "top") {
-    drawTopRadar(ctx, w, h, poseState, layers);
+    drawTopRadar(ctx, w, h, poseState, layers, bounds);
     return;
   }
 
@@ -64,6 +71,7 @@ export function drawRadar(
     "rgba(136,219,244,0.9)",
     0.95,
     2,
+    bounds,
   );
 
   for (const layer of layers) {
@@ -77,10 +85,11 @@ export function drawRadar(
       layer.color,
       0.2 + layer.weight * 0.58,
       1.5,
+      bounds,
     );
     drawMarker(
       ctx,
-      projectPose(layer.current, mode, w, h),
+      projectPose(layer.current, mode, w, h, bounds),
       layer.color,
       3.4,
       "dot",
@@ -88,10 +97,10 @@ export function drawRadar(
     );
   }
 
-  const origin = projectPose(ORIGIN_POSE, mode, w, h);
-  const start = projectPose(poseState.start, mode, w, h);
-  const current = projectPose(poseState.current, mode, w, h);
-  const target = projectPose(poseState.target, mode, w, h);
+  const origin = projectPose(ORIGIN_POSE, mode, w, h, bounds);
+  const start = projectPose(poseState.start, mode, w, h, bounds);
+  const current = projectPose(poseState.current, mode, w, h, bounds);
+  const target = projectPose(poseState.target, mode, w, h, bounds);
 
   drawMarker(ctx, origin, "rgba(226,112,176,0.95)", 4, "dot", 1);
   drawMarker(ctx, start, "rgba(255,255,255,0.42)", 3.2, "dot", 1);
@@ -115,13 +124,14 @@ function drawTopRadar(
   h: number,
   poseState: { start: Pose; current: Pose; target: Pose },
   layers: LayerTrace[],
+  bounds: CameraRadarBounds,
 ): void {
   const cx = w / 2;
   const cy = h / 2;
   const maxR = Math.min(w, h) / 2 - 13;
-  const currentPolar = topPolar(poseState.current);
-  const targetPolar = topPolar(poseState.target);
-  const startPolar = topPolar(poseState.start);
+  const currentPolar = topPolar(poseState.current, bounds.horizontal);
+  const targetPolar = topPolar(poseState.target, bounds.horizontal);
+  const startPolar = topPolar(poseState.start, bounds.horizontal);
   const activeRadius = maxR * Math.max(0.28, targetPolar.radius);
 
   drawGrid(ctx, "top", w, h, cx, cy);
@@ -155,8 +165,8 @@ function drawTopRadar(
   ctx.setLineDash([]);
 
   for (const layer of layers) {
-    const layerPolar = topPolar(layer.pose);
-    const layerCurrent = topPolar(layer.current);
+    const layerPolar = topPolar(layer.pose, bounds.horizontal);
+    const layerCurrent = topPolar(layer.current, bounds.horizontal);
     const layerR = maxR * Math.max(0.22, layerPolar.radius);
     ctx.globalAlpha = 0.2 + layer.weight * 0.45;
     ctx.strokeStyle = layer.color;
@@ -248,9 +258,10 @@ function drawPath(
   color: string,
   alpha: number,
   lineWidth: number,
+  bounds: CameraRadarBounds,
 ): void {
-  const start = projectPose(from, mode, w, h);
-  const end = projectPose(to, mode, w, h);
+  const start = projectPose(from, mode, w, h, bounds);
+  const end = projectPose(to, mode, w, h, bounds);
   const control = {
     x: (start.x + end.x) / 2,
     y: (start.y + end.y) / 2 - (mode === "top" ? 18 : 10),
@@ -338,36 +349,14 @@ function drawLabel(
   ctx.restore();
 }
 
-function projectPose(
+function topPolar(
   pose: Pose,
-  mode: ViewMode,
-  w: number,
-  h: number,
-): { x: number; y: number } {
-  if (mode === "top") {
-    const scale = Math.min(
-      (w - 28) / (WORLD_RANGE * 2),
-      (h - 28) / (WORLD_RANGE * 2),
-    );
-    return {
-      x: w / 2 + pose.x * scale,
-      y: h / 2 + pose.z * scale,
-    };
-  }
-
-  const scaleX = (w - 28) / (WORLD_RANGE * 2);
-  const scaleY = (h - 36) / HEIGHT_RANGE;
-  return {
-    x: w / 2 + pose.z * scaleX,
-    y: h - 20 - Math.max(0, pose.y) * scaleY,
-  };
-}
-
-function topPolar(pose: Pose): { angle: number; radius: number } {
+  range: number,
+): { angle: number; radius: number } {
   const distance = Math.hypot(pose.x, pose.z);
   return {
     angle: distance < 0.001 ? -Math.PI / 2 : Math.atan2(pose.z, pose.x),
-    radius: Math.min(Math.max(distance / WORLD_RANGE, 0.06), 1),
+    radius: Math.min(Math.max(distance / range, 0.06), 1),
   };
 }
 

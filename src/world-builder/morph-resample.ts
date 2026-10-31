@@ -2,6 +2,7 @@ import { Euler, Vector3 } from "three";
 import type { SceneTransform } from "./scene-state";
 import { compactLayouts } from "./motion-layout-utils";
 import { scaledAxes } from "./scene-contract";
+import { PRIMITIVE_SCALE_RANGE } from "./scene-bounds";
 
 const axes = ["scaleX", "scaleY", "scaleZ"] as const;
 const rotation = (part: SceneTransform) =>
@@ -44,7 +45,10 @@ function withSize(part: SceneTransform, size: number[]): SceneTransform {
   const presence = Math.min(1, Math.min(...size) / 0.01);
   const normalized = size.map((value) => value / presence);
   const low = Math.max(0.1, Math.max(...normalized) / 8);
-  const high = Math.min(8, Math.min(...normalized) / 0.1);
+  const high = Math.min(
+    PRIMITIVE_SCALE_RANGE[1],
+    Math.min(...normalized) / 0.1,
+  );
   if (low > high + 1e-12)
     throw new Error(
       "These boxes cannot be resampled within the supported shape bounds. Use fewer states or a compatible block preset.",

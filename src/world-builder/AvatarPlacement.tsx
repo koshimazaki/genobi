@@ -1,6 +1,7 @@
 import { NumberControl } from "./Controls";
 import { ORIENTATIONS, orient, type AvatarPose } from "./avatar-pose";
 import type { BuilderSession } from "./useBuilderSession";
+import { WORLD_POSITION_LIMIT } from "./scene-bounds";
 
 const degrees = (radians: number) => Math.round((radians * 180) / Math.PI);
 const radians = (degrees: number) => (degrees * Math.PI) / 180;
@@ -28,8 +29,8 @@ export function AvatarPlacement({ s }: { s: BuilderSession }) {
             key={axis}
             label={`Character ${axis}`}
             value={pose[axis]}
-            min={-40}
-            max={40}
+            min={-WORLD_POSITION_LIMIT}
+            max={WORLD_POSITION_LIMIT}
             step={0.1}
             change={(v) => set({ ...pose, [axis]: v })}
           />

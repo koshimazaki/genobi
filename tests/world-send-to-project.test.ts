@@ -300,7 +300,12 @@ describe("recipe op and presets", () => {
       const preset = findPreset(id, []);
       expect(preset.name).toBe(name);
       expect(preset.recipe.motion?.stateKeys).toHaveLength(
-        id === "fruit-audio-branches" ? 5 : 3,
+        (
+          { "fruit-audio-branches": 5, "bass-avenue": 4 } as Record<
+            string,
+            number
+          >
+        )[id] ?? 3,
       );
       expect(presetSummary(preset)).toMatchObject({ file: id });
     }

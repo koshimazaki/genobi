@@ -37,8 +37,8 @@ describe("freezing a viewport with a saved camera path", () => {
       pose = editor.cameraPose();
     expect(pose).toEqual(expected);
     expect(pose.position[1]).toBeCloseTo(40, 10);
-    expect(editor.viewPatch().targetY).toBe(15);
-    expect(editor.viewPatch().radius).toBe(60);
+    expect(editor.viewPatch().targetY).toBe(20);
+    expect(editor.viewPatch().radius).toBeCloseTo(Math.hypot(20, 20, 74), 10);
     pose.position[0] = 0;
     pose.target[1] = 0;
     expect(editor.cameraPose()).toEqual(expected);

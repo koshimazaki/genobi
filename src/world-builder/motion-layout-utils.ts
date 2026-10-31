@@ -1,4 +1,5 @@
 import type { SceneTransform } from "./scene-state";
+import { PRIMITIVE_SCALE_RANGE } from "./scene-bounds";
 
 /** Small authored layouts, never an unbounded voxel expansion. */
 export const pose = (
@@ -82,7 +83,7 @@ export function compactLayouts(
         !candidate.every(
           (part, state) =>
             part.scale >= 0.1 &&
-            part.scale <= 8 &&
+            part.scale <= PRIMITIVE_SCALE_RANGE[1] &&
             axes.every(
               (axis) =>
                 (part[axis] ?? 1) >= 0.1 &&

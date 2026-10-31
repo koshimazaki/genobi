@@ -10,6 +10,7 @@ import {
 import type { BuilderSession } from "./useBuilderSession";
 import type { WorldEditor } from "./useWorldEditor";
 import type { SceneVector } from "./scene-state";
+import { CAMERA_POSITION_LIMIT } from "./scene-bounds";
 
 export function SceneCameraControls({
   s,
@@ -180,8 +181,8 @@ export function SceneCameraControls({
                       key={axis}
                       label={`${field === "position" ? "Camera" : "Look"} ${axis}`}
                       value={key[field][i]}
-                      min={-80}
-                      max={80}
+                      min={-CAMERA_POSITION_LIMIT}
+                      max={CAMERA_POSITION_LIMIT}
                       step={0.25}
                       change={(value) => {
                         const vector = [...key[field]] as SceneVector;

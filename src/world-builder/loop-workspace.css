@@ -18,11 +18,21 @@
   min-width: 0;
 }
 .wb-loop-sidebar .wb-inspector.wb-panel {
+  grid-area: auto;
   contain: none;
   max-height: none;
   overflow: visible;
   border-left: 0;
   border-top: 1px solid var(--border);
+}
+/* The loop desk scrolls as one column; its panels use their natural height. */
+.wb-loop-sidebar
+  :is(.wb-dock-stack, .wb-dock-slot, .wb-dock-host, .wb-dock-panel) {
+  flex: none;
+}
+.wb-loop-sidebar .wb-dock-panel > .wb-panel-body {
+  flex: none;
+  overflow: visible;
 }
 .wb-loop-more {
   padding: 8px 14px;

@@ -5,6 +5,7 @@
  */
 import { ROOM_DIMENSION_RANGE, roomPointInside } from "./scene-room";
 import { ROOM_FACES, type RoomFace } from "./scene-state";
+import { WORLD_POSITION_LIMIT } from "./scene-bounds";
 
 export const ROOM_AUDIO_ENGINE = "genobi-browser-shoebox-v1" as const;
 export const ROOM_AUDIO_LABEL = "Geometry CPU · single-room approximation";
@@ -47,20 +48,22 @@ export function validateAcousticRoom(room: AcousticRoom) {
     !room.dimensions.every((v) => finite(v, ...ROOM_DIMENSION_RANGE)) ||
     !Array.isArray(room.center) ||
     room.center.length !== 3 ||
-    !room.center.every((v) => finite(v, -40, 40)) ||
+    !room.center.every((v) =>
+      finite(v, -WORLD_POSITION_LIMIT, WORLD_POSITION_LIMIT),
+    ) ||
     !Number.isInteger(room.seed) ||
     !finite(room.seed, 0, 0xffffffff) ||
     !room.absorption ||
-    !ROOM_SURFACES.every((surface) =>
-      finite(room.absorption[surface], 0.01, 0.99),
-    )
+    !ROOM_SURFACES.every((surface) => finite(room.absorption[surface], 0.01, 1))
   )
     throw new Error("Invalid acoustic room dimensions, materials or seed.");
   for (const point of [room.source, room.listener])
     if (
       !Array.isArray(point) ||
       point.length !== 3 ||
-      !point.every((v) => finite(v, -40, 40)) ||
+      !point.every((v) =>
+        finite(v, -WORLD_POSITION_LIMIT, WORLD_POSITION_LIMIT),
+      ) ||
       !roomPointInside(point, room.dimensions)
     )
       throw new Error(

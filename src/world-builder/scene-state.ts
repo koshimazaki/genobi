@@ -3,6 +3,7 @@ import type { ModSource } from "./mod-routes";
 import type { SceneMorphControl } from "./scene-morph-control";
 import type { SceneStateAudio } from "./scene-state-audio";
 import type { SceneRotation } from "./scene-rotation";
+import type { SceneAcousticZone } from "./scene-acoustic-zones";
 export type { SceneMorphControl } from "./scene-morph-control";
 export { motionInstances, sceneObjects } from "./scene-instances";
 
@@ -110,6 +111,9 @@ export interface SceneMotion {
   mappings: SceneMapping[];
   intensity: number;
   room?: SceneRoom;
+  /** Explicit metre-based spaces; the listener selects its enclosing zone. */
+  acousticZones?: SceneAcousticZone[];
+  acousticListener?: "camera" | "avatar";
   morphControl?: SceneMorphControl;
   stateAudio?: SceneStateAudio;
   rotation?: SceneRotation;

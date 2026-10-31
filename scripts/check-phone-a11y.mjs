@@ -42,7 +42,9 @@ const library = JSON.parse(
 ).map((source) => ({ ...source, origin: "sample" }));
 const results = [];
 const browser = await chromium.launch({
+  executablePath: process.env.DIRECTOR_BROWSER_PATH,
   channel:
+    process.env.DIRECTOR_BROWSER_PATH ||
     process.env.DIRECTOR_BROWSER === "bundled"
       ? undefined
       : (process.env.DIRECTOR_BROWSER ?? "chrome"),
