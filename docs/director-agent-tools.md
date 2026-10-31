@@ -13,30 +13,59 @@ stays in the prompt. See [licence-aware direction](licence-strategy.md).
 
 The agent and human use the same `director.bundle.v1` project, trusted graphics registry and media bytes. In advanced mode, **Agent command → Run command → Agent receipt** is the supported agent interface. No new server endpoint or secret-bearing project format is needed. The [skill](https://github.com/koshimazaki/Genobi/blob/main/.agents/skills/director-remix/SKILL.md) describes browser operation.
 
-| Command        | Required fields beyond `op`                                | Result                                                                             |
-| -------------- | ---------------------------------------------------------- | ---------------------------------------------------------------------------------- |
-| `assets`       | none                                                       | Detached asset list with roles and uses                                            |
-| `import-asset` | revision, use (`production` or `reference`); attached file | Add media without placement; returns asset IDs                                     |
-| `use-asset`    | revision, assetId, layerIds                                | Place existing media; references receive a production alias                        |
-| `alias-asset`  | revision, assetId, use                                     | Retain bytes and provenance under the other role                                   |
-| `remove-asset` | revision, assetId                                          | Remove only if no layer, plan or generation depends on it                          |
-| `brief`        | none                                                       | Animation prompt and resolved asset/font references with relative paths and hashes |
-| `inspect`      | none                                                       | Detached project snapshot including current revision                               |
-| `text`         | revision, layerId, text (≤80 chars)                        | Updated graphics text, checked as `set-parameters` checks it; revision increases   |
-| `replace`      | revision, layerIds; attached file                          | Atomic media replacement; same shot times/transforms                               |
-| `split`        | revision, layerId, frame, newId                            | Existing Director split, preserving source/animation time                          |
-| `project`      | revision, project                                          | Validated full JSON replacement with existing media hashes                         |
-| `frame`        | revision, assetId, frame                                   | PNG plus exact source timestamp/dimensions receipt                                 |
-| `cut`          | revision, assetId, in, out                                 | MP4 via dual editor; inclusive `in`, exclusive `out`                               |
-| `plate`        | revision                                                   | Clean timeline MP4 without graphics, filters or soundtrack                         |
+| Command          | Required fields beyond `op`                                | Result                                                                             |
+| ---------------- | ---------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| `assets`         | none                                                       | Detached asset list with roles and uses                                            |
+| `import-asset`   | revision, use (`production` or `reference`); attached file | Add media without placement; returns asset IDs                                     |
+| `use-asset`      | revision, assetId, layerIds                                | Place existing media; references receive a production alias                        |
+| `alias-asset`    | revision, assetId, use                                     | Retain bytes and provenance under the other role                                   |
+| `remove-asset`   | revision, assetId                                          | Remove only if no layer, plan or generation depends on it                          |
+| `brief`          | none                                                       | Animation prompt and resolved asset/font references with relative paths and hashes |
+| `inspect`        | none                                                       | Detached project snapshot including current revision                               |
+| `text`           | revision, layerId, text (≤80 chars)                        | Updated graphics text, checked as `set-parameters` checks it; revision increases   |
+| `replace`        | revision, layerIds; attached file                          | Atomic media replacement; same shot times/transforms                               |
+| `split`          | revision, layerId, frame, newId                            | Existing Director split, preserving source/animation time                          |
+| `split-clip`     | revision, layerId, frame, newLayerId                       | Shared split; source samples, animation and track stay aligned                     |
+| `duplicate-clip` | revision, layerId, newLayerId                              | Independent unlocked copy on a new lane at the top of the stack                    |
+| `remove-clip`    | revision, layerId                                          | Remove clip; retain source media, generation history and notes at their frames     |
+| `set-muted`      | revision, layerId, muted (boolean)                         | Mute audio or hide a visual clip in preview/export                                 |
+| `set-gain`       | revision, layerId, gain (0–2)                              | Change an audio clip's gain                                                        |
+| `project`        | revision, project                                          | Validated full JSON replacement with existing media hashes                         |
+| `frame`          | revision, assetId, frame                                   | PNG plus exact source timestamp/dimensions receipt                                 |
+| `cut`            | revision, assetId, in, out                                 | MP4 via dual editor; inclusive `in`, exclusive `out`                               |
+| `plate`          | revision                                                   | Clean timeline MP4 without graphics, filters or soundtrack                         |
 
 All indices are integers. `frame`/`cut` refer to the asset's decoded frame index (including VFR timestamps); `split` refers to composition frames. Cuts re-encode to the dual editor's output cadence, not packet-copy. Use its lossless tool separately if packet-copy/keyframe semantics are desired.
 
 Unknown command fields are rejected. Writes require the current revision; the shared Zustand command entry reserves asynchronous writes and rejects stale results before commit. Mutations validate project shape, cross references and hashes before commit. Each success remains undoable in the timeline. `project` is a deliberate full manifest replacement: layer locks protect ordinary tools, not a user-authorized manifest import.
 
+### Shared timeline controls
+
+The five `*-clip`/mute/gain commands above use the same parser and implementation in the
+browser console and `genobi_director_command` over HTTP, MCP or CLI. The browser
+passes `revision`; HTTP/MCP/CLI pass `baseRevision` outside `command`. A stale
+revision is refused, so read the current project before another edit.
+
+```sh
+genobi schema director-command
+genobi director-command --input '{"copyId":"PROJECT_COPY_ID","baseRevision":7,"command":{"op":"split-clip","layerId":"shot-one","frame":96,"newLayerId":"shot-one-end"}}'
+```
+
+Split requires a composition frame strictly inside the clip. The new id for
+split or duplicate must be unused by both clips and tracks. Split, removal and
+gain require an unlocked clip. As in the timeline, mute and duplicate are allowed
+on locked clips: mute changes only visibility, and duplication leaves the original
+locked. The commands provide no unlock bypass. Removal preserves review notes at
+their original frames and never deletes media or generation provenance. Human
+removal, mute and gain changes also appear as replayable feedback commands.
+
+These commands still need a linked local project copy for HTTP/MCP/CLI use.
+The hosted browser can use the console and Undo; pairing a hosted runner does
+not create a canonical hosted project copy or grant direct access to its draft.
+
 A ZIP contains `project.json`, referenced media and approved graphics files. A bare JSON import requires matching media already loaded. Download bundle and Render MP4 use existing Director controls; the command panel does not invent a second exporter. A generation result is applied only after explicit selection and records input/reference hashes, prompt and output backlinks. It excludes the provider key and provider job ID.
 
-Limits: 150 MB bundle, 150 MB imported media, 128 layers, 1080p-equivalent pixel area, 120 seconds. These panel commands run in the browser only. Agents outside the browser use the Director command set (`add-clip` with an optional in-point, `add-graphic` with its parameters (a registry recipe the project does not hold included), `move-clip`, `trim-clip`, `set-placement`, `set-parameters`, `set-resolution` (width and height, at most 1920 × 1080 pixels; [resolution](director-resolution.md)), `set-beat-grid` (tempo, downbeat and beats per bar), `set-prompt`, `set-global-prompt`, `set-clip-prompt`, `set-clip-directions` ([prompts and directions](director-prompts.md)), `set-camera`, `set-template-inputs`, `replace-plate`, and the frame notes `add-note`, `resolve-note` and `delete-note`) over MCP, against the project copy on the local server, after the person presses **Link an agent** in this panel; see [the Director bundle](director-bundle/README.md#project-copy-and-director-commands).
+Limits: 150 MB bundle, 150 MB imported media, 128 layers, 1080p-equivalent pixel area, 120 seconds. The browser-specific asset, export and full-manifest commands run in the browser only. Agents outside the browser use the Director command set (`add-clip` with an optional in-point, `add-graphic` with its parameters (a registry recipe the project does not hold included), `move-clip`, `trim-clip`, `split-clip`, `duplicate-clip`, `remove-clip`, `set-muted`, `set-gain`, `set-placement`, `set-parameters`, `set-resolution` (width and height, at most 1920 × 1080 pixels; [resolution](director-resolution.md)), `set-beat-grid` (tempo, downbeat and beats per bar), `set-prompt`, `set-global-prompt`, `set-clip-prompt`, `set-clip-directions` ([prompts and directions](director-prompts.md)), `set-camera`, `set-template-inputs`, `replace-plate`, and the frame notes `add-note`, `resolve-note` and `delete-note`) over MCP, against the project copy on the local server, after the person presses **Link an agent** in this panel; see [the Director bundle](director-bundle/README.md#project-copy-and-director-commands).
 
 ## Template plans and provenance over MCP
 

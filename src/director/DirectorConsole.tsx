@@ -318,6 +318,7 @@ export default function DirectorConsole({
             select={select}
             replace={replace}
             command={runCommand}
+            report={report}
           />
         </div>
       </div>

@@ -260,7 +260,7 @@ describe("feedback commands reproduce the person's project", () => {
 });
 
 describe("what no command expresses is listed, never dropped", () => {
-  it("lists removed, renamed, muted and locked layers and gain", () => {
+  it("maps removal, mute and gain while listing renamed and protected fields", () => {
     const current = person((p) => {
       const q = layer(
         layer(layer(p, "score", { gain: 0.5, name: "Song" }), "pulse", {
@@ -283,15 +283,12 @@ describe("what no command expresses is listed, never dropped", () => {
     const listed = diff.unmapped.map((u) => `${u.kind} ${u.id} ${u.field}`);
     expect(listed).toEqual(
       expect.arrayContaining([
-        "layer photo-2 layer",
-        "layer score gain",
         "layer score name",
-        "layer pulse muted",
         "layer pulse locked",
         "layer labels timing",
       ]),
     );
-    expect(listed).toHaveLength(6);
+    expect(listed).toHaveLength(3);
     const locked = diff.unmapped.find((u) => u.id === "labels")!;
     expect(locked.reason).toContain("Unlock Anime bars first");
     expect(diff.unmapped.every((u) => u.reason && u.label)).toBe(true);
@@ -304,6 +301,18 @@ describe("what no command expresses is listed, never dropped", () => {
       {
         command: { op: "set-beat-grid", bpm: 98 },
         label: "beat grid bpm 120 → 98",
+      },
+      {
+        command: { op: "remove-clip", layerId: "photo-2" },
+        label: "removed image Orbit 2",
+      },
+      {
+        command: { op: "set-gain", layerId: "score", gain: 0.5 },
+        label: "Pulse / 120 BPM gain 1 → 0.5",
+      },
+      {
+        command: { op: "set-muted", layerId: "pulse", muted: true },
+        label: "p5 rings muted/hidden",
       },
     ]);
   });

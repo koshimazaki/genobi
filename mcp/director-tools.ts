@@ -1,9 +1,6 @@
 import { z } from "zod";
-import {
-  COPY_ID,
-  DIRECTOR_OPS,
-  parseCommand,
-} from "../shared/director/commands";
+import { COPY_ID, parseCommand } from "../shared/director/commands";
+import { directorCommandSchema } from "./director-command-schema";
 import { parseFeedback } from "../shared/director/feedback";
 import {
   requiredParameters,
@@ -257,6 +254,7 @@ export const directorTools: ToolDefinition[] = [
       "Commands: add-clip {layerId (new), assetId, track (track id or new), startFrame, durationFrames, name?, sourceStartFrame? (in-point, source frames, audio and video only)};",
       "add-graphic {layerId (new), moduleId, track, startFrame, durationFrames, name?, parameters? {name: value}} (a recipe from recipes or registryRecipes; parameters go over the settings of a layer already using it, and a recipe no layer uses needs every name in its required list, each checked against its type and range);",
       "move-clip {layerId, startFrame, track?}; trim-clip {layerId, startFrame, durationFrames};",
+      "split-clip {layerId, frame, newLayerId} (cut strictly inside the clip on a composition frame; keeps source samples, animation and track); duplicate-clip {layerId, newLayerId} (independent unlocked copy on a new lane at the top of the stack); remove-clip {layerId} (keeps media/provenance and detaches its review notes to their frames); set-muted {layerId, muted: boolean} (audio mute or visual hide); set-gain {layerId, gain} (audio only, 0 to 2). Split, remove and gain respect locks; copying and mute follow the UI's allowed operations on locked clips without unlocking or changing the original. New ids must not collide with any clip or track.",
       "set-placement {layerId, position? {x?, y?} (composition pixels from the centre, y down), scale? (0-10], opacity? [0,1], rotationDegrees? [-360,360], motion? {scaleTo?, xTo?, yTo?, opacityTo?} (the end it moves to linearly over the clip) or null} (video, image and graphics layers);",
       "set-parameters {layerId, parameters: {name: value}} (a graphics or filter recipe's declared parameters, text included; genobi_project lists each recipe's names, types and ranges);",
       "set-resolution {width, height} (whole pixels 16-4096 per side, width × height <= 1920 × 1080; presets 960×540, 1280×720, 1920×1080; rescales composition-pixel positions and motion offsets, preserving fitted zoom ratios and timing; for Match assets measure the largest video and fit the current aspect ratio within it and the pixel cap, using even dimensions);",
@@ -274,12 +272,9 @@ export const directorTools: ToolDefinition[] = [
         .int()
         .min(1)
         .describe("The revision genobi_project returned"),
-      command: z
-        .object({ op: z.enum(DIRECTOR_OPS as [string, ...string[]]) })
-        .passthrough()
-        .describe(
-          "One command, for example {op: 'move-clip', layerId: 'title', startFrame: 30}",
-        ),
+      command: directorCommandSchema.describe(
+        "One command, for example {op: 'move-clip', layerId: 'title', startFrame: 30}",
+      ),
     },
     // The base revision makes a repeat a refused conflict, not a second edit;
     // every command stays undoable in the studio.

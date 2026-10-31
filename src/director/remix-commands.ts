@@ -10,6 +10,14 @@ import {
   setParameters,
 } from "../../shared/director/layer-commands";
 import { splitLayer } from "../../shared/director/split";
+import {
+  applyCommand as applyDirectorCommand,
+  parseCommand as parseDirectorCommand,
+} from "../../shared/director/commands";
+import {
+  isClipOp,
+  type ClipCommand,
+} from "../../shared/director/clip-commands";
 import { validateFiles, type Bundle } from "./bundle";
 import { validateProject } from "./validate";
 import { importAssets } from "./import-media";
@@ -25,6 +33,7 @@ import { missingTrack } from "../../shared/director/track-slot";
 import { checkAssetMedia } from "../../shared/director/asset-media";
 
 export type DirectorCommand =
+  | (ClipCommand & { revision: number })
   | { op: "inspect" }
   | { op: "brief" }
   | { op: "assets" }
@@ -54,6 +63,15 @@ export function parseCommand(value: unknown): DirectorCommand {
   if (!value || typeof value !== "object" || Array.isArray(value))
     throw new Error("Command must be an object");
   const c = value as Record<string, unknown>;
+  if (typeof c.op === "string" && isClipOp(c.op)) {
+    if (!Number.isSafeInteger(c.revision) || Number(c.revision) < 0)
+      throw new Error("revision must be an integer");
+    const { revision, ...command } = c;
+    return {
+      ...(parseDirectorCommand(command) as ClipCommand),
+      revision: revision as number,
+    };
+  }
   const fields: Record<string, string[]> = {
     inspect: [],
     brief: [],
@@ -155,7 +173,18 @@ export async function runDirectorCommand(
     );
   let next: Bundle;
   let assetIds: string[] | undefined;
-  if (c.op === "text") {
+  if (
+    c.op === "split-clip" ||
+    c.op === "duplicate-clip" ||
+    c.op === "remove-clip" ||
+    c.op === "set-muted" ||
+    c.op === "set-gain"
+  ) {
+    const { revision: _revision, ...command } = c;
+    const result = applyDirectorCommand({ project: p, prompt: "" }, command);
+    if (!result.ok) throw new Error(result.error);
+    next = { ...bundle, project: result.copy.project };
+  } else if (c.op === "text") {
     const layer = p.layers.find((l) => l.id === c.layerId);
     if (layer?.kind !== "graphics" || !("text" in layer.parameters))
       throw new Error("Choose a text graphics layer");
