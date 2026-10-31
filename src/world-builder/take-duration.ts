@@ -26,16 +26,18 @@ type Durations = {
   seconds: number | null;
   motion?: { stateKeys: { frame: number }[] };
   cameraMotion?: { keys: { frame: number }[] };
+  avatarPath?: { frame: number }[];
 };
 
 function retimeKeys<T extends { frame: number }>(
   keys: T[],
   before: number,
   after: number,
+  firstFrame = 0,
 ) {
-  if (keys.length > after)
+  if (keys.length > after - firstFrame)
     throw new Error("The take needs at least one frame per animation key.");
-  let last = -1;
+  let last = firstFrame - 1;
   return keys.map((key, index) => {
     const frame = Math.max(
       last + 1,
@@ -107,6 +109,23 @@ export function reconcileDuration(previous: Durations, input: unknown) {
       },
     };
   }
+  // The character's frame-zero pose is implicit. Keep paths that deliberately
+  // extend beyond the old take untouched: those describe a cropped longer move.
+  if (
+    previous.avatarPath &&
+    next.avatarPath &&
+    previous.avatarPath.every((key) => key.frame < previous.frames) &&
+    typeof frames === "number" &&
+    Number.isInteger(frames) &&
+    frames >= TAKE_FRAMES.min &&
+    frames <= TAKE_FRAMES.max &&
+    frames !== previous.frames &&
+    JSON.stringify(next.avatarPath) === JSON.stringify(previous.avatarPath)
+  )
+    next = {
+      ...next,
+      avatarPath: retimeKeys(next.avatarPath, previous.frames, frames, 1),
+    };
   return next;
 }
 

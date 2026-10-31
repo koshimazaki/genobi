@@ -193,9 +193,12 @@ distance. Zero and a missing envelope are neutral; target and lens are unchanged
 Audio controls can be tuned during Play independently of scene response intensity.
 
 **Reverse scene & camera** reverses both authored tracks, allowing loft → city as
-well as city → loft. Both final keys must lie at the take's end. Changing duration
-retimes unchanged scene and camera tracks together; imported explicit key times
-remain subject to validation. Audio continues to follow the soundtrack in its
+well as city → loft. An authored character path reverses with them, including its
+implicit starting pose. All final keys must lie at the take's end. Character paths
+must use linear movement; the action refuses fall easing or a path ending outside
+the take, so it cannot silently change the motion. Changing duration retimes
+unchanged scene and camera tracks together with character paths inside the take;
+imported explicit key times remain subject to validation. Audio continues to follow the soundtrack in its
 original direction. Loop repeats the keys; matching the first and final shape,
 camera position, target and lens is necessary for a smooth seam.
 
@@ -445,6 +448,7 @@ pixel-for-pixel, and depth reseeking agreed. The manifest reports frame 720 at
 ![Tick-selected A–D forms with a precise frame-grid duration fader](media/world-morph-composer-ui.jpg)
 
 Related: [World Builder](world-builder.md), [sound controls](world-builder-sound.md),
+[changing room sound](world-builder-dynamic-sound.md),
 [capture](world-builder-capture.md), [GPU evaluation](audiovisual-gpu-evaluation.md).
 
 ![Closed architecture at 64, 128 and 256 blocks, rendered by the production viewport](media/world-architecture-morphs.png)

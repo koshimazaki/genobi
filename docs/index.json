@@ -170,6 +170,7 @@
         "world-builder-acoustics.md",
         "world-builder-capture.md",
         "world-builder-controls.md",
+        "world-builder-dynamic-sound.md",
         "world-builder-interface.md",
         "world-builder-loops.md",
         "world-builder-motion.md",
@@ -209,6 +210,7 @@
         "templates.md",
         "vision.md",
         "world-builder-acoustics.md",
+        "world-builder-dynamic-sound.md",
         "world-builder-loops.md",
         "world-builder-motion.md",
         "world-builder-sound.md"
@@ -471,6 +473,7 @@
         "world-builder-acoustics.md",
         "world-builder-capture.md",
         "world-builder-controls.md",
+        "world-builder-dynamic-sound.md",
         "world-builder-interface.md",
         "world-builder-loops.md",
         "world-builder-motion.md",
@@ -771,6 +774,7 @@
         "world-builder-acoustics.md",
         "world-builder-capture.md",
         "world-builder-controls.md",
+        "world-builder-dynamic-sound.md",
         "world-builder-interface.md",
         "world-builder-loops.md",
         "world-builder-motion.md",
@@ -2353,7 +2357,11 @@
       "path": "world-builder-acoustics.md",
       "tags": ["3d", "world-builder", "comfy", "sound"],
       "summary": "World Builder's room acoustics estimate (Sabine RT60 to AKUSPACE presets) and the Reverb node's DSP route.",
-      "links": ["media-space.md", "world-builder.md"]
+      "links": [
+        "media-space.md",
+        "world-builder-dynamic-sound.md",
+        "world-builder.md"
+      ]
     },
     {
       "title": "World Builder · Capture panel",
@@ -2368,6 +2376,13 @@
       "tags": ["3d", "world-builder", "studio"],
       "summary": "World Builder controls - capture and edits during Play, character orientation, preview and character shortcuts, and the panel dock.",
       "links": ["world-builder-loops.md", "world-builder.md"]
+    },
+    {
+      "title": "Room sound along the scene timeline",
+      "path": "world-builder-dynamic-sound.md",
+      "tags": ["3d", "world-builder", "sound"],
+      "summary": "Browser CPU room sound follows the evaluated scene timeline, with retained convolution history and an explicit decay-tail policy.",
+      "links": []
     },
     {
       "title": "World Builder interface pass",
@@ -2401,6 +2416,7 @@
         "audiovisual-gpu-evaluation.md",
         "effects-catalogue.md",
         "world-builder-capture.md",
+        "world-builder-dynamic-sound.md",
         "world-builder-loops.md",
         "world-builder-sound.md",
         "world-builder.md"
@@ -2411,7 +2427,7 @@
       "path": "world-builder-sound.md",
       "tags": ["3d", "world-builder", "sound"],
       "summary": "World Builder's Sound panel, the example track, the audio mod matrix, the reactive room presets and what the Comfy node shows of them.",
-      "links": ["world-builder.md"]
+      "links": ["world-builder-dynamic-sound.md", "world-builder.md"]
     },
     {
       "title": "World Builder verification — 16 October 2026",
