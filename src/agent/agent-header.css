@@ -99,7 +99,11 @@
   }
   .wordmark .agent-bubble {
     width: min(340px, calc(100vw - 35px));
-    max-height: min(520px, calc(100svh - 100% - 24px));
+    /* Leave the fixed activity bar reachable below a long conversation. */
+    max-height: min(
+      520px,
+      calc(100svh - 100% - 24px - var(--space-16) - var(--space-32))
+    );
   }
   .wordmark .agent-bubble::after {
     left: 15px;

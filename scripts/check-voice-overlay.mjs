@@ -263,17 +263,17 @@ try {
 
   // Every section keeps Voice in the header.
   ({ context, page, voice } = await open({ path: "/" }));
+  // Director's first-entry dialog loads lazily and may appear between clicks.
+  await page.addLocatorHandler(
+    page.getByRole("button", { name: "Close Generate my version" }),
+    (close) => close.click(),
+  );
   for (const button of await page
     .locator("[data-preset-button]")
     .elementHandles()) {
     await button.click();
     await page.waitForTimeout(150);
     assert(await voice.isVisible(), "Voice in every section");
-    // Director may open its template input dialog on first entry.
-    const closeVersion = page.getByRole("button", {
-      name: "Close Generate my version",
-    });
-    if (await closeVersion.isVisible()) await closeVersion.click();
   }
   await context.close();
   checks.push("Voice is in the header of every section");
