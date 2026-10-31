@@ -3,6 +3,7 @@ import { isTerminal } from "../../shared/types";
 import GenerationIndicator from "./GenerationIndicator";
 import Icon from "./Icon";
 import { useEffect } from "react";
+import "../styles/generate-provider.css";
 import {
   loadSettings,
   useSettingsHold,
@@ -17,6 +18,9 @@ export default function GenerateButton({
   disabled,
   onSubmit,
   onResume,
+  providerChoices,
+  providerValue,
+  onProviderChange,
   hold: holdProp,
 }: {
   generator: Generator;
@@ -26,6 +30,10 @@ export default function GenerateButton({
   disabled: boolean;
   onSubmit: () => void;
   onResume: () => void;
+  /** Only show the split selector for image routes with a genuine choice. */
+  providerChoices?: readonly { value: string; label: string }[];
+  providerValue?: string;
+  onProviderChange?: (value: string) => void;
   /** What holds Generate; read from the settings store unless given. */
   hold?: SettingsHold;
 }) {
@@ -62,8 +70,9 @@ export default function GenerateButton({
             : generator === "edit"
               ? "Generate edit"
               : "Generate";
-  return (
+  const action = (
     <button
+      type="button"
       className={`generate-button${busy ? " is-generating" : ""}`}
       onClick={needsKey ? onResume : restoring ? undefined : onSubmit}
       // A run in flight cannot be called off: BFL has no cancel endpoint, so
@@ -88,5 +97,28 @@ export default function GenerateButton({
         {busy ? <GenerationIndicator /> : <Icon name="arrow" size={18} />}
       </span>
     </button>
+  );
+  if (!providerChoices?.length || !onProviderChange) return action;
+  const current = providerChoices.find((choice) => choice.value === providerValue);
+  return (
+    <div className="generate-split">
+      {action}
+      <div className="generate-split__selector">
+        <select
+          aria-label="Generation provider"
+          title={current ? `Generate with ${current.label}` : "Choose generation provider"}
+          value={providerValue}
+          disabled={busy || restoring || disabled}
+          onChange={(event) => onProviderChange(event.currentTarget.value)}
+        >
+          {providerChoices.map((choice) => (
+            <option key={choice.value} value={choice.value}>
+              {choice.label}
+            </option>
+          ))}
+        </select>
+        <Icon name="chevron" size={12} />
+      </div>
+    </div>
   );
 }
