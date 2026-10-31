@@ -23,18 +23,18 @@ agent-ready scope, paths, dependencies and acceptance checklists.
 A work package is a reviewable outcome. Large backend packages may need two
 small implementation PRs; forcing exactly ten commits would make review worse.
 
-| Package                                                                                | Outcome                                                                                     | Main gaps     | Dependency / gate                                                    |
-| -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- | ------------- | -------------------------------------------------------------------- |
-| [AV-01 · Camera-consistent UI](https://github.com/koshimazaki/genobi/issues/8)         | Simplify remix; expose Capture's next step and Sound's audio response; accessible selection | B05, B11      | Start now; capable-browser visual check before release               |
-| [AV-02 · GPU qualification](https://github.com/koshimazaki/genobi/issues/9)            | Immutable fixtures, model preflight and measured LTX guidance evidence                      | B03, B10, B11 | A: existing-feature pilot; B: final integrated template              |
-| [AV-03 · Scene states and evaluator](https://github.com/koshimazaki/genobi/issues/10)  | Versioned room, stable objects, variable state count, shared geometry/audio evaluation      | B02, B06, B07 | A's initial supported-motion decision; contracts proceed in parallel |
-| [AV-04 · Inputs, capture and look](https://github.com/koshimazaki/genobi/issues/11)    | Typed Swap, frozen input set, capture barrier, scene-derived Klein appearance               | B01, B03–B05  | AV-03 contracts                                                      |
-| [AV-05 · Hosted projects and restore](https://github.com/koshimazaki/genobi/issues/12) | Ownership, retained assets/revisions, safe restore and real project transfer                | B02, B12      | AV-03/04 contracts; storage scaffolding can start immediately        |
-| [AV-06 · Managed runs and delivery](https://github.com/koshimazaki/genobi/issues/13)   | Background completion, stable shot target, atomic companions                                | B13, B14      | AV-04/05                                                             |
-| [AV-07 · Agent commands and QC](https://github.com/koshimazaki/genobi/issues/14)       | Shared UI/API/CLI/MCP commands, field locks, scoped memory, evidence-based QC               | B12, B15, B16 | AV-03/05                                                             |
-| [AV-08 · CPU room treatment](https://github.com/koshimazaki/genobi/issues/15)          | Captured-room authority, dynamic schedule, full tails, sound-only revisions                 | B06–B09       | Algorithms start now; hosted delivery also needs AV-06               |
-| [AV-09 · Optional AKUSPACE quality](https://github.com/koshimazaki/genobi/issues/16)   | Musical-quality comparison and reversible parallel/serial experiments                       | B10, B11      | Baselines and sound interfaces; does not block CPU release           |
-| [AV-10 · Flagship and evaluation](https://github.com/koshimazaki/genobi/issues/17)     | Complete project flow, reproducible demo, managed evaluator access, sharing                 | B10, B11, B17 | Core contracts plus AV-02 final qualification                        |
+| Package                                                                                | Outcome                                                                                     | Main gaps     | Dependency / gate                                                   |
+| -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- | ------------- | ------------------------------------------------------------------- |
+| [AV-01 · Camera-consistent UI](https://github.com/koshimazaki/genobi/issues/8)         | Simplify remix; expose Capture's next step and Sound's audio response; accessible selection | B05, B11      | Start now; capable-browser visual check before release              |
+| [AV-02 · GPU qualification](https://github.com/koshimazaki/genobi/issues/9)            | Immutable fixtures, model preflight and measured LTX guidance evidence                      | B03, B10, B11 | A: existing-feature pilot; B: final integrated template             |
+| [AV-03 · Scene states and evaluator](https://github.com/koshimazaki/genobi/issues/10)  | Versioned room, stable objects, variable state count, shared geometry/audio evaluation      | B02, B06, B07 | Contracts and existing recipe conflicts now; A constrains motion    |
+| [AV-04 · Inputs, capture and look](https://github.com/koshimazaki/genobi/issues/11)    | Typed Swap, frozen input set, capture barrier, scene-derived Klein appearance               | B01, B03–B05  | AV-03 contracts                                                     |
+| [AV-05 · Hosted projects and restore](https://github.com/koshimazaki/genobi/issues/12) | Ownership, retained assets/revisions, safe restore and real project transfer                | B02, B12      | AV-03/04 contracts; storage scaffolding can start immediately       |
+| [AV-06 · Managed runs and delivery](https://github.com/koshimazaki/genobi/issues/13)   | Background completion, stable shot target, atomic companions                                | B13, B14      | Output integrity now; managed project attachment needs AV-04/05     |
+| [AV-07 · Agent commands and QC](https://github.com/koshimazaki/genobi/issues/14)       | Shared UI/API/CLI/MCP commands, field locks, scoped memory, evidence-based QC               | B12, B15, B16 | Existing-feature commands/voice now; new scene/hosted work AV-03/05 |
+| [AV-08 · CPU room treatment](https://github.com/koshimazaki/genobi/issues/15)          | Captured-room authority, dynamic schedule, full tails, sound-only revisions                 | B06–B09       | Algorithms start now; hosted delivery also needs AV-06              |
+| [AV-09 · Optional AKUSPACE quality](https://github.com/koshimazaki/genobi/issues/16)   | Musical-quality comparison and reversible parallel/serial experiments                       | B10, B11      | Baselines and sound interfaces; does not block CPU release          |
+| [AV-10 · Flagship and evaluation](https://github.com/koshimazaki/genobi/issues/17)     | Complete project flow, reproducible demo, managed evaluator access, sharing                 | B10, B11, B17 | Core contracts plus AV-02 final qualification                       |
 
 AV-02 deliberately has two milestones. Its offline kit and feasibility pilot
 inform the motion vocabulary; its final acceptance follows AV-03/04/10.
@@ -67,6 +67,25 @@ The end-to-end surface has one primary action per stage:
 The first UI slice improves current controls; it does not advertise the future
 hosted flow before its backing routes exist. Current hosted/local capability
 messages must remain accurate.
+
+### Agent control and voice
+
+The target is agent control over supported actions in both web and Studio,
+through the same validated commands as the UI. Voice defaults to the agent:
+choose a conversation once, keep sending subsequent notes there, and show its
+identity. An ended conversation or changed project must hold the transcript
+for explicit reselection, never silently switch to the newest agent. Prompt
+dictation remains an explicit dynamic destination; changing that selection
+must not resend an earlier note or press Generate.
+
+Expose the shared voice action from activity/log and conversation surfaces.
+[PR29](https://github.com/koshimazaki/genobi/pull/29) implements the local
+header, bubble and deck path under
+[issue28](https://github.com/koshimazaki/genobi/issues/28), with browser/mic
+verification still open. This does not provide hosted transcription, a hosted
+follow-up message transport, canonical hosted project access or complete
+web/Studio action parity. Those remain explicit acceptance work; runner
+pairing alone does not supply them. Paid actions retain quote/approval gates.
 
 ### Evidence from the current UI pass
 
@@ -184,13 +203,19 @@ wet-only stem. Failed hybrids remain optional and never delay the CPU proof.
 
 ## Two-agent execution order
 
-| Wave                  | Agent A: scene and audio                                        | Agent B: product, cloud and agent                                        |
-| --------------------- | --------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| 0: make work concrete | Offline AV-02 kit and AV-08 captured-room fix                   | AV-01 Camera-consistent UI; agree portable record contracts              |
-| 1: source proof       | AV-03 evaluator; AV-02 A pilot when GPU is available            | AV-05 ownership/assets/revisions scaffold against agreed contracts       |
-| 2: reliable inputs    | AV-04 Swap/capture/Klein alignment; CPU schedule algorithms     | AV-05 restore; AV-06 reservation/controller and delivery                 |
-| 3: complete loop      | AV-08 dynamic/tail/sound-only integration; AV-02 B measurements | AV-07 shared commands, planner, locks, memory/QC; AV-10 staged UI        |
-| 4: evaluator release  | Final seeds, full output/listening review; optional AV-09       | AV-10 second-user flow, watch/embed/remix, sanitized reproducibility kit |
+Start the existing-feature fixes before reserving a GPU. Output selection,
+timeline command parity, sticky voice routing, read-only Cloud readiness and
+recipe revision conflicts can be reviewed independently of whether the final
+LTX/AKUSPACE workflow qualifies. Reuse their portable contracts in later AV
+work; do not claim automatic compatibility before that integration is tested.
+
+| Wave                    | Agent A: scene and audio                                           | Agent B: product, cloud and agent                                                                               |
+| ----------------------- | ------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------- |
+| 0: repair current paths | Offline AV-02 kit; AV-08 captured-room fix; recipe conflict safety | AV-01 UI; output integrity, existing agent commands, sticky voice and Cloud readiness; agree portable contracts |
+| 1: source proof         | AV-03 evaluator; AV-02 A pilot when GPU is available               | AV-05 ownership/assets/revisions scaffold against agreed contracts                                              |
+| 2: reliable inputs      | AV-04 Swap/capture/Klein alignment; CPU schedule algorithms        | AV-05 restore; AV-06 reservation/controller and delivery                                                        |
+| 3: complete loop        | AV-08 dynamic/tail/sound-only integration; AV-02 B measurements    | AV-07 new scene/hosted commands, planner, locks, memory/QC; AV-10 staged UI                                     |
+| 4: evaluator release    | Final seeds, full output/listening review; optional AV-09          | AV-10 second-user flow, watch/embed/remix, sanitized reproducibility kit                                        |
 
 Each agent reviews the other lane's contract or boundary changes before merge.
 Use one issue per pickup and small scoped PRs. Record exact checks and remaining
@@ -211,6 +236,22 @@ No new GPU run, paid job, deployment or production migration was performed.
   the capable-browser visual check is completed.
 - The qualification kit includes 38 offline regressions and a CI step. Every
   new execution record starts as not run; these tests are not GPU evidence.
+
+The follow-up review moves these independent implementation slices into wave 0.
+These links identify PR work, not merged or deployed capabilities:
+
+| PR                                                                     | Implemented slice                                                                          | Remaining boundary                                                                       |
+| ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------- |
+| [22 · Output integrity](https://github.com/koshimazaki/genobi/pull/22) | Select the declared output node/media and require declared audio companions.               | Managed completion, retained bytes and atomic shot attachment still need AV-06.          |
+| [24 · Agent commands](https://github.com/koshimazaki/genobi/pull/24)   | Expose existing timeline edits through shared UI/API/CLI/MCP command validation.           | New scene commands, exact creative locks and hosted project control remain AV-03/05/07.  |
+| [27 · Cloud readiness](https://github.com/koshimazaki/genobi/pull/27)  | Explicit account-scoped node/model metadata check in Settings and agent discovery.         | Live account check, uploads, model loading, GPU execution and quality remain unverified. |
+| [29 · Voice routing](https://github.com/koshimazaki/genobi/pull/29)    | Agent-default remembered conversation, explicit prompt targets and local log entry points. | Capable-browser/real-mic checks and hosted speech/transport remain open.                 |
+
+Managed Comfy Cloud, a custom Comfy API deployment and Router are distinct
+routes. A managed-catalogue match is metadata readiness only; a custom graph
+needs its declared node/model environment and separate execution qualification.
+Router calls model IDs and does not establish arbitrary-workflow support. Use
+the runbook's route choice before preparing a paid pilot.
 
 The final release requires:
 

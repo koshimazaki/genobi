@@ -85,6 +85,22 @@ same stale button. See [the action's documented behavior](world-builder-sound.md
 
 ## Additional requirements, without inventing more baseline bugs
 
+### Existing-feature control work starts before GPU qualification
+
+The work packages combine independent repository fixes with future scene and
+hosted contracts. Split those scopes: existing timeline command parity, agent-default
+sticky voice, Cloud node/model readiness, exact output selection and recipe
+revision conflict handling can start now. They do not depend on the LTX pilot
+or final scene evaluator. The [implementation plan](audiovisual-implementation.md)
+tracks the focused PRs separately from the original release baseline.
+
+The interaction target is control over all supported actions from web and Studio,
+with voice reachable from activity/log and conversation surfaces. Select the
+agent once and retain that conversation across notes; prompt insertion is an
+explicit destination. Local command/voice improvements do not close B12:
+canonical hosted projects, hosted transcription/follow-up transport and
+cross-browser control still require their own routes and acceptance checks.
+
 ### Persistent restore and agent memory have different jobs
 
 [Studio undo](https://github.com/koshimazaki/genobi/blob/release/v0.14/src/studio/store.ts) retains at most twenty in-memory Bundle
@@ -127,7 +143,7 @@ optional and does not block a proven CPU-first release.
 | [Lifecycle tests](https://github.com/koshimazaki/genobi/blob/release/v0.14/tests/worker-lifecycle.test.ts), [take-to-project](https://github.com/koshimazaki/genobi/blob/release/v0.14/tests/mcp-take-to-project.test.ts)                                                                                                                       | Current expiry and owned local media import                                                                | Managed active-run retention and atomic target-aware attachment                  |
 | [Project preferences](https://github.com/koshimazaki/genobi/blob/release/v0.14/tests/project-preferences.test.ts), [agent memory](https://github.com/koshimazaki/genobi/blob/release/v0.14/tests/agent-memory.test.ts)                                                                                                                          | Persisted guidance and context continuity                                                                  | Uniform endpoint eligibility, exact field locks and persistent arbitrary restore |
 | [Proposed Apply room tests](https://github.com/koshimazaki/genobi/issues/15)                                                                                                                                                                                                                                                                    | Receipt authority and stale-context refusal at the hook boundary                                           | Actual sound quality; dynamic geometry or native convolution changes             |
-| [Offline qualification kit](https://github.com/koshimazaki/genobi/blob/release/v0.14/workflows/qualification/README.md)                                                                                                                                                                                                                         | Reproducible diagnostic inputs, graph identities and evidence validation                                   | Three-seed GPU qualification and truthful reviewed measurements                  |
+| [Offline qualification kit](https://github.com/koshimazaki/genobi/blob/7b97b310cd68909cef0039a6aacb08046d459b6e/workflows/qualification/README.md)                                                                                                                                                                                              | Reproducible diagnostic inputs, graph identities and evidence validation                                   | Three-seed GPU qualification and truthful reviewed measurements                  |
 
 The source audit ran five selected suites: 29 tests passed. The focused Apply
 room proposal passed 35 tests across its provenance, processing-route, capture
