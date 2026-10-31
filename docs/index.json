@@ -9,6 +9,8 @@
       "meaning": "Plans, sequencing, scope decisions and requirement capture",
       "pages": [
         "agent-workspace.md",
+        "audiovisual-gaps.md",
+        "audiovisual-implementation.md",
         "director-studio-shell.md",
         "dual-editor-editing.md",
         "genmod.md",
@@ -25,6 +27,7 @@
       "pages": [
         "activity-settings.md",
         "architecture.md",
+        "audiovisual-gpu-evaluation.md",
         "cloudflare.md",
         "read-through.md",
         "review-checklist.md",
@@ -38,6 +41,9 @@
       "pages": [
         "akuspace-docker.md",
         "arena.md",
+        "audiovisual-gaps.md",
+        "audiovisual-gpu-evaluation.md",
+        "audiovisual-implementation.md",
         "comfy-cloud-inventory.md",
         "comfy-deploy.md",
         "comfy-deployment.md",
@@ -173,6 +179,9 @@
         "akuspace-docker.md",
         "anime-teaser-template.md",
         "audio-analysis.md",
+        "audiovisual-gaps.md",
+        "audiovisual-gpu-evaluation.md",
+        "audiovisual-implementation.md",
         "bloom-teaser.md",
         "camera-wording.md",
         "comfy-deploy.md",
@@ -289,6 +298,8 @@
         "agent-setup.md",
         "architecture.md",
         "audio-analysis.md",
+        "audiovisual-gaps.md",
+        "audiovisual-implementation.md",
         "bfl-key-reuse.md",
         "cloudflare.md",
         "comfy-deploy.md",
@@ -318,6 +329,7 @@
       "meaning": "Comfy Cloud, Comfy Router, workflows and nodes",
       "pages": [
         "akuspace-docker.md",
+        "audiovisual-gpu-evaluation.md",
         "camera-wording.md",
         "comfy-cloud-inventory.md",
         "comfy-deploy.md",
@@ -430,6 +442,9 @@
       "meaning": "World Builder and Scene Adapter",
       "pages": [
         "adaptive-reverb.md",
+        "audiovisual-gaps.md",
+        "audiovisual-gpu-evaluation.md",
+        "audiovisual-implementation.md",
         "comfy-deploy.md",
         "director-bundle/showcase/adaptive-reverb/README.md",
         "project-assets.md",
@@ -473,6 +488,9 @@
       "meaning": "What was run and what it showed",
       "pages": [
         "adaptive-reverb-proof.md",
+        "audiovisual-gaps.md",
+        "audiovisual-gpu-evaluation.md",
+        "audiovisual-implementation.md",
         "director-remix-verification.md",
         "director-working-version.md",
         "dual-editor.md",
@@ -599,6 +617,9 @@
         "architecture.md",
         "arena.md",
         "audio-analysis.md",
+        "audiovisual-gaps.md",
+        "audiovisual-gpu-evaluation.md",
+        "audiovisual-implementation.md",
         "bfl-key-reuse.md",
         "bloom-teaser.md",
         "camera-wording.md",
@@ -898,6 +919,54 @@
       "tags": ["sound", "backend", "agents", "mcp"],
       "summary": "Audio analysis on the local server — tempo and a fitted beat grid, a downbeat estimate, onsets per band, intensity and key moments, with no Python; the optional librosa worker; the agent flow through genobi_audio_upload and genobi_audio_analysis.",
       "links": []
+    },
+    {
+      "title": "Audiovisual scene gap audit",
+      "path": "audiovisual-gaps.md",
+      "tags": [
+        "plan",
+        "verification",
+        "world-builder",
+        "sound",
+        "workflows",
+        "backend"
+      ],
+      "summary": "Source-backed audit of the seventeen audiovisual PRD gaps, existing safeguards, proposed fixes, and the evidence still needed before release.",
+      "links": [
+        "adaptive-reverb-proof.md",
+        "audiovisual-gpu-evaluation.md",
+        "comfy-deploy.md",
+        "licence-strategy.md",
+        "world-builder-sound.md"
+      ]
+    },
+    {
+      "title": "Audiovisual GPU and evaluator runbook",
+      "path": "audiovisual-gpu-evaluation.md",
+      "tags": [
+        "verification",
+        "workflows",
+        "comfy",
+        "world-builder",
+        "sound",
+        "architecture"
+      ],
+      "summary": "Operator runbook for staged audiovisual GPU qualification, CPU-first sound evaluation, managed deployment acceptance and evaluator access.",
+      "links": ["adaptive-reverb-proof.md", "comfy-deploy.md"]
+    },
+    {
+      "title": "Audiovisual scene implementation plan",
+      "path": "audiovisual-implementation.md",
+      "tags": [
+        "plan",
+        "verification",
+        "world-builder",
+        "sound",
+        "workflows",
+        "backend"
+      ],
+      "summary": "Ten linked implementation issues, a Camera-consistent user flow, two-agent sequencing, modular scene contracts, and release gates for one reproducible audiovisual template.",
+      "links": ["audiovisual-gaps.md", "audiovisual-gpu-evaluation.md"]
     },
     {
       "title": "Reuse a BFL Dashboard key",

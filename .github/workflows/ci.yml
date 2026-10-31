@@ -65,6 +65,9 @@ jobs:
         run: npm run typecheck
       - name: Tests
         run: npm test
+      # Offline evidence-contract tests only; no GPU, network or paid job.
+      - name: Audiovisual qualification fixtures
+        run: python3 -B -m unittest discover -s workflows/qualification -p 'test_*.py' -v
       - name: Build
         run: npm run build
       # The World Builder node's standalone bundle builds from src/world-builder

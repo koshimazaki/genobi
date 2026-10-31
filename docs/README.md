@@ -37,6 +37,10 @@ user action through every layer.
 
 ## Templates and evidence
 
+- [Audiovisual implementation plan](audiovisual-implementation.md) — ten linked issues, Camera-consistent UI, two-agent sequencing and modular scene scope.
+- [Audiovisual gap audit](audiovisual-gaps.md) — corrected status and ownership for the seventeen PRD gaps.
+- [Audiovisual GPU and evaluator runbook](audiovisual-gpu-evaluation.md) — offline fixtures, real GPU gates, CPU/AKUSPACE comparisons and hosted evaluator acceptance.
+
 - [Supervised workflow checks](supervised-workflow-checks.md) — complete asset-to-project acceptance and deferred project/Arena review follow-ups.
 - [Dimensions mix](dimensions-mix.md) — the first mix template: a finished
   Supernatural Creatures teaser cut to the owner's track at 140 BPM, with
