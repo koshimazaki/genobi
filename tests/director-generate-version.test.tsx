@@ -145,6 +145,79 @@ it("offers a project ZIP handoff on hosted and never sends unavailable media", a
   expect(state.send).not.toHaveBeenCalled();
 });
 
+it("lets a hosted finished mix keep existing media and continue editing from review without an agent", async () => {
+  state.copy = false;
+  const bundle = await versionMix();
+  await mount(bundle);
+  const title = document.querySelectorAll<HTMLInputElement>(
+    ".dir-version-words input",
+  )[1];
+  act(() => {
+    Object.getOwnPropertyDescriptor(
+      HTMLInputElement.prototype,
+      "value",
+    )!.set!.call(title, "MY REMIX");
+    title.dispatchEvent(new Event("input", { bubbles: true }));
+    for (const choice of document.querySelectorAll<HTMLInputElement>(
+      'input[type="checkbox"]',
+    ))
+      if (choice.checked) choice.click();
+  });
+  act(() => button("Review generation plan").click());
+  expect(document.body.textContent).toContain(
+    "No agent or paid generation is needed",
+  );
+  expect(button("Prepare with Genobi")).toBeUndefined();
+  expect(button("Apply swaps and continue editing").disabled).toBe(false);
+  await act(async () => {
+    button("Apply swaps and continue editing").click();
+    await vi.waitFor(
+      () =>
+        expect(studioStore.getState().director.bundle === bundle).toBe(false),
+      { timeout: 5000 },
+    );
+  });
+  expect(document.querySelector("dialog")).toBeNull();
+  expect(
+    studioStore.getState().director.bundle?.project.template?.inputs.title,
+  ).toBe("MY REMIX");
+  expect(state.send).not.toHaveBeenCalled();
+  expect(fetch).not.toHaveBeenCalled();
+  act(() => studioStore.getState().actions.undo());
+  expect(
+    studioStore.getState().director.bundle?.project.template?.inputs.title,
+  ).toBe(bundle.project.template?.inputs.title);
+});
+
+it("keeps the advanced brief collapsed by default and preserves it when toggled", async () => {
+  const original = await versionCharacter();
+  const brief = readBrief(original);
+  const text =
+    "Keep the original camera; make the room breathe to the bass. [Image 1]";
+  await mount(writeBrief(original, { ...brief, text }));
+  const advanced = document.querySelector<HTMLDetailsElement>(
+    ".dir-version-advanced",
+  )!;
+  const field = document.querySelector<HTMLTextAreaElement>(
+    'textarea[aria-label="Make it yours description"]',
+  )!;
+  expect(advanced.open).toBe(false);
+  act(() => advanced.querySelector("summary")!.click());
+  expect(advanced.open).toBe(true);
+  expect(field.value).toBe(text);
+  act(() => advanced.querySelector("summary")!.click());
+  expect(advanced.open).toBe(false);
+  expect(field.value).toBe(text);
+  act(() => button("Review generation plan").click());
+  await act(async () => {
+    button("Prepare with Genobi").click();
+    await vi.waitFor(() => expect(state.send).toHaveBeenCalledOnce());
+  });
+  expect(readBrief(studioStore.getState().director.bundle!).text).toBe(text);
+  expect(state.send.mock.calls[0][0]).toContain(text);
+  expect(fetch).not.toHaveBeenCalled();
+});
+
 it("keeps Gallery free of the template modal and does not reopen a dismissed panel on an edit", async () => {
   state.preset = "gallery";
   const mounted = await mount(await versionCharacter());

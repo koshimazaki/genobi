@@ -76,6 +76,9 @@ export default function VersionPanel({
   const [notice, setNotice] = useState("");
   const lock = useRef(false);
   const busy = working || agent.sending || agent.working;
+  // House templates still have shots to prepare. A finished mix with no
+  // replacement requests can be edited entirely in the browser.
+  const needsAgent = !template.mix || make.length > 0;
   async function act(action: () => Promise<void>) {
     if (lock.current) return;
     lock.current = true;
@@ -167,9 +170,9 @@ export default function VersionPanel({
       </nav>
       {agent.copy === false && (
         <p className="dir-version-connection" role="status">
-          Generation for this project continues in your local studio. You can
-          replace media and edit here. Save a project ZIP to bring your uploads
-          and edits with you.
+          {needsAgent
+            ? "Generation for this project continues in your local studio. You can replace media and edit here. Save a project ZIP to bring your uploads and edits with you."
+            : "You can apply these edits here. Save an editable project ZIP to keep your files and timeline."}
         </p>
       )}
       {new URLSearchParams(search).get("handoff") === "project-zip" && (
@@ -181,38 +184,6 @@ export default function VersionPanel({
       )}
       {!review ? (
         <>
-          <section
-            className="dir-version-brief"
-            aria-label="Make it yours brief"
-          >
-            <label>
-              Your description and reference bindings
-              <textarea
-                aria-label="Make it yours description"
-                value={readVersionBrief(draft).text}
-                maxLength={12000}
-                disabled={busy}
-                onChange={(e) =>
-                  setDraft(
-                    writeBrief(draft, {
-                      ...readVersionBrief(draft),
-                      text: e.target.value,
-                    }),
-                  )
-                }
-              />
-            </label>
-            <VersionPreview
-              bundle={draft}
-              ids={readVersionBrief(draft).references.flatMap((r) =>
-                r.assetId ? [r.assetId] : [],
-              )}
-            />
-            <small>
-              Character, style, font and other references stay bound to your
-              saved description. Edit their bindings in Make it yours.
-            </small>
-          </section>
           <section className="dir-version-inputs" aria-label="Template inputs">
             <fieldset className="dir-version-words" disabled={busy}>
               <legend>Words</legend>
@@ -265,6 +236,41 @@ export default function VersionPanel({
               />
             ))}
           </section>
+          <details className="dir-version-advanced">
+            <summary>Advanced · description and references</summary>
+            <section
+              className="dir-version-brief"
+              aria-label="Make it yours brief"
+            >
+              <label>
+                Your description and reference bindings
+                <textarea
+                  aria-label="Make it yours description"
+                  value={readVersionBrief(draft).text}
+                  maxLength={12000}
+                  disabled={busy}
+                  onChange={(e) =>
+                    setDraft(
+                      writeBrief(draft, {
+                        ...readVersionBrief(draft),
+                        text: e.target.value,
+                      }),
+                    )
+                  }
+                />
+              </label>
+              <VersionPreview
+                bundle={draft}
+                ids={readVersionBrief(draft).references.flatMap((r) =>
+                  r.assetId ? [r.assetId] : [],
+                )}
+              />
+              <small>
+                Character, style, font and other references stay bound to your
+                saved description. Edit their bindings in Make it yours.
+              </small>
+            </section>
+          </details>
           <footer>
             {agent.copy === false && (
               <>
@@ -317,8 +323,9 @@ export default function VersionPanel({
             bundle={draft}
             make={make}
             inputs={inputs}
+            needsAgent={needsAgent}
           />
-          {agent.copy === false && (
+          {needsAgent && agent.copy === false && (
             <p>
               To let your agent use these files, save the editable project ZIP
               and open it in your local studio. Hosted pairing alone does not
@@ -344,14 +351,28 @@ export default function VersionPanel({
               Back to inputs
             </button>
             <button
-              className="dir-primary"
-              disabled={busy || agent.copy !== true}
-              onClick={() => void act(prepare)}
+              className={needsAgent ? undefined : "dir-primary"}
+              disabled={busy}
+              onClick={() =>
+                void act(async () => {
+                  await apply();
+                  close();
+                })
+              }
             >
-              Prepare with Genobi · approval in bubble
+              Apply swaps and continue editing
             </button>
+            {needsAgent && (
+              <button
+                className="dir-primary"
+                disabled={busy || agent.copy !== true}
+                onClick={() => void act(prepare)}
+              >
+                Prepare with Genobi · approval in bubble
+              </button>
+            )}
           </footer>
-          {agent.copy === undefined && (
+          {needsAgent && agent.copy === undefined && (
             <p role="status">Checking local project connection…</p>
           )}
         </>

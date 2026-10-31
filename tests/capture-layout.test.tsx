@@ -34,11 +34,15 @@ it("sets a compatible capture preset and sends only an existing take without upl
     ready: true,
     busy: false,
     take: null,
+    recipe: { width: 1280, height: 704, frames: 97 },
     change,
     run: (fn: () => Promise<void>) => fn(),
   } as unknown as BuilderSession;
   const { host, redraw } = mount(() => <CaptureLayout s={s} send={send} />);
   const buttons = host.querySelectorAll("button");
+  expect(buttons[0].getAttribute("aria-pressed")).toBe("false");
+  expect(host.querySelector("output")?.textContent).toBe("Preset needed");
+  expect(host.querySelector("details")?.open).toBe(false);
   act(() => buttons[0].click());
   expect(change).toHaveBeenCalledWith({
     width: 1024,
@@ -47,11 +51,31 @@ it("sets a compatible capture preset and sends only an existing take without upl
     seconds: 8,
   });
   expect(buttons[1].disabled).toBe(true);
+  Object.assign(s.recipe, { width: 1024, height: 576, frames: 193 });
   s.take = {} as NonNullable<BuilderSession["take"]>;
   redraw();
+  expect(buttons[0].getAttribute("aria-pressed")).toBe("true");
+  expect(host.querySelector("output")?.textContent).toBe("Scene format set");
   await act(async () => buttons[1].click());
   expect(send).toHaveBeenCalledOnce();
+  s.busy = true;
+  redraw();
+  expect(buttons[0].disabled).toBe(true);
+  expect(buttons[1].disabled).toBe(true);
   expect(fetcher).not.toHaveBeenCalled();
+});
+
+it("does not offer a Camera handoff in the standalone builder", () => {
+  const s = {
+    ready: true,
+    busy: false,
+    recipe: { width: 1024, height: 576, frames: 193 },
+    change: vi.fn(),
+  } as unknown as BuilderSession;
+  const { host } = mount(() => <CaptureLayout s={s} />);
+  expect(host.querySelectorAll("button")).toHaveLength(1);
+  expect(host.textContent).not.toContain("Camera");
+  expect(host.textContent).toContain("does not start generation");
 });
 
 it("selects the combined workflow once for an explicit handoff, preserving later composer edits", () => {

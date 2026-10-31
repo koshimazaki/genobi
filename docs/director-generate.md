@@ -14,6 +14,9 @@ editable description. Preview an asset larger, drop a replacement onto its slot,
 or select another project asset. Replacements commit to this project with Undo;
 the Generate button below reads those same assets and the saved description.
 Character, style, font and other reference bindings remain in the saved brief.
+In the generation panel, **Advanced · description and references** opens the
+optional brief after the media cards. It starts collapsed; closing the disclosure
+keeps the text and bindings intact.
 Finished mixes show their declared template direction, which you can edit; this
 is not a claim to know the example footage’s original generation prompt.
 
@@ -29,6 +32,10 @@ image token. Unrelated references and the person's description stay intact.
 **Apply swaps only** commits a local edit with Undo. It does not generate or start
 an agent. A graphic's picture may change while its text and animation remain
 editable; its image bytes travel in the saved project ZIP.
+The plan review also offers **Apply swaps and continue editing**, including on the
+hosted studio. A finished mix with every input set to reuse has no agent step:
+the action applies the current media and Words and closes the panel. House
+templates with shots to generate retain their agent preparation path.
 
 For finished mixes, unchanged example video slots initially request replacements;
 your uploaded or generated clips initially stay in place. Review these choices.

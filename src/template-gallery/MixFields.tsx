@@ -9,14 +9,16 @@ export default function MixFields({ template }: { template: HouseTemplate }) {
   if (!mix) return null;
   const { cut } = mix;
   const recipes = [...new Set(cut.layers.map((l) => l.module))];
-  const slices = cut.shots.filter((s) => s.cropY !== null);
-  const clips = new Set(slices.map((s) => s.asset)).size;
+  // cropY only describes a square source's crop. Landscape shots are still
+  // real shots, including every shot in Adaptive reverb and Bloom.
+  const clips = new Set(cut.shots.map((s) => s.asset)).size;
   return (
     <section className="template-recipe" aria-label="The cut">
       <h3>The cut</h3>
       <p>
-        {slices.length} slices of {clips} bundled clips and an end card, cut on
-        the bar at {cut.bpm} BPM to the track from {cut.inPointSeconds} s.
+        {cut.shots.length} shots from {clips} bundled video{" "}
+        {clips === 1 ? "source" : "sources"}. Timeline at {cut.bpm} BPM; source
+        track starts at {cut.inPointSeconds} s.
       </p>
       <p>Overlays: {recipes.join(", ")}.</p>
     </section>

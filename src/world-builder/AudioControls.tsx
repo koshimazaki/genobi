@@ -1,7 +1,7 @@
 /**
  * The Sound panel, laid out as Holodeck's Audio Intel panel: a transport row
  * (Play with a live meter beside it, Load audio, Recent, the track name), then
- * Signal scopes, Mod matrix, Audio assets and Clear audio. Folded in the dock,
+ * Audio response, optional Signal scopes, Audio assets and Clear audio. Folded in the dock,
  * only the transport and its meter stay. A track a person loads plays at once.
  *
  * Layout ported from Holodeck's AudioIntelPanel

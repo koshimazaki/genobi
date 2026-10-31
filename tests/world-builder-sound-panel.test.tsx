@@ -133,7 +133,7 @@ describe("Sound panel layout", () => {
     );
   }
 
-  it("puts the transport first, then Holodeck's sections in order", () => {
+  it("puts editable audio response before optional diagnostic scopes", () => {
     const html = panel();
     const at = (text: string) => html.indexOf(text);
     expect(at('aria-label="Play"')).toBeGreaterThan(-1);
@@ -144,18 +144,22 @@ describe("Sound panel layout", () => {
     );
     expect(at("Voice take")).toBeGreaterThan(at('aria-label="Recent audio"'));
     const order = [
-      "Signal scopes",
+      "Audio response",
       "Mod matrix",
+      "Signal scopes",
       "Audio assets",
       "Clear audio",
     ];
     const places = order.map(at);
     expect(places.every((p) => p > at("Voice take"))).toBe(true);
     expect([...places].sort((x, y) => x - y)).toEqual(places);
-    // The scopes open by default, as in Holodeck.
+    // Route controls open first; collapsing diagnostics keeps the scopes mounted.
     expect(html).toMatch(
-      /<details class="wb-fold" open="">\s*<summary>Signal scopes/,
+      /<details class="wb-fold" open="">\s*<summary>Audio response/,
     );
+    expect(html).toMatch(/<details class="wb-fold">\s*<summary>Signal scopes/);
+    expect(html).toContain('aria-label="Route 1 target"');
+    expect(html).toContain("active routes");
     expect(html).toContain('aria-label="Spectrogram"');
     expect(html).toContain('aria-label="Spectrum"');
   });

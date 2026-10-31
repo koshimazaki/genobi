@@ -129,12 +129,12 @@ export function CaptureOutput({
               </button>
             )}
           </div>
+          <p className="wb-hint">
+            WebM carries the visual guidance; the matching WAV carries the
+            soundtrack.
+          </p>
         </Fold>
       )}
-      <p className="wb-hint">
-        WebM carries the visual guidance; the matching WAV carries the
-        soundtrack.
-      </p>
     </section>
   );
 }

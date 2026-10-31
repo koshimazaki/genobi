@@ -86,6 +86,7 @@ try {
     const badge = panel.locator(".wb-badge[data-tone]");
     assert.equal(await badge.textContent(), "ARMED");
 
+    await panel.getByText("Capture settings", { exact: true }).click();
     await button("1:1").click();
     await page.waitForFunction(
       () => window.directorScene.getRecipe().width === 1024,

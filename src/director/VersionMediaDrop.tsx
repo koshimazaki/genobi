@@ -85,6 +85,7 @@ export default function VersionMediaDrop({
           ref={input}
           className="sr-only"
           type="file"
+          hidden
           aria-label={`Upload ${slot.label}`}
           accept={
             slot.kind === "video"

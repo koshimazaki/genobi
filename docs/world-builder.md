@@ -138,7 +138,7 @@ capture script).
   [camera path](camera-wording.md#camera-paths); it does not reach a
   generation request yet.
 - Load audio to derive a reproducible per-frame RMS envelope and low, mid and
-  high bands. The Sound tab's **Mod matrix** routes them to props, set pieces,
+  high bands. The Sound tab's **Audio response** mod matrix routes them to props, set pieces,
   the character, the Neuro shader and the lights ([audio mod matrix](world-builder-sound.md#audio-mod-matrix)).
   Preview playback starts at frame zero.
 - Sound is live in Shot, Build and Walk: the Sound tab's loader, Play/Stop and

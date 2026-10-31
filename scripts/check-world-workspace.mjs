@@ -155,7 +155,7 @@ try {
       "Escape closes the focused panel and returns focus to its launcher",
     );
     await show("Sound");
-    await app.getByText("Mod matrix", { exact: true }).click();
+    // Audio response opens with the Sound panel; diagnostic scopes are optional.
     // Route 1 of a room is the sphere's height route.
     await chooseSelect(app.getByLabel("Route 1 property"), "scale");
     // The Genobi footer deck, opened, renders in front of the docked panels
