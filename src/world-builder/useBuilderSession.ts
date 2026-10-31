@@ -30,6 +30,7 @@ import { reconcileDuration } from "./take-duration";
 import { audioLabel, type AudioSource } from "./audio-history";
 import { hostMessages } from "./host-messages";
 import { useAudioHistory } from "./useAudioHistory";
+import { useAudioURL } from "./useAudioURL";
 import { assertWalkEdit } from "./walk-edits";
 import { useTakeChannel } from "./take-channel";
 import type { RecipeGuard, SceneAdapter } from "./scene-adapter";
@@ -63,7 +64,7 @@ export function useBuilderSession() {
     [error, setError] = useState(""),
     [status, setStatus] = useState("Ready to prepare a set."),
     [take, setTake, onTake] = useTakeChannel(),
-    [audioURL, setAudioURL] = useState(""),
+    [audioURL, setAudioURL] = useAudioURL(),
     [audioName, setAudioName] = useState(""),
     [mediaName, setMediaName] = useState(""),
     [loop, setLoop] = useState(false);
@@ -74,8 +75,13 @@ export function useBuilderSession() {
   const api = useRef<SceneAdapter | null>(null),
     previewQueue = useRef(Promise.resolve()),
     settling = useRef<() => boolean>(() => false);
-  const { playing, playingRef, setPlaying, stopping, settled } =
-    usePlaybackState(runtime, audioElement, previewQueue);
+  const playback = usePlaybackState(
+    runtime,
+    audioElement,
+    previewQueue,
+    () => !controller.current && !settling.current(),
+  );
+  const { playing, playingRef, setPlaying, stopping, settled } = playback;
   const [json, setJson] = useState(""),
     [ready, setReady] = useState(false),
     [previewOnly, setPreviewOnly] = useState(false);
@@ -188,7 +194,6 @@ export function useBuilderSession() {
       getRecipe: () => structuredClone(current.current),
       getRecipeRevision: revision.read,
       async configure(input, guard) {
-        // An edit applies live under Play; the preview skips frames meanwhile.
         idle(true, true);
         revision.assert(guard);
         const guarded = guard?.expectedRevision !== undefined;
@@ -413,15 +418,11 @@ export function useBuilderSession() {
       live.dispose();
       world.dispose();
     };
-  }, [playingRef, setPlaying, setTake]);
-  useEffect(
-    () => () => {
-      if (audioURL) URL.revokeObjectURL(audioURL);
-    },
-    [audioURL],
-  );
+  }, [playingRef, setAudioURL, setPlaying, setTake]);
   useScenePlayback({
     playing,
+    revision: playback.revision,
+    soundPreview: playback.soundPreview,
     // A seamless-loop recipe always previews looping, so the seam is seen.
     loop: loop || recipe.loop === true,
     current,
@@ -468,6 +469,7 @@ export function useBuilderSession() {
       stopping(() => loader.current(blob, source, label))(),
     mediaName,
     playing,
+    ...playback.sound,
     setPlaying,
     stopping,
     settled,
@@ -495,5 +497,4 @@ export function useBuilderSession() {
     onTake,
   };
 }
-
 export type BuilderSession = ReturnType<typeof useBuilderSession>;

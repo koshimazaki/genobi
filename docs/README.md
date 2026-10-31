@@ -40,6 +40,8 @@ user action through every layer.
 - [Audiovisual implementation plan](audiovisual-implementation.md) — ten linked issues, Camera-consistent UI, two-agent sequencing and modular scene scope.
 - [Audiovisual gap audit](audiovisual-gaps.md) — corrected status and ownership for the seventeen PRD gaps.
 - [Audiovisual GPU and evaluator runbook](audiovisual-gpu-evaluation.md) — offline fixtures, real GPU gates, CPU/AKUSPACE comparisons and hosted evaluator acceptance.
+- [Audio-reactive LTX pilot](audio-reactive-ltx-pilot.md) — editable fruit, architecture and descending-camera guides, exact music cues and controlled local model comparisons.
+- [Vast runner](vast-runner.md) — pinned worker setup, SSH, model downloads and read-only checks before the first GPU experiment.
 
 - [Supervised workflow checks](supervised-workflow-checks.md) — complete asset-to-project acceptance and deferred project/Arena review follow-ups.
 - [Dimensions mix](dimensions-mix.md) — the first mix template: a finished
@@ -186,6 +188,7 @@ user action through every layer.
   scene edits with a live revision guard.
 - [World Builder sound](world-builder-sound.md) — the Sound panel, the example
   track, the audio mod matrix and the reactive room presets.
+- [Changing room sound](world-builder-dynamic-sound.md) — local CPU rendering from the evaluated room timeline, independent dry sound, retained convolution history and decay tails.
 - [World Builder acoustics](world-builder-acoustics.md) — the room's Sabine
   RT60 estimate, AKUSPACE presets and the Reverb node.
 - [World Builder controls](world-builder-controls.md) — edits during Play,

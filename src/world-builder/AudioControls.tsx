@@ -18,6 +18,7 @@ import { useSignalScopes } from "./useSignalScopes";
 import { loadAndPlay } from "./sound-autoplay";
 import { togglePlay } from "./example-track";
 import { inComfyNode } from "./host";
+import { RoomSoundControls } from "./RoomSoundControls";
 import "./sound-panel.css";
 
 /** Sound works in Shot, Build and Walk; the take freezes it at capture. */
@@ -103,6 +104,7 @@ export function AudioControls({
         selected={selected}
         folded={folded}
       />
+      <RoomSoundControls s={s} folded={folded} />
     </div>
   );
 }

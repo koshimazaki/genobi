@@ -43,6 +43,7 @@
       "pages": [
         "akuspace-docker.md",
         "arena.md",
+        "audio-reactive-ltx-pilot.md",
         "audiovisual-gaps.md",
         "audiovisual-gpu-evaluation.md",
         "audiovisual-implementation.md",
@@ -59,6 +60,7 @@
         "seedvr2-upscale.md",
         "supervised-workflow-checks.md",
         "upscaling.md",
+        "vast-runner.md",
         "vfx-recipes/README.md",
         "vfx-recipes/anime-opening.md",
         "vfx-recipes/hologram-turntable.md",
@@ -170,6 +172,7 @@
         "world-builder-acoustics.md",
         "world-builder-capture.md",
         "world-builder-controls.md",
+        "world-builder-dynamic-sound.md",
         "world-builder-interface.md",
         "world-builder-loops.md",
         "world-builder-motion.md",
@@ -188,6 +191,7 @@
         "akuspace-docker.md",
         "anime-teaser-template.md",
         "audio-analysis.md",
+        "audio-reactive-ltx-pilot.md",
         "audiovisual-gaps.md",
         "audiovisual-gpu-evaluation.md",
         "audiovisual-implementation.md",
@@ -209,6 +213,7 @@
         "templates.md",
         "vision.md",
         "world-builder-acoustics.md",
+        "world-builder-dynamic-sound.md",
         "world-builder-loops.md",
         "world-builder-motion.md",
         "world-builder-sound.md"
@@ -361,6 +366,7 @@
         "seedvr2-upscale.md",
         "troubleshooting.md",
         "upscaling.md",
+        "vast-runner.md",
         "workflow-reference-library.md",
         "world-builder-acoustics.md",
         "world-builder.md"
@@ -461,6 +467,7 @@
       "meaning": "World Builder and Scene Adapter",
       "pages": [
         "adaptive-reverb.md",
+        "audio-reactive-ltx-pilot.md",
         "audiovisual-gaps.md",
         "audiovisual-gpu-evaluation.md",
         "audiovisual-implementation.md",
@@ -471,6 +478,7 @@
         "world-builder-acoustics.md",
         "world-builder-capture.md",
         "world-builder-controls.md",
+        "world-builder-dynamic-sound.md",
         "world-builder-interface.md",
         "world-builder-loops.md",
         "world-builder-motion.md",
@@ -591,6 +599,7 @@
         "seedvr2-upscale.md",
         "templates.md",
         "upscaling.md",
+        "vast-runner.md",
         "voice-mode.md",
         "voice-setup.md",
         "workflow-reference-library.md"
@@ -645,6 +654,7 @@
         "architecture.md",
         "arena.md",
         "audio-analysis.md",
+        "audio-reactive-ltx-pilot.md",
         "audiovisual-gaps.md",
         "audiovisual-gpu-evaluation.md",
         "audiovisual-implementation.md",
@@ -758,6 +768,7 @@
         "templates.md",
         "troubleshooting.md",
         "upscaling.md",
+        "vast-runner.md",
         "verification.md",
         "vfx-recipes/README.md",
         "vfx-recipes/anime-opening.md",
@@ -771,6 +782,7 @@
         "world-builder-acoustics.md",
         "world-builder-capture.md",
         "world-builder-controls.md",
+        "world-builder-dynamic-sound.md",
         "world-builder-interface.md",
         "world-builder-loops.md",
         "world-builder-motion.md",
@@ -970,6 +982,17 @@
       "tags": ["sound", "backend", "agents", "mcp"],
       "summary": "Audio analysis on the local server — tempo and a fitted beat grid, a downbeat estimate, onsets per band, intensity and key moments, with no Python; the optional librosa worker; the agent flow through genobi_audio_upload and genobi_audio_analysis.",
       "links": []
+    },
+    {
+      "title": "Audio-reactive LTX pilot",
+      "path": "audio-reactive-ltx-pilot.md",
+      "tags": ["workflows", "world-builder", "sound"],
+      "summary": "Capture editable music-driven fruit, architecture and descending-camera studies, then compare two local LTX candidates with the original soundtrack.",
+      "links": [
+        "vast-runner.md",
+        "world-builder-dynamic-sound.md",
+        "world-builder-loops.md"
+      ]
     },
     {
       "title": "Audiovisual scene gap audit",
@@ -2243,6 +2266,13 @@
       "links": ["run-location.md", "seedvr2-upscale.md"]
     },
     {
+      "title": "Vast runner for the LTX experiments",
+      "path": "vast-runner.md",
+      "tags": ["workflows", "comfy", "models"],
+      "summary": "Prepare a pinned local ComfyUI worker on Vast, connect by SSH and check it before running LTX experiments.",
+      "links": []
+    },
+    {
       "title": "Verification",
       "path": "verification.md",
       "tags": ["architecture", "verification"],
@@ -2353,7 +2383,11 @@
       "path": "world-builder-acoustics.md",
       "tags": ["3d", "world-builder", "comfy", "sound"],
       "summary": "World Builder's room acoustics estimate (Sabine RT60 to AKUSPACE presets) and the Reverb node's DSP route.",
-      "links": ["media-space.md", "world-builder.md"]
+      "links": [
+        "media-space.md",
+        "world-builder-dynamic-sound.md",
+        "world-builder.md"
+      ]
     },
     {
       "title": "World Builder · Capture panel",
@@ -2368,6 +2402,13 @@
       "tags": ["3d", "world-builder", "studio"],
       "summary": "World Builder controls - capture and edits during Play, character orientation, preview and character shortcuts, and the panel dock.",
       "links": ["world-builder-loops.md", "world-builder.md"]
+    },
+    {
+      "title": "Room sound along the scene timeline",
+      "path": "world-builder-dynamic-sound.md",
+      "tags": ["3d", "world-builder", "sound"],
+      "summary": "Browser CPU room sound follows the evaluated scene timeline, with retained convolution history and an explicit decay-tail policy.",
+      "links": []
     },
     {
       "title": "World Builder interface pass",
@@ -2401,6 +2442,7 @@
         "audiovisual-gpu-evaluation.md",
         "effects-catalogue.md",
         "world-builder-capture.md",
+        "world-builder-dynamic-sound.md",
         "world-builder-loops.md",
         "world-builder-sound.md",
         "world-builder.md"
@@ -2411,7 +2453,7 @@
       "path": "world-builder-sound.md",
       "tags": ["3d", "world-builder", "sound"],
       "summary": "World Builder's Sound panel, the example track, the audio mod matrix, the reactive room presets and what the Comfy node shows of them.",
-      "links": ["world-builder.md"]
+      "links": ["world-builder-dynamic-sound.md", "world-builder.md"]
     },
     {
       "title": "World Builder verification — 16 October 2026",

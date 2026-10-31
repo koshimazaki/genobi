@@ -445,6 +445,7 @@ pixel-for-pixel, and depth reseeking agreed. The manifest reports frame 720 at
 ![Tick-selected A–D forms with a precise frame-grid duration fader](media/world-morph-composer-ui.jpg)
 
 Related: [World Builder](world-builder.md), [sound controls](world-builder-sound.md),
+[changing room sound](world-builder-dynamic-sound.md),
 [capture](world-builder-capture.md), [GPU evaluation](audiovisual-gpu-evaluation.md).
 
 ![Closed architecture at 64, 128 and 256 blocks, rendered by the production viewport](media/world-architecture-morphs.png)
