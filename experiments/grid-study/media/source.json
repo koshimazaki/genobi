@@ -1,0 +1,16 @@
+{
+  "source": "public/media/director-templates/bloom-teaser/bloom-h3-b.mp4",
+  "sourceSha256": "5276e31e954a068d60a9b8a66fe3a5d4b0568cefdc1009a880a93243816b1114",
+  "atlasSha256": "a6ba25a9b0f01db6a06c83c8bcf4127dae4db8ffceb68960bf5552dbf79d45bb",
+  "atlasBytes": 2572012,
+  "columns": 8,
+  "rows": 16,
+  "frames": 128,
+  "width": 480,
+  "height": 270,
+  "fps": 24,
+  "primaryOffsetFrames": 16,
+  "studyFrames": 96,
+  "sourceStartSeconds": 0,
+  "provenance": "Existing owner-supplied MiniMax H3 output; no new generation."
+}

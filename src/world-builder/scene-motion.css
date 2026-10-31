@@ -30,7 +30,7 @@
   padding: 2px 0 5px;
 }
 .wb-app .wb-state-card {
-  flex: 1 0 140px;
+  flex: 1 0 190px;
   min-width: 0;
   max-width: 300px;
   padding: 0;
@@ -39,6 +39,11 @@
   overflow: hidden;
   text-align: left;
   background: var(--sunken);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+.wb-state-card[data-selected="true"] {
+  border-color: var(--accent-strong);
 }
 .wb-state-card svg {
   width: 100%;
@@ -62,6 +67,92 @@
   margin-left: auto;
   font-size: 9px;
   color: var(--muted);
+}
+.wb-state-card > span > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.wb-state-actions {
+  display: flex;
+  gap: 5px;
+  padding: 0 7px 7px;
+}
+.wb-state-actions button {
+  padding: 6px 7px;
+  font: 10px var(--mono);
+}
+.wb-state-actions button:last-child {
+  flex: 1;
+}
+.wb-app .wb-state-add {
+  flex: 0 0 150px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  border-style: dashed;
+  background: var(--sunken);
+  font: 11px var(--mono);
+}
+.wb-state-add small {
+  color: var(--muted);
+  font-size: 9px;
+}
+.wb-state-audio {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+.wb-state-audio-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 20px;
+}
+.wb-state-audio-heading .wb-check {
+  font: 11px var(--mono);
+}
+.wb-state-audio-strength {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  font: 10px var(--mono);
+  color: var(--muted);
+}
+.wb-state-audio-strength input {
+  min-width: 0;
+  width: 100px;
+}
+.wb-state-audio-strength output {
+  width: 32px;
+  text-align: right;
+}
+.wb-state-audio-routes {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 8px;
+  margin-top: 10px;
+}
+.wb-state-audio-routes > label {
+  display: grid;
+  gap: 5px;
+  min-width: 0;
+  font: 10px var(--mono);
+}
+.wb-state-audio-routes > label > span {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.wb-state-audio-routes b {
+  margin-right: 5px;
+  color: var(--accent-strong);
+}
+.wb-state-audio-routes .themed-select {
+  min-width: 0;
 }
 .wb-motion-controls {
   display: grid;
@@ -142,6 +233,6 @@
     flex-wrap: wrap;
   }
   .wb-app .wb-state-card {
-    flex-basis: 140px;
+    flex-basis: 190px;
   }
 }

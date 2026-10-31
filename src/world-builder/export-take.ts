@@ -160,6 +160,13 @@ async function exportTakeImpl(
             appearance: renderer.appearance?.(),
             frameCount: recipe.frames,
             duration: recipe.frames / recipe.fps,
+            ltxTiming: {
+              numFrames: recipe.frames,
+              frameRate: recipe.fps,
+              temporalMultiple: 8,
+              temporalOffset: 1,
+              lastSampleSeconds: (recipe.frames - 1) / recipe.fps,
+            },
             timebase: "frame / fps",
             colour: "browser SDR",
             passes: depthVideo ? ["colour", "depth"] : ["colour"],

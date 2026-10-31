@@ -1,4 +1,5 @@
 import { DeploymentAssets } from "./deployment-assets";
+import { effectsRouter } from "./effects-routes";
 import { ActivityStore } from "./activity";
 import { mountDevelopment, type DevOptions } from "./development-routes";
 import { RunnerConnection } from "./runner-connection";
@@ -293,6 +294,7 @@ export async function createApp(options: AppOptions) {
       !request.path.startsWith("/agent/") &&
       !request.path.startsWith("/runner/") &&
       !request.path.startsWith("/activity") &&
+      !request.path.startsWith("/effects") &&
       !/^\/(world|scrolls)\//.test(request.path) &&
       !request.path.startsWith("/arena")
     )
@@ -315,6 +317,7 @@ export async function createApp(options: AppOptions) {
   // An agent's session never spends: the person approves in their studio.
   for (const route of PAID_ROUTES) app.post(route, refuseAgentSpend);
   app.use("/api", accountRouter(service, keys, providers, limit));
+  app.use("/api/effects", effectsRouter(limit));
   app.get("/api/history", async (_request, response) => {
     limit("history", response.locals.sessionId);
     const studio = Boolean(response.locals.sharedOwner);

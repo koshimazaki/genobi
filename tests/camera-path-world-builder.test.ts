@@ -12,6 +12,8 @@ import {
 } from "../src/world-builder/camera-path";
 import {
   cameraAt,
+  cameraTargetAt,
+  cameraFovAt,
   presetRecipe,
   validateRecipe,
 } from "../src/world-builder/recipe";
@@ -39,6 +41,49 @@ const ring = (degrees: number, radius = 10, height = 1, steps = 16) =>
   );
 
 describe("World Builder moves as camera paths", () => {
+  it("retains keyed look targets, lenses and measured audio offsets through exported samples", () => {
+    const recipe = validateRecipe({
+      ...studio,
+      frames: 17,
+      bandEnvelopes: { sub: Array(17).fill(0.4), low: [], mid: [], high: [] },
+      cameraMotion: {
+        version: 1,
+        enabled: true,
+        keys: [
+          {
+            id: "a",
+            frame: 0,
+            position: [7, 8, 15],
+            target: [1, 3, -2],
+            fov: 38,
+            easing: "easeInOut",
+          },
+          {
+            id: "b",
+            frame: 16,
+            position: [3, 4, 9],
+            target: [2, 1, -5],
+            fov: 68,
+            easing: "linear",
+          },
+        ],
+        audio: { enabled: true, source: "sub", amount: 0.5, motion: "push" },
+      },
+    });
+    const path = validateCameraPath(
+      JSON.parse(JSON.stringify(recipeCameraPath(recipe))),
+    );
+    for (let frame = 0; frame < recipe.frames; frame++) {
+      const sampled = atFrame(path, frame, recipe.frames);
+      cameraAt(recipe, frame).forEach((n, i) =>
+        expect(sampled.position[i]).toBeCloseTo(n, 10),
+      );
+      cameraTargetAt(recipe, frame).forEach((n, i) =>
+        expect(sampled.target[i]).toBeCloseTo(n, 10),
+      );
+      expect(sampled.fov).toBeCloseTo(cameraFovAt(recipe, frame), 10);
+    }
+  });
   it("replays a recipe's eased orbit, dolly and crane exactly on every frame through JSON", () => {
     const recipe = validateRecipe({
       ...studio,

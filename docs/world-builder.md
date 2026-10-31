@@ -8,7 +8,7 @@ summary: World Builder and Scene Adapter, the set-preparation tool beside Direct
 World Builder is an optional set-preparation tool beside Director. Open it from
 Director's header or at `/world-builder`. `/scene-adapter` opens the same UI and
 runtime independently. The studio 3D preset opens this single Builder viewer,
-with a **Load preset** menu (it replaces the whole set) and a character menu, and one Camera / Sound / Scene / Capture inspector.
+with a **Load preset** menu and character menu, a global [Loop panel](world-builder-loops.md), and one sidebar for Camera / Sound / Scene / Capture settings. Loading a preset replaces the current set while preserving saved loop slots.
 The original Holodeck EC Playground is available with or without its animated
 mannequin, alongside Studio, Monument, Projection, editable Acoustic room and
 Club sets and the Neuro shader. Only the Playground assets are carried across; the old generation panels and full Holodeck app stay separate.
@@ -22,7 +22,7 @@ Comfy node's menu leaves out the **Neuro shader**: it is a full-frame sky with
 no set, character or depth to carry into a graph. It stays in the studio; its
 code is MIT, from Holodeck, so nothing in its licence restricts it.
 
-Four [scene motion presets](world-builder-motion.md) add editable state sequences, bounded voxel groups, audio-driven twists and room dimensions, with one evaluator for Shot and RGB/depth capture. Open **Load preset → Morph** or **Scene → Scene motion**.
+Thirteen [scene motion presets](world-builder-motion.md) add editable state sequences, enclosed architecture at three block densities, city-to-loft camera travel and independent spectral morph targets. Save A and B in the global Loop panel to combine complete views. The optional **Library → Presets → Build a morph** combines two to four authored forms with configurable movement paths. The dark grid stage and expandable viewport use the same scene evaluator as RGB/depth capture. Open **More settings → Scene** for advanced state editing. The gallery also contains the [editable effects catalogue](effects-catalogue.md).
 
 For the current interface and detailed controls, see [the interface pass](world-builder-interface.md).
 
@@ -32,8 +32,10 @@ For the current interface and detailed controls, see [the interface pass](world-
   Move, Rotate or Size handles (W / E / R), or edit all three axes in the inspector. Original ramps, vehicles,
   stairs and platforms are editable; the base floor and upper disk stay fixed.
   Add/remove box, sphere and cylinder primitives in the sidebar.
-- Drag empty space to orbit, right-drag to pan and scroll to zoom. **Use view as
-  shot** saves that framing, including its target, to the deterministic camera path.
+- In **Shot camera**, drag to orbit, right-drag or Shift-drag to pan and scroll
+  to zoom. The gesture commits exact framing to the camera path. **Camera** next
+  to **Expand** opens the existing shot and movement settings. Build also keeps
+  its free editing view and **Use viewport as shot** action.
 - **Character** selects the mannequin, dog, local creature or theme-coloured Blob. **Walk with avatar**:
   click the canvas, use WASD/arrows, drag to look, scroll to zoom. Keyboard control
   stops when focus leaves the canvas. Static capsule collision covers the current
@@ -298,10 +300,11 @@ connector restricted to read-only evaluation should use the visible controls
 and recipe editor. This does not install an LLM harness or expose a public RPC
 endpoint. [Agent skill](https://github.com/koshimazaki/Genobi/blob/main/.agents/skills/world-builder/SKILL.md).
 
-Dimensions are divisible by 64; frames follow `8k+1` from 9 through 241. A
-recipe's `seconds` (0.375 to 241 / 24 ≈ 10.04, `null` by default) is the
+Dimensions are divisible by 64; local frames follow `8k+1` from 9 through 721. A
+recipe's `seconds` (0.375 to 721 / 24 ≈ 30.04, `null` by default) is the
 move's duration: when set, `frames` is the nearest `8k+1` count to
-`seconds × 24`, so `{ "orbit": 360, "seconds": 10 }` is 241 frames. Recipes
+`seconds × 24`, so `{ "orbit": 360, "seconds": 30 }` is 721 frames, with its last
+sample at 30 seconds. Hosted model and deployment limits remain separate. Recipes
 without `seconds` keep their frames. Changing `frames` alone moves a set
 `seconds` with it. `describe()` reports the `seconds` range and the
 `capture-any-mode`, `move-seconds` and `orbit-360` capabilities; `orbit` is

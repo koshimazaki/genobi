@@ -69,7 +69,7 @@ describe("World Builder avatar path", () => {
     for (const avatarPath of [
       [],
       [{ frame: 0, pose: end }],
-      [{ frame: 241, pose: end }],
+      [{ frame: 721, pose: end }],
       [{ frame: 1.5, pose: end }],
       [
         { frame: 20, pose: end },

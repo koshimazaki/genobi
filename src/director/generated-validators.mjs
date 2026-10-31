@@ -29415,6 +29415,2224 @@ var require_validators = __commonJS({
       validate50.errors = vErrors;
       return errors === 0;
     }
+    exports.module_494e80992ee1e18963e4b2a0544185d91748043bb7e48ecadda9b3deba8e5998 =
+      validate51;
+    function validate51(
+      data,
+      {
+        instancePath = "",
+        parentData,
+        parentDataProperty,
+        rootData = data,
+      } = {},
+    ) {
+      let vErrors = null;
+      let errors = 0;
+      if (data && typeof data == "object" && !Array.isArray(data)) {
+        if (data.mix === void 0) {
+          const err0 = {
+            instancePath,
+            schemaPath: "#/required",
+            keyword: "required",
+            params: { missingProperty: "mix" },
+            message: "must have required property 'mix'",
+          };
+          if (vErrors === null) {
+            vErrors = [err0];
+          } else {
+            vErrors.push(err0);
+          }
+          errors++;
+        }
+        if (data.windowX === void 0) {
+          const err1 = {
+            instancePath,
+            schemaPath: "#/required",
+            keyword: "required",
+            params: { missingProperty: "windowX" },
+            message: "must have required property 'windowX'",
+          };
+          if (vErrors === null) {
+            vErrors = [err1];
+          } else {
+            vErrors.push(err1);
+          }
+          errors++;
+        }
+        if (data.windowY === void 0) {
+          const err2 = {
+            instancePath,
+            schemaPath: "#/required",
+            keyword: "required",
+            params: { missingProperty: "windowY" },
+            message: "must have required property 'windowY'",
+          };
+          if (vErrors === null) {
+            vErrors = [err2];
+          } else {
+            vErrors.push(err2);
+          }
+          errors++;
+        }
+        if (data.windowSize === void 0) {
+          const err3 = {
+            instancePath,
+            schemaPath: "#/required",
+            keyword: "required",
+            params: { missingProperty: "windowSize" },
+            message: "must have required property 'windowSize'",
+          };
+          if (vErrors === null) {
+            vErrors = [err3];
+          } else {
+            vErrors.push(err3);
+          }
+          errors++;
+        }
+        if (data.levels === void 0) {
+          const err4 = {
+            instancePath,
+            schemaPath: "#/required",
+            keyword: "required",
+            params: { missingProperty: "levels" },
+            message: "must have required property 'levels'",
+          };
+          if (vErrors === null) {
+            vErrors = [err4];
+          } else {
+            vErrors.push(err4);
+          }
+          errors++;
+        }
+        if (data.halftone === void 0) {
+          const err5 = {
+            instancePath,
+            schemaPath: "#/required",
+            keyword: "required",
+            params: { missingProperty: "halftone" },
+            message: "must have required property 'halftone'",
+          };
+          if (vErrors === null) {
+            vErrors = [err5];
+          } else {
+            vErrors.push(err5);
+          }
+          errors++;
+        }
+        if (data.jitter === void 0) {
+          const err6 = {
+            instancePath,
+            schemaPath: "#/required",
+            keyword: "required",
+            params: { missingProperty: "jitter" },
+            message: "must have required property 'jitter'",
+          };
+          if (vErrors === null) {
+            vErrors = [err6];
+          } else {
+            vErrors.push(err6);
+          }
+          errors++;
+        }
+        if (data.accent === void 0) {
+          const err7 = {
+            instancePath,
+            schemaPath: "#/required",
+            keyword: "required",
+            params: { missingProperty: "accent" },
+            message: "must have required property 'accent'",
+          };
+          if (vErrors === null) {
+            vErrors = [err7];
+          } else {
+            vErrors.push(err7);
+          }
+          errors++;
+        }
+        for (const key0 in data) {
+          if (!(
+            key0 === "mix" ||
+            key0 === "windowX" ||
+            key0 === "windowY" ||
+            key0 === "windowSize" ||
+            key0 === "levels" ||
+            key0 === "halftone" ||
+            key0 === "jitter" ||
+            key0 === "accent"
+          )) {
+            const err8 = {
+              instancePath,
+              schemaPath: "#/additionalProperties",
+              keyword: "additionalProperties",
+              params: { additionalProperty: key0 },
+              message: "must NOT have additional properties",
+            };
+            if (vErrors === null) {
+              vErrors = [err8];
+            } else {
+              vErrors.push(err8);
+            }
+            errors++;
+          }
+        }
+        if (data.mix !== void 0) {
+          let data0 = data.mix;
+          if (typeof data0 == "number" && isFinite(data0)) {
+            if (data0 > 1 || isNaN(data0)) {
+              const err9 = {
+                instancePath: instancePath + "/mix",
+                schemaPath: "#/properties/mix/maximum",
+                keyword: "maximum",
+                params: { comparison: "<=", limit: 1 },
+                message: "must be <= 1",
+              };
+              if (vErrors === null) {
+                vErrors = [err9];
+              } else {
+                vErrors.push(err9);
+              }
+              errors++;
+            }
+            if (data0 < 0 || isNaN(data0)) {
+              const err10 = {
+                instancePath: instancePath + "/mix",
+                schemaPath: "#/properties/mix/minimum",
+                keyword: "minimum",
+                params: { comparison: ">=", limit: 0 },
+                message: "must be >= 0",
+              };
+              if (vErrors === null) {
+                vErrors = [err10];
+              } else {
+                vErrors.push(err10);
+              }
+              errors++;
+            }
+          } else {
+            const err11 = {
+              instancePath: instancePath + "/mix",
+              schemaPath: "#/properties/mix/type",
+              keyword: "type",
+              params: { type: "number" },
+              message: "must be number",
+            };
+            if (vErrors === null) {
+              vErrors = [err11];
+            } else {
+              vErrors.push(err11);
+            }
+            errors++;
+          }
+        }
+        if (data.windowX !== void 0) {
+          let data1 = data.windowX;
+          if (typeof data1 == "number" && isFinite(data1)) {
+            if (data1 > 1 || isNaN(data1)) {
+              const err12 = {
+                instancePath: instancePath + "/windowX",
+                schemaPath: "#/properties/windowX/maximum",
+                keyword: "maximum",
+                params: { comparison: "<=", limit: 1 },
+                message: "must be <= 1",
+              };
+              if (vErrors === null) {
+                vErrors = [err12];
+              } else {
+                vErrors.push(err12);
+              }
+              errors++;
+            }
+            if (data1 < 0 || isNaN(data1)) {
+              const err13 = {
+                instancePath: instancePath + "/windowX",
+                schemaPath: "#/properties/windowX/minimum",
+                keyword: "minimum",
+                params: { comparison: ">=", limit: 0 },
+                message: "must be >= 0",
+              };
+              if (vErrors === null) {
+                vErrors = [err13];
+              } else {
+                vErrors.push(err13);
+              }
+              errors++;
+            }
+          } else {
+            const err14 = {
+              instancePath: instancePath + "/windowX",
+              schemaPath: "#/properties/windowX/type",
+              keyword: "type",
+              params: { type: "number" },
+              message: "must be number",
+            };
+            if (vErrors === null) {
+              vErrors = [err14];
+            } else {
+              vErrors.push(err14);
+            }
+            errors++;
+          }
+        }
+        if (data.windowY !== void 0) {
+          let data2 = data.windowY;
+          if (typeof data2 == "number" && isFinite(data2)) {
+            if (data2 > 1 || isNaN(data2)) {
+              const err15 = {
+                instancePath: instancePath + "/windowY",
+                schemaPath: "#/properties/windowY/maximum",
+                keyword: "maximum",
+                params: { comparison: "<=", limit: 1 },
+                message: "must be <= 1",
+              };
+              if (vErrors === null) {
+                vErrors = [err15];
+              } else {
+                vErrors.push(err15);
+              }
+              errors++;
+            }
+            if (data2 < 0 || isNaN(data2)) {
+              const err16 = {
+                instancePath: instancePath + "/windowY",
+                schemaPath: "#/properties/windowY/minimum",
+                keyword: "minimum",
+                params: { comparison: ">=", limit: 0 },
+                message: "must be >= 0",
+              };
+              if (vErrors === null) {
+                vErrors = [err16];
+              } else {
+                vErrors.push(err16);
+              }
+              errors++;
+            }
+          } else {
+            const err17 = {
+              instancePath: instancePath + "/windowY",
+              schemaPath: "#/properties/windowY/type",
+              keyword: "type",
+              params: { type: "number" },
+              message: "must be number",
+            };
+            if (vErrors === null) {
+              vErrors = [err17];
+            } else {
+              vErrors.push(err17);
+            }
+            errors++;
+          }
+        }
+        if (data.windowSize !== void 0) {
+          let data3 = data.windowSize;
+          if (typeof data3 == "number" && isFinite(data3)) {
+            if (data3 > 0.9 || isNaN(data3)) {
+              const err18 = {
+                instancePath: instancePath + "/windowSize",
+                schemaPath: "#/properties/windowSize/maximum",
+                keyword: "maximum",
+                params: { comparison: "<=", limit: 0.9 },
+                message: "must be <= 0.9",
+              };
+              if (vErrors === null) {
+                vErrors = [err18];
+              } else {
+                vErrors.push(err18);
+              }
+              errors++;
+            }
+            if (data3 < 0.1 || isNaN(data3)) {
+              const err19 = {
+                instancePath: instancePath + "/windowSize",
+                schemaPath: "#/properties/windowSize/minimum",
+                keyword: "minimum",
+                params: { comparison: ">=", limit: 0.1 },
+                message: "must be >= 0.1",
+              };
+              if (vErrors === null) {
+                vErrors = [err19];
+              } else {
+                vErrors.push(err19);
+              }
+              errors++;
+            }
+          } else {
+            const err20 = {
+              instancePath: instancePath + "/windowSize",
+              schemaPath: "#/properties/windowSize/type",
+              keyword: "type",
+              params: { type: "number" },
+              message: "must be number",
+            };
+            if (vErrors === null) {
+              vErrors = [err20];
+            } else {
+              vErrors.push(err20);
+            }
+            errors++;
+          }
+        }
+        if (data.levels !== void 0) {
+          let data4 = data.levels;
+          if (!(
+            typeof data4 == "number" &&
+            !(data4 % 1) &&
+            !isNaN(data4) &&
+            isFinite(data4)
+          )) {
+            const err21 = {
+              instancePath: instancePath + "/levels",
+              schemaPath: "#/properties/levels/type",
+              keyword: "type",
+              params: { type: "integer" },
+              message: "must be integer",
+            };
+            if (vErrors === null) {
+              vErrors = [err21];
+            } else {
+              vErrors.push(err21);
+            }
+            errors++;
+          }
+          if (typeof data4 == "number" && isFinite(data4)) {
+            if (data4 > 8 || isNaN(data4)) {
+              const err22 = {
+                instancePath: instancePath + "/levels",
+                schemaPath: "#/properties/levels/maximum",
+                keyword: "maximum",
+                params: { comparison: "<=", limit: 8 },
+                message: "must be <= 8",
+              };
+              if (vErrors === null) {
+                vErrors = [err22];
+              } else {
+                vErrors.push(err22);
+              }
+              errors++;
+            }
+            if (data4 < 2 || isNaN(data4)) {
+              const err23 = {
+                instancePath: instancePath + "/levels",
+                schemaPath: "#/properties/levels/minimum",
+                keyword: "minimum",
+                params: { comparison: ">=", limit: 2 },
+                message: "must be >= 2",
+              };
+              if (vErrors === null) {
+                vErrors = [err23];
+              } else {
+                vErrors.push(err23);
+              }
+              errors++;
+            }
+          }
+        }
+        if (data.halftone !== void 0) {
+          let data5 = data.halftone;
+          if (typeof data5 == "number" && isFinite(data5)) {
+            if (data5 > 1 || isNaN(data5)) {
+              const err24 = {
+                instancePath: instancePath + "/halftone",
+                schemaPath: "#/properties/halftone/maximum",
+                keyword: "maximum",
+                params: { comparison: "<=", limit: 1 },
+                message: "must be <= 1",
+              };
+              if (vErrors === null) {
+                vErrors = [err24];
+              } else {
+                vErrors.push(err24);
+              }
+              errors++;
+            }
+            if (data5 < 0 || isNaN(data5)) {
+              const err25 = {
+                instancePath: instancePath + "/halftone",
+                schemaPath: "#/properties/halftone/minimum",
+                keyword: "minimum",
+                params: { comparison: ">=", limit: 0 },
+                message: "must be >= 0",
+              };
+              if (vErrors === null) {
+                vErrors = [err25];
+              } else {
+                vErrors.push(err25);
+              }
+              errors++;
+            }
+          } else {
+            const err26 = {
+              instancePath: instancePath + "/halftone",
+              schemaPath: "#/properties/halftone/type",
+              keyword: "type",
+              params: { type: "number" },
+              message: "must be number",
+            };
+            if (vErrors === null) {
+              vErrors = [err26];
+            } else {
+              vErrors.push(err26);
+            }
+            errors++;
+          }
+        }
+        if (data.jitter !== void 0) {
+          let data6 = data.jitter;
+          if (typeof data6 == "number" && isFinite(data6)) {
+            if (data6 > 1 || isNaN(data6)) {
+              const err27 = {
+                instancePath: instancePath + "/jitter",
+                schemaPath: "#/properties/jitter/maximum",
+                keyword: "maximum",
+                params: { comparison: "<=", limit: 1 },
+                message: "must be <= 1",
+              };
+              if (vErrors === null) {
+                vErrors = [err27];
+              } else {
+                vErrors.push(err27);
+              }
+              errors++;
+            }
+            if (data6 < 0 || isNaN(data6)) {
+              const err28 = {
+                instancePath: instancePath + "/jitter",
+                schemaPath: "#/properties/jitter/minimum",
+                keyword: "minimum",
+                params: { comparison: ">=", limit: 0 },
+                message: "must be >= 0",
+              };
+              if (vErrors === null) {
+                vErrors = [err28];
+              } else {
+                vErrors.push(err28);
+              }
+              errors++;
+            }
+          } else {
+            const err29 = {
+              instancePath: instancePath + "/jitter",
+              schemaPath: "#/properties/jitter/type",
+              keyword: "type",
+              params: { type: "number" },
+              message: "must be number",
+            };
+            if (vErrors === null) {
+              vErrors = [err29];
+            } else {
+              vErrors.push(err29);
+            }
+            errors++;
+          }
+        }
+        if (data.accent !== void 0) {
+          let data7 = data.accent;
+          if (typeof data7 === "string") {
+            if (!pattern2.test(data7)) {
+              const err30 = {
+                instancePath: instancePath + "/accent",
+                schemaPath: "#/properties/accent/pattern",
+                keyword: "pattern",
+                params: { pattern: "^#[0-9a-fA-F]{6}$" },
+                message: 'must match pattern "^#[0-9a-fA-F]{6}$"',
+              };
+              if (vErrors === null) {
+                vErrors = [err30];
+              } else {
+                vErrors.push(err30);
+              }
+              errors++;
+            }
+          } else {
+            const err31 = {
+              instancePath: instancePath + "/accent",
+              schemaPath: "#/properties/accent/type",
+              keyword: "type",
+              params: { type: "string" },
+              message: "must be string",
+            };
+            if (vErrors === null) {
+              vErrors = [err31];
+            } else {
+              vErrors.push(err31);
+            }
+            errors++;
+          }
+        }
+      } else {
+        const err32 = {
+          instancePath,
+          schemaPath: "#/type",
+          keyword: "type",
+          params: { type: "object" },
+          message: "must be object",
+        };
+        if (vErrors === null) {
+          vErrors = [err32];
+        } else {
+          vErrors.push(err32);
+        }
+        errors++;
+      }
+      validate51.errors = vErrors;
+      return errors === 0;
+    }
+    exports.module_51e412e72f81eb3ca565b601f4854c92fb6f66e39d06f1ac3deb6a7dff44a46a =
+      validate52;
+    function validate52(
+      data,
+      {
+        instancePath = "",
+        parentData,
+        parentDataProperty,
+        rootData = data,
+      } = {},
+    ) {
+      let vErrors = null;
+      let errors = 0;
+      if (data && typeof data == "object" && !Array.isArray(data)) {
+        if (data.mix === void 0) {
+          const err0 = {
+            instancePath,
+            schemaPath: "#/required",
+            keyword: "required",
+            params: { missingProperty: "mix" },
+            message: "must have required property 'mix'",
+          };
+          if (vErrors === null) {
+            vErrors = [err0];
+          } else {
+            vErrors.push(err0);
+          }
+          errors++;
+        }
+        if (data.speed === void 0) {
+          const err1 = {
+            instancePath,
+            schemaPath: "#/required",
+            keyword: "required",
+            params: { missingProperty: "speed" },
+            message: "must have required property 'speed'",
+          };
+          if (vErrors === null) {
+            vErrors = [err1];
+          } else {
+            vErrors.push(err1);
+          }
+          errors++;
+        }
+        if (data.lines === void 0) {
+          const err2 = {
+            instancePath,
+            schemaPath: "#/required",
+            keyword: "required",
+            params: { missingProperty: "lines" },
+            message: "must have required property 'lines'",
+          };
+          if (vErrors === null) {
+            vErrors = [err2];
+          } else {
+            vErrors.push(err2);
+          }
+          errors++;
+        }
+        if (data.distortion === void 0) {
+          const err3 = {
+            instancePath,
+            schemaPath: "#/required",
+            keyword: "required",
+            params: { missingProperty: "distortion" },
+            message: "must have required property 'distortion'",
+          };
+          if (vErrors === null) {
+            vErrors = [err3];
+          } else {
+            vErrors.push(err3);
+          }
+          errors++;
+        }
+        if (data.accent === void 0) {
+          const err4 = {
+            instancePath,
+            schemaPath: "#/required",
+            keyword: "required",
+            params: { missingProperty: "accent" },
+            message: "must have required property 'accent'",
+          };
+          if (vErrors === null) {
+            vErrors = [err4];
+          } else {
+            vErrors.push(err4);
+          }
+          errors++;
+        }
+        for (const key0 in data) {
+          if (!(
+            key0 === "mix" ||
+            key0 === "speed" ||
+            key0 === "lines" ||
+            key0 === "distortion" ||
+            key0 === "accent"
+          )) {
+            const err5 = {
+              instancePath,
+              schemaPath: "#/additionalProperties",
+              keyword: "additionalProperties",
+              params: { additionalProperty: key0 },
+              message: "must NOT have additional properties",
+            };
+            if (vErrors === null) {
+              vErrors = [err5];
+            } else {
+              vErrors.push(err5);
+            }
+            errors++;
+          }
+        }
+        if (data.mix !== void 0) {
+          let data0 = data.mix;
+          if (typeof data0 == "number" && isFinite(data0)) {
+            if (data0 > 1 || isNaN(data0)) {
+              const err6 = {
+                instancePath: instancePath + "/mix",
+                schemaPath: "#/properties/mix/maximum",
+                keyword: "maximum",
+                params: { comparison: "<=", limit: 1 },
+                message: "must be <= 1",
+              };
+              if (vErrors === null) {
+                vErrors = [err6];
+              } else {
+                vErrors.push(err6);
+              }
+              errors++;
+            }
+            if (data0 < 0 || isNaN(data0)) {
+              const err7 = {
+                instancePath: instancePath + "/mix",
+                schemaPath: "#/properties/mix/minimum",
+                keyword: "minimum",
+                params: { comparison: ">=", limit: 0 },
+                message: "must be >= 0",
+              };
+              if (vErrors === null) {
+                vErrors = [err7];
+              } else {
+                vErrors.push(err7);
+              }
+              errors++;
+            }
+          } else {
+            const err8 = {
+              instancePath: instancePath + "/mix",
+              schemaPath: "#/properties/mix/type",
+              keyword: "type",
+              params: { type: "number" },
+              message: "must be number",
+            };
+            if (vErrors === null) {
+              vErrors = [err8];
+            } else {
+              vErrors.push(err8);
+            }
+            errors++;
+          }
+        }
+        if (data.speed !== void 0) {
+          let data1 = data.speed;
+          if (typeof data1 == "number" && isFinite(data1)) {
+            if (data1 > 2 || isNaN(data1)) {
+              const err9 = {
+                instancePath: instancePath + "/speed",
+                schemaPath: "#/properties/speed/maximum",
+                keyword: "maximum",
+                params: { comparison: "<=", limit: 2 },
+                message: "must be <= 2",
+              };
+              if (vErrors === null) {
+                vErrors = [err9];
+              } else {
+                vErrors.push(err9);
+              }
+              errors++;
+            }
+            if (data1 < 0 || isNaN(data1)) {
+              const err10 = {
+                instancePath: instancePath + "/speed",
+                schemaPath: "#/properties/speed/minimum",
+                keyword: "minimum",
+                params: { comparison: ">=", limit: 0 },
+                message: "must be >= 0",
+              };
+              if (vErrors === null) {
+                vErrors = [err10];
+              } else {
+                vErrors.push(err10);
+              }
+              errors++;
+            }
+          } else {
+            const err11 = {
+              instancePath: instancePath + "/speed",
+              schemaPath: "#/properties/speed/type",
+              keyword: "type",
+              params: { type: "number" },
+              message: "must be number",
+            };
+            if (vErrors === null) {
+              vErrors = [err11];
+            } else {
+              vErrors.push(err11);
+            }
+            errors++;
+          }
+        }
+        if (data.lines !== void 0) {
+          let data2 = data.lines;
+          if (typeof data2 == "number" && isFinite(data2)) {
+            if (data2 > 1 || isNaN(data2)) {
+              const err12 = {
+                instancePath: instancePath + "/lines",
+                schemaPath: "#/properties/lines/maximum",
+                keyword: "maximum",
+                params: { comparison: "<=", limit: 1 },
+                message: "must be <= 1",
+              };
+              if (vErrors === null) {
+                vErrors = [err12];
+              } else {
+                vErrors.push(err12);
+              }
+              errors++;
+            }
+            if (data2 < 0 || isNaN(data2)) {
+              const err13 = {
+                instancePath: instancePath + "/lines",
+                schemaPath: "#/properties/lines/minimum",
+                keyword: "minimum",
+                params: { comparison: ">=", limit: 0 },
+                message: "must be >= 0",
+              };
+              if (vErrors === null) {
+                vErrors = [err13];
+              } else {
+                vErrors.push(err13);
+              }
+              errors++;
+            }
+          } else {
+            const err14 = {
+              instancePath: instancePath + "/lines",
+              schemaPath: "#/properties/lines/type",
+              keyword: "type",
+              params: { type: "number" },
+              message: "must be number",
+            };
+            if (vErrors === null) {
+              vErrors = [err14];
+            } else {
+              vErrors.push(err14);
+            }
+            errors++;
+          }
+        }
+        if (data.distortion !== void 0) {
+          let data3 = data.distortion;
+          if (typeof data3 == "number" && isFinite(data3)) {
+            if (data3 > 1 || isNaN(data3)) {
+              const err15 = {
+                instancePath: instancePath + "/distortion",
+                schemaPath: "#/properties/distortion/maximum",
+                keyword: "maximum",
+                params: { comparison: "<=", limit: 1 },
+                message: "must be <= 1",
+              };
+              if (vErrors === null) {
+                vErrors = [err15];
+              } else {
+                vErrors.push(err15);
+              }
+              errors++;
+            }
+            if (data3 < 0 || isNaN(data3)) {
+              const err16 = {
+                instancePath: instancePath + "/distortion",
+                schemaPath: "#/properties/distortion/minimum",
+                keyword: "minimum",
+                params: { comparison: ">=", limit: 0 },
+                message: "must be >= 0",
+              };
+              if (vErrors === null) {
+                vErrors = [err16];
+              } else {
+                vErrors.push(err16);
+              }
+              errors++;
+            }
+          } else {
+            const err17 = {
+              instancePath: instancePath + "/distortion",
+              schemaPath: "#/properties/distortion/type",
+              keyword: "type",
+              params: { type: "number" },
+              message: "must be number",
+            };
+            if (vErrors === null) {
+              vErrors = [err17];
+            } else {
+              vErrors.push(err17);
+            }
+            errors++;
+          }
+        }
+        if (data.accent !== void 0) {
+          let data4 = data.accent;
+          if (typeof data4 === "string") {
+            if (!pattern2.test(data4)) {
+              const err18 = {
+                instancePath: instancePath + "/accent",
+                schemaPath: "#/properties/accent/pattern",
+                keyword: "pattern",
+                params: { pattern: "^#[0-9a-fA-F]{6}$" },
+                message: 'must match pattern "^#[0-9a-fA-F]{6}$"',
+              };
+              if (vErrors === null) {
+                vErrors = [err18];
+              } else {
+                vErrors.push(err18);
+              }
+              errors++;
+            }
+          } else {
+            const err19 = {
+              instancePath: instancePath + "/accent",
+              schemaPath: "#/properties/accent/type",
+              keyword: "type",
+              params: { type: "string" },
+              message: "must be string",
+            };
+            if (vErrors === null) {
+              vErrors = [err19];
+            } else {
+              vErrors.push(err19);
+            }
+            errors++;
+          }
+        }
+      } else {
+        const err20 = {
+          instancePath,
+          schemaPath: "#/type",
+          keyword: "type",
+          params: { type: "object" },
+          message: "must be object",
+        };
+        if (vErrors === null) {
+          vErrors = [err20];
+        } else {
+          vErrors.push(err20);
+        }
+        errors++;
+      }
+      validate52.errors = vErrors;
+      return errors === 0;
+    }
+    exports.module_4f68e150f10539e338fac5fe6b6db4e39fc8f117e6caf2d8040fe291ddf8bdae =
+      validate53;
+    function validate53(
+      data,
+      {
+        instancePath = "",
+        parentData,
+        parentDataProperty,
+        rootData = data,
+      } = {},
+    ) {
+      let vErrors = null;
+      let errors = 0;
+      if (data && typeof data == "object" && !Array.isArray(data)) {
+        if (data.mix === void 0) {
+          const err0 = {
+            instancePath,
+            schemaPath: "#/required",
+            keyword: "required",
+            params: { missingProperty: "mix" },
+            message: "must have required property 'mix'",
+          };
+          if (vErrors === null) {
+            vErrors = [err0];
+          } else {
+            vErrors.push(err0);
+          }
+          errors++;
+        }
+        if (data.speed === void 0) {
+          const err1 = {
+            instancePath,
+            schemaPath: "#/required",
+            keyword: "required",
+            params: { missingProperty: "speed" },
+            message: "must have required property 'speed'",
+          };
+          if (vErrors === null) {
+            vErrors = [err1];
+          } else {
+            vErrors.push(err1);
+          }
+          errors++;
+        }
+        if (data.accent === void 0) {
+          const err2 = {
+            instancePath,
+            schemaPath: "#/required",
+            keyword: "required",
+            params: { missingProperty: "accent" },
+            message: "must have required property 'accent'",
+          };
+          if (vErrors === null) {
+            vErrors = [err2];
+          } else {
+            vErrors.push(err2);
+          }
+          errors++;
+        }
+        if (data.label === void 0) {
+          const err3 = {
+            instancePath,
+            schemaPath: "#/required",
+            keyword: "required",
+            params: { missingProperty: "label" },
+            message: "must have required property 'label'",
+          };
+          if (vErrors === null) {
+            vErrors = [err3];
+          } else {
+            vErrors.push(err3);
+          }
+          errors++;
+        }
+        if (data.font === void 0) {
+          const err4 = {
+            instancePath,
+            schemaPath: "#/required",
+            keyword: "required",
+            params: { missingProperty: "font" },
+            message: "must have required property 'font'",
+          };
+          if (vErrors === null) {
+            vErrors = [err4];
+          } else {
+            vErrors.push(err4);
+          }
+          errors++;
+        }
+        for (const key0 in data) {
+          if (!(
+            key0 === "mix" ||
+            key0 === "speed" ||
+            key0 === "accent" ||
+            key0 === "label" ||
+            key0 === "font"
+          )) {
+            const err5 = {
+              instancePath,
+              schemaPath: "#/additionalProperties",
+              keyword: "additionalProperties",
+              params: { additionalProperty: key0 },
+              message: "must NOT have additional properties",
+            };
+            if (vErrors === null) {
+              vErrors = [err5];
+            } else {
+              vErrors.push(err5);
+            }
+            errors++;
+          }
+        }
+        if (data.mix !== void 0) {
+          let data0 = data.mix;
+          if (typeof data0 == "number" && isFinite(data0)) {
+            if (data0 > 1 || isNaN(data0)) {
+              const err6 = {
+                instancePath: instancePath + "/mix",
+                schemaPath: "#/properties/mix/maximum",
+                keyword: "maximum",
+                params: { comparison: "<=", limit: 1 },
+                message: "must be <= 1",
+              };
+              if (vErrors === null) {
+                vErrors = [err6];
+              } else {
+                vErrors.push(err6);
+              }
+              errors++;
+            }
+            if (data0 < 0 || isNaN(data0)) {
+              const err7 = {
+                instancePath: instancePath + "/mix",
+                schemaPath: "#/properties/mix/minimum",
+                keyword: "minimum",
+                params: { comparison: ">=", limit: 0 },
+                message: "must be >= 0",
+              };
+              if (vErrors === null) {
+                vErrors = [err7];
+              } else {
+                vErrors.push(err7);
+              }
+              errors++;
+            }
+          } else {
+            const err8 = {
+              instancePath: instancePath + "/mix",
+              schemaPath: "#/properties/mix/type",
+              keyword: "type",
+              params: { type: "number" },
+              message: "must be number",
+            };
+            if (vErrors === null) {
+              vErrors = [err8];
+            } else {
+              vErrors.push(err8);
+            }
+            errors++;
+          }
+        }
+        if (data.speed !== void 0) {
+          let data1 = data.speed;
+          if (typeof data1 == "number" && isFinite(data1)) {
+            if (data1 > 2 || isNaN(data1)) {
+              const err9 = {
+                instancePath: instancePath + "/speed",
+                schemaPath: "#/properties/speed/maximum",
+                keyword: "maximum",
+                params: { comparison: "<=", limit: 2 },
+                message: "must be <= 2",
+              };
+              if (vErrors === null) {
+                vErrors = [err9];
+              } else {
+                vErrors.push(err9);
+              }
+              errors++;
+            }
+            if (data1 < 0 || isNaN(data1)) {
+              const err10 = {
+                instancePath: instancePath + "/speed",
+                schemaPath: "#/properties/speed/minimum",
+                keyword: "minimum",
+                params: { comparison: ">=", limit: 0 },
+                message: "must be >= 0",
+              };
+              if (vErrors === null) {
+                vErrors = [err10];
+              } else {
+                vErrors.push(err10);
+              }
+              errors++;
+            }
+          } else {
+            const err11 = {
+              instancePath: instancePath + "/speed",
+              schemaPath: "#/properties/speed/type",
+              keyword: "type",
+              params: { type: "number" },
+              message: "must be number",
+            };
+            if (vErrors === null) {
+              vErrors = [err11];
+            } else {
+              vErrors.push(err11);
+            }
+            errors++;
+          }
+        }
+        if (data.accent !== void 0) {
+          let data2 = data.accent;
+          if (typeof data2 === "string") {
+            if (!pattern2.test(data2)) {
+              const err12 = {
+                instancePath: instancePath + "/accent",
+                schemaPath: "#/properties/accent/pattern",
+                keyword: "pattern",
+                params: { pattern: "^#[0-9a-fA-F]{6}$" },
+                message: 'must match pattern "^#[0-9a-fA-F]{6}$"',
+              };
+              if (vErrors === null) {
+                vErrors = [err12];
+              } else {
+                vErrors.push(err12);
+              }
+              errors++;
+            }
+          } else {
+            const err13 = {
+              instancePath: instancePath + "/accent",
+              schemaPath: "#/properties/accent/type",
+              keyword: "type",
+              params: { type: "string" },
+              message: "must be string",
+            };
+            if (vErrors === null) {
+              vErrors = [err13];
+            } else {
+              vErrors.push(err13);
+            }
+            errors++;
+          }
+        }
+        if (data.label !== void 0) {
+          let data3 = data.label;
+          if (typeof data3 === "string") {
+            if (func3(data3) > 48) {
+              const err14 = {
+                instancePath: instancePath + "/label",
+                schemaPath: "#/properties/label/maxLength",
+                keyword: "maxLength",
+                params: { limit: 48 },
+                message: "must NOT have more than 48 characters",
+              };
+              if (vErrors === null) {
+                vErrors = [err14];
+              } else {
+                vErrors.push(err14);
+              }
+              errors++;
+            }
+            if (func3(data3) < 0) {
+              const err15 = {
+                instancePath: instancePath + "/label",
+                schemaPath: "#/properties/label/minLength",
+                keyword: "minLength",
+                params: { limit: 0 },
+                message: "must NOT have fewer than 0 characters",
+              };
+              if (vErrors === null) {
+                vErrors = [err15];
+              } else {
+                vErrors.push(err15);
+              }
+              errors++;
+            }
+            if (!pattern60.test(data3)) {
+              const err16 = {
+                instancePath: instancePath + "/label",
+                schemaPath: "#/properties/label/pattern",
+                keyword: "pattern",
+                params: { pattern: "^[^\\u0000-\\u001f\\u007f]*$" },
+                message: 'must match pattern "^[^\\u0000-\\u001f\\u007f]*$"',
+              };
+              if (vErrors === null) {
+                vErrors = [err16];
+              } else {
+                vErrors.push(err16);
+              }
+              errors++;
+            }
+          } else {
+            const err17 = {
+              instancePath: instancePath + "/label",
+              schemaPath: "#/properties/label/type",
+              keyword: "type",
+              params: { type: "string" },
+              message: "must be string",
+            };
+            if (vErrors === null) {
+              vErrors = [err17];
+            } else {
+              vErrors.push(err17);
+            }
+            errors++;
+          }
+        }
+        if (data.font !== void 0) {
+          let data4 = data.font;
+          if (typeof data4 === "string") {
+            if (func3(data4) > 120) {
+              const err18 = {
+                instancePath: instancePath + "/font",
+                schemaPath: "#/properties/font/maxLength",
+                keyword: "maxLength",
+                params: { limit: 120 },
+                message: "must NOT have more than 120 characters",
+              };
+              if (vErrors === null) {
+                vErrors = [err18];
+              } else {
+                vErrors.push(err18);
+              }
+              errors++;
+            }
+            if (func3(data4) < 1) {
+              const err19 = {
+                instancePath: instancePath + "/font",
+                schemaPath: "#/properties/font/minLength",
+                keyword: "minLength",
+                params: { limit: 1 },
+                message: "must NOT have fewer than 1 characters",
+              };
+              if (vErrors === null) {
+                vErrors = [err19];
+              } else {
+                vErrors.push(err19);
+              }
+              errors++;
+            }
+            if (!pattern79.test(data4)) {
+              const err20 = {
+                instancePath: instancePath + "/font",
+                schemaPath: "#/properties/font/pattern",
+                keyword: "pattern",
+                params: { pattern: `^[A-Za-z0-9 ,"'-]+$` },
+                message: `must match pattern "^[A-Za-z0-9 ,"'-]+$"`,
+              };
+              if (vErrors === null) {
+                vErrors = [err20];
+              } else {
+                vErrors.push(err20);
+              }
+              errors++;
+            }
+          } else {
+            const err21 = {
+              instancePath: instancePath + "/font",
+              schemaPath: "#/properties/font/type",
+              keyword: "type",
+              params: { type: "string" },
+              message: "must be string",
+            };
+            if (vErrors === null) {
+              vErrors = [err21];
+            } else {
+              vErrors.push(err21);
+            }
+            errors++;
+          }
+        }
+      } else {
+        const err22 = {
+          instancePath,
+          schemaPath: "#/type",
+          keyword: "type",
+          params: { type: "object" },
+          message: "must be object",
+        };
+        if (vErrors === null) {
+          vErrors = [err22];
+        } else {
+          vErrors.push(err22);
+        }
+        errors++;
+      }
+      validate53.errors = vErrors;
+      return errors === 0;
+    }
+    exports.module_022ca481b003c2db3d9ce3b8352184c05cf712d13a891817f20ecd15886be56e =
+      validate54;
+    function validate54(
+      data,
+      {
+        instancePath = "",
+        parentData,
+        parentDataProperty,
+        rootData = data,
+      } = {},
+    ) {
+      let vErrors = null;
+      let errors = 0;
+      if (data && typeof data == "object" && !Array.isArray(data)) {
+        if (data.mix === void 0) {
+          const err0 = {
+            instancePath,
+            schemaPath: "#/required",
+            keyword: "required",
+            params: { missingProperty: "mix" },
+            message: "must have required property 'mix'",
+          };
+          if (vErrors === null) {
+            vErrors = [err0];
+          } else {
+            vErrors.push(err0);
+          }
+          errors++;
+        }
+        if (data.speed === void 0) {
+          const err1 = {
+            instancePath,
+            schemaPath: "#/required",
+            keyword: "required",
+            params: { missingProperty: "speed" },
+            message: "must have required property 'speed'",
+          };
+          if (vErrors === null) {
+            vErrors = [err1];
+          } else {
+            vErrors.push(err1);
+          }
+          errors++;
+        }
+        if (data.accent === void 0) {
+          const err2 = {
+            instancePath,
+            schemaPath: "#/required",
+            keyword: "required",
+            params: { missingProperty: "accent" },
+            message: "must have required property 'accent'",
+          };
+          if (vErrors === null) {
+            vErrors = [err2];
+          } else {
+            vErrors.push(err2);
+          }
+          errors++;
+        }
+        if (data.color === void 0) {
+          const err3 = {
+            instancePath,
+            schemaPath: "#/required",
+            keyword: "required",
+            params: { missingProperty: "color" },
+            message: "must have required property 'color'",
+          };
+          if (vErrors === null) {
+            vErrors = [err3];
+          } else {
+            vErrors.push(err3);
+          }
+          errors++;
+        }
+        if (data.text === void 0) {
+          const err4 = {
+            instancePath,
+            schemaPath: "#/required",
+            keyword: "required",
+            params: { missingProperty: "text" },
+            message: "must have required property 'text'",
+          };
+          if (vErrors === null) {
+            vErrors = [err4];
+          } else {
+            vErrors.push(err4);
+          }
+          errors++;
+        }
+        if (data.subtitle === void 0) {
+          const err5 = {
+            instancePath,
+            schemaPath: "#/required",
+            keyword: "required",
+            params: { missingProperty: "subtitle" },
+            message: "must have required property 'subtitle'",
+          };
+          if (vErrors === null) {
+            vErrors = [err5];
+          } else {
+            vErrors.push(err5);
+          }
+          errors++;
+        }
+        if (data.font === void 0) {
+          const err6 = {
+            instancePath,
+            schemaPath: "#/required",
+            keyword: "required",
+            params: { missingProperty: "font" },
+            message: "must have required property 'font'",
+          };
+          if (vErrors === null) {
+            vErrors = [err6];
+          } else {
+            vErrors.push(err6);
+          }
+          errors++;
+        }
+        if (data.shapeCount === void 0) {
+          const err7 = {
+            instancePath,
+            schemaPath: "#/required",
+            keyword: "required",
+            params: { missingProperty: "shapeCount" },
+            message: "must have required property 'shapeCount'",
+          };
+          if (vErrors === null) {
+            vErrors = [err7];
+          } else {
+            vErrors.push(err7);
+          }
+          errors++;
+        }
+        for (const key0 in data) {
+          if (!(
+            key0 === "mix" ||
+            key0 === "speed" ||
+            key0 === "accent" ||
+            key0 === "color" ||
+            key0 === "text" ||
+            key0 === "subtitle" ||
+            key0 === "font" ||
+            key0 === "shapeCount"
+          )) {
+            const err8 = {
+              instancePath,
+              schemaPath: "#/additionalProperties",
+              keyword: "additionalProperties",
+              params: { additionalProperty: key0 },
+              message: "must NOT have additional properties",
+            };
+            if (vErrors === null) {
+              vErrors = [err8];
+            } else {
+              vErrors.push(err8);
+            }
+            errors++;
+          }
+        }
+        if (data.mix !== void 0) {
+          let data0 = data.mix;
+          if (typeof data0 == "number" && isFinite(data0)) {
+            if (data0 > 1 || isNaN(data0)) {
+              const err9 = {
+                instancePath: instancePath + "/mix",
+                schemaPath: "#/properties/mix/maximum",
+                keyword: "maximum",
+                params: { comparison: "<=", limit: 1 },
+                message: "must be <= 1",
+              };
+              if (vErrors === null) {
+                vErrors = [err9];
+              } else {
+                vErrors.push(err9);
+              }
+              errors++;
+            }
+            if (data0 < 0 || isNaN(data0)) {
+              const err10 = {
+                instancePath: instancePath + "/mix",
+                schemaPath: "#/properties/mix/minimum",
+                keyword: "minimum",
+                params: { comparison: ">=", limit: 0 },
+                message: "must be >= 0",
+              };
+              if (vErrors === null) {
+                vErrors = [err10];
+              } else {
+                vErrors.push(err10);
+              }
+              errors++;
+            }
+          } else {
+            const err11 = {
+              instancePath: instancePath + "/mix",
+              schemaPath: "#/properties/mix/type",
+              keyword: "type",
+              params: { type: "number" },
+              message: "must be number",
+            };
+            if (vErrors === null) {
+              vErrors = [err11];
+            } else {
+              vErrors.push(err11);
+            }
+            errors++;
+          }
+        }
+        if (data.speed !== void 0) {
+          let data1 = data.speed;
+          if (typeof data1 == "number" && isFinite(data1)) {
+            if (data1 > 2 || isNaN(data1)) {
+              const err12 = {
+                instancePath: instancePath + "/speed",
+                schemaPath: "#/properties/speed/maximum",
+                keyword: "maximum",
+                params: { comparison: "<=", limit: 2 },
+                message: "must be <= 2",
+              };
+              if (vErrors === null) {
+                vErrors = [err12];
+              } else {
+                vErrors.push(err12);
+              }
+              errors++;
+            }
+            if (data1 < 0 || isNaN(data1)) {
+              const err13 = {
+                instancePath: instancePath + "/speed",
+                schemaPath: "#/properties/speed/minimum",
+                keyword: "minimum",
+                params: { comparison: ">=", limit: 0 },
+                message: "must be >= 0",
+              };
+              if (vErrors === null) {
+                vErrors = [err13];
+              } else {
+                vErrors.push(err13);
+              }
+              errors++;
+            }
+          } else {
+            const err14 = {
+              instancePath: instancePath + "/speed",
+              schemaPath: "#/properties/speed/type",
+              keyword: "type",
+              params: { type: "number" },
+              message: "must be number",
+            };
+            if (vErrors === null) {
+              vErrors = [err14];
+            } else {
+              vErrors.push(err14);
+            }
+            errors++;
+          }
+        }
+        if (data.accent !== void 0) {
+          let data2 = data.accent;
+          if (typeof data2 === "string") {
+            if (!pattern2.test(data2)) {
+              const err15 = {
+                instancePath: instancePath + "/accent",
+                schemaPath: "#/properties/accent/pattern",
+                keyword: "pattern",
+                params: { pattern: "^#[0-9a-fA-F]{6}$" },
+                message: 'must match pattern "^#[0-9a-fA-F]{6}$"',
+              };
+              if (vErrors === null) {
+                vErrors = [err15];
+              } else {
+                vErrors.push(err15);
+              }
+              errors++;
+            }
+          } else {
+            const err16 = {
+              instancePath: instancePath + "/accent",
+              schemaPath: "#/properties/accent/type",
+              keyword: "type",
+              params: { type: "string" },
+              message: "must be string",
+            };
+            if (vErrors === null) {
+              vErrors = [err16];
+            } else {
+              vErrors.push(err16);
+            }
+            errors++;
+          }
+        }
+        if (data.color !== void 0) {
+          let data3 = data.color;
+          if (typeof data3 === "string") {
+            if (!pattern2.test(data3)) {
+              const err17 = {
+                instancePath: instancePath + "/color",
+                schemaPath: "#/properties/color/pattern",
+                keyword: "pattern",
+                params: { pattern: "^#[0-9a-fA-F]{6}$" },
+                message: 'must match pattern "^#[0-9a-fA-F]{6}$"',
+              };
+              if (vErrors === null) {
+                vErrors = [err17];
+              } else {
+                vErrors.push(err17);
+              }
+              errors++;
+            }
+          } else {
+            const err18 = {
+              instancePath: instancePath + "/color",
+              schemaPath: "#/properties/color/type",
+              keyword: "type",
+              params: { type: "string" },
+              message: "must be string",
+            };
+            if (vErrors === null) {
+              vErrors = [err18];
+            } else {
+              vErrors.push(err18);
+            }
+            errors++;
+          }
+        }
+        if (data.text !== void 0) {
+          let data4 = data.text;
+          if (typeof data4 === "string") {
+            if (func3(data4) > 80) {
+              const err19 = {
+                instancePath: instancePath + "/text",
+                schemaPath: "#/properties/text/maxLength",
+                keyword: "maxLength",
+                params: { limit: 80 },
+                message: "must NOT have more than 80 characters",
+              };
+              if (vErrors === null) {
+                vErrors = [err19];
+              } else {
+                vErrors.push(err19);
+              }
+              errors++;
+            }
+            if (func3(data4) < 0) {
+              const err20 = {
+                instancePath: instancePath + "/text",
+                schemaPath: "#/properties/text/minLength",
+                keyword: "minLength",
+                params: { limit: 0 },
+                message: "must NOT have fewer than 0 characters",
+              };
+              if (vErrors === null) {
+                vErrors = [err20];
+              } else {
+                vErrors.push(err20);
+              }
+              errors++;
+            }
+            if (!pattern60.test(data4)) {
+              const err21 = {
+                instancePath: instancePath + "/text",
+                schemaPath: "#/properties/text/pattern",
+                keyword: "pattern",
+                params: { pattern: "^[^\\u0000-\\u001f\\u007f]*$" },
+                message: 'must match pattern "^[^\\u0000-\\u001f\\u007f]*$"',
+              };
+              if (vErrors === null) {
+                vErrors = [err21];
+              } else {
+                vErrors.push(err21);
+              }
+              errors++;
+            }
+          } else {
+            const err22 = {
+              instancePath: instancePath + "/text",
+              schemaPath: "#/properties/text/type",
+              keyword: "type",
+              params: { type: "string" },
+              message: "must be string",
+            };
+            if (vErrors === null) {
+              vErrors = [err22];
+            } else {
+              vErrors.push(err22);
+            }
+            errors++;
+          }
+        }
+        if (data.subtitle !== void 0) {
+          let data5 = data.subtitle;
+          if (typeof data5 === "string") {
+            if (func3(data5) > 120) {
+              const err23 = {
+                instancePath: instancePath + "/subtitle",
+                schemaPath: "#/properties/subtitle/maxLength",
+                keyword: "maxLength",
+                params: { limit: 120 },
+                message: "must NOT have more than 120 characters",
+              };
+              if (vErrors === null) {
+                vErrors = [err23];
+              } else {
+                vErrors.push(err23);
+              }
+              errors++;
+            }
+            if (func3(data5) < 0) {
+              const err24 = {
+                instancePath: instancePath + "/subtitle",
+                schemaPath: "#/properties/subtitle/minLength",
+                keyword: "minLength",
+                params: { limit: 0 },
+                message: "must NOT have fewer than 0 characters",
+              };
+              if (vErrors === null) {
+                vErrors = [err24];
+              } else {
+                vErrors.push(err24);
+              }
+              errors++;
+            }
+            if (!pattern60.test(data5)) {
+              const err25 = {
+                instancePath: instancePath + "/subtitle",
+                schemaPath: "#/properties/subtitle/pattern",
+                keyword: "pattern",
+                params: { pattern: "^[^\\u0000-\\u001f\\u007f]*$" },
+                message: 'must match pattern "^[^\\u0000-\\u001f\\u007f]*$"',
+              };
+              if (vErrors === null) {
+                vErrors = [err25];
+              } else {
+                vErrors.push(err25);
+              }
+              errors++;
+            }
+          } else {
+            const err26 = {
+              instancePath: instancePath + "/subtitle",
+              schemaPath: "#/properties/subtitle/type",
+              keyword: "type",
+              params: { type: "string" },
+              message: "must be string",
+            };
+            if (vErrors === null) {
+              vErrors = [err26];
+            } else {
+              vErrors.push(err26);
+            }
+            errors++;
+          }
+        }
+        if (data.font !== void 0) {
+          let data6 = data.font;
+          if (typeof data6 === "string") {
+            if (func3(data6) > 120) {
+              const err27 = {
+                instancePath: instancePath + "/font",
+                schemaPath: "#/properties/font/maxLength",
+                keyword: "maxLength",
+                params: { limit: 120 },
+                message: "must NOT have more than 120 characters",
+              };
+              if (vErrors === null) {
+                vErrors = [err27];
+              } else {
+                vErrors.push(err27);
+              }
+              errors++;
+            }
+            if (func3(data6) < 1) {
+              const err28 = {
+                instancePath: instancePath + "/font",
+                schemaPath: "#/properties/font/minLength",
+                keyword: "minLength",
+                params: { limit: 1 },
+                message: "must NOT have fewer than 1 characters",
+              };
+              if (vErrors === null) {
+                vErrors = [err28];
+              } else {
+                vErrors.push(err28);
+              }
+              errors++;
+            }
+            if (!pattern79.test(data6)) {
+              const err29 = {
+                instancePath: instancePath + "/font",
+                schemaPath: "#/properties/font/pattern",
+                keyword: "pattern",
+                params: { pattern: `^[A-Za-z0-9 ,"'-]+$` },
+                message: `must match pattern "^[A-Za-z0-9 ,"'-]+$"`,
+              };
+              if (vErrors === null) {
+                vErrors = [err29];
+              } else {
+                vErrors.push(err29);
+              }
+              errors++;
+            }
+          } else {
+            const err30 = {
+              instancePath: instancePath + "/font",
+              schemaPath: "#/properties/font/type",
+              keyword: "type",
+              params: { type: "string" },
+              message: "must be string",
+            };
+            if (vErrors === null) {
+              vErrors = [err30];
+            } else {
+              vErrors.push(err30);
+            }
+            errors++;
+          }
+        }
+        if (data.shapeCount !== void 0) {
+          let data7 = data.shapeCount;
+          if (!(
+            typeof data7 == "number" &&
+            !(data7 % 1) &&
+            !isNaN(data7) &&
+            isFinite(data7)
+          )) {
+            const err31 = {
+              instancePath: instancePath + "/shapeCount",
+              schemaPath: "#/properties/shapeCount/type",
+              keyword: "type",
+              params: { type: "integer" },
+              message: "must be integer",
+            };
+            if (vErrors === null) {
+              vErrors = [err31];
+            } else {
+              vErrors.push(err31);
+            }
+            errors++;
+          }
+          if (typeof data7 == "number" && isFinite(data7)) {
+            if (data7 > 24 || isNaN(data7)) {
+              const err32 = {
+                instancePath: instancePath + "/shapeCount",
+                schemaPath: "#/properties/shapeCount/maximum",
+                keyword: "maximum",
+                params: { comparison: "<=", limit: 24 },
+                message: "must be <= 24",
+              };
+              if (vErrors === null) {
+                vErrors = [err32];
+              } else {
+                vErrors.push(err32);
+              }
+              errors++;
+            }
+            if (data7 < 3 || isNaN(data7)) {
+              const err33 = {
+                instancePath: instancePath + "/shapeCount",
+                schemaPath: "#/properties/shapeCount/minimum",
+                keyword: "minimum",
+                params: { comparison: ">=", limit: 3 },
+                message: "must be >= 3",
+              };
+              if (vErrors === null) {
+                vErrors = [err33];
+              } else {
+                vErrors.push(err33);
+              }
+              errors++;
+            }
+          }
+        }
+      } else {
+        const err34 = {
+          instancePath,
+          schemaPath: "#/type",
+          keyword: "type",
+          params: { type: "object" },
+          message: "must be object",
+        };
+        if (vErrors === null) {
+          vErrors = [err34];
+        } else {
+          vErrors.push(err34);
+        }
+        errors++;
+      }
+      validate54.errors = vErrors;
+      return errors === 0;
+    }
+    exports.module_839d94a44729e8e6bf83fc36216ead0fc83dff2275cc8f788e9330bef1103474 =
+      validate55;
+    function validate55(
+      data,
+      {
+        instancePath = "",
+        parentData,
+        parentDataProperty,
+        rootData = data,
+      } = {},
+    ) {
+      let vErrors = null;
+      let errors = 0;
+      if (data && typeof data == "object" && !Array.isArray(data)) {
+        if (data.mix === void 0) {
+          const err0 = {
+            instancePath,
+            schemaPath: "#/required",
+            keyword: "required",
+            params: { missingProperty: "mix" },
+            message: "must have required property 'mix'",
+          };
+          if (vErrors === null) {
+            vErrors = [err0];
+          } else {
+            vErrors.push(err0);
+          }
+          errors++;
+        }
+        if (data.ripple === void 0) {
+          const err1 = {
+            instancePath,
+            schemaPath: "#/required",
+            keyword: "required",
+            params: { missingProperty: "ripple" },
+            message: "must have required property 'ripple'",
+          };
+          if (vErrors === null) {
+            vErrors = [err1];
+          } else {
+            vErrors.push(err1);
+          }
+          errors++;
+        }
+        if (data.folds === void 0) {
+          const err2 = {
+            instancePath,
+            schemaPath: "#/required",
+            keyword: "required",
+            params: { missingProperty: "folds" },
+            message: "must have required property 'folds'",
+          };
+          if (vErrors === null) {
+            vErrors = [err2];
+          } else {
+            vErrors.push(err2);
+          }
+          errors++;
+        }
+        if (data.speed === void 0) {
+          const err3 = {
+            instancePath,
+            schemaPath: "#/required",
+            keyword: "required",
+            params: { missingProperty: "speed" },
+            message: "must have required property 'speed'",
+          };
+          if (vErrors === null) {
+            vErrors = [err3];
+          } else {
+            vErrors.push(err3);
+          }
+          errors++;
+        }
+        for (const key0 in data) {
+          if (!(
+            key0 === "mix" ||
+            key0 === "ripple" ||
+            key0 === "folds" ||
+            key0 === "speed"
+          )) {
+            const err4 = {
+              instancePath,
+              schemaPath: "#/additionalProperties",
+              keyword: "additionalProperties",
+              params: { additionalProperty: key0 },
+              message: "must NOT have additional properties",
+            };
+            if (vErrors === null) {
+              vErrors = [err4];
+            } else {
+              vErrors.push(err4);
+            }
+            errors++;
+          }
+        }
+        if (data.mix !== void 0) {
+          let data0 = data.mix;
+          if (typeof data0 == "number" && isFinite(data0)) {
+            if (data0 > 1 || isNaN(data0)) {
+              const err5 = {
+                instancePath: instancePath + "/mix",
+                schemaPath: "#/properties/mix/maximum",
+                keyword: "maximum",
+                params: { comparison: "<=", limit: 1 },
+                message: "must be <= 1",
+              };
+              if (vErrors === null) {
+                vErrors = [err5];
+              } else {
+                vErrors.push(err5);
+              }
+              errors++;
+            }
+            if (data0 < 0 || isNaN(data0)) {
+              const err6 = {
+                instancePath: instancePath + "/mix",
+                schemaPath: "#/properties/mix/minimum",
+                keyword: "minimum",
+                params: { comparison: ">=", limit: 0 },
+                message: "must be >= 0",
+              };
+              if (vErrors === null) {
+                vErrors = [err6];
+              } else {
+                vErrors.push(err6);
+              }
+              errors++;
+            }
+          } else {
+            const err7 = {
+              instancePath: instancePath + "/mix",
+              schemaPath: "#/properties/mix/type",
+              keyword: "type",
+              params: { type: "number" },
+              message: "must be number",
+            };
+            if (vErrors === null) {
+              vErrors = [err7];
+            } else {
+              vErrors.push(err7);
+            }
+            errors++;
+          }
+        }
+        if (data.ripple !== void 0) {
+          let data1 = data.ripple;
+          if (typeof data1 == "number" && isFinite(data1)) {
+            if (data1 > 1 || isNaN(data1)) {
+              const err8 = {
+                instancePath: instancePath + "/ripple",
+                schemaPath: "#/properties/ripple/maximum",
+                keyword: "maximum",
+                params: { comparison: "<=", limit: 1 },
+                message: "must be <= 1",
+              };
+              if (vErrors === null) {
+                vErrors = [err8];
+              } else {
+                vErrors.push(err8);
+              }
+              errors++;
+            }
+            if (data1 < 0 || isNaN(data1)) {
+              const err9 = {
+                instancePath: instancePath + "/ripple",
+                schemaPath: "#/properties/ripple/minimum",
+                keyword: "minimum",
+                params: { comparison: ">=", limit: 0 },
+                message: "must be >= 0",
+              };
+              if (vErrors === null) {
+                vErrors = [err9];
+              } else {
+                vErrors.push(err9);
+              }
+              errors++;
+            }
+          } else {
+            const err10 = {
+              instancePath: instancePath + "/ripple",
+              schemaPath: "#/properties/ripple/type",
+              keyword: "type",
+              params: { type: "number" },
+              message: "must be number",
+            };
+            if (vErrors === null) {
+              vErrors = [err10];
+            } else {
+              vErrors.push(err10);
+            }
+            errors++;
+          }
+        }
+        if (data.folds !== void 0) {
+          let data2 = data.folds;
+          if (!(
+            typeof data2 == "number" &&
+            !(data2 % 1) &&
+            !isNaN(data2) &&
+            isFinite(data2)
+          )) {
+            const err11 = {
+              instancePath: instancePath + "/folds",
+              schemaPath: "#/properties/folds/type",
+              keyword: "type",
+              params: { type: "integer" },
+              message: "must be integer",
+            };
+            if (vErrors === null) {
+              vErrors = [err11];
+            } else {
+              vErrors.push(err11);
+            }
+            errors++;
+          }
+          if (typeof data2 == "number" && isFinite(data2)) {
+            if (data2 > 12 || isNaN(data2)) {
+              const err12 = {
+                instancePath: instancePath + "/folds",
+                schemaPath: "#/properties/folds/maximum",
+                keyword: "maximum",
+                params: { comparison: "<=", limit: 12 },
+                message: "must be <= 12",
+              };
+              if (vErrors === null) {
+                vErrors = [err12];
+              } else {
+                vErrors.push(err12);
+              }
+              errors++;
+            }
+            if (data2 < 2 || isNaN(data2)) {
+              const err13 = {
+                instancePath: instancePath + "/folds",
+                schemaPath: "#/properties/folds/minimum",
+                keyword: "minimum",
+                params: { comparison: ">=", limit: 2 },
+                message: "must be >= 2",
+              };
+              if (vErrors === null) {
+                vErrors = [err13];
+              } else {
+                vErrors.push(err13);
+              }
+              errors++;
+            }
+          }
+        }
+        if (data.speed !== void 0) {
+          let data3 = data.speed;
+          if (typeof data3 == "number" && isFinite(data3)) {
+            if (data3 > 2 || isNaN(data3)) {
+              const err14 = {
+                instancePath: instancePath + "/speed",
+                schemaPath: "#/properties/speed/maximum",
+                keyword: "maximum",
+                params: { comparison: "<=", limit: 2 },
+                message: "must be <= 2",
+              };
+              if (vErrors === null) {
+                vErrors = [err14];
+              } else {
+                vErrors.push(err14);
+              }
+              errors++;
+            }
+            if (data3 < 0 || isNaN(data3)) {
+              const err15 = {
+                instancePath: instancePath + "/speed",
+                schemaPath: "#/properties/speed/minimum",
+                keyword: "minimum",
+                params: { comparison: ">=", limit: 0 },
+                message: "must be >= 0",
+              };
+              if (vErrors === null) {
+                vErrors = [err15];
+              } else {
+                vErrors.push(err15);
+              }
+              errors++;
+            }
+          } else {
+            const err16 = {
+              instancePath: instancePath + "/speed",
+              schemaPath: "#/properties/speed/type",
+              keyword: "type",
+              params: { type: "number" },
+              message: "must be number",
+            };
+            if (vErrors === null) {
+              vErrors = [err16];
+            } else {
+              vErrors.push(err16);
+            }
+            errors++;
+          }
+        }
+      } else {
+        const err17 = {
+          instancePath,
+          schemaPath: "#/type",
+          keyword: "type",
+          params: { type: "object" },
+          message: "must be object",
+        };
+        if (vErrors === null) {
+          vErrors = [err17];
+        } else {
+          vErrors.push(err17);
+        }
+        errors++;
+      }
+      validate55.errors = vErrors;
+      return errors === 0;
+    }
   },
 });
 export default require_validators();

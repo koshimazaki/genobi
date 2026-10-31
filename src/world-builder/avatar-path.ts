@@ -1,5 +1,6 @@
 import { validateAvatarPose, type AvatarPose } from "./avatar-pose";
 import { CAMERA_MOVE_BY_KEY, type CameraMoveKey } from "./camera-moves";
+import { TAKE_FRAMES } from "./take-duration";
 
 /**
  * One timed key of the character's path. `avatarPose` is the path at frame
@@ -14,7 +15,7 @@ export interface AvatarKey {
 }
 
 export const AVATAR_PATH_KEYS = 16;
-const MAX_FRAME = 240;
+const MAX_FRAME = TAKE_FRAMES.max - 1;
 
 const plain = (v: unknown): v is Record<string, unknown> =>
   !!v && typeof v === "object" && !Array.isArray(v);
@@ -35,7 +36,7 @@ export function validateAvatarPath(path: unknown): AvatarKey[] {
         !["linear", "fall"].includes(key.ease as string))
     )
       throw new Error(
-        "Invalid avatarPath key: frames rise from 1 to 240, ease is linear or fall.",
+        `Invalid avatarPath key: frames rise from 1 to ${MAX_FRAME}, ease is linear or fall.`,
       );
     validateAvatarPose(key.pose);
     last = key.frame as number;

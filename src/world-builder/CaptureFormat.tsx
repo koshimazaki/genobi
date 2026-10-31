@@ -17,7 +17,7 @@ import {
   bankChoice,
   snapSide,
 } from "./capture-panel";
-import { framesForSeconds, TAKE_FPS } from "./take-duration";
+import { framesForSeconds, TAKE_FPS, TAKE_FRAMES } from "./take-duration";
 import { parameterSchema } from "./recipe";
 
 /** Aspect tiles, then the preset's size or custom width and height. */
@@ -135,7 +135,8 @@ export function CaptureTiming({
         <LoopControl s={s} />
       </fieldset>
       <p className="wb-hint">
-        A take is an 8k + 1 frame count at 24 fps: 9 to 241 frames.
+        A take is an 8k + 1 frame count at 24 fps: 9 to {TAKE_FRAMES.max}{" "}
+        frames. A 30-second move includes its endpoint at frame 720.
       </p>
     </div>
   );

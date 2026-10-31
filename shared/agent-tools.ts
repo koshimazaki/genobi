@@ -17,6 +17,9 @@ export const GENOBI_TOOLS = [
   "genobi_job",
   "genobi_quote",
   "genobi_template_plan",
+  // Read-only catalogue and portable configuration; apply via Director commands.
+  "genobi_effects",
+  "genobi_effect_variant",
   "genobi_world_recipe",
   "genobi_audio_analysis",
   "genobi_deployment_stage",

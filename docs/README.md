@@ -124,6 +124,9 @@ user action through every layer.
 
 ## Director
 
+- [Configurable effects catalogue](effects-catalogue.md) — the 3D and Editor gallery, four editable presets, portable variants and agent commands.
+- [Catalogue effect modules](director-bundle/effects-catalogue/README.md) — deterministic renderers, source hashes and preview/export verification.
+
 - [Composition resolution and monitors](director-resolution.md) — output sizes,
   asset matching, Undo and the responsive Program/Finished video layout.
 
@@ -131,6 +134,10 @@ user action through every layer.
   composer: offline asset foundation, how to try it, rendering and verification.
 - [House-style templates](templates.md) — the product video, character piece
   and audio-visual templates: inputs, tiers, shots, tracks and how to open them.
+- [Animations & Effects plan](animations-effects-plan.md) — editable layer presets,
+  Director/Editor placement, shader research, local studies and implementation backlog.
+- [Poster grid and water grid](poster-grid-direction.md) — restrained treatment windows,
+  temporal continuity and the supplied visual references.
 - [Falling room](falling-room.md) — the owner's generated loop: a brief, the
   World Builder's falling take, one Klein still, the room sound, an edit kept
   through a revision, and the bundle. No longer a gallery card.
@@ -172,6 +179,7 @@ user action through every layer.
   Save in the 3D tab, and room acoustics from the scene's geometry.
 - [Scene examples](scene-examples.md) — starter sets, characters, hybrids and LTX + AKUSPACE kits.
 - [Scene motion](world-builder-motion.md) — editable voxel, architecture, apartment and fruit states with deterministic guide capture.
+- [Scene loops](world-builder-loops.md) — frame a view, Save A/B, then play or capture a loop from the global sidebar.
 - [World Builder and Scene Adapter](world-builder.md) — the set-preparation tool
   beside Director, its agent contract and Comfy integration.
 - [World recipe handoffs](world-recipe-handoff.md) — preserve concurrent human

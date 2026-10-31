@@ -98,8 +98,13 @@ It restricts paths to Comfy's input directory, caps decoded takes at 2 GiB
 (including 193 frames at 1024 × 576), and hashes
 file contents for cache invalidation. Exported visual WebM and WAV are separate;
 use the combine node to mux a soundtrack. No audio file produces silence.
+Local captures now allow 9–721 frames on the 24 fps, `8k+1` grid. A 30-second
+move has 721 frames, with its last sample at 30 seconds and an encoded duration
+of 721/24 seconds. The 2 GiB guard still applies: 512 × 320 at 721 frames fits,
+while 1024 × 576 at that length is refused. The fixed hosted Layout-to-video
+deployment remains a separate 193-frame contract.
 Inputs shrinks large image batches to the 320M-value preview budget, keeping
-full-resolution source tensors unchanged; it still allows at most 241 RGB frames.
+full-resolution source tensors unchanged; it still allows at most 721 RGB frames.
 FFprobe must accompany FFmpeg for WebM metadata checks.
 
 Comfy Cloud uses the external World Builder's downloads with supported Load

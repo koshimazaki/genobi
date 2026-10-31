@@ -1,0 +1,147 @@
+.wb-morph-routing,
+.wb-morph-routing fieldset {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+.wb-morph-routing fieldset {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.wb-morph-routing fieldset:disabled {
+  opacity: 0.5;
+}
+.wb-morph-pad {
+  width: 100%;
+  aspect-ratio: 5 / 3;
+  background: var(--sunken);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: crosshair;
+  touch-action: none;
+  user-select: none;
+}
+.wb-morph-pad:focus-visible {
+  outline: 2px solid var(--accent-strong);
+  outline-offset: 2px;
+}
+.wb-morph-pad[aria-disabled="true"] {
+  cursor: default;
+}
+.wb-morph-pad svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.wb-morph-pad text {
+  fill: var(--soft);
+  font: 9px var(--mono);
+}
+.wb-morph-pad-field {
+  fill: var(--surface);
+  stroke: var(--border-strong);
+}
+.wb-morph-pad-grid {
+  stroke: var(--border);
+  stroke-width: 0.6;
+}
+.wb-morph-pad-guide {
+  stroke: var(--accent);
+  stroke-width: 0.7;
+  stroke-dasharray: 2 3;
+  opacity: 0.6;
+}
+.wb-morph-pad-baseline {
+  stroke: var(--accent-strong);
+  stroke-width: 1.4;
+  fill: var(--surface);
+}
+.wb-morph-pad-actual {
+  fill: var(--accent-strong);
+}
+.wb-morph-pad-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px 12px;
+  font: 9px var(--mono);
+  color: var(--soft);
+}
+.wb-morph-pad-legend output {
+  color: var(--accent-strong);
+  margin-left: auto;
+}
+.wb-morph-axis > span,
+.wb-morph-section-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+}
+.wb-morph-axis input {
+  width: 100%;
+  margin: 0;
+  accent-color: var(--accent);
+}
+.wb-morph-section-heading {
+  align-items: center;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  font: 10px var(--mono);
+}
+.wb-morph-section-heading strong {
+  color: var(--accent-strong);
+  font-weight: 500;
+}
+.wb-morph-section-heading span {
+  color: var(--muted);
+  font-size: 9px;
+}
+.wb-morph-targets {
+  display: grid;
+  gap: 8px;
+}
+.wb-morph-target {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--sunken);
+  min-width: 0;
+}
+.wb-morph-target output {
+  justify-self: end;
+  color: var(--accent-strong);
+  font: 10px var(--mono);
+}
+.wb-morph-target meter {
+  grid-column: 1 / -1;
+  width: 100%;
+  height: 5px;
+  accent-color: var(--accent);
+}
+.wb-morph-target .themed-select {
+  min-width: 0;
+  align-self: end;
+}
+.wb-morph-target .wb-number input {
+  width: 100%;
+}
+.wb-app .wb-morph-remove-target {
+  grid-column: 1 / -1;
+  min-height: 28px;
+  font-size: 9px;
+  background: none;
+  border-color: transparent;
+  color: var(--muted);
+}
+@media (max-width: 900px) {
+  .wb-app .wb-morph-routing button,
+  .wb-app .wb-morph-routing input:not([type="checkbox"]) {
+    min-height: 44px;
+  }
+  .wb-morph-routing .wb-check {
+    min-height: 44px;
+  }
+}

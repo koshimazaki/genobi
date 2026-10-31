@@ -1,0 +1,67 @@
+/* A single global loop desk beside the view; the catalogue spans below both. */
+.wb-stage-grid[data-loop-layout="true"] {
+  --wb-dock-width: clamp(300px, 25vw, 360px);
+  grid-template-columns: minmax(0, 1fr) var(--wb-dock-width);
+  grid-template-areas: "view panel" "library library";
+}
+.wb-loop-sidebar {
+  grid-area: panel;
+  min-width: 0;
+  max-height: calc(var(--wb-view-height) + 72px);
+  overflow: auto;
+  overscroll-behavior: contain;
+  border-left: 1px solid var(--border);
+  scrollbar-width: thin;
+}
+.wb-catalogue-row {
+  grid-area: library;
+  min-width: 0;
+}
+.wb-loop-sidebar .wb-inspector.wb-panel {
+  contain: none;
+  max-height: none;
+  overflow: visible;
+  border-left: 0;
+  border-top: 1px solid var(--border);
+}
+.wb-loop-more {
+  padding: 8px 14px;
+  border-top: 1px solid var(--border);
+}
+.wb-loop-more > summary {
+  padding: 5px 0;
+  cursor: pointer;
+  color: var(--muted);
+  font: 10px var(--mono);
+}
+.wb-loop-settings {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+.wb-loop-settings button {
+  flex: 1;
+  min-height: 36px;
+  font: 10px var(--mono);
+}
+@media (max-width: 900px) {
+  .wb-stage-grid[data-loop-layout="true"] {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "view" "panel" "library";
+  }
+  .wb-loop-sidebar {
+    max-height: none;
+    overflow: visible;
+    border-left: 0;
+    border-top: 1px solid var(--border);
+  }
+  .wb-loop-settings button,
+  .wb-loop-more > summary {
+    min-height: 44px;
+  }
+}
+@media (max-width: 600px) {
+  .wb-stage-grid[data-loop-layout="true"] {
+    --wb-view-height: clamp(240px, 65vw, 350px);
+  }
+}

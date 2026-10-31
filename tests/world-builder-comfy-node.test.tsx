@@ -52,7 +52,9 @@ describe("World Builder inside the Comfy node", () => {
     expect(node).toContain("Small room");
     for (const preset of MOTION_PRESETS) {
       expect(node).toContain(preset.name);
-      expect(menuPreset(preset.name).motion?.stateKeys).toHaveLength(3);
+      expect(menuPreset(preset.name).motion?.stateKeys).toHaveLength(
+        preset.id === "fruit-audio-branches" ? 5 : 3,
+      );
     }
   });
 
@@ -82,6 +84,7 @@ describe("World Builder inside the Comfy node", () => {
       playing: false,
       audioURL: "",
       audioName: "",
+      inputState: { phase: "idle", frame: 0 },
       example: { blob: null, label: "", credit: "" },
       history: { recent: [], persisted: true },
     } as unknown as BuilderSession;

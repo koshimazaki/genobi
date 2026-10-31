@@ -26,11 +26,12 @@ const exampleFiles = (dir: string): string[] =>
   );
 
 describe("a camera move with a duration", () => {
-  it("puts seconds on the 8k + 1 grid at 24 fps, within 241 frames", () => {
+  it("puts seconds on the 8k + 1 grid at 24 fps, within 721 frames", () => {
     expect(framesForSeconds(10)).toBe(241);
     expect(framesForSeconds(4)).toBe(97);
     expect(framesForSeconds(MOVE_SECONDS.min)).toBe(9);
-    expect(framesForSeconds(MOVE_SECONDS.max)).toBe(241);
+    expect(framesForSeconds(MOVE_SECONDS.max)).toBe(721);
+    expect(framesForSeconds(30)).toBe(721);
     for (let s = MOVE_SECONDS.min; s <= MOVE_SECONDS.max; s += 0.1) {
       const frames = framesForSeconds(s);
       expect((frames - 1) % 8).toBe(0);
@@ -38,13 +39,14 @@ describe("a camera move with a duration", () => {
     }
   });
 
-  it("derives the recipe's frames from seconds and refuses a take past 241", () => {
+  it("derives the recipe's frames from seconds and refuses a take past 721", () => {
     const ten = validateRecipe({ seconds: 10 });
     expect(ten.frames).toBe(241);
     expect(ten.seconds).toBe(10);
     // Seconds decides even when a stale frame count rides along.
     expect(validateRecipe({ seconds: 2, frames: 241 }).frames).toBe(49);
-    for (const seconds of [0, 0.2, 10.5, 12, Number.NaN, "4"])
+    expect(validateRecipe({ seconds: 30 }).frames).toBe(721);
+    for (const seconds of [0, 0.2, 30.5, 32, Number.NaN, "4"])
       expect(() => validateRecipe({ seconds })).toThrow();
   });
 
@@ -123,13 +125,13 @@ describe("Typed take length", () => {
   });
   it("clamps to the recipe range", () => {
     expect(framesForTypedSeconds("0.1")).toBe(9);
-    expect(framesForTypedSeconds("60")).toBe(241);
+    expect(framesForTypedSeconds("60")).toBe(721);
   });
   it("refuses text that is not a positive number", () => {
     for (const text of ["", "abc", "0", "-3", "Infinity"]) {
       const result = framesForTypedSeconds(text);
       expect(result).toBeInstanceOf(Error);
-      expect((result as Error).message).toMatch(/0.375 to 10.04/);
+      expect((result as Error).message).toMatch(/0.375 to 30.04/);
     }
   });
 });

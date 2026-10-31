@@ -78,10 +78,15 @@ describe("Director commands over MCP", () => {
       "split-clip",
       "set-muted",
       "set-gain",
+      "apply-effect-preset",
     ]);
     expect(
       schemas.find((s) => s.properties.op.const === "split-clip")?.properties,
     ).toHaveProperty("newLayerId");
+    expect(
+      schemas.find((s) => s.properties.op.const === "apply-effect-preset")
+        ?.properties,
+    ).toHaveProperty("expectedRevision");
     const commands = [
       { op: "duplicate-clip", layerId: "plate", newLayerId: "plate-copy" },
       {

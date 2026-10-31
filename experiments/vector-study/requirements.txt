@@ -1,0 +1,4 @@
+vtracer==0.6.12
+CairoSVG==2.8.2
+Pillow==13.0.0
+numpy==2.3.5

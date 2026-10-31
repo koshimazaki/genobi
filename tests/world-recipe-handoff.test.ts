@@ -134,7 +134,7 @@ describe("World Builder recipe hand-off", () => {
       }),
     ).toMatchObject({
       status: 400,
-      error: "Use 8k + 1 frames (9, 17, …, 241).",
+      error: "Use 8k + 1 frames (9, 17, …, 721).",
     });
     expect(
       await send(agent, `/${copyId}/world-recipe`, "POST", { take: "nope" }),

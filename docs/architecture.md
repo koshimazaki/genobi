@@ -75,7 +75,14 @@ motion](construction-motion.md) for capture and licence boundaries.
 
 ## Scene motion
 
-World Builder optionally stores versioned state keys, a bounded voxel group and one acoustic enclosure in its recipe. `evaluateScene` produces the geometry used by the viewport and both capture passes; edits target an authored state with audio/procedural offsets excluded. The existing 24-object budget and new 128-instance budget are separate. Capture receipts bind the evaluation inputs, frame-zero geometry and control audio; no provider call is needed. See [scene motion](world-builder-motion.md) for limits and agent entry points.
+World Builder optionally stores versioned shape states, a separate camera path, a bounded voxel group and one acoustic enclosure in its recipe. `evaluateScene` produces the geometry used by the viewport and both capture passes; camera position, look target and lens use the same frame clock. State edits exclude audio/procedural offsets. The 24-object and 256-instance budgets are separate. Capture receipts bind evaluation inputs, frame-zero geometry and control audio; no provider call is needed. See [scene motion](world-builder-motion.md) for limits and agent entry points.
+
+`shared/effects/` defines the versioned effects catalogue and strict variants.
+The 3D gallery and Editor picker share its controls and the trusted renderer.
+Applying a preset creates ordinary editable layers in one revision-checked Undo
+action. Express and Worker expose the same stateless catalogue and variant
+endpoints; imported variants cannot introduce executable source. See the
+[effects catalogue](effects-catalogue.md) for its source/input boundaries.
 
 ## Routes
 

@@ -61,7 +61,9 @@ experimental route for room-conditioned generated audio/video.
 
 ### Editable scene motion
 
-World Builder includes four three-state animation studies: voxel pyramid/cube, cathedral/street, expanding apartment and banana/papaya/apple. Edit individual states in the viewport, map control-audio bands to bounded motion, and capture aligned RGB/depth guides locally. See [scene motion](docs/world-builder-motion.md) for the controls, agent contract and current workflow boundary.
+World Builder's **Library → Presets** gallery includes thirteen morph/travel studies: city-to-loft camera journeys, spacecraft/mecha, masks, palms, finer fruits and enclosed architecture at 64/128/256 blocks. The global **Loop** panel saves complete shape/camera views as A–D: load an asset, frame it directly in Shot, save A, load another and save B. Play returns to A; Save loop captures the result. Camera sits beside Expand, music stays in the sidebar, and assets sit below the dark-grid view. Choose direct/scatter/twist/assembly paths, independent camera/object rotation, measured audio links and a frame-grid duration through 30 seconds. The optional **Build a morph** composer also tick-selects two to four individual authored forms. See [the loop workflow](docs/world-builder-loops.md) and [scene motion](docs/world-builder-motion.md).
+
+The same gallery and **Editor → Add track → Animations & Effects** expose Poster window, Cinematic scan/HUD, Kinetic title and Liquid mirror. Preview and save variants, then insert ordinary editable layers in one Undo action. The [effects catalogue](docs/effects-catalogue.md) documents controls, trusted-source validation and UI/API/CLI/MCP access.
 
 The apartment and cathedral studies also render [changing room sound](docs/world-builder-dynamic-sound.md) on the browser CPU. Choose an independent dry source, follow the evaluated room timeline, preview in sync with the scene, and export a WAV with its frozen recipe and sound receipt.
 

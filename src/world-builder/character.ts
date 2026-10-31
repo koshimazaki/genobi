@@ -15,7 +15,7 @@ import { CREATURE_SHA256 } from "../../shared/scene/creature-reference";
 import type { Recipe } from "./recipe";
 import { blobActor, blobCycle } from "./blob";
 import { firstClip, motionClips } from "./motion";
-import { loopedMotionAt } from "./loop";
+import { routedMotionAt, characterAudioClips } from "./character-audio";
 
 function assertCreature(recipe: Recipe) {
   if (recipe.avatarAsset !== "creature") return;
@@ -23,7 +23,10 @@ function assertCreature(recipe: Recipe) {
     throw new Error(
       "Load the local Creature VRM under Scene → Creature model & motion.",
     );
-  for (const clip of motionClips(recipe.avatarMotion))
+  for (const clip of [
+    ...motionClips(recipe.avatarMotion),
+    ...characterAudioClips(recipe),
+  ])
     if (LOCAL_MOTIONS.includes(clip) && !creatureMotions.has(clip))
       throw new Error(
         `Assign a local FBX to the ${clip} motion slot before preview or capture.`,
@@ -126,7 +129,7 @@ export function createBuilderCharacter(world: T.Scene, onTheme = () => {}) {
     /** Sample the recipe's motion at a frame of the take's grid. */
     sample(r: Recipe, frame: number) {
       root.visible = visible(r);
-      const { clip, time, hold } = loopedMotionAt(r, frame, (name) =>
+      const { clip, time, hold } = routedMotionAt(r, frame, (name) =>
         actor ? actor.duration(name as CharacterPose) : blobCycle(name),
       );
       actor?.setPose(clip);

@@ -215,3 +215,21 @@
 body:has(.genobi-shell) {
   min-width: 0;
 }
+/* The 3D workspace keeps its media shelf below the scene and preset catalogue. */
+.genobi-shell[data-preset="world"] .studio-workspace[data-assets-open] {
+  grid-template-columns: minmax(0, 1fr);
+}
+.genobi-shell[data-preset="world"] .studio-asset-rail {
+  position: static;
+  width: auto;
+  max-height: min(480px, 65svh);
+  box-shadow: none;
+}
+.genobi-shell[data-preset="world"] .studio-asset-tabs {
+  max-width: 480px;
+}
+.genobi-shell[data-preset="world"]
+  .studio-asset-rail
+  :is(.genobi-project-assets, .gallery-grid) {
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+}

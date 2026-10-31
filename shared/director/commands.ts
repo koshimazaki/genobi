@@ -3,6 +3,13 @@
 // the local server (against its project copy) and the studio (against its own
 // store, from the copy's event stream), so the two cannot disagree.
 import { readResolution, setResolution, type Resolution } from "./resolution";
+import { applyEffectPreset } from "../effects/apply";
+import {
+  EFFECT_APPLY_OPTIONAL,
+  EFFECT_APPLY_REQUIRED,
+  readEffectCommand,
+} from "../effects/command";
+import type { ApplyEffectCommand } from "../effects/types";
 import type { CameraSelection } from "../camera";
 import { cleanPrompt, readCamera } from "./directions";
 import {
@@ -122,6 +129,7 @@ export type DirectorCommand =
   | { op: "set-parameters"; layerId: string; parameters: Parameters }
   | ({ op: "set-beat-grid" } & BeatGridPatch)
   | ({ op: "set-resolution" } & Resolution)
+  | ApplyEffectCommand
   | ClipCommand
   | PromptCommand
   | NoteCommand;
@@ -148,6 +156,7 @@ const FIELDS: Record<DirectorOp, [string[], string[]]> = {
   "set-parameters": [["layerId", "parameters"], []],
   "set-beat-grid": [[], [...BEAT_GRID_FIELDS]],
   "set-resolution": [["width", "height"], []],
+  "apply-effect-preset": [EFFECT_APPLY_REQUIRED, EFFECT_APPLY_OPTIONAL],
   ...CLIP_FIELDS,
   ...PROMPT_FIELDS,
   ...NOTE_FIELDS,
@@ -172,6 +181,7 @@ export function parseCommand(value: unknown): DirectorCommand {
   if (extra) refuse(`${op} does not take ${extra.slice(0, 40)}`);
   const missing = required.find((k) => value[k] === undefined);
   if (missing) refuse(`${op} needs ${missing}`);
+  if (op === "apply-effect-preset") return readEffectCommand(value);
   const c: Record<string, unknown> = { op };
   for (const key of [
     "layerId",
@@ -296,6 +306,10 @@ function apply(copy: DirectorCopy, c: DirectorCommand): DirectorCopy {
     prompt: copy.prompt,
   });
   switch (c.op) {
+    case "apply-effect-preset": {
+      const { op: _op, ...input } = c;
+      return same(applyEffectPreset(project, input).project);
+    }
     case "remove-clip":
     case "duplicate-clip":
     case "split-clip":

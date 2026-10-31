@@ -1,4 +1,5 @@
 import type { SceneTransform, SceneVector } from "./scene-state";
+import { mixSceneColor } from "./scene-color";
 
 export const clampSceneValue = (v: number, lo: number, hi: number) =>
   Math.max(lo, Math.min(v, hi));
@@ -29,6 +30,10 @@ export function mixSceneTransform(
     z: mixSceneValue(a.z, b.z, t),
     scale: mixSceneValue(a.scale, b.scale, t),
   };
+  if (a.presence !== undefined || b.presence !== undefined)
+    result.presence = mixSceneValue(a.presence ?? 1, b.presence ?? 1, t);
+  if (a.color !== undefined && b.color !== undefined)
+    result.color = mixSceneColor(a.color, b.color, t);
   for (const key of scaleKeys)
     result[key] = mixSceneValue(a[key] ?? 1, b[key] ?? 1, t);
   for (const key of rotationKeys) {

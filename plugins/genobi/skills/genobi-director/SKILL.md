@@ -1,13 +1,13 @@
 ---
 name: genobi-director
-description: Finish a cut in the Genobi Director, the studio's main surface - link or read the person's project, plan the job, then use any studio tool or all of them (camera generation behind a quote, takes handed into the project, audio analysis for the beat grid, Director commands, provenance) and hand the result back to the person.
+description: Finish a cut in the Genobi Director, the studio's main surface - link or read the person's project, plan the job, then use any studio tool or all of them (camera generation behind a quote, takes handed into the project, configurable effect presets and variants, audio analysis for the beat grid, Director commands, provenance) and hand the result back to the person.
 license: MIT
 compatibility: Needs the Genobi studio running locally (`npm run dev` in camera-director), the genobi MCP server and Node 22 or later.
 metadata:
   version: "0.1.0"
   phase: "1 - quoted generation"
   tags: "agents, director, bundle, mcp"
-  docs: "docs/director-agent-tools.md, docs/director-bundle/README.md"
+  docs: "docs/director-agent-tools.md, docs/director-bundle/README.md, docs/effects-catalogue.md"
 ---
 
 # Genobi director
@@ -150,32 +150,33 @@ the studio. Send one per call:
 `genobi_director_command` with the `copyId`, the `baseRevision` you read and
 one `command`.
 
-| Command               | Fields beyond `op`                                                                                |
-| --------------------- | ------------------------------------------------------------------------------------------------- |
-| `add-clip`            | `layerId` (new), `assetId`, `track`, `startFrame`, `durationFrames`, `name?`, `sourceStartFrame?` |
-| `add-graphic`         | `layerId` (new), `moduleId`, `track`, `startFrame`, `durationFrames`, `name?`, `parameters?`      |
-| `move-clip`           | `layerId`, `startFrame`, `track?`                                                                 |
-| `trim-clip`           | `layerId`, `startFrame`, `durationFrames`                                                         |
-| `split-clip`          | `layerId`, `frame` (composition frame inside clip), `newLayerId`                                  |
-| `duplicate-clip`      | `layerId`, `newLayerId` (copy on a new lane, top of stack)                                        |
-| `remove-clip`         | `layerId` (media stays; notes stay at their frames)                                               |
-| `set-muted`           | `layerId`, `muted` (boolean; audio mute or visual hide)                                           |
-| `set-gain`            | `layerId`, `gain` (audio only, 0–2)                                                               |
-| `set-placement`       | `layerId`, `position?`, `scale?`, `opacity?`, `rotationDegrees?`, `motion?`                       |
-| `set-parameters`      | `layerId`, `parameters`                                                                           |
-| `set-resolution`      | `width`, `height` (whole pixels; at most 1920 × 1080 pixels in total)                             |
-| `set-beat-grid`       | `bpm?`, `beatOffsetSeconds?`, `beatsPerBar?` (at least one)                                       |
-| `set-prompt`          | `text` (the earlier prompt brief)                                                                 |
-| `set-global-prompt`   | `text` (up to 12,000 characters; empty clears it)                                                 |
-| `set-clip-prompt`     | `layerId`, `text` (up to 1,200 characters; empty clears it)                                       |
-| `set-clip-directions` | `layerId`, `directions` (`shot?`, `lens?`, `camera?`, `action?`; null clears one)                 |
-| `set-preferences`     | `preferences` (`selection?`, `usage?`), or null to clear project defaults                         |
-| `set-camera`          | `shotId`, `camera` (template projects)                                                            |
-| `set-template-inputs` | `inputs` (`subject?`, `title?`, `acoustic?`)                                                      |
-| `replace-plate`       | `layerId`, `assetId`                                                                              |
-| `add-note`            | `noteId` (new), `frame`, `text` (up to 500 characters), `layerId?`                                |
-| `resolve-note`        | `noteId`, `resolved?` (default true; false reopens it)                                            |
-| `delete-note`         | `noteId`                                                                                          |
+| Command               | Fields beyond `op`                                                                                                              |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| `add-clip`            | `layerId` (new), `assetId`, `track`, `startFrame`, `durationFrames`, `name?`, `sourceStartFrame?`                               |
+| `add-graphic`         | `layerId` (new), `moduleId`, `track`, `startFrame`, `durationFrames`, `name?`, `parameters?`                                    |
+| `apply-effect-preset` | `presetId`, `instanceId` (new), `expectedRevision`, `startFrame`, `durationFrames`, `parameters?`, `variant?`, `sourceLayerId?` |
+| `move-clip`           | `layerId`, `startFrame`, `track?`                                                                                               |
+| `trim-clip`           | `layerId`, `startFrame`, `durationFrames`                                                                                       |
+| `split-clip`          | `layerId`, `frame` (composition frame inside clip), `newLayerId`                                                                |
+| `duplicate-clip`      | `layerId`, `newLayerId` (copy on a new lane, top of stack)                                                                      |
+| `remove-clip`         | `layerId` (media stays; notes stay at their frames)                                                                             |
+| `set-muted`           | `layerId`, `muted` (boolean; audio mute or visual hide)                                                                         |
+| `set-gain`            | `layerId`, `gain` (audio only, 0–2)                                                                                             |
+| `set-placement`       | `layerId`, `position?`, `scale?`, `opacity?`, `rotationDegrees?`, `motion?`                                                     |
+| `set-parameters`      | `layerId`, `parameters`                                                                                                         |
+| `set-resolution`      | `width`, `height` (whole pixels; at most 1920 × 1080 pixels in total)                                                           |
+| `set-beat-grid`       | `bpm?`, `beatOffsetSeconds?`, `beatsPerBar?` (at least one)                                                                     |
+| `set-prompt`          | `text` (the earlier prompt brief)                                                                                               |
+| `set-global-prompt`   | `text` (up to 12,000 characters; empty clears it)                                                                               |
+| `set-clip-prompt`     | `layerId`, `text` (up to 1,200 characters; empty clears it)                                                                     |
+| `set-clip-directions` | `layerId`, `directions` (`shot?`, `lens?`, `camera?`, `action?`; null clears one)                                               |
+| `set-preferences`     | `preferences` (`selection?`, `usage?`), or null to clear project defaults                                                       |
+| `set-camera`          | `shotId`, `camera` (template projects)                                                                                          |
+| `set-template-inputs` | `inputs` (`subject?`, `title?`, `acoustic?`)                                                                                    |
+| `replace-plate`       | `layerId`, `assetId`                                                                                                            |
+| `add-note`            | `noteId` (new), `frame`, `text` (up to 500 characters), `layerId?`                                                              |
+| `resolve-note`        | `noteId`, `resolved?` (default true; false reopens it)                                                                          |
+| `delete-note`         | `noteId`                                                                                                                        |
 
 New clips need a new lowercase `layerId`; ids that must exist come from
 `genobi_project`.
@@ -224,9 +225,60 @@ New clips need a new lowercase `layerId`; ids that must exist come from
   `drop`, `impact`, `infinity` or `release`. Editing a prompt spends nothing
   and regenerates nothing: a new take still goes through the quote.
 
-A parallel change is adding motion-effect modules (shake, transitions, grade,
-speed lines, styled titles). Until it merges, use only the recipes
-`genobi_project` lists.
+### Configure an effect preset
+
+Use `genobi_effects {}` to list the same catalogue as **3D → Presets** and
+**Editor → Add → Effects**. Inspect a card with
+`genobi_effects {presetId: "cinematic-scan"}` before configuring it; use its
+exposed control names, defaults, ranges and ordered layers. The initial cards
+are `poster-window`, `cinematic-scan`, `kinetic-title` and `liquid-mirror`.
+
+Read `genobi_project` for the current revision, frame rate and picture coverage.
+Apply the preset with `genobi_director_command`, using the same revision for
+outer `baseRevision` and inner `command.expectedRevision`:
+
+```json
+{
+  "copyId": "the-linked-project-copy",
+  "baseRevision": 12,
+  "command": {
+    "op": "apply-effect-preset",
+    "presetId": "kinetic-title",
+    "instanceId": "end-card-01",
+    "expectedRevision": 12,
+    "startFrame": 48,
+    "durationFrames": 48,
+    "parameters": { "text": "SEE YOU SOON", "speed": 0.25 }
+  }
+}
+```
+
+Choose a fresh lowercase `instanceId` of at most 44 characters. A successful
+command inserts all preset layers together, with independently editable
+parameters and one studio Undo. Read the new project revision before another
+edit. A stale revision requires a fresh read and decision.
+
+Filter presets need visible image or video coverage for their full interval
+and treat the composition below their layers. Optional `sourceLayerId` checks
+one chosen clip's coverage; it does not isolate that clip. Kinetic title needs
+no input picture. Poster window and Liquid mirror sample the current frame;
+do not describe them as temporal video effects or fluid simulation. HUD
+readouts are authored graphics.
+
+For a reusable configuration, call `genobi_effect_variant` with
+`{action: "create", presetId, name, parameters}`. Save the returned `variant`
+JSON when the person asks; the tool does not persist it on the server. Validate
+imported JSON with `{action: "validate", variant}` before reuse, then pass it
+as `command.variant` alongside its matching `presetId`. Explicit command
+`parameters` override that insertion's values. Keep the returned preset version
+and module hashes unchanged; variants accept configuration only, never source
+code, file paths or arbitrary modules.
+
+The CLI equivalents are `genobi effects`, `genobi effect-variant` and
+`genobi director-command`. Read the
+[catalogue guide](../../../../docs/effects-catalogue.md) for the exact controls
+and portable format. For individual module layers, continue using recipes
+returned by `genobi_project`.
 
 ### Revisions and conflicts
 

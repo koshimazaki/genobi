@@ -1,5 +1,6 @@
 import { evaluateScene } from "./evaluate-scene";
 import { validateRecipe, type Recipe } from "./recipe";
+import { TAKE_FPS, TAKE_FRAMES } from "./take-duration";
 import {
   ROOM_SAMPLING_TOLERANCE_METERS,
   selectAcousticSnapshots,
@@ -23,7 +24,7 @@ export interface AcousticSchedule {
   treatment: "static" | "dynamic";
   /** Exactly the picture's frame grid, including its final frame duration. */
   frames: number;
-  fps: 24;
+  fps: typeof TAKE_FPS;
   duration: number;
   /** Initial uniform spacing; adaptive snapshots can add or replace knots. */
   sampleEveryFrames: number;
@@ -58,7 +59,7 @@ export function buildAcousticSchedule(
   if (
     !Number.isInteger(requested) ||
     requested < 1 ||
-    requested > 240 ||
+    requested >= TAKE_FRAMES.max ||
     !Number.isInteger(max) ||
     max < 2 ||
     max > MAX_ACOUSTIC_SNAPSHOTS ||
@@ -140,18 +141,18 @@ export function validateAcousticSchedule(schedule: AcousticSchedule) {
     schedule.version !== 1 ||
     schedule.engine !== ROOM_AUDIO_ENGINE ||
     !["static", "dynamic"].includes(schedule.treatment) ||
-    schedule.fps !== 24 ||
+    schedule.fps !== TAKE_FPS ||
     !Number.isInteger(schedule.frames) ||
-    schedule.frames < 9 ||
-    schedule.frames > 241 ||
-    (schedule.frames - 1) % 8 !== 0 ||
+    schedule.frames < TAKE_FRAMES.min ||
+    schedule.frames > TAKE_FRAMES.max ||
+    (schedule.frames - 1) % TAKE_FRAMES.step !== 0 ||
     schedule.duration !== schedule.frames / schedule.fps ||
     !Number.isFinite(schedule.maxIRSeconds) ||
     schedule.maxIRSeconds < 0.1 ||
     schedule.maxIRSeconds > 6 ||
     !Number.isInteger(schedule.sampleEveryFrames) ||
     schedule.sampleEveryFrames < 1 ||
-    schedule.sampleEveryFrames > 240 ||
+    schedule.sampleEveryFrames >= TAKE_FRAMES.max ||
     schedule.interpolation !== "linear-wet-crossfade" ||
     schedule.controlAudio !== "frozen-recipe-envelopes" ||
     !Array.isArray(schedule.snapshots) ||

@@ -14,12 +14,13 @@ export function useWorldEditor(s: BuilderSession) {
     [tool, setTool] = useState<Tool>("translate"),
     [selected, setSelected] = useState("");
   const editor = s.runtime.current?.editor;
-  function chooseMode(next: Mode) {
+  function chooseMode(next: Mode, redraw = true) {
+    if (s.previewOnly && next !== "shot") return;
     // Play stops before the mode changes, so leaving Walk commits an idle pose.
     s.setPlaying(false);
     editor?.setMode(next);
     setMode(next);
-    if (next !== "walk") {
+    if (next !== "walk" && redraw) {
       const frame = sceneEditFrame(s.recipe, s.frame);
       s.setFrame(frame);
       s.run(async () => {
@@ -136,7 +137,7 @@ export function useWorldEditor(s: BuilderSession) {
       if (!key) return;
       s.setPlaying(false);
       editor?.setMode("edit");
-      setMode("edit");
+      setMode(s.previewOnly ? "shot" : "edit");
       s.run(async () => {
         await s.settled();
         await s.api.current!.render(key.frame);
@@ -159,6 +160,9 @@ export function useWorldEditor(s: BuilderSession) {
             s.api.current!.configure({
               ...s.api.current!.getRecipe(),
               ...patch,
+              ...(s.recipe.cameraMotion
+                ? { cameraMotion: { ...s.recipe.cameraMotion, enabled: false } }
+                : {}),
             }),
           ),
         );

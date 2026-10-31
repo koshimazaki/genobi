@@ -129,8 +129,9 @@ that every emitted reflection follows an exact moving-wall trajectory.
 
 ## Bounds and cancellation
 
-The scene duration is the existing 9–241 frame grid at 24 fps. Sampling checks
-at most 241 frame geometries, while convolution remains limited to 24 scheduled
+The scene duration shares the viewer's 9–721 frame grid at 24 fps. A requested
+30-second endpoint contains 721 frames and lasts 721/24 seconds when encoded.
+Sampling checks at most 721 frame geometries, while convolution remains limited to 24 scheduled
 snapshots and at most six seconds per IR. Room audio accepts mono/stereo PCM
 from 8–96 kHz. Input samples must be finite and their absolute amplitude must
 not exceed 1,000,000. This is a corruption/overflow safety cap, not clipping or

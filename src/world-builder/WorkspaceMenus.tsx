@@ -6,6 +6,10 @@ import type { BuilderSession } from "./useBuilderSession";
 import type { WorldEditor } from "./useWorldEditor";
 import { CREATURE_SHA256 } from "../../shared/scene/creature-reference";
 import { creatureMotionReceipt } from "../scene3d/creature-fbx";
+import {
+  availableCharacterClips,
+  characterAudioForAsset,
+} from "./character-audio-options";
 
 export function WorkspaceMenus({
   s,
@@ -62,22 +66,32 @@ export function WorkspaceMenus({
           disabled={!s.ready || s.busy || s.recipe.scene === "neuro"}
           onChange={(ev) => {
             const value = ev.target.value;
+            const avatarAsset =
+              value === "blob"
+                ? "blob"
+                : value === "pug"
+                  ? "pug"
+                  : value === "creature"
+                    ? "creature"
+                    : "mannequin";
+            const motions = creatureMotionReceipt();
+            const characterAudio = characterAudioForAsset(
+              s.recipe.characterAudio,
+              avatarAsset,
+              avatarAsset === s.recipe.avatarAsset
+                ? undefined
+                : availableCharacterClips(avatarAsset, motions),
+            );
             s.change({
               avatar: value !== "none",
-              avatarAsset:
-                value === "blob"
-                  ? "blob"
-                  : value === "pug"
-                    ? "pug"
-                    : value === "creature"
-                      ? "creature"
-                      : "mannequin",
+              avatarAsset,
               avatarMotion: "idle",
+              ...(characterAudio ? { characterAudio } : {}),
               creatureReference:
                 value === "creature"
                   ? {
                       sha256: CREATURE_SHA256,
-                      motions: creatureMotionReceipt(),
+                      motions,
                     }
                   : null,
             });

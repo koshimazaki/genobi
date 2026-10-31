@@ -10,6 +10,8 @@ import { clampRoomPoint } from "./scene-room";
 import { nearestSceneKey } from "./scene-editing";
 import { SceneMotionMappings } from "./SceneMotionMappings";
 import { createMotionPreset, MOTION_PRESETS } from "./motion-presets";
+import { SceneMorphRouting } from "./SceneMorphRouting";
+import { pruneMorphControl } from "./scene-morph-control";
 import "./scene-motion.css";
 
 type Motion = NonNullable<Recipe["motion"]>;
@@ -81,7 +83,7 @@ export function SceneMotionControls({
           onChange={(ev) => e.preset(createMotionPreset(ev.target.value))}
         >
           <option value="" disabled>
-            Choose a three-state study…
+            Choose a motion preset…
           </option>
           {MOTION_PRESETS.map((p) => (
             <option key={p.id} value={p.id}>
@@ -180,6 +182,32 @@ export function SceneMotionControls({
               Preview motion
             </button>
           </div>
+          <Fold title="Morph routing" open={!!motion.morphControl?.enabled}>
+            <label>
+              Movement style
+              <ThemedSelect
+                aria-label="Scene transition style"
+                value={motion.transitionStyle ?? "direct"}
+                onChange={(event) => {
+                  if (e.mode !== "shot") e.chooseMode("shot", false);
+                  s.tune({
+                    motion: {
+                      ...motion,
+                      transitionStyle: event.target.value as NonNullable<
+                        Motion["transitionStyle"]
+                      >,
+                    },
+                  });
+                }}
+              >
+                <option value="direct">Direct</option>
+                <option value="scatter">Scatter</option>
+                <option value="twist">Twist</option>
+                <option value="assemble">Assemble</option>
+              </ThemedSelect>
+            </label>
+            <SceneMorphRouting s={s} e={e} />
+          </Fold>
           {motion.instances && (
             <Fold title="Voxel movement" open>
               <p className="wb-hint">
@@ -334,14 +362,23 @@ export function SceneMotionControls({
             <button
               type="button"
               disabled={motion.stateKeys.length <= 1 || index === 0}
-              onClick={() =>
-                s.change({
-                  motion: {
-                    ...motion,
-                    stateKeys: motion.stateKeys.filter((_, i) => i !== index),
-                  },
-                })
-              }
+              onClick={() => {
+                const stateKeys = motion.stateKeys.filter(
+                  (_, i) => i !== index,
+                );
+                const next = { ...motion, stateKeys };
+                if (next.stateAudio)
+                  next.stateAudio = {
+                    ...next.stateAudio,
+                    routes: next.stateAudio.routes.filter((route) =>
+                      stateKeys.some((state) => state.id === route.stateId),
+                    ),
+                  };
+                const control = pruneMorphControl(motion, stateKeys);
+                if (control) next.morphControl = control;
+                else delete next.morphControl;
+                s.change({ motion: next });
+              }}
             >
               Remove selected state
             </button>

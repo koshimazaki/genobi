@@ -9,18 +9,20 @@
       "meaning": "Plans, sequencing, scope decisions and requirement capture",
       "pages": [
         "agent-workspace.md",
+        "animations-effects-plan.md",
         "audiovisual-gaps.md",
         "audiovisual-implementation.md",
         "director-studio-shell.md",
         "dual-editor-editing.md",
         "genmod.md",
         "genobi-deck.md",
+        "poster-grid-direction.md",
         "supervised-workflow-checks.md"
       ]
     },
     "design": {
       "meaning": "Design mocks and port handoffs for a studio surface",
-      "pages": ["editor-timeline.md"]
+      "pages": ["editor-timeline.md", "poster-grid-direction.md"]
     },
     "architecture": {
       "meaning": "The cloud boundary, adapters, deployment and review",
@@ -80,6 +82,7 @@
       "pages": [
         "adaptive-reverb.md",
         "agent-workspace.md",
+        "animations-effects-plan.md",
         "anime-teaser-template.md",
         "bloom-teaser.md",
         "construction-motion.md",
@@ -110,6 +113,7 @@
         "dimensions-mix.md",
         "director-agent-tools.md",
         "director-bundle/README.md",
+        "director-bundle/effects-catalogue/README.md",
         "director-bundle/motion-effects.md",
         "director-bundle/project-copy.md",
         "director-bundle/showcase/README.md",
@@ -129,6 +133,7 @@
         "dual-editor-editing.md",
         "dual-editor.md",
         "editor-timeline.md",
+        "effects-catalogue.md",
         "genmod.md",
         "genobi-teaser-run/README.md",
         "genobi-teaser-run/claims.md",
@@ -136,6 +141,7 @@
         "genobi-teaser.md",
         "licence-strategy.md",
         "motion-fonts.md",
+        "poster-grid-direction.md",
         "project-assets.md",
         "runs/anime-teaser.md",
         "scrolls.md",
@@ -166,6 +172,7 @@
         "world-builder-controls.md",
         "world-builder-dynamic-sound.md",
         "world-builder-interface.md",
+        "world-builder-loops.md",
         "world-builder-motion.md",
         "world-builder-sound.md",
         "world-builder-verification.md",
@@ -204,6 +211,7 @@
         "vision.md",
         "world-builder-acoustics.md",
         "world-builder-dynamic-sound.md",
+        "world-builder-loops.md",
         "world-builder-motion.md",
         "world-builder-sound.md"
       ]
@@ -218,6 +226,7 @@
         "agent-sessions.md",
         "agent-setup.md",
         "agent-workspace.md",
+        "animations-effects-plan.md",
         "anime-teaser-template.md",
         "arena.md",
         "audio-analysis.md",
@@ -233,6 +242,7 @@
         "director-prompts.md",
         "director-references.md",
         "dual-editor.md",
+        "effects-catalogue.md",
         "falling-room.md",
         "genobi-cli.md",
         "genobi-deck.md",
@@ -290,11 +300,13 @@
       "meaning": "House templates, their inputs, intake and skills",
       "pages": [
         "adaptive-reverb.md",
+        "animations-effects-plan.md",
         "anime-teaser-template.md",
         "bloom-teaser.md",
         "director-generate.md",
         "falling-room.md",
-        "media-previews.md"
+        "media-previews.md",
+        "poster-grid-direction.md"
       ]
     },
     "backend": {
@@ -386,6 +398,7 @@
         "audio-analysis.md",
         "capabilities.md",
         "dual-editor.md",
+        "effects-catalogue.md",
         "genobi-cli.md",
         "hermes-open-route.md",
         "hermes-profiles.md",
@@ -438,7 +451,8 @@
         "voice-mode.md",
         "voice-setup.md",
         "world-builder-controls.md",
-        "world-builder-interface.md"
+        "world-builder-interface.md",
+        "world-builder-loops.md"
       ]
     },
     "dual-editor": {
@@ -454,12 +468,14 @@
         "audiovisual-implementation.md",
         "comfy-deploy.md",
         "director-bundle/showcase/adaptive-reverb/README.md",
+        "effects-catalogue.md",
         "project-assets.md",
         "world-builder-acoustics.md",
         "world-builder-capture.md",
         "world-builder-controls.md",
         "world-builder-dynamic-sound.md",
         "world-builder-interface.md",
+        "world-builder-loops.md",
         "world-builder-motion.md",
         "world-builder-sound.md",
         "world-builder-verification.md",
@@ -472,20 +488,24 @@
       "pages": [
         "director-agent-tools.md",
         "director-bundle/README.md",
+        "director-bundle/effects-catalogue/README.md",
         "director-bundle/motion-effects.md",
         "director-bundle/project-copy.md",
         "director-bundle/showcase/README.md",
-        "director-prompts.md"
+        "director-prompts.md",
+        "effects-catalogue.md"
       ]
     },
     "research": {
       "meaning": "External evidence and reference reviews",
       "pages": [
+        "animations-effects-plan.md",
         "comfy-deployment.md",
         "director-references.md",
         "director-remix-research.md",
         "genmod.md",
         "minimax-h3-camera.md",
+        "poster-grid-direction.md",
         "vfx-recipes/README.md",
         "vfx-recipes/anime-opening.md",
         "vfx-recipes/hologram-turntable.md",
@@ -623,6 +643,7 @@
         "agent-setup.md",
         "agent-workspace.md",
         "akuspace-docker.md",
+        "animations-effects-plan.md",
         "anime-teaser-template.md",
         "architecture.md",
         "arena.md",
@@ -668,6 +689,7 @@
         "dimensions-mix.md",
         "director-agent-tools.md",
         "director-bundle/README.md",
+        "director-bundle/effects-catalogue/README.md",
         "director-bundle/motion-effects.md",
         "director-bundle/project-copy.md",
         "director-bundle/showcase/README.md",
@@ -687,6 +709,7 @@
         "dual-editor-editing.md",
         "dual-editor.md",
         "editor-timeline.md",
+        "effects-catalogue.md",
         "falling-room.md",
         "genmod.md",
         "genobi-cli.md",
@@ -712,6 +735,7 @@
         "minimax-h3-camera.md",
         "motion-fonts.md",
         "openjutsu-swap.md",
+        "poster-grid-direction.md",
         "project-assets.md",
         "read-through.md",
         "registry-skills.md",
@@ -752,6 +776,7 @@
         "world-builder-controls.md",
         "world-builder-dynamic-sound.md",
         "world-builder-interface.md",
+        "world-builder-loops.md",
         "world-builder-motion.md",
         "world-builder-sound.md",
         "world-builder-verification.md",
@@ -871,6 +896,21 @@
       "links": ["comfy-deployment.md", "run-location.md"]
     },
     {
+      "title": "Animations & Effects",
+      "path": "animations-effects-plan.md",
+      "tags": ["director", "plan", "templates", "research", "agents"],
+      "summary": "Implemented 3D preset gallery and editable effects catalogue, plus remaining temporal-media, source-authoring and reference work.",
+      "links": [
+        "director-bundle/README.md",
+        "effects-catalogue.md",
+        "poster-grid-direction.md",
+        "taste-memory.md",
+        "vfx-recipes/README.md",
+        "world-builder-loops.md",
+        "world-builder-motion.md"
+      ]
+    },
+    {
       "title": "Anime teaser template",
       "path": "anime-teaser-template.md",
       "tags": ["templates", "director", "agents", "ltx", "sound"],
@@ -904,6 +944,7 @@
         "director-working-version.md",
         "dual-editor-editing.md",
         "dual-editor.md",
+        "effects-catalogue.md",
         "genobi-cli.md",
         "hermes-profiles.md",
         "licence-strategy.md",
@@ -1041,6 +1082,7 @@
         "dual-editor-editing.md",
         "dual-editor.md",
         "editor-timeline.md",
+        "effects-catalogue.md",
         "falling-room.md",
         "genmod.md",
         "genobi-cli.md",
@@ -1377,6 +1419,13 @@
       ]
     },
     {
+      "title": "Editable effect renderers",
+      "path": "director-bundle/effects-catalogue/README.md",
+      "tags": ["director", "bundle"],
+      "summary": "Trusted editable poster, scan, HUD, kinetic and reflection renderers with explicit frame time and reproducible checks.",
+      "links": ["poster-grid-direction.md"]
+    },
+    {
       "title": "Motion effects",
       "path": "director-bundle/motion-effects.md",
       "tags": ["director", "bundle", "agents"],
@@ -1534,6 +1583,13 @@
       "tags": ["studio", "director", "design"],
       "summary": "The production Editor timeline after the timeline design port, what changed, where it lives and what still differs from the mock.",
       "links": []
+    },
+    {
+      "title": "Configurable effects catalogue",
+      "path": "effects-catalogue.md",
+      "tags": ["director", "world-builder", "agents", "mcp", "bundle"],
+      "summary": "Configurable effect presets in the 3D gallery and Editor, portable variants, trusted modules and the shared agent contract.",
+      "links": ["animations-effects-plan.md", "director-agent-tools.md"]
     },
     {
       "title": "Falling room",
@@ -1777,6 +1833,13 @@
       "links": ["comfy-deployment.md"]
     },
     {
+      "title": "Poster grid and water grid",
+      "path": "poster-grid-direction.md",
+      "tags": ["director", "design", "plan", "templates", "research"],
+      "summary": "Restrained poster-window and temporal water-grid direction from the supplied stills and Kodoi prompt transcript, with implementation acceptance.",
+      "links": ["animations-effects-plan.md"]
+    },
+    {
       "title": "Outputs into project assets",
       "path": "project-assets.md",
       "tags": ["studio", "director", "world-builder", "dual-editor"],
@@ -1816,6 +1879,7 @@
         "director-agent-tools.md",
         "director-bundle/README.md",
         "dual-editor.md",
+        "effects-catalogue.md",
         "falling-room.md",
         "genobi-cli.md",
         "genobi-teaser-run/README.md",
@@ -1863,6 +1927,7 @@
         "director-bundle/README.md",
         "director-working-version.md",
         "dual-editor.md",
+        "effects-catalogue.md",
         "falling-room.md",
         "genobi-cli.md",
         "hermes-runs.md",
@@ -1910,6 +1975,7 @@
         "director-bundle/README.md",
         "director-working-version.md",
         "dual-editor.md",
+        "effects-catalogue.md",
         "falling-room.md",
         "genobi-cli.md",
         "genobi-teaser-run/README.md",
@@ -2309,7 +2375,7 @@
       "path": "world-builder-controls.md",
       "tags": ["3d", "world-builder", "studio"],
       "summary": "World Builder controls - capture and edits during Play, character orientation, preview and character shortcuts, and the panel dock.",
-      "links": ["world-builder.md"]
+      "links": ["world-builder-loops.md", "world-builder.md"]
     },
     {
       "title": "Room sound along the scene timeline",
@@ -2331,14 +2397,27 @@
       ]
     },
     {
+      "title": "Build a loop from saved views",
+      "path": "world-builder-loops.md",
+      "tags": ["3d", "world-builder", "studio", "sound"],
+      "summary": "One global Loop panel for saved A–D scenes and cameras, direct Shot framing, whole-loop movement, audio links and exact LTX capture timing.",
+      "links": [
+        "animations-effects-plan.md",
+        "world-builder-capture.md",
+        "world-builder-motion.md"
+      ]
+    },
+    {
       "title": "Scene motion: editable shapes on one timeline",
       "path": "world-builder-motion.md",
       "tags": ["3d", "world-builder", "sound", "agents"],
-      "summary": "Editable scene states, four voxel and room morph presets, deterministic audio mappings, and aligned browser guide capture.",
+      "summary": "Authored form sequences, paired A–D shape/camera saves, audio state pulls, rotation, and 30-second local RGB/depth guides on the 8k+1 frame grid.",
       "links": [
         "audiovisual-gpu-evaluation.md",
+        "effects-catalogue.md",
         "world-builder-capture.md",
         "world-builder-dynamic-sound.md",
+        "world-builder-loops.md",
         "world-builder-sound.md",
         "world-builder.md"
       ]
@@ -2365,6 +2444,7 @@
       "links": [
         "agent-context.md",
         "camera-wording.md",
+        "effects-catalogue.md",
         "falling-room.md",
         "media-space.md",
         "project-assets.md",
@@ -2374,6 +2454,7 @@
         "world-builder-capture.md",
         "world-builder-controls.md",
         "world-builder-interface.md",
+        "world-builder-loops.md",
         "world-builder-motion.md",
         "world-builder-sound.md",
         "world-builder-verification.md",

@@ -1,0 +1,62 @@
+.wb-scene-audio {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.wb-scene-audio-heading,
+.wb-scene-audio-buttons,
+.wb-scene-audio > .wb-hint {
+  grid-column: 1 / -1;
+}
+.wb-scene-audio-heading,
+.wb-scene-audio-slider > span {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.wb-scene-audio-heading span {
+  max-width: 58%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--muted);
+  font-size: 11px;
+}
+.wb-scene-audio-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.wb-scene-audio-slider,
+.wb-scene-audio-band {
+  display: grid;
+  gap: 6px;
+  font-size: 12px;
+}
+.wb-scene-audio-slider input {
+  width: 100%;
+  margin: 0;
+  accent-color: var(--accent);
+}
+.wb-scene-audio-slider output {
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
+}
+@media (max-width: 900px) {
+  .wb-scene-audio-buttons button,
+  .wb-scene-audio .select-menu__trigger {
+    min-height: 44px;
+  }
+  .wb-scene-audio-slider input {
+    min-height: 30px;
+  }
+}
+@media (max-width: 600px) {
+  .wb-scene-audio {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

@@ -109,18 +109,23 @@ export function loopedShaderSpeed(speed: number, period: number) {
 /** What the loop does to this recipe, in words, for the hint beside the toggle. */
 export function loopNotes(r: Recipe): string[] {
   const period = loopPeriod(r);
+  const keyed = r.cameraMotion?.enabled && r.cameraMotion.base !== "legacy";
   const notes = [
     r.motion
       ? `Period ${period.toFixed(2)} s (${r.frames} frames). Scene states restart at the seam; match the final shape, room and controls to the first for a smooth repeat.`
       : `Period ${period.toFixed(2)} s (${r.frames} frames); the last frame stops one step short of the first, so a looping player never repeats one.`,
   ];
-  if (r.orbit % 360)
+  if (keyed)
+    notes.push(
+      "Camera keys restart at the seam; match the final position, target and lens to the first for a smooth repeat.",
+    );
+  if (!keyed && r.orbit % 360)
     notes.push(
       `Orbit ${r.orbit}° is not a whole turn, so the view jumps at the seam; use ±360°.`,
     );
-  else if (r.orbit)
+  else if (!keyed && r.orbit)
     notes.push("Orbit runs at constant speed; the curve is ignored.");
-  if (r.dolly || (r.elevationEnd ?? r.elevation) !== r.elevation)
+  if (!keyed && (r.dolly || (r.elevationEnd ?? r.elevation) !== r.elevation))
     notes.push("Dolly and elevation change go out and come back.");
   if (r.avatar && r.scene !== "neuro")
     notes.push(
@@ -161,7 +166,10 @@ export function loopNotes(r: Recipe): string[] {
     notes.push(
       `The Neuro sky plays ${wholeCycles(period, NEURO_CYCLE / r.speed)} whole cycle(s): speed ${loopedShaderSpeed(r.speed, period).toFixed(2)} instead of ${r.speed}.`,
     );
-  if (r.envelope.length || r.bandEnvelopes.low.length)
+  if (
+    r.envelope.length ||
+    Object.values(r.bandEnvelopes).some((band) => band.length)
+  )
     notes.push(
       "Audio-driven motion follows the audio as it is and may not meet.",
     );

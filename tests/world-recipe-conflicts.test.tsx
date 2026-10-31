@@ -65,7 +65,7 @@ const decoded = () => ({
   channels: [new Float32Array([0.1])],
   sampleRate: 24,
   envelope: [0.1],
-  bands: { low: [0.1], mid: [0.1], high: [0.1] },
+  bands: { sub: [0.05], low: [0.1], mid: [0.1], high: [0.1] },
 });
 const bundle = (id = project.id) => ({
   project: { ...structuredClone(project), id } as unknown as Project,

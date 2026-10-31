@@ -65,7 +65,7 @@ describe("World Builder replay contract", () => {
     expect(v.getInt16(48, true)).toBe(0);
   });
   it("keeps long audio analysis within the maximum capture length", () => {
-    expect(rmsEnvelope([new Float32Array(48 * 60)], 48).length).toBe(241);
+    expect(rmsEnvelope([new Float32Array(48 * 60)], 48).length).toBe(721);
   });
 });
 

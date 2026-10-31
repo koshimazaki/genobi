@@ -3,7 +3,7 @@ import type { BuilderSession } from "./useBuilderSession";
 import { download } from "./useBuilderSession";
 import type { LibraryTake } from "./take-library";
 import type { SceneLibraryState } from "./useSceneLibrary";
-import { PRESET_NAME, type ScenePreset } from "./world-presets";
+import { PresetGallery } from "./PresetGallery";
 import "./scene-library.css";
 
 const OPEN_KEY = "genobi.world.library.open";
@@ -102,38 +102,6 @@ function TakeCard({
   );
 }
 
-function PresetCard({
-  preset,
-  lib,
-  disabled,
-}: {
-  preset: ScenePreset;
-  lib: SceneLibraryState;
-  disabled: boolean;
-}) {
-  return (
-    <li className="wb-lib-card wb-lib-preset">
-      <button
-        className="wb-lib-load"
-        disabled={disabled}
-        onClick={() => lib.loadPreset(preset)}
-      >
-        <strong>{preset.name}</strong>
-        <small>{preset.summary}</small>
-      </button>
-      {preset.source === "saved" && (
-        <button
-          aria-label={`Delete preset ${preset.name}`}
-          disabled={disabled}
-          onClick={() => lib.removePreset(preset.name)}
-        >
-          ×
-        </button>
-      )}
-    </li>
-  );
-}
-
 /**
  * Where the library keeps its takes, in words. Embedded (the Comfy node's
  * World Builder, the one place the bundle runs in an iframe) they are kept
@@ -155,15 +123,16 @@ export function SceneLibrary({
   s,
   lib,
   disabled,
+  onConfigureScene,
 }: {
   s: BuilderSession;
   lib: SceneLibraryState;
   /** The scene is busy, playing or walking: loading waits. */
   disabled: boolean;
+  onConfigureScene?: () => void;
 }) {
   const [open, setOpen] = useState(readOpen);
-  const [tab, setTab] = useState<"takes" | "presets">("takes");
-  const [name, setName] = useState("");
+  const [tab, setTab] = useState<"takes" | "presets">("presets");
   const busy = disabled || !!lib.working;
   const toggle = () => {
     setOpen(!open);
@@ -189,7 +158,7 @@ export function SceneLibrary({
         </button>
         {open && (
           <div className="wb-lib-tabs" role="tablist" aria-label="Library">
-            {(["takes", "presets"] as const).map((key) => (
+            {(["presets", "takes"] as const).map((key) => (
               <button
                 key={key}
                 role="tab"
@@ -218,37 +187,12 @@ export function SceneLibrary({
               <p className="wb-hint">{emptyLibraryHint()}</p>
             )
           ) : (
-            <>
-              <form
-                className="wb-lib-save"
-                onSubmit={(ev) => {
-                  ev.preventDefault();
-                  lib.savePreset(name);
-                  setName("");
-                }}
-              >
-                <input
-                  aria-label="Preset name"
-                  placeholder="Name this scene"
-                  maxLength={PRESET_NAME}
-                  value={name}
-                  onChange={(ev) => setName(ev.target.value)}
-                />
-                <button disabled={!s.ready || !name.trim() || !!lib.working}>
-                  Save current as preset
-                </button>
-              </form>
-              <ul className="wb-lib-row">
-                {lib.presets.map((preset) => (
-                  <PresetCard
-                    key={`${preset.source}:${preset.name}`}
-                    preset={preset}
-                    lib={lib}
-                    disabled={busy}
-                  />
-                ))}
-              </ul>
-            </>
+            <PresetGallery
+              s={s}
+              lib={lib}
+              disabled={busy}
+              onConfigureScene={onConfigureScene}
+            />
           )}
         </div>
       )}

@@ -1,6 +1,6 @@
 import { canonical } from "../../shared/memory/state";
 import { evaluateScene } from "./evaluate-scene";
-import { cameraAt, cameraTargetAt, type Recipe } from "./recipe";
+import { cameraAt, cameraTargetAt, cameraFovAt, type Recipe } from "./recipe";
 
 export async function sceneDigest(value: unknown) {
   const bytes = new TextEncoder().encode(canonical(value));
@@ -18,7 +18,9 @@ export async function sceneCaptureInfo(recipe: Recipe) {
     evaluator: "genobi-scene-v1",
     motionVersion: recipe.motion.version,
     recipeSha256: await sceneDigest(recipe),
-    analysis: "builder-level-crossover-envelope-v1",
+    analysis: recipe.bandEnvelopes.sub?.length
+      ? "builder-level-crossover-sub-envelope-v2"
+      : "builder-level-crossover-envelope-v1",
     controlEnvelopeSha256: await sceneDigest({
       level: recipe.envelope,
       ...recipe.bandEnvelopes,
@@ -29,7 +31,7 @@ export async function sceneCaptureInfo(recipe: Recipe) {
       camera: {
         position: cameraAt(recipe, 0),
         target: cameraTargetAt(recipe, 0),
-        fov: recipe.fov,
+        fov: cameraFovAt(recipe, 0),
       },
     }),
     stateIds: recipe.motion.stateKeys.map((key) => key.id),
