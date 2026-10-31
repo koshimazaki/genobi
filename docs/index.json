@@ -935,6 +935,7 @@
       "links": [
         "adaptive-reverb-proof.md",
         "audiovisual-gpu-evaluation.md",
+        "audiovisual-implementation.md",
         "comfy-deploy.md",
         "licence-strategy.md",
         "world-builder-sound.md"
@@ -952,7 +953,11 @@
         "architecture"
       ],
       "summary": "Operator runbook for staged audiovisual GPU qualification, CPU-first sound evaluation, managed deployment acceptance and evaluator access.",
-      "links": ["adaptive-reverb-proof.md", "comfy-deploy.md"]
+      "links": [
+        "adaptive-reverb-proof.md",
+        "audiovisual-implementation.md",
+        "comfy-deploy.md"
+      ]
     },
     {
       "title": "Audiovisual scene implementation plan",

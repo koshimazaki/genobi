@@ -10,7 +10,7 @@ proposed audiovisual release. It does not report a new GPU run, deployed
 endpoint or completed evaluator session. Historical GPU results are recorded
 separately in [Adaptive reverb proof](adaptive-reverb-proof.md).
 
-The [qualification kit](https://github.com/koshimazaki/genobi/blob/release/v0.14/workflows/qualification/README.md) prepares exact
+The [qualification kit](https://github.com/koshimazaki/genobi/blob/7b97b310cd68909cef0039a6aacb08046d459b6e/workflows/qualification/README.md) prepares exact
 diagnostic audio, snapshots workflow graphs and validates evidence. It does
 not render Three.js, run ComfyUI, submit a job, or establish that a reviewer's
 measurements are true. New records start as `not_run`.
@@ -84,6 +84,29 @@ final source scene, not only a diagnostic movie that bypasses its evaluator.
 
 ## 4. Prepare the actual GPU route
 
+Choose the route before allocating hardware. The existing-feature fixes in the
+[implementation plan](audiovisual-implementation.md) can be validated offline
+first; they do not require a successful workflow pilot.
+
+| Route                       | What can be checked first                                                                                                                                                           | What it does not establish                                                                                                          |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| Managed Comfy Cloud         | [PR27's explicit account check](https://github.com/koshimazaki/genobi/pull/27) inspects node classes and declared model-slot choices. Unknown schema/loader choices remain unknown. | Metadata compatibility does not validate uploads, input types, model loading/VRAM, execution, motion, reference adherence or sound. |
+| Custom Comfy API deployment | Check the pinned Build's nodes/models and offline workflow contract, then use the deployment steps below.                                                                           | Registering an endpoint or passing a managed Cloud check does not qualify this Build.                                               |
+| Comfy Router                | Inspect the supported model call and its input contract.                                                                                                                            | A model-ID call does not execute or qualify an arbitrary workflow graph.                                                            |
+
+User-installed custom node packs need local ComfyUI or a custom deployment;
+managed Cloud uses its available catalogue. In particular, the simple core-LoRA
+AKUSPACE template is distinct from the aligned-reference and scene-acoustics
+graphs. Checking one cannot qualify the others. No live account check or new
+GPU run is claimed by these PRs. The metadata check requires an authorized key
+but uploads nothing and starts no GPU job.
+
+Route definitions checked on 31 October 2026 against the provider's
+[Cloud discovery surface](https://docs.comfy.org/development/cloud/overview),
+[custom-node policy](https://support.comfy.org/articles/6791455062-custom-nodes-on-cloud),
+[deployment guide](https://docs.comfy.org/development/serverless/overview) and
+[Router model calls](https://docs.comfy.org/development/comfy-router/quickstart).
+
 Use [Comfy deployment operations](comfy-deploy.md) for authentication, current
 CLI prerequisites, model resolution and billing. A configured endpoint or
 successful offline build-spec test is not a deployed model. Choose actual
@@ -128,7 +151,7 @@ session jobs and future managed project runs are different acceptance paths.
 
 ## 5. Measure the visual output
 
-Use [`matrix.json`](https://github.com/koshimazaki/genobi/blob/release/v0.14/workflows/qualification/matrix.json) and retain
+Use [`matrix.json`](https://github.com/koshimazaki/genobi/blob/7b97b310cd68909cef0039a6aacb08046d459b6e/workflows/qualification/matrix.json) and retain
 per-frame annotations. These are initial product thresholds, not measured LTX
 guarantees:
 
@@ -157,7 +180,7 @@ the PRD's one-frame duration tolerance is not permission to bypass that guard.
 The stock combined graph freezes LTX audio conditioning and muxes the CPU
 reverb mix of the source. Its acoustic prompt node does not load AKUSPACE.
 The separate AKUSPACE graph regenerates audio; it is not transparent
-convolution. See [the qualification kit's sound cases](https://github.com/koshimazaki/genobi/blob/release/v0.14/workflows/qualification/README.md).
+convolution. See [the qualification kit's sound cases](https://github.com/koshimazaki/genobi/blob/7b97b310cd68909cef0039a6aacb08046d459b6e/workflows/qualification/README.md).
 
 For CPU treatment, retain dry audio, IRs/schedule, wet stem and final mix.
 Test a stationary scene, smooth expansion, impulses immediately before/during
@@ -179,7 +202,7 @@ product intention, not an invented model setting. No parallel experiment is
 a prerequisite, though it can be a useful comparison.
 The pinned aligned-reference node still injects reference tokens at time zero
 when its extra reference-guidance scale is zero; the
-[kit documents that distinction](https://github.com/koshimazaki/genobi/blob/release/v0.14/workflows/qualification/README.md#preserve-the-sound-alternatives).
+[kit documents that distinction](https://github.com/koshimazaki/genobi/blob/7b97b310cd68909cef0039a6aacb08046d459b6e/workflows/qualification/README.md#preserve-the-sound-alternatives).
 Neither time-zero alignment nor zero extra guidance proves source fidelity.
 
 Compare level-matched complete excerpts and endings, including the preferred
@@ -195,7 +218,7 @@ experimental and does not postpone the CPU-first release.
 ## 7. Validate and retain the evidence
 
 Copy the generated template, then fill each measured run exactly as described
-in [the evidence format](https://github.com/koshimazaki/genobi/blob/release/v0.14/workflows/qualification/README.md#record-and-validate-evidence):
+in [the evidence format](https://github.com/koshimazaki/genobi/blob/7b97b310cd68909cef0039a6aacb08046d459b6e/workflows/qualification/README.md#record-and-validate-evidence):
 
 ```sh
 cp "$GENOBI_AV_EVIDENCE/evidence.template.json" "$GENOBI_AV_EVIDENCE/evidence.json"
