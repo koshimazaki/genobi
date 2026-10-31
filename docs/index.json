@@ -165,6 +165,7 @@
         "world-builder-capture.md",
         "world-builder-controls.md",
         "world-builder-interface.md",
+        "world-builder-motion.md",
         "world-builder-sound.md",
         "world-builder-verification.md",
         "world-builder.md",
@@ -201,6 +202,7 @@
         "templates.md",
         "vision.md",
         "world-builder-acoustics.md",
+        "world-builder-motion.md",
         "world-builder-sound.md"
       ]
     },
@@ -262,6 +264,7 @@
         "vision.md",
         "voice-mode.md",
         "workflow-reference-library.md",
+        "world-builder-motion.md",
         "world-builder.md",
         "world-live.md",
         "world-recipe-handoff.md"
@@ -454,6 +457,7 @@
         "world-builder-capture.md",
         "world-builder-controls.md",
         "world-builder-interface.md",
+        "world-builder-motion.md",
         "world-builder-sound.md",
         "world-builder-verification.md",
         "world-builder.md",
@@ -744,6 +748,7 @@
         "world-builder-capture.md",
         "world-builder-controls.md",
         "world-builder-interface.md",
+        "world-builder-motion.md",
         "world-builder-sound.md",
         "world-builder-verification.md",
         "world-builder.md",
@@ -907,7 +912,8 @@
         "taste-memory.md",
         "template-gallery.md",
         "voice-mode.md",
-        "voice-setup.md"
+        "voice-setup.md",
+        "world-builder-motion.md"
       ]
     },
     {
@@ -2310,6 +2316,18 @@
       ]
     },
     {
+      "title": "Scene motion: editable shapes on one timeline",
+      "path": "world-builder-motion.md",
+      "tags": ["3d", "world-builder", "sound", "agents"],
+      "summary": "Editable scene states, four voxel and room morph presets, deterministic audio mappings, and aligned browser guide capture.",
+      "links": [
+        "audiovisual-gpu-evaluation.md",
+        "world-builder-capture.md",
+        "world-builder-sound.md",
+        "world-builder.md"
+      ]
+    },
+    {
       "title": "World Builder sound",
       "path": "world-builder-sound.md",
       "tags": ["3d", "world-builder", "sound"],
@@ -2340,6 +2358,7 @@
         "world-builder-capture.md",
         "world-builder-controls.md",
         "world-builder-interface.md",
+        "world-builder-motion.md",
         "world-builder-sound.md",
         "world-builder-verification.md",
         "world-live.md",

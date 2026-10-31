@@ -20,4 +20,8 @@ export const SCENE_CAPABILITIES = [
   "screen-image-video",
   "recipe-json",
   "scene-library",
+  "scene-state-interpolation-v1",
+  "bounded-voxel-morphs",
+  "audio-scene-mappings",
+  "evaluated-room-geometry",
 ] as const;

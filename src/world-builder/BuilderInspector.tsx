@@ -3,6 +3,7 @@ import { shapeLabels } from "./scene-contract";
 import { Fold } from "./FloatingPanel";
 import { ObjectInspector } from "./ObjectInspector";
 import { CameraControls } from "./CameraControls";
+import { SceneMotionControls } from "./SceneMotionControls";
 import { AudioControls } from "./AudioControls";
 import { CaptureControls } from "./CaptureControls";
 import { RecipeControls } from "./RecipeControls";
@@ -82,6 +83,7 @@ export function PanelBody({
     case "scene":
       return (
         <fieldset disabled={!idle}>
+          <SceneMotionControls s={s} e={e} />
           {s.recipe.avatar && <MotionList s={s} />}
           <CreatureFile
             onLoad={(pose) =>
@@ -144,7 +146,7 @@ export function PanelBody({
               </label>
             )}
             <div className="wb-object-list">
-              {s.recipe.objects.map((p) => (
+              {e.objects.map((p) => (
                 <button
                   key={p.id}
                   onClick={() => {
@@ -156,7 +158,7 @@ export function PanelBody({
                   <small>{shapeLabels[p.shape]}</small>
                 </button>
               ))}
-              {!s.recipe.objects.length && (
+              {!e.objects.length && (
                 <p className="wb-hint">Build → Add to place primitives.</p>
               )}
             </div>

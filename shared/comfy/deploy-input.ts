@@ -74,6 +74,10 @@ export function readDeployInput(value: unknown): DeployInput {
       throw deployInvalid(
         "Use the matching v1, 24 fps, 1024 × 576, 193-frame capture recipe.",
       );
+    if (Object.hasOwn(recipe, "motion"))
+      throw deployInvalid(
+        "Animated scene guides need a workflow with dynamic sound support. This combined deployment uses static room acoustics. Download the RGB/depth guides for a custom workflow instead.",
+      );
   }
   return {
     seed: v.seed as number,

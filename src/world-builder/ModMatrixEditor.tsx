@@ -9,6 +9,7 @@
 import ThemedSelect from "../components/ThemedSelect";
 import Icon from "../components/Icon";
 import type { Recipe } from "./recipe";
+import { sceneObjects } from "./scene-instances";
 import {
   MAX_ROUTES,
   MOD_SOURCES,
@@ -45,7 +46,7 @@ export function ModMatrixEditor({
 }) {
   const routes = recipe.audioRoutes;
   const options = targetOptions(
-    recipe.objects.map((p) => p.id),
+    sceneObjects(recipe).map((p) => p.id),
     recipe.scene === "playground",
   );
   const routeTarget = targetForSelection(selected);

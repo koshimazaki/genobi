@@ -24,6 +24,8 @@ export const MESSAGE_PROMPT_MAX = 2400;
 
 /** The room preset whose floor this set still has, "custom room", or none. */
 export function worldRoom(recipe: Recipe) {
+  if (recipe.motion?.room)
+    return `${recipe.motion.room.id} (single-room acoustic ${recipe.motion.room.visible ? "enclosure" : "proxy"})`;
   const floor = recipe.objects.find((o) => o.id === "room-floor");
   if (!floor) return undefined;
   const same = (a?: number, b?: number) => Math.abs((a ?? 1) - (b ?? 1)) < 1e-6;
@@ -60,6 +62,12 @@ export function sceneSummary(recipe: Recipe, preset?: string) {
       name ? `preset ${name}` : "",
       `room ${worldRoom(recipe) ?? `none (${recipe.scene})`}`,
       `character ${character(recipe)}`,
+      ...(recipe.motion
+        ? [
+            `motion ${recipe.motion.stateKeys.map((k) => k.label).join(" → ")}`,
+            `${recipe.motion.instances?.count ?? 0} voxels`,
+          ]
+        : []),
       `camera shot ${recipe.cameraShot}`,
       `${recipe.frames} frames (${(recipe.frames / recipe.fps).toFixed(1)} s) at ${recipe.width}×${recipe.height}`,
     ]

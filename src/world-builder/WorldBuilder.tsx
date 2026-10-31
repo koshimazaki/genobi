@@ -29,6 +29,7 @@ import "./node-compact.css";
 import { type RecentAudio } from "./audio-history";
 import { dropOnScene } from "./sound-drop";
 import { SceneLibrary } from "./SceneLibrary";
+import { SceneStateStrip } from "./SceneStateStrip";
 import { togglePlay } from "./example-track";
 import { useSceneLibrary } from "./useSceneLibrary";
 import type { Take } from "./export-take";
@@ -221,6 +222,11 @@ export default function WorldBuilder({
                   {s.recipe.width} × {s.recipe.height}
                 </span>
               </div>
+              <SceneStateStrip
+                s={s}
+                e={e}
+                onControls={() => dispatch({ type: "open", key: "scene" })}
+              />
               <SceneLibrary
                 s={s}
                 lib={lib}

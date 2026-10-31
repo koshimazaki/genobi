@@ -29,7 +29,7 @@ export function ObjectInspector({
           onChange={(event) => e.select(event.target.value)}
         >
           <option value="">Select in the scene…</option>
-          {s.recipe.objects.map((p) => (
+          {e.objects.map((p) => (
             <option key={p.id} value={`prop:${p.id}`}>
               {p.id}
             </option>
@@ -38,6 +38,11 @@ export function ObjectInspector({
             playgroundIds.map((id) => <option key={id}>{id}</option>)}
         </ThemedSelect>
       </label>
+      {s.recipe.motion && t && (
+        <p className="wb-hint">
+          Editing the selected state. Other states keep their positions.
+        </p>
+      )}
       {t ? (
         <>
           <div className="wb-transform-grid">
@@ -93,7 +98,7 @@ export function ObjectInspector({
               ),
             )}
           </div>
-          {e.prop && (
+          {e.prop && e.authored && (
             <>
               <label>
                 Colour
@@ -172,7 +177,7 @@ export function ObjectInspector({
           </button>
         )}
       </Fold>
-      {e.prop && (
+      {e.prop && e.authored && (
         <button className="wb-danger" onClick={e.remove}>
           Delete selected primitive
         </button>

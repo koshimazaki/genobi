@@ -70,6 +70,14 @@ suppression, double threshold), with no extra pip dependency.
   batches into one 2x2, 1x4 or 2x4 sheet for FLUX Klein; empty slots stay black and
   `panels` names each cell. `examples/storyboard/ninja/` holds eight recipes for a 2x4 board.
 
+Recipes with scene `motion` can be captured with matching RGB and depth, but
+the Python **Acoustics** and **Reverb** nodes are static estimators. They reject
+these recipes explicitly so animated voxels or an acoustic proxy never become
+an incorrect open-sky estimate. Use World Builder's dynamic CPU room sound for
+an evaluated timeline. The browser treatment and these native static nodes
+are separate engines; exporting motion does not add LTX conditioning or a
+dynamic Python acoustic scheduler.
+
 `examples/world-builder-acoustics.json` wires all of this into one graph: Capture
 → Acoustics → Koshi_AKUSPACEPrompt (the LoRA route; that node comes from the
 ComfyUI-Koshi-Nodes pack, which must be installed too) and Capture → Reverb →

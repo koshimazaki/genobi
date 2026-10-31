@@ -3,6 +3,12 @@ import type { BuilderSession } from "./useBuilderSession";
 import type { Mode, Tool } from "./interaction";
 import type { Shape, Recipe, Prop } from "./recipe";
 import { validSurface } from "./scene-contract";
+import {
+  editableSceneObjects,
+  patchSceneObject,
+  removeSceneObject,
+  sceneEditFrame,
+} from "./scene-editing";
 export function useWorldEditor(s: BuilderSession) {
   const [mode, setMode] = useState<Mode>("shot"),
     [tool, setTool] = useState<Tool>("translate"),
@@ -14,10 +20,11 @@ export function useWorldEditor(s: BuilderSession) {
     editor?.setMode(next);
     setMode(next);
     if (next !== "walk") {
-      s.setFrame(0);
+      const frame = sceneEditFrame(s.recipe, s.frame);
+      s.setFrame(frame);
       s.run(async () => {
         await s.settled();
-        await s.runtime.current!.renderFrame(0);
+        await s.runtime.current!.renderFrame(frame);
       });
     }
   }
@@ -58,15 +65,12 @@ export function useWorldEditor(s: BuilderSession) {
       setMode("shot");
     }
   }, [editor, s.recipe.scene]);
-  const prop = s.recipe.objects.find((p) => `prop:${p.id}` === selected);
+  const objects = editableSceneObjects(s.recipe, s.frame);
+  const prop = objects.find((p) => `prop:${p.id}` === selected);
+  const authored = s.recipe.objects.some((p) => `prop:${p.id}` === selected);
   const transform = prop ?? s.runtime.current?.getLayout(selected);
   function patchObject(patch: Partial<Prop>) {
-    if (prop)
-      s.change({
-        objects: s.recipe.objects.map((p) =>
-          p.id === prop.id ? { ...p, ...patch } : p,
-        ),
-      });
+    if (prop) s.change(patchSceneObject(s.recipe, s.frame, prop.id, patch));
     else if (transform)
       s.change({
         layout: {
@@ -80,11 +84,14 @@ export function useWorldEditor(s: BuilderSession) {
       });
   }
   function remove() {
-    if (!prop) return;
+    if (!prop || !authored) return;
     const objects = s.recipe.objects.filter((p) => p.id !== prop.id);
     const next = {
       ...s.recipe,
       objects,
+      ...(s.recipe.motion
+        ? { motion: removeSceneObject(s.recipe, prop.id) }
+        : {}),
       // A route to a removed primitive goes with it.
       audioRoutes: s.recipe.audioRoutes.filter(
         (route) => route.target !== `prop:${prop.id}`,
@@ -121,7 +128,20 @@ export function useWorldEditor(s: BuilderSession) {
     tool,
     selected,
     prop,
+    objects,
+    authored,
     transform,
+    editState: (index: number) => {
+      const key = s.recipe.motion?.stateKeys[index];
+      if (!key) return;
+      s.setPlaying(false);
+      editor?.setMode("edit");
+      setMode("edit");
+      s.run(async () => {
+        await s.settled();
+        await s.api.current!.render(key.frame);
+      });
+    },
     chooseMode,
     chooseTool,
     patchObject,

@@ -1,0 +1,147 @@
+.wb-motion-strip {
+  padding: 10px 13px;
+  border-top: 1px solid var(--border);
+  background: var(--surface);
+  min-width: 0;
+}
+.wb-motion-strip > header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  font: 10px var(--mono);
+}
+.wb-motion-strip > header strong {
+  color: var(--text);
+  font-weight: 500;
+}
+.wb-motion-strip > header span {
+  color: var(--muted);
+  flex: 1;
+}
+.wb-motion-strip > header button {
+  font: 10px var(--mono);
+  padding: 5px 8px;
+}
+.wb-state-cards {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 2px 0 5px;
+}
+.wb-app .wb-state-card {
+  flex: 1 0 140px;
+  min-width: 0;
+  max-width: 300px;
+  padding: 0;
+  display: grid;
+  gap: 0;
+  overflow: hidden;
+  text-align: left;
+  background: var(--sunken);
+}
+.wb-state-card svg {
+  width: 100%;
+  height: 76px;
+  display: block;
+}
+.wb-state-card > span {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  min-width: 0;
+  padding: 7px 9px;
+  font: 11px var(--mono);
+  white-space: nowrap;
+}
+.wb-state-card b {
+  font-weight: 400;
+  color: var(--accent-strong);
+}
+.wb-state-card small {
+  margin-left: auto;
+  font-size: 9px;
+  color: var(--muted);
+}
+.wb-motion-controls {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.wb-motion-controls h3 {
+  margin: 0;
+  font: 12px var(--mono);
+  color: var(--accent-strong);
+}
+.wb-motion-controls input[type="text"],
+.wb-motion-controls input:not([type]) {
+  width: 100%;
+  min-width: 0;
+  background: var(--sunken);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 7px;
+}
+.wb-motion-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  min-width: 0;
+}
+.wb-motion-pair input {
+  width: 100%;
+}
+.wb-motion-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.wb-motion-mappings {
+  display: grid;
+  gap: 8px;
+}
+.wb-motion-route {
+  display: grid;
+  grid-template-columns: 30px minmax(0, 1fr) minmax(0, 1.4fr) 28px;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+.wb-motion-route > .wb-number {
+  grid-column: 2 / 4;
+  grid-row: 2;
+}
+.wb-motion-route .wb-number input {
+  width: 100%;
+}
+.wb-motion-route > button {
+  grid-column: 4;
+  grid-row: 1;
+  padding: 5px;
+}
+.wb-motion-route .themed-select {
+  min-width: 0;
+}
+@media (max-width: 900px) {
+  .wb-motion-strip {
+    padding: 8px;
+  }
+  .wb-motion-strip > header {
+    flex-wrap: wrap;
+  }
+  .wb-motion-strip > header span {
+    flex-basis: 60%;
+  }
+  .wb-motion-strip button {
+    min-height: 44px;
+  }
+  .wb-state-card > span {
+    flex-wrap: wrap;
+  }
+  .wb-app .wb-state-card {
+    flex-basis: 140px;
+  }
+}

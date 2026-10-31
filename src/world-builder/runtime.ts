@@ -1,5 +1,7 @@
 import * as T from "three";
-import { orbitPosition } from "./prop-orbit";
+import { evaluateScene } from "./evaluate-scene";
+import { editableSceneObjects, sceneObjectEdits } from "./scene-editing";
+import { sceneObjects } from "./scene-instances";
 import { createSceneMedia } from "./scene-media";
 import { geometryFor } from "./geometry";
 import { faces, scaledAxes } from "./scene-contract";
@@ -13,17 +15,12 @@ import {
 } from "./recipe";
 import { applyAvatarPose } from "./avatar-pose";
 import { avatarPoseAt } from "./avatar-path";
-import { modOf, modsAt, NO_MODS } from "./mod-routes";
+import { modOf } from "./mod-routes";
 import { applyAvatarMods, createWorldMods } from "./mod-apply";
 import { vertexShader, fragmentShader } from "./neuro";
 import { createBuilderCharacter } from "./character";
 import { createDepthPass } from "./depth-pass";
-import {
-  loopedMotionAt,
-  loopedShaderSpeed,
-  loopedSpin,
-  loopPeriod,
-} from "./loop";
+import { loopedMotionAt, loopedShaderSpeed, loopPeriod } from "./loop";
 import { CHARACTER_MODELS } from "../../shared/scene/character-catalog";
 
 export function createWorld(
@@ -130,8 +127,18 @@ export function createWorld(
       stage,
       asset,
       () => renderer.render(world, camera),
-      () => recipe,
-      onEdit,
+      () => ({
+        ...recipe,
+        objects: editableSceneObjects(recipe, currentFrame),
+      }),
+      (patch) => {
+        const { objects, ...rest } = patch;
+        onEdit(
+          objects && recipe.motion
+            ? { ...rest, ...sceneObjectEdits(recipe, currentFrame, objects) }
+            : patch,
+        );
+      },
       (time, state) => character.walk(recipe, time, state),
     );
     editor.refresh();
@@ -140,6 +147,7 @@ export function createWorld(
   void loaded.catch(() => {});
   let recipe: Recipe,
     objectSignature = "",
+    currentFrame = 0,
     disposed = false,
     // A capture owns the canvas: the stopped preview never draws over a frame.
     capturing = false;
@@ -211,13 +219,15 @@ export function createWorld(
       playground.avatar.position.copy(position);
       playground.avatar.rotation.y = yaw!;
     }
+    const objects = evaluateScene(recipe, 0).objects;
+    const editableIds = new Set(sceneObjects(recipe).map((p) => p.id));
     const signature = JSON.stringify(
-      recipe.objects.map((p) => [p.id, p.shape]),
+      objects.map((p) => [p.id, p.shape, editableIds.has(p.id)]),
     );
     if (signature !== objectSignature) {
       clearProps();
       objectSignature = signature;
-      for (const p of recipe.objects) {
+      for (const p of objects) {
         const geometry = geometryFor(p.shape);
         if (!geometry.groups.length)
           geometry.addGroup(
@@ -240,7 +250,7 @@ export function createWorld(
             }),
         );
         const mesh = new T.Mesh(geometry, materials);
-        mesh.userData.editId = `prop:${p.id}`;
+        if (editableIds.has(p.id)) mesh.userData.editId = `prop:${p.id}`;
         mesh.castShadow = mesh.receiveShadow = true;
         props.add(mesh);
       }
@@ -250,10 +260,13 @@ export function createWorld(
   }
   function draw(frame: number) {
     if (disposed) throw new Error("Scene was closed.");
+    currentFrame = frame;
     const seconds = frame / recipe.fps,
-      // Build hides audio offsets so they are never baked into transforms.
-      mods = editor?.mode === "edit" ? NO_MODS : modsAt(recipe, frame),
       period = loopPeriod(recipe);
+    const evaluated = evaluateScene(recipe, frame, {
+      editing: editor?.mode === "edit",
+    });
+    const mods = evaluated.mods;
     if (!editor || editor.mode === "shot") {
       camera.position.set(...cameraAt(recipe, frame));
       camera.lookAt(...cameraTargetAt(recipe, frame));
@@ -271,28 +284,12 @@ export function createWorld(
     key.intensity = recipe.light + modOf(mods, ["light:key"], "light") * 3;
     fill.intensity = 1 + modOf(mods, ["light:fill"], "light");
     props.children.forEach((mesh, i) => {
-      const p = recipe.objects[i];
+      const p = evaluated.objects[i];
       const targets = ["primitives", `prop:${p.id}`];
       const glow = modOf(mods, targets, "glow");
-      // Build edits the prop where it stands; Shot and Walk move it on its orbit.
-      const [x, z] =
-        editor?.mode === "edit"
-          ? [p.x, p.z]
-          : orbitPosition(p, seconds, recipe.loop ? period : undefined);
-      mesh.position.set(x, p.y + modOf(mods, targets, "height"), z);
-      const pulse = 1 + modOf(mods, targets, "scale");
-      mesh.scale.set(
-        ...(scaledAxes(p).map((v) => v * pulse) as [number, number, number]),
-      );
-      mesh.rotation.set(
-        p.rotationX ?? 0,
-        (p.rotation ?? 0) +
-          (editor?.mode === "edit"
-            ? 0
-            : (recipe.loop ? loopedSpin(p.spin, period) : p.spin) * seconds) +
-          modOf(mods, targets, "spin"),
-        p.rotationZ ?? 0,
-      );
+      mesh.position.set(p.x, p.y, p.z);
+      mesh.scale.set(...scaledAxes(p));
+      mesh.rotation.set(p.rotationX ?? 0, p.rotation ?? 0, p.rotationZ ?? 0);
       const materials = (
         mesh as T.Mesh<T.BufferGeometry, T.MeshStandardMaterial[]>
       ).material;
@@ -367,6 +364,9 @@ export function createWorld(
     await media.load(target, blob);
   }
   return {
+    get frame() {
+      return currentFrame;
+    },
     get editor() {
       return editor;
     },

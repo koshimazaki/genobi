@@ -22,6 +22,8 @@ Comfy node's menu leaves out the **Neuro shader**: it is a full-frame sky with
 no set, character or depth to carry into a graph. It stays in the studio; its
 code is MIT, from Holodeck, so nothing in its licence restricts it.
 
+Four [scene motion presets](world-builder-motion.md) add editable state sequences, bounded voxel groups, audio-driven twists and room dimensions, with one evaluator for Shot and RGB/depth capture. Open **Load preset → Morph** or **Scene → Scene motion**.
+
 For the current interface and detailed controls, see [the interface pass](world-builder-interface.md).
 
 ## Build and explore

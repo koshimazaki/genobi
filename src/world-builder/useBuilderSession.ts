@@ -24,6 +24,7 @@ import { assertWalkEdit } from "./walk-edits";
 import { useTakeChannel } from "./take-channel";
 import type { RecipeGuard, SceneAdapter } from "./scene-adapter";
 import { createRecipeRevision } from "./recipe-revision";
+import { withAddedSceneObject, sceneFrameAfterEdit } from "./scene-editing";
 export type { SceneAdapter } from "./scene-adapter";
 declare global {
   interface Window {
@@ -120,6 +121,10 @@ export function useBuilderSession() {
         setAudioURL("");
         setAudioName("");
       }
+      const editFrame =
+        next.motion && world.editor?.mode === "edit"
+          ? sceneFrameAfterEdit(current.current, next, world.frame)
+          : 0;
       current.current = next;
       revision.advance();
       commitAudio?.();
@@ -127,8 +132,11 @@ export function useBuilderSession() {
       setRecipe(next);
       setTake(null);
       setStatus("Set updated. Capture a new take when ready.");
-      await rewindUnlessPlaying(playingRef.current, setFrame, (n) =>
-        world.renderFrame(n),
+      await rewindUnlessPlaying(
+        playingRef.current,
+        setFrame,
+        (n) => world.renderFrame(n),
+        editFrame,
       ).catch((error) => setError(errorText(error)));
     }
     const live = liveSession(
@@ -420,23 +428,19 @@ export function useBuilderSession() {
     );
   const add = async (shape: Shape) => {
     const id = `${shape}-${crypto.randomUUID().slice(0, 8)}`;
-    await api.current!.configure({
-      ...current.current,
-      objects: [
-        ...current.current.objects,
-        {
-          id,
-          shape,
-          x: current.current.targetX,
-          y: 1,
-          z: current.current.targetZ,
-          scale: 1,
-          spin: 0,
-          color: "#b7cad8",
-          prompt: "",
-        },
-      ],
-    });
+    await api.current!.configure(
+      withAddedSceneObject(current.current, {
+        id,
+        shape,
+        x: current.current.targetX,
+        y: 1,
+        z: current.current.targetZ,
+        scale: 1,
+        spin: 0,
+        color: "#b7cad8",
+        prompt: "",
+      }),
+    );
     return id;
   };
   const handoff = sessionHandoffs(api, take, setFrame, setStatus);

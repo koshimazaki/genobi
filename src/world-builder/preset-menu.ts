@@ -2,6 +2,7 @@ import { CREATURE_SHA256 } from "../../shared/scene/creature-reference";
 import { creatureMotionReceipt } from "../scene3d/creature-fbx";
 import { localCreature } from "../scene3d/creature";
 import { inComfyNode } from "./host";
+import { createMotionPreset, MOTION_PRESETS } from "./motion-presets";
 import { presetRecipe, presets, type Recipe } from "./recipe";
 
 /** The shader set: the current set drawn by the Neuro sky shader. */
@@ -17,9 +18,11 @@ export const COMFY_HIDDEN_PRESETS: readonly string[] = [SHADER_PRESET];
 
 /** The Load preset menu's set names, in order, for where this runs. */
 export function presetMenu(comfy = inComfyNode()) {
-  return [...Object.keys(presets), SHADER_PRESET].filter(
-    (name) => !comfy || !COMFY_HIDDEN_PRESETS.includes(name),
-  );
+  return [
+    ...MOTION_PRESETS.map((p) => p.name),
+    ...Object.keys(presets),
+    SHADER_PRESET,
+  ].filter((name) => !comfy || !COMFY_HIDDEN_PRESETS.includes(name));
 }
 
 /**
@@ -31,6 +34,8 @@ export function menuPreset(
   name: string,
   creatureLoaded = !!localCreature(),
 ): Recipe {
+  const motion = MOTION_PRESETS.find((p) => p.name === name || p.id === name);
+  if (motion) return createMotionPreset(motion.id);
   const recipe = presetRecipe(name);
   if (recipe.avatarAsset !== "creature") return recipe;
   return creatureLoaded

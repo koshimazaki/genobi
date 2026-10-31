@@ -18,6 +18,10 @@ export async function withAudioCompanion(
     sha256: await hash(take.audio),
     duration: frames / 24,
   };
+  if (receipt.sceneEvaluation) {
+    receipt.audioCompanion.role = "motion-control";
+    receipt.sceneEvaluation.controlAudioSha256 = receipt.audioCompanion.sha256;
+  }
   take.manifest = new Blob([JSON.stringify(receipt, null, 2)], {
     type: "application/json",
   });
