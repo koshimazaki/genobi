@@ -83,6 +83,11 @@
   }
 }
 @media (max-width: 700px) {
+  /* The phone header has three rows. Anchor the reply below the complete
+     header so an active conversation cannot cover Voice or navigation. */
+  .wordmark > .agent-companion {
+    position: static;
+  }
   .wordmark > .agent-companion,
   .wordmark .agent-launcher {
     width: 44px;
@@ -94,7 +99,7 @@
   }
   .wordmark .agent-bubble {
     width: min(340px, calc(100vw - 35px));
-    max-height: min(520px, calc(100svh - 88px));
+    max-height: min(520px, calc(100svh - 100% - 24px));
   }
   .wordmark .agent-bubble::after {
     left: 15px;

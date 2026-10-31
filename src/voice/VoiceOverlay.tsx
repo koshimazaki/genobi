@@ -13,9 +13,19 @@ import {
   voiceDeliveryPending,
 } from "./destination-store";
 import { voiceProjectId } from "./agent-destination";
+import { capturePromptDestination } from "./prompt-destination";
 
 const clock = (seconds: number) =>
   `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;
+
+function captureRouting() {
+  const route = voiceRouting();
+  return {
+    route,
+    projectId: voiceProjectId(),
+    promptDestination: capturePromptDestination(route.destination),
+  };
+}
 
 /**
  * The voice surface: a thin pill that hangs under the studio header rather
@@ -38,10 +48,7 @@ export function VoiceOverlay({
   onClose: (returnFocus: boolean) => void;
 }) {
   const [language, setLanguage] = useState(readVoiceLanguage);
-  const [routing, setRouting] = useState(() => ({
-    route: voiceRouting(),
-    projectId: voiceProjectId(),
-  }));
+  const [routing, setRouting] = useState(captureRouting);
   const sending = useVoiceDeliveryPending();
   const selectedRouting = useVoiceRouting();
   const voice = useVoiceRecorder(status?.maxSeconds || 60, language);
@@ -54,7 +61,13 @@ export function VoiceOverlay({
   // transcription starts, its destination is frozen until delivery completes.
   useEffect(() => {
     if (recording)
-      setRouting((before) => ({ ...before, route: selectedRouting }));
+      setRouting((before) => ({
+        ...before,
+        route: selectedRouting,
+        promptDestination: capturePromptDestination(
+          selectedRouting.destination,
+        ),
+      }));
   }, [recording, selectedRouting]);
   const working = phase === "transcribing" || phase === "starting" || sending;
   const [expanded, setExpanded] = useState(false);
@@ -75,7 +88,7 @@ export function VoiceOverlay({
   const start = useRef(voice.start);
   start.current = async () => {
     if (voiceDeliveryPending()) return;
-    setRouting({ route: voiceRouting(), projectId: voiceProjectId() });
+    setRouting(captureRouting());
     await voice.start();
   };
   useEffect(() => {
@@ -249,6 +262,7 @@ export function VoiceOverlay({
               onHandoff={(element) => (handed.current = element)}
               routing={routing.route}
               projectId={routing.projectId}
+              promptDestination={routing.promptDestination}
             />
           </div>
         )}

@@ -99,7 +99,9 @@ export async function intentChecks({ open, checks, output }) {
     );
     await page.waitForTimeout(400);
     assert.deepEqual(sent.writes, [], "nothing is submitted");
-    assert.equal(sent.agentStatus.length, 0, "no agent is asked");
+    assert.equal(sent.sessions.length, 0, "Camera dictation starts no agent");
+    assert.equal(sent.messages.length, 0, "Camera dictation sends no message");
+    assert.equal(sent.approvals.length, 0, "Camera dictation approves no step");
     await context.close();
   }
   checks.push(

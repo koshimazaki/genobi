@@ -32,6 +32,8 @@ activity deck. The pill opens and records immediately. Stop ends the note and
 transcribes it. Record and Stop share a position on the right of the waveform,
 beside the transcript chevron. The header microphone also stops the recording
 when pressed again. **To** remains visible while the transcript panel is folded.
+On phones, the agent reply opens below the complete header so Voice and the
+navigation remain reachable. The recorder and transcript fit a 320-pixel viewport.
 
 **Agent is the default destination.** A new transcript goes to the configured
 agent even when its words resemble a Camera generation request. If no session
@@ -65,7 +67,10 @@ sets the next note's destination; it never resends the displayed transcript.
 **Copy** remains available whenever there is a transcript.
 
 A named prompt that closes does not redirect into a different prompt. Its words
-stay in the panel until a destination is selected. **Update prompt** corrects
+stay in the panel until a destination is selected. A note captures its prompt
+field and Scroll document/cell when recording begins or its destination is
+explicitly changed while speaking. Switching fields, cells or documents while
+transcription is pending cannot redirect it. **Update prompt** corrects
 the original field and its Scroll document/cell; **Send correction** targets the
 conversation that received the original note. Typing a correction alone does
 not send anything.

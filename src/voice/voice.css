@@ -36,6 +36,7 @@
   right: 0;
   z-index: 60;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   justify-items: end;
   gap: 6px;
   width: min(420px, 100%);

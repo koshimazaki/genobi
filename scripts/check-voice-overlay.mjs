@@ -115,7 +115,9 @@ try {
     await page.getByLabel("Voice destination").inputValue(),
     "prompt",
   );
-  assert.equal(sent.agentStatus.length, 0, "filling a prompt asks no agent");
+  assert.equal(sent.sessions.length, 0, "dictation starts no agent session");
+  assert.equal(sent.messages.length, 0, "dictation sends no agent message");
+  assert.equal(sent.approvals.length, 0, "dictation approves no paid step");
   assert.equal(sent.cancel, 0, "a finished note keeps nothing to cancel");
   checks.push(
     "Explicit Current prompt dictation names the field it filled; Agent is exercised separately as the fresh-browser default",
@@ -202,13 +204,18 @@ try {
     .getByRole("dialog", { name: "Voice" })
     .getByLabel("Language", { exact: true });
   await language.waitFor();
-  assert.deepEqual(await language.locator("option").allTextContents(), [
-    "English",
-    "Auto-detect",
-    "French",
-    "Japanese",
-  ]);
-  assert.equal(await language.inputValue(), "English");
+  await language.click();
+  assert.deepEqual(
+    await page
+      .getByRole("listbox", { name: "Language" })
+      .getByRole("option")
+      .allTextContents(),
+    ["English", "Auto-detect", "French", "Japanese"],
+  );
+  await page.keyboard.press("Escape");
+  const languageValue = () =>
+    page.locator("#voice-language-native").inputValue();
+  assert.equal(await languageValue(), "English");
   await chooseSelect(language, "auto");
   assert(!(await overflow(page)), "no horizontal overflow at 320");
   await page.screenshot({ path: `${output}/voice-language-320.png` });
@@ -218,7 +225,7 @@ try {
   await voice.click();
   await listening(page);
   await page.getByRole("button", { name: "Show transcript" }).click();
-  assert.equal(await language.inputValue(), "auto", "kept in this browser");
+  assert.equal(await languageValue(), "auto", "kept in this browser");
   await context.close();
   ({ context, page, voice, sent } = await open({
     // Storage that refuses the voice key, read and write.
@@ -262,6 +269,11 @@ try {
     await button.click();
     await page.waitForTimeout(150);
     assert(await voice.isVisible(), "Voice in every section");
+    // Director may open its template input dialog on first entry.
+    const closeVersion = page.getByRole("button", {
+      name: "Close Generate my version",
+    });
+    if (await closeVersion.isVisible()) await closeVersion.click();
   }
   await context.close();
   checks.push("Voice is in the header of every section");

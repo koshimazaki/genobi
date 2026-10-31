@@ -27,6 +27,7 @@ import {
 } from "./world-prompt-target";
 import { applyVoiceIntent } from "./voice-intent-target";
 import { liveSession, type Routed } from "./session-message";
+import type { PromptDestination } from "./prompt-destination";
 
 type Delivery = { result: Routed; routing: VoiceRouting; projectId?: string };
 const NOTHING_RUNS = "Nothing runs until you press Generate.";
@@ -38,6 +39,7 @@ export function VoiceDestinations({
   onHandoff,
   routing,
   projectId,
+  promptDestination,
   onBusyChange,
 }: {
   transcript: string;
@@ -45,6 +47,7 @@ export function VoiceDestinations({
   onHandoff: (element: HTMLElement) => void;
   routing: VoiceRouting;
   projectId?: string;
+  promptDestination?: PromptDestination;
   onBusyChange?: (busy: boolean) => void;
 }) {
   const shell = useShell();
@@ -70,7 +73,7 @@ export function VoiceDestinations({
       return {
         kind: "none",
         words,
-        text: "The selected prompt belongs to a different document or item now. Choose a destination before sending the correction.",
+        text: "The selected prompt belongs to a different document or item now. Choose a destination before sending these words.",
       };
     if (target?.id === "project-prompt-text" && liveSession())
       return {
@@ -115,7 +118,7 @@ export function VoiceDestinations({
     words: string,
     destination: VoiceRouting,
     project: string | undefined,
-    scope?: string,
+    capturedPrompt?: PromptDestination,
   ) {
     if (inFlight.current || !words || !beginVoiceDelivery()) return;
     inFlight.current = true;
@@ -164,13 +167,21 @@ export function VoiceDestinations({
               text: "No Camera request was recognised. Choose Agent or a prompt to use these words directly.",
             };
       } else
-        result = prompt(
-          words,
-          destination.destination === "prompt"
-            ? undefined
-            : destination.destination.slice(7),
-          scope,
-        );
+        result =
+          capturedPrompt && !capturedPrompt.field
+            ? {
+                kind: "none",
+                words,
+                text: "No editable prompt was selected for this note. Choose a destination before sending these words.",
+              }
+            : prompt(
+                words,
+                capturedPrompt?.field ??
+                  (destination.destination === "prompt"
+                    ? undefined
+                    : destination.destination.slice(7)),
+                capturedPrompt?.scope,
+              );
     } catch (error) {
       result = { kind: "none", words, text: (error as Error).message };
     } finally {
@@ -186,7 +197,7 @@ export function VoiceDestinations({
   useEffect(() => {
     if (once.current) return;
     once.current = true;
-    void deliver(transcript.trim(), routing, projectId);
+    void deliver(transcript.trim(), routing, projectId, promptDestination);
     // eslint-disable-next-line react-hooks/exhaustive-deps -- exactly once when a note arrives
   }, []);
 
@@ -211,7 +222,9 @@ export function VoiceDestinations({
       text,
       target,
       delivery.projectId,
-      routed.kind === "filled" ? routed.scope : undefined,
+      routed.kind === "filled"
+        ? { field: routed.field, scope: routed.scope }
+        : undefined,
     );
   }
 

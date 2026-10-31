@@ -33,7 +33,7 @@ const delivered = async (page, sent, count) => {
 };
 
 export async function destinationChecks({ open, checks, output }) {
-  for (const width of [1440, 390]) {
+  for (const width of [1440, 390, 320]) {
     // null leaves browser storage empty, exercising the actual default.
     const { context, page, voice, sent } = await open({
       width,
@@ -42,7 +42,21 @@ export async function destinationChecks({ open, checks, output }) {
       agent: AGENT,
       text: REQUEST,
     });
-    await speak(page, voice);
+    if (width <= 700) {
+      const header = await page.locator(".topbar").boundingBox();
+      const bubble = await page.locator(".agent-bubble").boundingBox();
+      assert(
+        bubble.y >= header.y + header.height,
+        `the open conversation leaves every header control reachable at ${width}`,
+      );
+    }
+    const entry =
+      width === 390
+        ? page
+            .locator(".agent-bubble")
+            .getByRole("button", { name: "Speak to agent" })
+        : voice;
+    await speak(page, entry);
     await delivered(page, sent, 1);
     assert.equal(
       await page.getByLabel("Voice destination").inputValue(),
@@ -79,6 +93,29 @@ export async function destinationChecks({ open, checks, output }) {
   }
   checks.push(
     "Fresh browser defaults to Agent, Camera-shaped words stay with the selected conversation, notes and corrections reuse it, and folding never resends.",
+  );
+
+  // The activity log selects its own conversation through the same recorder.
+  {
+    const { context, page, sent } = await open({
+      path: "/",
+      destination: null,
+      agent: AGENT,
+      text: REQUEST,
+    });
+    await page.locator(".deck-bar").click();
+    await speak(
+      page,
+      page.locator(".deck-log").getByRole("button", { name: "Speak to agent" }),
+    );
+    await delivered(page, sent, 1);
+    assert.equal(sent.messages[0].id, SESSION.id);
+    assert.equal(sent.sessions.length, 0);
+    assert.deepEqual(sent.writes, []);
+    await context.close();
+  }
+  checks.push(
+    "Bubble and activity-log microphone entry points reuse the shared recorder and selected conversation.",
   );
 
   // Prompt choice is explicit, remembered, and does not resend an existing note.
