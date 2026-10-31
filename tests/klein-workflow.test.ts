@@ -25,6 +25,7 @@ import { requireRoute } from "../shared/provider";
 import { startTake } from "../shared/take";
 import { imagePrompt } from "../src/image-regions";
 import { setup } from "./server-harness";
+import { infoFor } from "./comfy-readiness-fixture";
 
 const graph = kleinWorkflow.graph;
 const layout = imagePrompt(
@@ -84,9 +85,9 @@ describe("the open Klein graph", () => {
       inputs: { images: ["18:8", 0] },
     });
     expect(kleinWorkflow.output).toEqual({ nodeId: "9", media: "image" });
-    // Cloud's catalogue alias, recorded accepted on 17 October; the
-    // template's hyphenated name was rejected then.
-    expect(KLEIN_UNET).toBe("flux3_image_klein_sd_int8_convrot.safetensors");
+    // The pinned graph carries the official Comfy template filename; Cloud
+    // preflight resolves the older account alias if that is what is listed.
+    expect(KLEIN_UNET).toBe("flux3-image-klein-int8-convrot.safetensors");
   });
 
   it("puts a literal at every slot, and the upsampler on by default", () => {
@@ -304,7 +305,10 @@ describe("Klein through the SDK", () => {
         }),
       },
     }));
-    const client = new ComfySdkWorkflows({ connect, env: {} });
+    const fetcher = vi.fn<typeof fetch>().mockResolvedValue(
+      Response.json(infoFor(kleinWorkflow.graph)),
+    );
+    const client = new ComfySdkWorkflows({ connect, env: {}, fetcher });
     const values = kleinValues({ imageAspectRatio: "1:1" }, layout, () => 0);
     const handle = await client.run(kleinWorkflow, values, "comfyui-k", {
       idempotencyKey: "job-k",
@@ -416,6 +420,8 @@ describe("the local server runs open Klein end to end", () => {
     const fetcher: typeof fetch = async (target, init) => {
       const url = String(target);
       calls.push({ url, init });
+      if (url === "https://cloud.comfy.org/api/object_info")
+        return Response.json(infoFor(kleinWorkflow.graph));
       if (url === "https://cloud.comfy.org/api/v2/jobs")
         return Response.json(job("queued"), { status: 201 });
       if (url === "https://cloud.comfy.org/api/v2/jobs/k-1")
@@ -458,7 +464,8 @@ describe("the local server runs open Klein end to end", () => {
       mediaType: "image",
       costEstimateUsd: 0.009,
     });
-    const { workflow } = JSON.parse(String(calls[0].init?.body));
+    const postCall = calls.find((call) => call.url === "https://cloud.comfy.org/api/v2/jobs");
+    const { workflow } = JSON.parse(String(postCall?.init?.body));
     expect(workflow["18:16"].inputs.switch).toBe(false);
     expect(workflow["18:20"].inputs.string_b).toContain('"kite_1"');
     expect(workflow["18:6"].inputs).toMatchObject({ width: 1360, height: 768 });
