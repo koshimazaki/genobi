@@ -63,8 +63,13 @@ export function useBuilderSession() {
   const api = useRef<SceneAdapter | null>(null),
     previewQueue = useRef(Promise.resolve()),
     settling = useRef<() => boolean>(() => false);
-  const { playing, playingRef, setPlaying, stopping, settled } =
-    usePlaybackState(runtime, audioElement, previewQueue);
+  const playback = usePlaybackState(
+    runtime,
+    audioElement,
+    previewQueue,
+    () => !controller.current && !settling.current(),
+  );
+  const { playing, playingRef, setPlaying, stopping, settled } = playback;
   const [json, setJson] = useState(""),
     [ready, setReady] = useState(false);
   useEffect(() => {
@@ -186,7 +191,6 @@ export function useBuilderSession() {
       getRecipe: () => structuredClone(current.current),
       getRecipeRevision: revision.read,
       async configure(input, guard) {
-        // An edit applies live under Play; the preview skips frames meanwhile.
         idle(true, true);
         revision.assert(guard);
         const guarded = guard?.expectedRevision !== undefined;
@@ -404,6 +408,8 @@ export function useBuilderSession() {
   );
   useScenePlayback({
     playing,
+    revision: playback.revision,
+    soundPreview: playback.soundPreview,
     // A seamless-loop recipe always previews looping, so the seam is seen.
     loop: loop || recipe.loop === true,
     current,
@@ -463,6 +469,7 @@ export function useBuilderSession() {
       stopping(() => loader.current(blob, source, label))(),
     mediaName,
     playing,
+    ...playback.sound,
     setPlaying,
     stopping,
     settled,

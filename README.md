@@ -63,6 +63,8 @@ experimental route for room-conditioned generated audio/video.
 
 World Builder includes four three-state animation studies: voxel pyramid/cube, cathedral/street, expanding apartment and banana/papaya/apple. Edit individual states in the viewport, map control-audio bands to bounded motion, and capture aligned RGB/depth guides locally. See [scene motion](docs/world-builder-motion.md) for the controls, agent contract and current workflow boundary.
 
+The apartment and cathedral studies also render [changing room sound](docs/world-builder-dynamic-sound.md) on the browser CPU. Choose an independent dry source, follow the evaluated room timeline, preview in sync with the scene, and export a WAV with its frozen recipe and sound receipt.
+
 ## Create, edit and revise
 
 - **Edit an existing Klein image.** Drop your source straight onto Image layout, add bounding boxes and describe changes. Resize the preview from its corner for detailed work.
