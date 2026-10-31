@@ -2239,15 +2239,14 @@
       "title": "Voice mode",
       "path": "voice-mode.md",
       "tags": ["agents", "studio", "backend", "models"],
-      "summary": "Voice mode in the studio header — one-click recording, local Qwen3-ASR transcription through a Python worker, the WIE-style LED waveform, where the transcript goes (a spoken generation request to Camera, the prompt on screen, or an agent session), the language setting, setup and what stays on the machine.",
+      "summary": "Local voice transcription with an agent-first remembered destination, pinned conversations, explicit prompt dictation, language selection and hosted limits.",
       "links": [
         "agent-approvals.md",
         "agent-context.md",
         "agent-sessions.md",
         "agent-setup.md",
         "genobi-cli.md",
-        "voice-setup.md",
-        "world-builder.md"
+        "voice-setup.md"
       ]
     },
     {

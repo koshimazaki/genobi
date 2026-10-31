@@ -24,6 +24,17 @@ const PROMPTS: readonly (readonly [id: string, label: string])[] = [
 ];
 const PROMPT_IDS = PROMPTS.map(([id]) => id);
 
+export const isPromptId = (id: string) => PROMPT_IDS.includes(id);
+export const promptName = (id: string) => LABELS.get(id);
+/** A reused field can represent a different document or selected object. */
+export const promptScope = (field: PromptField) => field.dataset.voiceScope;
+/** Named choices are limited to the same editable fields dictation can use. */
+export const visiblePromptChoices = () =>
+  PROMPTS.filter(([id]) => promptById(id)).map(([id, label]) => ({
+    id,
+    label,
+  }));
+
 /** What the Tool prompt button calls each field. */
 const LABELS = new Map(PROMPTS);
 

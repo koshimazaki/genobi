@@ -7,6 +7,7 @@ import { micPanel, onVoiceReady, useVoiceInstall } from "./install-store";
 import "./voice.css";
 import { useHostedStudio } from "../hosted-studio";
 import { HostedVoicePanel } from "./HostedVoiceNotice";
+import { OPEN_AGENT_VOICE } from "./destination-store";
 
 /**
  * Voice mode's mic in the studio header (issue #23), beside the theme and the
@@ -23,8 +24,18 @@ export default function VoiceButton() {
   const [ready, setReady] = useState(0);
   const installing = !!useVoiceInstall().state?.busy;
   const button = useRef<HTMLButtonElement>(null);
-  const mic = useRef<(() => boolean) | undefined>(undefined);
+  const mic = useRef<((recordOnly?: boolean) => boolean) | undefined>(
+    undefined,
+  );
   useEffect(trackPromptFocus, []);
+  useEffect(() => {
+    const show = () => {
+      if (shown.current && mic.current?.(true)) return;
+      setOpen(true);
+    };
+    window.addEventListener(OPEN_AGENT_VOICE, show);
+    return () => window.removeEventListener(OPEN_AGENT_VOICE, show);
+  }, []);
   // An install that finishes elsewhere (setup) makes the mic live. While this
   // panel is open it shows "Start using Voice Mode" instead (onVoiceReady).
   const shown = useRef(open);

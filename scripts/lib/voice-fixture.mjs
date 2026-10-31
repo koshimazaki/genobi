@@ -6,8 +6,6 @@
 import assert from "node:assert/strict";
 
 export const TRANSCRIPT = "Open Genobi and orbit the vessel for 6.1 seconds.";
-/** The session action once the transcript has gone into a prompt. */
-export const SEND = "Send to agent instead";
 export const READY = {
   available: true,
   python: true,
@@ -46,6 +44,9 @@ export function voiceFixture(browser, base, errors) {
     script,
     text = TRANSCRIPT,
     path = "/?workspace=ninja",
+    // Recorder/layout checks use explicit dictation; destination checks pass
+    // null to exercise the application's fresh-browser Agent default.
+    destination = "prompt",
   } = {}) {
     const context = await browser.newContext({
       viewport: { width, height: 900 },
@@ -57,6 +58,7 @@ export function voiceFixture(browser, base, errors) {
       wav: [],
       agentStatus: [],
       sessions: [],
+      messages: [],
       approvals: [],
       copies: new Set(),
       // Any other write the page tries: none may be a generation.
@@ -88,6 +90,21 @@ export function voiceFixture(browser, base, errors) {
       if (path === "/api/agent/status") {
         sent.agentStatus.push(request.headers()["x-genobi-agent"]);
         return agent ? route.fulfill({ json: agent.status }) : notFound(route);
+      }
+      if (path === "/api/agent/sessions" && method === "GET")
+        return route.fulfill({
+          json: { session: agent?.read ?? agent?.session?.json ?? null },
+        });
+      const message = path.match(/^\/api\/agent\/sessions\/([^/]+)\/messages$/);
+      if (message && method === "POST") {
+        sent.messages.push({
+          id: message[1],
+          body: request.postDataJSON(),
+          header: request.headers()["x-genobi-agent"],
+        });
+        if (agent?.message) return route.fulfill(agent.message);
+        const session = agent?.read ?? agent?.session?.json;
+        return session ? route.fulfill({ json: session }) : notFound(route);
       }
       if (path === "/api/agent/sessions" && method === "POST") {
         sent.sessions.push({
@@ -155,14 +172,16 @@ export function voiceFixture(browser, base, errors) {
       return route.fulfill({
         json:
           path === "/api/health"
-            ? { hasServerKey: false }
+            ? { ok: true, hasServerKey: false, hosted: status === null }
             : { jobs: [], sources: [] },
       });
     });
     // Count microphone requests.
     await context.addInitScript(
-      ({ refuse }) => {
+      ({ refuse, destination }) => {
         localStorage.setItem("genobi-setup-seen-v1", "1");
+        if (destination)
+          localStorage.setItem("genobi.voice.destination", destination);
         // The agent bubble is opt-in since the activity settings landed; a
         // person who wants the session panel shown has this preference set.
         // Logging itself stays off, so no activity write is mistaken for a run.
@@ -181,7 +200,7 @@ export function voiceFixture(browser, base, errors) {
             : granted(constraints);
         };
       },
-      { refuse },
+      { refuse, destination },
     );
     if (script) await context.addInitScript(script);
     const page = await context.newPage();

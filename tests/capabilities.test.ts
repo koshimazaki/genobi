@@ -53,6 +53,7 @@ describe("capability map", () => {
     const map = copy();
     entry(map, "arena").status = "verified";
     entry(map, "media-space").evidence = "2026-10-24 docs/media-space.md";
+    entry(map, "voice-mode").status = "verified";
     entry(map, "voice-mode").evidence =
       "2026-10-21 docs/voice-mode.md#no-such-section";
     entry(map, "scrolls").evidence = "2026-10-21 docs/scrolls.md#what-works";
@@ -70,6 +71,7 @@ describe("capability map", () => {
 
   it("needs the record's section to name the evidence date", () => {
     const map = copy();
+    entry(map, "voice-mode").status = "verified";
     entry(map, "voice-mode").evidence =
       "2026-10-22 docs/voice-mode.md#verification";
     expect(checkCapabilities(root, map)).toContain(

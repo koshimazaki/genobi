@@ -14,6 +14,7 @@ import { OPEN_BUBBLE } from "./useAgentSession";
 import { TeachingNote } from "../teachings/TeachingNote";
 import { useHostedStudio } from "../hosted-studio";
 import { HostedVoiceNotice } from "../voice/HostedVoiceNotice";
+import { AgentVoiceButton } from "../voice/AgentVoiceButton";
 import {
   AgentConversation,
   conversationOf,
@@ -239,6 +240,7 @@ export function AgentBubble({
             )}
           </div>
           <footer className="agent-bubble-foot">
+            <AgentVoiceButton session={session} />
             {!session && (
               <button
                 type="button"

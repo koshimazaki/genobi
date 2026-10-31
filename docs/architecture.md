@@ -80,8 +80,8 @@ The landing Gallery and Director read one `shared/templates/` catalogue.
 HTML. Express and the Worker serve `/watch/<template-id>` and
 `/embed/<template-id>` before private API handling. These routes use only curated
 catalogue media, never visitor jobs or storage. The embed alone permits framing.
-See [gallery and sharing](template-gallery.md). Voice mode's mic sits in the
-same header, in every section; its routes are local only (below).
+See [gallery and sharing](template-gallery.md). Local-only [voice](voice-mode.md)
+defaults to a remembered agent destination, with explicit prompt dictation.
 
 One Comfy key serves two routes, and the wording the studio uses for them is "partner and hosted models via Comfy Router; open workflows via Comfy Cloud (API v2)". `router` runs partner and Router-hosted models by id (`shared/comfy/router.ts`). `workflow` runs Genobi's own API-format graphs through the official SDK, `@comfyorg/sdk` (MIT), against Comfy API v2 (`server/comfy-sdk.ts` behind the `WorkflowClient` interface in `shared/comfy/workflow.ts`). Router cannot run a graph and does not front Cloud, so neither wraps the other. `bfl` is BFL's own API, used for Klein's API and for a FLUX Router entry when the key is BFL's.
 

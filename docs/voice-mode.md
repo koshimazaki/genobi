@@ -1,6 +1,6 @@
 ---
 tags: [agents, studio, backend, models]
-summary: Voice mode in the studio header — one-click recording, local Qwen3-ASR transcription through a Python worker, the WIE-style LED waveform, where the transcript goes (a spoken generation request to Camera, the prompt on screen, or an agent session), the language setting, setup and what stays on the machine.
+summary: Local voice transcription with an agent-first remembered destination, pinned conversations, explicit prompt dictation, language selection and hosted limits.
 ---
 
 # Voice mode
@@ -11,11 +11,9 @@ a session audio source, linked audio asset or external-agent local file, checks
 the worker's duration limit and returns text without executing it. Hosted has no
 transcription worker. See [agent voice inputs](genobi-cli.md#project-references-deployments-and-voice).
 
-Voice is the main way to direct Genobi (issue #23, "Signal"). This page covers
-the first four boxes: **local transcription** with Qwen3-ASR, reusing X
-Console's voice worker approach, **the same look** as X Console's voice mode,
-the WIE-style LED waveform, in Genobi's colours, **one click, two
-destinations**, and **voice goes where it is meant**.
+Voice directs the configured agent by default. The header microphone, agent
+bubble and activity deck share one recorder. Qwen3-ASR transcribes on the local
+machine; the chosen agent harness receives the resulting text.
 
 ## On the hosted studio
 
@@ -29,116 +27,92 @@ you to check the connection and reload.
 
 ## In the local studio
 
-Press the mic (**Voice**) in the studio header, beside the theme and the key,
-in any section. A thin pill opens under the header on the right (Stop, the LED
-waveform, a chevron and close) and it is already recording. Speak, then press
-the mic again, or Stop in the pill, and the local model transcribes.
-Pressing the mic when nothing is recording closes the pill. The panel under
-the pill opens with the transcript, which you can correct, and says where it
-went. There is no picker; the transcript goes where it is meant, once, as it
-arrives (`src/voice/VoiceDestinations.tsx`):
+Press **Voice** in any section, or **Speak to agent** in the Genobi bubble or
+activity deck. The pill opens and records immediately. Stop ends the note and
+transcribes it. Record and Stop share a position on the right of the waveform,
+beside the transcript chevron. The header microphone also stops the recording
+when pressed again. **To** remains visible while the transcript panel is folded.
+On phones, the agent reply opens below the complete header so Voice and the
+navigation remain reachable. The recorder and transcript fit a 320-pixel viewport.
 
-1. **A spoken generation request** opens Camera, selects the mode and model,
-   and writes the subject into the prompt. See
-   [spoken requests](#spoken-requests). Not while a Scroll prompt or World
-   Builder's scene direction is where the words would go: there a spoken
-   scene stays a direction ([to World Builder](#to-world-builder)).
-2. **Otherwise, a running agent session** takes it as your next message
-   (Box 1.8; [below](#to-a-running-session)): the session the bubble follows,
-   while it is starting or running. The bubble opens and shows it in the
-   session's conversation.
-3. **Otherwise, the prompt on screen** takes the whole transcript: **Camera
-   prompt**, **Image prompt**, **Upscale prompt**, **Project prompt field**
-   (the Director's project prompt) or **World Builder scene direction**. That is the prompt you last worked in, or
-   else the first visible one (`src/voice/prompt-target.ts`). It fills the
-   field the way typing does, and the panel says which ("In the Camera
-   prompt."). With an LTX gap's tab open (Scene, Character, Action or
-   Audio), that gap is the prompt on screen: "In the Action gap.", and
-   Update prompt goes back to the same gap. A spoken request still writes the
-   main Prompt tab and shows it.
-4. **With none of these**, as in Gallery with words that are not a request, the panel says "No prompt on this screen." and offers **Do it in
-   a session**, the [project prompt](#the-project-prompt). It does not switch
-   sections by itself.
+**Agent is the default destination.** A new transcript goes to the configured
+agent even when its words resemble a Camera generation request. If no session
+is running, the existing setup/start flow opens; once configured, further notes
+reuse the same selected conversation. A new note needs no destination dialog.
+The selected runner and a short conversation title appear in **To**.
 
-After 1 or 3 the panel offers **Send to agent instead**, which hands the same
-words to the agent (the running session, or a new one), so a transcript that
-went the wrong way is not lost. The filled prompt stays as it is. After 2 it
-offers **To prompt**, which puts the words in the prompt on screen instead.
-Every panel also offers **Copy**, which writes the transcript to the clipboard
-(never reads it) and says "Copied to the clipboard.", so the words can be used
-by hand while the agent works on something else.
+The destination preference is remembered in this browser. Conversation and
+project identities remain in page memory, including after closing/reopening
+the pill. No session identity or transcript is placed in this preference's
+browser storage. Automatic selection skips sessions known to belong to a
+different project. After reload, a running conversation with an unknown project
+needs one explicit selection through **Shown conversation** or its log's
+**Speak to agent**; it is never silently assigned to the open project.
+
+### Choosing a destination
+
+| Destination                 | Result                                                                                  |
+| --------------------------- | --------------------------------------------------------------------------------------- |
+| Agent                       | Send the entire transcript as a direction to the selected agent.                        |
+| Current agent / new session | Explicitly release the previous conversation and use the current session, or start one. |
+| Shown conversation          | Select the different conversation currently shown in the bubble.                        |
+| Current prompt              | Dictate into the last focused editable prompt, or the first visible prompt.             |
+| A named prompt              | Dictate only into that field, including an LTX gap or World Builder scene direction.    |
+| Camera request              | Interpret a medium/model/subject request with the existing Camera parser.               |
+
+Choose while speaking or between notes. Once transcription begins, the note's
+destination is frozen until delivery completes. Changing **To** after delivery
+sets the next note's destination; it never resends the displayed transcript.
+**Send to selected destination** explicitly sends the displayed words again.
+**Copy** remains available whenever there is a transcript.
+
+A named prompt that closes does not redirect into a different prompt. Its words
+stay in the panel until a destination is selected. A note captures its prompt
+field and Scroll document/cell when recording begins or its destination is
+explicitly changed while speaking. Switching fields, cells or documents while
+transcription is pending cannot redirect it. **Update prompt** corrects
+the original field and its Scroll document/cell; **Send correction** targets the
+conversation that received the original note. Typing a correction alone does
+not send anything.
 
 ### To World Builder
 
-With World Builder open, its **Scene direction** (the recipe's `prompt`) is
-a prompt on screen (`src/voice/world-prompt-target.ts`). When a Camera
-prompt is also visible (a layout showing both), the Camera prompt still takes
-the words, and reads them as a request, unless the scene direction was the
-last field you worked in. The textarea in the
-Scene panel is filled the way typing fills it; with the Scene panel closed,
-World Builder's own registration takes the words through its session's
-`change`, as an edit of the field would, when no other prompt is on screen. Either way the panel says "In the
-World Builder scene direction.", nothing is captured or rendered, and the
-recipe's 4,000-character limit holds. "a ninja falling in the cathedral" is
-not read as a Camera request there. Beside the field, **Send to Genobi**
-hands the direction and a summary of the set to the agent
-([agent hand-off](world-builder.md#agent-hand-off)); the voice panel's own
-**Send to agent instead** sends only the transcript.
+Select **World Builder scene direction** to edit the recipe's `prompt`. It
+continues to work when World Builder is open with its Scene panel closed,
+through the existing registered scene-direction action. The recipe's
+4,000-character limit still applies. This only edits the direction; it captures
+or renders nothing. Choose Agent to ask for scene manipulation instead.
 
 ### To a running session
 
-The order follows what the person is doing (Box 1.8): with a session working
-on the project, what they say next is for the session, not the prompt
-(`deliverTranscript`, `src/voice/session-message.ts`). The studio posts the
-words to the session's message route ([a second
-message](agent-sessions.md#a-second-message)) with `source: "voice"`, the
-bubble opens on the conversation, and the panel says "Sent to your Hermes
-session as your next message." A headless Claude Code session takes it on its
-stdin as its next turn. A runner without live input (Hermes, a Terminal
-window) gets it through its Genobi MCP server: the server keeps it beside the
-session in memory (`server/agent-inbox.ts`: six kept, five unread at most,
-never logged), the MCP server collects the unread ones once each with its
-grant (`POST /api/agent/run/messages`) and appends them to the agent's next
-Genobi tool answer as the person's next message (`withMessages`,
-`mcp/server.ts`). The session's brief says so, and that `genobi_status`
-collects any waiting.
+The selected conversation remains the destination across notes even if another
+session becomes the latest one in the bubble. A conversation's **Speak to agent**
+action explicitly selects that conversation. Each send checks the selected
+session again. If it finished, is unavailable, or the open project changed, the
+transcript stays visible and the person chooses a destination again. It is not
+sent to another session or inserted into an unrelated prompt.
 
-A session that refuses (it ended a moment ago, or it was relayed from the
-hosted studio) leaves the words to the prompt on screen, with its reason. A
-corrected transcript offers **Send correction**, another message. The
-Director's **Project prompt field** is not filled while a session runs: it is
-part of the project copy the agent is changing, and filling it would push the
-copy over the agent's revision; the panel says so and offers **Send to
-agent**. Nothing is submitted: the session's paid steps still wait in the
-bubble for Approve.
+The studio uses the same `POST /api/agent/sessions/:id/messages` route as typed
+directions, with `source: "voice"`. Headless Claude Code takes it as its next
+turn. Hermes and a Terminal runner can receive the message through their next
+Genobi tool call; the panel says when it is queued. An idle Terminal runner may
+need to call `genobi_status` to collect it. A hosted relay does not add a speech
+worker or a follow-up-message transport.
 
-A Terminal agent waiting for typing in its window calls no tool, so the
-message waits too; telling it in the window that you sent one makes it call
-`genobi_status` and read it.
+The Director project prompt is held while a live agent edits that project.
+A failed or uncertain send is never retried automatically. Recording another
+note is held while the current delivery or initial agent setup is pending.
 
-Correcting the transcript does not change the prompt by itself: once it
-differs from what went in, **Update prompt** sends the corrected words to the
-same place. After a spoken request it reads them again as a request (only
-then, never per keystroke), so fixing "a penguin" to "a pelican" updates the
-subject; words that no longer read as one fill the Camera prompt whole. After
-a plain fill it replaces that same prompt's text. When nothing was placed (a
-misheard "make an imag of a penguin" in the Gallery), a corrected transcript
-offers **Try again**, which routes the words afresh, once.
-
-**Nothing is spent by voice.** A Camera prompt, filled either way, ends with
-focus on the composer's Generate button, its price beside it, and the panel
-says "Nothing runs until you press Generate." One click or Enter runs it; voice
-never presses it (AGENTS.md: generation is a paid side effect, and #23's
-"Confirm before spending"). A Generate that cannot run yet (an Edit without its
-reference) leaves focus on the prompt. The Director's prompt keeps focus where
-it was. Escape on the Generate button (or prompt) that voice focused closes
-the pill and leaves focus there; it never presses Generate.
+**Paid generation still needs approval.** Direct prompt dictation and Camera
+request mode end at the priced Generate button without pressing it. Agent
+requests use the existing quote/approval path. Escape from Generate closes
+Voice and leaves focus there; it never runs generation.
 
 ## Spoken requests
 
-`shared/voice-intent.ts` reads a transcript without a model: the same words
-always route the same way, and nothing is sent anywhere to decide it. A
-request names a medium and/or a model, and a subject:
+**Camera request** must be selected explicitly. `shared/voice-intent.ts` then
+reads the transcript without a model. A request names a medium and/or a model,
+and a subject:
 
 | Said                                                  | Studio                                                       |
 | ----------------------------------------------------- | ------------------------------------------------------------ |
@@ -156,7 +130,7 @@ picture, photo, still, video, clip, film or movie; the model follows "with",
 "showing", "about", a colon or a comma, and is kept as said, case included,
 less closing punctuation and a trailing "please". Without a medium or a model
 it is not a request: "open the director", "make the video louder" and "what
-time is it" go on to the prompt on screen.
+time is it" stay in the transcript until another destination is selected.
 
 **The vocabulary comes from the registry** (`shared/voice-vocabulary.ts`), not
 a list kept by hand. Every runnable image or video entry in
@@ -171,16 +145,14 @@ word the registry no longer gives. A mishearing is never read at the end of a
 subject, so "an image of a lawyer with client" keeps its client. Coming
 entries, the upscale and Edit are never selected. The word tables are Maps
 and Sets, so `constructor` or `__proto__` is an ordinary word; if
-reading the words ever fails, the transcript is treated as no request and
-fills the prompt on screen.
+reading the words ever fails, the transcript stays visible without changing a prompt.
 
 **Which entry.** A named model is that entry. A family or a medium alone is the
 first runnable entry that fits, in registry order: Klein first among FLUX
 stills, LTX-2.5 Fast first among LTX video. What the composer already holds
 stays when it fits: Klein on the API stays on the API when Klein is named, and
 FLUX 3 Image stays when you ask for a FLUX still. A medium the model cannot
-make ("a video with Klein") selects nothing, and the transcript goes on to the
-prompt on screen.
+make ("a video with Klein") selects nothing and keeps the transcript.
 
 **How it lands.** `src/voice/voice-intent-target.ts` hands the request to the
 composer, which registers itself from `useComposer`, and the composer applies
@@ -193,12 +165,14 @@ composer, toolbar and gallery where they are, as AGENTS.md requires.
 
 ## What is local
 
-Everything. The microphone audio goes from the browser to the local Genobi
+Transcription is local. The microphone audio goes from the browser to the local Genobi
 server on `127.0.0.1`, then to a Python worker on the same machine, which reads
 a model folder on disk with the Hugging Face libraries set offline. No speech
 service is called and nothing is downloaded at run time. The decoded audio is
 written to a private temporary folder for the worker and deleted when it
-answers. Nothing is logged: not the audio, the transcript or any path.
+answers. The transcription worker logs no audio, transcript or path. Sending the
+text to an agent uses that harness's configured model/provider and records the
+message in its conversation; it does not send the microphone audio.
 
 The hosted studio (Cloudflare Pages) has no voice route. There the Voice button
 says that voice mode runs on the local server only.
@@ -288,7 +262,7 @@ shot" and "two characters" read as said.
 
 ## The project prompt
 
-The transcript becomes a request to the local server, in the shape
+The first Agent-directed transcript becomes a request to the local server, in the shape
 `shared/agent-session.ts` defines (shared with the server's routes), through
 the studio's spawn action (`src/agent/spawn.ts`,
 [spawn the agent](agent-setup.md#spawn-the-agent)):
@@ -357,133 +331,62 @@ Reduced motion keeps a static meter: no arrival, no easing, and a still loader.
 
 The pill hangs under the header against its right edge and opens downward
 over the gallery or panels; it moves neither the toolbar, the gallery nor the
-hero. While recording it shows only Stop (a square), the LEDs, the chevron and
-close; the state ("LISTENING 00:04") is still spoken to screen readers. The
+hero. While recording it shows Stop (a square), the LEDs, the destination, the chevron
+and close; the state ("LISTENING 00:04") is still spoken to screen readers. The
 panel under it opens by itself for the transcript, a message or the loader,
 and the chevron folds or opens it. Focus goes to Stop; Escape or the close
 button returns it to Voice; closing drops a recording in progress. A refused
 microphone, a missing microphone and an unconfigured server each show a
 message in the panel; a refusal is asked once per opening, never in a loop,
-and Record in the pill tries again. Voice has one entry point: the header mic.
+and Record in the pill tries again. The header mic, bubble and deck all open
+the same recorder; conversation entry points also select their agent.
 
 ## Verification
 
-- `npm test`: the dictionary and numbers, the chunker and silence gate on
-  synthetic samples, the level formula, the WAV the studio sends (measured by
-  `shared/audio.ts`), the status route with and without configuration, and
-  transcribe refusing a wrong type, an unreadable, overlong or oversized file and
-  an unconfigured machine before anything is spawned. A recording past the
-  limit is trimmed to exactly the limit, which the server accepts. Prewarm
-  races are arranged with a held status check: a transcription or a second
-  prewarm that starts meanwhile, or a cancel, leaves one worker or none, and
-  cancelling stops the waiting worker. The page-hide hook runs the cancel and
-  the cancel request is sent with `keepalive`. A stand-in script checks
-  the worker's line protocol when `python3` is on `PATH`. No test needs Python,
-  a model or ffmpeg.
-- `tests/voice-languages.test.ts` and `tests/voice-server.test.ts`: the
-  allow-list (exact names, `auto`, nothing else), the server default read
-  from the environment in any case, the choice in the browser (English when
-  missing, unknown or refused by storage), the query each note sends, the
-  status listing the languages, each note's language reaching the worker
-  request (`auto` as null, none as the server's default), an unknown language
-  making the server not set up, and an off-list, repeated or overlong
-  language refused before anything is decoded. With `python3` on `PATH`, the
-  real worker's request check takes a name or null and refuses anything else.
-- `tests/voice-agent-client.test.ts`: the agent status read (a missing route,
-  a page or a network failure is "not set up"; unknown runners and extra
-  fields are dropped), the copy handle (this session's own copy only, a valid
-  handle only), and the session request (the header, the body, no copy when
-  none is open, an empty or overlong prompt refused before sending, and the
-  server's refusal shown).
-- `tests/voice-intent.test.ts`: the parser on the examples above, mixed
-  casing and punctuation, the spoken variants (flux three, Klein, client), a
-  model before the medium, after the verb or after the subject, a mishearing
-  never read at the end of a subject, Object.prototype's names (constructor,
-  toString, `__proto__`, hasOwnProperty, valueOf) read as ordinary words in
-  every slot, and refusals ("open the director", "what
-  time is it", "make the video louder", an empty note); a transcript after the
-  dictionary's clean-up; which entry each request selects, a held entry kept,
-  a medium the model cannot make selecting nothing; the vocabulary drawn from
-  the registry's labels and ids, following a renamed entry, and every
-  mishearing tied to a word the registry still gives.
-- `tests/voice-intent-target.test.ts`: against the composer's own reducer, a
-  request from the Gallery selects Camera, image mode and Klein and writes "a
-  penguin" as a marked edit, with the request Generate would send naming Klein;
-  from Camera it stays and moves to LTX-2.5 Fast with LTX's controls; a medium
-  alone takes the default still; words that are not a request, or that no
-  model fits, change nothing; with no composer nothing happens; a long subject
-  is cut to the prompt's limit.
-- `node scripts/check-voice-overlay.mjs` against a dev server (helpers in
-  `scripts/lib/voice-fixture.mjs`, the destinations in
-  `scripts/lib/voice-destination-checks.mjs`, spoken requests in
-  `scripts/lib/voice-intent-checks.mjs`; the transcription is a fixture
-  answer): Chrome with a fake microphone records on one click of the mic,
-  prewarms, and the mic again stops and transcribes; it sends WAV and shows
-  the transcript; with no picker, the transcript goes into the prompt on
-  screen (Ninja's and Camera's), says which, focuses the priced Generate in
-  Camera and submits nothing; a corrected transcript reaches the prompt only
-  through Update prompt, and Escape on the focused Generate closes Voice,
-  keeps focus there and submits nothing; from the Gallery at 1440 and 390 px, "I want to
-  generate an image with FLUX of a penguin." opens Camera on FLUX 3 Image
-  Klein with "a penguin" in the prompt and focus on Generate, and submits
-  nothing, and Update prompt turns a corrected "pelican" into the subject; a
-  misheard "make an imag of a penguin" in the Gallery goes nowhere, and Try
-  again on the corrected words opens Camera on Klein; in Camera at 1440 and 390 px a spoken image request and an LTX
-  video request leave the hero, composer, toolbar and gallery where they
-  were; Gallery with words that are not a request says "No prompt on this
-  screen.", offers a session and stays in Gallery; Send to agent instead asks
-  the status first and, with the route missing or `available: false`, sends
-  nothing; when available it posts the transcript, the open project's copy
-  handle and `source: "voice"` with `X-Genobi-Agent: 1`, says the session
-  started and announces it once; a refusal shows the server's message. Voice
-  is in the header of every section; the pill sits under the header on the
-  right; the chevron folds the panel; the toolbar, gallery and panels do not
-  move at 1440, 390 and 320 px; Escape returns focus to Voice; closing during
-  a recording cancels the prewarm once, and a finished note cancels nothing; a
-  `pagehide` mid-recording cancels it too; the loader is still under reduced
-  motion; a refused microphone is asked once, and refusal, missing worker and
-  hosted studio each show their message. The Language control offers English
-  first, Auto-detect, then the server's list; a choice goes with the next
-  note, survives a reload, and storage that refuses the key still works. API
-  routes are fixtures.
-- On an M1 Max with Qwen3-ASR-0.6B on Metal, 21 October 2026, a 7.7 s `say`
-  recording ("Open Genobi and render with L T X at six point one seconds…")
-  came back as "Open Genobi and render with LTX at 6.1 seconds. Then use the
-  AKUSPACE preset for 24 frames." Cold, over two runs: 10.4 and 12.8 s, almost
-  all of it loading the model. Prewarmed: 0.73 and 0.78 s. With 27 s of room
-  tone appended, the tail chunk was gated and the text was unchanged; five
-  seconds of room tone alone was refused as `no_speech` without starting the
-  model; a request dropped after two seconds left no worker running.
-  Cancelling a prewarm, while it loaded and again once it was warm, left no
-  worker running either.
+The revised routing is **implemented**. Focused unit tests and a Chrome 148
+browser review on 31 October 2026 exercise the changed interaction paths.
+The browser uses a fake microphone and fixture APIs. A physical-microphone
+recording through Qwen3-ASR and a live agent remains unverified.
 
-- Through the header pill on 21 October 2026, Qwen3-ASR-0.6B on Metal: a
-  `say` clip ("a slow dolly in on a forest shaman") converted to 16 kHz mono
-  WAV came back from `POST /api/voice/transcribe` as "A slow dolly in on a
-  forest charmer." in 9.3 s cold (8.8 s of it loading the model, 0.37 s
-  transcribing). "Shaman" was misheard, which a dictionary entry could fix if
-  real speech shows the same. The same file fed to Chrome's fake microphone
-  went from the header pill through Use as prompt into Camera's description.
+The routing regressions use fake sessions and synthetic transcripts; they
+make no model or paid-generation request:
 
-- One click through the real pipe, 21 October 2026, Qwen3-ASR-0.6B on Metal,
-  Chrome's fake microphone playing a `say` clip ("A slow dolly in on a forest
-  shaman, then orbit the vessel for six point one seconds."): the mic
-  recorded, the mic again stopped it, and 8.8 s after the first click the
-  transcript read "A slow dolly in on a forest charman, then orbit the vessel
-  for 6.1 seconds." (the fake device loops the clip, so a repeat followed);
-  Camera prompt filled the scene description, and Project prompt said agent
-  sessions aren't set up, as this server has no agent route yet. Through the
-  route, a French `say` clip came back in French with `?language=French` and
-  with `auto` (detected as French), and run together as "Unlentraveling
-  avant…" with `?language=English`, so the hint reaches the model.
-  `?language=Klingon` was refused with `voice_language`.
+- `tests/voice-destinations.test.tsx`: agent-first Camera-shaped requests,
+  StrictMode duplicate prevention, refusal without prompt fallback, pinned
+  corrections, repeated notes, explicit rerouting and unavailable prompt fields.
+- `tests/voice-session-route.test.ts`: selected-session sends, ended/refused
+  session holds, pending messages, transcript validation and project changes
+  before and during a lookup.
+- `tests/voice-destination-store.test.ts`: validated preference persistence,
+  agent default, session identities kept out of storage, late-result selection
+  protection and refused browser storage.
+- `tests/voice-note-target.test.tsx`: initial prompt identity capture, changed
+  Scroll cells/documents during transcription, closed fields and deliberate
+  destination selection while recording.
+- `tests/voice-setup-focus.test.tsx`: the install offer receives focus after
+  model discovery enables it, without taking focus from a person editing the
+  installation folder or another prompt.
+- `tests/voice-hosted.test.tsx`: the hosted microphone explanation and no
+  microphone or transcription request, including uncertain runtime detection.
+- Existing capture, language, dictionary, intent-parser, server, setup and
+  agent-send tests cover their respective unchanged boundaries.
+
+Browser checks cover 1440-, 390- and 320-pixel layouts, keyboard focus, repeated
+recording, bubble/deck entry points, pinned destinations and corrections,
+prompt dictation, language persistence and paid-approval fixtures. An expanded
+conversation at 320 × 600 also keeps its footer above the fixed activity bar.
+Recovery checks cover reduced motion, prewarm cancellation, page hiding,
+recorder and decoding failures, microphone refusal, the installation offer and
+hosted limits. Run `node scripts/check-voice-overlay.mjs` against a local studio
+to repeat the browser fixtures. They do not establish microphone hardware
+quality, live transcription or agent execution, or GPU execution.
 
 ## Not yet
 
 - A message reaching a Terminal agent that is idle at its prompt: it arrives
   with the agent's next Genobi tool call, not as typed input in the window.
-- Director commands from the transcript: voice fills a prompt or sets up
-  Camera; the agent session is what drives tools.
+- Direct transcript-to-command execution: the selected agent drives tools;
+  explicit prompt dictation and Camera parsing only prepare inputs.
 - Spoken confirmation ("generate", "go") to press Generate: voice stops at the
   priced button for now.
 - Spoken Edit and Upscale requests, and a spoken camera move or duration ("a
@@ -491,6 +394,6 @@ and Record in the pill tries again. Voice has one entry point: the header mic.
 - A dictionary editor in the studio, and suggestions from corrections (X
   Console has both).
 - Holding a key to talk.
-- Real microphone use in the browser was checked with Chrome's fake device and
-  fixture routes; the full pipe was checked with synthesised speech through the
-  server, not a person at a microphone.
+- Real microphone hardware: earlier browser checks used Chrome's fake device
+  and fixture routes; the transcription pipe used synthesised speech through
+  the server, not a person at a microphone.

@@ -159,6 +159,32 @@ it("explains hosted voice in the Genobi bubble", async () => {
   await expectNotice();
 });
 
+it("conversation voice entry points open the same hosted explanation without recording", async () => {
+  const { default: VoiceButton } = await import("../src/voice/VoiceButton");
+  const { AgentVoiceButton } = await import("../src/voice/AgentVoiceButton");
+  const { voiceRouting } = await import("../src/voice/destination-store");
+  const session = {
+    id: "selected",
+    runner: "hermes" as const,
+    status: "running" as const,
+    prompt: "Scene",
+    startedAt: "",
+    lines: [],
+  };
+  await mount(
+    <>
+      <VoiceButton />
+      <AgentVoiceButton session={session} />
+    </>,
+  );
+  const speak = [...host.querySelectorAll("button")].find(
+    (button) => button.textContent === "Speak to agent",
+  );
+  await act(async () => speak!.click());
+  expect(voiceRouting().agent?.session.id).toBe("selected");
+  await expectNotice();
+});
+
 it.each([false, true])(
   "explains the optional hosted voice starter (embedded=%s)",
   async (embedded) => {

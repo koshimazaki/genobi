@@ -72,7 +72,8 @@ experimental route for room-conditioned generated audio/video.
   back. Dual Swords compares footage and extracts exact frames.
 - **Bring your own harness.** Connect Hermes, Claude Code or Codex through
   MCP, CLI and skills. The local studio also supports voice directions using
-  Qwen3-ASR and a Development workspace for extending the app.
+  Qwen3-ASR and a Development workspace for extending the app. Voice defaults
+  to the agent, remembers your destination and offers explicit prompt dictation.
 - **Build your Taste layer.** Celebrate creative work with links and credit to
   its creators, then add your own favourite references. Save personal selections
   in the local studio or extend the catalogue in your fork. Project memory keeps

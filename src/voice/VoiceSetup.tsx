@@ -30,6 +30,9 @@ export function VoiceSetup({
   const [check, setCheck] = useState(0);
   const install = useVoiceInstall();
   const state = install.state;
+  const openingFocus = useRef(
+    typeof document === "undefined" ? null : document.activeElement,
+  );
   const confirm = useRef<HTMLButtonElement>(null);
   useEffect(() => {
     let active = true;
@@ -56,8 +59,14 @@ export function VoiceSetup({
     };
   }, [check]);
   useEffect(() => {
-    confirm.current?.focus();
-  }, [info]);
+    // Discovery initially disables Install. Focus it when ready if focus is
+    // still at the opener or page; respect a move to another control.
+    if (
+      document.activeElement === openingFocus.current ||
+      document.activeElement === document.body
+    )
+      confirm.current?.focus();
+  }, [info, install.found]);
   const pending = choosing || install.pending;
   const busy = pending || !!state?.busy;
   const ready = state?.phase === "ready";
