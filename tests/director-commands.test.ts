@@ -52,6 +52,7 @@ describe("parsing Director commands", () => {
       "set-parameters",
       "set-beat-grid",
       "set-resolution",
+      "apply-effect-preset",
       "remove-clip",
       "duplicate-clip",
       "split-clip",

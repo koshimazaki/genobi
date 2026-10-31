@@ -64,6 +64,7 @@ describe("World Builder sound in every mode", () => {
       frame: 0,
       audioURL: "",
       audioName: "",
+      inputState: { phase: "idle", frame: 0 },
       example: { blob: null, label: "", credit: "" },
       history: { recent: [entry("a", 2048, "Voice take")], persisted: true },
       take: null,

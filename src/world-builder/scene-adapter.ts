@@ -3,6 +3,12 @@ import type { Recipe, parameterSchema } from "./recipe";
 import type { Take } from "./export-take";
 import type { SentTake } from "./send-take";
 
+declare global {
+  interface Window {
+    directorScene?: SceneAdapter;
+  }
+}
+
 export interface RecipeGuard {
   /** An opaque mounted-scene token from getRecipeRevision, not project.revision. */
   expectedRevision?: string;

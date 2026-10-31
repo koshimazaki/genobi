@@ -58,7 +58,7 @@ scene is never recorded as the take's provenance.
 - **Rate & time.** Takes are fixed at 24 fps. The take length stepper (also
   beside Capture take under the scene) moves one 8k + 1 step, and its seconds
   are typeable: Enter or leaving the field sets the nearest 8k + 1 frame count
-  (typing 10 gives 241 frames, 10.04 s), clamped to 9–241 frames, with the
+  (typing 30 gives 721 frames, 30.04 s), clamped to 9–721 frames, with the
   frames shown beside it; text that is not a positive number is refused. The quick
   lengths 1, 2, 3, 4, 5, 8 and 10 s set **Move seconds**, which the recipe
   rounds to the nearest 8k + 1 frame count: 25, 49, 73, 97, 121, 193 and 241
@@ -67,6 +67,10 @@ scene is never recorded as the take's provenance.
   (with **360° loop · 2 s**) are the same controls as before.
   The quick-length bank is one keyboard tab stop: arrows select adjacent lengths,
   and Home/End select the first/last length, like Camera's keyboard sections.
+  The continuous duration slider uses the same frame grid. A 30-second move's
+  final sample is frame 720; its encoded clip includes that final frame. Fixed
+  receipts record this in `ltxTiming` alongside the existing frame count and
+  duration. This does not expand hosted model duration limits.
 - **Passes & sync.** What a take carries: the colour pass (WebM and first
   frame), the linear depth pass, which is always rendered (its near and far
   range, `depthNear` and `depthFar` in metres, are editable here), the matching

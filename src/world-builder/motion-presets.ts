@@ -10,14 +10,65 @@ import {
   apartmentPieces,
   buildingLayouts,
 } from "./motion-building-layouts";
-import { fruitLayouts, voxelStructureLayouts } from "./motion-voxel-layouts";
+import { fruitLayouts } from "./motion-voxel-layouts";
+import { fruitBranchPresetPatch } from "./motion-fruit-branch-preset";
+import { architecturePresetPatch } from "./motion-architecture-preset";
+import { cityLoftLayouts } from "./motion-city-layouts";
+import {
+  spacecraftLayouts,
+  maskLayouts,
+  palmGroveLayouts,
+} from "./motion-object-layouts";
 
 export const MOTION_PRESETS = [
   {
+    id: "city-to-loft",
+    name: "Travel · City / loft",
+    summary: "Skyline → street canyon → open loft · 96 transforming parts",
+    acoustic: "Visual architecture only; no outdoor acoustic simulation.",
+  },
+  {
+    id: "neo-tokyo-to-loft",
+    name: "Travel · Neo Tokyo / loft",
+    summary: "Night skyline → neon street → open loft · camera travel",
+    acoustic: "Original geometric interpretation; no real city reconstruction.",
+  },
+  {
     id: "voxel-architecture",
-    name: "Morph · Pyramid / cube",
-    summary: "Pyramid → cube → open structure · 64 retained blocks",
+    name: "Morph · Architecture · 64",
+    summary: "Pyramid → house / chamber → cathedral · 64 retained blocks",
     acoustic: "No acoustic enclosure. Add a room to explore reverb.",
+  },
+  {
+    id: "voxel-architecture-128",
+    name: "Morph · Architecture · 128",
+    summary: "Pyramid → house / chamber → cathedral · 128 retained blocks",
+    acoustic: "Visual architecture with stable parts; no inferred acoustics.",
+  },
+  {
+    id: "voxel-architecture-256",
+    name: "Morph · Architecture · 256",
+    summary: "Pyramid → house / chamber → cathedral · 256 retained blocks",
+    acoustic: "Highest bounded detail; visual geometry only.",
+  },
+  {
+    id: "spacecraft-mecha",
+    name: "Morph · Spacecraft / mecha",
+    summary: "Spacecraft → mecha → winged mecha · 128 retained parts",
+    acoustic: "Authored modular forms, ready for audio-driven transformation.",
+  },
+  {
+    id: "mask-morph",
+    name: "Morph · Mask / crown",
+    summary: "Mask → crown → open mask · 96 retained parts",
+    acoustic: "Geometric masks with independently editable morph and twist.",
+  },
+  {
+    id: "palm-grove",
+    name: "Motion · Palm grove",
+    summary: "Upright → sway → spread · 96 retained parts",
+    acoustic:
+      "A sculptural palm study; audio can push the sway and separation.",
   },
   {
     id: "cathedral-street",
@@ -40,6 +91,21 @@ export const MOTION_PRESETS = [
     summary: "Banana → papaya → apple · 96 retained voxels",
     acoustic:
       "No acoustic enclosure. Fruit shapes drive the visual guide only.",
+  },
+  {
+    id: "fruit-morph-fine",
+    name: "Morph · Fine fruit",
+    summary: "Banana → papaya → apple · 192 smaller voxels",
+    acoustic:
+      "Twice the voxels with a comparable silhouette and editable states.",
+  },
+  {
+    id: "fruit-audio-branches",
+    name: "Morph · Fruit / audio branches",
+    summary:
+      "Five fruit shapes · independent progress and spectral target axes",
+    acoustic:
+      "Bass → apple · mids → orange · highs → watermelon; energy-band routing.",
   },
 ] as const;
 export type MotionPresetId = (typeof MOTION_PRESETS)[number]["id"];
@@ -129,22 +195,119 @@ function voxels(
 }
 
 function presetPatch(id: MotionPresetId): Partial<Recipe> {
-  if (id === "voxel-architecture")
+  if (id === "fruit-audio-branches") return fruitBranchPresetPatch();
+  if (
+    id === "voxel-architecture" ||
+    id === "voxel-architecture-128" ||
+    id === "voxel-architecture-256"
+  )
+    return architecturePresetPatch(
+      id === "voxel-architecture-256"
+        ? 256
+        : id === "voxel-architecture-128"
+          ? 128
+          : 64,
+    );
+  if (id === "city-to-loft" || id === "neo-tokyo-to-loft") {
+    const neon = id === "neo-tokyo-to-loft";
+    const motion = voxels(
+      96,
+      neon
+        ? ["#93b9b2", "#c46d8e", "#84c9ce", "#c5b288"]
+        : ["#d4c4a4", "#98abb0", "#b3baab", "#d9d3c2"],
+      ["Skyline", "Street canyon", "Open loft"],
+      cityLoftLayouts(),
+    );
+    motion.stateKeys.forEach((key, i) => {
+      key.frame = [0, 96, 192][i];
+    });
+    motion.mappings = [
+      mapping("lift", "low", 0.22),
+      mapping("spread", "high", 0.025),
+      mapping("morph", "level", 0.025),
+    ];
+    motion.intensity = 0.5;
     return {
-      radius: 10.7,
-      fov: 42,
-      azimuth: 28,
-      elevation: 22,
-      targetY: 1.8,
-      motion: voxels(
-        64,
-        ["#c7d3a5", "#b4c887", "#93a18b", "#d9dfc0"],
-        ["Pyramid", "Cube", "Open structure"],
-        voxelStructureLayouts(),
-      ),
+      motion,
+      frames: 193,
+      seconds: 8,
+      radius: 24,
+      targetY: 3,
+      orbit: 0,
+      background: neon ? "#090b14" : "#080b12",
+      fov: 48,
+      cameraMotion: {
+        version: 1,
+        enabled: true,
+        keys: [
+          {
+            id: "camera-skyline",
+            frame: 0,
+            position: [25, 21, 31],
+            target: [0, 4, 0],
+            fov: 48,
+            easing: "easeInOut",
+          },
+          {
+            id: "camera-street",
+            frame: 96,
+            position: [0, 4.2, 21],
+            target: [0, 2.7, -1],
+            fov: 54,
+            easing: "easeInOut",
+          },
+          {
+            id: "camera-loft",
+            frame: 192,
+            position: [0, 2.5, 5.5],
+            target: [0, 2, -3.5],
+            fov: 68,
+            easing: "easeInOut",
+          },
+        ],
+        audio: { enabled: false, source: "sub", amount: 0.2, motion: "push" },
+      },
       prompt:
-        "A modular voxel pyramid folds into a cube, then opens into a hollow structure. Keep all 64 block identities and the fixed camera. Low-band vertical twist, mid-band horizontal twist and high-band separation add bounded motion.",
+        "Travel from an original geometric city skyline down a street canyon into an open loft. The same 96 architectural parts become floor tiles, beams, windows and furniture. Camera position, look target and lens move on the same timeline. Keep the transition readable; audio adds restrained height and separation offsets.",
     };
+  }
+  if (id === "spacecraft-mecha" || id === "mask-morph" || id === "palm-grove") {
+    const ship = id === "spacecraft-mecha",
+      palm = id === "palm-grove";
+    const motion = voxels(
+      ship ? 128 : 96,
+      ship
+        ? ["#b7c9c9", "#829b9c", "#dfcaa5", "#ca8870"]
+        : palm
+          ? ["#91ac8a", "#6e8e72", "#c3ad7e", "#b7c591"]
+          : ["#d6be96", "#b09577", "#82aaa6", "#d9ceac"],
+      ship
+        ? ["Spacecraft", "Mecha", "Winged mecha"]
+        : palm
+          ? ["Upright", "Sway", "Spread"]
+          : ["Mask", "Crown", "Open mask"],
+      ship ? spacecraftLayouts() : palm ? palmGroveLayouts() : maskLayouts(),
+    );
+    motion.mappings = [
+      mapping("twistY", "low", palm ? 0.12 : 0.25),
+      mapping("spread", "high", palm ? 0.04 : 0.1),
+      mapping("morph", "sub", 0.12),
+    ];
+    return {
+      motion,
+      radius: ship ? 15 : palm ? 16 : 11,
+      fov: 46,
+      azimuth: ship ? 22 : palm ? 28 : 12,
+      elevation: ship ? 18 : palm ? 18 : 8,
+      targetY: ship ? 2.4 : palm ? 2.2 : 2.6,
+      background: "#080b12",
+      prompt: ship
+        ? "Original modular spacecraft transforms into a standing mecha, then opens its wings. The same 128 parts retain their identities. Prepared sub-bass gently advances the morph; bass turns the group and highs open the spacing."
+        : palm
+          ? "Three geometric palm forms sway and open their fronds. Keep 96 stable parts, with a gentle audio-responsive sway and separation."
+          : "An original geometric mask transforms into a crown, then an open mask. Keep 96 stable pieces and use restrained audio-responsive morphing and twist.",
+    };
+  }
   if (id === "cathedral-street") {
     const motion = voxels(
       64,
@@ -226,6 +389,7 @@ function presetPatch(id: MotionPresetId): Partial<Recipe> {
         "A compact apartment expands and opens into a loft. The same partitions move into a kitchen island and shelving while the furniture retains its identity. Floor, walls and ceiling derive from one changing acoustic enclosure; the viewport uses a cutaway.",
     };
   }
+  const detail = id === "fruit-morph-fine" ? 192 : 96;
   return {
     radius: 9.1,
     fov: 40,
@@ -233,13 +397,12 @@ function presetPatch(id: MotionPresetId): Partial<Recipe> {
     elevation: 13,
     targetY: 2.35,
     motion: voxels(
-      96,
+      detail,
       ["#e7cb72", "#d5ba65", "#c6c77d", "#b1c17d"],
       ["Banana", "Papaya", "Apple"],
-      fruitLayouts(),
+      fruitLayouts(detail),
     ),
-    prompt:
-      "A voxel banana becomes a tall papaya and then a rounded apple. Keep the same 96 blocks. Bass twists vertical layers, mids twist horizontal layers, high frequencies separate cells and level gently offsets the morph.",
+    prompt: `A voxel banana becomes a tall papaya and then a rounded apple. Keep the same ${detail} blocks. Bass twists vertical layers, mids twist horizontal layers, high frequencies separate cells and level gently offsets the morph.`,
   };
 }
 
@@ -254,7 +417,8 @@ export function createMotionPreset(id: string): Recipe {
     screen: false,
     objects: [],
     audioRoutes: [],
-    background: "#18231f",
+    stageLook: "dark-grid",
+    background: "#080b12",
     width: 1280,
     height: 704,
     seconds: 6,

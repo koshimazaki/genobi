@@ -31,8 +31,11 @@ import {
 } from "../../shared/director/assets";
 import { missingTrack } from "../../shared/director/track-slot";
 import { checkAssetMedia } from "../../shared/director/asset-media";
+import type { ApplyEffectCommand } from "../../shared/effects/types";
+import { applyEffectToBundle } from "./effect-bundle";
 
 export type DirectorCommand =
+  | ApplyEffectCommand
   | (ClipCommand & { revision: number })
   | { op: "inspect" }
   | { op: "brief" }
@@ -63,6 +66,8 @@ export function parseCommand(value: unknown): DirectorCommand {
   if (!value || typeof value !== "object" || Array.isArray(value))
     throw new Error("Command must be an object");
   const c = value as Record<string, unknown>;
+  if (c.op === "apply-effect-preset")
+    return parseDirectorCommand(c) as ApplyEffectCommand;
   if (typeof c.op === "string" && isClipOp(c.op)) {
     if (!Number.isSafeInteger(c.revision) || Number(c.revision) < 0)
       throw new Error("revision must be an integer");
@@ -137,6 +142,10 @@ export async function runDirectorCommand(
 ) {
   const c = parseCommand(value),
     p = bundle.project;
+  if (c.op === "apply-effect-preset") {
+    const { op: _op, ...input } = c;
+    return applyEffectToBundle(bundle, input);
+  }
   if (c.op === "brief") return { receipt: resolveBrief(bundle) };
   if (c.op === "inspect") return { receipt: structuredClone(p) };
   if (c.op === "assets")

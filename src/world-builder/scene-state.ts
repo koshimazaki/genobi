@@ -1,14 +1,24 @@
 import type { Prop } from "./recipe";
 import type { ModSource } from "./mod-routes";
+import type { SceneMorphControl } from "./scene-morph-control";
+import type { SceneStateAudio } from "./scene-state-audio";
+import type { SceneRotation } from "./scene-rotation";
+export type { SceneMorphControl } from "./scene-morph-control";
 export { motionInstances, sceneObjects } from "./scene-instances";
 
-/** Versioned, finite authored state. Instance topology and materials stay fixed. */
+/** Versioned, finite authored state. Instance topology stays fixed. */
 export type SceneVector = [number, number, number];
 export type SceneTransform = Pick<Prop, "x" | "y" | "z" | "scale"> &
   Pick<
     Prop,
-    "rotation" | "rotationX" | "rotationZ" | "scaleX" | "scaleY" | "scaleZ"
-  >;
+    | "rotation"
+    | "rotationX"
+    | "rotationZ"
+    | "scaleX"
+    | "scaleY"
+    | "scaleZ"
+    | "presence"
+  > & { color?: string };
 export const SCENE_CONTROL_DEFAULTS = {
   twistX: 0,
   twistY: 0,
@@ -100,9 +110,13 @@ export interface SceneMotion {
   mappings: SceneMapping[];
   intensity: number;
   room?: SceneRoom;
+  morphControl?: SceneMorphControl;
+  stateAudio?: SceneStateAudio;
+  rotation?: SceneRotation;
+  transitionStyle?: "direct" | "scatter" | "twist" | "assemble";
 }
 export const MAX_SCENE_KEYS = 16;
-export const MAX_SCENE_INSTANCES = 128;
+export const MAX_SCENE_INSTANCES = 256;
 export const MAX_EVALUATED_OBJECTS = 24 + MAX_SCENE_INSTANCES + 6;
 
 /** Transform-only copy: editing a key cannot change topology or material. */
@@ -112,6 +126,7 @@ export function sceneTransformOf(p: Prop): SceneTransform {
     y: p.y,
     z: p.z,
     scale: p.scale,
+    ...(p.presence !== undefined ? { presence: p.presence } : {}),
     ...(p.rotation !== undefined ? { rotation: p.rotation } : {}),
     ...(p.rotationX !== undefined ? { rotationX: p.rotationX } : {}),
     ...(p.rotationZ !== undefined ? { rotationZ: p.rotationZ } : {}),

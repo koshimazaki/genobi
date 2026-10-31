@@ -20,11 +20,15 @@ const effects = await json("docs/director-bundle/effects/project.json");
 const versionMedia = await json(
   "docs/director-bundle/version-media/modules.json",
 );
+const catalogueEffects = await json(
+  "docs/director-bundle/effects-catalogue/modules.json",
+);
 const exports = { project: project.$id };
 for (const module of [
   ...Object.values(registry.modules),
   ...Object.values(effects.modules),
   ...Object.values(versionMedia),
+  ...Object.values(catalogueEffects),
 ]) {
   const name = `module_${module.file.sha256}`;
   ajv.addSchema(module.parameterSchema, name);

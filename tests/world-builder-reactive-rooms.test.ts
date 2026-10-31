@@ -52,7 +52,12 @@ vi.mock("../src/world-builder/playground", async () => {
   };
 });
 vi.mock("../src/world-builder/interaction", () => ({
-  createInteraction: () => ({ mode: "shot", refresh() {}, dispose() {} }),
+  createInteraction: () => ({
+    mode: "shot",
+    refresh() {},
+    cancelCameraGesture() {},
+    dispose() {},
+  }),
 }));
 vi.mock("../src/world-builder/character", async () => {
   const T = await vi.importActual<typeof Three>("three");

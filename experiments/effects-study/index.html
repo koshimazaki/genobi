@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <title>Animations & Effects — Genobi studies</title>
+    <link rel="stylesheet" href="./study.css" />
+    <link rel="stylesheet" href="./responsive.css" />
+  </head>
+  <body>
+    <main>
+      <header class="masthead">
+        <a class="wordmark" href="/">◉ Genobi</a>
+        <p>Templates <span>/</span> Animations & Effects</p>
+        <span class="badge">LOCAL STUDY · 01</span>
+      </header>
+      <section class="intro">
+        <div>
+          <p class="eyebrow">A small library of possibilities</p>
+          <h1>Three ways to<br />bend a frame.</h1>
+        </div>
+        <p class="intro-copy">
+          A camera becomes an instrument. A room becomes a reflection. A flat
+          image becomes a landscape. Explore the same source through three
+          different visual systems.
+        </p>
+      </section>
+      <nav class="modes" aria-label="Effect studies">
+        <button data-mode="helmet" aria-pressed="true">
+          <span class="index">01 / SIGNAL</span><strong>Field monitor</strong
+          ><span>Helmet HUD · scan · RGB split</span>
+        </button>
+        <button data-mode="mirror" aria-pressed="false">
+          <span class="index">02 / REFLECTION</span
+          ><strong>Liquid mirror</strong
+          ><span>Flowing distortion · kaleidoscope</span>
+        </button>
+        <button data-mode="terrain" aria-pressed="false">
+          <span class="index">03 / DIMENSION</span
+          ><strong>Signal terrain</strong
+          ><span>Luminance displacement · 2.5D</span>
+        </button>
+      </nav>
+      <section class="workspace" aria-label="Effect preview and controls">
+        <div class="preview-bar">
+          <span id="mode-title">FIELD MONITOR</span
+          ><span id="frame-status">LOADING SOURCE</span>
+        </div>
+        <div class="stage">
+          <canvas
+            id="output"
+            width="960"
+            height="540"
+            aria-label="Rendered effect preview"
+          ></canvas>
+          <p id="loading" role="status">Preparing the source frame…</p>
+        </div>
+        <div class="transport">
+          <button id="play" aria-label="Play study" disabled>
+            ▶ <span>Play</span>
+          </button>
+          <label class="scrub"
+            >Frame
+            <input
+              id="frame"
+              type="range"
+              min="0"
+              max="143"
+              value="0"
+              step="1"
+              disabled
+            /><output id="time">00.00 / 06.00 s</output></label
+          >
+          <label class="intensity"
+            >Intensity
+            <input
+              id="intensity"
+              type="range"
+              min="0"
+              max="1"
+              value="0.65"
+              step="0.01"
+              disabled
+            /><output id="amount">65%</output></label
+          >
+        </div>
+        <div class="caption">
+          <p id="description">
+            A restrained visor display over existing footage. Scanning light,
+            curved optics and controlled chromatic separation move on one clock.
+          </p>
+          <span id="technique">VIDEO + ORIGINAL SHADER + HUD</span>
+        </div>
+      </section>
+      <section class="ingredients" aria-label="Reusable components">
+        <div>
+          <p class="eyebrow">Built as a combination</p>
+          <h2 id="recipe-name">Field monitor / 01</h2>
+          <p id="recipe-copy">
+            Separate visual ingredients, one shared timeline. This is a local
+            experiment for a future reusable effect library.
+          </p>
+          <div class="preset-actions">
+            <button id="save" disabled>Save combination ↓</button
+            ><button id="open" disabled>Open combination</button
+            ><input
+              id="preset-file"
+              type="file"
+              accept="application/json,.json"
+              hidden
+            />
+          </div>
+          <p id="preset-status" role="status"></p>
+        </div>
+        <ol id="ingredients">
+          <li><span>01</span>Source video</li>
+          <li><span>02</span>Lens & RGB split</li>
+          <li><span>03</span>Scanning light</li>
+          <li><span>04</span>Vector readouts</li>
+        </ol>
+      </section>
+      <footer>
+        <p>
+          Source: <strong>Adaptive reverb</strong> · reverb-ltx · cathedral
+          passage, 08–14 s.
+        </p>
+        <p>
+          Original studies. Terrain uses the credited Alien.js Fresnel helper.
+          <a href="./README.md">Study notes & credits ↗</a>
+        </p>
+      </footer>
+    </main>
+    <script type="module" src="./study.js"></script>
+  </body>
+</html>

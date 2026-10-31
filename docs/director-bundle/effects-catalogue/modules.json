@@ -1,0 +1,280 @@
+{
+  "effects-poster-window": {
+    "engine": "threejs",
+    "engineVersion": "0.180.0",
+    "mode": "filter",
+    "file": {
+      "path": "graphics/effects-poster-window.mjs",
+      "sha256": "494e80992ee1e18963e4b2a0544185d91748043bb7e48ecadda9b3deba8e5998"
+    },
+    "parameterSchema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mix",
+        "windowX",
+        "windowY",
+        "windowSize",
+        "levels",
+        "halftone",
+        "jitter",
+        "accent"
+      ],
+      "properties": {
+        "mix": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0.64
+        },
+        "windowX": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0.5
+        },
+        "windowY": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0.5
+        },
+        "windowSize": {
+          "type": "number",
+          "minimum": 0.1,
+          "maximum": 0.9,
+          "default": 0.54
+        },
+        "levels": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 8,
+          "default": 4
+        },
+        "halftone": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0.75
+        },
+        "jitter": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0.2
+        },
+        "accent": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "default": "#b64c50"
+        }
+      }
+    }
+  },
+  "effects-scan": {
+    "engine": "threejs",
+    "engineVersion": "0.180.0",
+    "mode": "filter",
+    "file": {
+      "path": "graphics/effects-scan.mjs",
+      "sha256": "51e412e72f81eb3ca565b601f4854c92fb6f66e39d06f1ac3deb6a7dff44a46a"
+    },
+    "parameterSchema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mix", "speed", "lines", "distortion", "accent"],
+      "properties": {
+        "mix": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0.3
+        },
+        "speed": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 2,
+          "default": 0.5
+        },
+        "lines": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0.25
+        },
+        "distortion": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0.2
+        },
+        "accent": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "default": "#9ce2bc"
+        }
+      }
+    }
+  },
+  "effects-hud": {
+    "engine": "animejs",
+    "engineVersion": "4.5.0",
+    "mode": "overlay",
+    "file": {
+      "path": "graphics/effects-hud.mjs",
+      "sha256": "4f68e150f10539e338fac5fe6b6db4e39fc8f117e6caf2d8040fe291ddf8bdae"
+    },
+    "parameterSchema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mix", "speed", "accent", "label", "font"],
+      "properties": {
+        "mix": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0.75
+        },
+        "speed": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 2,
+          "default": 0.3
+        },
+        "accent": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "default": "#9ce2bc"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 48,
+          "pattern": "^[^\\u0000-\\u001f\\u007f]*$",
+          "default": "FIELD MONITOR"
+        },
+        "font": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120,
+          "pattern": "^[A-Za-z0-9 ,\"'-]+$",
+          "default": "IBM Plex Mono"
+        }
+      }
+    }
+  },
+  "effects-kinetic-title": {
+    "engine": "animejs",
+    "engineVersion": "4.5.0",
+    "mode": "overlay",
+    "file": {
+      "path": "graphics/effects-kinetic-title.mjs",
+      "sha256": "022ca481b003c2db3d9ce3b8352184c05cf712d13a891817f20ecd15886be56e"
+    },
+    "parameterSchema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mix",
+        "speed",
+        "accent",
+        "color",
+        "text",
+        "subtitle",
+        "font",
+        "shapeCount"
+      ],
+      "properties": {
+        "mix": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 1
+        },
+        "speed": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 2,
+          "default": 0.35
+        },
+        "accent": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "default": "#d2f56a"
+        },
+        "color": {
+          "type": "string",
+          "pattern": "^#[0-9a-fA-F]{6}$",
+          "default": "#f0f1e9"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 80,
+          "pattern": "^[^\\u0000-\\u001f\\u007f]*$",
+          "default": "MAKE IT MOVE"
+        },
+        "subtitle": {
+          "type": "string",
+          "minLength": 0,
+          "maxLength": 120,
+          "pattern": "^[^\\u0000-\\u001f\\u007f]*$",
+          "default": "EDITABLE MOTION"
+        },
+        "font": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120,
+          "pattern": "^[A-Za-z0-9 ,\"'-]+$",
+          "default": "IBM Plex Mono"
+        },
+        "shapeCount": {
+          "type": "integer",
+          "minimum": 3,
+          "maximum": 24,
+          "default": 12
+        }
+      }
+    }
+  },
+  "effects-liquid-mirror": {
+    "engine": "threejs",
+    "engineVersion": "0.180.0",
+    "mode": "filter",
+    "file": {
+      "path": "graphics/effects-liquid-mirror.mjs",
+      "sha256": "839d94a44729e8e6bf83fc36216ead0fc83dff2275cc8f788e9330bef1103474"
+    },
+    "parameterSchema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mix", "ripple", "folds", "speed"],
+      "properties": {
+        "mix": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0.45
+        },
+        "ripple": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0.3
+        },
+        "folds": {
+          "type": "integer",
+          "minimum": 2,
+          "maximum": 12,
+          "default": 6
+        },
+        "speed": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 2,
+          "default": 0.35
+        }
+      }
+    }
+  }
+}

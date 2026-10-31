@@ -1,0 +1,60 @@
+{
+  "timing": "Authored frame clock; silent, no music analysis.",
+  "reports": [
+    {
+      "mode": "poster",
+      "file": "poster.mp4",
+      "programs": [],
+      "streams": [
+        {
+          "codec_type": "video",
+          "width": 960,
+          "height": 540,
+          "r_frame_rate": "24/1",
+          "nb_frames": "96"
+        }
+      ],
+      "format": {
+        "duration": "4.000000",
+        "size": "787247"
+      },
+      "source": {
+        "asset": "bloom-h3-b",
+        "url": "/media/director-templates/bloom-teaser/bloom-h3-b.mp4",
+        "sha256": "5276e31e954a068d60a9b8a66fe3a5d4b0568cefdc1009a880a93243816b1114",
+        "primaryOffsetFrames": 16,
+        "bankFrames": 128,
+        "bankWidth": 480,
+        "bankHeight": 270
+      }
+    },
+    {
+      "mode": "water",
+      "file": "water.mp4",
+      "programs": [],
+      "streams": [
+        {
+          "codec_type": "video",
+          "width": 960,
+          "height": 540,
+          "r_frame_rate": "24/1",
+          "nb_frames": "96"
+        }
+      ],
+      "format": {
+        "duration": "4.000000",
+        "size": "450588"
+      },
+      "source": {
+        "asset": "bloom-h3-b",
+        "url": "/media/director-templates/bloom-teaser/bloom-h3-b.mp4",
+        "sha256": "5276e31e954a068d60a9b8a66fe3a5d4b0568cefdc1009a880a93243816b1114",
+        "primaryOffsetFrames": 16,
+        "bankFrames": 128,
+        "bankWidth": 480,
+        "bankHeight": 270
+      }
+    }
+  ],
+  "errors": []
+}

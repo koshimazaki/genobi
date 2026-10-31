@@ -14,7 +14,10 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { strToU8 } from "fflate";
 import type { DirectorCopy } from "../shared/director/commands";
-import { TRUSTED_RECIPES } from "../shared/director/graphic-commands";
+import {
+  TRUSTED_RECIPES,
+  TRUSTED_RECIPE_SOURCES,
+} from "../shared/director/graphic-commands";
 import { DIRECTOR_PROJECT_LIMIT, type Project } from "../shared/director/types";
 import {
   BRIEF_PATH,
@@ -110,9 +113,9 @@ export async function namedBytes(dir: string, names: Set<string>) {
 }
 
 /** Where the trusted recipes' files live: beside the registry that names them. */
-const REGISTRY_DIR = path.resolve(
+const REPOSITORY_DIR = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
-  "../docs/director-bundle/example",
+  "..",
 );
 
 /**
@@ -142,12 +145,14 @@ export async function afterCommand(
   for (const m of Object.values(project.modules)) {
     const target = path.join(files, m.file.sha256);
     if (copies.has(target) || (await exists(target))) continue;
-    const trusted = Object.values(TRUSTED_RECIPES).find(
-      (t) => t.file.sha256 === m.file.sha256,
+    const trusted = Object.entries(TRUSTED_RECIPES).find(
+      ([, t]) => t.file.sha256 === m.file.sha256,
     );
     if (!trusted)
       throw new AppError(422, "A recipe file is missing.", "command_refused");
-    const bytes = await readFile(path.join(REGISTRY_DIR, trusted.file.path));
+    const bytes = await readFile(
+      path.join(REPOSITORY_DIR, TRUSTED_RECIPE_SOURCES[trusted[0]]),
+    );
     if (createHash("sha256").update(bytes).digest("hex") !== m.file.sha256)
       throw new AppError(500, "A recipe file changed.", "recipe_changed");
     copies.set(target, bytes);

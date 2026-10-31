@@ -10,6 +10,7 @@ import { createInteraction } from "./interaction";
 import {
   cameraAt,
   cameraTargetAt,
+  cameraFovAt,
   validateRecipe,
   type Recipe,
 } from "./recipe";
@@ -20,12 +21,15 @@ import { applyAvatarMods, createWorldMods } from "./mod-apply";
 import { vertexShader, fragmentShader } from "./neuro";
 import { createBuilderCharacter } from "./character";
 import { createDepthPass } from "./depth-pass";
-import { loopedMotionAt, loopedShaderSpeed, loopPeriod } from "./loop";
+import { loopedShaderSpeed, loopPeriod } from "./loop";
+import { routedMotionAt } from "./character-audio";
 import { CHARACTER_MODELS } from "../../shared/scene/character-catalog";
+import { createDarkGrid } from "./dark-grid";
+import { shotCameraPatch } from "./shot-camera-edit";
 
 export function createWorld(
   canvas: HTMLCanvasElement,
-  onEdit: (patch: Partial<Recipe>) => void,
+  onEdit: (patch: Partial<Recipe>, previewFrame?: number) => void,
 ) {
   const renderer = new T.WebGLRenderer({
     canvas,
@@ -71,6 +75,8 @@ export function createWorld(
   const grid = new T.GridHelper(40, 40, "#7b8e9a", "#45525d");
   grid.position.y = -0.79;
   stage.add(grid);
+  const darkGrid = createDarkGrid();
+  stage.add(darkGrid.group);
   const screenMaterial = new T.MeshBasicMaterial({
     color: "#212b38",
     side: T.DoubleSide,
@@ -126,7 +132,9 @@ export function createWorld(
       props,
       stage,
       asset,
-      () => renderer.render(world, camera),
+      () => {
+        if (!capturing) renderer.render(world, camera);
+      },
       () => ({
         ...recipe,
         objects: editableSceneObjects(recipe, currentFrame),
@@ -140,7 +148,10 @@ export function createWorld(
         );
       },
       (time, state) => character.walk(recipe, time, state),
+      (pose) =>
+        onEdit(shotCameraPatch(recipe, currentFrame, pose), currentFrame),
     );
+    if (capturing) releaseCapture = editor.holdEdits();
     editor.refresh();
   });
   // renderFrame reports loading failures; avoid an unhandled rejection on teardown.
@@ -151,6 +162,7 @@ export function createWorld(
     disposed = false,
     // A capture owns the canvas: the stopped preview never draws over a frame.
     capturing = false;
+  let releaseCapture: (() => void) | undefined;
   function bindSurfaces() {
     screenMaterial.map = media.texture("screen/all") ?? null;
     screenMaterial.color.set(screenMaterial.map ? "#ffffff" : "#212b38");
@@ -208,7 +220,10 @@ export function createWorld(
     camera.updateProjectionMatrix();
     world.background = new T.Color(recipe.background);
     stage.visible = recipe.scene !== "neuro";
-    floor.visible = grid.visible = recipe.scene === "stage";
+    floor.visible = grid.visible =
+      recipe.scene === "stage" && recipe.stageLook !== "dark-grid";
+    darkGrid.group.visible =
+      recipe.scene === "stage" && recipe.stageLook === "dark-grid";
     screen.visible = recipe.scene === "stage" && recipe.screen !== false;
     sky.visible = recipe.scene === "neuro";
     const position =
@@ -268,8 +283,11 @@ export function createWorld(
     });
     const mods = evaluated.mods;
     if (!editor || editor.mode === "shot") {
+      editor?.cancelCameraGesture();
       camera.position.set(...cameraAt(recipe, frame));
       camera.lookAt(...cameraTargetAt(recipe, frame));
+      camera.fov = cameraFovAt(recipe, frame);
+      camera.updateProjectionMatrix();
     }
     // A path moves the character over the take; Build shows and edits its
     // start, and Walk drives the character itself.
@@ -285,6 +303,7 @@ export function createWorld(
     fill.intensity = 1 + modOf(mods, ["light:fill"], "light");
     props.children.forEach((mesh, i) => {
       const p = evaluated.objects[i];
+      mesh.visible = (p.presence ?? 1) > 0;
       const targets = ["primitives", `prop:${p.id}`];
       const glow = modOf(mods, targets, "glow");
       mesh.position.set(p.x, p.y, p.z);
@@ -309,7 +328,7 @@ export function createWorld(
     shader.uniforms.u_intensity.value =
       recipe.intensity + modOf(mods, ["neuro"], "light");
     poseCharacters(frame);
-    editor?.refresh();
+    editor?.refresh(cameraTargetAt(recipe, frame));
     renderer.render(world, camera);
     return canvas;
   }
@@ -320,7 +339,7 @@ export function createWorld(
       CHARACTER_MODELS.mannequin.clips[
         clip as keyof typeof CHARACTER_MODELS.mannequin.clips
       ] ?? "Idle_Loop";
-    const move = loopedMotionAt(recipe, frame, (clip) =>
+    const move = routedMotionAt(recipe, frame, (clip) =>
       playground ? playground.duration(clipName(clip)) : 0,
     );
     playground?.pose(move.time, clipName(move.clip), move.hold);
@@ -356,7 +375,7 @@ export function createWorld(
       world,
       camera,
       { near: recipe.depthNear, far: recipe.depthFar },
-      [grid, sky],
+      [grid, darkGrid.lines, darkGrid.shadow, sky],
     );
     return canvas;
   }
@@ -364,6 +383,7 @@ export function createWorld(
     await media.load(target, blob);
   }
   return {
+    kind: "webgl" as "webgl" | "geometry",
     get frame() {
       return currentFrame;
     },
@@ -377,10 +397,13 @@ export function createWorld(
     prepareCharacter: (r: Recipe) => character.prepare(r),
     beginCapture: () => {
       capturing = true;
+      releaseCapture ??= editor?.holdEdits();
       character.freeze();
     },
     endCapture: () => {
       capturing = false;
+      releaseCapture?.();
+      releaseCapture = undefined;
       character.thaw();
     },
     appearance: () =>

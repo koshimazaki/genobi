@@ -8,16 +8,22 @@ import { Parameters } from "./Controls";
 import { MotionView } from "./MotionView";
 import { MoveSeconds, TakeLength } from "./TakeLength";
 import { LoopControl } from "./LoopControl";
+import { SceneCameraControls } from "./SceneCameraControls";
 import { BUILDER_CHARACTER_MODELS as CHARACTER_MODELS } from "./character-catalog";
 export function CameraControls({
   s,
   e,
+  compact = false,
 }: {
   s: BuilderSession;
   e: WorldEditor;
+  compact?: boolean;
 }) {
   const active =
-    CAMERA_MOVES.find((m) => m.key === s.recipe.cameraShot)?.label ?? "Custom";
+    s.recipe.cameraMotion?.enabled && s.recipe.cameraMotion.base !== "legacy"
+      ? "Camera path"
+      : (CAMERA_MOVES.find((m) => m.key === s.recipe.cameraShot)?.label ??
+        "Custom");
   const subject = e.prop
     ? ([e.prop.x, e.prop.y, e.prop.z] as [number, number, number])
     : s.recipe.avatar
@@ -45,6 +51,9 @@ export function CameraControls({
               dolly: 0,
               elevationEnd: null,
               cameraShot: "custom",
+              ...(s.recipe.cameraMotion
+                ? { cameraMotion: { ...s.recipe.cameraMotion, enabled: false } }
+                : {}),
             });
           }}
         >
@@ -83,7 +92,7 @@ export function CameraControls({
           <small>Active shot</small>
           <strong>{active}</strong>
         </div>
-        <TakeLength s={s} label="Active shot" />
+        {!compact && <TakeLength s={s} label="Active shot" />}
       </div>
       {(
         [
@@ -122,7 +131,15 @@ export function CameraControls({
       <Fold title="Lens & movement">
         <Parameters
           recipe={s.recipe}
-          change={(patch) => s.change({ ...patch, cameraShot: "custom" })}
+          change={(patch) =>
+            s.change({
+              ...patch,
+              cameraShot: "custom",
+              ...(s.recipe.cameraMotion
+                ? { cameraMotion: { ...s.recipe.cameraMotion, enabled: false } }
+                : {}),
+            })
+          }
           names={[
             "fov",
             "azimuth",
@@ -150,9 +167,10 @@ export function CameraControls({
           </ThemedSelect>
         </label>
       </Fold>
-      <button onClick={e.useView} disabled={e.mode !== "edit"}>
-        Use viewport as shot
-      </button>
+      <SceneCameraControls s={s} e={e} expanded={compact ? false : undefined} />
+      {e.mode === "edit" && (
+        <button onClick={e.useView}>Use viewport as shot</button>
+      )}
     </>
   );
 }

@@ -1,0 +1,241 @@
+.wb-loop-panel {
+  min-width: 0;
+  padding: 13px;
+  display: grid;
+  gap: 10px;
+  background: var(--surface);
+  font: 11px var(--mono);
+}
+.wb-loop-panel > header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+}
+.wb-loop-panel h2 {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0;
+  font: 13px var(--mono);
+}
+.wb-loop-panel > header > span {
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 10px;
+}
+.wb-loop-panel button {
+  min-height: 36px;
+  font: 11px var(--mono);
+}
+.wb-loop-panel .wb-loop-add {
+  min-width: 36px;
+  padding: 6px;
+}
+.wb-loop-slots {
+  display: grid;
+  gap: 6px;
+}
+.wb-app .wb-loop-slot {
+  display: grid;
+  padding: 0;
+  min-width: 0;
+  overflow: hidden;
+  text-align: left;
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--sunken);
+}
+.wb-loop-slot[data-filled="true"] {
+  border-style: solid;
+}
+.wb-app .wb-loop-slot[aria-pressed="true"] {
+  border-color: var(--accent-strong);
+  box-shadow: inset 0 0 0 1px var(--accent-strong);
+}
+.wb-loop-slot > svg,
+.wb-loop-empty {
+  display: flex;
+  width: 100%;
+  height: 54px;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+}
+.wb-loop-slot-label {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  min-width: 0;
+  padding: 7px;
+  border-top: 1px solid var(--border);
+}
+.wb-loop-slot-label > span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--muted);
+  font-size: 9px;
+}
+.wb-loop-slot-label b {
+  color: var(--accent-strong);
+  font-weight: 500;
+}
+.wb-loop-slot-label svg {
+  flex-shrink: 0;
+  margin-left: auto;
+  color: var(--accent-strong);
+}
+.wb-loop-save-view,
+.wb-loop-actions {
+  display: flex;
+  gap: 6px;
+}
+.wb-loop-save-view button,
+.wb-loop-actions button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 7px;
+  min-width: 0;
+}
+.wb-loop-save-view button:first-child,
+.wb-loop-actions button {
+  flex: 1;
+}
+.wb-loop-save-view small {
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 9px;
+}
+.wb-loop-panel .wb-loop-clear {
+  width: 36px;
+  flex-shrink: 0;
+  padding: 0;
+}
+.wb-loop-panel .wb-loop-play {
+  border-color: var(--accent-strong);
+  background: var(--accent-strong);
+  color: var(--on-accent, #151a0c);
+}
+.wb-loop-guidance,
+.wb-loop-notice,
+.wb-loop-error,
+.wb-loop-track {
+  margin: 0;
+  font-size: 10px;
+  line-height: 1.55;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+.wb-loop-error {
+  color: var(--error, #e8958a);
+}
+.wb-loop-notice {
+  color: var(--text);
+}
+.wb-loop-duration {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 3px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}
+.wb-loop-duration > label,
+.wb-loop-field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-width: 0;
+  color: var(--muted);
+}
+.wb-loop-seconds {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.wb-loop-seconds input {
+  width: 64px;
+  min-width: 0;
+  text-align: right;
+}
+.wb-loop-duration > input[type="range"] {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  height: 26px;
+  accent-color: var(--accent-strong);
+}
+.wb-loop-duration > output {
+  color: var(--muted);
+  font-size: 9px;
+}
+.wb-loop-field .themed-select,
+.wb-loop-field > select {
+  min-width: 0;
+  width: 160px;
+  max-width: 60%;
+}
+.wb-loop-progress {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 10px;
+  color: var(--muted);
+}
+.wb-loop-options .wb-fold {
+  margin: 0;
+  border-top: 1px solid var(--border);
+}
+.wb-loop-options .wb-fold > summary {
+  min-height: 36px;
+  padding: 8px 0;
+}
+.wb-loop-options .wb-fold > div {
+  display: grid;
+  gap: 10px;
+  padding: 4px 0 12px;
+}
+.wb-loop-options .wb-state-audio {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.wb-loop-options .wb-state-audio-routes {
+  grid-template-columns: minmax(0, 1fr);
+}
+.wb-loop-options .wb-state-audio-strength {
+  width: 100%;
+}
+.wb-loop-options .wb-state-audio-strength input {
+  min-width: 0;
+  flex: 1;
+}
+.wb-loop-options .wb-check {
+  min-height: 32px;
+}
+.wb-loop-track {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+@media (max-width: 900px) {
+  .wb-loop-panel button,
+  .wb-loop-panel input,
+  .wb-loop-panel select,
+  .wb-loop-panel .themed-select,
+  .wb-loop-options .wb-fold > summary,
+  .wb-loop-options .wb-check {
+    min-height: 44px;
+  }
+  .wb-loop-panel .wb-loop-clear,
+  .wb-loop-panel .wb-loop-add {
+    min-width: 44px;
+  }
+  .wb-loop-options .wb-check input {
+    min-height: 0;
+  }
+}

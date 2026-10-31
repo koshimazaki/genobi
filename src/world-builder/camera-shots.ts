@@ -23,6 +23,9 @@ export function shotPatch(
   const radius = Math.hypot(...offset),
     target = move.kind === "static" ? [0, 0, 0] : move.lookOffset;
   const patch: Partial<Recipe> = {
+    ...(r.cameraMotion
+      ? { cameraMotion: { ...r.cameraMotion, enabled: false } }
+      : {}),
     cameraShot: key,
     azimuth: (Math.atan2(offset[0], offset[2]) * 180) / Math.PI,
     elevation: (Math.asin(offset[1] / radius) * 180) / Math.PI,

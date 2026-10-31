@@ -24,6 +24,11 @@ import { galleryPage } from "../shared/gallery/page";
 import { runnerRoute } from "./runner-routes";
 import { RunnerStore, digest } from "./runner-store";
 import { runtimeCapabilities } from "../shared/runtime-capabilities";
+import {
+  effectCatalogueResponse,
+  effectVariantResponse,
+} from "../shared/effects/service";
+import { CommandError } from "../shared/director/layer-commands";
 
 const json = (data: unknown, status = 200) =>
   Response.json(data, {
@@ -129,6 +134,25 @@ export default {
       }
       const get = request.method === "GET";
       const post = request.method === "POST";
+      if (
+        (get && url.pathname === "/api/effects") ||
+        (post && url.pathname === "/api/effects/variants")
+      ) {
+        await rateLimit(env, "history", session);
+        let result;
+        try {
+          result = get
+            ? effectCatalogueResponse(url.searchParams.get("presetId"))
+            : effectVariantResponse(await readJson(request, 16_384));
+        } catch (error) {
+          if (error instanceof CommandError)
+            throw new AppError(400, error.message, "invalid_effect");
+          throw error;
+        }
+        const response = json(result);
+        if (cookie) response.headers.append("Set-Cookie", cookie);
+        return response;
+      }
       const keyHeader = request.headers.get("x-byo-key");
       const key = keyHeader ? requireKey(keyHeader) : undefined;
       const settings = await deploymentSettingsRoute(

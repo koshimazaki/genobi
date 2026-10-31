@@ -1,0 +1,74 @@
+[
+  {
+    "viewport": "desktop",
+    "result": "PASS",
+    "undefinedPatchesRefused": true,
+    "parity": {
+      "poster": true,
+      "water": true
+    },
+    "zero": true,
+    "stableCenter": true,
+    "changed": true,
+    "invalidPatchRefused": true,
+    "diagnostics": {
+      "mode": "water",
+      "intensity": 1,
+      "grid": false,
+      "frame": 48,
+      "ready": true,
+      "playing": false,
+      "fps": 24,
+      "frames": 96,
+      "source": {
+        "asset": "bloom-h3-b",
+        "url": "/media/director-templates/bloom-teaser/bloom-h3-b.mp4",
+        "sha256": "5276e31e954a068d60a9b8a66fe3a5d4b0568cefdc1009a880a93243816b1114",
+        "primaryOffsetFrames": 16,
+        "bankFrames": 128,
+        "bankWidth": 480,
+        "bankHeight": 270
+      },
+      "atlasDecodes": 1,
+      "bankFrames": 128,
+      "cachedPixelFrames": 8,
+      "maxDelayFrames": 4
+    }
+  },
+  {
+    "viewport": "phone",
+    "result": "PASS",
+    "undefinedPatchesRefused": true,
+    "parity": {
+      "poster": true,
+      "water": true
+    },
+    "zero": true,
+    "stableCenter": true,
+    "changed": true,
+    "invalidPatchRefused": true,
+    "diagnostics": {
+      "mode": "water",
+      "intensity": 1,
+      "grid": false,
+      "frame": 48,
+      "ready": true,
+      "playing": false,
+      "fps": 24,
+      "frames": 96,
+      "source": {
+        "asset": "bloom-h3-b",
+        "url": "/media/director-templates/bloom-teaser/bloom-h3-b.mp4",
+        "sha256": "5276e31e954a068d60a9b8a66fe3a5d4b0568cefdc1009a880a93243816b1114",
+        "primaryOffsetFrames": 16,
+        "bankFrames": 128,
+        "bankWidth": 480,
+        "bankHeight": 270
+      },
+      "atlasDecodes": 1,
+      "bankFrames": 128,
+      "cachedPixelFrames": 8,
+      "maxDelayFrames": 4
+    }
+  }
+]

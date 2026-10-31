@@ -3,6 +3,9 @@ import { MOD_SOURCES } from "./mod-routes";
 import { validTransform } from "./scene-contract";
 import { motionInstances } from "./scene-instances";
 import { roomPointInside } from "./scene-room";
+import { validateMorphControl } from "./scene-morph-validation";
+import { validateStateAudio } from "./scene-state-audio";
+import { validateSceneRotation } from "./scene-rotation";
 import {
   MAX_SCENE_INSTANCES,
   MAX_SCENE_KEYS,
@@ -84,6 +87,10 @@ export function validateSceneMotion(
       "mappings",
       "intensity",
       "room",
+      "morphControl",
+      "stateAudio",
+      "rotation",
+      "transitionStyle",
     ]) ||
     input.version !== 1 ||
     !vector(input.pivot, -40, 40) ||
@@ -91,6 +98,12 @@ export function validateSceneMotion(
   )
     fail("Invalid scene motion version, pivot or intensity.");
   const motion = input as unknown as SceneMotion;
+  if (motion.rotation !== undefined) validateSceneRotation(motion.rotation);
+  if (
+    motion.transitionStyle !== undefined &&
+    !["direct", "scatter", "twist", "assemble"].includes(motion.transitionStyle)
+  )
+    fail("Invalid scene transition style.");
   const authoredIds = recipe.objects.map((p) => p.id);
   const instanceIds: string[] = [];
   if (motion.instances !== undefined) {
@@ -191,6 +204,8 @@ export function validateSceneMotion(
           "y",
           "z",
           "scale",
+          "presence",
+          "color",
           "rotation",
           "rotationX",
           "rotationZ",
@@ -202,10 +217,13 @@ export function validateSceneMotion(
           finite(v, -40, 40),
         ) ||
         !finite(transform.scale, 0.1, 8) ||
+        (transform.color !== undefined &&
+          (typeof transform.color !== "string" ||
+            !/^#[0-9a-f]{6}$/i.test(transform.color))) ||
         !validTransform(transform)
       )
         fail(
-          "Invalid scene state transform; topology and materials cannot change between states.",
+          "Invalid scene state transform, presence or color; topology cannot change between states.",
         );
     }
     if (
@@ -237,6 +255,18 @@ export function validateSceneMotion(
         fail("State source and listener must remain inside the acoustic room.");
     }
   }
+  for (const objectId of objectIds ?? []) {
+    const colors = motion.stateKeys.map((key) => key.objects[objectId].color);
+    if (
+      colors.some((color) => color !== undefined) &&
+      colors.some((color) => color === undefined)
+    )
+      fail("Animated object color must be supplied in every state.");
+  }
+  if (motion.morphControl !== undefined)
+    validateMorphControl(motion.morphControl, keyIds);
+  if (motion.stateAudio !== undefined)
+    validateStateAudio(motion.stateAudio, keyIds);
   if (!Array.isArray(motion.mappings) || motion.mappings.length > 16)
     fail("Use at most 16 scene audio mappings.");
   const routeIds = new Set<string>();

@@ -1,4 +1,5 @@
 import { arenaTools } from "./arena-tools";
+import { effectTools } from "./effects-tools";
 import { worldTools } from "./world-tools";
 import { memoryTools } from "./memory-tools";
 import { licenceTools } from "./licence-tools";
@@ -185,6 +186,7 @@ export const tools: ToolDefinition[] = [
   ...directorTools,
   ...memoryTools,
   ...templateTools,
+  ...effectTools,
   ...takeTools,
   ...provenanceTools,
   ...audioTools,

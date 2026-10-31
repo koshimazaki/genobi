@@ -11,6 +11,9 @@ import type { Playground } from "./playground";
 import { readAvatarPose } from "./avatar-pose";
 import { createEditLock } from "./edit-lock";
 import type { Recipe } from "./recipe";
+import type { SceneVector } from "./scene-state";
+import type { SceneCameraPose } from "./scene-camera-blend";
+import { createShotCameraGesture } from "./shot-camera-gesture";
 export type Tool = "translate" | "rotate" | "scale";
 export type Mode = "shot" | "edit" | "walk";
 export function createInteraction(
@@ -24,15 +27,16 @@ export function createInteraction(
   getRecipe: () => Recipe,
   patch: (p: Partial<Recipe>) => void,
   onWalk: (time: number, state: WalkState) => void = () => {},
+  onCamera: (pose: SceneCameraPose) => void = () => {},
 ) {
   const orbit = new OrbitControls(camera, canvas),
     gizmo = new TransformControls(camera, canvas);
   const helper = gizmo.getHelper();
   world.add(helper);
-  orbit.enabled = false;
+  orbit.enabled = true;
   gizmo.enabled = false;
-  orbit.minDistance = 2;
-  orbit.maxDistance = 60;
+  orbit.minDistance = 0.1;
+  orbit.maxDistance = Infinity;
   const ray = new T.Raycaster(),
     pointer = new T.Vector2(),
     down = new T.Vector2(),
@@ -44,14 +48,43 @@ export function createInteraction(
     last = 0,
     time = 0,
     dragged = false;
+  const cameraPose = (): SceneCameraPose => ({
+    position: camera.position.toArray() as SceneVector,
+    target: orbit.target.toArray() as SceneVector,
+    fov: camera.fov,
+  });
+  const cameraGesture = createShotCameraGesture({
+    isShot: () => mode === "shot",
+    allowed: () => !editsLocked,
+    read: cameraPose,
+    restore: (pose) => {
+      camera.position.set(...pose.position);
+      orbit.target.set(...pose.target);
+      camera.fov = pose.fov;
+      camera.lookAt(orbit.target);
+      camera.updateProjectionMatrix();
+    },
+    commit: onCamera,
+    render,
+  });
+  const cancelCameraGesture = () => {
+    if (!cameraGesture.active) return;
+    // reset() also ends OrbitControls' internal pointer state. A released hold
+    // must not resume the cancelled drag before the old pointer-up arrives.
+    orbit.saveState();
+    orbit.reset();
+    cameraGesture.cancel();
+  };
   const editLock = createEditLock((locked) => {
+    editsLocked = locked;
+    if (locked) cancelCameraGesture();
     if (locked && gizmo.dragging) {
       gizmo.reset();
       gizmo.dragging = false;
       gizmo.axis = null;
     }
-    editsLocked = locked;
     gizmo.enabled = mode === "edit" && !locked;
+    orbit.enabled = mode === "walk" || (!locked && !gizmo.dragging);
   });
   let input: WorldControl | undefined,
     inputUntil = 0;
@@ -235,10 +268,12 @@ export function createInteraction(
       object = object.parent ?? undefined;
     api.select(object?.userData.editId ?? "");
   };
-  orbit.addEventListener("change", render);
+  orbit.addEventListener("start", cameraGesture.start);
+  orbit.addEventListener("change", cameraGesture.change);
+  orbit.addEventListener("end", cameraGesture.end);
   gizmo.addEventListener("change", render);
   gizmo.addEventListener("dragging-changed", (e) => {
-    orbit.enabled = !e.value && mode === "edit";
+    orbit.enabled = !e.value && !editsLocked;
     if (e.value) dragged = true;
   });
   gizmo.addEventListener("mouseUp", commit);
@@ -302,8 +337,9 @@ export function createInteraction(
     },
     /** A live transform is not a committed recipe edit yet. */
     get dragging() {
-      return gizmo.dragging;
+      return gizmo.dragging || cameraGesture.active;
     },
+    cancelCameraGesture,
     onSelect: (_id: string) => {},
     get selection() {
       return selected;
@@ -319,18 +355,22 @@ export function createInteraction(
       gizmo.showX = gizmo.showY = gizmo.showZ = true;
       render();
     },
-    refresh() {
+    refresh(target?: readonly [number, number, number]) {
       attach();
       if (mode === "shot")
         orbit.target.set(
-          getRecipe().targetX,
-          getRecipe().targetY,
-          getRecipe().targetZ,
+          ...(target ??
+            ([
+              getRecipe().targetX,
+              getRecipe().targetY,
+              getRecipe().targetZ,
+            ] as const)),
         );
     },
     /** `report: false` leaves saving a walk's position to the caller. */
     setMode(next: Mode, report = true) {
       if (next === mode) return;
+      cancelCameraGesture();
       const wasWalk = mode === "walk";
       mode = next;
       api.onMode(next);
@@ -339,8 +379,10 @@ export function createInteraction(
       cancelAnimationFrame(frame);
       last = 0;
       if (wasWalk && report) patch({ avatarPose: avatarPose() });
-      orbit.enabled = next !== "shot";
-      orbit.enablePan = next === "edit";
+      orbit.enabled = next === "walk" || !editsLocked;
+      orbit.enablePan = next !== "walk";
+      orbit.minDistance = next === "shot" ? 0.1 : 2;
+      orbit.maxDistance = next === "shot" ? Infinity : 60;
       gizmo.enabled = next === "edit" && !editsLocked;
       attach();
       if (next === "walk") {
@@ -375,10 +417,13 @@ export function createInteraction(
       api.setMode("shot", false);
       return frozen;
     },
+    /** Exact current view for a paired scene/camera key; no orbit clamps. */
+    cameraPose,
     viewPatch(): Partial<Recipe> {
       const v = camera.position.clone().sub(orbit.target),
         r = v.length();
       return {
+        fov: T.MathUtils.clamp(camera.fov, 15, 100),
         targetX: T.MathUtils.clamp(orbit.target.x, -40, 40),
         targetY: T.MathUtils.clamp(orbit.target.y, -5, 15),
         targetZ: T.MathUtils.clamp(orbit.target.z, -40, 40),

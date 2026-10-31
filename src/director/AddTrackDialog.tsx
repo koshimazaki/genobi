@@ -6,6 +6,7 @@ import type { Project } from "../../shared/director/types";
 import SelectMenu from "../components/SelectMenu";
 import Icon from "../components/Icon";
 import { useModalDialog } from "../components/useModalDialog";
+import { EffectsPicker } from "../effects/EffectsPicker";
 
 export default function AddTrackDialog({
   project,
@@ -27,6 +28,7 @@ export default function AddTrackDialog({
     [name, setName] = useState("");
   const [files, setFiles] = useState<File[]>([]),
     [error, setError] = useState("");
+  const [view, setView] = useState<"media" | "effects">("media");
   useModalDialog(dialog);
   const options = [
     { value: "auto", label: "Media · detect from file" },
@@ -73,7 +75,7 @@ export default function AddTrackDialog({
   return (
     <dialog
       ref={dialog}
-      className="dir-add-dialog"
+      className={`dir-add-dialog${view === "effects" ? " is-effects" : ""}`}
       aria-labelledby="add-track-heading"
       onCancel={(e) => {
         e.preventDefault();
@@ -92,83 +94,115 @@ export default function AddTrackDialog({
         </button>
       </header>
       <div className="dir-add-dialog-body">
-        <SelectMenu
-          id="add-track-type"
-          label="Type"
-          value={type}
-          onChange={setType}
-          options={options}
-          disabled={busy}
-          compact
-        />
-        <label className="dir-track-name">
-          Track name
-          <input
-            aria-label="Track name"
-            value={name}
-            maxLength={120}
-            placeholder="Use the file or graphics name"
+        <div
+          className="dir-add-choices"
+          role="group"
+          aria-label="Add to the edit"
+        >
+          <button
+            type="button"
+            aria-pressed={view === "media"}
             disabled={busy}
-            onChange={(e) => setName(e.target.value)}
-          />
-        </label>
-        {!type.startsWith("module:") && (
+            onClick={() => setView("media")}
+          >
+            Media & graphics
+          </button>
+          <button
+            type="button"
+            aria-pressed={view === "effects"}
+            disabled={busy}
+            onClick={() => setView("effects")}
+          >
+            Animations & Effects
+          </button>
+        </div>
+        {view === "effects" ? (
+          <EffectsPicker />
+        ) : (
           <>
-            <input
-              ref={picker}
-              hidden
-              type="file"
-              multiple
-              accept="image/png,image/jpeg,image/webp,video/*,audio/*"
-              onChange={(e) => chooseFiles(Array.from(e.target.files ?? []))}
-            />
-            <button
-              className="dir-asset-drop"
+            <SelectMenu
+              id="add-track-type"
+              label="Type"
+              value={type}
+              onChange={setType}
+              options={options}
               disabled={busy}
-              onClick={() => picker.current?.click()}
-              onDragOver={(e) => {
-                e.preventDefault();
-                e.dataTransfer.dropEffect = "copy";
-              }}
-              onDrop={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                if (e.dataTransfer.files.length) {
-                  chooseFiles(Array.from(e.dataTransfer.files));
-                  return;
-                }
-                void studioDropFile(
-                  e.dataTransfer,
-                  studioStore.getState().director.bundle,
-                  shell?.library,
-                )
-                  .then((file) => chooseFiles(file ? [file] : []))
-                  .catch((error) => setError(String(error)));
-              }}
-            >
-              <Icon name="upload" size={24} />
-              <span>
-                {files.length
-                  ? files.map((f) => f.name).join(", ")
-                  : "Drop image, video or audio"}
-              </span>
-              <small>or choose files</small>
-            </button>
+              compact
+            />
+            <label className="dir-track-name">
+              Track name
+              <input
+                aria-label="Track name"
+                value={name}
+                maxLength={120}
+                placeholder="Use the file or graphics name"
+                disabled={busy}
+                onChange={(e) => setName(e.target.value)}
+              />
+            </label>
+            {!type.startsWith("module:") && (
+              <>
+                <input
+                  ref={picker}
+                  hidden
+                  type="file"
+                  multiple
+                  accept="image/png,image/jpeg,image/webp,video/*,audio/*"
+                  onChange={(e) =>
+                    chooseFiles(Array.from(e.target.files ?? []))
+                  }
+                />
+                <button
+                  className="dir-asset-drop"
+                  disabled={busy}
+                  onClick={() => picker.current?.click()}
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = "copy";
+                  }}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (e.dataTransfer.files.length) {
+                      chooseFiles(Array.from(e.dataTransfer.files));
+                      return;
+                    }
+                    void studioDropFile(
+                      e.dataTransfer,
+                      studioStore.getState().director.bundle,
+                      shell?.library,
+                    )
+                      .then((file) => chooseFiles(file ? [file] : []))
+                      .catch((error) => setError(String(error)));
+                  }}
+                >
+                  <Icon name="upload" size={24} />
+                  <span>
+                    {files.length
+                      ? files.map((f) => f.name).join(", ")
+                      : "Drop image, video or audio"}
+                  </span>
+                  <small>or choose files</small>
+                </button>
+              </>
+            )}
           </>
         )}
         {error && <p role="alert">{error}</p>}
       </div>
       <footer>
         <button disabled={busy} onClick={close}>
-          Cancel
+          {view === "effects" ? "Done" : "Cancel"}
         </button>
-        <button
-          className="dir-primary"
-          disabled={busy || (!type.startsWith("module:") && !files.length)}
-          onClick={() => void add()}
-        >
-          {busy ? "Adding…" : "Add track"}
-        </button>
+        {view === "media" && (
+          <button
+            className="dir-primary"
+            disabled={busy || (!type.startsWith("module:") && !files.length)}
+            onClick={() => void add()}
+          >
+            {busy ? "Adding…" : "Add track"}
+          </button>
+        )}
       </footer>
     </dialog>
   );

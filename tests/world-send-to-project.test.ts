@@ -299,7 +299,9 @@ describe("recipe op and presets", () => {
     for (const { id, name } of MOTION_PRESETS) {
       const preset = findPreset(id, []);
       expect(preset.name).toBe(name);
-      expect(preset.recipe.motion?.stateKeys).toHaveLength(3);
+      expect(preset.recipe.motion?.stateKeys).toHaveLength(
+        id === "fruit-audio-branches" ? 5 : 3,
+      );
       expect(presetSummary(preset)).toMatchObject({ file: id });
     }
     expect(findPreset("fall-cathedral", []).recipe.cameraShot).toBe("highWide");

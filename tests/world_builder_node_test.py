@@ -70,6 +70,15 @@ class WorldBuilderNodes(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, '2 GiB'):
             self.node.recipe_data(json.dumps({**recipe, 'width': 1280, 'height': 704, 'frames': 201}))
 
+    def test_thirty_second_grid_keeps_decoded_memory_guard(self):
+        recipe = {'version': 1, 'fps': 24, 'width': 512, 'height': 320, 'frames': 721}
+        self.assertEqual(self.node.recipe_data(json.dumps(recipe)), recipe)
+        for frames in (720, 722, 729):
+            with self.assertRaisesRegex(ValueError, 'frame count'):
+                self.node.recipe_data(json.dumps({**recipe, 'frames': frames}))
+        with self.assertRaisesRegex(ValueError, '2 GiB'):
+            self.node.recipe_data(json.dumps({**recipe, 'width': 1024, 'height': 576}))
+
     def test_inputs_downscale_over_budget_preview_without_mutating_source(self):
         images = torch.ones((1, 256, 256, 3))
         # Simulate a large decoded batch's value count without allocating gigabytes.
@@ -80,7 +89,7 @@ class WorldBuilderNodes(unittest.TestCase):
             self.assertEqual(image.size, (128, 128))
         self.assertEqual(tuple(images.shape), (1, 256, 256, 3))
         self.assertEqual(float(images.mean()), 1)
-        for invalid in (torch.empty((0,256,256,3)), torch.empty((242,2,2,3)), torch.empty((1,0,256,3))):
+        for invalid in (torch.empty((0,256,256,3)), torch.empty((722,2,2,3)), torch.empty((1,0,256,3))):
             with self.assertRaises(ValueError):
                 self.node.DirectorSceneInputs().prepare(24, invalid)
 

@@ -25,6 +25,7 @@ import {
 import "./mod-matrix.css";
 
 const SOURCE_LABELS: Record<ModSource, string> = {
+  sub: "Sub",
   low: "Low",
   mid: "Mid",
   high: "High",
@@ -56,7 +57,9 @@ export function ModMatrixEditor({
   const levels = Object.fromEntries(
     MOD_SOURCES.map((source) => {
       const data =
-        source === "level" ? recipe.envelope : recipe.bandEnvelopes[source];
+        source === "level"
+          ? recipe.envelope
+          : (recipe.bandEnvelopes[source] ?? []);
       return [source, data[frame] ?? 0];
     }),
   ) as Record<ModSource, number>;

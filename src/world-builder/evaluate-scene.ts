@@ -4,6 +4,15 @@ import { orbitPosition } from "./prop-orbit";
 import { loopedSpin, loopPeriod } from "./loop";
 import { motionInstances, sceneObjects } from "./scene-instances";
 import { clampRoomPoint, roomSurfaces, roomSurfaceId } from "./scene-room";
+import { evaluateMorphControl } from "./scene-morph-evaluation";
+import type { EvaluatedMorphControl } from "./scene-morph-control";
+import { transitionTransform } from "./scene-transition";
+import { rotationAt, rotateSceneObject } from "./scene-rotation";
+import {
+  evaluateStateAudio,
+  timelineStatePair,
+  type StateAudioWeights,
+} from "./scene-state-audio";
 import {
   SCENE_CONTROL_DEFAULTS,
   SCENE_CONTROL_RANGES,
@@ -35,6 +44,8 @@ export interface EvaluatedScene {
   /** Legacy matrix for non-prop lights, avatar and playground, applied by the runtime. */
   mods: Mods;
   state: { from: string; to: string; progress: number } | null;
+  morphControl?: EvaluatedMorphControl;
+  stateAudio?: StateAudioWeights;
 }
 export interface SceneEvaluationOptions {
   audio?: boolean;
@@ -55,7 +66,7 @@ function mappedOffsets(recipe: Recipe, frame: number, enabled: boolean) {
     const data =
       mapping.source === "level"
         ? recipe.envelope
-        : recipe.bandEnvelopes[mapping.source];
+        : (recipe.bandEnvelopes[mapping.source] ?? []);
     result[mapping.property] =
       (result[mapping.property] ?? 0) +
       sample(data, frame) * mapping.amount * recipe.motion.intensity;
@@ -67,20 +78,6 @@ function mappedOffsets(recipe: Recipe, frame: number, enabled: boolean) {
   return result;
 }
 
-/** Keys contain complete transforms for every retained ID; seeking has no prior state. */
-function keyPair(keys: SceneStateKey[], frame: number) {
-  let index = 0;
-  while (index + 1 < keys.length && keys[index + 1].frame <= frame) index++;
-  const from = keys[index],
-    to = keys[Math.min(index + 1, keys.length - 1)];
-  const raw =
-    from === to
-      ? 0
-      : clamp((frame - from.frame) / (to.frame - from.frame), 0, 1);
-  const progress =
-    from.easing === "easeInOut" ? raw * raw * (3 - 2 * raw) : raw;
-  return { from, to, progress };
-}
 function evaluatedControls(
   from: SceneStateKey,
   to: SceneStateKey,
@@ -240,28 +237,52 @@ export function evaluateScene(
     : Math.max(0, requestedFrame);
   const mods: Mods = audio ? modsAt(recipe, frame) : new Map();
   const offsets = mappedOffsets(recipe, frame, audio);
-  const authoredFrame = clamp(
-    frame + (offsets.morph ?? 0) * (recipe.frames - 1),
-    0,
-    recipe.frames - 1,
-  );
-  const pair = motion ? keyPair(motion.stateKeys, authoredFrame) : undefined;
+  const morphControl =
+    editing || motion?.stateAudio?.enabled
+      ? undefined
+      : evaluateMorphControl(recipe, frame, audio);
+  const authoredFrame = morphControl
+    ? frame
+    : clamp(
+        frame + (offsets.morph ?? 0) * (recipe.frames - 1),
+        0,
+        recipe.frames - 1,
+      );
+  const timelinePair = motion
+    ? timelineStatePair(motion.stateKeys, authoredFrame)
+    : undefined;
+  const stateAudio =
+    !editing && timelinePair
+      ? evaluateStateAudio(recipe, frame, timelinePair, audio)
+      : undefined;
+  const pair = stateAudio ?? morphControl ?? timelinePair;
   const controls = pair
     ? evaluatedControls(pair.from, pair.to, pair.progress, offsets)
     : { ...SCENE_CONTROL_DEFAULTS };
   const instances = motion?.instances
     ? new Map(motionInstances(motion.instances).map((p) => [p.id, p]))
     : new Map<string, Prop>();
+  const rotation = editing
+    ? undefined
+    : rotationAt(motion?.rotation, frame, recipe.frames, recipe.loop);
   const objects = sceneObjects(recipe).map((base) => {
     const from = pair?.from.objects[base.id],
       to = pair?.to.objects[base.id];
     let p =
       from && to
-        ? { ...base, ...mixSceneTransform(from, to, pair!.progress) }
+        ? {
+            ...base,
+            ...(motion && !editing
+              ? transitionTransform(from, to, pair!.progress, base.id, motion)
+              : mixSceneTransform(from, to, pair!.progress)),
+          }
         : { ...base };
     if (motion && !editing && instances.has(p.id))
       p = applyInstanceControls(p, instances.get(p.id)!, motion, controls);
-    return applyPropMotion(p, recipe, frame, mods, editing);
+    p = applyPropMotion(p, recipe, frame, mods, editing);
+    return rotation && motion
+      ? rotateSceneObject(p, motion.pivot, rotation)
+      : p;
   });
   const room =
     motion && pair
@@ -280,6 +301,8 @@ export function evaluateScene(
     room,
     controls,
     mods,
+    ...(morphControl ? { morphControl: morphControl.metadata } : {}),
+    ...(stateAudio ? { stateAudio: stateAudio.metadata } : {}),
     state: pair
       ? { from: pair.from.id, to: pair.to.id, progress: pair.progress }
       : null,

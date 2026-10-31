@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { BuilderSession } from "./useBuilderSession";
 import type { WorldEditor } from "./useWorldEditor";
 import type { BuilderAssets } from "./useBuilderAssets";
@@ -134,7 +134,7 @@ export function useSceneLibrary(
   const { onTake } = s;
   useEffect(() => onTake((take) => void keep.current(take)), [onTake]);
 
-  const presets = [...builtInPresets(), ...saved];
+  const presets = useMemo(() => [...builtInPresets(), ...saved], [saved]);
 
   // The agent's half: attached to the adapter the session already exposes as
   // `window.directorScene`, and taken away again when the view unmounts.
@@ -208,6 +208,12 @@ export function useSceneLibrary(
         await applyPreset(s, e, preset.recipe);
         noteWorldPreset(preset.name);
         return `Loaded ${preset.name}. The sound stays; reattach any screen or surface media.`;
+      }),
+    loadComposition: (recipe: Recipe) =>
+      act("composition", async () => {
+        await applyPreset(s, e, recipe);
+        noteWorldPreset(undefined);
+        return "Loaded your morph. The soundtrack stays attached. Use Save scene to keep it in the catalogue.";
       }),
     savePreset: (name: string) =>
       act("save", async () => {

@@ -1,4 +1,5 @@
 import type { CharacterPose } from "../../shared/scene/characters";
+import { MOVE_SECONDS } from "./take-duration";
 
 /** One named clip held for `seconds` of the take. */
 export interface MotionStep {
@@ -12,8 +13,8 @@ export interface MotionStep {
 export type AvatarMotion = CharacterPose | MotionStep[];
 
 export const MAX_MOTION_STEPS = 8;
-/** The longest take is 241 frames at 24 fps. */
-export const MAX_STEP_SECONDS = 241 / 24;
+/** A single move can fill the longest local take. */
+export const MAX_STEP_SECONDS = MOVE_SECONDS.max;
 export const MIN_STEP_SECONDS = 1 / 24;
 
 /**

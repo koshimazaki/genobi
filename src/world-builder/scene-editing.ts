@@ -44,7 +44,11 @@ export function sceneObjectEdits(
     const original = before.get(object.id);
     if (!original) continue;
     const value = sceneTransformOf(object);
-    if (JSON.stringify(value) !== JSON.stringify(sceneTransformOf(original))) {
+    if (key.objects[object.id]?.color !== undefined) value.color = object.color;
+    const beforeValue = sceneTransformOf(original);
+    if (key.objects[object.id]?.color !== undefined)
+      beforeValue.color = original.color;
+    if (JSON.stringify(value) !== JSON.stringify(beforeValue)) {
       transforms[object.id] = value;
       if (!Object.hasOwn(key.objects, object.id)) added.add(object.id);
     }

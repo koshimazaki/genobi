@@ -58,7 +58,7 @@ describe("mannequin move library", () => {
       [],
       [{ clip: "fly", seconds: 1 }],
       [{ clip: "jog", seconds: 0 }],
-      [{ clip: "jog", seconds: 11 }],
+      [{ clip: "jog", seconds: 31 }],
       [{ clip: "jog", seconds: 1, speed: 2 }],
       Array.from({ length: 9 }, () => ({ clip: "idle", seconds: 1 })),
       { clip: "jog", seconds: 1 },
@@ -145,7 +145,12 @@ describe("mannequin move library", () => {
     expect(moves.length).toBeGreaterThanOrEqual(7);
     for (const [file, recipe] of moves) {
       const r = validateRecipe(recipe);
-      expect(r, file).toEqual(recipe);
+      // Old saved moves have no measured sub band; normalization adds silence.
+      expect(r, file).toEqual({
+        ...recipe,
+        bandEnvelopes: { sub: [], ...recipe.bandEnvelopes },
+      });
+      expect(validateRecipe(r), file).toEqual(r);
       expect(r.frames, file).toBeGreaterThanOrEqual(121);
       expect(r.frames, file).toBeLessThanOrEqual(241);
       expect(r.cameraShot, file).not.toBe("custom");

@@ -21,3 +21,26 @@ export function createEditLock(apply: (locked: boolean) => void) {
     },
   };
 }
+
+/** Loading owns one idempotent edit hold, independent from playback/capture. */
+export function createLoadingEditLock(
+  hold: () => (() => void) | undefined,
+  report: (loading: boolean) => void,
+) {
+  let active = false,
+    release: (() => void) | undefined;
+  return {
+    get active() {
+      return active;
+    },
+    set(value: boolean, publish = true) {
+      if (value && !active) release = hold();
+      active = value;
+      if (!value) {
+        release?.();
+        release = undefined;
+      }
+      if (publish) report(value);
+    },
+  };
+}

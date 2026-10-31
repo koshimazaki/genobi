@@ -1,0 +1,204 @@
+@media (max-width: 800px) {
+  main {
+    padding: 20px;
+  }
+  .masthead {
+    gap: 15px;
+  }
+  .masthead p {
+    font-size: 10px;
+  }
+  .badge {
+    font-size: 8px;
+    padding: 6px;
+  }
+  .intro {
+    padding: 32px 0;
+    gap: 24px;
+  }
+  .intro-copy {
+    max-width: 280px;
+    font-size: 12px;
+  }
+  h1 {
+    font-size: 42px;
+    letter-spacing: -2px;
+  }
+  .modes button {
+    padding: 14px;
+    gap: 8px;
+  }
+  .modes strong {
+    font-size: 17px;
+  }
+  .modes button > span:last-child {
+    font-size: 10px;
+    line-height: 1.4;
+  }
+  .transport {
+    flex-wrap: wrap;
+    gap: 10px 18px;
+  }
+  .scrub {
+    flex-basis: calc(100% - 105px);
+  }
+  .intensity {
+    margin-left: 104px;
+    max-width: none;
+  }
+  .intensity input {
+    width: 150px;
+  }
+  .caption {
+    align-items: start;
+  }
+  .ingredients {
+    gap: 30px;
+  }
+  .ingredients ol {
+    grid-template-columns: 1fr;
+  }
+  footer {
+    font-size: 9px;
+  }
+}
+@media (max-width: 480px) {
+  main {
+    padding: 16px 12px;
+  }
+  .masthead {
+    gap: 12px;
+    padding-bottom: 18px;
+  }
+  .wordmark {
+    font-size: 21px;
+  }
+  .masthead p {
+    font-size: 9px;
+    line-height: 1.6;
+    max-width: 115px;
+  }
+  .masthead p span {
+    margin: 0 4px;
+  }
+  .badge {
+    max-width: 79px;
+    text-align: center;
+    line-height: 1.5;
+    letter-spacing: 0.5px;
+  }
+  .intro {
+    display: block;
+    padding: 30px 6px 26px;
+  }
+  .intro-copy {
+    max-width: none;
+    margin-top: 20px;
+    font-size: 12px;
+  }
+  .modes button {
+    padding: 13px 9px;
+    gap: 8px;
+  }
+  .index {
+    font-size: 8px;
+    letter-spacing: 0;
+  }
+  .modes strong {
+    font-size: 15px;
+    line-height: 1.15;
+  }
+  .modes button > span:last-child {
+    font-size: 9px;
+  }
+  .preview-bar {
+    font-size: 8px;
+    letter-spacing: 1px;
+    padding: 10px;
+  }
+  .transport {
+    padding: 12px 10px;
+    gap: 10px;
+  }
+  #play {
+    min-width: 68px;
+    height: 36px;
+  }
+  .scrub {
+    gap: 7px;
+    flex-basis: calc(100% - 78px);
+    font-size: 9px;
+  }
+  .scrub output {
+    min-width: 79px;
+    font-size: 8px;
+  }
+  .intensity {
+    margin-left: 78px;
+    font-size: 10px;
+  }
+  .intensity input {
+    width: 130px;
+  }
+  .caption {
+    display: block;
+    padding: 13px;
+  }
+  .caption p {
+    font-size: 11px;
+  }
+  .caption > span {
+    display: block;
+    max-width: none;
+    text-align: left;
+    margin-top: 10px;
+    font-size: 8px;
+  }
+  .ingredients {
+    grid-template-columns: 1fr;
+    gap: 18px;
+    margin: 26px 6px;
+  }
+  .ingredients ol {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .ingredients li {
+    font-size: 10px;
+    padding: 12px 5px;
+  }
+  .ingredients li span {
+    margin-right: 7px;
+  }
+  footer {
+    display: block;
+    margin: 0 6px;
+  }
+  footer p:last-child {
+    text-align: left;
+    margin-top: 8px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}
+.preset-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+}
+.preset-actions button {
+  border: 1px solid #4b5943;
+  border-radius: 4px;
+  padding: 10px 13px;
+  background: #20291c;
+  color: #bed5af;
+  font-size: 11px;
+}
+#preset-status {
+  margin-top: 10px;
+  font-size: 11px;
+  color: var(--accent);
+}
