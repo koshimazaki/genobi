@@ -104,19 +104,30 @@ npx wrangler dev
 
 ## Deployment
 
-Releases are run by hand with `npm run deploy:pages`. The workflow can deploy
-on a push to `main` and deliberately holds no credential to do it: Cloudflare's
-`Cloudflare Pages: Edit` and `D1: Edit` are account-scoped, so the narrowest
-token this repository could hold would still let a public repository's CI reach
-every Pages project and D1 database in the account. Without the secrets the job
-skips rather than fails, so `main` stays green.
+Production is deployed from this public repository. The `Deploy production`
+job in [CI](https://github.com/koshimazaki/genobi/blob/main/.github/workflows/ci.yml) runs only on a push to `main` of
+`koshimazaki/genobi`, after the verify and Cloudflare jobs pass. It builds the
+Pages bundle, applies pending D1 migrations to `flux-studio-lite`, deploys that
+exact bundle to the `genobi` Pages project and checks `/api/health`. The same
+workflow file lives in the private camera-director repository, where a
+repository guard keeps the job from running even if a credential is added
+there, so production has one deployment path. The Pages project, D1 database
+and R2 bucket are the existing ones; the older resource names are kept on
+purpose, so no data moves.
 
-To enable it, add `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` to a
-GitHub environment named `production`, restricted to `main`; the workflow needs
-no edit. It then builds, applies pending migrations, deploys that bundle and
-checks `/api/health`. Keep production migrations additive. The token reaches
-only the migration and deploy steps — never pull-request CI, `npm ci` or the
-build — and fork pull requests are never given secrets at all.
+The job reads `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` from a GitHub
+environment named `production`. Without them it skips rather than fails, so
+`main` stays green on a fork. Cloudflare's `Cloudflare Pages: Edit` and
+`D1: Edit` are account-scoped, so restrict that environment to the `main`
+branch and add a required reviewer: a merge then waits for an explicit
+approval before production data is touched. The token reaches only the
+migration and deploy steps — never pull-request CI, `npm ci` or the build — and
+fork pull requests are never given secrets at all. Keep production migrations
+additive, so the previous deployment keeps working while Pages switches
+versions.
+
+`npm run deploy:pages` remains the manual fallback from a clean checkout of
+`main`; it records the checkout's commit hash on the Pages deployment.
 
 For another account, set `CLOUDFLARE_ACCOUNT_ID` and update the database/bucket bindings in `wrangler.pages.json`. The original Workers target still uses `wrangler.jsonc`. The earlier catalogue kept its clips in R2 under `library/`. Those objects are now unreferenced: the app serves library clips as static assets, and the sweep only collects keys it can derive from a job, so they will not be cleaned up automatically. Delete them by hand once the new catalogue is live:
 

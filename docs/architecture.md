@@ -403,13 +403,21 @@ Upscaling a private clip mints a random, two-hour, object-specific capability UR
   its pointer/keyboard grip changes neither prompt text nor generation settings.
   All composer modes share the same minimum footprint at each breakpoint.
 - **Express locally.** Readable same-origin endpoints and established byte-range responses. Node's filesystem and process APIs are the local adapter, not Cloudflare-compatible code.
+- **Protected production deployment from the public repository.** A push to `main` of
+  `koshimazaki/genobi` can deploy after the verification and Cloudflare jobs pass,
+  using credentials in the `production` environment. Cloudflare's Pages and D1
+  permissions are account-scoped, so configure that environment for `main` only
+  with a required reviewer before enabling its credentials. Pull-request jobs
+  receive no deployment credentials. The deployment builds first, applies additive
+  migrations, publishes to the existing Pages project and checks `/api/health`;
+  without credentials it skips. Manual deployment remains an operator fallback.
+  See [Cloudflare operations](cloudflare.md#deployment).
 
 ### Rejected, and why
 
 - **Free camera dragging.** No continuous model control has been demonstrated. Named, optional terms are honest and inspectable.
 - **A seed parameter.** Neither FLUX 3 video nor video upscale documents one, so run-to-run variation is the provider's own and there is nothing to record. Sending an unknown field risks a 422 on every generation.
 - **A public community feed.** Every platform running one has accounts: an owner who accepted terms, who can be banned, and who can delete their own work. This app is deliberately anonymous, so a published clip would have no one to attribute, ban or honour a takedown from.
-- **A CI deployment token.** Cloudflare's Pages and D1 permissions are account-scoped, so the narrowest token would still expose every project in the account to a public repository's CI. Releases stay manual.
 - **Presenting a library clip as a camera finding.** Existing media previews the pipeline; it is not a controlled comparison.
 
 ## Limits

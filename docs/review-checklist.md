@@ -51,7 +51,8 @@ See [architecture](architecture.md), `shared/idempotency.ts`,
   day without losing, double-counting or reclassifying completed generations?
 - Do rate limits, batch bounds and retention claims match the actual code paths,
   including Pages request-triggered housekeeping and failure recovery?
-- Does the production job remain restricted to a successful `main` push, keep
+- Does the production job remain restricted to a successful `main` push of the
+  public repository, keep
   secrets out of pull requests, serialize deploys and apply only
   backward-compatible migrations before publishing the new bundle?
 
