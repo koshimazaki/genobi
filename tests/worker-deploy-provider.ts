@@ -6,7 +6,10 @@ export const deploymentRequests: {
   authorised: boolean;
   body?: Record<string, unknown>;
 }[] = [];
-export const deploymentFault = { uncertain: false };
+export const deploymentFault = {
+  uncertain: false,
+  incompleteOutput: "" as "" | "video" | "ir",
+};
 const wav = new Uint8Array(16044);
 const view = new DataView(wav.buffer);
 for (const [at, text] of [
@@ -81,12 +84,24 @@ export async function fakeDeployment(
       job("succeeded", [
         {
           id: "video",
-          node_id: "75",
+          node_id: deploymentFault.incompleteOutput === "video" ? "75" : "61",
           name: "video.mp4",
           type: "video",
           content_type: "video/mp4",
           size_bytes: clip.length,
         },
+        ...(deploymentFault.incompleteOutput === "ir"
+          ? []
+          : [
+              {
+                id: "ir-audio",
+                node_id: "11",
+                name: "ir.wav",
+                type: "audio",
+                content_type: "audio/wav",
+                size_bytes: wav.length,
+              },
+            ]),
         {
           id: "audio",
           node_id: "13",
@@ -97,11 +112,11 @@ export async function fakeDeployment(
         },
       ]),
     );
-  if (/\/assets\/(video|audio)\/content/.test(url.pathname))
+  if (/\/assets\/(video|audio|ir-audio)\/content/.test(url.pathname))
     return new MFResponse(null, {
       status: 302,
       headers: {
-        Location: `https://deployment-delivery.bfl.ai/${url.pathname.includes("audio") ? "wet.wav" : "clip.mp4"}`,
+        Location: `https://deployment-delivery.bfl.ai/${url.pathname.includes("ir-audio") ? "ir.wav" : url.pathname.includes("audio") ? "wet.wav" : "clip.mp4"}`,
       },
     });
   return new MFResponse("not found", { status: 404 });

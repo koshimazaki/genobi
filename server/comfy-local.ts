@@ -5,6 +5,13 @@ import { parseWorkflowDestination } from "../shared/comfy/destination";
 import type { LocalModels } from "../shared/comfy/local-models";
 import type { LocalComfyStatus } from "../shared/comfy/run-location";
 import { modelSlots } from "../shared/comfy/workflows";
+import { selectWorkflowOutputs } from "../shared/comfy/outputs";
+import {
+  FILE_NAME,
+  safeSubfolder,
+  localOutputFiles,
+  localOutputUrl,
+} from "./comfy-local-files";
 import {
   localJobId,
   unsent,
@@ -40,18 +47,7 @@ const TIMEOUT = {
 };
 const PROMPT_ID = /^[A-Za-z0-9_-]{1,128}$/;
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
-const FILE_NAME = /^[A-Za-z0-9_()-][A-Za-z0-9 _.()-]{0,254}$/;
 const CLASS = /^[A-Za-z0-9_]{1,64}$/;
-const MEDIA: Record<string, WorkflowOutput["media"]> = {
-  mp4: "video",
-  png: "image",
-  jpg: "image",
-  jpeg: "image",
-  webp: "image",
-  mp3: "audio",
-  wav: "audio",
-  flac: "audio",
-};
 const EXTENSION: Record<WorkflowFile["contentType"], string> = {
   "image/png": "png",
   "image/jpeg": "jpg",
@@ -63,11 +59,6 @@ type ObjectInfo = Record<
   string,
   { input?: Record<string, Record<string, unknown> | undefined> } | undefined
 >;
-interface SavedFile {
-  filename: string;
-  subfolder: string;
-  type: string;
-}
 
 const noAnswer = () =>
   unsent(
@@ -119,27 +110,6 @@ function rejectedLocally(body: unknown): AppError {
     "workflow_rejected",
   );
 }
-
-/** Every saved file a history entry lists under one node's output. */
-function savedFiles(output: unknown): SavedFile[] {
-  if (!output || typeof output !== "object") return [];
-  return Object.values(output).flatMap((list) =>
-    Array.isArray(list)
-      ? list.filter(
-          (item): item is SavedFile =>
-            typeof item?.filename === "string" &&
-            typeof (item.subfolder ?? "") === "string" &&
-            item.type === "output",
-        )
-      : [],
-  );
-}
-const mediaOf = (name: string) =>
-  MEDIA[name.slice(name.lastIndexOf(".") + 1).toLowerCase()];
-const safeSubfolder = (value: string) =>
-  value === "" ||
-  (value.length <= 512 &&
-    value.split("/").every((part) => FILE_NAME.test(part) && part !== ".."));
 
 export interface LocalComfyOptions {
   /** http on 127.0.0.1 or localhost only; checked again here. */
@@ -426,27 +396,23 @@ export class LocalComfyWorkflows implements WorkflowClient {
     if (!entry) return { id, status: "Task not found" };
     if (entry.status?.status_str === "error") return { id, status: "Error" };
     const outputs = entry.outputs ?? {};
-    const fit = (files: SavedFile[]) =>
-      files.filter(
-        (file) =>
-          mediaOf(file.filename) === expected.media &&
-          FILE_NAME.test(file.filename) &&
-          safeSubfolder(file.subfolder ?? ""),
-      );
-    // The template's own output node; any file of that kind otherwise.
-    const file =
-      fit(savedFiles(outputs[expected.nodeId]))[0] ??
-      fit(Object.values(outputs).flatMap(savedFiles))[0];
-    if (!file) return { id, status: "Error" };
-    const query = new URLSearchParams({
-      filename: file.filename,
-      subfolder: file.subfolder ?? "",
-      type: "output",
-    });
+    const selected = selectWorkflowOutputs(localOutputFiles(outputs), expected);
+    if (!selected.ok) return { id, status: "Error", error: selected.error };
     return {
       id,
       status: "Ready",
-      result: { sample: `${this.base}/view?${query}` },
+      result: { sample: localOutputUrl(this.base, selected.primary.file) },
+      ...(expected.companions?.length
+        ? {
+            companions: selected.companions.map(
+              ({ nodeId, label, output }) => ({
+                nodeId,
+                label,
+                url: localOutputUrl(this.base, output.file),
+              }),
+            ),
+          }
+        : {}),
     };
   }
 
