@@ -343,10 +343,10 @@ the same recorder; conversation entry points also select their agent.
 
 ## Verification
 
-The revised routing is **implemented**, with 113 focused fixture tests across
-12 suites passing on 31 October 2026. It is not yet verified end to end in a
-capable browser or with a real microphone. The earlier voice implementation's
-verification record does not establish those changed interaction paths.
+The revised routing is **implemented**. Focused unit tests and a Chrome 148
+browser review on 31 October 2026 exercise the changed interaction paths.
+The browser uses a fake microphone and fixture APIs. A physical-microphone
+recording through Qwen3-ASR and a live agent remains unverified.
 
 The routing regressions use fake sessions and synthetic transcripts; they
 make no model or paid-generation request:
@@ -360,17 +360,26 @@ make no model or paid-generation request:
 - `tests/voice-destination-store.test.ts`: validated preference persistence,
   agent default, session identities kept out of storage, late-result selection
   protection and refused browser storage.
+- `tests/voice-note-target.test.tsx`: initial prompt identity capture, changed
+  Scroll cells/documents during transcription, closed fields and deliberate
+  destination selection while recording.
+- `tests/voice-setup-focus.test.tsx`: the install offer receives focus after
+  model discovery enables it, without taking focus from a person editing the
+  installation folder.
 - `tests/voice-hosted.test.tsx`: the hosted microphone explanation and no
   microphone or transcription request, including uncertain runtime detection.
 - Existing capture, language, dictionary, intent-parser, server, setup and
   agent-send tests cover their respective unchanged boundaries.
 
-These checks do not establish microphone hardware quality, browser layout or
-GPU execution. Desktop/phone overflow, keyboard focus, repeated recording and
-bubble/deck entry points need a capable-browser visual check before release.
-`node scripts/check-voice-overlay.mjs` includes the explicit destinations,
-repeated agent notes and corrections, prompt dictation, recording, language and
-paid-approval fixtures. Its browser execution remains a separate visual gate.
+Browser checks cover 1440-, 390- and 320-pixel layouts, keyboard focus, repeated
+recording, bubble/deck entry points, pinned destinations and corrections,
+prompt dictation, language persistence and paid-approval fixtures. An expanded
+conversation at 320 × 600 also keeps its footer above the fixed activity bar.
+Recovery checks cover reduced motion, prewarm cancellation, page hiding,
+recorder and decoding failures, microphone refusal, the installation offer and
+hosted limits. Run `node scripts/check-voice-overlay.mjs` against a local studio
+to repeat the browser fixtures. They do not establish microphone hardware
+quality, live transcription or agent execution, or GPU execution.
 
 ## Not yet
 

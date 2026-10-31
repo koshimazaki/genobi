@@ -268,11 +268,11 @@ try {
     page.getByRole("button", { name: "Close Generate my version" }),
     (close) => close.click(),
   );
-  for (const button of await page
-    .locator("[data-preset-button]")
-    .elementHandles()) {
-    await button.click();
-    await page.waitForTimeout(150);
+  const sections = page.locator("[data-preset-button]");
+  const sectionCount = await sections.count();
+  for (let index = 0; index < sectionCount; index++) {
+    await sections.nth(index).click();
+    await voice.waitFor({ state: "visible" });
     assert(await voice.isVisible(), "Voice in every section");
   }
   await context.close();
@@ -424,11 +424,13 @@ try {
     status: { available: false, maxSeconds: 180 },
   }));
   let installs = 0;
-  await page.route("**/api/voice/setup", (route) => {
+  await page.route("**/api/voice/setup**", (route) => {
     if (route.request().method() !== "GET") {
       installs++;
       return route.abort();
     }
+    if (new URL(route.request().url()).pathname.endsWith("/found"))
+      return route.fulfill({ json: { models: [] } });
     return route.fulfill({
       json: {
         token: "fixture-grant",
@@ -446,11 +448,11 @@ try {
   const offer = page.getByRole("dialog", { name: "Install Voice Mode?" });
   await offer.waitFor();
   const yes = offer.getByRole("button", {
-    name: "Yes, install Voice Mode",
+    name: "Install new",
     exact: true,
   });
   await yes.waitFor();
-  assert.equal(await focusedName(page), "Yes, install Voice Mode");
+  assert.equal(await focusedName(page), "Install new");
   assert.equal(
     await page.getByRole("button", { name: "Record", exact: true }).count(),
     0,
