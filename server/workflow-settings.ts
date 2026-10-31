@@ -1,3 +1,4 @@
+import { LOCAL_DEPLOY_INPUT_BYTES } from "../shared/comfy/deploy-file";
 import { AppError } from "./errors";
 import { entryFor, readyEntry, type Entry } from "../shared/registry";
 import type { Generator, VideoModel } from "../shared/types";
@@ -180,6 +181,7 @@ export class WorkflowSettings {
       source,
       fixed: false,
       choices: [...RUN_LOCATIONS],
+      deploymentInputBytes: LOCAL_DEPLOY_INPUT_BYTES,
       local,
       note:
         mode === "both"

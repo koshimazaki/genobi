@@ -312,7 +312,12 @@ export default function VersionPanel({
         </>
       ) : (
         <>
-          <VersionPlan template={template} bundle={draft} make={make} />
+          <VersionPlan
+            template={template}
+            bundle={draft}
+            make={make}
+            inputs={inputs}
+          />
           {agent.copy === false && (
             <p>
               To let your agent use these files, save the editable project ZIP

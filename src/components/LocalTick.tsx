@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import type { RunLocationState } from "../../shared/comfy/run-location";
+import {
+  localRunChoice,
+  type RunLocationState,
+} from "../../shared/comfy/run-location";
 import {
   readRunLocation,
   saveRunLocation,
@@ -18,8 +21,8 @@ const EMPTY: SettingView<RunLocationState> = {
  * The model menu's Local tick: the same session run location as Studio
  * setup, through the same `SettingSaver` (one save at a time, a definite
  * refusal restores, an uncertain save reads the server again). Ticked saves
- * `both` (open workflows on the local ComfyUI, API models on their cloud
- * provider); unticked saves `cloud`. It shows ticked for Local and Both.
+ * `both` when offered, else `local`; unticked saves `cloud`. The server must
+ * offer both sides of the switch. It shows ticked for Local and Both.
  * `onTicked` runs as a tick is sent: the local ComfyUI runs open workflows
  * only, so the menu turns Open only on with it.
  */
@@ -43,10 +46,12 @@ export default function LocalTick({ onTicked }: { onTicked: () => void }) {
   }, []);
   const state = view.value;
   if (!state) return null;
+  const localChoice = localRunChoice(state);
+  const disabled = !localChoice || !state.choices.includes("cloud");
   const ticked = view.confirmed && state.location === "local";
   const choose = (local: boolean) => {
-    if (saving || saver.current!.saving) return;
-    const location = local ? "both" : "cloud";
+    if (disabled || saving || saver.current!.saving) return;
+    const location = local ? localChoice! : "cloud";
     if (local) onTicked();
     void saver.current!.save(
       { ...state, mode: location, location: local ? "local" : "cloud" },
@@ -56,15 +61,15 @@ export default function LocalTick({ onTicked }: { onTicked: () => void }) {
   return (
     <label
       title={
-        state.fixed
-          ? "The hosted studio runs every workflow on Comfy Cloud."
+        disabled
+          ? "Local ComfyUI is unavailable from this studio. Open your local Genobi server to use it."
           : "Run open workflows on the ComfyUI on this machine. API models stay on their cloud provider."
       }
     >
       <input
         type="checkbox"
         checked={ticked}
-        disabled={state.fixed}
+        disabled={disabled}
         // aria-disabled, not disabled: focus stays on the tick while saving.
         aria-disabled={saving}
         aria-busy={saving}

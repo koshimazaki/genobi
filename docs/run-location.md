@@ -1,6 +1,6 @@
 ---
 tags: [workflows, comfy, backend, studio, mcp]
-summary: Run location (Local ComfyUI or Comfy Cloud), the local ComfyUI client, workflow swapping and the local model map.
+summary: Local ComfyUI, Comfy Cloud and registered deployments; capability-aware controls, workflow swapping and the local model map.
 ---
 
 # Run location and workflow swapping
@@ -19,7 +19,7 @@ same capability.
 
 ## Comfy Deploy
 
-The local Settings panel also registers an existing Developer Platform endpoint
+The Settings panel also registers an existing Developer Platform endpoint
 as **Comfy Deploy**. Only `https://<deployment>.run.comfy.app` is accepted,
 without a port, path, credentials, query or fragment. The URL persists; a key
 never enters these settings. Registering selects the deployment run location
@@ -29,22 +29,58 @@ session later selects another default location. The Local tick hides them.
 
 Camera stages each required input through the deployment's SDK asset API,
 then quotes and explicitly confirms GPU-time billing. Session-owned tickets
-expire after two hours or process restart. Quotes bind the endpoint URL;
+expire after two hours; a local server restart also clears its in-memory tickets.
+Hosted tickets persist in D1 across Worker restarts. Quotes bind the endpoint URL;
 recorded jobs continue polling their original endpoint after settings change.
 A lost submission is never resent. Video, IR and audio downloads become private
 studio media, with the original deployment link on the take card.
 
-The hosted Worker has a fixed Comfy Cloud client and no deployment registry.
-It hides these models and refuses their quotes/submissions with
-`deployment_local_only`: **Comfy Deploy runs from the local studio**.
+The hosted Worker offers Comfy Cloud and per-session registered deployments.
+It has no local ComfyUI. The run-location response advertises
+`deploymentInputBytes`: 32,000,000 bytes per hosted input or 150,000,000 bytes
+per local input. Camera and 3D capture validate that limit before staging any
+file, and the server enforces the same limit. A missing or invalid advertised
+limit uses the conservative hosted cap. Staging rechecks queued captures, so
+a capture made against one adapter cannot bypass the other adapter's cap.
 [Exact Camera steps and workflow limits](comfy-deploy.md#use-it-from-camera).
+
+### MCP and CLI deployment lifecycle
+
+An external agent registers an endpoint with `genobi_run_location` using
+`location: "deployment"` and `deploymentUrl`. Studio-started agents inherit their
+person's destination and cannot change it. `genobi_models` includes the two LTX
+deployment recipes with `inputModel`, `requiresDeployment` and their staging
+tool. The catalogue is static; a quote checks actual configuration and keys.
+
+`genobi_deployment_stage` (CLI `genobi deployment-stage`) accepts a manifest token,
+matching `contentType`, and exactly one of `filePath`, `projectAsset: {copyId,
+assetId}`, or `worldFile: {session, file}`. A studio-started agent must use a linked
+project or paired World source. The adapter bounds media reads using the
+advertised `deploymentInputBytes` before upload. Staging sends media to the
+deployment under its storage/billing terms, but never submits a workflow.
+
+Place the returned ticket IDs in `deploy.assets` under their tokens. Include a
+nonnegative integer `deploy.seed`, `deploy.negativePrompt`, and the capture recipe
+JSON string in `deploy.recipe` where the endpoint requires it. These recipes use
+eight seconds, HD and 16:9 without draft. Quote that complete input; the response
+names the deployment and its GPU-time billing. Submit exactly that input after
+approval, with the quote and a stable idempotency key. Tickets expire after two
+hours and are scoped to one session and endpoint; a rejection requires re-staging
+and a fresh quote, not changing the request key of an uncertain submission.
+
+`genobi_job` and `genobi_take.outputs` expose companion audio with its own asset
+IDs. `genobi_take_to_project` accepts an optional `outputId` to copy a particular
+output into a linked local project; omitting it copies the primary video.
+CLI names derive from the MCP definitions and carry the same schemas and guards.
+The stdio transports still require a loopback local server: hosted REST deployment
+support does not provide authenticated remote MCP access.
 
 ## Where it is set
 
 | Who      | How                                                                                                                                            |
 | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
 | Operator | `GENOBI_WORKFLOW_DESTINATION` (`cloud`, `local` or `deployment`) and `GENOBI_WORKFLOW_URL`: the server's default                               |
-| Studio   | **Studio setup** in Studio settings (the key button): Local ComfyUI, Comfy Cloud or Both                                                       |
+| Studio   | **Studio setup** in Studio settings (the key button): advertised Local ComfyUI, Comfy Cloud, Both or Comfy Deploy choices                      |
 | Studio   | The **Local** tick in the model menu's header, beside Open only (below)                                                                        |
 | Agents   | `genobi_run_location` (read, or set with `location`), `genobi_workflows` (list; `checkLocal` asks the local ComfyUI), `genobi_workflow_select` |
 | HTTP     | `GET`/`POST /api/settings/run-location`, `GET /api/settings/workflows[?check=local]`, `POST /api/settings/workflows/selection`                 |
@@ -52,12 +88,15 @@ It hides these models and refuses their quotes/submissions with
 **The Local tick** (`src/components/LocalTick.tsx`) is a second control over
 the same session setting, through the same `SettingSaver` and lane as Studio
 setup: one save at a time, a definite refusal shows the server's value again,
-an uncertain save reads the server again. Ticked saves `both`, not `local`:
+an uncertain save reads the server again. Ticked prefers `both` when advertised:
 the two run a workflow entry identically (both resolve to `local`), and `both`
 is the value that says what the tick means, open workflows on this machine
 while Router and BFL entries keep their cloud provider. Unticked saves
-`cloud`. It shows ticked for Local and Both, and is disabled on the hosted
-studio. Ticking it also ticks **Open only**, since the local ComfyUI runs open
+`cloud`. If the adapter offers Local but no Both, ticking saves `local`.
+It shows ticked for Local and Both. It is disabled when settings are fixed or
+the adapter does not offer both a local choice and Cloud. Hosted deployment
+settings are editable, but their choices do not include Local or Both.
+Ticking it also ticks **Open only**, since the local ComfyUI runs open
 workflows only; either can be unticked after, and Open only with Local off
 means open models on Comfy Cloud. Open only stays composer state that never
 reaches the server. While Local is ticked the menu keeps only what can run
@@ -72,16 +111,16 @@ wording in `src/run-mode.ts`): short tags saying where the next run goes, from
 the entry's route, the session's run location as the server last answered it,
 and a pinned template's `hosts`. Hovering gives the sentence.
 
-| Entry and setting                              | Tags                                                          | Sentence (title)                                               |
-| ---------------------------------------------- | ------------------------------------------------------------- | -------------------------------------------------------------- |
-| Workflow, Local or Both                        | OPEN WEIGHTS · LOCAL COMFYUI                                  | Runs on the local ComfyUI                                      |
-| Workflow, Cloud                                | OPEN WEIGHTS · COMFY CLOUD                                    | Runs on Comfy Cloud on your Comfy key                          |
-| Workflow, server default deployment            | OPEN WEIGHTS · COMFY DEPLOYMENT                               | Runs on the Comfy deployment on your Comfy key                 |
-| Pinned template (Openjutsu)                    | COMFY DEPLOYMENT, note "its own host, not Local or Cloud"     | Runs on the Comfy deployment on your Comfy key                 |
-| Router entry                                   | API · COMFY ROUTER                                            | Runs on Comfy Router on your Comfy key                         |
-| BFL entry, or a FLUX Router entry on a BFL key | API · BFL                                                     | Runs on BFL's API on your BFL key                              |
-| FLUX Router entry, no key in the page          | API · COMFY ROUTER OR BFL                                     | Runs on Comfy Router on a Comfy key, or BFL's API on a BFL key |
-| Hosted studio, workflow                        | COMFY CLOUD, note "the hosted studio always uses Comfy Cloud" | Runs on Comfy Cloud on your Comfy key                          |
+| Entry and setting                              | Tags                                                                   | Sentence (title)                                               |
+| ---------------------------------------------- | ---------------------------------------------------------------------- | -------------------------------------------------------------- |
+| Workflow, Local or Both                        | OPEN WEIGHTS · LOCAL COMFYUI                                           | Runs on the local ComfyUI                                      |
+| Workflow, Cloud                                | OPEN WEIGHTS · COMFY CLOUD                                             | Runs on Comfy Cloud on your Comfy key                          |
+| Workflow, server default deployment            | OPEN WEIGHTS · COMFY DEPLOYMENT                                        | Runs on the Comfy deployment on your Comfy key                 |
+| Pinned template (Openjutsu)                    | COMFY DEPLOYMENT, note "its own host, not Local or Cloud"              | Runs on the Comfy deployment on your Comfy key                 |
+| Router entry                                   | API · COMFY ROUTER                                                     | Runs on Comfy Router on your Comfy key                         |
+| BFL entry, or a FLUX Router entry on a BFL key | API · BFL                                                              | Runs on BFL's API on your BFL key                              |
+| FLUX Router entry, no key in the page          | API · COMFY ROUTER OR BFL                                              | Runs on Comfy Router on a Comfy key, or BFL's API on a BFL key |
+| Hosted studio, workflow                        | COMFY CLOUD or COMFY DEPLOYMENT, according to the session and template | Runs on the named endpoint on your Comfy key                   |
 
 The first tag is the weights, the second the endpoint: OPEN WEIGHTS for any
 entry with open weights, API for one without (FLUX Video Upscale reads
@@ -113,8 +152,10 @@ clip with no recorded run (today the first creature clip, made outside the
 studio) opens an empty composer on FLUX 3 text to video, a closed entry, so
 Open only starts unticked until setup is saved. When setup chose **Local
 only** and this session has not chosen a run location itself (`source:
-"server"`), the studio writes `both`, which ticks Local; it does the same when
-setup is saved with that answer. Neither default marks the composer edited.
+"server"`), the studio writes `both` if offered, or `local` if that is the
+adapter's local choice; it does the same when setup is saved with that answer.
+An adapter offering neither receives no local settings write. Neither default
+marks the composer edited.
 
 The model menu has no **Workflow** picker since 27 October 2026: the H3 rows
 already name their guide, and a template is chosen by an agent, over HTTP, or
@@ -132,10 +173,17 @@ a restart does not move a session back to the default. An agent has its own
 session, as it does for jobs. Settings writes count in the `edit` rate bucket,
 not with paid submissions.
 
-The hosted Worker is always Comfy Cloud: `GET /api/settings/run-location`
-answers `fixed: true` with that said, `GET /api/settings/workflows` lists the
-defaults with `fixed: true`, and there is no POST. The studio shows the run
-location there as a disabled choice.
+The hosted Worker's `GET /api/settings/run-location` answers `fixed: false`
+with `choices: ["cloud", "deployment"]`. Its POST accepts either choice and
+registration of a deployment endpoint. The workflow catalogue remains fixed
+except for the registered layout deployment's preset selection. The UI uses
+these capabilities to decide which controls are available.
+
+Hosted identity is independent of editable settings: `src/hosted-studio.ts`
+reads `GET /api/health` and its `hosted: true` flag. A valid local health
+response without that flag remains local. Missing or malformed health stays
+unconfirmed, so setup, voice and other local-only operations wait for a valid
+answer rather than guessing from `fixed`.
 
 `deployment` (a Comfy API deployment, `https://{name}.run.comfy.app`) runs
 through the same SDK as Comfy Cloud, on the deployment's own base URL and with
@@ -200,8 +248,8 @@ revision read together (`WorkflowSettings` in `server/workflow-settings.ts`).
 The counter lives in memory: each process starts at its start time in
 milliseconds times a thousand (`firstSettingsRevision` in
 `shared/comfy/run-location.ts`), so a restart never answers below a revision
-the last process handed out. The hosted Worker's settings never change and
-always answer revision 0.
+the last process handed out. The hosted Worker starts at revision 0 and
+increments a durable per-session D1 revision for accepted deployment changes.
 
 Each setting has one sequencing point for the page's lifetime
 (`SettingLane` in `src/setting-lane.ts`, one per setting in

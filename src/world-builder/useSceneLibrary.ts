@@ -232,7 +232,7 @@ export function useSceneLibrary(
     /** The take as MP4 (and WAV) under Project, as Capture's own add does. */
     addTake: (take: LibraryTake) =>
       act("add", async () => {
-        await a.addTake(asTake(take), take);
+        await a.addTake(asTake(take));
         return "";
       }),
     /**

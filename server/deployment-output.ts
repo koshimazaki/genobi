@@ -12,13 +12,16 @@ export async function saveDeploymentAudio(
     // These are node ids from the bundled graph, never provider job identifiers.
     const id = `${job.id}-audio-${output.nodeId.replaceAll(":", "-")}`;
     const url = `/api/clips/${id}`;
-    if (!store.data.sources.some((s) => s.id === id)) {
+    let source = store.data.sources.find(
+      (s) => s.id === id && s.sessionId === job.sessionId,
+    );
+    if (!source) {
       const saved = await saveResult(
         store.directory,
         { id, generator: "audio" },
         await client.download(output.url),
       );
-      store.data.sources.push({
+      source = {
         id,
         sessionId: job.sessionId,
         filePath: saved.file,
@@ -27,11 +30,20 @@ export async function saveDeploymentAudio(
         origin: "generated",
         mediaType: "audio",
         ...saved.metadata,
-      });
+      };
+      store.data.sources.push(source);
     }
     job.companions ??= [];
-    if (!job.companions.some((file) => file.url === url))
-      job.companions.push({ label: output.label, url });
+    const companion = {
+      assetId: id,
+      mediaType: "audio" as const,
+      contentType: source.contentType ?? "application/octet-stream",
+      label: output.label,
+      url,
+    };
+    const prior = job.companions.findIndex((file) => file.url === url);
+    if (prior < 0) job.companions.push(companion);
+    else job.companions[prior] = companion;
     await store.save();
   }
   delete job.companionDownloads;

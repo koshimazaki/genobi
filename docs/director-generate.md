@@ -22,6 +22,9 @@ audio, cut footage and pictures inside graphics. Existing replacements and title
 edits appear as the current inputs. Choose project Assets or Inspirations, upload
 files by dropping them on the large media boxes, or keep the defaults. Audio can be previewed and picked from owned Camera
 results. Required kinds, counts and duration checks preserve the current cut.
+Removing a reference also removes its saved brief token in the same undoable
+edit, so reducing the reference count cannot leave a handoff with an unbound
+image token. Unrelated references and the person's description stay intact.
 
 **Apply swaps only** commits a local edit with Undo. It does not generate or start
 an agent. A graphic's picture may change while its text and animation remain
@@ -31,7 +34,10 @@ For finished mixes, unchanged example video slots initially request replacements
 your uploaded or generated clips initially stay in place. Review these choices.
 Select **Generate replacement with my agent** for each replacement you want made.
 Existing media stays in place while a replacement is planned. **Review generation
-plan** lists the choices and declared shots. **Prepare with Genobi** applies the
+plan** lists the current Words, media choices and declared shots. Words edits
+update generated subject and title lines in the description; custom prose is
+preserved. The handoff names the current Words explicitly, including when an
+older saved description still contains template defaults. **Prepare with Genobi** applies the
 inputs and sends the current project, complete saved Make it yours brief and
 reference bindings, direction and edits to the agent workflow.
 If an agent is not configured, the existing setup flow guides you through it.

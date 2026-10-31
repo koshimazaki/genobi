@@ -40,14 +40,33 @@ Limits: 150 MB bundle, 150 MB imported media, 128 layers, 1080p-equivalent pixel
 
 ## Template plans and provenance over MCP
 
+`genobi_project` includes the full bounded `brief` (`version`, `text`, and
+`references` with asset/font bindings), in addition to the legacy `prompt` text.
+Its assets include each bundle-relative `file.path` and `file.sha256`; these are
+project metadata, not machine paths. Quote and submit can consume image assets
+as ordered `projectImageReferences: [{copyId, assetId}]`. Both calls resolve the
+bytes through the linked project's authorized file route, verify the recorded
+hash, and enforce image/combined-request limits. An unlinked project, missing
+asset, non-image or SVG is refused. Do not also pass inline `imageReferences`.
+If the owner changes an asset between quote and submit, the old quote no longer
+matches. For a source-conditioned open Klein run, use `imageAspectRatio: "auto"`.
+
 Four MCP tools sit beside the Director commands; none spends, and all but the handoff only read.
 
-| Tool                     | Arguments                                                                                                                          | Returns                                                                                                                                                                                                  |
-| ------------------------ | ---------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `genobi_template_plan`   | `template`, optional `inputs` (subject, title, aspect, bpm, acoustic) and `cameras` per shot id                                    | Each shot's exact `genobi_quote` arguments, length, start and expected price, from the `planTemplate` the Director opens                                                                                 |
-| `genobi_budget`          | optional `runs` and `usd` for a whole recipe                                                                                       | Who pays (`payer`, `uncapped` for the owner's saved key), the runs and dollars the demo budget leaves this session today (`GET /api/budget`, local only), and whether the recipe fits                    |
-| `genobi_provenance`      | `title`, `jobIds`, `agent` (harness, model, provider, open), `hardware`, optional `copyId`, `skill`, `workflows`, times            | The checked provenance card, its Markdown and a small gallery summary; outputs hashed from the studio unless `hashOutputs` is false                                                                      |
-| `genobi_take_to_project` | `id` (a Ready job of this agent session) or `sourceId` (its own trim, concat, crossfade or space result), `copyId`, `baseRevision` | The asset id, copied into the linked project copy with its generation record (`POST /api/projects/<copyId>/takes`, local only), and a result's `derivation`; place it with `replace-plate` or `add-clip` |
+| Tool                     | Arguments                                                                                                                                                | Returns                                                                                                                                                                                                           |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `genobi_template_plan`   | `template`, optional `inputs` (subject, title, aspect, bpm, acoustic) and `cameras` per shot id                                                          | Each shot's exact `genobi_quote` arguments, length, start and expected price, from the `planTemplate` the Director opens                                                                                          |
+| `genobi_budget`          | optional `runs` and `usd` for a whole recipe                                                                                                             | Who pays (`payer`, `uncapped` for the owner's saved key), the runs and dollars the demo budget leaves this session today (`GET /api/budget`, local only), and whether the recipe fits                             |
+| `genobi_provenance`      | `title`, `jobIds`, `agent` (harness, model, provider, open), `hardware`, optional `copyId`, `skill`, `workflows`, times                                  | The checked provenance card, its Markdown and a small gallery summary; outputs hashed from the studio unless `hashOutputs` is false                                                                               |
+| `genobi_take_to_project` | `id` (a Ready job of this agent session), optional `outputId`, or `sourceId` (its own trim, concat, crossfade or space result), `copyId`, `baseRevision` | The asset id and kind, copied into the linked project copy with its generation record (`POST /api/projects/<copyId>/takes`, local only), and a result's `derivation`; place it with `replace-plate` or `add-clip` |
+
+`genobi_job` and `genobi_take.outputs` expose a deployment's separate audio
+companions with labels, asset IDs, media types and availability. Omit `outputId`
+to import the primary output, or pass an output's `assetId` to import that
+companion. The server verifies membership in this take and the stored source's
+owner; a source ID alone cannot cross ownership. Audio handoffs suggest an audio
+track placement. Older companion records without measured MIME say
+`application/octet-stream`; import still inspects their actual bytes.
 
 A media tool's result (`genobi_media_trim`, `_concat`, `_crossfade` or `_space`, video or audio)
 goes in by `sourceId` (`server/project-derived.ts`). Every source in its history must be the

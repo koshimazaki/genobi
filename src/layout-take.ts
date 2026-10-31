@@ -1,3 +1,7 @@
+import {
+  deploymentInputLimit,
+  LOCAL_DEPLOY_INPUT_BYTES,
+} from "../shared/comfy/deploy-file";
 import { create } from "zustand";
 import { emptySlots } from "../shared/ltx-prompt";
 import { emptyLight } from "../shared/light";
@@ -53,6 +57,7 @@ export const useLayoutTake = create<{ pending?: CapturedLayout }>(() => ({}));
 export async function capturedLayout(
   take: Take,
   endpoint: string,
+  inputBytes = LOCAL_DEPLOY_INPUT_BYTES,
 ): Promise<CapturedLayout> {
   if (take.mode === "live")
     throw new Error(
@@ -67,10 +72,12 @@ export async function capturedLayout(
   };
   if (
     Object.values(files).some(
-      (file) => file.size === 0 || file.size > 150_000_000,
+      (file) => file.size === 0 || file.size > inputBytes,
     )
   )
-    throw new Error("Keep each captured input between 1 byte and 150 MB.");
+    throw new Error(
+      `Keep each captured input between 1 byte and ${inputBytes / 1_000_000} MB.`,
+    );
   return {
     id: crypto.randomUUID(),
     name: take.name,
@@ -83,12 +90,17 @@ export async function capturedLayout(
 
 /** A browser-only handoff. No upload, quote, submission or project mutation. */
 export async function queueLayoutTake(take: Take) {
-  const endpoint = useSettingsStore.getState().runLocation?.deployment?.url;
+  const settings = useSettingsStore.getState().runLocation;
+  const endpoint = settings?.deployment?.url;
   if (!endpoint)
     throw new Error(
       "Register your Comfy deployment in Settings → Generation setup, then send the take again.",
     );
-  const pending = await capturedLayout(take, endpoint);
+  const pending = await capturedLayout(
+    take,
+    endpoint,
+    deploymentInputLimit(settings?.deploymentInputBytes),
+  );
   useLayoutTake.setState({ pending });
 }
 
@@ -120,6 +132,19 @@ export async function stageLayoutTake(
   };
   const assets: Record<string, string> = {};
   check();
+  const inputBytes = deploymentInputLimit(
+    useSettingsStore.getState().runLocation?.deploymentInputBytes,
+  );
+  // Validate the whole capture before staging any file, including old queued
+  // captures made under another adapter or an earlier limit.
+  if (
+    Object.values(take.files).some(
+      (file) => !file.size || file.size > inputBytes,
+    )
+  )
+    throw new Error(
+      `Keep each captured input between 1 byte and ${inputBytes / 1_000_000} MB.`,
+    );
   for (const [token, file] of Object.entries(take.files)) {
     const { id } = await stage(`/api/settings/deployment-assets/${token}`, {
       method: "POST",

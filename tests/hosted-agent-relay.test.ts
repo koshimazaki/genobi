@@ -6,7 +6,7 @@ import type {
   AgentSession,
   AgentSessionRequest,
 } from "../shared/agent-session";
-import { HOSTED_RUN_LOCATION } from "../shared/comfy/run-location";
+const HOSTED_HEALTH = { ok: true, hasServerKey: false, hosted: true };
 import { RunnerConnection } from "../server/runner-connection";
 import { relayFixture } from "./runner-relay-fixture";
 import { AgentSessions } from "../server/agent-sessions";
@@ -79,8 +79,8 @@ it("the hosted spawn action reaches the existing local launcher through the rela
     f.fetcher,
   );
   const browser = vi.fn(async (url: string, init?: RequestInit) =>
-    url === "/api/settings/run-location"
-      ? Response.json(HOSTED_RUN_LOCATION)
+    url === "/api/health"
+      ? Response.json(HOSTED_HEALTH)
       : f.fetcher(`https://genobi.pages.dev${url}`, init),
   );
   vi.stubGlobal("fetch", browser);

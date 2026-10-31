@@ -143,6 +143,12 @@ the chosen tier sets the reference megapixels. The caption and edit-box rows go
 directly to the encoder so a text-only upsampler cannot remove their coordinates.
 The existing diffusion/encoder/VAE model slots and output node are retained.
 
+Source-conditioned open edits require `imageAspect: "auto"` (or its default).
+An explicit canvas ratio is rejected rather than silently ignored; use the API
+route if the edit needs a different canvas. Local model-file overrides apply
+only to slots present in the derived graph, so a configured text-only
+`upsampler_encoder` does not break image edits.
+
 Local and hosted adapters upload the actual source bytes before the one reserved
 job submission. Hosted uploads use the official low-level SDK transport because
 the high-level SDK's runtime WASM hashing cannot execute in workerd. The server

@@ -177,7 +177,7 @@
   gap: 5px;
   margin: 8px 0;
 }
-.genobi-shell .dir-remix :is(input, select, textarea) {
+.genobi-shell .dir-remix :is(input:not(.sr-only), select, textarea) {
   padding: 7px;
 }
 .genobi-shell .dir-remix button {

@@ -2,6 +2,8 @@ import { z } from "zod";
 import type { RunLocationState } from "../shared/comfy/run-location";
 import type { WorkflowCatalogue } from "../shared/comfy/workflows";
 import type { ToolDefinition } from "./definition";
+import { RUN_LOCATIONS } from "../shared/comfy/run-location";
+import { parseWorkflowDestination } from "../shared/comfy/destination";
 
 // The run location and workflow swapping, through the same session settings
 // the studio uses (`/api/settings` on the local server). Nothing here is paid
@@ -14,12 +16,19 @@ export const workflowTools: ToolDefinition[] = [
     name: "genobi_run_location",
     title: "Genobi run location",
     description:
-      "Read or set where this session's open workflows run: local (the ComfyUI on this machine, its own models, nothing charged) or cloud (Comfy Cloud, charged to the Comfy key). Both combines local open workflows with cloud API models, with no automatic cloud fallback. Without `location` it only reads, and reports whether a local ComfyUI answers. A quote taken before a change cannot be spent after it; ask for a new one.",
+      "Read or set this session's open-workflow destination: local, cloud, both, or deployment with deploymentUrl (https://<name>.run.comfy.app). A deployment uses its workspace's billing. Without location this only reads readiness and input limits. No automatic fallback. A destination change invalidates earlier quotes and staged tickets; stage and quote again before an approved submission.",
     inputSchema: {
       location: z
-        .enum(["local", "cloud", "both"])
+        .enum(RUN_LOCATIONS)
         .optional()
         .describe("Set the run location; omit to read it"),
+      deploymentUrl: z
+        .string()
+        .max(2048)
+        .optional()
+        .describe(
+          "Required with location deployment; an exact https://<name>.run.comfy.app endpoint, without credentials, path or query.",
+        ),
     },
     tags: ["agents", "mcp", "workflows", "comfy"],
     docs: ["docs/run-location.md"],
@@ -29,10 +38,17 @@ export const workflowTools: ToolDefinition[] = [
       destructiveHint: false,
     },
     async run(api, args) {
+      if (args.deploymentUrl !== undefined && args.location !== "deployment")
+        throw new Error("deploymentUrl requires location deployment.");
+      if (args.location === "deployment")
+        parseWorkflowDestination("deployment", args.deploymentUrl);
       return args.location === undefined
         ? api.get<RunLocationState>("/api/settings/run-location")
         : api.post<RunLocationState>("/api/settings/run-location", {
             location: args.location,
+            ...(args.deploymentUrl !== undefined
+              ? { deploymentUrl: args.deploymentUrl }
+              : {}),
           });
     },
   },

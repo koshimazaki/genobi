@@ -53,7 +53,12 @@ Existing chains keep their review and approval history.
 `WorkspaceHeading`, `NinjaHeading`, `ThemedSelect` and `SelectMenu` implement the
 shared presentation. The browser parity check covers headings, alignment,
 keyboard/forms, modal menus, Ninja revisit behavior and Camera's direct
-generation controls; `scripts/check-camera-models.mjs` covers the model menu,
+generation controls at 1440, 390 and 320 pixels. It checks the generation intake
+before closing it to inspect Director and Editor. Gallery alignment includes its
+filter banner. Director upload inputs keep their screen-reader-only dimensions
+so the shared intake does not create page-wide horizontal scrolling. Set
+`DIRECTOR_BROWSER_PATH` to check with an alternate Chromium executable.
+`scripts/check-camera-models.mjs` covers the model menu,
 FLUX 3 image to video's camera terms and the toolbar across model switches.
 
 The Editor's timeline, transport, channel column, direction pickers and the

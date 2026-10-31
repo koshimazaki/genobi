@@ -37,7 +37,9 @@
     "deepseek-v4-1-flash": { "name": "DeepSeek V4.1 Flash on Nous (Hermes)", "weights": "api" },
     "local-llm": { "name": "An open model on a local server, such as Qwen on Ollama (Hermes)", "weights": "open" },
     "claude-code": { "name": "Claude Code (the person's subscription)", "weights": "closed" },
-    "codex": { "name": "Codex (the person's subscription)", "weights": "closed" }
+    "codex": { "name": "Codex (the person's subscription)", "weights": "closed" },
+    "ltx-deploy-layout-to-video": { "name": "LTX-2.5 Layout-to-Video on a registered deployment", "weights": "open" },
+    "ltx-deploy-akuspace": { "name": "LTX-2.5 AKUSPACE on a registered deployment", "weights": "open" }
   },
   "capabilities": [
     {
@@ -171,9 +173,9 @@
     {
       "id": "run-location", "name": "Run location and workflow swap", "status": "implemented",
       "where": "Camera · run location (Studio setup, or the model menu's Local tick; tags under the model say where a run goes); agents per session",
-      "description": "Choose local ComfyUI or Comfy Cloud for every open workflow, and swap the graph behind a model for the session.",
+      "description": "Choose local ComfyUI, Comfy Cloud, or a registered Comfy deployment for open workflows, and swap the graph behind a model for the session. Runtime discovery distinguishes hosted support from local configuration.",
       "mcp": ["genobi_run_location", "genobi_workflows", "genobi_workflow_select"], "cli": ["run-location", "workflows", "workflow-select"],
-      "skills": ["genobi-camera", "genobi-akuspace"], "docs": ["docs/run-location.md", "docs/comfy-cloud-inventory.md"],
+      "skills": ["genobi-camera", "genobi-akuspace"], "docs": ["docs/run-location.md", "docs/comfy-cloud-inventory.md", "docs/comfy-deploy.md"],
       "runs": [{ "route": "local-model", "models": ["ltx-2-5", "flux-3-klein"] }, { "route": "comfy-cloud", "models": ["ltx-2-5", "flux-3-klein"] }]
     },
     {
@@ -259,7 +261,7 @@
     {
       "id": "world-take-to-project", "name": "World takes into the project from agents", "status": "implemented",
       "where": "3D · World Builder's Takes library, paired with an agent",
-      "description": "A paired agent reads the current recipe, loads any move-library preset by file name and sends a named take to the open project as the card's Send to Director does: first frame and MP4, labelled with the take's name.",
+      "description": "A paired agent reads the current recipe, loads any move-library preset by file name and sends a named take to the open project as the card's Send to Director does: first frame and MP4, labelled with the take's name. Captured dimensions and recipe come from the saved take receipt, with a project-change guard during MP4 conversion.",
       "mcp": ["genobi_world"], "cli": ["world"],
       "skills": ["genobi-3d", "genobi-cli"], "docs": ["docs/world-live.md", "docs/world-builder.md"],
       "runs": [{ "route": "local-free" }]
@@ -487,6 +489,22 @@
       "mcp": [], "cli": [],
       "skills": [], "docs": ["docs/vision.md"],
       "runs": [{ "route": "local-free" }]
+    },
+    {
+      "id": "deployment-agent-inputs", "name": "Registered deployment inputs from agents", "status": "implemented",
+      "where": "Camera · Comfy Deploy, MCP and CLI",
+      "description": "Register a deployment, discover its workflow presets, stage bounded project or paired World media, then quote and submit using session-bound input tickets. Companion audio is discoverable and can be imported separately.",
+      "mcp": ["genobi_run_location", "genobi_workflows", "genobi_workflow_select", "genobi_deployment_stage", "genobi_quote", "genobi_submit", "genobi_take_to_project"], "cli": ["run-location", "workflows", "workflow-select", "deployment-stage", "quote", "submit", "take-to-project"],
+      "skills": ["genobi-comfy", "genobi-cli"], "docs": ["docs/comfy-deploy.md", "docs/run-location.md"],
+      "runs": [{ "route": "comfy-cloud", "models": ["ltx-deploy-layout-to-video", "ltx-deploy-akuspace"] }]
+    },
+    {
+      "id": "voice-agent-api", "name": "Local voice transcription from agents", "status": "implemented",
+      "where": "Agents · local REST API, MCP and CLI",
+      "description": "Read local transcription readiness and transcribe a bounded local or linked-project recording without starting an agent or spending on generation. Requires the locally configured voice service.",
+      "mcp": ["genobi_voice_status", "genobi_voice_transcribe"], "cli": ["voice-status", "voice-transcribe"],
+      "skills": ["genobi-studio", "genobi-cli"], "docs": ["docs/voice-mode.md", "docs/genobi-cli.md"],
+      "runs": [{ "route": "local-model", "models": ["qwen3-asr"] }]
     }
   ]
 }

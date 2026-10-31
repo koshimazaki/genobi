@@ -7,6 +7,8 @@ import { recordWorldRecipe } from "../studio/world-record";
 import { applyRoom, recipeRoom } from "./apply-room";
 import { DIRECTOR_MEDIA_BYTES } from "../../shared/director/types";
 import { TOO_LARGE } from "./send-take";
+import { takeRecipe } from "./take-recipe";
+import { studioStore } from "../studio/store";
 
 /**
  * Where a capture goes. In the studio (`onAsset`, the shared project-assets
@@ -27,23 +29,23 @@ export function useBuilderAssets(
   useEffect(() => () => encoding.current?.abort(), []);
   /**
    * The take as MP4 (with its WAV) under Project; resolves to what was
-   * added. `size` is the take's own frame size, the current recipe's when
-   * the take was just captured.
+   * added. Dimensions and provenance come from the take's own receipt.
    */
-  async function addTake(
-    take: Take,
-    size: { width: number; height: number } = s.recipe,
-  ) {
+  async function addTake(take: Take) {
     if (!onAsset) return undefined;
     // The re-encode keeps roughly the WebM's size, so a take already past the
     // project's media limit is refused before minutes of encoding.
     if (take.video.size > DIRECTOR_MEDIA_BYTES) throw new Error(TOO_LARGE);
+    const before = studioStore.getState().director.bundle;
+    const recipe = await takeRecipe(take);
     const abort = new AbortController();
     encoding.current = abort;
     setSaving("take");
     setResult("");
     try {
-      const mp4 = await takeToMp4(take.video, size, abort.signal);
+      const mp4 = await takeToMp4(take.video, recipe, abort.signal);
+      if (studioStore.getState().director.bundle !== before)
+        throw new Error("Project changed. Send the take again.");
       const video = await onAsset({
         blob: mp4,
         filename: `${take.name}.mp4`,
@@ -63,8 +65,7 @@ export function useBuilderAssets(
           .join(" "),
       );
       // The project keeps the recipe that made its take (Download bundle).
-      const recipe = s.api.current?.getRecipe();
-      if (recipe) recordWorldRecipe(recipe);
+      recordWorldRecipe(recipe);
       return { video, audio: audio || undefined };
     } finally {
       if (encoding.current === abort) encoding.current = null;

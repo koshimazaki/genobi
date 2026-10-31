@@ -1,4 +1,5 @@
 import { AppError } from "../../server/errors";
+import { HOSTED_DEPLOY_INPUT_BYTES } from "./deploy-file";
 import type { DestinationKind } from "./destination";
 
 /**
@@ -67,7 +68,21 @@ export interface RunLocationState {
   /** The local ComfyUI, where the adapter has one to ask. */
   local: LocalComfyStatus | null;
   deployment?: { url: string; name: string };
+  /** Maximum bytes per staged deployment input, enforced by this adapter. */
+  deploymentInputBytes?: number;
   note: string;
+}
+
+/** Prefer the mixed local/API mode, but never invent an unsupported choice. */
+export function localRunChoice(
+  state: Pick<RunLocationState, "choices" | "fixed">,
+) {
+  if (state.fixed) return undefined;
+  return state.choices.includes("both")
+    ? "both"
+    : state.choices.includes("local")
+      ? "local"
+      : undefined;
 }
 
 export const HOSTED_RUN_LOCATION: RunLocationState = {
@@ -78,5 +93,6 @@ export const HOSTED_RUN_LOCATION: RunLocationState = {
   fixed: true,
   choices: ["cloud"],
   local: null,
+  deploymentInputBytes: HOSTED_DEPLOY_INPUT_BYTES,
   note: "The hosted studio runs every workflow on Comfy Cloud. Run the studio on your own machine to use a local ComfyUI. Register a Comfy deployment endpoint in Settings to use its workflows.",
 };

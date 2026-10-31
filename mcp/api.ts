@@ -77,6 +77,10 @@ export class GenobiApi {
   private session = "";
   /** The one session handshake in flight, shared by every first request. */
   private handshake?: Promise<void>;
+  /** Local-file tools remain unavailable to a restricted studio-started session. */
+  get agentSession() {
+    return this.agent;
+  }
   constructor(
     readonly base: URL,
     private fetcher: typeof fetch = fetch,
@@ -241,6 +245,7 @@ export class GenobiApi {
     path: `/api/${string}`,
     limit: number,
   ): Promise<Uint8Array<ArrayBuffer>> {
+    if (!this.session) await this.startSession();
     let response: Response;
     try {
       response = await this.fetcher(new URL(path, this.base), {
@@ -259,11 +264,35 @@ export class GenobiApi {
         response.status,
       );
     const length = Number(response.headers.get("content-length") ?? 0);
-    if (length > limit) throw new Error(`The media is over ${limit} bytes.`);
-    const body = new Uint8Array(await response.arrayBuffer());
-    if (body.length > limit)
+    if (length > limit) {
+      await response.body?.cancel();
       throw new Error(`The media is over ${limit} bytes.`);
-    return body;
+    }
+    const reader = response.body?.getReader();
+    if (!reader) return new Uint8Array();
+    const chunks: Uint8Array[] = [];
+    let size = 0;
+    try {
+      for (;;) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        size += value.length;
+        if (size > limit) {
+          await reader.cancel();
+          throw new Error(`The media is over ${limit} bytes.`);
+        }
+        chunks.push(value);
+      }
+    } finally {
+      reader.releaseLock();
+    }
+    const bytes = new Uint8Array(size);
+    let offset = 0;
+    for (const chunk of chunks) {
+      bytes.set(chunk, offset);
+      offset += chunk.length;
+    }
+    return bytes;
   }
 
   /** Optional activity must not hold a tool forever if the studio is unavailable. */

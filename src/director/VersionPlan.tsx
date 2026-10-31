@@ -1,5 +1,8 @@
 import { readyEntry } from "../../shared/registry";
-import type { HouseTemplate } from "../../shared/templates/types";
+import type {
+  HouseTemplate,
+  TemplateInputs,
+} from "../../shared/templates/types";
 import { versionSlots } from "../../shared/templates/version";
 import type { Bundle } from "./bundle";
 import { projectPlan } from "./house-template";
@@ -8,10 +11,12 @@ export default function VersionPlan({
   template,
   bundle,
   make,
+  inputs,
 }: {
   template: HouseTemplate;
   bundle: Bundle;
   make: string[];
+  inputs: TemplateInputs;
 }) {
   const shots = template.mix ? [] : projectPlan(template, bundle.project).shots;
   return (
@@ -21,6 +26,12 @@ export default function VersionPlan({
         timeline. It shows the actual route, quotes and total before any paid
         step. Keeping existing media needs no generation.
       </p>
+      <dl className="dir-version-words-review">
+        <dt>{template.inputs.subject.label}</dt>
+        <dd>{inputs.subject}</dd>
+        <dt>{template.inputs.title.label}</dt>
+        <dd>{inputs.title}</dd>
+      </dl>
       <ul>
         {versionSlots(template).map((slot) => {
           const entry =

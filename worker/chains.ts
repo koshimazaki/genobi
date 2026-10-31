@@ -16,7 +16,9 @@ import {
   type ChainRecord,
 } from "../shared/chain";
 import { publicQuote } from "../shared/quote";
+import { readyEntry } from "../shared/registry";
 import type { GenerateInput, Job } from "../shared/types";
+import { workflowPlan } from "./deployments";
 import { submit } from "./jobs";
 import { findQuote, quote } from "./quotes";
 import { rateLimit } from "./storage";
@@ -95,9 +97,27 @@ async function stageJobs(env: Env, session: string, record: ChainRecord) {
 
 async function liveQuote(env: Env, session: string, id: string | undefined) {
   const found = id ? await findQuote(env, id, session) : undefined;
-  return found && !found.jobId && Date.parse(found.expiresAt) > Date.now()
-    ? found
-    : undefined;
+  if (!found || found.jobId || Date.parse(found.expiresAt) <= Date.now())
+    return undefined;
+  const entry = readyEntry(found.recipe.id);
+  if (entry?.route === "workflow") {
+    let plan;
+    try {
+      plan = await workflowPlan(env, session, entry);
+    } catch (error) {
+      if (error instanceof AppError) return undefined;
+      throw error;
+    }
+    // A changed endpoint, preset or location needs a new approval, just as on
+    // the local adapter. A read can quote it again without submitting a run.
+    if (
+      found.recipe.location !== plan.location ||
+      found.recipe.workflow !== plan.workflow ||
+      found.recipe.deployment?.url !== plan.deployment?.url
+    )
+      return undefined;
+  }
+  return found;
 }
 
 async function view(env: Env, loaded: Loaded, jobs?: (Job | undefined)[]) {

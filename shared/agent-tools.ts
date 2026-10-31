@@ -14,6 +14,12 @@ export const GENOBI_TOOLS = [
   "genobi_jobs",
   "genobi_job",
   "genobi_quote",
+  "genobi_template_plan",
+  "genobi_world_recipe",
+  "genobi_audio_analysis",
+  "genobi_deployment_stage",
+  "genobi_voice_status",
+  "genobi_voice_transcribe",
   "genobi_take",
   // Never spends: copies a take (its own, or one the person picked) into the
   // project the agent is linked to, as the Director skill asks.

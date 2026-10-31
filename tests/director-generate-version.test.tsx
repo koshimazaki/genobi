@@ -101,12 +101,12 @@ it("opens inputs when a template is selected and hands a finished mix to the age
   });
   expect(state.send).toHaveBeenCalledOnce();
   const message = state.send.mock.calls[0][0];
-  expect(message).toContain("Generate a replacement");
-  expect(message).toContain("Reuse current media");
+  expect(message).toContain("Replace slot IDs: mix-01.");
+  expect(message).toContain("Reuse other media");
   expect(cleanInstruction(message)).toBe(message);
   expect(message).toContain("brief/prompt.json");
   expect(message).toContain("wait for explicit approval");
-  expect(message).toContain("never retry an uncertain submission");
+  expect(message).toContain("never retry uncertain submissions");
   expect(fetch).not.toHaveBeenCalled();
   expect(document.querySelector("dialog")).toBeNull();
 });

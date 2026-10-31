@@ -339,4 +339,63 @@ describe("hosted caller-owned Comfy deployments", () => {
       deploymentFault.uncertain = false;
     }
   });
+  it("recovers every companion after the final job save fails", async () => {
+    const session = newSession();
+    const body = await staged(session);
+    const quote = await quoted(session, body);
+    const response = await submit(session, body, quote.id);
+    const { job } = (await response.json()) as { job: Job };
+    const db = await mf.getD1Database("DB");
+    const before = deploymentRequests.filter(
+      (r) => r.method === "POST" && r.path === "/api/v2/jobs",
+    ).length;
+    await db
+      .prepare(
+        `CREATE TRIGGER fail_deployment_ready BEFORE UPDATE ON jobs
+      WHEN json_extract(NEW.data,'$.status')='Ready'
+      BEGIN SELECT RAISE(FAIL, 'injected final job save failure'); END`,
+      )
+      .run();
+    try {
+      expect(
+        (await call(`/api/jobs/${job.id}`, { headers: headers(session) }))
+          .status,
+      ).toBe(500);
+      expect(
+        await db
+          .prepare("SELECT job FROM deployment_outputs WHERE job=?")
+          .bind(job.id)
+          .first(),
+      ).toEqual({ job: job.id });
+    } finally {
+      await db.prepare("DROP TRIGGER fail_deployment_ready").run();
+      await db
+        .prepare("UPDATE jobs SET lease_until=0 WHERE id=?")
+        .bind(job.id)
+        .run();
+    }
+    const retried = await call(`/api/jobs/${job.id}`, {
+      headers: headers(session),
+    });
+    const ready = (await retried.json()) as { job: Job };
+    expect(ready.job.status).toBe("Ready");
+    expect(ready.job.companions).toContainEqual({
+      assetId: `${job.id}-audio-13`,
+      label: "Room wet mix",
+      url: `/api/clips/${job.id}-audio-13`,
+      mediaType: "audio",
+      contentType: "audio/wav",
+    });
+    expect(
+      await db
+        .prepare("SELECT job FROM deployment_outputs WHERE job=?")
+        .bind(job.id)
+        .first(),
+    ).toBeNull();
+    expect(
+      deploymentRequests.filter(
+        (r) => r.method === "POST" && r.path === "/api/v2/jobs",
+      ),
+    ).toHaveLength(before);
+  });
 });

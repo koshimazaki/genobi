@@ -4,6 +4,7 @@ import type { HouseTemplate } from "../../shared/templates/types";
 import type { Bundle } from "./bundle";
 import { feedbackOf } from "./feedback-file";
 import { resolveBrief } from "./prompt-brief";
+import { versionTextInputs } from "./version-inputs";
 
 /** Keep the complete request inside Send's limit; the linked copy holds the full brief. */
 export function versionInstruction(
@@ -12,11 +13,13 @@ export function versionInstruction(
   make: string[],
 ) {
   const brief = resolveBrief(bundle);
+  const { subject, title } = versionTextInputs(bundle, template);
   const required = [
-    `Make my version of ${template.name} on this existing linked project. Read its current revision, actual asset files, complete brief/prompt.json with every reference binding, and generationPlans first.`,
-    `Generate a replacement for these input slot IDs: ${make.join(", ") || "none"}. Reuse current media for every other slot.`,
-    "My saved Make it yours description and character/style references take priority over template defaults. Ask for missing direction; do not infer original prompts from demo footage.",
-    "Keep current media, timing, source in-points, graphics and edits until approved results are ready. Show each paid quote and total; wait for explicit approval in the studio bubble. This is not spending approval. Persist idempotency first; never retry an uncertain submission. Apply results with revision checks and preview; keep existing media on failure.",
+    `Make my version of ${template.name} on this linked project. First read revision, asset files, complete brief/prompt.json with bindings, and generationPlans.`,
+    `Current Words: ${JSON.stringify({ subject, title })}. Override template defaults; retain longer custom headlines on layers.`,
+    `Replace slot IDs: ${make.join(", ") || "none"}. Reuse other media.`,
+    "Follow saved description and references. Ask about missing/conflicting direction; never infer original demo prompts.",
+    "Keep media, timing, in-points and edits until results are approved. Show paid quotes and total; wait for explicit approval in the studio bubble. No spending approved here. Persist idempotency first; never retry uncertain submissions. Apply with revision checks and preview; keep media on failure.",
   ].join("\n");
   if (required.length > REGENERATE_INSTRUCTION_MAX - 120)
     throw new Error(
@@ -31,5 +34,5 @@ export function versionInstruction(
       REGENERATE_INSTRUCTION_MAX - required.length,
       "… Read the full linked project brief and directions.",
     )
-  );
+  ).trimEnd();
 }

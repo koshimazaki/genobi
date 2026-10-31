@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { entryFor } from "../shared/registry";
+import { localRunChoice } from "../shared/comfy/run-location";
 import { readSelection } from "./licensing/preferences";
 import { SETUP_SAVED } from "./setup/state";
 import { setupLocationWrite, useSettingsStore } from "./settings-store";
@@ -40,12 +41,13 @@ export function useSetupDefaults(
         wrote ||
         readSelection()?.execution !== "local" ||
         !current ||
-        current.fixed ||
         current.location === "local"
       )
         return false;
+      const choice = localRunChoice(current);
+      if (!choice) return false;
       wrote = true;
-      void setupLocationWrite("both").catch(() => {});
+      void setupLocationWrite(choice).catch(() => {});
       return true;
     };
     const stop = useSettingsStore.subscribe((s, before) => {

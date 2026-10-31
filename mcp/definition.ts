@@ -2,6 +2,7 @@ import type { z } from "zod";
 import type { Job } from "../shared/types";
 import type { GenobiApi } from "./api";
 import { jobProgressLine } from "../shared/progress-line";
+import { takeOutputs } from "../shared/take";
 
 /** One MCP tool: its schema, its MCP annotations and what it asks the studio. */
 export interface ToolDefinition {
@@ -46,6 +47,7 @@ export function jobSummary(job: Job) {
     estimateUsd: job.costEstimateUsd,
     actualUsd: job.costActualUsd ?? null,
     resultUrl: job.resultUrl ?? null,
+    outputs: job.status === "Ready" ? takeOutputs(job) : [],
     error: job.error ?? null,
   };
 }

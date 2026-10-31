@@ -14,10 +14,10 @@ let fixed: boolean;
 let settings: Promise<Response> | undefined;
 const getUserMedia = vi.fn().mockRejectedValue(new Error("Unexpected mic"));
 const request = vi.fn(async (url: string) => {
-  if (url === "/api/settings/run-location")
+  if (url === "/api/health")
     return (
       settings ??
-      Response.json({ revision: 1, location: "cloud", choices: [], fixed })
+      Response.json({ ok: true, hasServerKey: false, hosted: fixed })
     );
   if (url === "/api/voice/status")
     return Response.json({ available: true, maxSeconds: 180 });
@@ -114,9 +114,7 @@ it("waits for hosted detection when the mic is pressed immediately", async () =>
   expect(voiceCalls()).toEqual([]);
   expect(getUserMedia).not.toHaveBeenCalled();
   await act(async () => {
-    answer(
-      Response.json({ revision: 1, location: "cloud", choices: [], fixed }),
-    );
+    answer(Response.json({ ok: true, hasServerKey: false, hosted: fixed }));
   });
   await expectNotice();
 });
@@ -246,6 +244,6 @@ it("guards every voice client and the recorder on hosted", async () => {
   expect(voiceCalls()).toEqual([]);
   expect(getUserMedia).not.toHaveBeenCalled();
   expect(
-    request.mock.calls.filter(([url]) => url === "/api/settings/run-location"),
+    request.mock.calls.filter(([url]) => url === "/api/health"),
   ).toHaveLength(1);
 });

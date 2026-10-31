@@ -225,7 +225,14 @@ export class LocalComfyWorkflows implements WorkflowClient {
     template: WorkflowTemplate,
     values: Record<string, unknown>,
   ) {
-    return { ...values, ...this.models[template.id] };
+    // Runtime variants share the registered template's model configuration,
+    // but may remove a loader (Klein editing omits the text-only upsampler).
+    const overrides = Object.fromEntries(
+      Object.entries(this.models[template.id] ?? {}).filter(
+        ([slot]) => template.slots[slot]?.kind === "model",
+      ),
+    );
+    return { ...values, ...overrides };
   }
 
   /** What a filled graph needs that this ComfyUI lacks: node types, and model slots. */

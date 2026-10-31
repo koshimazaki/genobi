@@ -1,3 +1,4 @@
+import { deploymentInputLimit } from "../../shared/comfy/deploy-file";
 import DeploymentPreset from "./DeploymentPreset";
 import {
   clearLayoutTake,
@@ -55,6 +56,9 @@ export default function DeploymentWorkspace({
   current.current = state;
   const model = state.model;
   const selectedTemplate = useSettingsStore((s) => s.workflows[model]);
+  const inputBytes = deploymentInputLimit(
+    useSettingsStore((s) => s.runLocation?.deploymentInputBytes),
+  );
   if (!isDeployModel(model)) return null;
   const endpoint = deployEndpoint(model);
   const template = deployTemplates.find(
@@ -94,8 +98,10 @@ export default function DeploymentWorkspace({
         if (current.current.model === model) change({ recipe });
         return;
       }
-      if (file.size > 150_000_000)
-        throw new Error("Keep each deployment input under 150 MB.");
+      if (!file.size || file.size > inputBytes)
+        throw new Error(
+          `Keep each deployment input between 1 byte and ${inputBytes / 1_000_000} MB.`,
+        );
       const extension = file.name.split(".").at(-1)?.toLowerCase();
       const types: Record<string, string> = {
         webm: "video/webm",
@@ -193,7 +199,8 @@ export default function DeploymentWorkspace({
           {model === "ltx-deploy-layout-to-video"
             ? "Scene-derived room reverb"
             : "AKUSPACE learned-audio experiment"}{" "}
-          · {state.duration}s at 24 fps
+          · {state.duration}s at 24 fps · up to {inputBytes / 1_000_000} MB per
+          input
         </p>
         {model === "ltx-deploy-layout-to-video" && captured && (
           <div>
@@ -272,9 +279,9 @@ export default function DeploymentWorkspace({
             onChange={(e) => change({ negativePrompt: e.target.value })}
           />
           <p>
-            Inputs are staged on your deployment. Tickets last two hours in this
-            studio process. Reattach after restart. L2R needs the matching
-            capture recipe; room geometry comes from that recipe.
+            Inputs are staged on your deployment. Tickets last two hours;
+            reattach expired inputs. L2R needs the matching capture recipe; room
+            geometry comes from that recipe.
           </p>
           <p>
             AKUSPACE changes the music. CPU adaptive reverb runs separately on

@@ -1,5 +1,8 @@
 import express from "express";
-import { validDeploymentFile } from "../shared/comfy/deploy-file";
+import {
+  LOCAL_DEPLOY_INPUT_BYTES,
+  validDeploymentFile,
+} from "../shared/comfy/deploy-file";
 import { randomUUID } from "node:crypto";
 import { requireKey, AppError } from "./errors";
 import { ComfySdkWorkflows } from "./comfy-sdk";
@@ -76,7 +79,7 @@ export class DeploymentAssets {
     if (
       !(bytes instanceof Uint8Array) ||
       !bytes.length ||
-      bytes.length > 150_000_000 ||
+      bytes.length > LOCAL_DEPLOY_INPUT_BYTES ||
       !validDeploymentFile(token, contentType, bytes)
     )
       throw deployInvalid(
@@ -120,7 +123,7 @@ export class DeploymentAssets {
     const router = express.Router();
     router.post(
       "/deployment-assets/:token",
-      express.raw({ type: () => true, limit: "150mb" }),
+      express.raw({ type: () => true, limit: LOCAL_DEPLOY_INPUT_BYTES }),
       async (request, response) => {
         const session = response.locals.sessionId as string;
         limit("edit", session);

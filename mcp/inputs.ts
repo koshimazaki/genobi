@@ -8,6 +8,9 @@ import {
   MAX_IMAGE_REFERENCES,
 } from "../shared/image";
 import { presets } from "../shared/presets";
+import { DEPLOY_FILE_TOKENS } from "../shared/comfy/deploy-input";
+import { projectAssetSchema, projectImageReferences } from "./project-assets";
+import type { GenobiApi } from "./api";
 import { QUOTE_ID } from "../shared/quote";
 import type {
   AspectRatio,
@@ -34,6 +37,8 @@ const generators = [
   "audio",
 ] as const satisfies readonly Generator[];
 const models = [
+  "ltx-deploy-layout-to-video",
+  "ltx-deploy-akuspace",
   "flux-3",
   "flux-3-i2v",
   "minimax-h3",
@@ -164,6 +169,25 @@ export const generationShape = {
     .describe(
       "PNG/JPEG/WebP data URLs. H3: exactly two, identity then look; H3 on Router: exactly two, character sheet then storyboard; FLUX i2v: one to ten ordered keyframes; Edit: source first; openjutsu-swap: the character, then the first frame (a Klein box edit) if any",
     ),
+  projectImageReferences: z
+    .array(projectAssetSchema)
+    .min(1)
+    .max(MAX_IMAGE_REFERENCES)
+    .optional()
+    .describe(
+      "Image assets of linked projects, in reference order. The adapter resolves their bytes; use instead of imageReferences. Read the full brief's reference bindings from genobi_project.",
+    ),
+  deploy: z
+    .strictObject({
+      seed: z.number().int().min(0).max(Number.MAX_SAFE_INTEGER),
+      negativePrompt: z.string().max(12000),
+      recipe: z.string().max(64000).optional(),
+      assets: z.partialRecord(z.enum(DEPLOY_FILE_TOKENS), z.string().uuid()),
+    })
+    .optional()
+    .describe(
+      "ltx-deploy-* only: staged ownership tickets from genobi_deployment_stage, seed, negative prompt and the capture recipe. Tickets expire after two hours; quote and submit in the same session and endpoint.",
+    ),
   swap: z
     .object({
       start: z
@@ -226,7 +250,8 @@ export const idempotencyKeyField = z
 export function generationBody(args: Record<string, unknown>) {
   const body: Record<string, unknown> = {};
   for (const field of Object.keys(generationShape))
-    if (args[field] !== undefined) body[field] = args[field];
+    if (field !== "projectImageReferences" && args[field] !== undefined)
+      body[field] = args[field];
   if (body.generator === "video" || body.generator === "upscale") {
     body.cameraEnabled ??= false;
     body.draft ??= false;
@@ -240,5 +265,30 @@ export function generationBody(args: Record<string, unknown>) {
         selection[section.id] ?? null,
       ]),
     );
+  return body;
+}
+
+/** Quote and submit resolve the same scoped references, so changed bytes fail quote matching. */
+export async function resolvedGenerationBody(
+  api: GenobiApi,
+  args: Record<string, unknown>,
+) {
+  const body = generationBody(args);
+  if (args.projectImageReferences !== undefined) {
+    if (Array.isArray(args.imageReferences) && args.imageReferences.length)
+      throw new Error(
+        "Use projectImageReferences or imageReferences, not both.",
+      );
+    body.imageReferences = await projectImageReferences(
+      api,
+      args.projectImageReferences,
+    );
+  }
+  if (
+    body.model === "flux-3-klein" &&
+    Array.isArray(body.imageReferences) &&
+    body.imageReferences.length
+  )
+    body.imageAspectRatio ??= "auto";
   return body;
 }

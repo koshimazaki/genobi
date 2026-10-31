@@ -18,6 +18,7 @@ import {
   SUBJECT_ACTIONS,
 } from "../shared/director/directions";
 import type { GraphicsModule, Layer, Project } from "../shared/director/types";
+import type { PromptBrief } from "../src/director/prompt-brief";
 import { findHouseTemplate } from "../shared/templates/catalogue";
 import type { ToolDefinition } from "./definition";
 
@@ -31,7 +32,7 @@ interface ProjectRead {
   revision: number;
   updatedAt: string;
   project: Project;
-  brief: { text: string } | null;
+  brief: PromptBrief | null;
 }
 
 // Two people's projects can share an id (templates reuse them), so an agent
@@ -103,6 +104,8 @@ export function projectSummary(read: ProjectRead) {
     globalPrompt: p.globalPrompt ?? "",
     // The earlier prompt brief, kept as context beside the global prompt.
     prompt: read.brief?.text ?? "",
+    // Preserve token → asset bindings so model references use the owner's actual files.
+    brief: read.brief ?? null,
     template: p.template ?? null,
     preferences: p.preferences ?? null,
     // The revision your last command left, which genobi_project_feedback
@@ -128,6 +131,7 @@ export function projectSummary(read: ProjectRead) {
       label: assetLabel(a.file.path),
       kind: a.kind,
       use: a.use,
+      file: a.file,
       durationSeconds: a.durationSeconds ?? null,
     })),
     recipes: Object.entries(p.modules).map(recipeSummary),
@@ -210,7 +214,7 @@ export const directorTools: ToolDefinition[] = [
     name: "genobi_project",
     title: "Genobi Director project",
     description:
-      "Read one Director project: its revision, globalPrompt (the primary direction for the whole piece), tracks with their clips (frames, in-point, placement with its start and motion end, recipe parameters, and each clip's own prompt and typed directions {shot, lens, camera, action} with directionWords), assets (assetId, label: the name it was added under such as a World take's, or null; kind, use, durationSeconds), graphics recipes with the parameters each takes (recipes, and registryRecipes the project can still bring in with add-graphic), template shots with their camera and prompt, the earlier project prompt brief (prompt), and frame notes (the person's review pinned to a frame and maybe a layer: noteId, frame, layerId, text, author, createdAt, resolved). Act on open notes, then resolve them. Send commands against the revision you read. agentRevision is the revision your last command left; genobi_project_feedback returns what the person changed since then.",
+      "Read one Director project: revision, globalPrompt, tracks/clips with timing, placement, parameters, prompts and directions; assets with assetId, label, kind, use, file path/hash and duration; recipes and registryRecipes; shots; complete brief (text plus reference bindings); and frame notes. Resolve brief.references to assets and pass image references to genobi_quote as projectImageReferences [{copyId,assetId}], in the intended order. The adapter reads the authorized file bytes; never invent references from filenames. Send commands against the revision you read. agentRevision is the revision your last command left; genobi_project_feedback returns the person's changes since then.",
     inputSchema: { copyId },
     tags: ["agents", "mcp", "director", "bundle"],
     docs: [

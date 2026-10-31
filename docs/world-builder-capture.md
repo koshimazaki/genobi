@@ -17,6 +17,12 @@ controls with no counterpart here (frame rates other than 24, frame preview,
 operator corners, burn-in, proof video, a viewport-sized capture) are left out
 rather than imitated.
 
+Sending a saved take uses the dimensions and recipe in its capture receipt,
+even when a different scene is now open. A project change during MP4 conversion
+stops the import; send the take again in the intended project. An invalid
+receipt requires a new capture or a direct download, so an unrelated current
+scene is never recorded as the take's provenance.
+
 ## Layout
 
 - **Status strip.** A state badge, then the size, frame rate, take length and

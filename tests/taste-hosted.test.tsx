@@ -6,7 +6,7 @@ import { readFileSync } from "node:fs";
 import { tasteDemos } from "../src/licensing/taste-demos";
 import { tasteLibraries } from "../shared/licensing/report";
 import { tasteSources } from "../shared/licensing/taste-shelf";
-import { HOSTED_RUN_LOCATION } from "../shared/comfy/run-location";
+const HOSTED_HEALTH = { ok: true, hasServerKey: false, hosted: true };
 
 vi.mock("../src/licensing/AsciiStudy", () => ({ default: () => null }));
 
@@ -27,7 +27,7 @@ const profile = {
   shelf: { excluded: [], custom: [] },
 };
 const server = vi.fn(async (url: string, init?: RequestInit) => {
-  if (url === "/api/settings/run-location") return settings();
+  if (url === "/api/health") return settings();
   if (url === "/api/memory/taste") return json(profile);
   if (url === "/api/memory/taste/shelf")
     return json({
@@ -44,7 +44,7 @@ beforeEach(() => {
   vi.resetModules();
   server.mockClear();
   observers.clear();
-  settings = async () => json(HOSTED_RUN_LOCATION);
+  settings = async () => json(HOSTED_HEALTH);
   vi.stubGlobal("fetch", server);
   vi.stubGlobal("IS_REACT_ACT_ENVIRONMENT", true);
   vi.stubGlobal("matchMedia", () => ({
@@ -126,7 +126,7 @@ it("waits for hosted detection before allowing any local-only request", async ()
   await render();
   expect(host.textContent).toContain("public references");
   expect(memoryCalls()).toEqual([]);
-  await act(async () => resolve(json(HOSTED_RUN_LOCATION)));
+  await act(async () => resolve(json(HOSTED_HEALTH)));
   expect(memoryCalls()).toEqual([]);
 });
 
@@ -145,7 +145,7 @@ it.each(["offline", "unrecognised"])(
 );
 
 it("reads and saves the personal shelf in confirmed local mode", async () => {
-  settings = async () => json({ ...HOSTED_RUN_LOCATION, fixed: false });
+  settings = async () => json({ ...HOSTED_HEALTH, hosted: false });
   await render();
   expect(memoryCalls().map(([url]) => url)).toEqual(["/api/memory/taste"]);
   expect(host.textContent).toContain("My reusable taste");

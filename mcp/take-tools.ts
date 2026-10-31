@@ -25,6 +25,13 @@ const inputSchema = {
     .describe(
       "A video or audio result of genobi_media_trim, _concat, _crossfade or _space, for your own cut; leave out with id",
     ),
+  outputId: z
+    .string()
+    .regex(MEDIA_SOURCE_ID)
+    .optional()
+    .describe(
+      "With id, select an output assetId from genobi_take.outputs (for example companion audio). Omit for the primary output.",
+    ),
   copyId: z.string().regex(COPY_ID).describe("The linked project's copyId"),
   baseRevision: z
     .number()
@@ -42,6 +49,12 @@ const inputObject = z
         code: "custom",
         path: ["id"],
         message: "Give id (a take) or sourceId (a media result), not both.",
+      });
+    if (input.outputId !== undefined && input.id === undefined)
+      ctx.addIssue({
+        code: "custom",
+        path: ["outputId"],
+        message: "outputId requires a take id.",
       });
   })
   .meta({ oneOf: [{ required: ["id"] }, { required: ["sourceId"] }] });
@@ -72,12 +85,16 @@ export const takeTools: ToolDefinition[] = [
           assetId: string;
           revision: number;
           added: boolean;
+          kind?: "video" | "image" | "audio";
           derivation?: Derivation;
         }>(`/api/projects/${encodeURIComponent(String(args.copyId))}/takes`, {
           ...(derived ? { sourceId: args.sourceId } : { jobId: args.id }),
+          ...(args.outputId === undefined ? {} : { outputId: args.outputId }),
           baseRevision: args.baseRevision,
         });
-        const audio = added.derivation?.sources[0]?.kind === "audio";
+        const audio =
+          added.kind === "audio" ||
+          added.derivation?.sources[0]?.kind === "audio";
         return {
           ...added,
           next: audio

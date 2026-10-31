@@ -11,7 +11,7 @@ Each tool of the Genobi MCP server: what it does, whether it is read-only, write
 
 ## `genobi_status`
 
-Genobi status · read-only. Check that the local Genobi studio is running and whether it holds a provider key and generation budget.
+Genobi status · read-only. Check that the local Genobi studio is running, whether it holds a provider key and generation budget, and the runtime's supported operations, configuration and limits. Older servers may omit capabilities; never treat that omission as support for an operation.
 
 - Tags: `agents`, `mcp`, `backend`
 - Taught by: [`anime-teaser`](registry-skills.md#anime-teaser), [`audio-visual`](registry-skills.md#audio-visual), [`character-piece`](registry-skills.md#character-piece), [`falling-room`](registry-skills.md#falling-room), [`genobi-cli`](registry-skills.md#genobi-cli), [`genobi-comfy`](registry-skills.md#genobi-comfy), [`genobi-director`](registry-skills.md#genobi-director), [`genobi-hermes`](registry-skills.md#genobi-hermes), [`genobi-machine`](registry-skills.md#genobi-machine), [`genobi-studio`](registry-skills.md#genobi-studio), [`genobi-swords`](registry-skills.md#genobi-swords), [`product-video`](registry-skills.md#product-video)
@@ -187,10 +187,10 @@ Link a Genobi project · writes. Link the Director project the person is editing
 
 ## `genobi_project`
 
-Genobi Director project · read-only. Read one Director project: its revision, globalPrompt (the primary direction for the whole piece), tracks with their clips (frames, in-point, placement with its start and motion end, recipe parameters, and each clip's own prompt and typed directions {shot, lens, camera, action} with directionWords), assets (assetId, label: the name it was added under such as a World take's, or null; kind, use, durationSeconds), graphics recipes with the parameters each takes (recipes, and registryRecipes the project can still bring in with add-graphic), template shots with their camera and prompt, the earlier project prompt brief (prompt), and frame notes (the person's review pinned to a frame and maybe a layer: noteId, frame, layerId, text, author, createdAt, resolved). Act on open notes, then resolve them. Send commands against the revision you read. agentRevision is the revision your last command left; genobi_project_feedback returns what the person changed since then.
+Genobi Director project · read-only. Read one Director project: revision, globalPrompt, tracks/clips with timing, placement, parameters, prompts and directions; assets with assetId, label, kind, use, file path/hash and duration; recipes and registryRecipes; shots; complete brief (text plus reference bindings); and frame notes. Resolve brief.references to assets and pass image references to genobi_quote as projectImageReferences [{copyId,assetId}], in the intended order. The adapter reads the authorized file bytes; never invent references from filenames. Send commands against the revision you read. agentRevision is the revision your last command left; genobi_project_feedback returns the person's changes since then.
 
 - Tags: `agents`, `mcp`, `director`, `bundle`
-- Taught by: [`anime-teaser`](registry-skills.md#anime-teaser), [`audio-visual`](registry-skills.md#audio-visual), [`character-piece`](registry-skills.md#character-piece), [`falling-room`](registry-skills.md#falling-room), [`genobi-3d`](registry-skills.md#genobi-3d), [`genobi-director`](registry-skills.md#genobi-director), [`genobi-licensing`](registry-skills.md#genobi-licensing), [`genobi-studio`](registry-skills.md#genobi-studio), [`product-video`](registry-skills.md#product-video)
+- Taught by: [`anime-teaser`](registry-skills.md#anime-teaser), [`audio-visual`](registry-skills.md#audio-visual), [`character-piece`](registry-skills.md#character-piece), [`falling-room`](registry-skills.md#falling-room), [`genobi-3d`](registry-skills.md#genobi-3d), [`genobi-cli`](registry-skills.md#genobi-cli), [`genobi-director`](registry-skills.md#genobi-director), [`genobi-licensing`](registry-skills.md#genobi-licensing), [`genobi-studio`](registry-skills.md#genobi-studio), [`product-video`](registry-skills.md#product-video)
 - Docs: [docs/director-bundle/README.md](director-bundle/README.md), [docs/director-working-version.md](director-working-version.md)
 
 ## `genobi_project_feedback`
@@ -262,7 +262,7 @@ Genobi template plan · read-only. Plan a house template (product-video, charact
 Genobi take to project · writes. Hand a Ready take you made (id), or a video or audio result of your own media tools (sourceId: a trim, concat, crossfade or space), into the Director project you linked: the studio copies its clip, still, song or cut into that project as a production asset, at the revision you read, and the person sees it. A result's record names its operation and inputs, each input the project already holds as an input asset; hand the takes it was cut from in first so the project names them. A result built from media your session does not own is refused. Returns the assetId to place, for example with genobi_director_command replace-plate (a clip) or add-clip on an audio track (a song or audio cut). Never submits or pays; the same file twice answers with the same asset.
 
 - Tags: `agents`, `mcp`, `director`, `bundle`, `dual-editor`
-- Taught by: [`anime-teaser`](registry-skills.md#anime-teaser), [`audio-visual`](registry-skills.md#audio-visual), [`character-piece`](registry-skills.md#character-piece), [`falling-room`](registry-skills.md#falling-room), [`genobi-director`](registry-skills.md#genobi-director), [`genobi-hermes`](registry-skills.md#genobi-hermes), [`genobi-swords`](registry-skills.md#genobi-swords), [`genobi-upscale`](registry-skills.md#genobi-upscale), [`product-video`](registry-skills.md#product-video)
+- Taught by: [`anime-teaser`](registry-skills.md#anime-teaser), [`audio-visual`](registry-skills.md#audio-visual), [`character-piece`](registry-skills.md#character-piece), [`falling-room`](registry-skills.md#falling-room), [`genobi-comfy`](registry-skills.md#genobi-comfy), [`genobi-director`](registry-skills.md#genobi-director), [`genobi-hermes`](registry-skills.md#genobi-hermes), [`genobi-swords`](registry-skills.md#genobi-swords), [`genobi-upscale`](registry-skills.md#genobi-upscale), [`product-video`](registry-skills.md#product-video)
 - Docs: [docs/director-agent-tools.md](director-agent-tools.md), [docs/director-bundle/README.md](director-bundle/README.md), [docs/dual-editor.md](dual-editor.md)
 
 ## `genobi_provenance`
@@ -347,7 +347,7 @@ Genobi media space · writes. Put an AKUSPACE room on a video or audio clip's ex
 
 ## `genobi_run_location`
 
-Genobi run location · writes. Read or set where this session's open workflows run: local (the ComfyUI on this machine, its own models, nothing charged) or cloud (Comfy Cloud, charged to the Comfy key). Both combines local open workflows with cloud API models, with no automatic cloud fallback. Without `location` it only reads, and reports whether a local ComfyUI answers. A quote taken before a change cannot be spent after it; ask for a new one.
+Genobi run location · writes. Read or set this session's open-workflow destination: local, cloud, both, or deployment with deploymentUrl (https://<name>.run.comfy.app). A deployment uses its workspace's billing. Without location this only reads readiness and input limits. No automatic fallback. A destination change invalidates earlier quotes and staged tickets; stage and quote again before an approved submission.
 
 - Tags: `agents`, `mcp`, `workflows`, `comfy`
 - Taught by: [`genobi-akuspace`](registry-skills.md#genobi-akuspace), [`genobi-camera`](registry-skills.md#genobi-camera), [`genobi-cli`](registry-skills.md#genobi-cli), [`genobi-comfy`](registry-skills.md#genobi-comfy), [`genobi-upscale`](registry-skills.md#genobi-upscale)
@@ -368,6 +368,30 @@ Genobi workflow select · writes. Swap the workflow template behind a workflow m
 - Tags: `agents`, `mcp`, `workflows`, `comfy`
 - Taught by: [`genobi-akuspace`](registry-skills.md#genobi-akuspace), [`genobi-camera`](registry-skills.md#genobi-camera), [`genobi-comfy`](registry-skills.md#genobi-comfy)
 - Docs: [docs/run-location.md](run-location.md)
+
+## `genobi_deployment_stage`
+
+Stage a Comfy deployment input · writes. Upload one media input to the session's registered Comfy deployment. Use filePath (external agents only), a linked projectAsset, or a paired worldFile. Returns a session/endpoint-bound ticket for deploy.assets[token] in genobi_quote. Tickets expire after two hours or become unusable after switching endpoints; re-stage only when refused. No generation is submitted and no provider key is returned. The deployment's storage/billing policies apply to uploads.
+
+- Tags: `agents`, `mcp`, `workflows`, `comfy`
+- Taught by: [`genobi-cli`](registry-skills.md#genobi-cli), [`genobi-comfy`](registry-skills.md#genobi-comfy)
+- Docs: [docs/run-location.md](run-location.md), [docs/comfy-deploy.md](comfy-deploy.md)
+
+## `genobi_voice_status`
+
+Local voice status · read-only. Read local speech-to-text availability, supported languages and recording limit. No model is installed or started. Voice transcription requires the local Genobi server.
+
+- Tags: `agents`, `mcp`, `sound`
+- Taught by: [`genobi-cli`](registry-skills.md#genobi-cli), [`genobi-studio`](registry-skills.md#genobi-studio)
+- Docs: [docs/voice-mode.md](voice-mode.md), [docs/genobi-cli.md](genobi-cli.md)
+
+## `genobi_voice_transcribe`
+
+Transcribe local audio · writes. Transcribe a WAV, FLAC or MP3 with the local voice worker. Read genobi_voice_status first. Name a session audio source, linked project audio asset, or (external agents only) a local file. Bytes and duration are bounded before transcription; no provider API, generation, or prompt execution is performed. Returns the transcript for review before another action.
+
+- Tags: `agents`, `mcp`, `sound`
+- Taught by: [`genobi-cli`](registry-skills.md#genobi-cli), [`genobi-studio`](registry-skills.md#genobi-studio)
+- Docs: [docs/voice-mode.md](voice-mode.md), [docs/genobi-cli.md](genobi-cli.md)
 
 ## `genobi_machine`
 

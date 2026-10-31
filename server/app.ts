@@ -274,7 +274,7 @@ export async function createApp(options: AppOptions) {
       });
     response.locals.sessionId = sessionId;
     response.locals.agent = fromAgent(agents, request, sessionId);
-    scopeAgentRequest(agents, request, response.locals);
+    scopeAgentRequest(agents, request, response.locals, store);
     shareTakes(store, request, response.locals);
     // Paid writes are counted once here; each read route counts its own bucket.
     // Unpaid routes count their own too: project copy writes (`edit`), voice

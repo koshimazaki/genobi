@@ -1,3 +1,16 @@
+/** Per-input limits advertised by the adapter that receives deployment uploads. */
+export const HOSTED_DEPLOY_INPUT_BYTES = 32_000_000;
+export const LOCAL_DEPLOY_INPUT_BYTES = 150_000_000;
+
+/** Older or unconfirmed settings use the conservative hosted limit. */
+export function deploymentInputLimit(advertised?: number): number {
+  return Number.isSafeInteger(advertised) &&
+    advertised! > 0 &&
+    advertised! <= LOCAL_DEPLOY_INPUT_BYTES
+    ? advertised!
+    : HOSTED_DEPLOY_INPUT_BYTES;
+}
+
 /** File signatures prevent arbitrary content being uploaded under a media type. */
 export function validDeploymentFile(
   token: string,

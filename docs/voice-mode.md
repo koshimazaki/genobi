@@ -5,6 +5,12 @@ summary: Voice mode in the studio header — one-click recording, local Qwen3-AS
 
 # Voice mode
 
+Agents use `genobi_voice_status` and `genobi_voice_transcribe` over MCP, or
+`genobi voice-status` and `genobi voice-transcribe` in the CLI. Transcription takes
+a session audio source, linked audio asset or external-agent local file, checks
+the worker's duration limit and returns text without executing it. Hosted has no
+transcription worker. See [agent voice inputs](genobi-cli.md#project-references-deployments-and-voice).
+
 Voice is the main way to direct Genobi (issue #23, "Signal"). This page covers
 the first four boxes: **local transcription** with Qwen3-ASR, reusing X
 Console's voice worker approach, **the same look** as X Console's voice mode,

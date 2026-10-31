@@ -80,6 +80,7 @@ describe("genobi_take_to_project with a media tool's result", () => {
         assetId: `derived-${trim.sourceId}`,
         revision: 3,
         added: true,
+        kind: "video",
         derivation: {
           operation: "trim",
           sources: [{ kind: "video", origin: "take", assetId: taken.assetId }],
@@ -361,6 +362,7 @@ describe("genobi_take_to_project with a media tool's result", () => {
     expect(Object.keys(schema.properties ?? {})).toEqual([
       "id",
       "sourceId",
+      "outputId",
       "copyId",
       "baseRevision",
     ]);

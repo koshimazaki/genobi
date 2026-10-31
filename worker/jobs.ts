@@ -4,6 +4,7 @@ import type { Expectation } from "../shared/comfy/expectation";
 import { deploymentClient } from "./deployments";
 import {
   copyDeploymentAudio,
+  forgetDeploymentAudio,
   rememberDeploymentAudio,
 } from "./deployment-output";
 import { h3WorkflowFiles, readsClip } from "./workflow-files";
@@ -456,6 +457,10 @@ export async function poll(
       job.status = "expired";
   } finally {
     await saveJob(env, row, job);
+    // A failed final save leaves the receipt for the next poll. Once Ready is
+    // durable, failed cleanup can wait for the bounded retention sweep.
+    if (recipe?.deployment && job.status === "Ready")
+      await forgetDeploymentAudio(env, row.id).catch(() => {});
     await env.DB.prepare(
       "UPDATE jobs SET lease_until=? WHERE id=? AND session=?",
     )

@@ -42,6 +42,7 @@
 .agent-approval-terms dd {
   margin: 0;
   font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
 }
 .agent-approval-status {
   margin: 0 0 6px;

@@ -18,7 +18,7 @@ import { importAssets } from "./import-media";
 import { BRIEF_PATH, readBrief, writeBrief } from "./prompt-brief";
 import { bindVersionPicture } from "./version-pictures";
 import { projectPlan } from "./house-template";
-import { readVersionBrief } from "./version-brief";
+import { readVersionBrief, versionBriefWords } from "./version-brief";
 
 export type VersionPicks = Record<string, string[]>;
 
@@ -240,6 +240,11 @@ export async function applyVersionInputs(
         });
         if (!brief.text.includes(`[${label}]`)) brief.text += `\n[${label}]`;
       }
+      // A reduced slot keeps the surviving labels but removes discarded tokens
+      // in the same edit, so the next agent handoff has no unbound references.
+      for (const reference of old)
+        if (!brief.references.some((r) => r.label === reference.label))
+          brief.text = brief.text.split(`[${reference.label}]`).join("");
     }
     if (!ids[0] && slot.reference?.kind === "audio") {
       if (
@@ -337,6 +342,9 @@ export async function applyVersionInputs(
     next.project.template = { id: template.id, inputs };
   }
   checkReferences(next.project);
-  next = writeBrief(next, brief);
+  next = writeBrief(
+    next,
+    versionBriefWords(brief, template, currentInputs, inputs),
+  );
   return validateFiles(next);
 }

@@ -22,6 +22,7 @@ import { sweep } from "./sweep";
 import { galleryPage } from "../shared/gallery/page";
 import { runnerRoute } from "./runner-routes";
 import { RunnerStore, digest } from "./runner-store";
+import { runtimeCapabilities } from "../shared/runtime-capabilities";
 
 const json = (data: unknown, status = 200) =>
   Response.json(data, {
@@ -32,8 +33,11 @@ const json = (data: unknown, status = 200) =>
     },
   });
 /** Bounds a JSON body even for clients using chunked transfer encoding. */
-async function readJson(request: Request): Promise<unknown> {
-  if (Number(request.headers.get("content-length")) > 16 * 1024 * 1024)
+async function readJson(
+  request: Request,
+  maxBytes = 16 * 1024 * 1024,
+): Promise<unknown> {
+  if (Number(request.headers.get("content-length")) > maxBytes)
     throw new AppError(413, "The request is too large.");
   const reader = request.body?.getReader();
   if (!reader) throw new AppError(400, "Expected a request body.");
@@ -43,7 +47,7 @@ async function readJson(request: Request): Promise<unknown> {
     const { value, done } = await reader.read();
     if (done) break;
     bytes += value.byteLength;
-    if (bytes > 16 * 1024 * 1024) {
+    if (bytes > maxBytes) {
       await reader.cancel();
       throw new AppError(413, "The request is too large.");
     }
@@ -130,7 +134,7 @@ export default {
         request,
         env,
         session,
-        () => readJson(request),
+        () => readJson(request, 2048),
       );
       if (settings) {
         const response = json(settings);
@@ -159,7 +163,10 @@ export default {
         await rateLimit(env, "submit", session);
       }
       let response: Response;
-      if (get && url.pathname === "/api/health") {
+      if (get && url.pathname === "/api/capabilities") {
+        await rateLimit(env, "history", session);
+        response = json(runtimeCapabilities("hosted"));
+      } else if (get && url.pathname === "/api/health") {
         // Housekeeping rides on the two routes a page load hits once, never on
         // the 4-second poll, so its cost scales with visits rather than ticks.
         ctx.waitUntil(sweep(env).catch(() => {}));

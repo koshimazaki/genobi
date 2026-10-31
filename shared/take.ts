@@ -60,6 +60,9 @@ export interface TakeOutput {
   contentType: string;
   /** False once retention or quota removed the media; the take still stands. */
   available: boolean;
+  label?: string;
+  /** Session-owned media route, never an upstream provider delivery URL. */
+  url?: string;
 }
 
 export interface TakeReceipt {
@@ -139,6 +142,34 @@ export async function startTake(
   };
 }
 
+/** Every owned output, including deployment audio that is separate from the video. */
+export function takeOutputs(job: Job): TakeOutput[] {
+  const outputs: TakeOutput[] = [
+    {
+      assetId: job.id,
+      mediaType: job.mediaType ?? "video",
+      contentType: job.resultContentType ?? "video/mp4",
+      available: job.mediaAvailable !== false,
+    },
+  ];
+  const seen = new Set([job.id]);
+  for (const file of job.companions ?? []) {
+    const id = /^\/api\/clips\/([A-Za-z0-9_-]{1,80})$/.exec(file.url)?.[1];
+    if (!id || seen.has(id) || (file.assetId && file.assetId !== id)) continue;
+    seen.add(id);
+    outputs.push({
+      assetId: id,
+      label: file.label,
+      url: file.url,
+      mediaType: "audio",
+      // Historical records have no measured MIME; do not guess WAV.
+      contentType: file.contentType ?? "application/octet-stream",
+      available: job.mediaAvailable !== false && file.available !== false,
+    });
+  }
+  return outputs;
+}
+
 /** The finished take, or null while the job has no owned output yet. */
 export function takeOf(job: Job, start: TakeStart): Take | null {
   if (job.status !== "Ready") return null;
@@ -148,14 +179,7 @@ export function takeOf(job: Job, start: TakeStart): Take | null {
     // A take recorded as `cloud` reads as the route it ran on now.
     recipe: { ...start.recipe, route: currentRoute(start.recipe.route) },
     inputs: start.inputs,
-    outputs: [
-      {
-        assetId: job.id,
-        mediaType: job.mediaType ?? "video",
-        contentType: job.resultContentType ?? "video/mp4",
-        available: job.mediaAvailable !== false,
-      },
-    ],
+    outputs: takeOutputs(job),
     receipt: {
       estimateUsd: job.costEstimateUsd,
       ...(job.costActualUsd === undefined

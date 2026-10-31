@@ -937,6 +937,7 @@
         "camera-wording.md",
         "cloudflare.md",
         "comfy-cloud-inventory.md",
+        "comfy-deploy.md",
         "comfy-deployment.md",
         "dimensions-mix.md",
         "director-agent-tools.md",
@@ -1468,7 +1469,9 @@
       "links": [
         "capabilities.md",
         "hermes-open-route.md",
+        "run-location.md",
         "taste-memory.md",
+        "voice-mode.md",
         "world-live.md"
       ]
     },
@@ -1753,12 +1756,14 @@
         "architecture.md",
         "arena.md",
         "audio-analysis.md",
+        "comfy-deploy.md",
         "credits/README.md",
         "director-agent-tools.md",
         "director-bundle/README.md",
         "director-working-version.md",
         "dual-editor.md",
         "falling-room.md",
+        "genobi-cli.md",
         "hermes-runs.md",
         "licence-strategy.md",
         "machine-check.md",
@@ -1775,6 +1780,7 @@
         "taste-memory.md",
         "templates.md",
         "upscaling.md",
+        "voice-mode.md",
         "world-builder.md",
         "world-live.md"
       ]
@@ -1795,6 +1801,7 @@
         "audio-analysis.md",
         "camera-wording.md",
         "capabilities.md",
+        "comfy-deploy.md",
         "comfy-deployment.md",
         "credits/README.md",
         "director-agent-tools.md",
@@ -1826,6 +1833,7 @@
         "taste-memory.md",
         "templates.md",
         "upscaling.md",
+        "voice-mode.md",
         "world-builder.md",
         "world-live.md"
       ]
@@ -1841,7 +1849,7 @@
       "title": "Run location and workflow swapping",
       "path": "run-location.md",
       "tags": ["workflows", "comfy", "backend", "studio", "mcp"],
-      "summary": "Run location (Local ComfyUI or Comfy Cloud), the local ComfyUI client, workflow swapping and the local model map.",
+      "summary": "Local ComfyUI, Comfy Cloud and registered deployments; capability-aware controls, workflow swapping and the local model map.",
       "links": ["comfy-deploy.md", "openjutsu-swap.md"]
     },
     {
@@ -2150,6 +2158,7 @@
         "agent-context.md",
         "agent-sessions.md",
         "agent-setup.md",
+        "genobi-cli.md",
         "voice-setup.md",
         "world-builder.md"
       ]

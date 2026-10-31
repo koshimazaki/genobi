@@ -30,16 +30,34 @@ Standard, non-fragmented MP4s with one video track are supported. Uploads: 50 MB
 
 Submissions, credits, job polling, history and private media have per-minute limits. The health endpoint is not rate-limited by the application. `shared/limits.ts` holds the numbers once; the Worker counts them in D1 so all isolates share a window, and the local Express server counts the same buckets in memory. The local server reads `localRateLimit`, which raises only `history` to 600: its reads are memory reads on the owner's machine, and one page load makes about twenty of them, so the hosted 60 ran out after a few reloads.
 
-| Bucket        | Per minute              | Route                                            |
-| ------------- | ----------------------- | ------------------------------------------------ |
-| `submit`      | 8 per session           | `POST /api/jobs`, `POST /api/uploads`            |
-| `submitPerIp` | 20 per IP               | the same writes, hashed client IP (Worker only)  |
-| `credits`     | 20 per session          | `GET /api/credits`                               |
-| `poll`        | 120 per session         | `GET /api/jobs/:id`                              |
-| `history`     | 60 per session          | `GET /api/history`                               |
-| `media`       | 600 per session or link | `GET`/`HEAD /api/clips/:id`, `/api/input/:token` |
+| Bucket           | Per minute                | Route                                            |
+| ---------------- | ------------------------- | ------------------------------------------------ |
+| `submit`         | 8 per session             | `POST /api/jobs`, `POST /api/uploads`            |
+| `submitPerIp`    | 20 per IP                 | the same writes, hashed client IP (Worker only)  |
+| `settingsPerIp`  | 30 per IP                 | unpaid deployment endpoint/preset settings       |
+| `settingsGlobal` | 300 across the deployment | the same settings writes                         |
+| `credits`        | 20 per session            | `GET /api/credits`                               |
+| `poll`           | 120 per session           | `GET /api/jobs/:id`                              |
+| `history`        | 60 per session            | `GET /api/history`                               |
+| `media`          | 600 per session or link   | `GET`/`HEAD /api/clips/:id`, `/api/input/:token` |
 
 These bound this deployment's own Worker, D1 and R2 usage. They are not a spending control: generation is charged to the visitor's own BFL key, which the pre-submission balance check covers separately.
+
+Unpaid deployment settings apply the hashed-IP and deployment-wide limits before
+their per-session limit or body parsing, so a fresh cookie does not reset the
+caller’s allowance. Settings bodies are limited to 2 KB while streaming, including
+requests without `Content-Length`. At most 10,000 session settings records can
+exist; insertion checks that ceiling atomically and existing sessions can still
+update their records at capacity. Choosing the default Cloud setting does not
+create a record for a new session. Settings expire after 30 days.
+
+Every hosted workflow quote records its location and template, including ordinary
+Comfy Cloud runs. `Genobi-Run-Location` and `Genobi-Workflow` expectations must
+match before pricing or submission; a mismatched Cloud request is refused too.
+Paused chains also compare their quote with the current location, template and
+deployment endpoint. After a settings change, reading a chain with its caller key
+quotes the stage again without submitting it; a keyless read hides the stale quote
+and asks for the key. The refreshed quote still needs a separate approval.
 
 **Project media is a local limit.** The Editor's per-file and per-project limits
 (`DIRECTOR_MEDIA_BYTES` and `DIRECTOR_PROJECT_BYTES` in `shared/director/types.ts`,
@@ -118,6 +136,16 @@ Apply additive migration `0009_deployments.sql` before publishing this version.
 It creates session endpoint/preset settings, two-hour input receipts and temporary
 companion-output delivery records. Housekeeping removes expired receipts/delivery
 records and settings older than 30 days. It introduces no provider secret or binding.
+
+Companion delivery receipts remain until the job’s Ready state and all audio
+links are durably saved. If that final save fails, the next poll reconstructs
+the links from the receipt and the already saved audio sources without another
+generation. Cleanup after a successful save is best-effort; the retention sweep
+reclaims a receipt whose immediate deletion failed.
+Each recovered audio source must also have its R2 object. A missing object is
+copied again from the retained receipt. If source insertion succeeds but quota
+eviction fails, cleanup preserves the verified bytes owned by that source;
+invalid bytes and a failed insertion with no source row are removed.
 
 ## Verification boundary
 

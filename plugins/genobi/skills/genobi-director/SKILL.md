@@ -66,6 +66,16 @@ licences and creator credits beside the output. Unknown rights are not a pass.
 
 ## Generate a shot
 
+Read the complete `genobi_project.brief`, including `references`, before using
+an image mentioned as `[Image 1]` or similar. Each reference binds the label to
+an `assetId`; the asset list includes its kind, relative file path and hash.
+Pass ordered `projectImageReferences: [{copyId, assetId}]` in quote and submit
+instead of copying media into the conversation. The adapter reads only files
+this session owns or linked, validates the bytes, and preserves input order.
+Do not combine this field with inline `imageReferences`. If an asset changes,
+quote again and obtain approval for the new inputs. Source-conditioned open
+Klein must use `imageAspectRatio: "auto"` because it derives shape from the source.
+
 Use the `genobi-camera` card for the model. The loop is the paying rule from
 `genobi-studio`: `genobi_quote`, show the price and wait for the person's yes,
 `genobi_submit` with that `quoteId`, the same arguments and a new
@@ -76,6 +86,13 @@ A template project lists its `shots` with each shot's `camera`; reuse those
 ids in the quote, so the take matches what the person set.
 
 ## Bring a take into the project
+
+`genobi_job` and `genobi_take.outputs` include separate deployment audio such
+as the wet track or impulse response. To import one, add `outputId` equal to
+that output's `assetId` to `genobi_take_to_project`. Omitting it selects the
+primary output. The server checks the output belongs to the job and the source
+belongs to its authorized owner; imported audio is placed with `add-clip` on
+an audio track. Reading or copying a companion never submits another run.
 
 Your takes live in your own studio session, so the person cannot see them
 until you hand them in:

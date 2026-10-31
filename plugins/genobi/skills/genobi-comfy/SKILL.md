@@ -120,9 +120,10 @@ swap for a ComfyUI without the AKUSPACE LoRA; use your own entry and template.
 
 1. `genobi_run_location {"location": "local"}` when the session's location is
    not the one the template needs: `local`, `cloud` or `both` (local open
-   workflows plus cloud API models). A Comfy deployment is not a session
-   choice: it is the server's default (`GENOBI_WORKFLOW_DESTINATION=deployment`)
-   or a template's pinned `hosts`.
+   workflows plus cloud API models). An external agent can choose `deployment`
+   with `deploymentUrl: "https://<name>.run.comfy.app"`; registration and tickets
+   belong to that session. Studio-started agents inherit their person's setting
+   and do not change run location. A template's pinned `hosts` still apply.
 2. `genobi_workflow_select {"entry": "ltx-2-5-akuspace", "template": "ltx-2-5-t2v"}`
    puts the template behind the entry for this session.
 3. `genobi_quote {"generator": "video", "model": "ltx-2.5-akuspace", "description": "A test shot of the new template: rain on a tin roof, one figure under it.", "camera": {"shot-sizes": "wide", "movements": "static"}, "cameraEnabled": true, "duration": 4, "resolution": "hd", "aspectRatio": "16:9", "acoustic": {"mode": "room", "preset": "cathedral", "level": "mid"}}`
@@ -133,6 +134,46 @@ swap for a ComfyUI without the AKUSPACE LoRA; use your own entry and template.
    once. Never resubmit an uncertain run with a new key.
 5. `genobi_job` until `Ready`, then `genobi_take` for the outputs and receipt.
    Put what ran, where, how long and what it cost in the template's README.
+
+### Registered deployment inputs
+
+The model catalogue includes `ltx-deploy-layout-to-video` and
+`ltx-deploy-akuspace`. Use the row's `inputModel` for quote/submit, and read
+the endpoint manifest and [run location](../../../../docs/run-location.md) for
+its required files. Both recipes use eight seconds, HD, 16:9 and no draft.
+
+`genobi_deployment_stage` stages exactly one input and returns its ticket:
+
+```json
+{
+  "token": "REFERENCE_PNG",
+  "contentType": "image/png",
+  "projectAsset": {
+    "copyId": "signal-studies.abcdefghjk",
+    "assetId": "image-1"
+  }
+}
+```
+
+External agents may use `filePath` for an absolute local media file instead;
+studio-started agents cannot. A paired browser capture may use
+`worldFile: {session, file}` with a file returned by the live World session.
+Do not combine sources. Staging uploads media but does not run the graph; the
+deployment's storage/billing policies still apply. Size limits come from
+`genobi_run_location.deploymentInputBytes`.
+
+Use the returned IDs as `deploy.assets` keyed by token, with `deploy.seed` and
+`deploy.negativePrompt`. Layout-to-video also needs the matching capture recipe
+as the `deploy.recipe` JSON string. Tickets expire after two hours and belong
+to this session and endpoint: a new process needs a shared CLI profile to reuse
+them, and changing endpoints requires staging again. Never put an external URL
+or provider asset ID in place of a ticket. Quote and submit the same complete
+input with the usual approval and stable request key. A deployment quote reports
+GPU-time billing; a zero estimate is not free execution.
+
+Read `genobi_take.outputs` after completion. Separate wet/IR/audio outputs have
+their own asset IDs; `genobi_take_to_project` with `outputId` selects one and
+omitting it selects the video. No additional generation is needed.
 
 ## 7. Hand back
 
@@ -152,5 +193,6 @@ export a Qwen3-TTS graph that takes `text` and a voice description, give it
 `text`, `voice` and `seed` slots and an audio output, register it under a new
 `text-to-speech` capability as `localOnly`, prove it on a local ComfyUI, record
 the model's licence in `LICENCES.md`, then wire the result into the Director as
-an audio asset. The hosted Worker stores MP4s and stills only, so the entry
-stays local until that changes.
+an audio asset. A new narration route still needs a measured, owned audio-output
+contract on each intended adapter; hosted deployment companion audio does not
+make a new standalone TTS model available automatically.

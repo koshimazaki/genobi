@@ -116,6 +116,12 @@ per file to bound Worker memory; local inputs keep their 150 MB ceiling. The hos
 adapter uses the official low-level SDK upload transport without the optional
 client-side WASM dedup hash; Comfy hashes the uploaded bytes on its server.
 
+Hosted settings writes are bounded by caller IP and across the deployment as well
+as by session, with 2 KB streamed request bodies and an atomic ceiling of 10,000
+settings records. Choosing Cloud for a new session stores no settings row.
+Companion-output receipts are retained until the Ready job and its audio links
+have been saved, so a failed final save can recover those links on the next poll.
+
 Registering an endpoint uploads nothing and starts no GPU job. Attaching files is
 explicit; Generate obtains a quote and confirmation before one reserved submission.
 Comfy may bill storage or warm-worker time separately from a generation. Use

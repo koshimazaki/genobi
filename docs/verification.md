@@ -11,6 +11,36 @@ The architecture under test is Cloudflare Pages with an advanced-mode Worker,
 D1 job state, R2 private media and a four-clip static first-run library. The
 Express adapter remains the local development path.
 
+## v0.14 agent and recovery checks · 31 October 2026
+
+The regression suites cover runtime capability discovery on both adapters,
+hosted onboarding and voice routing, supported run-location choices, current
+Words and reference cleanup, and adapter-specific deployment upload limits.
+Local MCP integration tests exercise project-reference quote/submit, staged
+Comfy inputs, voice transcription, companion import, and the owner's explicit
+approval of an agent-prepared deployment. These use fake providers and a fake
+voice worker; they do not establish that a paid model or GPU deployment ran.
+
+Worker tests inject failures before and after source persistence and before the
+final Ready save, then verify that polling restores companion audio without
+another generation. Settings tests cover streamed size limits, rotating-session
+abuse, aggregate write limits and concurrent insertion at the settings ceiling.
+Paused-chain tests require a fresh quote after an endpoint or preset changes.
+3D take tests retain the saved receipt's recipe and stop an import when its
+project changes during conversion.
+
+Browser checks exercised the workspaces at 1440, 390 and 320 px, a nine-frame
+colour/depth capture with moving geometry, and a 241-frame orbit from Walk.
+Successful Editor MP4 export is not claimed for this pass: the test Chromium
+lacks AAC encoding and reaches the existing export capability guard. Real voice
+model execution and paid provider/deployment runs were not performed.
+
+The development dependency refresh pins patched Miniflare/Wrangler transitive
+packages and overrides minimatch to 11.0.3 until ESLint's dependency range
+includes its security fixes. Both production-only and complete-tree npm audits
+report no known advisories with this lockfile on the date above. The full lint,
+type, test and build checks remain the compatibility gate for that override.
+
 ## Automated checks
 
 Counts go stale; what each command guarantees does not.

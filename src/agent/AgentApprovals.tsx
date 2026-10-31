@@ -46,7 +46,11 @@ const ROUTE: Record<string, string> = {
 /** "FLUX 3 · Video, 5 s, 16:9, hd · Comfy Router". */
 export function planLine(approval: AgentApproval) {
   const p = approval.plan;
-  const where = p.location ? LOCATION[p.location] : ROUTE[p.route];
+  const where = p.deployment
+    ? `Comfy deployment ${p.deployment.name}`
+    : p.location
+      ? LOCATION[p.location]
+      : ROUTE[p.route];
   // An upscale: its measured source, the factor and creativity it sends.
   if (p.upscale) {
     const u = p.upscale;
@@ -190,6 +194,10 @@ export function AgentApprovals({
       >
         {approvals.map((approval) => {
           const open = approvable(approval, now);
+          const metered =
+            !!approval.plan.billing ||
+            !!approval.plan.deployment ||
+            approval.plan.location === "deployment";
           const status = open
             ? undefined
             : approval.status === "pending"
@@ -206,9 +214,28 @@ export function AgentApprovals({
                 <ApprovalPrompt text={approval.plan.description} />
               )}
               <dl className="agent-approval-terms">
-                <dt>Estimated cost</dt>
-                <dd>${approval.estimateUsd.toFixed(2)}</dd>
-                <dt>Paid by</dt>
+                {metered ? (
+                  <>
+                    <dt>Billing</dt>
+                    <dd>
+                      {approval.plan.billing ?? "Comfy deployment GPU time"}
+                    </dd>
+                    <dt>Cost limit</dt>
+                    <dd>No fixed price or cost cap.</dd>
+                  </>
+                ) : (
+                  <>
+                    <dt>Estimated cost</dt>
+                    <dd>${approval.estimateUsd.toFixed(2)}</dd>
+                  </>
+                )}
+                {approval.plan.deployment && (
+                  <>
+                    <dt>Deployment</dt>
+                    <dd>{approval.plan.deployment.url}</dd>
+                  </>
+                )}
+                <dt>{metered ? "Key used" : "Paid by"}</dt>
                 <dd>{PAYER_LABEL[approval.payer]}</dd>
                 {open && (
                   <>
@@ -252,7 +279,9 @@ export function AgentApprovals({
                   >
                     {busy === approval.quoteId
                       ? "Approving…"
-                      : `Approve $${approval.estimateUsd.toFixed(2)}`}
+                      : metered
+                        ? "Approve paid GPU time"
+                        : `Approve $${approval.estimateUsd.toFixed(2)}`}
                   </button>
                   <button
                     type="button"

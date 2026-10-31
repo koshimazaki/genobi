@@ -63,7 +63,7 @@
   min-width: 0;
   width: 100%;
 }
-.dir-version-panel input,
+.dir-version-panel input:not(.sr-only),
 .dir-version-panel select,
 .dir-version-panel button {
   box-sizing: border-box;
@@ -79,7 +79,7 @@
 .dir-version-panel input[type="checkbox"] {
   min-height: auto;
 }
-.dir-version-panel input[type="file"] {
+.dir-version-panel input[type="file"]:not(.sr-only) {
   min-width: 0;
   width: 100%;
 }

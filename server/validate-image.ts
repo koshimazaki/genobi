@@ -85,6 +85,12 @@ export function validateImage(
     Number(tolerance) > 4
   )
     throw new AppError(400, "Choose supported image settings.");
+  if (model === "flux-3-klein" && refs.length && ratio !== "auto")
+    throw new AppError(
+      400,
+      "Klein's open image edits preserve the first reference's aspect ratio. Use auto, or choose the API run for a different canvas.",
+      "invalid_image_aspect",
+    );
   const cameraEnabled = controls.camera && body.cameraEnabled === true;
   let still = {};
   if (cameraEnabled) {

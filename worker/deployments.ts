@@ -7,13 +7,16 @@ import {
   HOSTED_RUN_LOCATION,
   type RunLocationState,
 } from "../shared/comfy/run-location";
-import { entryFor } from "../shared/registry";
+import { entryFor, type Entry } from "../shared/registry";
 import { isDeployModel } from "../shared/comfy/deploy-catalogue";
 import {
   DEPLOY_FILE_TOKENS,
   deployInvalid,
 } from "../shared/comfy/deploy-input";
-import { validDeploymentFile } from "../shared/comfy/deploy-file";
+import {
+  HOSTED_DEPLOY_INPUT_BYTES,
+  validDeploymentFile,
+} from "../shared/comfy/deploy-file";
 import {
   requireTemplateFor,
   workflowCatalogue,
@@ -22,11 +25,11 @@ import {
 import { workflowRun } from "../shared/comfy/runs";
 import { composePrompt } from "../shared/presets";
 import type { GenerateInput } from "../shared/types";
-import type { WorkflowPlan } from "../shared/take";
+import { sha256Hex, type WorkflowPlan } from "../shared/take";
 import { rateLimit } from "./storage";
+import { MAX_DEPLOYMENT_SETTINGS } from "../shared/limits";
 
-// Buffering for the SDK stays well below the Worker's memory ceiling.
-export const HOSTED_DEPLOY_INPUT_BYTES = 32_000_000;
+export { HOSTED_DEPLOY_INPUT_BYTES } from "../shared/comfy/deploy-file";
 /** Unexpired input tickets one session may hold. */
 const MAX_STAGED = 32;
 const EXTENSIONS: Record<string, string> = {
@@ -114,6 +117,12 @@ export async function deploymentSettingsRoute(
     return undefined;
   if (!request.headers.get("content-type")?.startsWith("application/json"))
     throw new AppError(415, "Send JSON from the studio.");
+  await rateLimit(
+    env,
+    "settingsPerIp",
+    await sha256Hex(request.headers.get("cf-connecting-ip") || "local"),
+  );
+  await rateLimit(env, "settingsGlobal", "deployment-settings");
   await rateLimit(env, "edit", session);
   const value = await body();
   if (
@@ -128,6 +137,9 @@ export async function deploymentSettingsRoute(
     if (v.location !== "cloud" && v.location !== "deployment")
       throw new AppError(400, "Choose Comfy Cloud or a Comfy deployment.");
     const saved = await readSettings(env, session);
+    // The default needs no durable record. Anonymous visitors cannot fill D1
+    // by repeatedly choosing Cloud with a fresh cookie.
+    if (v.location === "cloud" && !saved) return deploymentState(env, session);
     const url =
       v.location === "cloud"
         ? null
@@ -136,12 +148,19 @@ export async function deploymentSettingsRoute(
               ? v.deploymentUrl
               : (saved?.url ?? ""),
           ).url;
-    await env.DB.prepare(
-      `INSERT INTO deployment_settings(session,url,revision,updated_at) VALUES(?,?,1,?)
+    const result = await env.DB.prepare(
+      `INSERT INTO deployment_settings(session,url,revision,updated_at)
+      SELECT ?,?,1,? WHERE EXISTS (SELECT 1 FROM deployment_settings WHERE session=?)
+      OR (SELECT count(*) FROM deployment_settings) < ?
       ON CONFLICT(session) DO UPDATE SET url=excluded.url, revision=deployment_settings.revision+1,updated_at=excluded.updated_at`,
     )
-      .bind(session, url, Date.now())
+      .bind(session, url, Date.now(), session, MAX_DEPLOYMENT_SETTINGS)
       .run();
+    if (!result.meta.changes)
+      throw new AppError(
+        429,
+        "The studio's deployment settings capacity is full. Try again later.",
+      );
     return deploymentState(env, session);
   }
   if (v.entry !== "ltx-deploy-layout-to-video")
@@ -278,6 +297,35 @@ export async function deploymentUpload(
   return { id };
 }
 
+/** The current hosted plan, without reading or uploading any input assets. */
+export async function workflowPlan(
+  env: Env,
+  session: string,
+  entry: Entry,
+): Promise<WorkflowPlan> {
+  if (entry.status !== "ready" || entry.route !== "workflow") return {};
+  const saved = await readSettings(env, session);
+  const { choice } = requireTemplateFor(
+    entry.id,
+    entry.id === "ltx-deploy-layout-to-video"
+      ? (saved?.template ?? undefined)
+      : undefined,
+  );
+  const cloud: WorkflowPlan = { location: "cloud", workflow: choice.id };
+  if (!saved?.url) {
+    if (isDeployModel(entry.videoModel))
+      throw deployInvalid("Register a Comfy deployment in Settings first.");
+    return cloud;
+  }
+  if (choice.template.hosts && !choice.template.hosts.includes("deployment"))
+    return cloud;
+  return {
+    location: "deployment",
+    workflow: choice.id,
+    deployment: deployment(saved.url),
+  };
+}
+
 /** Freeze endpoint, preset and owned input references before the durable reservation. */
 export async function deploymentPlan(
   env: Env,
@@ -285,35 +333,14 @@ export async function deploymentPlan(
   input: GenerateInput,
 ) {
   const entry = entryFor(input.generator, input.model);
-  const empty = {
-    plan: {} as WorkflowPlan,
-    values: {} as Record<string, unknown>,
-  };
-  if (entry.status !== "ready" || entry.route !== "workflow") return empty;
-  const saved = await readSettings(env, session);
-  if (!saved?.url) {
-    if (isDeployModel(input.model))
-      throw deployInvalid("Register a Comfy deployment in Settings first.");
-    return empty;
-  }
-  const { choice } = requireTemplateFor(
-    entry.id,
-    input.model === "ltx-deploy-layout-to-video"
-      ? (saved.template ?? undefined)
-      : undefined,
-  );
-  if (choice.template.hosts && !choice.template.hosts.includes("deployment"))
-    return empty;
-  const plan: WorkflowPlan = {
-    location: "deployment",
-    workflow: choice.id,
-    deployment: deployment(saved.url),
-  };
+  const plan = await workflowPlan(env, session, entry);
+  if (!plan.deployment || entry.status !== "ready")
+    return { plan, values: {} as Record<string, unknown> };
   const { values } = workflowRun(
     entry.model,
     input,
     composePrompt(input),
-    choice.id,
+    plan.workflow,
     "deployment",
   );
   const refs = new Map<string, object>();
@@ -321,7 +348,7 @@ export async function deploymentPlan(
     const row = await env.DB.prepare(
       "SELECT reference FROM deployment_assets WHERE id=? AND session=? AND url=? AND token=? AND expires>?",
     )
-      .bind(id, session, saved.url, token, Date.now())
+      .bind(id, session, plan.deployment.url, token, Date.now())
       .first<{ reference: string }>();
     if (!row)
       throw deployInvalid(

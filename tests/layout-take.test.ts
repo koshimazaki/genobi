@@ -191,3 +191,55 @@ describe("a captured scene handed to the combined layout/video/reverb job", () =
     expect(useLayoutTake.getState().pending).toBeUndefined();
   });
 });
+
+it("enforces the receiving adapter's limit before queuing or uploading any capture", async () => {
+  const video = new Blob(["colour"], { type: "video/webm" });
+  Object.defineProperty(video, "size", { value: 40_000_000 });
+  const captured = take({ video });
+  useSettingsStore.setState({
+    runLocation: {
+      ...HOSTED_RUN_LOCATION,
+      fixed: false,
+      deployment: { url: endpoint, name: "fixture" },
+    },
+  });
+  await expect(queueLayoutTake(captured)).rejects.toThrow("32 MB");
+  expect(useLayoutTake.getState().pending).toBeUndefined();
+
+  useSettingsStore.setState({
+    runLocation: {
+      ...useSettingsStore.getState().runLocation!,
+      deploymentInputBytes: 150_000_000,
+    },
+  });
+  await queueLayoutTake(captured);
+  const pending = useLayoutTake.getState().pending!;
+  expect(pending.files.TAKE_WEBM).toBe(video);
+  // A queued capture can survive a context/limit change; check all files again
+  // before the first byte is uploaded, rather than failing part-way through.
+  useSettingsStore.setState({
+    runLocation: {
+      ...useSettingsStore.getState().runLocation!,
+      deploymentInputBytes: 32_000_000,
+    },
+  });
+  const upload = vi.fn(async () => ({ id: "receipt" }));
+  await expect(
+    stageLayoutTake(pending, "", () => endpoint, upload),
+  ).rejects.toThrow("32 MB");
+  expect(upload).not.toHaveBeenCalled();
+  expect(useLayoutTake.getState().pending).toBe(pending);
+});
+
+it.each([32_000_000, 150_000_000])(
+  "accepts captures at the advertised %i byte boundary and rejects larger ones",
+  async (limit) => {
+    for (const size of [limit, limit + 1]) {
+      const video = new Blob(["colour"], { type: "video/webm" });
+      Object.defineProperty(video, "size", { value: size });
+      const pending = capturedLayout(take({ video }), endpoint, limit);
+      if (size === limit) expect((await pending).files.TAKE_WEBM).toBe(video);
+      else await expect(pending).rejects.toThrow(`${limit / 1_000_000} MB`);
+    }
+  },
+);

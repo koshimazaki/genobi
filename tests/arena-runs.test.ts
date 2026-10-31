@@ -153,9 +153,10 @@ describe("attaching a finished run to an approach", () => {
     expect(arena.media).toHaveLength(1);
     expect(slot.media).toBe(arena.media[0].hash);
     const media = await fetch(`${route}/files/${slot.media}`, { headers });
-    expect(Buffer.from(await media.arrayBuffer())).toEqual(
-      Buffer.from(studio.bfl.media),
-    );
+    // Native byte equality keeps a large assertion from blocking HTTP timers.
+    expect(
+      Buffer.from(await media.arrayBuffer()).equals(studio.bfl.media),
+    ).toBe(true);
     // Attaching again finds the same bytes rather than storing a copy.
     const again = await (await attach("rgb", { jobId: job.id })).json();
     expect(again.arena.media).toHaveLength(1);
