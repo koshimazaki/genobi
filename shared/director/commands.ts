@@ -10,7 +10,14 @@ import {
   type ProjectPreferences,
 } from "../licensing/project-preferences";
 import { placeAsset } from "./assets";
-import { graphicParameters, recipeFor } from "./graphic-commands";
+import { addLayer, fits, lane } from "./add-commands";
+import {
+  applyClipCommand,
+  CLIP_FIELDS,
+  isClipOp,
+  readClipFields,
+  type ClipCommand,
+} from "./clip-commands";
 import {
   BEAT_GRID_FIELDS,
   readBeatGrid,
@@ -45,7 +52,7 @@ import {
   type PromptCommand,
 } from "./prompt-commands";
 import { setShotCamera, setTemplateInputs } from "./template-commands";
-import { laneId, lanes, moveToLane, trackFamily } from "./tracks";
+import { laneId, moveToLane } from "./tracks";
 import {
   checkReferences,
   LAYER_LIMIT,
@@ -115,6 +122,7 @@ export type DirectorCommand =
   | { op: "set-parameters"; layerId: string; parameters: Parameters }
   | ({ op: "set-beat-grid" } & BeatGridPatch)
   | ({ op: "set-resolution" } & Resolution)
+  | ClipCommand
   | PromptCommand
   | NoteCommand;
 export type DirectorOp = DirectorCommand["op"];
@@ -140,6 +148,7 @@ const FIELDS: Record<DirectorOp, [string[], string[]]> = {
   "set-parameters": [["layerId", "parameters"], []],
   "set-beat-grid": [[], [...BEAT_GRID_FIELDS]],
   "set-resolution": [["width", "height"], []],
+  ...CLIP_FIELDS,
   ...PROMPT_FIELDS,
   ...NOTE_FIELDS,
 };
@@ -164,7 +173,14 @@ export function parseCommand(value: unknown): DirectorCommand {
   const missing = required.find((k) => value[k] === undefined);
   if (missing) refuse(`${op} needs ${missing}`);
   const c: Record<string, unknown> = { op };
-  for (const key of ["layerId", "assetId", "moduleId", "shotId", "noteId"])
+  for (const key of [
+    "layerId",
+    "newLayerId",
+    "assetId",
+    "moduleId",
+    "shotId",
+    "noteId",
+  ])
     if (key in value) {
       if (typeof value[key] !== "string" || !DIRECTOR_ID.test(value[key]))
         refuse(`${key} must be a lowercase id such as layer-1`);
@@ -217,6 +233,7 @@ export function parseCommand(value: unknown): DirectorCommand {
   if (op === "set-resolution") Object.assign(c, readResolution(value));
   if (op === "set-parameters" || value.parameters !== undefined)
     c.parameters = readParameters(value.parameters);
+  if (isClipOp(op)) Object.assign(c, readClipFields(value));
   if (isNoteOp(op)) Object.assign(c, readNoteFields(value));
   if (isPromptOp(op)) Object.assign(c, readPromptFields(op, value));
   if (op === "set-template-inputs") {
@@ -279,6 +296,12 @@ function apply(copy: DirectorCopy, c: DirectorCommand): DirectorCopy {
     prompt: copy.prompt,
   });
   switch (c.op) {
+    case "remove-clip":
+    case "duplicate-clip":
+    case "split-clip":
+    case "set-muted":
+    case "set-gain":
+      return same(applyClipCommand(project, c));
     case "set-preferences": {
       const { preferences: _previous, ...rest } = project;
       return same(
@@ -362,133 +385,4 @@ function apply(copy: DirectorCopy, c: DirectorCommand): DirectorCopy {
     case "set-clip-directions":
       return same(applyPromptCommand(project, c));
   }
-}
-
-function fits(project: Project, start: number, duration: number) {
-  if (start + duration > project.composition.durationFrames)
-    refuse(
-      `The clip would end after the project's ${project.composition.durationFrames} frames`,
-    );
-}
-/** An existing lane that takes this kind of clip. */
-function lane(project: Project, id: string, kind: Layer["kind"]) {
-  const found = lanes(project.layers).find((l) => l.id === id);
-  if (!found) return refuse(`No track ${id} in this project`);
-  if (found.family !== trackFamily(kind))
-    refuse(`Track ${id} holds ${found.family} clips, not ${kind}`);
-  return found;
-}
-
-const still = {
-  opacity: 1,
-  position: { x: 0, y: 0 },
-  scale: 1,
-  rotationDegrees: 0,
-};
-
-function addLayer(
-  from: Project,
-  c: Extract<DirectorCommand, { op: "add-clip" | "add-graphic" }>,
-): Project {
-  let project = from;
-  if (project.layers.length >= LAYER_LIMIT)
-    refuse(`A project holds at most ${LAYER_LIMIT} layers`);
-  const taken = project.layers.some(
-    (l) => l.id === c.layerId || laneId(l) === c.layerId,
-  );
-  if (taken) refuse(`Layer id ${c.layerId} is taken`);
-  fits(project, c.startFrame, c.durationFrames);
-  const base = {
-    id: c.layerId,
-    name: c.name ?? c.layerId,
-    startFrame: c.startFrame,
-    durationFrames: c.durationFrames,
-    locked: false,
-  };
-  let layer: Layer;
-  if (c.op === "add-clip") {
-    const asset = project.assets[c.assetId];
-    if (!asset) return refuse(`No asset ${c.assetId} in this project`);
-    if (asset.use !== "production")
-      refuse(`${c.assetId} is a reference; place a production asset`);
-    if (asset.kind === "image" && c.sourceStartFrame !== undefined)
-      refuse(`${c.assetId} is a still image; it has no in-point`);
-    const sourceStartFrame = c.sourceStartFrame ?? 0;
-    layer =
-      asset.kind === "audio"
-        ? {
-            ...base,
-            kind: "audio",
-            assetId: c.assetId,
-            sourceStartFrame,
-            gain: 1,
-          }
-        : asset.kind === "video"
-          ? {
-              ...base,
-              kind: "video",
-              assetId: c.assetId,
-              sourceStartFrame,
-              fit: "contain",
-              ...still,
-            }
-          : {
-              ...base,
-              kind: "image",
-              assetId: c.assetId,
-              fit: "contain",
-              ...still,
-            };
-  } else {
-    // A recipe no layer uses yet, even one from the registry, takes the
-    // parameters given; otherwise they go over a using layer's settings.
-    const recipe = recipeFor(project, c.moduleId);
-    project = recipe.project;
-    const { module } = recipe;
-    const model = project.layers.find(
-      (l) => "moduleId" in l && l.moduleId === c.moduleId,
-    );
-    const parameters = graphicParameters(
-      c.moduleId,
-      module,
-      model && "parameters" in model ? model.parameters : undefined,
-      c.parameters,
-    );
-    layer =
-      module.mode === "filter"
-        ? {
-            ...base,
-            kind: "filter",
-            moduleId: c.moduleId,
-            parameters,
-            input: "composite-below",
-          }
-        : {
-            ...base,
-            kind: "graphics",
-            moduleId: c.moduleId,
-            parameters,
-            ...still,
-          };
-  }
-  const layers = [...project.layers];
-  let at: number;
-  if (c.track === "new") {
-    // Media sits under the graphics, graphics under the filters.
-    const above =
-      layer.kind === "filter"
-        ? -1
-        : layers.findIndex((l) =>
-            layer.kind === "graphics"
-              ? l.kind === "filter"
-              : l.kind === "graphics" || l.kind === "filter",
-          );
-    at = above < 0 ? layers.length : above;
-  } else {
-    lane(project, c.track, layer.kind);
-    layer = { ...layer, track: c.track };
-    at = layers.reduce((end, l, i) => (laneId(l) === c.track ? i + 1 : end), 0);
-  }
-  layers.splice(at, 0, layer);
-  return { ...project, layers };
 }

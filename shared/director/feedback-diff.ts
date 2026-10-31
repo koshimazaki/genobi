@@ -25,6 +25,7 @@ import {
   timingOf,
 } from "./feedback-labels";
 import { noteSteps, projectSteps } from "./feedback-project";
+import { clipSettingSteps, removedClipSteps } from "./feedback-clips";
 import { promptSteps } from "./feedback-prompts";
 import { residual } from "./feedback-residual";
 import type { Placement } from "./layer-commands";
@@ -84,10 +85,12 @@ export function diffCopies(base: DirectorCopy, current: DirectorCopy): Diff {
     timingOf(current.project.composition),
   );
   projectSteps(b);
+  removedClipSteps(b);
   plateSteps(b);
   timingSteps(b);
   addSteps(b);
   lookSteps(b);
+  clipSettingSteps(b);
   promptSteps(b);
   noteSteps(b);
   residual(b, base);

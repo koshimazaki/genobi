@@ -232,14 +232,14 @@ an ordered list of existing Director commands: `move-clip` and `trim-clip`
 `set-placement`, `set-parameters` (text included), `replace-plate`,
 `add-clip`/`add-graphic` for new layers, `set-prompt`, `set-global-prompt`,
 `set-clip-prompt`, `set-clip-directions`, `set-template-inputs`,
-`set-camera`, `set-beat-grid`, and the note commands. Each command is applied with
+`set-camera`, `set-beat-grid`, `set-resolution`, `remove-clip`, `set-muted`, `set-gain`, and the note commands. Each command is applied with
 `applyCommand` as it is chosen, so the list applies in order to the base (with
 any files the person added, which are listed below) and gives the person's
 project back. Each carries a short label in frames and, when the composition
 has a tempo, in beats and bars counted from `beatOffsetSeconds`: "title 変身
 starts 12 frames (0.82 beats) later, at frame 249 (on bar 4 beat 4)", "HUD
-moved down 40 px". What no command can express (a removed layer, a rename,
-mute or lock, gain, a restacked layer, the frame size, rate or length, a
+moved down 40 px". What no command can express (a rename or lock, a restacked layer, the frame
+rate or length, a
 cleared tempo field, a new file,
 or a change the base refuses, such as a move on a layer locked there) is
 listed in `unmapped` with its reason; a final comparison of the replayed

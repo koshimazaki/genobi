@@ -156,6 +156,11 @@ one `command`.
 | `add-graphic`         | `layerId` (new), `moduleId`, `track`, `startFrame`, `durationFrames`, `name?`, `parameters?`      |
 | `move-clip`           | `layerId`, `startFrame`, `track?`                                                                 |
 | `trim-clip`           | `layerId`, `startFrame`, `durationFrames`                                                         |
+| `split-clip`          | `layerId`, `frame` (composition frame inside clip), `newLayerId`                                  |
+| `duplicate-clip`      | `layerId`, `newLayerId` (copy on a new lane, top of stack)                                        |
+| `remove-clip`         | `layerId` (media stays; notes stay at their frames)                                               |
+| `set-muted`           | `layerId`, `muted` (boolean; audio mute or visual hide)                                           |
+| `set-gain`            | `layerId`, `gain` (audio only, 0–2)                                                               |
 | `set-placement`       | `layerId`, `position?`, `scale?`, `opacity?`, `rotationDegrees?`, `motion?`                       |
 | `set-parameters`      | `layerId`, `parameters`                                                                           |
 | `set-resolution`      | `width`, `height` (whole pixels; at most 1920 × 1080 pixels in total)                             |
@@ -175,6 +180,12 @@ one `command`.
 New clips need a new lowercase `layerId`; ids that must exist come from
 `genobi_project`.
 
+- Split, remove and gain require an unlocked clip. Mute and duplicate match
+  the UI: a locked clip can be hidden or copied without unlocking or changing
+  the original. Never clear a person's lock to make another command succeed.
+- Choose a fresh `newLayerId` for split or duplicate. Existing clip and track
+  ids are reserved. Split preserves samples and animated poses; remove keeps
+  source assets and generation history. Read the new revision after each edit.
 - `add-clip` takes `sourceStartFrame`, the in-point in source frames (audio
   and video only), so a shot is one command.
 - `set-placement` sets framing: `position` (composition pixels from the

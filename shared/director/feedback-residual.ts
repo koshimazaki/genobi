@@ -57,8 +57,6 @@ export const sameCopy = (a: DirectorCopy, b: DirectorCopy) =>
 const LAYER_REASONS: Record<string, string> = {
   name: "No Director command renames a layer",
   locked: "No Director command locks or unlocks a layer",
-  muted: "No Director command mutes a layer",
-  gain: "No Director command sets an audio clip's gain",
   moduleId: "No Director command swaps a layer's recipe",
   parameters: "set-parameters sets values; it cannot remove one",
   track:
@@ -179,7 +177,7 @@ function layerResidual(b: Builder) {
         id: l.id,
         field: "layer",
         label: `removed ${l.kind} ${layerName(l)}`,
-        reason: "No Director command removes a layer",
+        reason: "remove-clip could not reproduce this removal",
       });
       continue;
     }
