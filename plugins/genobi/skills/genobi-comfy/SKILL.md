@@ -28,9 +28,10 @@ Nothing here spends until step 6, and that step quotes first.
 1. `genobi_status {}` → the studio is up.
 2. `genobi_run_location {}` → `location` (`local`, `cloud` or `deployment`)
    and whether a local ComfyUI answers.
-3. `genobi_workflows {"checkLocal": true}` → every template, the capability
-   it serves, which one each `workflow` model runs, and on a local ComfyUI
-   the node types and model files it lacks. Free; nothing is submitted.
+3. `genobi_workflows {"checkLocal": true}` for local ComfyUI, or
+   `genobi_workflows {"checkCloud": true}` for this account's Comfy Cloud
+   catalogue. The Cloud check reports missing nodes/model slots and unknowns;
+   metadata compatibility does not prove execution. No generation is submitted.
 4. `genobi_docs {"text": "<what you are adding>"}` and
    `genobi_registry {"tag": "workflows"}` → the pages and tools that already
    cover it. A capability that exists as a template is swapped with
@@ -88,9 +89,11 @@ check:worker` (the template lives in `shared/`, so it must stay portable),
   ComfyUI's `custom_nodes` and name the model files through
   `GENOBI_LOCAL_MODELS` (`docs/run-location.md`); never download a model
   without saying what and how large.
-- **Comfy Cloud:** `requiredNodes` and `requiredModels` must be in the
-  account's catalogue. Cloud cannot load custom node packs or uploaded audio;
-  a graph that needs either goes to a deployment.
+- **Comfy Cloud:** use `genobi_workflows {"checkCloud": true}` with the studio's
+  Comfy connection. Inspect unknowns and missing resources before quoting.
+  Cloud cannot install our custom node packs; use a deployment when a graph
+  needs them. Validate input support and GPU execution separately; a catalogue
+  match does not prove either (`docs/comfy-readiness.md`).
 - **A Comfy Developer Platform deployment:** the graph must be in
   `comfy-build/workflows/` and its packs and weights pinned in
   `comfy-build/sources.lock` and `comfy-build/models/<set>.txt`

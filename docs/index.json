@@ -41,6 +41,7 @@
         "comfy-cloud-inventory.md",
         "comfy-deploy.md",
         "comfy-deployment.md",
+        "comfy-readiness.md",
         "director-comfy.md",
         "genmod.md",
         "media-space.md",
@@ -207,6 +208,7 @@
         "arena.md",
         "audio-analysis.md",
         "capabilities.md",
+        "comfy-readiness.md",
         "credits/README.md",
         "director-agent-tools.md",
         "director-bundle/README.md",
@@ -258,6 +260,7 @@
       "meaning": "First-run setup, keys, harness sign-in and onboarding",
       "pages": [
         "agent-setup.md",
+        "comfy-readiness.md",
         "getting-started.md",
         "teachings.md",
         "troubleshooting.md"
@@ -319,6 +322,7 @@
         "comfy-cloud-inventory.md",
         "comfy-deploy.md",
         "comfy-deployment.md",
+        "comfy-readiness.md",
         "director-comfy.md",
         "director-remix-verification.md",
         "getting-started.md",
@@ -603,6 +607,7 @@
         "comfy-cloud-inventory.md",
         "comfy-deploy.md",
         "comfy-deployment.md",
+        "comfy-readiness.md",
         "construction-motion.md",
         "credits.md",
         "credits/README.md",
@@ -856,6 +861,7 @@
         "cloudflare.md",
         "comfy-deploy.md",
         "comfy-deployment.md",
+        "comfy-readiness.md",
         "construction-motion.md",
         "director-bundle/README.md",
         "director-generate.md",
@@ -1001,7 +1007,7 @@
       "path": "comfy-cloud-inventory.md",
       "tags": ["workflows", "comfy", "models", "licences"],
       "summary": "What Comfy Cloud runs for Genobi today, what needs importing, and what stays local.",
-      "links": ["architecture.md", "machine-check.md"]
+      "links": ["architecture.md", "comfy-readiness.md", "machine-check.md"]
     },
     {
       "title": "Deploy the key LTX and World Builder workflows",
@@ -1023,6 +1029,13 @@
       "tags": ["workflows", "comfy", "backend", "models", "research"],
       "summary": "A Comfy Developer Platform build recipe for the Openjutsu swap, AKUSPACE and Layout-to-Render from one set of pins in comfy-build/; how comfy build push treats weights, the shared ComfyUI version, sizes per workflow and one build versus several.",
       "links": ["akuspace-docker.md", "comfy-deploy.md"]
+    },
+    {
+      "title": "Check Comfy Cloud workflows",
+      "path": "comfy-readiness.md",
+      "tags": ["workflows", "comfy", "agents", "setup"],
+      "summary": "Read-only Comfy Cloud node and model checks from Settings, HTTP, MCP and CLI, with explicit metadata and execution limits.",
+      "links": []
     },
     {
       "title": "Signal: construction video workflows",
@@ -1850,7 +1863,7 @@
       "path": "run-location.md",
       "tags": ["workflows", "comfy", "backend", "studio", "mcp"],
       "summary": "Local ComfyUI, Comfy Cloud and registered deployments; capability-aware controls, workflow swapping and the local model map.",
-      "links": ["comfy-deploy.md", "openjutsu-swap.md"]
+      "links": ["comfy-deploy.md", "comfy-readiness.md", "openjutsu-swap.md"]
     },
     {
       "title": "Hosted runner pairing",

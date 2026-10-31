@@ -375,6 +375,13 @@ Tucking it away preserves polling and leaves an avatar to reopen the session.
 
 ## Keys, and what follows from them
 
+Workflow compatibility is an explicit, read-only account check: both adapters
+serve `GET /api/settings/workflows?check=cloud` through the same bounded Cloud
+catalogue reader. Settings, MCP and CLI expose it without submitting a job or
+changing the chosen destination. Reports distinguish missing resources, unknown
+metadata and deployment-only templates. They do not claim GPU execution or
+quality. See [Cloud workflow checks](comfy-readiness.md).
+
 The deployment accepts visitor keys only. No shared BFL key or secret is deployed.
 
 A key is held in live page state, sent as a header when needed, and cleared on navigation and page restoration. Legacy Web Storage credentials are deleted without being read. Browser and server persistence were both rejected for the deployment: an operator cannot honestly offer operator-blind keys using a secret they themselves control.

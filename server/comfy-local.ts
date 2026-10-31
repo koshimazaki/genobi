@@ -4,7 +4,7 @@ import { fillSlots, type ApiGraph } from "../shared/comfy/slots";
 import { parseWorkflowDestination } from "../shared/comfy/destination";
 import type { LocalModels } from "../shared/comfy/local-models";
 import type { LocalComfyStatus } from "../shared/comfy/run-location";
-import { modelSlots } from "../shared/comfy/workflows";
+import { inspectWorkflow, type ObjectInfo } from "../shared/comfy/readiness";
 import { selectWorkflowOutputs } from "../shared/comfy/outputs";
 import {
   FILE_NAME,
@@ -55,11 +55,6 @@ const EXTENSION: Record<WorkflowFile["contentType"], string> = {
   "video/mp4": "mp4",
 };
 
-type ObjectInfo = Record<
-  string,
-  { input?: Record<string, Record<string, unknown> | undefined> } | undefined
->;
-
 const noAnswer = () =>
   unsent(
     "No local ComfyUI answered at the run location's address. Start ComfyUI, or switch the run location to Comfy Cloud.",
@@ -80,17 +75,6 @@ const badLocation = () =>
 /** Only a refused connection proves a request never reached ComfyUI. */
 const refusedConnection = (error: unknown) =>
   (error as { cause?: { code?: unknown } })?.cause?.code === "ECONNREFUSED";
-
-/** The options a combo input lists in `/object_info`, in either schema. */
-function comboOptions(info: ObjectInfo, type: string, input: string) {
-  const inputs = info[type]?.input;
-  const spec = (inputs?.required?.[input] ?? inputs?.optional?.[input]) as
-    unknown[] | undefined;
-  if (!Array.isArray(spec)) return undefined;
-  if (Array.isArray(spec[0])) return spec[0] as unknown[];
-  const options = (spec[1] as { options?: unknown } | undefined)?.options;
-  return spec[0] === "COMBO" && Array.isArray(options) ? options : undefined;
-}
 
 /** A refusal ComfyUI stated: node classes only, never its messages. */
 function rejectedLocally(body: unknown): AppError {
@@ -207,23 +191,8 @@ export class LocalComfyWorkflows implements WorkflowClient {
 
   /** What a filled graph needs that this ComfyUI lacks: node types, and model slots. */
   missing(template: WorkflowTemplate, graph: ApiGraph, info: ObjectInfo) {
-    const nodes = [
-      ...new Set(Object.values(graph).map((node) => node.class_type)),
-    ]
-      .filter((type) => !info[type])
-      .sort();
-    const models = modelSlots(template).filter((slot) => {
-      const path = template.slots[slot].path;
-      const dot = path.indexOf(".");
-      const node = graph[path.slice(0, dot)];
-      if (!node || !info[node.class_type]) return false;
-      const options = comboOptions(info, node.class_type, path.slice(dot + 1));
-      return (
-        options !== undefined &&
-        !options.includes(node.inputs[path.slice(dot + 1)])
-      );
-    });
-    return { nodes, models };
+    const check = inspectWorkflow(template, graph, info);
+    return { nodes: check.missingNodes, models: check.missingModels };
   }
 
   /**

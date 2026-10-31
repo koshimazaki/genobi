@@ -102,6 +102,8 @@ export interface AppOptions extends DevOptions {
    */
   workflows?: WorkflowClient;
   deploymentFetcher?: typeof fetch;
+  /** Read-only Cloud catalogue transport; tests inject a fixture response. */
+  cloudCheckFetcher?: typeof fetch;
   /** The default run location (`GENOBI_WORKFLOW_DESTINATION`) and the local ComfyUI. */
   runLocation?: {
     destination?: WorkflowDestination;
@@ -442,7 +444,13 @@ export async function createApp(options: AppOptions) {
   // Local only, like voice: the hosted Worker has no audio analysis route.
   app.use("/api/audio", audioRouter(audio, limit));
   app.use("/api/settings", deploymentAssets.router(limit));
-  app.use("/api/settings", settingsRouter(settings, limit, local));
+  app.use(
+    "/api/settings",
+    settingsRouter(settings, limit, local, {
+      key: () => keys.key("comfy"),
+      fetcher: options.cloudCheckFetcher,
+    }),
+  );
   // Local only: hosted visitors keep layouts in the browser (layout-routes.ts).
   const layouts = new LocalLayouts(options.directory);
   app.use("/api/layouts", layoutRouter(layouts, limit));

@@ -11,6 +11,8 @@ export const GENOBI_TOOLS = [
   // Comparison records/media only; explicit one-use Arena pairing.
   "genobi_arena",
   "genobi_models",
+  // Read-only node/model metadata checks, including explicit Comfy Cloud reads.
+  "genobi_workflows",
   "genobi_jobs",
   "genobi_job",
   "genobi_quote",

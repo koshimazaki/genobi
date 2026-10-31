@@ -7,6 +7,7 @@ import { useModalDialog } from "./useModalDialog";
 import { KeySlot, LocalAgentStatus, useLocalKeys } from "./LocalKeys";
 import RunLocationField from "./RunLocationField";
 import { PageKeyForm } from "./PageKeyForm";
+import { CloudWorkflowCheck } from "./CloudWorkflowCheck";
 import type { KeysStatus } from "../../shared/keys";
 import "../styles/studio-settings.css";
 
@@ -127,6 +128,10 @@ export default function KeyDialog({
               ? "Saved in this machine’s macOS Keychain. This page receives connection status only."
               : "One key at a time for this visit. Kept in page memory; cleared on refresh or disconnect."}
           </p>
+          <CloudWorkflowCheck
+            apiKey={value}
+            connectionRevision={`${keys?.comfy.connected ?? false}:${keys?.comfy.revision ?? 0}`}
+          />
         </SettingsSection>
         <SettingsSection
           title="BFL key"

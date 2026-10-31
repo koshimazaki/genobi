@@ -355,7 +355,7 @@ Genobi run location · writes. Read or set this session's open-workflow destinat
 
 ## `genobi_workflows`
 
-Genobi workflows · read-only. List the workflow templates behind each capability (text to video, image, upscale, acoustic space, layout to render) and which one each workflow model runs in this session. With checkLocal, also asks the local ComfyUI which node types and model files each template lacks there (free; nothing is submitted).
+Genobi workflows · read-only. List workflow templates and this session's selections. With checkLocal, inspect the local ComfyUI's node/model catalogue. With checkCloud, inspect this account's Comfy Cloud catalogue using the studio's Comfy connection; reports missing nodes/model slots, unknown availability and deployment-only templates. Choose at most one check. Metadata compatibility does not prove GPU execution, input compatibility or output quality. No generation is submitted, and the selected run location is not changed.
 
 - Tags: `agents`, `mcp`, `workflows`, `comfy`
 - Taught by: [`genobi-akuspace`](registry-skills.md#genobi-akuspace), [`genobi-camera`](registry-skills.md#genobi-camera), [`genobi-comfy`](registry-skills.md#genobi-comfy)

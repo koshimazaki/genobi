@@ -4,18 +4,21 @@ import type { RateBucket } from "../shared/limits";
 import { workflowTemplates } from "../shared/comfy/workflows";
 import type { LocalComfyWorkflows } from "./comfy-local";
 import type { WorkflowSettings } from "./workflow-settings";
+import { checkedCloudCatalogue } from "./comfy-cloud-check";
+import type { Fetcher } from "../shared/provider";
 
 /**
  * `/api/settings`: the session's run location and workflow choices, read and
  * changed by the studio and by agents through MCP. Nothing here is paid or
- * sent to a provider; the only outside read is the local ComfyUI's
- * `/system_stats` (and `/object_info` when a check is asked for). Writes count
- * in the `edit` bucket, not with paid submissions.
+ * submitted to a provider. Checks explicitly read the local or Cloud node
+ * catalogue; ordinary settings reads stay offline. Writes count in the `edit`
+ * bucket, and Cloud checks in `credits`, never with paid submissions.
  */
 export function settingsRouter(
   settings: WorkflowSettings,
   limit: (bucket: RateBucket, id: string) => void,
   local?: LocalComfyWorkflows,
+  cloud?: { key: () => string | undefined; fetcher?: Fetcher },
 ) {
   const router = express.Router();
   const body = express.json({ limit: "2kb" });
@@ -42,6 +45,17 @@ export function settingsRouter(
   router.get("/workflows", async (request, response) => {
     limit("history", response.locals.sessionId);
     const catalogue = settings.catalogue(response.locals.sessionId);
+    if (request.query.check === "cloud") {
+      limit("credits", response.locals.sessionId);
+      response.json(
+        await checkedCloudCatalogue(
+          catalogue,
+          request.headers["x-byo-key"] ?? cloud?.key(),
+          cloud?.fetcher,
+        ),
+      );
+      return;
+    }
     // A detection read only when asked: /object_info can be large.
     const check =
       request.query.check === "local" && local

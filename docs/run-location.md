@@ -344,6 +344,13 @@ progress over HTTP, so a local job shows Pending, then Generating.
 
 ## The template table
 
+**Cloud compatibility:** Settings → Studio setup → **Check Comfy Cloud workflows**
+and `genobi_workflows {"checkCloud":true}` read the account's node/model metadata
+without changing this setting or generating anything. Both local and hosted HTTP
+adapters serve `GET /api/settings/workflows?check=cloud`; studio-started agents
+may use the read-only tool. Unknown availability remains explicit. See
+[Cloud workflow checks](comfy-readiness.md) for the result and execution limits.
+
 `shared/comfy/workflows.ts` lists each template with its id, label, the
 capabilities it serves, its graph file, slots, required node types and model
 files, and how its slots are filled. A `workflow` entry's capability is fixed

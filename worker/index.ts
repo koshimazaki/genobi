@@ -7,6 +7,7 @@ import {
 } from "./deployments";
 import { readExpectation } from "../shared/comfy/expectation";
 import { AppError, requireKey } from "../server/errors";
+import { checkedCloudCatalogue } from "../server/comfy-cloud-check";
 import {
   validateIdempotencyKey,
   validateInput,
@@ -189,7 +190,11 @@ export default {
         response = json(await deploymentState(env, session));
       } else if (get && url.pathname === "/api/settings/workflows") {
         await rateLimit(env, "history", session);
-        response = json(await deploymentCatalogue(env, session));
+        const catalogue = await deploymentCatalogue(env, session);
+        if (url.searchParams.get("check") === "cloud") {
+          await rateLimit(env, "credits", session);
+          response = json(await checkedCloudCatalogue(catalogue, key));
+        } else response = json(catalogue);
       } else if (
         post &&
         /^\/api\/settings\/deployment-assets\/[^/]+$/.test(url.pathname)

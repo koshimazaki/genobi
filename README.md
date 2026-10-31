@@ -100,6 +100,9 @@ Comfy Cloud and the BFL API are the primary hosted generation choices.
 Run the studio locally to add local agent, voice and project integrations;
 choose local ComfyUI when you want supported workflows on your own hardware.
 
+**Check Comfy Cloud workflows** in Settings reads your account's node and model
+availability before a render. Agents can use the same [read-only check](docs/comfy-readiness.md).
+
 | Setup                        | What you need                                                         | Good for                                                        |
 | ---------------------------- | --------------------------------------------------------------------- | --------------------------------------------------------------- |
 | Hosted studio                | A browser; your provider key for generation                           | Trying examples, browser editing and supported cloud generation |

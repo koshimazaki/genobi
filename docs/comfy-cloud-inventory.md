@@ -13,6 +13,11 @@ checkpoints and diffusion models listed by their loaders). Nothing was run or
 paid for. The authoritative check for a given account is the
 Cloud API's `/api/object_info` and models endpoints with that account's key.
 
+Use **Check Comfy Cloud workflows** in Settings, or
+`genobi_workflows {"checkCloud":true}`, to inspect the shipped templates against
+that account's current node/model metadata. [The check](comfy-readiness.md)
+reports unknowns and missing resources; it does not establish GPU execution.
+
 The rule: open models first; whatever does
 not fit on the person's machine runs on Comfy Cloud. The [machine check](machine-check.md)
 decides which, per capability, and falls back to the models below.
