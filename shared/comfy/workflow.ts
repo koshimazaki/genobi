@@ -17,6 +17,7 @@ export type { WorkflowSlot } from "./slots";
 export interface WorkflowOutput {
   nodeId: string;
   media: "video" | "image" | "audio";
+  /** Required named audio outputs; a completed job missing any is not Ready. */
   companions?: { nodeId: string; label: string }[];
 }
 /** Every shipped video graph ends in SaveVideo node `75`. */

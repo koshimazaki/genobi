@@ -96,6 +96,13 @@ workflow or input invalidates the quote. Polling uses the recorded endpoint even
 if Settings changes later. Ready video and companion IR/wet/audio files are
 saved under the studio session's ownership and linked from the result card.
 
+The output contract names the final video node and every required audio node.
+Cloud, deployment and local polling require those exact node IDs and media kinds;
+another video (such as a guide preview) cannot stand in for a missing result.
+A completed workflow missing a required companion reports an output error instead
+of becoming a partially delivered Ready take. Link-read failures remain retryable
+unless the asset has expired; polling never submits another generation.
+
 MCP/CLI generation does not yet expose deployment input staging. Their model
 discovery omits these Camera-only entries; use Camera for this route. Director
 agent handoffs keep their existing quoted generation tools.
