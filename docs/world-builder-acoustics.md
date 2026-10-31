@@ -7,6 +7,11 @@ summary: World Builder's room acoustics estimate (Sabine RT60 to AKUSPACE preset
 
 Part of [World Builder and Scene Adapter](world-builder.md).
 
+For animated `motion` recipes, use [changing room sound](world-builder-dynamic-sound.md)
+in the browser's Sound panel. It evaluates an explicit enclosure along the same
+timeline as the visual guide. The native nodes described below remain static and
+reject animated recipes instead of guessing a room from their geometry.
+
 ## Acoustics
 
 **World Builder · Acoustics** reads a recipe and names the AKUSPACE treatment

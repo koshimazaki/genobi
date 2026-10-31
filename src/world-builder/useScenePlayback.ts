@@ -2,9 +2,12 @@ import { useEffect, useRef, type RefObject } from "react";
 import { runPreview } from "./scene-playback";
 import type { Recipe } from "./recipe";
 import type { SceneAdapter } from "./useBuilderSession";
+import { soundPreviewFrames, type SoundPreview } from "./sound-preview";
 
 export function useScenePlayback({
   playing,
+  revision,
+  soundPreview,
   loop,
   current,
   api,
@@ -18,6 +21,8 @@ export function useScenePlayback({
   held,
 }: {
   playing: boolean;
+  revision: number;
+  soundPreview: RefObject<SoundPreview | null>;
   loop: boolean;
   current: RefObject<Recipe>;
   api: RefObject<SceneAdapter | null>;
@@ -44,13 +49,26 @@ export function useScenePlayback({
   guards.current = { active, held };
   useEffect(() => {
     if (!playing) return;
-    const audio = audioElement.current;
+    const rendered = soundPreview.current;
+    const audio = rendered?.element ?? audioElement.current;
+    const frames = () =>
+      rendered
+        ? soundPreviewFrames(current.current.frames, rendered.duration)
+        : current.current.frames;
+    let live = true;
     const stop = runPreview({
-      frames: () => current.current.frames,
-      loop: () => looping.current,
+      frames,
+      loop: () => !rendered && looping.current,
+      elapsed: rendered
+        ? () =>
+            rendered.element.ended
+              ? frames() / 24
+              : rendered.element.currentTime
+        : undefined,
       active: () => guards.current.active(),
       held: () => guards.current.held(),
       async draw(frame) {
+        frame = Math.min(frame, current.current.frames - 1);
         if (rendering.current()) await api.current?.render(frame);
         else setFrame(frame);
       },
@@ -58,6 +76,12 @@ export function useScenePlayback({
         if (!audio?.getAttribute("src")) return;
         audio.currentTime = 0;
         void audio.play().catch((e: unknown) => {
+          if (!live || !guards.current.active()) return;
+          if (rendered && (e as Error | null)?.name !== "AbortError") {
+            setPlaying(false);
+            setStatus("Room sound could not start; press Preview again.");
+            return;
+          }
           // A refused autoplay stops the preview so Play is there to press.
           if ((e as Error | null)?.name === "NotAllowedError") {
             setPlaying(false);
@@ -77,11 +101,14 @@ export function useScenePlayback({
       },
     });
     return () => {
+      live = false;
       stop();
       audio?.pause();
     };
   }, [
     playing,
+    revision,
+    soundPreview,
     current,
     api,
     audioElement,
