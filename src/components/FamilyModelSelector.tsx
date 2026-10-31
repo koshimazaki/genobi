@@ -216,6 +216,13 @@ export default function FamilyModelSelector({
             <p className="family-model__hidden" aria-live="polite">
               {hiddenNote(family, filter)}
             </p>
+            {family === "ltx" && !deploymentRegistered && (
+              <p className="family-model__hidden">
+                Layout-to-video and deployment AKUSPACE need your own Comfy
+                deployment. Add its endpoint in Studio settings. Other cloud
+                models only need your Comfy key.
+              </p>
+            )}
             <div
               id="family-model-options"
               role="listbox"

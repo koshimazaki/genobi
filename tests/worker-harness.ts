@@ -1,5 +1,6 @@
 // The Worker under test: one workerd per test file, with isolated D1/R2, every
 // migration applied, and a fake BFL whose submissions the tests count.
+import { fakeDeployment } from "./worker-deploy-provider";
 import { afterAll, beforeAll, beforeEach } from "vitest";
 import {
   Miniflare,
@@ -161,6 +162,8 @@ export function useWorker() {
         r2Buckets: ["MEDIA"],
         serviceBindings: { ASSETS: () => new MFResponse("asset") },
         outboundService: async (request) => {
+          const deployed = await fakeDeployment(request, clip);
+          if (deployed) return deployed;
           const url = new URL(request.url);
           if (url.hostname === "api.bfl.ai" && url.pathname === "/v1/credits") {
             if (faults.holdCredits) await faults.holdCredits;
@@ -228,10 +231,15 @@ export function useWorker() {
                 request.headers.get("authorization") ?? "",
               ),
               idempotency: request.headers.get("idempotency-key"),
-              ...(request.method === "POST"
+              ...(request.method === "POST" && url.pathname === "/api/v2/jobs"
                 ? { body: (await request.json()) as Record<string, unknown> }
                 : {}),
             });
+            if (url.pathname === "/api/v2/assets")
+              return MFResponse.json(
+                { id: crypto.randomUUID() },
+                { status: 201 },
+              );
             if (url.pathname === "/api/v2/jobs")
               return MFResponse.json(cloudJob("queued"), { status: 201 });
             if (url.pathname === "/api/v2/jobs/wf-1")

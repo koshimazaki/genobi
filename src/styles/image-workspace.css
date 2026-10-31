@@ -361,3 +361,21 @@
     gap: 7px;
   }
 }
+
+/* Explicit resizing is a presentation choice; normal mode dimensions stay fixed. */
+.image-stage-media > .prompt-resize-handle {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  width: 44px;
+  height: 32px;
+  z-index: 8;
+}
+
+.image-stage-media > .prompt-resize-handle span {
+  width: 12px;
+  height: 12px;
+  border: 0;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+}

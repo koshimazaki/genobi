@@ -1,5 +1,6 @@
+import PromptResizeHandle from "./PromptResizeHandle";
 import ThemedSelect from "./ThemedSelect";
-import { useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import type { ComposerState } from "../useComposer";
 import type { Box, ImageRegion } from "../image-regions";
 import { IMAGE_ACCEPT, type ImageReferences } from "../useImageReferences";
@@ -8,7 +9,7 @@ import ImageRegionCard from "./ImageRegionCard";
 import Icon from "./Icon";
 import FeaturedVideo from "./FeaturedVideo";
 import type { Job } from "../../shared/types";
-import { isImage, isKlein } from "../../shared/image";
+import { imageEditing, isImage, isKlein } from "../../shared/image";
 
 export default function ImageStage({
   state,
@@ -27,6 +28,9 @@ export default function ImageStage({
   layoutRevision?: number;
   onRetry?: (job: Job) => void;
 }) {
+  const mediaId = useId();
+  const [manualHeight, setManualHeight] = useState<number | null>(null);
+  const media = useRef<HTMLDivElement>(null);
   const sourceInput = useRef<HTMLInputElement>(null);
   const [activeId, setActiveId] = useState<string | null>(null),
     [over, setOver] = useState(false);
@@ -40,7 +44,7 @@ export default function ImageStage({
   const boxes = isKlein(state.model);
   const refs = state.imageReferences ?? [],
     regions = boxes ? state.imageRegions : [],
-    edit = state.generator === "edit";
+    edit = imageEditing(state);
   const active = regions.find((r) => r.id === activeId),
     canDraw = boxes && (!edit || refs.length > 0);
   function add(box: Box) {
@@ -68,29 +72,62 @@ export default function ImageStage({
     result.status === "Ready" &&
     result.resultUrl &&
     result.mediaAvailable !== false;
+  const stage = useRef<HTMLElement>(null);
+  const openBoxes = useRef(() => {});
+  openBoxes.current = () => {
+    if (!canDraw) {
+      sourceInput.current?.click();
+      return;
+    }
+    if (canDraw && !regions.length) add([250, 250, 750, 750]);
+    const canvas = stage.current?.querySelector<HTMLElement>(
+      ".image-region-canvas",
+    );
+    canvas?.focus();
+    canvas?.scrollIntoView?.({ block: "nearest" });
+  };
+  useEffect(() => {
+    if (layoutRevision > 0) openBoxes.current();
+  }, [layoutRevision]);
   if (ready && !(edit && refs.length) && (!boxes || layoutFor !== previewKey))
     return (
-      <FeaturedVideo
-        job={result}
-        onRetry={onRetry}
-        captionAction={
-          boxes ? (
-            <button
-              className="text-button"
-              onClick={() => setLayoutFor(previewKey)}
-            >
-              {edit ? "Edit layout" : "Arrange layout"}
-            </button>
-          ) : undefined
-        }
-      />
+      <div
+        onDragOver={(event) => event.preventDefault()}
+        onDrop={(event) => {
+          event.preventDefault();
+          images.drop(event.dataTransfer, "source");
+        }}
+      >
+        <FeaturedVideo
+          job={result}
+          onRetry={onRetry}
+          captionAction={
+            boxes ? (
+              <button
+                className="text-button"
+                onClick={() => setLayoutFor(previewKey)}
+              >
+                {edit ? "Edit layout" : "Arrange layout"}
+              </button>
+            ) : undefined
+          }
+        />
+      </div>
     );
   return (
     <section
+      ref={stage}
       className="featured-video image-stage"
       aria-label="Image editing stage"
     >
       <div
+        ref={media}
+        id={mediaId}
+        style={
+          manualHeight === null
+            ? undefined
+            : { height: manualHeight, maxHeight: "none" }
+        }
         className="featured-media image-stage-media"
         data-dragging={over || undefined}
         onDragOver={(e) => {
@@ -104,7 +141,7 @@ export default function ImageStage({
         onDrop={(e) => {
           e.preventDefault();
           setOver(false);
-          images.drop(e.dataTransfer, edit ? "source" : "tray");
+          images.drop(e.dataTransfer, edit || boxes ? "source" : "tray");
         }}
       >
         {canDraw ? (
@@ -153,12 +190,12 @@ export default function ImageStage({
             {ready && !(edit && refs.length) && (
               <button onClick={() => setLayoutFor(null)}>View result</button>
             )}
-            {edit && refs.length > 0 && (
+            {(edit || boxes) && (
               <button
                 disabled={images.loading}
                 onClick={() => sourceInput.current?.click()}
               >
-                Replace source
+                {refs.length ? "Replace source" : "Drop / choose image"}
               </button>
             )}
             {canDraw && (
@@ -198,6 +235,14 @@ export default function ImageStage({
             onClose={() => setActiveId(null)}
           />
         )}
+        <PromptResizeHandle
+          fieldId={mediaId}
+          label="image preview"
+          min={216}
+          max={1200}
+          height={() => media.current?.getBoundingClientRect().height ?? 300}
+          onResize={setManualHeight}
+        />
         <input
           className="sr-only"
           ref={sourceInput}
@@ -215,7 +260,7 @@ export default function ImageStage({
           {edit
             ? "Drop source → describe edits"
             : boxes
-              ? "Describe an image or arrange it with boxes"
+              ? "Drop an image to edit, or draw a new layout"
               : "Describe an image and add references"}
         </span>
         <span>

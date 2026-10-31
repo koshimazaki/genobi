@@ -180,3 +180,53 @@ References remain in tab memory and need reattachment after reload.
 
 These checks used local fixtures and fake providers. No paid generation or
 deployment was performed.
+
+## Hosted deployment, Make it yours and Klein — 31 October 2026
+
+The hosted studio can now register a Comfy deployment of its own. Reviewed and
+run locally; nothing here was exercised against a live deployment, and no paid
+call was made in this pass.
+
+What the review confirmed in the code, each with a test in
+`tests/worker-deployments.test.ts`:
+
+| Claim                                         | Where it holds                                                                                                                                                                                                                                                                                                                                                       |
+| --------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Only `https://<name>.run.comfy.app` runs      | `parseWorkflowDestination` requires one label, no port, no path, no credentials, query or fragment, and refuses a foreign host (`saves unpaid settings without a key, isolates sessions and refuses foreign hosts`)                                                                                                                                                  |
+| The visitor key is never stored               | `deployment_settings` holds url/preset/revision only; `deployment_assets` holds a receipt id, session, endpoint, input role and expiry. Uploads use the caller key in request memory (`uploads through the real SDK with a transient caller key and stores only an owned receipt`)                                                                                   |
+| No key reaches a log                          | No `console.*` call in `worker/` or `server/` takes a key or the `x-byo-key` header                                                                                                                                                                                                                                                                                  |
+| One session cannot reach another's files      | Asset reads bind id, session, endpoint, token and expiry; inserts cap at 32 per session atomically; outputs are keyed by job and read only from the session-owned row                                                                                                                                                                                                |
+| A paid run needs a quote and a claimed ticket | Quoting requires the endpoint and owned input picks, submission refuses without a confirmed quote, and an uncertain call is never resubmitted (`requires setup and owned tickets before quoting, and confirmation before submission`; `binds quotes to presets and endpoint and sends one reserved job under concurrency`; `never resubmits an uncertain paid call`) |
+| A drifted setting cannot be submitted         | `requireExpectedPlan` answers 409 when the quoted location or workflow differs, before provider work                                                                                                                                                                                                                                                                 |
+| Migration 0009 is additive                    | All nine migrations replay in order into a scratch SQLite database; 0009 adds `deployment_settings`, `deployment_assets`, `deployment_outputs` and two indexes, and alters nothing                                                                                                                                                                                   |
+
+`Make it yours` feeds `Generate my version`: the panel takes the template's real
+media, replacements and text, writes the brief, and the instruction names the
+selected slot IDs, defers to the saved description and references, refuses to
+infer prompts from demo footage, and asks for a quote before spending
+(`tests/director-version-media.test.tsx`, `tests/director-generate-version.test.tsx`).
+Klein takes a dropped image without a prior generation
+(`tests/klein-source-edit.test.tsx`).
+
+Locally run: `npm run lint`, `check:size`, `typecheck`, `check:licences`,
+`check:registry`, `check:scene-adapter` and `build:pages` (which includes
+`check:worker`) pass, as do `format:check` and `check:wiki` on the changed files.
+`npm test` passes apart from tests that fail the same way before this change:
+
+- `ffmpeg-render`, `space-render` and `upscale-parts-render` drive real ffmpeg
+  and pass with a current ffmpeg (6.1 or 7.1). An old ffmpeg 4.x first on PATH
+  rounds a cut's duration differently; put a current one first before treating
+  those as regressions.
+- A few agent-session tests (`agent-session-inbox`, `agent-sessions`,
+  `agent-terminal-sign-in`) are timing-sensitive inside a full parallel run, and
+  `voice-discovery` depends on the home folder layout. Both fail identically
+  without this change.
+
+Not verified here: a hosted run against a real `*.run.comfy.app` deployment, the
+32 MB hosted input ceiling as measured against a live endpoint, and the browser
+pass at phone and desktop widths after the settings and Help changes.
+
+A follow-up hardening of hosted uploads holds each input once rather than
+copying it into a second buffer, and refuses an unknown input role or a session
+already at its 32-ticket cap before reading the body or calling the deployment
+(`refuses an unknown input role, and a session at its ticket cap, before uploading`).

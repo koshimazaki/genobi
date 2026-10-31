@@ -19,6 +19,7 @@ import {
   findMixTemplate,
 } from "../../shared/templates/catalogue";
 import ProjectPrompt from "./ProjectPrompt";
+import TemplateMediaInputs from "./TemplateMediaInputs";
 import RemixGeneration from "./RemixGeneration";
 import type { PageKey } from "../usePageKey";
 import type { GenerateInput } from "../../shared/types";
@@ -31,6 +32,7 @@ import { mediaSlots, pictureSlots, type MediaSlot } from "./remix-slots";
 import "./remix.css";
 
 export default function RemixPanel({
+  generateVersion,
   connection,
   bundle,
   disabled,
@@ -42,6 +44,7 @@ export default function RemixPanel({
   busy,
   report,
 }: {
+  generateVersion: () => void;
   connection: PageKey;
   bundle: Bundle;
   disabled: boolean;
@@ -331,6 +334,7 @@ export default function RemixPanel({
       </StudioPanel>
       <StudioPanel id="prompt">
         <div className="dir-remix">
+          <TemplateMediaInputs bundle={bundle} disabled={editingDisabled} />
           <ProjectPrompt
             key={bundle.project.id}
             bundle={bundle}
@@ -338,6 +342,20 @@ export default function RemixPanel({
             // disable the focused field after one character.
             disabled={editingDisabled}
           />
+          {(findHouseTemplate(
+            bundle.project.template?.id ?? bundle.project.id,
+          ) ||
+            findMixTemplate(
+              bundle.project.template?.id ?? bundle.project.id,
+            )) && (
+            <button
+              className="dir-primary"
+              disabled={disabled}
+              onClick={generateVersion}
+            >
+              Generate my version
+            </button>
+          )}
         </div>
       </StudioPanel>
       <StudioPanel id="templates">

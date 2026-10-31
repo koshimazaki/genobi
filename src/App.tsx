@@ -394,7 +394,11 @@ export default function App() {
                   model={model}
                   onOpenCamera={() => setShowCamera(true)}
                   onOpenAcoustic={() => setShowAcoustic(true)}
-                  onOpenBoxes={() => setLayoutRevision((value) => value + 1)}
+                  onOpenBoxes={() => {
+                    if (shell && !shell.visible.includes("preview"))
+                      shell.select("camera");
+                    setLayoutRevision((value) => value + 1);
+                  }}
                 />
               </div>
               <ComposerWorkspace

@@ -8,7 +8,6 @@ import {
 import type { ComposerState } from "./useComposer";
 import type { Take } from "./world-builder/export-take";
 import { validateRecipe } from "./world-builder/recipe";
-import { readHostedStudio } from "./hosted-studio";
 import { useSettingsStore } from "./settings-store";
 import { request } from "./useJobs";
 
@@ -84,14 +83,10 @@ export async function capturedLayout(
 
 /** A browser-only handoff. No upload, quote, submission or project mutation. */
 export async function queueLayoutTake(take: Take) {
-  if ((await readHostedStudio()) !== false)
-    throw new Error(
-      "Layout-to-video runs from the local studio. Save this take and open Genobi locally.",
-    );
   const endpoint = useSettingsStore.getState().runLocation?.deployment?.url;
   if (!endpoint)
     throw new Error(
-      "Register your Comfy deployment in local Settings → Generation setup, then send the take again.",
+      "Register your Comfy deployment in Settings → Generation setup, then send the take again.",
     );
   const pending = await capturedLayout(take, endpoint);
   useLayoutTake.setState({ pending });

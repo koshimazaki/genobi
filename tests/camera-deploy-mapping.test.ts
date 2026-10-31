@@ -1,6 +1,4 @@
 import manifest from "../workflows/ltx-world-builder.endpoints.json";
-import { refuseHostedDeployment } from "../shared/comfy/deploy-catalogue";
-import { HOSTED_RUN_LOCATION } from "../shared/comfy/run-location";
 import { requireQuotedRun } from "../server/take";
 import type { QuoteRecord } from "../shared/quote";
 import { describe, expect, it } from "vitest";
@@ -169,7 +167,7 @@ describe("Comfy Deploy registration and Camera placeholder mapping", () => {
     ).toThrow(/fixed/);
   });
 
-  it("shows deployment entries only after registration and never on hosted", () => {
+  it("shows deployment entries only after registration and also on hosted", () => {
     expect(entriesFor("ltx").some((e) => e.deploymentOnly)).toBe(false);
     expect(
       entriesFor("ltx", { deploymentRegistered: true }).filter(
@@ -180,7 +178,7 @@ describe("Comfy Deploy registration and Camera placeholder mapping", () => {
       entriesFor("ltx", { hosted: true, deploymentRegistered: true }).some(
         (e) => e.deploymentOnly,
       ),
-    ).toBe(false);
+    ).toBe(true);
     expect(
       workflowCatalogue().entries.some((e) =>
         e.entry.startsWith("ltx-deploy-"),
@@ -190,28 +188,12 @@ describe("Comfy Deploy registration and Camera placeholder mapping", () => {
       workflowCatalogue(() => undefined, true, 0, true).entries.some((e) =>
         e.entry.startsWith("ltx-deploy-"),
       ),
-    ).toBe(false);
+    ).toBe(true);
     expect(() =>
       requireTemplateFor("ltx-deploy-layout-to-video", "ltx-i2v-vocalist"),
     ).toThrow();
   });
-  it("rejects hosted requests before balance/provider work and binds quote destinations", async () => {
-    expect(HOSTED_RUN_LOCATION.note).toContain(
-      "Comfy Deploy runs from the local studio",
-    );
-    const request = validateInput({
-      ...input,
-      model: "ltx-deploy-akuspace",
-      duration: 8,
-      aspectRatio: "16:9",
-      deploy: { seed: 0, negativePrompt: "", assets: {} },
-    });
-    expect(() => refuseHostedDeployment(request.model)).toThrow(
-      expect.objectContaining({
-        code: "deployment_local_only",
-        message: "Comfy Deploy runs from the local studio",
-      }),
-    );
+  it("binds quote destinations", async () => {
     const recipe = {
       id: "ltx-deploy-layout-to-video",
       version: 1,

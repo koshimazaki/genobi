@@ -459,7 +459,10 @@ export const entryFor = (
     registry.find(
       (e): e is ReadyEntry =>
         e.status === "ready" &&
-        e.generator === generator &&
+        (e.generator === generator ||
+          (generator === "edit" &&
+            (e.videoModel === "flux-3-klein" ||
+              e.videoModel === "flux-3-klein-api"))) &&
         (!wanted || e.videoModel === wanted),
     );
   return (find(model) ?? find("flux-3") ?? find())!;

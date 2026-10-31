@@ -18,6 +18,7 @@ import { importAssets } from "./import-media";
 import { BRIEF_PATH, readBrief, writeBrief } from "./prompt-brief";
 import { bindVersionPicture } from "./version-pictures";
 import { projectPlan } from "./house-template";
+import { readVersionBrief } from "./version-brief";
 
 export type VersionPicks = Record<string, string[]>;
 
@@ -185,7 +186,7 @@ export async function applyVersionInputs(
     project: structuredClone(bundle.project),
     files: new Map(bundle.files),
   };
-  let brief = readBrief(next);
+  let brief = readVersionBrief(next);
   const slots = versionSlots(template);
   if (Object.keys(picks).some((id) => !slots.some((slot) => slot.id === id)))
     throw new Error("Unknown template input slot.");
@@ -196,8 +197,7 @@ export async function applyVersionInputs(
     const plannedInput = make.includes(slot.id);
     if (
       !(slot.picture && ids.length === 0) &&
-      !plannedInput &&
-      (ids.length < slot.min || ids.length > slot.max)
+      (ids.length > slot.max || (!plannedInput && ids.length < slot.min))
     )
       throw new Error(
         `${slot.label}: choose ${slot.min} to ${slot.max} files.`,

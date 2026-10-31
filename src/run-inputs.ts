@@ -1,5 +1,5 @@
 import type { GenerateInput, Job } from "../shared/types";
-import { isImage, isKlein } from "../shared/image";
+import { imageEditing, isImage, isKlein } from "../shared/image";
 import { imagePrompt, type ImageRegion } from "./image-regions";
 import { checkRunInputs } from "./run-inputs-check";
 import type { ComposerState } from "./useComposer";
@@ -27,12 +27,14 @@ export function captureRunInputs(
   composer?: ComposerState,
 ): RunInputs {
   const regions = isKlein(input.model) ? (composer?.imageRegions ?? []) : [];
+  // The same edit test the composer sends with: a Klein image with a
+  // reference is an edit, so its description carries the region instruction.
   const editable =
     composer &&
     isImage(input.generator) &&
     composer.generator === input.generator &&
     composer.model === input.model &&
-    imagePrompt(composer.description, regions, input.generator === "edit") ===
+    imagePrompt(composer.description, regions, imageEditing(input)) ===
       input.description;
   const value = {
     id: job.id,

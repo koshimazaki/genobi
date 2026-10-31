@@ -6,7 +6,7 @@ import type { DestinationKind } from "./destination";
  * ComfyUI on this machine), Cloud (Comfy Cloud), or Both (local workflows
  * alongside cloud API models). The local server reads its
  * default from `GENOBI_WORKFLOW_DESTINATION` and keeps a per-session choice
- * the studio and agents share; the hosted Worker is always Comfy Cloud.
+ * the studio and agents share; the hosted Worker offers Comfy Cloud and registered deployments.
  */
 export const RUN_LOCATIONS = ["local", "cloud", "both", "deployment"] as const;
 export type RunLocation = (typeof RUN_LOCATIONS)[number];
@@ -46,7 +46,7 @@ export interface LocalComfyStatus {
  * handled the request, so answers order by when the server handled them, not
  * by when they arrived; the studio applies only an answer newer than the last
  * it applied. It lives in memory and starts each process above the last one's
- * (`firstSettingsRevision`). The hosted Worker's settings never change: 0.
+ * (`firstSettingsRevision`). The hosted Worker increments a per-session D1 revision.
  */
 export const firstSettingsRevision = (now = Date.now()) => now * 1000;
 export const HOSTED_SETTINGS_REVISION = 0;
@@ -61,7 +61,7 @@ export interface RunLocationState {
   label: string;
   /** Where the location came from: this session's choice or the server's default. */
   source: "session" | "server";
-  /** True where it cannot change: the hosted Worker. */
+  /** True where this adapter cannot change settings. */
   fixed: boolean;
   choices: RunLocation[];
   /** The local ComfyUI, where the adapter has one to ask. */
@@ -78,5 +78,5 @@ export const HOSTED_RUN_LOCATION: RunLocationState = {
   fixed: true,
   choices: ["cloud"],
   local: null,
-  note: "The hosted studio runs every workflow on Comfy Cloud. Run the studio on your own machine to use a local ComfyUI. Comfy Deploy runs from the local studio.",
+  note: "The hosted studio runs every workflow on Comfy Cloud. Run the studio on your own machine to use a local ComfyUI. Register a Comfy deployment endpoint in Settings to use its workflows.",
 };

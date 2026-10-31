@@ -1,3 +1,5 @@
+import { useShell } from "../studio/ShellContext";
+import { versionRequestedSlots, versionStudioUrl } from "./version-handoff";
 import { useRef, useState } from "react";
 import type {
   HouseTemplate,
@@ -5,7 +7,6 @@ import type {
 } from "../../shared/templates/types";
 import { versionSlots } from "../../shared/templates/version";
 import { SUBJECT_LIMIT, TITLE_LIMIT } from "../../shared/templates/plan";
-import { promptsInstruction } from "../../shared/director/prompt-send";
 import { useModalDialog } from "../components/useModalDialog";
 import { studioStore } from "../studio/store";
 import {
@@ -15,10 +16,12 @@ import {
   versionTextInputs,
 } from "./version-inputs";
 import { saveBundle, type Bundle } from "./bundle";
-import { feedbackOf } from "./feedback-file";
 import type { useAgentSend } from "./useAgentSend";
-import VersionInputSlot from "./VersionInputSlot";
+import VersionInputSlot, { VersionPreview } from "./VersionInputSlot";
+import { writeBrief } from "./prompt-brief";
 import VersionPlan from "./VersionPlan";
+import { versionInstruction } from "./version-instruction";
+import { readVersionBrief } from "./version-brief";
 
 export default function VersionPanel({
   template,
@@ -33,6 +36,7 @@ export default function VersionPanel({
   close: () => void;
   startAgent: (instruction: string) => void;
 }) {
+  const shell = useShell();
   const dialog = useRef<HTMLDialogElement>(null);
   useModalDialog(dialog);
   const [draft, setDraft] = useState(initial);
@@ -42,7 +46,30 @@ export default function VersionPanel({
   const [inputs, setInputs] = useState<TemplateInputs>(() =>
     versionTextInputs(initial, template),
   );
-  const [make, setMake] = useState<string[]>([]);
+  const search = typeof window === "undefined" ? "" : window.location.search;
+  const [make, setMake] = useState<string[]>(() => {
+    if (new URLSearchParams(search).has("generate"))
+      return versionRequestedSlots(template.id, search);
+    return template.mix
+      ? versionSlots(template)
+          .filter(
+            (slot) =>
+              slot.kind === "video" &&
+              (picks[slot.id] ?? []).every(
+                (id) =>
+                  !["uploaded", "generated"].includes(
+                    initial.project.assets[id]?.origin,
+                  ),
+              ),
+          )
+          .map((slot) => slot.id)
+      : [];
+  });
+  const localUrl = versionStudioUrl(
+    template.id,
+    shell?.preset ?? "director",
+    make,
+  );
   const [review, setReview] = useState(false);
   const [working, setWorking] = useState(false);
   const [error, setError] = useState("");
@@ -90,24 +117,7 @@ export default function VersionPanel({
   }
   async function prepare() {
     const bundle = await apply();
-    const choices = versionSlots(template)
-      .map((slot) => {
-        const ids = picks[slot.id] ?? [];
-        const media = ids
-          .map((id) => `${id} (${bundle.project.assets[id]?.file.path})`)
-          .join(", ");
-        return `${slot.label} (${slot.id}, ${slot.kind}): ${make.includes(slot.id) ? "Generate a replacement" : "Reuse current media"}; ${media || (slot.picture ? "declared template picture" : "not supplied")}. Keep the current media until approved results are ready.`;
-      })
-      .join("\n");
-    startAgent(
-      [
-        `Make my version of ${template.name} on this existing linked project. Read its current revision, actual asset files, brief and generationPlans first.`,
-        `My brief: ${JSON.stringify(inputs.subject)}. Title: ${JSON.stringify(inputs.title)}.`,
-        choices,
-        "Use my supplied assets and references. Preserve timeline timing, source in-points, graphics and other edits. For every requested new asset, inspect its clip uses and required source duration, propose a suitable model/workflow and ask for missing creative direction. Do not infer an original generation prompt from demo footage. Show each paid step's quote and total and wait for explicit approval in the studio bubble before submission; this handoff is not spending approval. Persist idempotency first and never retry an uncertain submission automatically. Place approved results with revision-checked shared project commands and preview the cut. On failure keep the current media and report why.",
-        promptsInstruction(bundle.project, feedbackOf(bundle)).text,
-      ].join("\n"),
-    );
+    startAgent(versionInstruction(bundle, template, make));
   }
   return (
     <dialog
@@ -134,56 +144,150 @@ export default function VersionPanel({
         </button>
       </header>
       <p>
-        Choose the media to reuse or replace. Your linked agent prepares
-        generation; each paid step waits for a quote and your approval in the
-        bubble.
+        Drop your media into the slots below, keep the originals or ask your
+        agent for replacements. Paid generation waits for your approval.
       </p>
+      <nav aria-label="Make my version steps" className="dir-version-steps">
+        <button
+          type="button"
+          aria-current={!review ? "step" : undefined}
+          onClick={() => setReview(false)}
+          disabled={busy}
+        >
+          1 · Your media
+        </button>
+        <button
+          type="button"
+          aria-current={review ? "step" : undefined}
+          onClick={() => setReview(true)}
+          disabled={busy}
+        >
+          2 · Generation plan
+        </button>
+      </nav>
+      {agent.copy === false && (
+        <p className="dir-version-connection" role="status">
+          Generation for this project continues in your local studio. You can
+          replace media and edit here. Save a project ZIP to bring your uploads
+          and edits with you.
+        </p>
+      )}
+      {new URLSearchParams(search).get("handoff") === "project-zip" && (
+        <p className="dir-version-connection">
+          This is the selected template. If you changed media or timing in the
+          hosted studio, import your saved project ZIP before preparing
+          generation.
+        </p>
+      )}
       {!review ? (
         <>
-          <fieldset disabled={busy}>
-            <legend>Words</legend>
-            {(["subject", "title"] as const).map((key) => (
-              <label key={key}>
-                {template.inputs[key].label}
-                <input
-                  value={inputs[key]}
-                  maxLength={key === "subject" ? SUBJECT_LIMIT : TITLE_LIMIT}
-                  onChange={(e) =>
-                    setInputs({ ...inputs, [key]: e.target.value })
-                  }
-                />
-                <small>{template.inputs[key].hint}</small>
-              </label>
-            ))}
-          </fieldset>
-          {versionSlots(template).map((slot) => (
-            <VersionInputSlot
-              key={slot.id}
-              slot={slot}
+          <section
+            className="dir-version-brief"
+            aria-label="Make it yours brief"
+          >
+            <label>
+              Your description and reference bindings
+              <textarea
+                aria-label="Make it yours description"
+                value={readVersionBrief(draft).text}
+                maxLength={12000}
+                disabled={busy}
+                onChange={(e) =>
+                  setDraft(
+                    writeBrief(draft, {
+                      ...readVersionBrief(draft),
+                      text: e.target.value,
+                    }),
+                  )
+                }
+              />
+            </label>
+            <VersionPreview
               bundle={draft}
-              ids={picks[slot.id] ?? []}
-              defaults={defaults[slot.id] ?? []}
-              disabled={busy}
-              make={make.includes(slot.id)}
-              generate={(yes) =>
-                setMake((old) =>
-                  yes
-                    ? [...new Set([...old, slot.id])]
-                    : old.filter((id) => id !== slot.id),
-                )
-              }
-              pick={(ids) => setPicks((old) => ({ ...old, [slot.id]: ids }))}
-              upload={(files) =>
-                act(async () => {
-                  const imported = await importVersionFiles(draft, slot, files);
-                  setDraft(imported.bundle);
-                  setPicks((old) => ({ ...old, [slot.id]: imported.assetIds }));
-                  setMake((old) => old.filter((id) => id !== slot.id));
-                })
-              }
+              ids={readVersionBrief(draft).references.flatMap((r) =>
+                r.assetId ? [r.assetId] : [],
+              )}
             />
-          ))}
+            <small>
+              Character, style, font and other references stay bound to your
+              saved description. Edit their bindings in Make it yours.
+            </small>
+          </section>
+          <section className="dir-version-inputs" aria-label="Template inputs">
+            <fieldset className="dir-version-words" disabled={busy}>
+              <legend>Words</legend>
+              {(["subject", "title"] as const).map((key) => (
+                <label key={key}>
+                  {template.inputs[key].label}
+                  <input
+                    value={inputs[key]}
+                    maxLength={key === "subject" ? SUBJECT_LIMIT : TITLE_LIMIT}
+                    onChange={(e) =>
+                      setInputs({ ...inputs, [key]: e.target.value })
+                    }
+                  />
+                  <small>{template.inputs[key].hint}</small>
+                </label>
+              ))}
+            </fieldset>
+            {versionSlots(template).map((slot) => (
+              <VersionInputSlot
+                key={slot.id}
+                slot={slot}
+                bundle={draft}
+                ids={picks[slot.id] ?? []}
+                defaults={defaults[slot.id] ?? []}
+                disabled={busy}
+                make={make.includes(slot.id)}
+                generate={(yes) =>
+                  setMake((old) =>
+                    yes
+                      ? [...new Set([...old, slot.id])]
+                      : old.filter((id) => id !== slot.id),
+                  )
+                }
+                pick={(ids) => setPicks((old) => ({ ...old, [slot.id]: ids }))}
+                upload={(files) =>
+                  act(async () => {
+                    const imported = await importVersionFiles(
+                      draft,
+                      slot,
+                      files,
+                    );
+                    setDraft(imported.bundle);
+                    setPicks((old) => ({
+                      ...old,
+                      [slot.id]: imported.assetIds,
+                    }));
+                    setMake((old) => old.filter((id) => id !== slot.id));
+                  })
+                }
+              />
+            ))}
+          </section>
           <footer>
+            {agent.copy === false && (
+              <>
+                <button
+                  disabled={busy}
+                  onClick={() =>
+                    void act(async () => {
+                      await saveBundle(await apply());
+                    })
+                  }
+                >
+                  Save project ZIP
+                </button>
+                <a
+                  className="dir-version-local"
+                  href={localUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Open local studio ↗
+                </a>
+              </>
+            )}
             <button
               disabled={busy}
               onClick={() =>
@@ -225,11 +329,7 @@ export default function VersionPanel({
               >
                 Save project ZIP
               </button>{" "}
-              <a
-                href="http://127.0.0.1:4317"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <a href={localUrl} target="_blank" rel="noopener noreferrer">
                 Open local studio ↗
               </a>
             </p>

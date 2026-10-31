@@ -1,4 +1,5 @@
 import { Comfy } from "@comfyorg/sdk";
+import { ComfyLow } from "@comfyorg/sdk/low";
 import { AppError } from "./errors";
 import { isComfyKey, mediaUrl, type Fetcher } from "../shared/provider";
 import type { ProviderResult } from "../shared/provider";
@@ -125,14 +126,17 @@ export interface ComfySdkOptions {
   connect?: Connect;
   /** The process environment the SDK reads; `process.env` where there is one. */
   env?: Record<string, string | undefined>;
+  portableUploads?: boolean;
 }
 
 export class ComfySdkWorkflows implements WorkflowClient {
   private readonly destination: WorkflowDestination;
   private readonly fetcher: Fetcher;
   private readonly connect: Connect;
+  private readonly portableUploads: boolean;
   private readonly env: Record<string, string | undefined>;
   constructor(options: ComfySdkOptions = {}) {
+    this.portableUploads = options.portableUploads ?? false;
     this.destination = options.destination ?? DEFAULT_DESTINATION;
     this.fetcher = options.fetcher ?? ((...args) => fetch(...args));
     this.connect = options.connect ?? connectSdk;
@@ -211,7 +215,30 @@ export class ComfySdkWorkflows implements WorkflowClient {
       template,
       values,
       files,
-      client.assets,
+      this.portableUploads
+        ? {
+            fromBytes: (bytes, options) => ({
+              asReference: async (signal) => {
+                const low = new ComfyLow(this.base, key, {
+                  fetch: destinationFetch(this.base, this.fetcher),
+                  clientInfo: "genobi",
+                });
+                const asset = await low.postAssets(
+                  new Blob([new Uint8Array(bytes)]),
+                  options.contentType,
+                  options.filename,
+                  { signal },
+                );
+                if (
+                  typeof asset.id !== "string" ||
+                  !/^[a-zA-Z0-9-]{1,128}$/.test(asset.id)
+                )
+                  throw new Error("Invalid asset receipt");
+                return { __type: "core/ASSET", info: { id: asset.id } };
+              },
+            }),
+          }
+        : client.assets,
     );
     let job: { id: string };
     try {

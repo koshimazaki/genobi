@@ -37,16 +37,20 @@ describe("Arena run requests", () => {
         description: "A lighthouse at dusk.",
       });
     }
-    // Stills carry references only where the entry takes them.
+    // Stills carry references wherever the entry's controls take them; a
+    // video entry takes none of the comparison's stills.
     const ref = `data:image/png;base64,${(
       await readFile("tests/fixtures/reference.png")
     ).toString("base64")}`;
     expect(
-      validateInput(arenaRunInput("flux-3-image", "Morph it", {}, [ref]))
-        .imageReferences,
+      arenaRunInput("flux-3-image", "Morph it", {}, [ref]).imageReferences,
     ).toHaveLength(1);
     expect(
       arenaRunInput("flux-3-klein", "Morph it", {}, [ref]).imageReferences,
+    ).toHaveLength(1);
+    expect(
+      arenaRunInput("ltx-2-5-fast", "Morph it", {}, [ref]).imageReferences ??
+        [],
     ).toEqual([]);
     // LTX offers whole Router durations: 7 seconds becomes 6.
     expect(arenaRunInput("ltx-2-5-fast", "x", { duration: 7 }).duration).toBe(

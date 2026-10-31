@@ -1,10 +1,12 @@
+import VersionMediaDrop from "./VersionMediaDrop";
+import { createPortal } from "react-dom";
+import ReferencePreview from "../components/ReferencePreview";
 import { useEffect, useState } from "react";
 import type { Source } from "../../shared/types";
 import {
   versionSourceSeconds,
   type VersionSlot,
 } from "../../shared/templates/version";
-import { TEMPLATE_ACCEPT } from "../../shared/templates/intake";
 import { request } from "../useJobs";
 import type { Bundle } from "./bundle";
 import MediaTile from "./MediaTile";
@@ -55,6 +57,32 @@ function AudioWave({ bytes }: { bytes?: Uint8Array<ArrayBuffer> }) {
   );
 }
 
+function TemplatePicture({ url }: { url: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <button
+        type="button"
+        className="dir-version-picture"
+        aria-label="Preview template picture"
+        onClick={() => setOpen(true)}
+      >
+        <img alt="Template default" src={url} />
+        <small>View larger</small>
+      </button>
+      {open &&
+        createPortal(
+          <ReferencePreview
+            url={url}
+            label="Template picture"
+            onClose={() => setOpen(false)}
+          />,
+          document.body,
+        )}
+    </>
+  );
+}
+
 export function VersionPreview({
   bundle,
   ids,
@@ -77,11 +105,14 @@ export function VersionPreview({
                 {(frame) => frame}
               </MediaTile>
               {asset.kind === "audio" && <AudioWave bytes={bytes} />}
+              <small className="dir-version-filename" title={asset.file.path}>
+                {asset.file.path.split("/").at(-1)}
+              </small>
             </div>
           );
         })
       ) : fallback ? (
-        <img alt="Template default" src={fallback} />
+        <TemplatePicture url={fallback} />
       ) : (
         <p>No asset selected.</p>
       )}
@@ -104,12 +135,12 @@ export default function VersionInputSlot({
   slot: VersionSlot;
   bundle: Bundle;
   ids: string[];
-  defaults: string[];
+  defaults?: string[];
   disabled: boolean;
-  make: boolean;
+  make?: boolean;
   pick: (ids: string[]) => void;
   upload: (files: File[]) => Promise<void>;
-  generate: (make: boolean) => void;
+  generate?: (make: boolean) => void;
 }) {
   const [owned, setOwned] = useState<Source[]>();
   const [error, setError] = useState("");
@@ -168,7 +199,18 @@ export default function VersionInputSlot({
             of source media to keep the current timing.
           </p>
         )}
-      <VersionPreview bundle={bundle} ids={ids} fallback={slot.picture?.url} />
+      <VersionMediaDrop
+        slot={slot}
+        bundle={bundle}
+        disabled={disabled || loading}
+        upload={upload}
+      >
+        <VersionPreview
+          bundle={bundle}
+          ids={ids}
+          fallback={slot.picture?.url}
+        />
+      </VersionMediaDrop>
       {audioUrl && (
         <audio
           aria-label={`${slot.label} preview`}
@@ -178,15 +220,17 @@ export default function VersionInputSlot({
         />
       )}
       <div className="dir-version-controls">
-        <button
-          type="button"
-          onClick={() => {
-            pick(defaults);
-            generate(false);
-          }}
-        >
-          Keep default
-        </button>
+        {defaults && (
+          <button
+            type="button"
+            onClick={() => {
+              pick(defaults);
+              generate?.(false);
+            }}
+          >
+            Keep default
+          </button>
+        )}
         <label>
           Project assets / Inspirations
           <select
@@ -199,7 +243,7 @@ export default function VersionInputSlot({
                   .map((o) => o.value)
                   .filter(Boolean),
               );
-              generate(false);
+              generate?.(false);
             }}
           >
             <option value="">Choose {slot.kind}</option>
@@ -219,25 +263,6 @@ export default function VersionInputSlot({
               </optgroup>
             ))}
           </select>
-        </label>
-        <label>
-          Upload {slot.kind}
-          <input
-            aria-label={`Upload ${slot.label}`}
-            type="file"
-            multiple={slot.max > 1}
-            accept={
-              slot.kind === "video"
-                ? "video/mp4,.mp4"
-                : TEMPLATE_ACCEPT[slot.kind]
-            }
-            onChange={(e) => {
-              const files = [...(e.target.files ?? [])];
-              e.target.value = "";
-              if (files.length)
-                void upload(files).catch((e: Error) => setError(e.message));
-            }}
-          />
         </label>
         {slot.kind === "audio" && (
           <button type="button" onClick={() => void tracks()}>
@@ -266,13 +291,13 @@ export default function VersionInputSlot({
             type="button"
             onClick={() => {
               pick([]);
-              generate(false);
+              generate?.(false);
             }}
           >
             Leave empty
           </button>
         )}
-        {
+        {generate && (
           <label>
             <input
               type="checkbox"
@@ -281,9 +306,9 @@ export default function VersionInputSlot({
                 generate(e.target.checked);
               }}
             />
-            Ask Genobi to generate this input
+            Generate replacement with my agent
           </label>
-        }
+        )}
       </div>
       {error && <p role="alert">{error}</p>}
     </fieldset>

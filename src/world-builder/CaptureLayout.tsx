@@ -24,9 +24,9 @@ export default function CaptureLayout({
         </button>
       )}
       <p className="wb-hint">
-        Capture at 1024 × 576, 193 frames, 24 fps. The local Camera workflow
-        combines layout-guided LTX video and scene-derived CPU reverb in one
-        job. No generation starts here.
+        Capture at 1024 × 576, 193 frames, 24 fps. The Camera workflow combines
+        layout-guided LTX video and scene-derived CPU reverb in one job. No
+        generation starts here.
       </p>
     </div>
   );

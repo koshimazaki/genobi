@@ -103,12 +103,13 @@ export default function KeyDialog({
       <div className="settings-grid">
         <SettingsSection
           title="Studio setup"
-          subtitle="Local ComfyUI, Comfy Cloud or both"
+          subtitle="Local ComfyUI, Comfy Cloud or deployment"
           open
         >
           <RunLocationField />
           <p>
-            Connect with your Comfy API key for Comfy Router and Comfy Cloud.
+            Connect your Comfy API key for Router, Cloud or your deployment.
+            Deployment GPU time is billed to its owning Comfy workspace.
           </p>
           {keychain && keys ? (
             <KeySlot

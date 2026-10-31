@@ -192,11 +192,26 @@ describe("coming entries", () => {
           expect(html).toContain('aria-disabled="true"');
           expect(html).toContain(`title="${entry.note}"`);
           expect(html).toContain(">soon<");
+        } else if (entry.deploymentOnly) {
+          // A deployment entry needs its own endpoint before it can run.
+          expect(html).toContain('aria-disabled="true"');
+          expect(html).toContain(">setup required<");
+          expect(html).not.toContain(">soon<");
         } else {
           expect(html).not.toContain("aria-disabled");
           expect(html).not.toContain("soon");
         }
       }
+    // Once a deployment is registered the same row is choosable.
+    const deploy = modelOptions("ltx", false, false, undefined, true).find(
+      (option) => option.value === "ltx-deploy-layout-to-video",
+    );
+    expect(deploy).toBeTruthy();
+    expect(
+      renderToStaticMarkup(
+        <SelectOptionRow option={deploy!} selected={false} />,
+      ),
+    ).not.toContain("aria-disabled");
   });
 
   it("puts the family's ready entry in the menu and keeps FLUX open-only for Klein", () => {

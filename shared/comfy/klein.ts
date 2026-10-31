@@ -98,13 +98,14 @@ export function kleinValues(
   input: {
     imageAspectRatio?: ImageAspectRatio;
     imageResolution?: ImageResolution;
+    imageReferences?: string[];
   },
   prompt: string,
   random: () => number = Math.random,
 ) {
   let layout;
   try {
-    layout = readLayout(prompt);
+    layout = readLayout(prompt, input.imageReferences?.length ?? 0);
   } catch (error) {
     if (error instanceof LayoutError) throw unsent(error.message);
     throw error;

@@ -68,11 +68,11 @@ describe("a panel's own 3D frame is its reference", () => {
     expect(planRuns(d, { kind: "sheet", plan: true })[0].frames).toEqual([]);
   });
 
-  it("refuses Klein's open graph and lets FLUX 3 Edit draw from frames alone", async () => {
+  it("lets Klein's open graph draw from a panel frame, and FLUX 3 Edit draw from frames alone", async () => {
     const { document: d } = await board();
-    expect(runProblem(d, DEFAULT_GENERATOR, [], { kind: "fill" })).toMatch(
-      /Panel 1 \(Shot 1\) has its own 3D frame\. Klein's open graph takes text only/,
-    );
+    expect(
+      runProblem(d, DEFAULT_GENERATOR, [], { kind: "fill" }),
+    ).toBeUndefined();
     const edit = { ...DEFAULT_GENERATOR, entry: "flux-3-edit" };
     expect(runProblem(d, edit, [], { kind: "fill" })).toMatch(
       /FLUX 3 Edit redraws a reference/,

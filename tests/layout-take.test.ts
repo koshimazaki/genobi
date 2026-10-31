@@ -109,7 +109,7 @@ describe("a captured scene handed to the combined layout/video/reverb job", () =
     expect(() => layoutRecipe(" ".repeat(64001))).toThrow("64 KB");
   });
 
-  it("queues only on a confirmed local studio with a registered endpoint, without network writes", async () => {
+  it("queues on local and hosted studios with a registered endpoint, without network writes", async () => {
     const fetcher = vi.fn(() => {
       throw new Error("No network is allowed during handoff");
     });
@@ -124,7 +124,8 @@ describe("a captured scene handed to the combined layout/video/reverb job", () =
     });
     for (const hosted of [true, undefined]) {
       vi.mocked(readHostedStudio).mockResolvedValue(hosted);
-      await expect(queueLayoutTake(take())).rejects.toThrow("local studio");
+      await queueLayoutTake(take());
+      expect(useLayoutTake.getState().pending?.endpoint).toBe(endpoint);
     }
     vi.mocked(readHostedStudio).mockResolvedValue(false);
     await queueLayoutTake(take());

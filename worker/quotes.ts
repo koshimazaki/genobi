@@ -1,4 +1,8 @@
-import { refuseHostedDeployment } from "../shared/comfy/deploy-catalogue";
+import { deploymentPlan } from "./deployments";
+import {
+  requireExpectedPlan,
+  type Expectation,
+} from "../shared/comfy/expectation";
 import { isH3, takesVideoReferences } from "../shared/h3";
 import { isSwap } from "../shared/openjutsu";
 import { isSeedvr2, requireSeedvr2Fit } from "../shared/comfy/seedvr2";
@@ -40,8 +44,14 @@ export async function price(
   session: string,
   key: string,
   provider: Provider,
+  expected?: Expectation,
 ) {
-  refuseHostedDeployment(input.model);
+  const { plan, values: deploymentValues } = await deploymentPlan(
+    env,
+    session,
+    input,
+  );
+  requireExpectedPlan(plan, expected);
   // The swap needs a custom node pack only its own Comfy deployment holds;
   // the hosted studio does not run it.
   if (isSwap(input.model))
@@ -74,15 +84,18 @@ export async function price(
     : undefined;
   if (metadata && isSeedvr2(input.model))
     requireSeedvr2Fit(metadata, input.upscaleFactor);
-  const estimate = estimateRunUsd(input, metadata);
-  const balance = await provider.balance(key);
+  const estimate = plan.deployment ? 0 : estimateRunUsd(input, metadata);
+  const balance = plan.deployment
+    ? { usdCents: null }
+    : await provider.balance(key);
   if (balance.usdCents !== null && balance.usdCents / 100 < estimate)
     throw new AppError(402, "Your balance is below this estimate.");
   const sha256 = source?.kind === "session" ? source.sha256 : undefined;
   return {
     source,
     estimate,
-    take: await startTake(input, isComfyKey(key), sha256),
+    take: await startTake(input, isComfyKey(key), sha256, plan),
+    deploymentValues,
   };
 }
 
@@ -92,6 +105,7 @@ export async function quote(
   session: string,
   key: string,
   providers: Providers = defaultProviders(),
+  expected?: Expectation,
 ) {
   input = await hashReferences(input);
   const { estimate, take } = await price(
@@ -100,6 +114,7 @@ export async function quote(
     session,
     key,
     providerFor(key, providers),
+    expected,
   );
   const record = newQuote(take, estimate);
   await saveQuote(env, record, session);

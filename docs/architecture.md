@@ -27,9 +27,8 @@ React composer → same-origin /api/* ──┤
 
 ## Registered Comfy deployments
 
-The local studio binds validated Comfy URLs to quotes/takes and requires
-confirmation before reserving and submitting once.
-Tickets stay in memory; outputs become private media. [Camera steps and hosted refusal](comfy-deploy.md#use-it-from-camera).
+Both adapters bind validated Comfy URLs to quotes/takes and require confirmation before reserving and submitting once.
+Local tickets stay in memory; hosted tickets stay in session-owned D1 rows for two hours. Outputs become private media. [Camera steps and deployment setup](comfy-deploy.md#use-it-from-camera).
 
 ## Browser Recreate inputs
 
@@ -90,7 +89,7 @@ The upscale is one of those Router entries: Router lists BFL's upscaler as `bfl/
 
 MiniMax H3 is also a Router entry, `minimax-h3-router` on `minimax/minimax-h3` ([schema](https://docs.comfy.org/router-schemas/minimax/minimax-h3.json), version `c0e2e941ffff`, checked 27 October 2026): reference to video from two images and no guide, beside the four guided OmniRef workflows. `h3RouterBody` (`shared/comfy/h3-router.ts`) is the only place its body is built, for both adapters: `content` is one text item and the two references as `image_url` items with `role: "reference_image"` (the character sheet, then the storyboard), sent as the data URLs the person gave, which the schema accepts; `duration` 4 to 15 whole seconds; `resolution` `768P` for HD and `2K` for Full HD; `ratio` one of the schema's six, from the aspect. The schema states no image size or count, so the studio's own reference bounds apply (each under 5 MB, all under about 11 MB). The result is the terminal task document; `ComfyRouter.poll` reads `task.content.url` once `task.status` is `succeeded`, and any other status or a `task.error` is an error with its credits kept. That link lasts usually 12 hours (Router's signed re-host), shorter if Router falls back to MiniMax's own link, and has no refresh route; the job copies it on the first poll after completion, and a `403`, `404` or `410` from it marks the run expired rather than retrying. The quote uses Comfy's published H3 Reference to Video rate (27.16 credits a second at 768P, 39.22 at 2K, [partner-node pricing](https://docs.comfy.org/tutorials/partner-nodes/pricing), checked 27 October 2026); Router states no rate of its own, so the first approved run's credits header shows whether Router bills the same. None of this has run against Router yet.
 
-The SDK imports `node:crypto`, `node:fs`, `node:path` and `node:stream` at load, so it cannot sit in `shared/`. Both adapters import the same client; the Worker bundle leaves `node:*` external (`scripts/build-pages.mjs`) and workerd resolves it under `nodejs_compat`. `tests/worker-workflow.test.ts` runs that path inside workerd against a fake Comfy Cloud; it has not run against the deployed Pages project. The SDK hashes uploads with WebAssembly compiled at runtime, which Workers refuse; only the local studio stages deployment inputs through that SDK.
+The SDK imports `node:crypto`, `node:fs`, `node:path` and `node:stream` at load, so it cannot sit in `shared/`. Both adapters import the same client; the Worker bundle leaves `node:*` external (`scripts/build-pages.mjs`) and workerd resolves it under `nodejs_compat`. `tests/worker-workflow.test.ts` runs that path inside workerd against a fake Comfy Cloud; it has not run against the deployed Pages project. The SDK hashes uploads with WebAssembly compiled at runtime, which Workers refuse; the hosted adapter therefore uploads through the official low-level SDK transport, omitting the optional dedup hint and letting Comfy hash the bytes. The local studio retains the high-level SDK upload path.
 
 Where workflows run is the **run location**, one setting every `workflow` entry follows: Local ComfyUI, Comfy Cloud or a registered Comfy deployment ([run location](run-location.md)). The local server reads its default from `GENOBI_WORKFLOW_DESTINATION` and keeps a per-session choice the studio and agents share (`/api/settings`); the take records the location and template a run used, and a quote cannot be spent under another. Comfy Cloud runs through the SDK; a local ComfyUI runs through `server/comfy-local.ts`, a client of ComfyUI's own HTTP API (`/object_info`, `/upload/image`, `/prompt`, `/queue`, `/history`, `/view`), because the SDK reads a deployment URL only from the process-wide `COMFY_BASE_URL`. `server/workflow-destinations.ts` sends a run where its take says and a poll to the client whose address the handle names. A Comfy API deployment (a Comfy Developer Platform deployment's https URL, the server's default destination or `GENOBI_DEPLOYMENT_URL`) runs through the same SDK on its own base URL: the SDK reads a base only from `COMFY_BASE_URL` while a client is constructed, so the deployment client sets it for that one synchronous construction and restores it (`withBaseUrl` in `server/comfy-sdk.ts`), and its fetch reaches that origin only. The hosted Worker is always Comfy Cloud and says so. The SDK client refuses to run while the operator's own `COMFY_BASE_URL` is set rather than let it redirect a visitor's key.
 
@@ -418,7 +417,8 @@ See [Cloudflare operations](cloudflare.md) for deployment, migrations and hosted
 
 Image/Edit share `shared/image.ts` for schema choices, prices, byte limits and
 PNG/JPEG/WebP header inspection. Each reference is checked for media type,
-dimensions and size. Incoming reference bytes are request-only; persisted replay
+dimensions and size. Klein sources and references select the source-conditioned graph in `shared/comfy/klein-edit.ts`, using Comfy’s `ReferenceMultiLatent` on both conditioning branches. The source determines the output aspect; the resolution tier sets the area. Hosted uploads use the portable official SDK transport without runtime WASM hashing.
+Incoming reference bytes are request-only; persisted replay
 state contains SHA-256 fingerprints, and public jobs expose only their count.
 The browser does not persist references. The same idempotency key with changed
 reference content or settings is a conflict on both adapters.

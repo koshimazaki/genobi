@@ -165,3 +165,201 @@
     flex: 1 1 160px;
   }
 }
+
+/* One shared landscape intake for Director and Editor. */
+.dir-version-panel {
+  width: min(1160px, calc(100vw - 32px));
+  padding: 20px;
+}
+.dir-version-steps {
+  display: flex;
+  gap: 8px;
+  margin: 16px 0;
+}
+.dir-version-inputs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  align-items: start;
+}
+.dir-version-inputs > fieldset {
+  margin: 0;
+  padding: 12px;
+}
+.dir-version-inputs > .dir-version-words {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.dir-version-slot > p {
+  margin: 4px 0 8px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.dir-version-slot legend {
+  font-size: 13px;
+  font-weight: 600;
+}
+.dir-version-controls {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  align-items: end;
+}
+.dir-version-controls > label {
+  margin: 0;
+}
+.dir-version-controls > label:has(select),
+.dir-version-controls > label:has(input[type="checkbox"]) {
+  grid-column: 1 / -1;
+}
+.dir-version-controls > label:has(input[type="checkbox"]) {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 0 0;
+}
+.dir-version-drop-wrap {
+  min-width: 0;
+  margin: 10px 0;
+}
+.dir-version-drop {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(130px, 0.8fr);
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  background: var(--sunken, #101216);
+  min-height: 150px;
+  min-width: 0;
+}
+.dir-version-drop[data-dragging] {
+  border-color: var(--accent);
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.dir-version-drop .dir-version-drop__choose {
+  display: grid;
+  gap: 6px;
+  align-content: center;
+  min-height: 96px;
+  padding: 12px;
+  text-align: center;
+  border-style: dashed;
+}
+.dir-version-drop__choose strong {
+  font-size: 13px;
+}
+.dir-version-drop__choose span {
+  font-size: 12px;
+  color: var(--muted);
+}
+.dir-version-drop .dir-version-previews {
+  min-width: 0;
+  gap: 6px;
+}
+.dir-version-drop .dir-version-previews > div {
+  flex: 1 1 90px;
+  min-width: 0;
+  width: auto;
+}
+.dir-version-drop .dir-version-previews > img {
+  width: 100%;
+}
+.dir-version-filename {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.dir-version-panel .dir-version-connection {
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--sunken);
+}
+.dir-version-panel footer {
+  margin-top: 18px;
+  justify-content: flex-end;
+}
+.dir-version-local {
+  padding: 8px 12px;
+  color: inherit;
+  font-size: 13px;
+}
+@media (max-width: 800px) {
+  .dir-version-inputs,
+  .dir-version-inputs > .dir-version-words {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .dir-version-panel {
+    padding: 16px;
+  }
+}
+@media (max-width: 420px) {
+  .dir-version-drop {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .dir-version-drop .dir-version-previews {
+    justify-content: center;
+  }
+  .dir-version-drop .dir-version-drop__choose {
+    min-height: 64px;
+  }
+}
+.dir-version-inline {
+  width: 100%;
+  max-height: none;
+  padding: 0;
+  margin: 0 0 16px;
+  border: 0;
+  background: transparent;
+  overflow: visible;
+  container-type: inline-size;
+}
+.dir-version-inline > h3 {
+  margin: 0;
+}
+.dir-version-brief {
+  margin: 16px 0;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.dir-version-brief textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 110px;
+  max-height: 320px;
+  resize: vertical;
+  font: inherit;
+  line-height: 1.5;
+  padding: 10px;
+  color: var(--text);
+  background: var(--sunken);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+@container (max-width: 650px) {
+  .dir-version-inline .dir-version-inputs {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.dir-version-previews > .dir-version-picture {
+  display: grid;
+  gap: 6px;
+  width: 100%;
+  padding: 6px;
+}
+.dir-version-previews .dir-version-picture img {
+  width: 100%;
+  max-width: 100%;
+  object-fit: contain;
+}
+.dir-version-brief .dir-version-previews {
+  margin: 10px 0;
+}

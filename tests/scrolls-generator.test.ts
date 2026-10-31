@@ -52,13 +52,13 @@ describe("the Scrolls generator builds its request from the prompt and reference
     expect(input.description).not.toMatch(/Standoff/);
   });
 
-  it("refuses references on Klein's open graph and names the routes that take them", () => {
-    expect(referenceProblem("flux-3-klein", 1)).toMatch(
-      /Run: API.*FLUX 3 Edit/,
-    );
-    expect(() =>
-      generatorInput(board(), DEFAULT_GENERATOR, { references: [REF] }),
-    ).toThrow(/open graph takes text only/);
+  it("takes references on Klein's open graph too, and still caps them", () => {
+    expect(referenceProblem("flux-3-klein", 1)).toBeUndefined();
+    const input = generatorInput(board(), DEFAULT_GENERATOR, {
+      references: [REF],
+    });
+    expect(input).toMatchObject({ generator: "image", model: "flux-3-klein" });
+    expect(input.imageReferences).toEqual([REF.url]);
     expect(referenceProblem("flux-3-klein-api", 10)).toBeUndefined();
     expect(referenceProblem("flux-3-klein-api", 11)).toMatch(/up to 10/);
     expect(referenceProblem("flux-3-edit", 0)).toMatch(/at least one/);
@@ -147,9 +147,13 @@ describe("the Scrolls generator builds its request from the prompt and reference
       imageResolution: "1.5k",
     });
     expect(fitGenerator({ ...api, entry: "flux-3-klein" })).toMatchObject({
-      imageAspectRatio: "1:1",
+      // The open graph names `auto` now, so a ratio it takes survives a switch.
+      imageAspectRatio: "auto",
       imageResolution: "1.5k",
     });
+    expect(
+      fitGenerator({ ...api, entry: "flux-3-klein", imageAspectRatio: "4:5" }),
+    ).toMatchObject({ imageAspectRatio: "4:5" });
     expect(fitGenerator({ ...api, entry: "flux-3-edit" })).toMatchObject({
       imageResolution: "1k",
     });

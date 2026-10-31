@@ -13,6 +13,7 @@ import GenerateVersionAction from "./GenerateVersionAction";
  * toolbar does not move between the two (AGENTS.md, stable dimensions).
  */
 export default function ComposerHeader({
+  versionRequest,
   simple = false,
   name,
   busy,
@@ -22,6 +23,7 @@ export default function ComposerHeader({
   render,
   switchMode,
 }: {
+  versionRequest?: number;
   simple?: boolean;
   name?: string;
   busy: boolean;
@@ -66,7 +68,10 @@ export default function ComposerHeader({
           project={name}
         />
         <div className="dir-file-actions">
-          <GenerateVersionAction disabled={transportBusy} />
+          <GenerateVersionAction
+            disabled={transportBusy}
+            request={versionRequest}
+          />
           <button disabled={transportBusy} onClick={open}>
             {simple ? "Open saved project" : "Open bundle"}
           </button>

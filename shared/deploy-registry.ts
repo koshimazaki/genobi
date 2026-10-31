@@ -21,7 +21,6 @@ export const deployEntries: ReadyEntry[] = DEPLOY_ENDPOINTS.map((name) => {
     model: `workflow/${endpoint.workflow.slice(0, -5)}`,
     open: true,
     camera: "ltx-2.5",
-    localOnly: true,
     deploymentOnly: true,
     controls: {
       kind: "video",

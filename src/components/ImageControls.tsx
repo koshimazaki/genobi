@@ -1,3 +1,4 @@
+import { imageEditing } from "../../shared/image";
 import type { ComposerState } from "../useComposer";
 import SelectMenu from "./SelectMenu";
 import { Switch } from "./GenerationControls";
@@ -53,15 +54,15 @@ export default function ImageControls({
         label="Aspect ratio"
         compact
         value={
-          state.generator === "edit" && hasRegions
+          imageEditing(state)
             ? "auto"
             : hasRegions &&
-                state.generator === "image" &&
+                !imageEditing(state) &&
                 (!state.imageAspectRatio || state.imageAspectRatio === "auto")
               ? "1:1"
               : (state.imageAspectRatio ?? "auto")
         }
-        disabled={state.generator === "edit" && hasRegions}
+        disabled={imageEditing(state)}
         options={controls.aspectRatios.map((value) => ({
           value,
           label: value === "auto" ? "Auto" : value,

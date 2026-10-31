@@ -1,3 +1,4 @@
+import { sweepDeployments } from "./deployment-retention";
 import {
   expireStaleJob,
   JOB_MAX_AGE_MS,
@@ -52,6 +53,7 @@ export async function sweep(
 ): Promise<SweepReport | null> {
   if (!(await claim(env, now))) return null;
   await sweepRunnerRelay(env.DB, now);
+  await sweepDeployments(env, now);
   return {
     expired: await expireAbandonedJobs(env, now),
     days: await rollUpDailyStats(env),

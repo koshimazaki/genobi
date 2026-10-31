@@ -10,8 +10,10 @@ import "./version.css";
 /** One header for Director and Editor; opening overlays the stable studio. */
 export default function GenerateVersionAction({
   disabled,
+  request = 0,
 }: {
   disabled: boolean;
+  request?: number;
 }) {
   const bundle = useStudio((s) => s.director.bundle);
   const template = bundle && versionTemplate(bundle.project);
@@ -29,6 +31,9 @@ export default function GenerateVersionAction({
       setOpen(true);
     }
   }, [visible, template, projectId]);
+  useEffect(() => {
+    if (request) setOpen(true);
+  }, [request]);
   if (!bundle || !template) return null;
   const close = () => {
     setOpen(false);

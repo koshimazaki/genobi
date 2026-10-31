@@ -6,7 +6,6 @@ import { download, type Bundle } from "./bundle";
 import {
   briefArchive,
   nextReferenceLabel,
-  readBrief,
   withReferenceRoom,
   writeBrief,
   type PromptBrief,
@@ -18,6 +17,7 @@ import { importPromptFont } from "./prompt-font";
 import { importAssets } from "./import-media";
 import { acceptsStudioMedia, studioDropFile } from "../studio/media-drop";
 import "./project-prompt.css";
+import { readVersionBrief } from "./version-brief";
 import { PROJECT_ASSET_DRAG, readAssetDrag } from "./asset-drag";
 import { useShell } from "../studio/ShellContext";
 import {
@@ -44,7 +44,7 @@ export default function ProjectPrompt({
   const actions = useStudio((s) => s.actions);
   const shell = useShell();
   const director = shell?.preset === "director";
-  const brief = readBrief(bundle);
+  const brief = readVersionBrief(bundle);
   const field = useRef<PromptTextHandle>(null);
   const root = useRef<HTMLElement>(null);
   const uploadingRef = useRef(false);

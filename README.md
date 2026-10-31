@@ -61,6 +61,7 @@ experimental route for room-conditioned generated audio/video.
 
 ## Create, edit and revise
 
+- **Edit an existing Klein image.** Drop your source straight onto Image layout, add bounding boxes and describe changes. Resize the preview from its corner for detailed work.
 - **Direct across models.** Camera controls adapt to FLUX video, LTX and
   MiniMax H3 using their documented prompting language. Klein has image framing,
   layouts and first-frame references. [Camera wording and sources](docs/camera-wording.md).
@@ -114,9 +115,9 @@ and [current limitations](docs/troubleshooting.md).
 Editable templates open **Generate my version** in Director or Editor: reuse
 assets, upload replacements, apply undoable swaps, or ask your linked agent to
 prepare new media. Paid generation waits for approval in the bubble. See
-[the version guide](docs/director-generate.md). Local Camera can also register
+[the version guide](docs/director-generate.md). Camera on the hosted or local studio can register
 [a Comfy deployment](docs/comfy-deploy.md#use-it-from-camera) for Layout-to-video
-and AKUSPACE; hosted visits keep their existing Cloud routes.
+and AKUSPACE. These require a deployment in your own Comfy workspace and an authorised key; that workspace pays for GPU usage. Other cloud generations only need their supported provider key.
 
 ### Run locally
 

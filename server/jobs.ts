@@ -1,3 +1,4 @@
+import { isKleinEdit, kleinFiles } from "../shared/comfy/klein-edit";
 import { WorkflowDestinations } from "./workflow-destinations";
 import { pollJob } from "./job-poll";
 import { DeploymentAssets } from "./deployment-assets";
@@ -336,6 +337,9 @@ export class JobService {
           idempotencyKey: job.id,
           location: take.recipe.location,
           deployment: take.recipe.deployment,
+          ...(isKleinEdit(requestInput)
+            ? { files: kleinFiles(requestInput) }
+            : {}),
           ...(source
             ? {
                 files: clipFiles(

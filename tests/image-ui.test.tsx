@@ -54,7 +54,8 @@ describe("image UI contract", () => {
     expect(layout).not.toContain('"src_bbox"');
   });
   it("parks unsupported regions without sending them or changing the source aspect", () => {
-    expect(input.imageAspectRatio).toBe("16:9");
+    // An edit keeps the source's own aspect, so the ratio is sent as `auto`.
+    expect(input.imageAspectRatio).toBe("auto");
     expect(input.description).toBe("Recolor the coat");
     expect(input).not.toHaveProperty("imageRegions");
     const video = composerInput({
@@ -64,8 +65,17 @@ describe("image UI contract", () => {
     });
     expect(video).not.toHaveProperty("imageReferences");
   });
-  it("keeps automatic layout boxes square even when a reference is non-square", () => {
+  it("keeps automatic layout boxes square, and lets a Klein reference choose the aspect", () => {
     const layout = composerInput({
+      ...initialComposer,
+      generator: "image",
+      model: "flux-3-klein-api",
+      imageAspectRatio: "auto",
+      imageRegions: [region],
+    });
+    // No reference: automatic layout boxes are square whatever the tray holds.
+    expect(layout.imageAspectRatio).toBe("1:1");
+    const edit = composerInput({
       ...initialComposer,
       generator: "image",
       model: "flux-3-klein-api",
@@ -73,7 +83,8 @@ describe("image UI contract", () => {
       imageReferences: ["wide-reference"],
       imageRegions: [region],
     });
-    expect(layout.imageAspectRatio).toBe("1:1");
+    // A reference makes it an edit of that image, so `auto` follows its aspect.
+    expect(edit.imageAspectRatio).toBe("auto");
   });
   it("restores recorded image settings without borrowing unrelated references", () => {
     const restored = composerReducer(

@@ -12,9 +12,11 @@ The hosted app uses your own BFL key. Connect it in the header: the balance chec
 ## Runtime
 
 - Pages static frontend + advanced-mode Worker: same-origin API with the existing D1/R2 bindings.
-- Comfy Deploy runs from the local studio. Hosted quote and job routes return
-  `501 deployment_local_only` for its models before validating generation inputs
-  or calling a provider; deployment registration and input staging stay local.
+- Comfy deployments can be registered per browser session in Settings. The endpoint
+  must be an HTTPS `*.run.comfy.app` origin. The visitor supplies its workspace's
+  Comfy key on each upload, quote, submission and poll; no provider key is persisted.
+  The owning workspace pays. Standard Router/Cloud generation remains available
+  without a custom endpoint. Hosted deployment uploads are capped at 32 MB each.
 - D1: session-owned jobs, unique submission IDs, copy leases, source metadata and temporary input links.
 - R2: private uploaded/generated MP4s. The public library is not in R2: its clips are static assets under `/media`, listed in `public/media/gallery.json`. Recorded runs carry their prompt, camera terms, settings and confirmed cost; supplied clips carry model provenance without an invented setup. Cards use separate small previews; imports and upscales keep the full files ([media preparation](media-previews.md)).
 - Icons: `public/favicon.svg` is the Genobi mask from `src/components/GenobiMark.tsx` with its colours fixed (lime outline and band, dark face), so it reads on light and dark tabs. `npm run favicon` renders it into `public/favicon.ico` (one 32 px PNG in an ICO container) and the 180 px `public/apple-touch-icon.png` with the Playwright Chromium the browser checks use; rerun it after changing the SVG. Pages serves all three as static assets outside `_routes.json`, and the local server serves them from `public/` (Vite) or `dist/` (production).
@@ -111,6 +113,11 @@ npx wrangler d1 migrations apply flux-studio-lite --remote
 ```
 
 Do not provision a BFL secret: each visitor supplies their own key. Do not log request headers or provider bodies. The Worker only forwards keys to allowed BFL API hosts and refuses redirects. Input-video capability links expire after two hours. Normal clip playback requires the owning browser's HttpOnly cookie.
+
+Apply additive migration `0009_deployments.sql` before publishing this version.
+It creates session endpoint/preset settings, two-hour input receipts and temporary
+companion-output delivery records. Housekeeping removes expired receipts/delivery
+records and settings older than 30 days. It introduces no provider secret or binding.
 
 ## Verification boundary
 

@@ -1,6 +1,10 @@
 import type { ComposerState } from "../useComposer";
 import type { ImageReferences } from "../useImageReferences";
-import { IMAGE_DESCRIPTION_LIMIT, isKlein } from "../../shared/image";
+import {
+  IMAGE_DESCRIPTION_LIMIT,
+  imageEditing,
+  isKlein,
+} from "../../shared/image";
 import { cameraClauses } from "../../shared/camera";
 import { takesCamera } from "../../shared/controls";
 import { entryFor } from "../../shared/registry";
@@ -24,7 +28,7 @@ export default function ImageWorkspace({
     imagePrompt(
       state.description,
       isKlein(state.model) ? state.imageRegions : [],
-      state.generator === "edit",
+      imageEditing(state),
     ).length - IMAGE_DESCRIPTION_LIMIT;
   const clauses =
     state.cameraEnabled &&
@@ -41,16 +45,14 @@ export default function ImageWorkspace({
         <PromptField
           id="image-prompt"
           label={
-            state.generator === "edit"
-              ? "Describe your edit"
-              : "Describe your image"
+            imageEditing(state) ? "Describe your edit" : "Describe your image"
           }
           labelClassName="upscale-prompt-label"
           value={state.description}
           onChange={(description) => update({ description })}
           maxLength={IMAGE_DESCRIPTION_LIMIT}
           placeholder={
-            state.generator === "edit"
+            imageEditing(state)
               ? "Describe what should change in the source image…"
               : "Describe a scene, character, texture or asset…"
           }

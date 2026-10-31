@@ -116,7 +116,7 @@ build while every other check stays green.
    controls it shows and what each offers. FLUX 3 has the 5–20 s fader, all seven ratios and Draft;
    LTX-2.5 has Router's duration list, 16:9 and 9:16; FLUX Video Upscale has `UpscaleControls`.
    A still's controls (`kind: "image"`) list BFL's image ratios and tiers, web grounding (FLUX 3
-   Image only), whether it takes references (not the open Klein graph yet) and whether it keeps
+   Image only), whether it takes references (including the open Klein edit path) and whether it keeps
    the camera: Klein does, FLUX 3 Image does not. Selecting Klein from a video entry removes
    duration and Draft and keeps the camera switch and the Camera controls button. The camera
    dialog drops Movements when the composer holds an image generator (`still`, set from the
@@ -221,7 +221,7 @@ build while every other check stays green.
    `/queue` and `/history`. On Local a run needs no Comfy key and its estimate is zero.
    `GENOBI_LOCAL_MODELS` (and `GENOBI_KLEIN_MODEL`, kept) names the local model files by
    template and slot (`shared/comfy/local-models.ts`, through `parseModelFile`, never repeated).
-   The Worker always uses Comfy Cloud and answers `/api/settings` as fixed. See
+   The Worker defaults to Comfy Cloud; `worker/deployments.ts` keeps session-owned endpoint/preset settings, input receipts and fixed Cloud templates for other entries. See
    [run location](run-location.md).
 
 10. `src/components/` — `PromptInput` edits the scene and coloured camera text, plus the acoustic
@@ -345,8 +345,8 @@ are local-only too. `shared/ninja-layout.ts` is the Ninja arrangement and its ve
 ## Image editing
 
 Image and Edit use the same FLUX image endpoint; FLUX 3 Image Klein, the first image entry, runs
-as an open graph (`workflows/flux-3-klein-t2i.json`) or on BFL's Klein endpoint, Image only
-(Klein edits are later work, so Edit stays on FLUX 3). `ImageStage` replaces the hero
+as an open graph (`workflows/flux-3-klein-t2i.json`) or on BFL's Klein endpoint.
+With a dropped source, `shared/comfy/klein-edit.ts` uses reference-conditioned edit wiring instead of text-to-image. `ImageStage` replaces the hero
 inside its existing footprint; `ImageWorkspace` keeps prompt and references in
 the composer. `useImageReferences` validates uploads and updates source, reference
 ordering and region assignments together. `ImageRegionCanvas` handles pointer
