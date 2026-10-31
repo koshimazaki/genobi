@@ -10,6 +10,7 @@ import {
   keyKind,
   missingKeyError,
   type KeyKind,
+  type ProviderChoice,
 } from "../shared/provider";
 import {
   isTerminal,
@@ -154,11 +155,11 @@ export class ServerKeys {
     return KEY_KINDS.some((kind) => Boolean(this.key(kind)));
   }
   /** The key a run uses: `chooseKey` between Comfy and BFL. */
-  forRun(generator: Generator, model: VideoModel) {
+  forRun(generator: Generator, model: VideoModel, preference: ProviderChoice = "auto") {
     return chooseKey(generator, model, {
       comfy: this.key("comfy"),
       bfl: this.key("bfl"),
-    });
+    }, preference);
   }
   /**
    * Whose key `forRun` picked: a key from the environment is the studio's own
@@ -311,15 +312,25 @@ export function runCredential(
   byoKey?: string,
   /** The run's planned location, when it is a workflow run. */
   location?: string,
+  preference: ProviderChoice = "auto",
 ): RunCredential {
-  if (byoKey) return { key: requireKey(byoKey), mode: "byo" };
-  const held = keys.forRun(generator, model);
+  if (byoKey) {
+    const entered = requireKey(byoKey);
+    if (preference !== "auto" && keyKind(entered) !== preference)
+      throw new AppError(400, `This run selected ${preference === "bfl" ? "BFL" : "Comfy"}, but the connected page key belongs to the other provider.`, "invalid_key");
+    return { key: entered, mode: "byo" };
+  }
+  const held = keys.forRun(generator, model, preference);
   // A workflow run planned for the local ComfyUI needs no provider key: with
   // none sent or held it runs keyless, as the owner's (the budget never holds
   // a local run). Every other plan, Comfy Cloud included, needs its key.
   if (!held && location === "local") return { key: "", mode: "owner" };
   // No key at all: name the key this route needs, not BFL for every route.
-  if (!held) throw missingKeyError(model);
+  if (!held) {
+    if (preference !== "auto")
+      throw new AppError(400, `Connect a ${preference === "bfl" ? "BFL" : "Comfy"} key for the selected provider.`, "invalid_key");
+    throw missingKeyError(model);
+  }
   const key = requireKey(held);
   return { key, mode: keys.modeOf(key) };
 }
