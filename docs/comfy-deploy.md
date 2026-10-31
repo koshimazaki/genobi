@@ -72,7 +72,7 @@ audio noise mask zero. The final video uses Reverb's wet/dry mix, not generated
 AKUSPACE audio. IR and wet audio are saved alongside it. Two sampler stages are
 internal to one submitted job, not two generation requests or an audio rerun.
 
-In 3D → Capture, choose **Layout-to-video capture preset** (1024 × 576,
+In 3D → Capture, choose **Use Layout-to-video format** (1024 × 576,
 193 frames, 24 fps), load your track and capture. **Use take in Layout-to-video**
 opens Camera with the frozen capture recipe and scene prompt. **Attach captured
 scene** explicitly stages its colour/depth take, first frame and matching WAV

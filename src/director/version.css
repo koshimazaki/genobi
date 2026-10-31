@@ -3,10 +3,11 @@
   background: var(--surface, #16181b);
   border: 1px solid var(--border);
   border-radius: 12px;
-  width: min(780px, calc(100vw - 32px));
+  width: min(1160px, calc(100vw - 32px));
+  max-width: calc(100vw - 32px);
   max-height: calc(100dvh - 48px);
   box-sizing: border-box;
-  padding: 24px;
+  padding: 20px;
   overflow: auto;
   font: inherit;
 }
@@ -49,6 +50,7 @@
   grid-template-columns: minmax(0, 1fr);
   gap: 6px;
   margin: 8px 0;
+  min-width: 0;
 }
 .dir-version-controls > label {
   min-width: 0;
@@ -58,6 +60,11 @@
 .dir-version-panel legend,
 .dir-version-panel p {
   overflow-wrap: anywhere;
+}
+.dir-version-panel legend {
+  box-sizing: border-box;
+  max-width: 100%;
+  white-space: normal;
 }
 .dir-version-panel select {
   min-width: 0;
@@ -75,6 +82,7 @@
   border-radius: 6px;
   padding: 8px 12px;
   min-height: 36px;
+  min-width: 0;
 }
 .dir-version-panel input[type="checkbox"] {
   min-height: auto;
@@ -156,6 +164,7 @@
   .dir-version-panel {
     padding: 16px;
     width: calc(100vw - 16px);
+    max-width: calc(100vw - 16px);
     max-height: calc(100dvh - 16px);
   }
   .dir-version-controls > label {
@@ -167,12 +176,9 @@
 }
 
 /* One shared landscape intake for Director and Editor. */
-.dir-version-panel {
-  width: min(1160px, calc(100vw - 32px));
-  padding: 20px;
-}
 .dir-version-steps {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
   margin: 16px 0;
 }
@@ -181,6 +187,7 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
   align-items: start;
+  min-width: 0;
 }
 .dir-version-inputs > fieldset {
   margin: 0;
@@ -329,6 +336,21 @@
   padding: 12px;
   border: 1px solid var(--border);
   border-radius: 8px;
+}
+.dir-version-advanced {
+  margin-top: 16px;
+  border-top: 1px solid var(--border);
+  padding-top: 8px;
+  min-width: 0;
+}
+.dir-version-advanced > summary {
+  cursor: pointer;
+  padding: 10px 0;
+  font-size: 13px;
+}
+.dir-version-advanced > summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
 }
 .dir-version-brief textarea {
   box-sizing: border-box;

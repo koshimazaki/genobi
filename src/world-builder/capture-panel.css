@@ -60,21 +60,6 @@
     animation: pulse var(--motion-pulse) ease-in-out infinite;
   }
 }
-.wb-app .wb-capture-fold {
-  margin-left: auto;
-  padding: 2px 8px;
-  font: 9px var(--mono);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--muted);
-  background: transparent;
-  box-shadow: none;
-}
-.wb-app .wb-capture-fold[aria-expanded="true"] {
-  color: var(--muted);
-  border-color: var(--border);
-  background: transparent;
-}
 /* Transport: record, still, and the progress over the take's frames. */
 .wb-capture-transport {
   display: flex;
@@ -244,6 +229,14 @@
   padding-top: 10px;
   min-width: 0;
 }
+.wb-layout-handoff {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+.wb-layout-handoff .wb-panel-actions {
+  flex-direction: column;
+}
 .wb-status-dots {
   display: grid;
   gap: 6px;
@@ -282,4 +275,11 @@
 .wb-app .wb-capture .wb-panel-actions > button {
   min-width: 0;
   overflow-wrap: anywhere;
+}
+.wb-capture .wb-capture-export {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr));
+}
+.wb-app .wb-capture .wb-capture-export > button {
+  overflow-wrap: normal;
 }

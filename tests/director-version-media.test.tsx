@@ -74,6 +74,12 @@ it("routes file drops and the chooser through one import and refuses URL-only/di
   await act(async () => drop(target, [file], ["text/uri-list"]));
   expect(upload).toHaveBeenCalledTimes(1);
   const input = host.querySelector("input")!;
+  // The labelled chooser button is the accessible control. Its backing file
+  // input must not occupy an off-screen box and widen the modal or Director.
+  expect(input.hidden).toBe(true);
+  const click = vi.spyOn(input, "click");
+  act(() => host.querySelector<HTMLButtonElement>("button")!.click());
+  expect(click).toHaveBeenCalledOnce();
   Object.defineProperty(input, "files", { value: [file] });
   await act(async () =>
     input.dispatchEvent(new Event("change", { bubbles: true })),

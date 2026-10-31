@@ -1,14 +1,15 @@
 /**
  * The Capture panel, laid out after Holodeck's World Capture panel (MIT, see
  * Holodeck-LICENSE.txt): a status strip, a transport with the record button,
- * then Format and Rate & time side by side when there is room, Passes & sync
- * and Output. It renders inside the dock or the pop-out window alike.
+ * then Output and optional settings. Format and Rate & time sit side by side
+ * when there is room. It renders inside the dock or the pop-out window alike.
  */
 import { useEffect, useState } from "react";
 import type { BuilderSession } from "./useBuilderSession";
 import { download } from "./useBuilderSession";
 import type { BuilderAssets } from "./useBuilderAssets";
 import { Badge } from "./CapturePrimitives";
+import { Fold } from "./FloatingPanel";
 import { CaptureFormat, CaptureTiming } from "./CaptureFormat";
 import { CaptureOutput, CapturePasses } from "./CaptureOutput";
 import { captureBadge, lengthLabel } from "./capture-panel";
@@ -41,7 +42,6 @@ export function CaptureControls({
   // captures from frame zero; framing and stills stay in Shot.
   const idle = s.ready && !s.busy;
   const setEditable = shot && s.ready && !s.busy;
-  const [folded, setFolded] = useState(false);
   const liveRecording = useLiveRecording(s);
   const { width, height, frames } = s.recipe;
   const badge = captureBadge({
@@ -64,17 +64,6 @@ export function CaptureControls({
         <Badge>{live ? "30 FPS requested" : `${TAKE_FPS} FPS`}</Badge>
         <Badge>{lengthLabel(frames)}</Badge>
         <Badge>{a.toAssets ? "MP4 → assets" : "WEBM"}</Badge>
-        <button
-          type="button"
-          className="wb-capture-fold"
-          aria-expanded={!folded}
-          aria-label={
-            folded ? "Show capture settings" : "Fold capture settings"
-          }
-          onClick={() => setFolded(!folded)}
-        >
-          {folded ? "Settings" : "Fold"}
-        </button>
       </div>
       <div className="wb-capture-transport">
         <button
@@ -143,16 +132,14 @@ export function CaptureControls({
           Shot camera.
         </p>
       )}
-      {!folded && (
-        <>
-          <div className="wb-capture-columns">
-            <CaptureFormat s={s} disabled={!setEditable} />
-            <CaptureTiming s={s} idle={idle} setEditable={setEditable} />
-          </div>
-          <CapturePasses s={s} setEditable={setEditable} />
-        </>
-      )}
       <CaptureOutput s={s} a={a} shot={shot} />
+      <Fold title="Capture settings">
+        <div className="wb-capture-columns">
+          <CaptureFormat s={s} disabled={!setEditable} />
+          <CaptureTiming s={s} idle={idle} setEditable={setEditable} />
+        </div>
+        <CapturePasses s={s} setEditable={setEditable} />
+      </Fold>
     </div>
   );
 }

@@ -96,7 +96,7 @@ export function CaptureOutput({
       </div>
       {take && (
         <Fold title="Export take">
-          <div className="wb-panel-actions">
+          <div className="wb-panel-actions wb-capture-export">
             {a.toAssets && (
               <button
                 disabled={!!a.saving || s.busy}
@@ -129,12 +129,12 @@ export function CaptureOutput({
               </button>
             )}
           </div>
+          <p className="wb-hint">
+            WebM carries the visual guidance; the matching WAV carries the
+            soundtrack.
+          </p>
         </Fold>
       )}
-      <p className="wb-hint">
-        WebM carries the visual guidance; the matching WAV carries the
-        soundtrack.
-      </p>
     </section>
   );
 }
