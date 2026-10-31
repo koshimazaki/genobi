@@ -26,6 +26,8 @@ export interface PreviewLoop {
   /** A single pass reached its last frame. */
   finish(): void;
   fail(error: unknown): void;
+  /** Optional media clock: loading or stalled audio must hold its picture. */
+  elapsed?: () => number;
   now?: () => number;
   request?: (tick: () => void) => number;
   cancel?: (id: number) => void;
@@ -46,7 +48,7 @@ export function runPreview(p: PreviewLoop) {
     // A tick queued before Stop must not draw over a capture that follows it.
     if (!live()) return;
     const position = previewPosition(
-      (now() - start) / 1000,
+      p.elapsed?.() ?? (now() - start) / 1000,
       p.frames(),
       p.loop(),
     );

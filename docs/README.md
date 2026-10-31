@@ -178,6 +178,7 @@ user action through every layer.
   scene edits with a live revision guard.
 - [World Builder sound](world-builder-sound.md) — the Sound panel, the example
   track, the audio mod matrix and the reactive room presets.
+- [Changing room sound](world-builder-dynamic-sound.md) — local CPU rendering from the evaluated room timeline, independent dry sound, retained convolution history and decay tails.
 - [World Builder acoustics](world-builder-acoustics.md) — the room's Sabine
   RT60 estimate, AKUSPACE presets and the Reverb node.
 - [World Builder controls](world-builder-controls.md) — edits during Play,

@@ -148,4 +148,5 @@ a local Vite server and blocks provider/network writes. The standalone adapter
 must also be rebuilt and checked with the existing scene-adapter commands.
 
 Related: [World Builder](world-builder.md), [sound controls](world-builder-sound.md),
+[changing room sound](world-builder-dynamic-sound.md),
 [capture](world-builder-capture.md), [GPU evaluation](audiovisual-gpu-evaluation.md).
