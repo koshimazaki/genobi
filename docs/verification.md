@@ -181,9 +181,9 @@ plus a second job guarding the cloud boundary.
 
 Pull-request CI cannot deploy and is never given production credentials; it
 uploads the frontend build as a short-lived review artifact. The production job
-runs only on a push to `main`, and this deployment holds no credential for it,
-so it skips: releases are run by hand. See [Cloudflare](cloudflare.md) for why,
-and for the two secrets that would enable it.
+runs only on a push to `main` of the public repository, behind the `production`
+environment; without its two secrets it skips. See
+[Cloudflare](cloudflare.md#deployment) for what it does and how it is guarded.
 
 ## Library clips as evidence
 

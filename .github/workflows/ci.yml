@@ -151,3 +151,83 @@ jobs:
           done
           echo "Resulting schema:"
           sqlite3 "$db" ".tables"
+
+  deploy:
+    name: Deploy production
+    # Production has one source: the public koshimazaki/genobi repository.
+    # This file is shared with the private camera-director repository, where
+    # the guard keeps the job from running even if a credential is added.
+    if: >-
+      github.repository == 'koshimazaki/genobi' &&
+      github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [verify, cloudflare]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment:
+      name: production
+      url: https://genobi.pages.dev
+    concurrency:
+      group: cloudflare-pages-production
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      deployments: write
+    steps:
+      # Same shape as "Detect Cloudflare port" above: an unconfigured
+      # deployment is a skip, not a failure. A fork of this repository, or this
+      # one before its token exists, keeps a green `main` and starts deploying
+      # by itself the moment the credential is added — with no workflow edit.
+      # Only the presence of the secret is tested; its value is never printed,
+      # compared or written to an output.
+      - name: Detect deployment credentials
+        id: creds
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          if [ -n "$CLOUDFLARE_API_TOKEN" ] && [ -n "$CLOUDFLARE_ACCOUNT_ID" ]; then
+            echo "present=true" >> "$GITHUB_OUTPUT"
+            echo "Production credentials found — deploying."
+          else
+            echo "present=false" >> "$GITHUB_OUTPUT"
+            echo "No production credentials — skipping deploy. Add CLOUDFLARE_API_TOKEN"
+            echo "and CLOUDFLARE_ACCOUNT_ID to the production environment to enable it."
+          fi
+
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        if: steps.creds.outputs.present == 'true'
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        if: steps.creds.outputs.present == 'true'
+        with:
+          node-version: 22
+          cache: npm
+
+      # No credential in this step's environment: `npm ci` runs dependency
+      # lifecycle scripts, and they have no reason to see a deployment token.
+      - name: Install
+        if: steps.creds.outputs.present == 'true'
+        run: npm ci
+
+      # Build before touching production data. Pages receives this exact bundle
+      # only after the additive migrations have succeeded.
+      - name: Build production Pages bundle
+        if: steps.creds.outputs.present == 'true'
+        run: npm run build:pages
+
+      - name: Apply D1 migrations
+        if: steps.creds.outputs.present == 'true'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: npx wrangler d1 migrations apply flux-studio-lite --remote --config wrangler.pages.json
+
+      - name: Deploy to Cloudflare Pages
+        if: steps.creds.outputs.present == 'true'
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: node scripts/deploy-pages.mjs
+
+      - name: Smoke-check production
+        if: steps.creds.outputs.present == 'true'
+        run: curl --fail --silent --show-error --retry 6 --retry-delay 5 https://genobi.pages.dev/api/health
