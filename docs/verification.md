@@ -24,7 +24,8 @@ voice worker; they do not establish that a paid model or GPU deployment ran.
 Worker tests inject failures before and after source persistence and before the
 final Ready save, then verify that polling restores companion audio without
 another generation. Settings tests cover streamed size limits, rotating-session
-abuse, aggregate write limits and concurrent insertion at the settings ceiling.
+abuse, aggregate write limits and concurrent insertion at the settings ceiling,
+which displaces the oldest record rather than refusing new visitors.
 Paused-chain tests require a fresh quote after an endpoint or preset changes.
 3D take tests retain the saved receipt's recipe and stop an import when its
 project changes during conversion.

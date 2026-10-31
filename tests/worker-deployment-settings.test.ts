@@ -77,7 +77,7 @@ describe("hosted deployment settings bounds", () => {
     }
   });
 
-  it("bounds stored configurations atomically and lets existing sessions update", async () => {
+  it("bounds stored configurations atomically, displacing the oldest rather than refusing", async () => {
     const db = await mf.getD1Database("DB");
     await db.prepare("DELETE FROM deployment_settings").run();
     const existing = newSession();
@@ -86,22 +86,36 @@ describe("hosted deployment settings bounds", () => {
       .prepare(
         `WITH RECURSIVE n(x) AS (SELECT 1 UNION ALL SELECT x+1 FROM n WHERE x<?)
         INSERT INTO deployment_settings(session,url,revision,updated_at)
-        SELECT 'capacity-' || x, ?, 1, ? FROM n`,
+        SELECT 'capacity-' || x, ?, 1, ? - x FROM n`,
       )
-      .bind(MAX_DEPLOYMENT_SETTINGS - 2, endpoint, Date.now())
+      .bind(MAX_DEPLOYMENT_SETTINGS - 2, endpoint, Date.now() - 1)
       .run();
     try {
       const results = await Promise.all([
         save(newSession(), deploy),
         save(newSession(), deploy),
       ]);
-      expect(results.map((r) => r.status).sort()).toEqual([200, 429]);
+      expect(results.map((r) => r.status)).toEqual([200, 200]);
       expect((await save(existing, { location: "cloud" })).status).toBe(200);
       expect(
         await db
           .prepare("SELECT count(*) AS n FROM deployment_settings")
           .first(),
       ).toEqual({ n: MAX_DEPLOYMENT_SETTINGS });
+      // The least recently saved row went; the existing session stayed.
+      const oldest = `capacity-${MAX_DEPLOYMENT_SETTINGS - 2}`;
+      expect(
+        await db
+          .prepare("SELECT session FROM deployment_settings WHERE session=?")
+          .bind(oldest)
+          .first(),
+      ).toBeNull();
+      expect(
+        await db
+          .prepare("SELECT session FROM deployment_settings WHERE session=?")
+          .bind(existing.slice(15))
+          .first(),
+      ).not.toBeNull();
     } finally {
       await db.prepare("DELETE FROM deployment_settings").run();
     }

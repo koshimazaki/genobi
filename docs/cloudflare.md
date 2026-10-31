@@ -47,8 +47,10 @@ Unpaid deployment settings apply the hashed-IP and deployment-wide limits before
 their per-session limit or body parsing, so a fresh cookie does not reset the
 caller’s allowance. Settings bodies are limited to 2 KB while streaming, including
 requests without `Content-Length`. At most 10,000 session settings records can
-exist; insertion checks that ceiling atomically and existing sessions can still
-update their records at capacity. Choosing the default Cloud setting does not
+exist. At that ceiling a new session displaces the least recently saved record in
+the same transaction instead of being refused, so rotating cookies cannot lock
+every visitor out until records expire; existing sessions update in place, and
+jobs keep polling the endpoint recorded on their take. Choosing the default Cloud setting does not
 create a record for a new session. Settings expire after 30 days.
 
 Every hosted workflow quote records its location and template, including ordinary

@@ -148,19 +148,22 @@ export async function deploymentSettingsRoute(
               ? v.deploymentUrl
               : (saved?.url ?? ""),
           ).url;
-    const result = await env.DB.prepare(
-      `INSERT INTO deployment_settings(session,url,revision,updated_at)
-      SELECT ?,?,1,? WHERE EXISTS (SELECT 1 FROM deployment_settings WHERE session=?)
-      OR (SELECT count(*) FROM deployment_settings) < ?
-      ON CONFLICT(session) DO UPDATE SET url=excluded.url, revision=deployment_settings.revision+1,updated_at=excluded.updated_at`,
-    )
-      .bind(session, url, Date.now(), session, MAX_DEPLOYMENT_SETTINGS)
-      .run();
-    if (!result.meta.changes)
-      throw new AppError(
-        429,
-        "The studio's deployment settings capacity is full. Try again later.",
-      );
+    // At the ceiling a new session displaces the least recently saved one in
+    // the same transaction, rather than refusing everyone until rows expire:
+    // rotating cookies can then only push out an old endpoint, which its
+    // owner re-enters. Jobs keep polling the endpoint recorded on their take.
+    await env.DB.batch([
+      env.DB.prepare(
+        `DELETE FROM deployment_settings WHERE session IN (
+          SELECT session FROM deployment_settings ORDER BY updated_at LIMIT max(0,
+            (SELECT count(*) FROM deployment_settings) - ? + 1))
+        AND NOT EXISTS (SELECT 1 FROM deployment_settings WHERE session=?)`,
+      ).bind(MAX_DEPLOYMENT_SETTINGS, session),
+      env.DB.prepare(
+        `INSERT INTO deployment_settings(session,url,revision,updated_at) VALUES(?,?,1,?)
+        ON CONFLICT(session) DO UPDATE SET url=excluded.url, revision=deployment_settings.revision+1,updated_at=excluded.updated_at`,
+      ).bind(session, url, Date.now()),
+    ]);
     return deploymentState(env, session);
   }
   if (v.entry !== "ltx-deploy-layout-to-video")
