@@ -365,7 +365,7 @@ make no model or paid-generation request:
   destination selection while recording.
 - `tests/voice-setup-focus.test.tsx`: the install offer receives focus after
   model discovery enables it, without taking focus from a person editing the
-  installation folder.
+  installation folder or another prompt.
 - `tests/voice-hosted.test.tsx`: the hosted microphone explanation and no
   microphone or transcription request, including uncertain runtime detection.
 - Existing capture, language, dictionary, intent-parser, server, setup and

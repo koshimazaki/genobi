@@ -30,7 +30,9 @@ export function VoiceSetup({
   const [check, setCheck] = useState(0);
   const install = useVoiceInstall();
   const state = install.state;
-  const panel = useRef<HTMLDivElement>(null);
+  const openingFocus = useRef(
+    typeof document === "undefined" ? null : document.activeElement,
+  );
   const confirm = useRef<HTMLButtonElement>(null);
   useEffect(() => {
     let active = true;
@@ -57,9 +59,12 @@ export function VoiceSetup({
     };
   }, [check]);
   useEffect(() => {
-    // Discovery initially disables Install. Focus it when ready, unless the
-    // person has already moved into the panel (for example, to edit a folder).
-    if (!panel.current?.contains(document.activeElement))
+    // Discovery initially disables Install. Focus it when ready if focus is
+    // still at the opener or page; respect a move to another control.
+    if (
+      document.activeElement === openingFocus.current ||
+      document.activeElement === document.body
+    )
       confirm.current?.focus();
   }, [info, install.found]);
   const pending = choosing || install.pending;
@@ -68,7 +73,6 @@ export function VoiceSetup({
   const message = error || install.error || state?.error;
   return (
     <div
-      ref={panel}
       id="voice-overlay"
       className="voice-setup"
       role="dialog"

@@ -31,13 +31,15 @@ vi.mock("../src/voice/install-store", () => ({
 ).IS_REACT_ACT_ENVIRONMENT = true;
 let host: HTMLDivElement;
 let voice: HTMLButtonElement;
+let background: HTMLTextAreaElement;
 let root: Root;
 beforeEach(() => {
   install.found = undefined;
   host = document.createElement("div");
   voice = document.createElement("button");
   voice.textContent = "Voice";
-  document.body.append(voice, host);
+  background = document.createElement("textarea");
+  document.body.append(voice, background, host);
   voice.focus();
   root = createRoot(host);
 });
@@ -45,6 +47,7 @@ afterEach(async () => {
   await act(async () => root.unmount());
   host.remove();
   voice.remove();
+  background.remove();
 });
 const render = async () => {
   await act(async () =>
@@ -71,4 +74,12 @@ it("does not steal focus from someone editing the folder while discovery runs", 
   install.found = [];
   await render();
   expect(document.activeElement).toBe(folder);
+});
+
+it("does not steal focus from a background prompt selected during discovery", async () => {
+  await render();
+  background.focus();
+  install.found = [];
+  await render();
+  expect(document.activeElement).toBe(background);
 });
