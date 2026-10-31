@@ -68,6 +68,14 @@ export async function price(
       "Music runs in the local studio for now; the hosted studio cannot save a song yet. Nothing was sent or charged.",
       "audio_local_only",
     );
+  if (
+    isImage(input.generator) &&
+    input.model === "flux-3" &&
+    input.imageProvider &&
+    input.imageProvider !== "auto" &&
+    (isComfyKey(key) ? "comfy" : "bfl") !== input.imageProvider
+  )
+    throw new AppError(400, "This run selected a different provider from the connected API key. Connect the matching key.", "invalid_key");
   requireRoute(input.generator, input.model ?? "flux-3", key);
   const source =
     input.generator === "upscale" || isH3(input.model)
