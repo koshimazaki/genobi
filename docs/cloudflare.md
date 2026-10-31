@@ -105,7 +105,7 @@ npx wrangler dev
 ## Deployment
 
 Production is deployed from this public repository. The `Deploy production`
-job in [CI](../.github/workflows/ci.yml) runs only on a push to `main` of
+job in [CI](https://github.com/koshimazaki/genobi/blob/main/.github/workflows/ci.yml) runs only on a push to `main` of
 `koshimazaki/genobi`, after the verify and Cloudflare jobs pass. It builds the
 Pages bundle, applies pending D1 migrations to `flux-studio-lite`, deploys that
 exact bundle to the `genobi` Pages project and checks `/api/health`. The same
