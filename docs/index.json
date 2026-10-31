@@ -2195,8 +2195,8 @@
       "title": "World Builder · Capture panel",
       "path": "world-builder-capture.md",
       "tags": ["3d", "world-builder"],
-      "summary": "The World Builder Capture panel ported from Holodeck — badge, record button, format, rate and time, passes and outputs.",
-      "links": ["world-builder-controls.md", "world-builder.md"]
+      "summary": "The World Builder Capture panel — current format, capture and output first, with optional format and pass settings.",
+      "links": ["world-builder-controls.md"]
     },
     {
       "title": "World Builder controls",
