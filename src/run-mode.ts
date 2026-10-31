@@ -6,6 +6,7 @@ import {
   payingKeyKind,
   requiredKeyKind,
   type KeyKind,
+  type ProviderChoice,
 } from "../shared/provider";
 import type { KeySlots } from "../shared/keys";
 import type { Generator, VideoModel } from "../shared/types";
@@ -95,9 +96,10 @@ export function runPayer(
   slots: Partial<KeySlots> | undefined,
   generator: Generator,
   model: VideoModel,
+  preference: ProviderChoice = "auto",
 ): KeyKind | null {
   const held = visitKey ? { [kindOf(visitKey)]: true } : (slots ?? {});
-  return payingKeyKind(generator, model, held) ?? null;
+  return payingKeyKind(generator, model, held, preference) ?? null;
 }
 
 /** Where an entry that is not a graph runs: Router or BFL, never local. */
