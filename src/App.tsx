@@ -10,7 +10,7 @@ import { isTerminal } from "../shared/types";
 import { readReference } from "./image-files";
 import { isH3, h3EstimateCredits } from "../shared/h3";
 import { h3RouterCredits, isH3Router } from "../shared/comfy/h3-router";
-import { estimateImageUsd, isImage } from "../shared/image";
+import { estimateImageUsd, isImage, isKlein } from "../shared/image";
 import { MUSIC_ESTIMATE_CREDITS } from "../shared/music";
 import { useImageReferences } from "./useImageReferences";
 import ImageStage from "./components/ImageStage";
@@ -178,6 +178,30 @@ export default function App() {
         : isH3Router(model)
           ? h3RouterCredits(duration, runResolution)
           : null;
+  // One click runs the displayed route; the adjacent picker changes which key
+  // and endpoint the *next* run will use. Klein's open graph is not Router.
+  const providerChoices = !isImage(generator)
+    ? undefined
+    : isKlein(model)
+      ? [
+          { value: "comfy", label: "Comfy workflow" },
+          { value: "bfl", label: "BFL API" },
+        ]
+      : [
+          { value: "auto", label: "Auto" },
+          { value: "bfl", label: "BFL API" },
+          { value: "comfy", label: "Comfy Router" },
+        ];
+  const providerValue = isKlein(model)
+    ? model === "flux-3-klein" ? "comfy" : "bfl"
+    : (state.imageProvider ?? "auto");
+  const payer = runPayer(
+    key,
+    slots,
+    generator,
+    model,
+    isImage(generator) && model === "flux-3" ? state.imageProvider ?? "auto" : "auto",
+  );
   const estimate = isImage(generator)
     ? estimateImageUsd(state)
     : generator === "audio"
@@ -249,7 +273,7 @@ export default function App() {
     composerRef.current?.scrollIntoView(smoothScroll("center"));
   }
   async function submit() {
-    if (!key && !hasServerKey && !runsKeyless(generator, model)) {
+    if ((!key && !hasServerKey || (isImage(generator) && !payer)) && !runsKeyless(generator, model)) {
       setShowKey(true);
       return;
     }
@@ -419,7 +443,7 @@ export default function App() {
                 update={update}
                 estimate={estimate}
                 estimateCredits={estimateCredits}
-                keyKind={runPayer(key, slots, generator, model)}
+                keyKind={payer}
                 action={
                   <GenerateButton
                     generator={generator}
@@ -434,6 +458,13 @@ export default function App() {
                       uploading ||
                       images.loading ||
                       composerBlocked(state, sourceId, composed)
+                    }
+                    providerChoices={providerChoices}
+                    providerValue={providerValue}
+                    onProviderChange={(value) =>
+                      isKlein(model)
+                        ? update({ model: value === "bfl" ? "flux-3-klein-api" : "flux-3-klein" })
+                        : update({ imageProvider: value as "auto" | "bfl" | "comfy" })
                     }
                     onSubmit={() => void submit()}
                     onResume={() => setShowKey(true)}
