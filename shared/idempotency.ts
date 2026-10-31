@@ -40,6 +40,7 @@ const FIELDS = [
   "ltxPrompt",
   "imageAspectRatio",
   "imageResolution",
+  "imageProvider",
   "imageGrounding",
   "imageSafetyTolerance",
   "imageReferences",
@@ -53,6 +54,7 @@ export function canonicalInput(input: Partial<GenerateInput>): string {
   value.aspectRatio ??= "16:9";
   value.model ??= "flux-3";
   value.upscaleCreativity ??= 0;
+  value.imageProvider ??= "auto";
   // No treatment: every run before Acoustic Space, and every other entry.
   value.acoustic ??= null;
   // Jobs recorded before per-term editing stored a preset id and no wording.
