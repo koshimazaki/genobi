@@ -135,6 +135,20 @@ VRM is attached under Scene, and the neutral mannequin when it is not
 recipes, so `small_room.json` names the creature; configured directly, without
 the menu, it needs the creature attached.
 
+## Apply a captured room
+
+In the local studio, **Apply room** uses the room saved in the selected take's
+recipe receipt and processes that take's WAV. Editing the open scene does not
+change an existing take's treatment. To use the edited room, capture a new take
+first. A take without a valid receipt asks for a new capture; the current scene
+is never substituted. Before import starts, the action rechecks the selected take and project and
+discards a result if either changed during processing. Asset import separately
+checks project identity while reading its files.
+
+This action selects the nearest supported room preset and uses the local CPU
+Space route. It does not run the trained AKUSPACE LoRA or the native
+geometry-derived Comfy reverb graph. Those remain separate workflow choices.
+
 ## Inside the Comfy node
 
 The Comfy node runs the same panel. Its Sound tab lists the graph's audio as
