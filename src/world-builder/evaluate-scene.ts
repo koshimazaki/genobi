@@ -1,0 +1,287 @@
+import type { Prop, Recipe } from "./recipe";
+import { modOf, modsAt, type Mods } from "./mod-routes";
+import { orbitPosition } from "./prop-orbit";
+import { loopedSpin, loopPeriod } from "./loop";
+import { motionInstances, sceneObjects } from "./scene-instances";
+import { clampRoomPoint, roomSurfaces, roomSurfaceId } from "./scene-room";
+import {
+  SCENE_CONTROL_DEFAULTS,
+  SCENE_CONTROL_RANGES,
+  SCENE_MAPPING_RANGES,
+  type SceneControls,
+  type SceneMappingProperty,
+  type SceneMotion,
+  type SceneRoom,
+  type SceneStateKey,
+  type SceneVector,
+} from "./scene-state";
+import {
+  clampSceneValue as clamp,
+  mixSceneValue as mix,
+  mixSceneVector,
+  mixSceneTransform,
+  twistPoint,
+  twistRotation,
+} from "./scene-transform";
+
+export interface EvaluatedScene {
+  /** The requested frame on the bounded motion timeline. */
+  frame: number;
+  /** Authored timeline position after the bounded audio morph offset. */
+  authoredFrame: number;
+  objects: Prop[];
+  room?: SceneRoom;
+  controls: SceneControls;
+  /** Legacy matrix for non-prop lights, avatar and playground, applied by the runtime. */
+  mods: Mods;
+  state: { from: string; to: string; progress: number } | null;
+}
+export interface SceneEvaluationOptions {
+  audio?: boolean;
+  /** Show authored transforms without baking time-driven offsets into editor changes. */
+  editing?: boolean;
+}
+
+function sample(data: number[], frame: number) {
+  const index = Math.floor(frame),
+    fraction = frame - index;
+  return mix(data[index] ?? 0, data[index + 1] ?? data[index] ?? 0, fraction);
+}
+function mappedOffsets(recipe: Recipe, frame: number, enabled: boolean) {
+  const result: Partial<Record<SceneMappingProperty, number>> = {};
+  if (!enabled || !recipe.motion) return result;
+  for (const mapping of recipe.motion.mappings) {
+    if (!mapping.enabled) continue;
+    const data =
+      mapping.source === "level"
+        ? recipe.envelope
+        : recipe.bandEnvelopes[mapping.source];
+    result[mapping.property] =
+      (result[mapping.property] ?? 0) +
+      sample(data, frame) * mapping.amount * recipe.motion.intensity;
+  }
+  for (const property of Object.keys(result) as SceneMappingProperty[]) {
+    const [lo, hi] = SCENE_MAPPING_RANGES[property];
+    result[property] = clamp(result[property]!, lo, hi);
+  }
+  return result;
+}
+
+/** Keys contain complete transforms for every retained ID; seeking has no prior state. */
+function keyPair(keys: SceneStateKey[], frame: number) {
+  let index = 0;
+  while (index + 1 < keys.length && keys[index + 1].frame <= frame) index++;
+  const from = keys[index],
+    to = keys[Math.min(index + 1, keys.length - 1)];
+  const raw =
+    from === to
+      ? 0
+      : clamp((frame - from.frame) / (to.frame - from.frame), 0, 1);
+  const progress =
+    from.easing === "easeInOut" ? raw * raw * (3 - 2 * raw) : raw;
+  return { from, to, progress };
+}
+function evaluatedControls(
+  from: SceneStateKey,
+  to: SceneStateKey,
+  t: number,
+  offsets: Partial<Record<SceneMappingProperty, number>>,
+) {
+  const result = { ...SCENE_CONTROL_DEFAULTS };
+  for (const property of Object.keys(result) as (keyof SceneControls)[]) {
+    const [lo, hi] = SCENE_CONTROL_RANGES[property];
+    result[property] = clamp(
+      mix(
+        from.controls?.[property] ?? result[property],
+        to.controls?.[property] ?? result[property],
+        t,
+      ) + (offsets[property] ?? 0),
+      lo,
+      hi,
+    );
+  }
+  return result;
+}
+function evaluatedRoom(
+  motion: SceneMotion,
+  from: SceneStateKey,
+  to: SceneStateKey,
+  t: number,
+  offsets: Partial<Record<SceneMappingProperty, number>>,
+): SceneRoom | undefined {
+  if (!motion.room) return undefined;
+  const base = motion.room;
+  const dimensions = mixSceneVector(
+    from.room?.dimensions ?? base.dimensions,
+    to.room?.dimensions ?? base.dimensions,
+    t,
+  );
+  for (const [index, property] of [
+    "roomWidth",
+    "roomHeight",
+    "roomDepth",
+  ].entries())
+    dimensions[index] = clamp(
+      dimensions[index] + (offsets[property as SceneMappingProperty] ?? 0),
+      1,
+      32,
+    );
+  const source = clampRoomPoint(
+    mixSceneVector(
+      from.room?.source ?? base.source,
+      to.room?.source ?? base.source,
+      t,
+    ),
+    dimensions,
+  );
+  const listener = clampRoomPoint(
+    mixSceneVector(
+      from.room?.listener ?? base.listener,
+      to.room?.listener ?? base.listener,
+      t,
+    ),
+    dimensions,
+  );
+  return {
+    ...base,
+    center: [...base.center],
+    dimensions,
+    source,
+    listener,
+    absorption: { ...base.absorption },
+  };
+}
+
+function applyInstanceControls(
+  p: Prop,
+  base: Prop,
+  motion: SceneMotion,
+  controls: SceneControls,
+): Prop {
+  const group = motion.instances!;
+  const rows = Math.ceil(group.count / (group.columns * group.columns));
+  // A voxel belongs to the same lattice layers even while its target shape changes.
+  const layerX =
+    group.columns === 1
+      ? 0
+      : base.x / (((group.columns - 1) / 2) * group.spacing);
+  const layerY = rows === 1 ? 0 : base.y / (((rows - 1) / 2) * group.spacing);
+  const ax = controls.twistX * layerX,
+    ay = controls.twistY * layerY;
+  const local = [
+    p.x - motion.pivot[0],
+    p.y - motion.pivot[1],
+    p.z - motion.pivot[2],
+  ] as SceneVector;
+  const point = twistPoint(local, ax, ay);
+  const rotation = twistRotation(p, ax, ay);
+  const distance = (1 + controls.spread) * controls.scale;
+  return {
+    ...p,
+    x: clamp(motion.pivot[0] + point[0] * distance, -40, 40),
+    y: clamp(motion.pivot[1] + point[1] * distance + controls.lift, -40, 40),
+    z: clamp(motion.pivot[2] + point[2] * distance, -40, 40),
+    scale: clamp(p.scale * controls.scale, 0.1, 8),
+    rotationX: rotation[0],
+    rotation: rotation[1],
+    rotationZ: rotation[2],
+  };
+}
+
+/** Legacy orbit/spin/modulation stays numerically identical and is applied once. */
+function applyPropMotion(
+  p: Prop,
+  recipe: Recipe,
+  frame: number,
+  mods: Mods,
+  editing: boolean,
+): Prop {
+  const targets = ["primitives", `prop:${p.id}`];
+  const [x, z] = editing
+    ? [p.x, p.z]
+    : orbitPosition(
+        p,
+        frame / recipe.fps,
+        recipe.loop ? loopPeriod(recipe) : undefined,
+      );
+  const spin = editing
+    ? 0
+    : ((recipe.loop ? loopedSpin(p.spin, loopPeriod(recipe)) : p.spin) *
+        frame) /
+      recipe.fps;
+  return {
+    ...p,
+    x,
+    z,
+    y: p.y + modOf(mods, targets, "height"),
+    scale: p.scale * (1 + modOf(mods, targets, "scale")),
+    rotation: (p.rotation ?? 0) + spin + modOf(mods, targets, "spin"),
+  };
+}
+
+/**
+ * Single source of evaluated geometry for Shot, RGB, depth and CPU acoustics.
+ * Validated recipe in; a fresh snapshot out. No wall clock, mutation or integrator.
+ */
+export function evaluateScene(
+  recipe: Recipe,
+  requestedFrame: number,
+  options: SceneEvaluationOptions = {},
+): EvaluatedScene {
+  if (!Number.isFinite(requestedFrame))
+    throw new Error("Scene frame must be finite.");
+  const motion = recipe.motion,
+    editing = options.editing === true;
+  const audio = options.audio !== false && !editing;
+  const frame = motion
+    ? recipe.loop
+      ? ((requestedFrame % recipe.frames) + recipe.frames) % recipe.frames
+      : clamp(requestedFrame, 0, recipe.frames - 1)
+    : Math.max(0, requestedFrame);
+  const mods: Mods = audio ? modsAt(recipe, frame) : new Map();
+  const offsets = mappedOffsets(recipe, frame, audio);
+  const authoredFrame = clamp(
+    frame + (offsets.morph ?? 0) * (recipe.frames - 1),
+    0,
+    recipe.frames - 1,
+  );
+  const pair = motion ? keyPair(motion.stateKeys, authoredFrame) : undefined;
+  const controls = pair
+    ? evaluatedControls(pair.from, pair.to, pair.progress, offsets)
+    : { ...SCENE_CONTROL_DEFAULTS };
+  const instances = motion?.instances
+    ? new Map(motionInstances(motion.instances).map((p) => [p.id, p]))
+    : new Map<string, Prop>();
+  const objects = sceneObjects(recipe).map((base) => {
+    const from = pair?.from.objects[base.id],
+      to = pair?.to.objects[base.id];
+    let p =
+      from && to
+        ? { ...base, ...mixSceneTransform(from, to, pair!.progress) }
+        : { ...base };
+    if (motion && !editing && instances.has(p.id))
+      p = applyInstanceControls(p, instances.get(p.id)!, motion, controls);
+    return applyPropMotion(p, recipe, frame, mods, editing);
+  });
+  const room =
+    motion && pair
+      ? evaluatedRoom(motion, pair.from, pair.to, pair.progress, offsets)
+      : undefined;
+  if (room?.visible) {
+    const hidden = room.cutaway
+      ? new Set([roomSurfaceId(room, "south"), roomSurfaceId(room, "ceiling")])
+      : new Set<string>();
+    objects.push(...roomSurfaces(room).filter((p) => !hidden.has(p.id)));
+  }
+  return {
+    frame,
+    authoredFrame,
+    objects,
+    room,
+    controls,
+    mods,
+    state: pair
+      ? { from: pair.from.id, to: pair.to.id, progress: pair.progress }
+      : null,
+  };
+}

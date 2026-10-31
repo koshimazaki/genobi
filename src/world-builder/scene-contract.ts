@@ -1,4 +1,5 @@
 import type { Recipe } from "./recipe";
+import { sceneObjects } from "./scene-instances";
 export const shapes = [
   "box",
   "sphere",
@@ -75,7 +76,7 @@ export function validSurface(target: string, r: Recipe) {
   if (extra.length) return false;
   if (object.startsWith("world:"))
     return playgroundIds.includes(object.slice(6)) && face === "all";
-  const p = r.objects.find((p) => `prop:${p.id}` === object);
+  const p = sceneObjects(r).find((p) => `prop:${p.id}` === object);
   return (
     !!p &&
     (face === "all" ||

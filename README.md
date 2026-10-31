@@ -59,6 +59,10 @@ experimental route for room-conditioned generated audio/video.
 [Acoustics and reverb](docs/world-builder-acoustics.md) ·
 [ComfyUI nodes and examples](custom_nodes/director_world_builder/README.md)
 
+### Editable scene motion
+
+World Builder includes four three-state animation studies: voxel pyramid/cube, cathedral/street, expanding apartment and banana/papaya/apple. Edit individual states in the viewport, map control-audio bands to bounded motion, and capture aligned RGB/depth guides locally. See [scene motion](docs/world-builder-motion.md) for the controls, agent contract and current workflow boundary.
+
 ## Create, edit and revise
 
 - **Edit an existing Klein image.** Drop your source straight onto Image layout, add bounding boxes and describe changes. Resize the preview from its corner for detailed work.

@@ -21,6 +21,9 @@ import { cameraProgressAt } from "./loop";
 import { validateAvatarPose, type AvatarPose } from "./avatar-pose";
 import { trackOffset, validateAvatarPath, type AvatarKey } from "./avatar-path";
 import { ORBIT_RANGE } from "./prop-orbit";
+import type { SceneMotion } from "./scene-state";
+import { sceneObjects } from "./scene-instances";
+import { validateSceneMotion } from "./scene-state-validation";
 import {
   LEGACY_AUDIO_FIELDS,
   legacyFromRoutes,
@@ -106,6 +109,8 @@ export type Recipe = Record<Parameter, number> & {
   prompt: string;
   background: string;
   objects: Prop[];
+  /** Optional deterministic state animation, bounded voxels and one acoustic room. */
+  motion?: SceneMotion;
   envelope: number[];
 };
 export const defaultRecipe: Recipe = {
@@ -249,6 +254,7 @@ export function validateRecipe(input: unknown): Recipe {
     "loop",
     "screen",
     "avatarPath",
+    "motion",
     ...LEGACY_AUDIO_FIELDS,
   ]);
   if (Object.keys(input).some((key) => !allowed.has(key)))
@@ -388,6 +394,7 @@ export function validateRecipe(input: unknown): Recipe {
       throw new Error("Invalid primitive.");
     ids.add(p.id);
   }
+  if (r.motion !== undefined) r.motion = validateSceneMotion(r.motion, r);
   if (!validTextures(r.textures, r))
     throw new Error("Invalid surface texture assignments.");
   if (
@@ -397,7 +404,7 @@ export function validateRecipe(input: unknown): Recipe {
     (r.elevationEnd !== null && !finite(r.elevationEnd, -89, 89))
   )
     throw new Error("Invalid camera movement.");
-  const objectIds = r.objects.map((p) => p.id);
+  const objectIds = sceneObjects(r).map((p) => p.id);
   r.audioRoutes =
     // The old single-route fields still describe one route; when present
     // (an older recipe, or an agent patch), they replace the matrix. Fields

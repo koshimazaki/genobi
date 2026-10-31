@@ -21,7 +21,11 @@ export function framesForSeconds(seconds: number) {
 
 export const takeSeconds = (frames: number) => frames / TAKE_FPS;
 
-type Durations = { frames: number; seconds: number | null };
+type Durations = {
+  frames: number;
+  seconds: number | null;
+  motion?: { stateKeys: { frame: number }[] };
+};
 
 /**
  * Which length an edit asked for. A caller that changes `frames` but leaves
@@ -31,15 +35,53 @@ type Durations = { frames: number; seconds: number | null };
  */
 export function reconcileDuration(previous: Durations, input: unknown) {
   if (!input || typeof input !== "object" || Array.isArray(input)) return input;
-  const next = input as Partial<Durations>;
+  let next = input as Partial<Durations>;
   if (
     typeof next.frames === "number" &&
     next.frames !== previous.frames &&
     typeof next.seconds === "number" &&
     next.seconds === previous.seconds
   )
-    return { ...next, seconds: takeSeconds(next.frames) };
-  return input;
+    next = { ...next, seconds: takeSeconds(next.frames) };
+  const frames =
+    typeof next.seconds === "number"
+      ? framesForSeconds(next.seconds)
+      : next.frames;
+  // Only retime an existing sequence that the caller left unchanged. Imported
+  // sequences keep their explicit frames and still fail ordinary validation.
+  if (
+    previous.motion &&
+    next.motion &&
+    typeof frames === "number" &&
+    Number.isInteger(frames) &&
+    frames >= TAKE_FRAMES.min &&
+    frames <= TAKE_FRAMES.max &&
+    frames !== previous.frames &&
+    JSON.stringify(next.motion) === JSON.stringify(previous.motion)
+  ) {
+    const keys = next.motion.stateKeys;
+    if (keys.length > frames)
+      throw new Error("The take needs at least one frame per scene state.");
+    let last = -1;
+    next = {
+      ...next,
+      motion: {
+        ...next.motion,
+        stateKeys: keys.map((key, index) => {
+          const frame = Math.max(
+            last + 1,
+            Math.min(
+              frames - keys.length + index,
+              Math.round((key.frame * (frames - 1)) / (previous.frames - 1)),
+            ),
+          );
+          last = frame;
+          return { ...key, frame };
+        }),
+      },
+    };
+  }
+  return next;
 }
 
 /**

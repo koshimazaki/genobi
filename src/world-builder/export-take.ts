@@ -1,6 +1,7 @@
 import { withBrowserActivity } from "../activity/store";
 import { validateRecipe, type Recipe } from "./recipe";
 import { makeWebm, type EncodedFrame } from "./webm";
+import { sceneCaptureInfo } from "./scene-capture";
 export interface CaptureRenderer {
   renderFrame(frame: number): HTMLCanvasElement | Promise<HTMLCanvasElement>;
   /** Optional linear depth pass over the same camera path and frame grid. */
@@ -153,6 +154,9 @@ async function exportTakeImpl(
           {
             version: 1,
             recipe,
+            ...(recipe.motion
+              ? { sceneEvaluation: await sceneCaptureInfo(recipe) }
+              : {}),
             appearance: renderer.appearance?.(),
             frameCount: recipe.frames,
             duration: recipe.frames / recipe.fps,

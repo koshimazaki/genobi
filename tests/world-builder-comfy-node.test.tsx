@@ -14,6 +14,7 @@ import {
   validateRecipe,
 } from "../src/world-builder/recipe";
 import { sourceName } from "../src/world-builder/AudioRecentMenu";
+import { MOTION_PRESETS } from "../src/world-builder/motion-presets";
 import { LiveControls } from "../src/world-builder/LiveControls";
 import { AudioControls } from "../src/world-builder/AudioControls";
 import { togglePlay, EXAMPLE_TRACK } from "../src/world-builder/example-track";
@@ -39,12 +40,20 @@ describe("World Builder inside the Comfy node", () => {
   it("keeps the shader preset in the studio and leaves it out of the node", () => {
     const studio = presetMenu(false),
       node = presetMenu(true);
-    expect(studio).toEqual([...Object.keys(presets), SHADER_PRESET]);
+    expect(studio).toEqual([
+      ...MOTION_PRESETS.map((preset) => preset.name),
+      ...Object.keys(presets),
+      SHADER_PRESET,
+    ]);
     expect(node).not.toContain(SHADER_PRESET);
     expect(node).toEqual(
       studio.filter((name) => !COMFY_HIDDEN_PRESETS.includes(name)),
     );
     expect(node).toContain("Small room");
+    for (const preset of MOTION_PRESETS) {
+      expect(node).toContain(preset.name);
+      expect(menuPreset(preset.name).motion?.stateKeys).toHaveLength(3);
+    }
   });
 
   it("drops the agent pairing button inside Comfy and keeps it in the studio", () => {

@@ -20,6 +20,8 @@ import sprint from "../../custom_nodes/director_world_builder/examples/moves/spr
 import sword from "../../custom_nodes/director_world_builder/examples/moves/sword.json";
 import { presetRecipe, validateRecipe, type Recipe } from "./recipe";
 
+import { motionPresets } from "./motion-presets";
+
 export interface ScenePreset {
   name: string;
   source: "built-in" | "saved";
@@ -68,6 +70,8 @@ export function presetBody(input: unknown): Recipe {
 }
 
 function summary(recipe: Recipe) {
+  if (recipe.motion)
+    return `${recipe.motion.stateKeys.map((k) => k.label).join(" → ")} · ${(recipe.frames / recipe.fps).toFixed(1)} s`;
   const motion = Array.isArray(recipe.avatarMotion)
     ? recipe.avatarMotion.map((m) => m.clip).join(" → ")
     : recipe.avatar
@@ -124,6 +128,7 @@ let builtIns: ScenePreset[] | undefined;
 /** The built-in presets, in a stable order. */
 export function builtInPresets(): ScenePreset[] {
   builtIns ??= [
+    ...motionPresets(),
     preset("Fall · big room", fallBigRoom()),
     // The move library's skydive-cathedral under the name a person asks for.
     preset("Skydive · through the rooms", presetBody(skydiveCathedral)),

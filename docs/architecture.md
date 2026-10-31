@@ -73,6 +73,10 @@ vendored, separately licensed construction effect. The local GLB turntable and
 ASCII sample use Three.js. No generation API is called. See [construction
 motion](construction-motion.md) for capture and licence boundaries.
 
+## Scene motion
+
+World Builder optionally stores versioned state keys, a bounded voxel group and one acoustic enclosure in its recipe. `evaluateScene` produces the geometry used by the viewport and both capture passes; edits target an authored state with audio/procedural offsets excluded. The existing 24-object budget and new 128-instance budget are separate. Capture receipts bind the evaluation inputs, frame-zero geometry and control audio; no provider call is needed. See [scene motion](world-builder-motion.md) for limits and agent entry points.
+
 ## Routes
 
 The landing Gallery and Director read one `shared/templates/` catalogue.

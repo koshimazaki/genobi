@@ -95,8 +95,9 @@ export async function rewindUnlessPlaying(
   playing: boolean,
   setFrame: (frame: number) => void,
   render: (frame: number) => unknown,
+  frame = 0,
 ) {
   if (playing) return;
-  setFrame(0);
-  await render(0);
+  setFrame(frame);
+  await render(frame);
 }

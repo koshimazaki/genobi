@@ -110,7 +110,9 @@ export function loopedShaderSpeed(speed: number, period: number) {
 export function loopNotes(r: Recipe): string[] {
   const period = loopPeriod(r);
   const notes = [
-    `Period ${period.toFixed(2)} s (${r.frames} frames); the last frame stops one step short of the first, so a looping player never repeats one.`,
+    r.motion
+      ? `Period ${period.toFixed(2)} s (${r.frames} frames). Scene states restart at the seam; match the final shape, room and controls to the first for a smooth repeat.`
+      : `Period ${period.toFixed(2)} s (${r.frames} frames); the last frame stops one step short of the first, so a looping player never repeats one.`,
   ];
   if (r.orbit % 360)
     notes.push(

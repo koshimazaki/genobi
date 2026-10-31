@@ -20,6 +20,7 @@ import {
   type LibraryTake,
 } from "../src/world-builder/take-library";
 import { builtInPresets, findPreset } from "../src/world-builder/world-presets";
+import { MOTION_PRESETS } from "../src/world-builder/motion-presets";
 import { presetSummary } from "../src/world-builder/useSceneLibrary";
 import { defaultRecipe, presetRecipe } from "../src/world-builder/recipe";
 import type { Take } from "../src/world-builder/export-take";
@@ -289,11 +290,17 @@ describe("recipe op and presets", () => {
         .map((p) => p.file)
         .filter(Boolean)
         .sort(),
-    ).toEqual(files);
+    ).toEqual([...files, ...MOTION_PRESETS.map((p) => p.id)].sort());
     for (const file of files) {
       const preset = findPreset(file, []);
       expect(preset.name).toBe(`Move · ${file}`);
       expect(presetSummary(preset)).toMatchObject({ file });
+    }
+    for (const { id, name } of MOTION_PRESETS) {
+      const preset = findPreset(id, []);
+      expect(preset.name).toBe(name);
+      expect(preset.recipe.motion?.stateKeys).toHaveLength(3);
+      expect(presetSummary(preset)).toMatchObject({ file: id });
     }
     expect(findPreset("fall-cathedral", []).recipe.cameraShot).toBe("highWide");
     // A saved preset of that exact name still wins over a file name.

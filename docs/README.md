@@ -171,6 +171,7 @@ user action through every layer.
 - [Scene builder](scene-builder.md) — agent-built scenes as data, Load and
   Save in the 3D tab, and room acoustics from the scene's geometry.
 - [Scene examples](scene-examples.md) — starter sets, characters, hybrids and LTX + AKUSPACE kits.
+- [Scene motion](world-builder-motion.md) — editable voxel, architecture, apartment and fruit states with deterministic guide capture.
 - [World Builder and Scene Adapter](world-builder.md) — the set-preparation tool
   beside Director, its agent contract and Comfy integration.
 - [World recipe handoffs](world-recipe-handoff.md) — preserve concurrent human
