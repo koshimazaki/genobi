@@ -45,7 +45,9 @@ scene is never recorded as the take's provenance.
   **Send first frame to Director**, **Send take to Comfy** (inside the Comfy
   iframe) and **Apply room** retain their existing availability rules.
   **Export take** holds Add take to project assets, Video · WebM, First frame,
-  Depth · WebM, Capture receipt and Matching audio · WAV.
+  Depth · WebM, Capture receipt and Matching audio · WAV. Its actions wrap into
+  readable columns in the narrow dock and pop-out window; labels break between
+  words, keeping the downloads usable at either width.
 - **Capture settings.** A native disclosure, closed initially, contains Format,
   Rate & time, and Passes & sync. Its controls stay mounted when closed, so
   opening the custom format fields survives folding and reopening.
@@ -86,7 +88,8 @@ action is present. `tests/world-builder-capture-keyboard.test.tsx` checks keyboa
 selection and the disabled bank; `tests/capture-layout.test.tsx` checks the
 selected-format summary and the no-generation handoff. `scripts/check-world-capture-panel.mjs` drives the panel in
 a browser at desktop and phone widths, docked and popped out (badge states,
-aspect tiles, custom-size snapping, the duration bank and overflow); run it with
+aspect tiles, custom-size snapping, keyboard disclosure and duration selection,
+readable export labels and overflow); run it with
 `DIRECTOR_URL=http://127.0.0.1:4317 node scripts/check-world-capture-panel.mjs`
 against a dev server. `scripts/check-world-workspace.mjs` covers Capture take
 and Cancel.

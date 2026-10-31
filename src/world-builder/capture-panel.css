@@ -276,3 +276,10 @@
   min-width: 0;
   overflow-wrap: anywhere;
 }
+.wb-capture .wb-capture-export {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr));
+}
+.wb-app .wb-capture .wb-capture-export > button {
+  overflow-wrap: normal;
+}

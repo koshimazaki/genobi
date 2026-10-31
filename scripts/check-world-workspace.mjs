@@ -354,6 +354,13 @@ try {
       }
       await configure(page, { frames: 241 });
       await show("Capture");
+      // Capture settings is optional and collapsed by default. Keep it open
+      // while recording so the format-lock check exercises the visible UI.
+      const captureSettings = app.getByText("Capture settings", {
+        exact: true,
+      });
+      if (!(await captureSettings.evaluate((el) => el.parentElement.open)))
+        await captureSettings.click();
       await button("Capture take").first().click();
       await button("Cancel capture").waitFor();
       assert.equal(
