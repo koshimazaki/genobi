@@ -133,7 +133,7 @@ Routing examples, from request to the skills to load:
 | `genobi_media_space`      | Put an AKUSPACE room on a clip's sound in timed segments, as a new source       |
 | `genobi_run_location`     | Read or set `local`, `cloud`, `both` or a registered `deployment`               |
 | `genobi_deployment_stage` | Stage a scoped input for a deployment and receive a session-bound ticket        |
-| `genobi_workflows`        | List the workflow templates per capability; `checkLocal` checks ComfyUI         |
+| `genobi_workflows`        | List templates; `checkLocal` / `checkCloud` inspect node and model metadata     |
 | `genobi_workflow_select`  | Swap the template behind a workflow model, within its capability                |
 | `genobi_machine`          | This machine's memory, disk and GPU, and which models run here or on Cloud      |
 | `genobi_skill`            | List the skills, or load one by name when the task needs it; never pays         |

@@ -23,9 +23,12 @@ export const cloudRequests: {
   method: string;
   path: string;
   bearer: boolean;
+  apiKey?: boolean;
   idempotency: string | null;
   body?: Record<string, unknown>;
 }[] = [];
+/** Explicit Cloud discovery fixture; separate from generation requests. */
+export const cloudCatalogue = { body: {} as unknown, status: 200 };
 /** What reached the fake Router's queued submit, without the key itself. */
 export const routerRequests: {
   path: string;
@@ -230,11 +233,22 @@ export function useWorker() {
               bearer: /^Bearer comfyui-/.test(
                 request.headers.get("authorization") ?? "",
               ),
+              ...(url.pathname === "/api/object_info"
+                ? {
+                    apiKey: /^comfyui-/.test(
+                      request.headers.get("x-api-key") ?? "",
+                    ),
+                  }
+                : {}),
               idempotency: request.headers.get("idempotency-key"),
               ...(request.method === "POST" && url.pathname === "/api/v2/jobs"
                 ? { body: (await request.json()) as Record<string, unknown> }
                 : {}),
             });
+            if (url.pathname === "/api/object_info")
+              return MFResponse.json(cloudCatalogue.body, {
+                status: cloudCatalogue.status,
+              });
             if (url.pathname === "/api/v2/assets")
               return MFResponse.json(
                 { id: crypto.randomUUID() },

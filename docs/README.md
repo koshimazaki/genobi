@@ -86,6 +86,8 @@ user action through every layer.
 - [Workflow reference library](workflow-reference-library.md) — future custom nodes
   and workflow candidates, starting with MiniMax H3 loops.
 
+- [Cloud workflow checks](comfy-readiness.md) — inspect an account's node/model
+  metadata from Settings or agents, without generation.
 - [Comfy Cloud inventory](comfy-cloud-inventory.md) — what Comfy Cloud runs
   today, what needs importing, and what stays local.
 - [MP4 and LTX handoff](director-comfy.md) — clean Director export into the
