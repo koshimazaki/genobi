@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { renderToStaticMarkup } from "react-dom/server";
+import { createElement } from "react";
 import { validateInput } from "../server/validation";
 import { runCredential, ServerKeys } from "../server/keys";
 import {
@@ -60,17 +61,17 @@ describe("image provider selection", () => {
   it("places an accessible provider selector adjacent to Generate", () => {
     const render = (providerChoices?: { value: string; label: string }[]) =>
       renderToStaticMarkup(
-        <GenerateButton
-          generator="image"
-          submitting={false}
-          disabled={false}
-          hasKey
-          onSubmit={() => {}}
-          onResume={() => {}}
-          providerChoices={providerChoices}
-          providerValue="comfy"
-          onProviderChange={() => {}}
-        />,
+        createElement(GenerateButton, {
+          generator: "image",
+          submitting: false,
+          disabled: false,
+          hasKey: true,
+          onSubmit: () => {},
+          onResume: () => {},
+          providerChoices,
+          providerValue: "comfy",
+          onProviderChange: () => {},
+        }),
       );
     expect(render([
       { value: "auto", label: "Auto" },
