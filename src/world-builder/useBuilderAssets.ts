@@ -4,7 +4,7 @@ import { takeToMp4 } from "./take-mp4";
 import type { BuilderSession } from "./useBuilderSession";
 import { addedMessage, type AddAsset } from "../studio/project-assets";
 import { recordWorldRecipe } from "../studio/world-record";
-import { applyRoom, recipeRoom } from "./apply-room";
+import { applyRoom, recipeRoom, type RoomChoice } from "./apply-room";
 import { DIRECTOR_MEDIA_BYTES } from "../../shared/director/types";
 import { TOO_LARGE } from "./send-take";
 import { takeRecipe } from "./take-recipe";
@@ -25,6 +25,36 @@ export function useBuilderAssets(
 ) {
   const [saving, setSaving] = useState<"" | "take" | "frame" | "room">("");
   const [result, setResult] = useState("");
+  const [capturedRoom, setCapturedRoom] = useState<{
+    take: Take;
+    room?: RoomChoice;
+    problem?: string;
+  }>();
+  const take = s.take;
+  const activeTake = useRef(take);
+  const canAddAssets = Boolean(onAsset);
+  useEffect(() => {
+    activeTake.current = take;
+    let current = true;
+    if (canAddAssets && take?.audio && take.mode !== "live")
+      void takeRecipe(take).then(
+        (recipe) => {
+          if (current) setCapturedRoom({ take, room: recipeRoom(recipe) });
+        },
+        () => {
+          if (current)
+            setCapturedRoom({
+              take,
+              problem:
+                "This take has no valid recipe receipt. Capture a new take before applying its room.",
+            });
+        },
+      );
+    return () => {
+      current = false;
+      activeTake.current = null;
+    };
+  }, [take, canAddAssets]);
   const encoding = useRef<AbortController | null>(null);
   useEffect(() => () => encoding.current?.abort(), []);
   /**
@@ -96,17 +126,34 @@ export function useBuilderAssets(
       setSaving("");
     }
   }
-  /** The take's room, for Apply room; none for open sky or without sound. */
-  const room =
-    s.take?.audio && s.take.mode !== "live" ? recipeRoom(s.recipe) : undefined;
+  /** A room belongs to its capture, never to the subsequently edited scene. */
+  const checkedRoom = capturedRoom?.take === take ? capturedRoom : undefined;
+  const room = checkedRoom?.room;
   async function roomTake() {
     const take = s.take;
-    if (!onAsset || !take?.audio || !room) return;
+    if (!onAsset || !take?.audio || take.mode === "live") return;
+    const before = studioStore.getState().director.bundle;
+    const check = () => {
+      if (activeTake.current !== take)
+        throw new Error(
+          "Take changed. Apply the room to the selected take again.",
+        );
+      if (studioStore.getState().director.bundle !== before)
+        throw new Error("Project changed. Apply the take's room again.");
+    };
     setSaving("room");
     setResult("");
     try {
+      const room = recipeRoom(await takeRecipe(take));
+      if (!room) throw new Error("This take has no enclosed room to apply.");
+      check();
       setResult(
-        addedMessage(await applyRoom(take.audio, take.name, room, onAsset)),
+        addedMessage(
+          await applyRoom(take.audio, take.name, room, (media) => {
+            check();
+            return onAsset(media);
+          }),
+        ),
       );
     } finally {
       setSaving("");
@@ -127,7 +174,7 @@ export function useBuilderAssets(
     cancelAdd: () =>
       encoding.current?.abort(new Error("Adding the take was cancelled.")),
     saving,
-    result,
+    result: (onAsset && checkedRoom?.problem) || result,
     canSend: Boolean(onAsset) || s.canSendToDirector,
     toLayout: onLayoutTake
       ? async () => {
