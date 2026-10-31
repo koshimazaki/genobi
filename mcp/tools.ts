@@ -5,6 +5,7 @@ import { licenceTools } from "./licence-tools";
 import { scrollsTools } from "./scrolls-tools";
 import { sceneTools } from "./scene-tools";
 import { z } from "zod";
+import { StudioError } from "./api";
 import { registry } from "../shared/registry";
 import {
   modelFamilies,
@@ -31,6 +32,8 @@ import { takeTools } from "./take-tools";
 import { upscalePartsTools } from "./upscale-parts-tools";
 import { templateTools } from "./template-tools";
 import { workflowTools } from "./workflow-tools";
+import { deploymentTools } from "./deployment-tools";
+import { voiceTools } from "./voice-tools";
 import { JOB_ID, jobSummary, type ToolDefinition } from "./definition";
 
 export { jobSummary, type ToolDefinition } from "./definition";
@@ -42,7 +45,7 @@ const readTools: ToolDefinition[] = [
     name: "genobi_status",
     title: "Genobi status",
     description:
-      "Check that the local Genobi studio is running and whether it holds a provider key and generation budget.",
+      "Check that the local Genobi studio is running, whether it holds a provider key and generation budget, and the runtime's supported operations, configuration and limits. Older servers may omit capabilities; never treat that omission as support for an operation.",
     inputSchema: {},
     tags: ["agents", "mcp", "backend"],
     docs: ["docs/agent-sessions.md", "plugins/genobi/README.md"],
@@ -54,7 +57,18 @@ const readTools: ToolDefinition[] = [
         budgetUsd: number;
         sessionLimit: number;
       }>("/api/health");
-      return { studio: api.base.origin, ...health };
+      let capabilities: unknown;
+      try {
+        capabilities = await api.get("/api/capabilities");
+      } catch (error) {
+        if (!(error instanceof StudioError && error.status === 404))
+          throw error;
+      }
+      return {
+        studio: api.base.origin,
+        ...health,
+        ...(capabilities === undefined ? {} : { capabilities }),
+      };
     },
   },
   {
@@ -81,35 +95,39 @@ const readTools: ToolDefinition[] = [
     annotations: { readOnlyHint: true, idempotentHint: true },
     async run(_api, args) {
       const selection = parseSelection(args.selection ?? {});
-      return (
-        registry
-          // Camera stages deployment inputs; this adapter has no staging tool.
-          .filter((e) => e.status !== "ready" || !e.deploymentOnly)
-          .filter((e) => !args.status || e.status === args.status)
-          .filter((e) => matchesSelection(e, selection))
-          .map((e) =>
-            e.status === "ready"
-              ? {
-                  id: e.id,
-                  label: e.label,
-                  task: e.task ?? null,
-                  family: e.family,
-                  open: e.open,
-                  status: e.status,
-                  route: e.route,
-                  runLocations: runLocations(e),
-                  model: e.model,
-                }
-              : {
-                  id: e.id,
-                  label: e.label,
-                  family: e.family,
-                  open: e.open,
-                  status: e.status,
-                  note: e.note,
-                },
-          )
-      );
+      return registry
+        .filter((e) => !args.status || e.status === args.status)
+        .filter((e) => matchesSelection(e, selection))
+        .map((e) =>
+          e.status === "ready"
+            ? {
+                id: e.id,
+                label: e.label,
+                task: e.task ?? null,
+                family: e.family,
+                open: e.open,
+                status: e.status,
+                route: e.route,
+                runLocations: runLocations(e),
+                model: e.model,
+                generator: e.generator,
+                inputModel: e.videoModel,
+                ...(e.deploymentOnly
+                  ? {
+                      requiresDeployment: true,
+                      stageTool: "genobi_deployment_stage",
+                    }
+                  : {}),
+              }
+            : {
+                id: e.id,
+                label: e.label,
+                family: e.family,
+                open: e.open,
+                status: e.status,
+                note: e.note,
+              },
+        );
     },
   },
   {
@@ -172,6 +190,8 @@ export const tools: ToolDefinition[] = [
   ...audioTools,
   ...mediaTools,
   ...workflowTools,
+  ...deploymentTools,
+  ...voiceTools,
   ...machineTools,
   ...developTools,
   ...skillTools(),

@@ -5,9 +5,27 @@ import { VoiceDestinations } from "./VoiceDestinations";
 import { readVoiceLanguage, saveVoiceLanguage } from "./language-store";
 import { VoiceLanguageSelect } from "./VoiceLanguageSelect";
 import { VoiceLEDWaveform } from "./VoiceLEDWaveform";
+import { VoiceDestinationPicker } from "./VoiceDestinationPicker";
+import {
+  voiceRouting,
+  useVoiceRouting,
+  useVoiceDeliveryPending,
+  voiceDeliveryPending,
+} from "./destination-store";
+import { voiceProjectId } from "./agent-destination";
+import { capturePromptDestination } from "./prompt-destination";
 
 const clock = (seconds: number) =>
   `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;
+
+function captureRouting() {
+  const route = voiceRouting();
+  return {
+    route,
+    projectId: voiceProjectId(),
+    promptDestination: capturePromptDestination(route.destination),
+  };
+}
 
 /**
  * The voice surface: a thin pill that hangs under the studio header rather
@@ -26,17 +44,32 @@ export function VoiceOverlay({
   /** Undefined while the server is asked. */
   status: VoiceStatus | undefined;
   /** The header mic's press: true when it stopped a recording. */
-  mic: RefObject<(() => boolean) | undefined>;
+  mic: RefObject<((recordOnly?: boolean) => boolean) | undefined>;
   onClose: (returnFocus: boolean) => void;
 }) {
   const [language, setLanguage] = useState(readVoiceLanguage);
+  const [routing, setRouting] = useState(captureRouting);
+  const sending = useVoiceDeliveryPending();
+  const selectedRouting = useVoiceRouting();
   const voice = useVoiceRecorder(status?.maxSeconds || 60, language);
   const record = useRef<HTMLButtonElement>(null);
   const close = useRef<HTMLButtonElement>(null);
   const ready = !!status?.available;
   const { phase } = voice;
   const recording = phase === "recording";
-  const working = phase === "transcribing" || phase === "starting";
+  // Choosing a destination while speaking applies to this note. Once
+  // transcription starts, its destination is frozen until delivery completes.
+  useEffect(() => {
+    if (recording)
+      setRouting((before) => ({
+        ...before,
+        route: selectedRouting,
+        promptDestination: capturePromptDestination(
+          selectedRouting.destination,
+        ),
+      }));
+  }, [recording, selectedRouting]);
+  const working = phase === "transcribing" || phase === "starting" || sending;
   const [expanded, setExpanded] = useState(false);
   // Open the panel for anything to read; only the chevron folds it again.
   const toRead =
@@ -53,16 +86,26 @@ export function VoiceOverlay({
   // refused microphone ends in its message; nothing starts it again. A tick
   // later, so a mount that is undone at once never asks for the microphone.
   const start = useRef(voice.start);
-  start.current = voice.start;
+  start.current = async () => {
+    if (voiceDeliveryPending()) return;
+    setRouting(captureRouting());
+    await voice.start();
+  };
   useEffect(() => {
     if (!ready) return;
     const tick = setTimeout(() => void start.current());
     return () => clearTimeout(tick);
   }, [ready]);
-  mic.current = () => {
-    if (!recording) return false;
-    voice.stop();
-    return true;
+  mic.current = (recordOnly = false) => {
+    if (recording) {
+      if (!recordOnly) voice.stop();
+      return true;
+    }
+    if (recordOnly && ready && !working) {
+      void start.current();
+      return true;
+    }
+    return false;
   };
   useEffect(
     () => () => {
@@ -131,6 +174,11 @@ export function VoiceOverlay({
       data-expanded={expanded || undefined}
     >
       <div className="voice-pill">
+        <VoiceLEDWaveform
+          levels={voice.levels}
+          mode={phase === "transcribing" ? "working" : "listening"}
+        />
+        <VoiceDestinationPicker disabled={working} />
         <button
           ref={record}
           className="voice-record"
@@ -142,15 +190,11 @@ export function VoiceOverlay({
           title={recording ? "Stop and transcribe" : "Record"}
           onClick={() => {
             if (recording) voice.stop();
-            else if (!working) void voice.start();
+            else if (!working) void start.current();
           }}
         >
           <span aria-hidden="true" />
         </button>
-        <VoiceLEDWaveform
-          levels={voice.levels}
-          mode={phase === "transcribing" ? "working" : "listening"}
-        />
         <button
           className="voice-chevron"
           aria-label={expanded ? "Hide transcript" : "Show transcript"}
@@ -216,6 +260,9 @@ export function VoiceOverlay({
               transcript={voice.transcript}
               onChange={voice.setTranscript}
               onHandoff={(element) => (handed.current = element)}
+              routing={routing.route}
+              projectId={routing.projectId}
+              promptDestination={routing.promptDestination}
             />
           </div>
         )}

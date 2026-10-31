@@ -262,8 +262,14 @@ describe("recipe op and presets", () => {
   it("returns the current recipe, refused past 64 KB", async () => {
     const recipe = structuredClone(defaultRecipe);
     expect(
-      await bridge({ getRecipe: () => recipe } as never, { op: "recipe" }),
-    ).toEqual({ state: "done", result: { recipe } });
+      await bridge(
+        {
+          getRecipe: () => recipe,
+          getRecipeRevision: () => "scene:7",
+        } as never,
+        { op: "recipe" },
+      ),
+    ).toEqual({ state: "done", result: { recipe, revision: "scene:7" } });
     expect(() => boundedRecipe({ prompt: "x".repeat(64_001) })).toThrow(
       "Recipe exceeds 64 KB.",
     );

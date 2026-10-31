@@ -18,6 +18,7 @@ import { importAssets } from "./import-media";
 import { BRIEF_PATH, readBrief, writeBrief } from "./prompt-brief";
 import { bindVersionPicture } from "./version-pictures";
 import { projectPlan } from "./house-template";
+import { readVersionBrief, versionBriefWords } from "./version-brief";
 
 export type VersionPicks = Record<string, string[]>;
 
@@ -185,7 +186,7 @@ export async function applyVersionInputs(
     project: structuredClone(bundle.project),
     files: new Map(bundle.files),
   };
-  let brief = readBrief(next);
+  let brief = readVersionBrief(next);
   const slots = versionSlots(template);
   if (Object.keys(picks).some((id) => !slots.some((slot) => slot.id === id)))
     throw new Error("Unknown template input slot.");
@@ -196,8 +197,7 @@ export async function applyVersionInputs(
     const plannedInput = make.includes(slot.id);
     if (
       !(slot.picture && ids.length === 0) &&
-      !plannedInput &&
-      (ids.length < slot.min || ids.length > slot.max)
+      (ids.length > slot.max || (!plannedInput && ids.length < slot.min))
     )
       throw new Error(
         `${slot.label}: choose ${slot.min} to ${slot.max} files.`,
@@ -240,6 +240,11 @@ export async function applyVersionInputs(
         });
         if (!brief.text.includes(`[${label}]`)) brief.text += `\n[${label}]`;
       }
+      // A reduced slot keeps the surviving labels but removes discarded tokens
+      // in the same edit, so the next agent handoff has no unbound references.
+      for (const reference of old)
+        if (!brief.references.some((r) => r.label === reference.label))
+          brief.text = brief.text.split(`[${reference.label}]`).join("");
     }
     if (!ids[0] && slot.reference?.kind === "audio") {
       if (
@@ -337,6 +342,9 @@ export async function applyVersionInputs(
     next.project.template = { id: template.id, inputs };
   }
   checkReferences(next.project);
-  next = writeBrief(next, brief);
+  next = writeBrief(
+    next,
+    versionBriefWords(brief, template, currentInputs, inputs),
+  );
   return validateFiles(next);
 }

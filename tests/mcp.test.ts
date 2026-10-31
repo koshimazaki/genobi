@@ -70,6 +70,7 @@ describe("tools", () => {
     expect(seen.map((s) => [s.path, s.cookie])).toEqual([
       ["/api/health", null],
       ["/api/health", `camera_session=${SESSION}`],
+      ["/api/capabilities", `camera_session=${SESSION}`],
       ["/api/history", `camera_session=${SESSION}`],
     ]);
   });
@@ -96,9 +97,7 @@ describe("tools", () => {
       status: "ready",
     })) as { id: string; route: string }[];
     expect(ready.map((m) => m.id)).toEqual(
-      registry
-        .filter((e) => e.status === "ready" && !e.deploymentOnly)
-        .map((e) => e.id),
+      registry.filter((e) => e.status === "ready").map((e) => e.id),
     );
     expect(
       ready.every((m) => ["router", "workflow", "bfl"].includes(m.route)),
@@ -144,6 +143,7 @@ describe("tools", () => {
       "genobi_upscale_parts_plan",
       "genobi_upscale_parts_retry",
       ...media,
+      "genobi_deployment_stage",
       // Each start is another Developer (one at a time): not free to repeat.
       "genobi_develop",
     ]);
@@ -174,6 +174,8 @@ describe("tools", () => {
       // Session settings: writes, safe to repeat, never paid.
       "genobi_run_location",
       "genobi_workflow_select",
+      "genobi_deployment_stage",
+      "genobi_voice_transcribe",
       // Starts a Developer in a worktree; never paid, never on main.
       "genobi_develop",
     ]);

@@ -1,7 +1,19 @@
-.startup-guide {
-  width: min(560px, calc(100vw - 24px));
+.key-dialog.startup-guide {
+  width: min(1120px, calc(100vw - 48px));
   max-height: calc(100svh - 24px);
   overflow: auto;
+}
+.startup-guide__columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 32px;
+  align-items: start;
+}
+.startup-guide__columns > section {
+  min-width: 0;
+}
+.startup-guide__columns h3:first-child {
+  margin-top: 12px;
 }
 .startup-guide ul {
   padding: 0 0 0 22px;
@@ -10,6 +22,8 @@
 .startup-guide li {
   padding-left: 6px;
   margin: 14px 0;
+  font-size: 13px;
+  line-height: 1.7;
 }
 .startup-guide li::marker {
   color: var(--accent-strong);
@@ -26,7 +40,16 @@
   gap: 12px;
   flex-wrap: wrap;
 }
-@media (max-width: 700px) {
+@media (max-width: 800px) {
+  .key-dialog.startup-guide {
+    width: calc(100vw - 20px);
+    max-height: calc(100svh - 20px);
+    padding: 16px;
+  }
+  .startup-guide__columns {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
   .startup-guide button {
     min-height: 44px;
     min-width: 44px;

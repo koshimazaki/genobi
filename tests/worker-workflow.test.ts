@@ -1,6 +1,12 @@
 import { describe, expect, it } from "vitest";
 import type { Job } from "../shared/types";
-import { call, cloudRequests, newSession, useWorker } from "./worker-harness";
+import {
+  call,
+  cloudRequests,
+  imageFixture,
+  newSession,
+  useWorker,
+} from "./worker-harness";
 
 // The workflow route inside workerd: the Worker bundles @comfyorg/sdk with its
 // node: imports left to nodejs_compat, as scripts/build-pages.mjs does.
@@ -126,6 +132,42 @@ describe("Cloudflare adapter: the workflow route through the Comfy SDK", () => {
     expect(posts()).toHaveLength(1);
   });
 
+  it("uploads a dropped Klein source and submits a reference-conditioned edit via the portable SDK", async () => {
+    const session = newSession();
+    const before = cloudRequests.length;
+    const ref = `data:image/png;base64,${Buffer.from(imageFixture).toString("base64")}`;
+    const response = await call("/api/jobs", {
+      method: "POST",
+      headers: {
+        cookie: session,
+        "x-byo-key": key,
+        "idempotency-key": "worker-source-edit",
+        "content-type": "application/json",
+      },
+      body: JSON.stringify({
+        generator: "image",
+        model: "flux-3-klein",
+        description:
+          'Change the object. [{"id":"object","from":"ref_image_0","src_bbox":[0,0,500,500],"tgt_bbox":[0,0,500,500],"desc":"blue"}]',
+        imageReferences: [ref],
+        imageAspectRatio: "auto",
+      }),
+    });
+    const data = (await response.json()) as { job: Job };
+    expect(response.status, JSON.stringify(data)).toBe(202);
+    expect(data.job.status, JSON.stringify(data)).toBe("Pending");
+    const sent = cloudRequests.slice(before);
+    expect(sent.filter((r) => r.path === "/api/v2/assets")).toHaveLength(1);
+    const graph = sent.find((r) => r.path === "/api/v2/jobs")!.body!
+      .workflow as Record<string, { inputs: Record<string, unknown> }>;
+    expect(graph["reference-0"].inputs.image).toMatchObject({
+      __type: "core/ASSET",
+    });
+    expect(graph["18:7"].inputs.latent_image).toEqual(["reference-latents", 2]);
+    expect(graph["18:17"].inputs.value).toContain("src_bbox");
+    expect(sent.every((r) => r.bearer)).toBe(true);
+  });
+
   it("refuses music before any quote, reservation or Cloud request", async () => {
     const session = newSession();
     const before = cloudRequests.length;
@@ -169,8 +211,8 @@ describe("Cloudflare adapter: the workflow route through the Comfy SDK", () => {
     });
     expect(await location.json()).toMatchObject({
       location: "cloud",
-      fixed: true,
-      choices: ["cloud"],
+      fixed: false,
+      choices: ["cloud", "deployment"],
       local: null,
       // The same contract as the local server; hosted settings never change.
       revision: 0,
@@ -207,37 +249,5 @@ describe("Cloudflare adapter: the workflow route through the Comfy SDK", () => {
     expect(workflows.templates.map((t) => t.id)).not.toContain(
       "openjutsu-swap",
     );
-  });
-});
-
-describe("hosted Comfy Deploy boundary", () => {
-  it("states local-only and refuses a deployment quote before any provider call", async () => {
-    const before = cloudRequests.length;
-    const location = await call("/api/settings/run-location", {
-      headers: { cookie: newSession() },
-    });
-    expect(((await location.json()) as { note: string }).note).toContain(
-      "Comfy Deploy runs from the local studio",
-    );
-    for (const model of ["ltx-deploy-layout-to-video", "ltx-deploy-akuspace"])
-      for (const route of ["/api/quotes", "/api/jobs"]) {
-        const result = await call(route, {
-          method: "POST",
-          headers: {
-            cookie: newSession(),
-            "x-byo-key": key,
-            "Content-Type": "application/json",
-          },
-          // Incomplete input must report the hosted boundary before validation
-          // (including the missing deployment tickets and job request key).
-          body: JSON.stringify({ model }),
-        });
-        expect(result.status).toBe(501);
-        expect(await result.json()).toMatchObject({
-          code: "deployment_local_only",
-          error: "Comfy Deploy runs from the local studio",
-        });
-      }
-    expect(cloudRequests.length).toBe(before);
   });
 });

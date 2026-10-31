@@ -9,6 +9,7 @@ import { BUDGET_USD, SESSION_LIMIT, type JobService } from "./jobs";
 import type { BudgetReport } from "../shared/budget";
 import { keySlots, keysRevision } from "../shared/keys";
 import type { RateBucket } from "../shared/limits";
+import { runtimeCapabilities } from "../shared/runtime-capabilities";
 
 /** Each held server slot's balance, or the reason it could not be read. */
 async function slotBalances(keys: ServerKeys, providers: Providers) {
@@ -45,6 +46,10 @@ export function accountRouter(
   limit: (bucket: RateBucket, id: string) => void,
 ) {
   const router = express.Router();
+  router.get("/capabilities", (_request, response) => {
+    limit("history", response.locals.sessionId);
+    response.json(runtimeCapabilities("local"));
+  });
   router.get("/health", (_request, response) =>
     response.json({
       ok: true,

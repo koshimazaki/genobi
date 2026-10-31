@@ -5,19 +5,25 @@ export default function PromptResizeHandle({
   fieldId,
   height,
   onResize,
+  label = "prompt",
+  min = 64,
+  max = 640,
 }: {
   fieldId: string;
+  label?: string;
+  min?: number;
+  max?: number;
   height: () => number;
   onResize: (height: number | null) => void;
 }) {
   const drag = useRef<{ y: number; height: number } | null>(null);
   const resize = (value: number) =>
-    onResize(Math.max(64, Math.min(640, value)));
+    onResize(Math.max(min, Math.min(max, value)));
   return (
     <button
       type="button"
       className="prompt-resize-handle"
-      aria-label="Resize prompt: drag or use Up and Down arrows; Home resets"
+      aria-label={`Resize ${label}: drag or use Up and Down arrows; Home resets`}
       aria-controls={fieldId}
       title="Drag to resize · ↑ ↓ to adjust · double-click to reset"
       onPointerDown={(event) => {
@@ -48,7 +54,7 @@ export default function PromptResizeHandle({
           return;
         event.preventDefault();
         if (event.key === "Home") onResize(null);
-        else if (event.key === "End") resize(640);
+        else if (event.key === "End") resize(max);
         else resize(height() + (event.key === "ArrowUp" ? -32 : 32));
       }}
     >

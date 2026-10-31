@@ -32,7 +32,7 @@
   margin: 12px 0;
   min-width: 0;
 }
-.dir-remix input,
+.dir-remix input:not(.sr-only),
 .dir-remix select,
 .dir-remix textarea {
   width: 100%;

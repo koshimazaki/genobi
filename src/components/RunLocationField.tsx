@@ -26,7 +26,7 @@ const EMPTY: SettingView<RunLocationState> = {
 
 /**
  * Run location: where every open workflow runs for this session, Local
- * ComfyUI or Comfy Cloud. The hosted studio is always Comfy Cloud and says so.
+ * ComfyUI, Comfy Cloud or a registered deployment. Hosted offers Cloud and deployment.
  * `SettingSaver` keeps it equal to the server: one save at a time, newest
  * answer only, and a fresh read after a save whose answer was lost.
  */
@@ -115,6 +115,20 @@ export default function RunLocationField() {
           </button>
         </label>
       )}
+      <p className="run-location__note">
+        A Comfy key is enough for supported Router and Cloud models.
+        Layout-to-video and deployment AKUSPACE also need a deployment created
+        in your own Comfy workspace, with Genobi’s nodes and models. Enter its
+        endpoint above and use a key authorised for that workspace. Comfy
+        charges that workspace for GPU time.{" "}
+        <a
+          href="https://github.com/koshimazaki/genobi/blob/main/docs/comfy-deploy.md"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Deployment setup guide
+        </a>
+      </p>
       {state.deployment && (
         <a href={state.deployment.url} target="_blank" rel="noreferrer">
           Runs on your Comfy deployment {state.deployment.name}
@@ -122,7 +136,8 @@ export default function RunLocationField() {
       )}
       <p className="run-location__note">
         Local and Both run open workflows on this machine. Comfy Cloud runs them
-        online. API models use their cloud provider in every setup.
+        online. Comfy Deploy runs workflows on your registered endpoint. API
+        models use their cloud provider in every setup.
       </p>
       <p className="run-location__note" role="status">
         {saving

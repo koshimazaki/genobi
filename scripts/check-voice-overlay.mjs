@@ -6,8 +6,8 @@ import { chooseSelect } from "./lib/choose-select.mjs";
  * Asserts Voice is in the header of every section, the pill hangs under the
  * header on the right and leaves the toolbar, gallery and panels where they
  * were, one click on the mic records and the next stops and transcribes,
- * the chevron folds the panel, the transcript goes where it is meant: a
- * spoken request to Camera, else the prompt on screen, else a session
+ * the chevron folds the panel, and explicit routing keeps Agent as default,
+ * pins conversations and offers opt-in prompt dictation and Camera requests
  * (scripts/lib/voice-destination-checks.mjs, voice-intent-checks.mjs and
  * voice-gap-checks.mjs, which also covers LTX's prompt gaps), the
  * recording goes through MediaRecorder as WAV, Escape closes with focus
@@ -31,7 +31,6 @@ import {
   listening,
   overflow,
   pixels,
-  SEND,
   transcribed,
   TRANSCRIPT,
   underHeader,
@@ -104,7 +103,7 @@ try {
     "Fake microphone records through MediaRecorder, prewarms, sends WAV and shows the transcript",
   );
   await page.screenshot({ path: `${output}/voice-transcript-1440.png` });
-  // No picker: the transcript has gone straight into the prompt on screen.
+  // The fixture explicitly selected Current prompt for recorder checks.
   const routed = await page.locator(".voice-routed").textContent();
   const id = {
     "Camera prompt": "description",
@@ -112,11 +111,16 @@ try {
   }[routed.match(/^In the (.+?)\./)?.[1]];
   assert(id, `the transcript names the prompt it filled: ${routed}`);
   assert.equal(await fieldText(page, id), TRANSCRIPT);
-  assert(await page.getByRole("button", { name: SEND }).isVisible());
-  assert.equal(sent.agentStatus.length, 0, "filling a prompt asks no agent");
+  assert.equal(
+    await page.getByLabel("Voice destination").inputValue(),
+    "prompt",
+  );
+  assert.equal(sent.sessions.length, 0, "dictation starts no agent session");
+  assert.equal(sent.messages.length, 0, "dictation sends no agent message");
+  assert.equal(sent.approvals.length, 0, "dictation approves no paid step");
   assert.equal(sent.cancel, 0, "a finished note keeps nothing to cancel");
   checks.push(
-    "No picker: in Ninja the transcript goes straight into the prompt on screen, says which, and offers Send to agent instead",
+    "Explicit Current prompt dictation names the field it filled; Agent is exercised separately as the fresh-browser default",
   );
   await page.getByRole("button", { name: "Close voice" }).click();
   assert.equal(await overlay.count(), 0);
@@ -200,13 +204,18 @@ try {
     .getByRole("dialog", { name: "Voice" })
     .getByLabel("Language", { exact: true });
   await language.waitFor();
-  assert.deepEqual(await language.locator("option").allTextContents(), [
-    "English",
-    "Auto-detect",
-    "French",
-    "Japanese",
-  ]);
-  assert.equal(await language.inputValue(), "English");
+  await language.click();
+  assert.deepEqual(
+    await page
+      .getByRole("listbox", { name: "Language" })
+      .getByRole("option")
+      .allTextContents(),
+    ["English", "Auto-detect", "French", "Japanese"],
+  );
+  await page.keyboard.press("Escape");
+  const languageValue = () =>
+    page.locator("#voice-language-native").inputValue();
+  assert.equal(await languageValue(), "English");
   await chooseSelect(language, "auto");
   assert(!(await overflow(page)), "no horizontal overflow at 320");
   await page.screenshot({ path: `${output}/voice-language-320.png` });
@@ -216,7 +225,7 @@ try {
   await voice.click();
   await listening(page);
   await page.getByRole("button", { name: "Show transcript" }).click();
-  assert.equal(await language.inputValue(), "auto", "kept in this browser");
+  assert.equal(await languageValue(), "auto", "kept in this browser");
   await context.close();
   ({ context, page, voice, sent } = await open({
     // Storage that refuses the voice key, read and write.
@@ -254,11 +263,16 @@ try {
 
   // Every section keeps Voice in the header.
   ({ context, page, voice } = await open({ path: "/" }));
-  for (const button of await page
-    .locator("[data-preset-button]")
-    .elementHandles()) {
-    await button.click();
-    await page.waitForTimeout(150);
+  // Director's first-entry dialog loads lazily and may appear between clicks.
+  await page.addLocatorHandler(
+    page.getByRole("button", { name: "Close Generate my version" }),
+    (close) => close.click(),
+  );
+  const sections = page.locator("[data-preset-button]");
+  const sectionCount = await sections.count();
+  for (let index = 0; index < sectionCount; index++) {
+    await sections.nth(index).click();
+    await voice.waitFor({ state: "visible" });
     assert(await voice.isVisible(), "Voice in every section");
   }
   await context.close();
@@ -410,11 +424,13 @@ try {
     status: { available: false, maxSeconds: 180 },
   }));
   let installs = 0;
-  await page.route("**/api/voice/setup", (route) => {
+  await page.route("**/api/voice/setup**", (route) => {
     if (route.request().method() !== "GET") {
       installs++;
       return route.abort();
     }
+    if (new URL(route.request().url()).pathname.endsWith("/found"))
+      return route.fulfill({ json: { models: [] } });
     return route.fulfill({
       json: {
         token: "fixture-grant",
@@ -432,11 +448,11 @@ try {
   const offer = page.getByRole("dialog", { name: "Install Voice Mode?" });
   await offer.waitFor();
   const yes = offer.getByRole("button", {
-    name: "Yes, install Voice Mode",
+    name: "Install new",
     exact: true,
   });
   await yes.waitFor();
-  assert.equal(await focusedName(page), "Yes, install Voice Mode");
+  assert.equal(await focusedName(page), "Install new");
   assert.equal(
     await page.getByRole("button", { name: "Record", exact: true }).count(),
     0,
@@ -456,12 +472,11 @@ try {
   await voice.click();
   // The hosted studio has no setup route, so the offer shows where Voice Mode
   // installs (the local-run instructions) and cannot be confirmed.
-  await page.getByText(/^Prefer to clone from GitHub\?$/).waitFor();
-  assert(
-    await page
-      .getByRole("button", { name: "Yes, install Voice Mode", exact: true })
-      .isDisabled(),
-  );
+  await page
+    .getByText(/Voice mode runs in the local studio/)
+    .first()
+    .waitFor();
+  assert.equal(await page.evaluate(() => window.voiceMicRequests), 0);
   await context.close();
   checks.push(
     "Refused microphone (asked once, no loop) and hosted studio each show a message; an unconfigured server offers to install, and installs nothing without a yes",

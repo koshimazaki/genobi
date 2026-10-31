@@ -1,6 +1,6 @@
 import { afterEach, expect, it, vi } from "vitest";
 
-// Hosted detection that never answers, as when the run-location read stalls.
+// Hosted detection that never answers, as when the health read stalls.
 vi.mock("../src/hosted-studio", () => ({
   readHostedStudio: () => new Promise<boolean | undefined>(() => {}),
 }));

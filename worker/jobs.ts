@@ -1,12 +1,16 @@
+import { readImageResponse } from "./image-response";
+import { isKleinEdit, kleinFiles } from "../shared/comfy/klein-edit";
+import type { Expectation } from "../shared/comfy/expectation";
+import { deploymentClient } from "./deployments";
+import {
+  copyDeploymentAudio,
+  forgetDeploymentAudio,
+  rememberDeploymentAudio,
+} from "./deployment-output";
 import { h3WorkflowFiles, readsClip } from "./workflow-files";
 import { takesVideoReferences } from "../shared/h3";
 import { h3RouterBody, isH3Router } from "../shared/comfy/h3-router";
-import {
-  isImage,
-  imageBody,
-  inspectImage,
-  MAX_IMAGE_RESULT_BYTES,
-} from "../shared/image";
+import { isImage, imageBody, inspectImage } from "../shared/image";
 import { providerUrl } from "../server/bfl";
 import { CREDITS_PER_USD, isLtx, ltxBody } from "../shared/comfy/ltx";
 import { settingsHash, type QuoteRecord } from "../shared/quote";
@@ -96,7 +100,10 @@ export async function submit(
   origin: string,
   quoteId?: string,
   providers: Providers = defaultProviders(),
-  workflowClient: WorkflowClient = new ComfySdkWorkflows(),
+  workflowClient: WorkflowClient = new ComfySdkWorkflows({
+    portableUploads: true,
+  }),
+  expected?: Expectation,
 ) {
   const requestInput = input;
   input = await hashReferences(input);
@@ -104,13 +111,20 @@ export async function submit(
   const model = input.model ?? "flux-3";
   const existing = await priorJob(env, session, idempotency);
   if (existing) return duplicate(existing, input);
-  const { source, estimate, take } = await price(
+  const { source, estimate, take, deploymentValues } = await price(
     env,
     input,
     session,
     key,
     provider,
+    expected,
   );
+  if (take.recipe.deployment && !quoteId)
+    throw new AppError(
+      400,
+      "Review and confirm a deployment quote first.",
+      "quote_required",
+    );
   let quote: QuoteRecord | undefined;
   if (quoteId !== undefined) {
     const found = await findQuote(env, quoteId, session);
@@ -191,13 +205,36 @@ export async function submit(
     if (entry.route === "workflow") {
       // A workflow, chosen by the registry entry rather than the key. Its job
       // URL takes the polling_url column, so no migration is needed.
-      const { template, values } = workflowRun(entry.model, input, job.prompt);
-      row.polling_url = await workflowClient.run(template, values, key, {
-        idempotencyKey: job.id,
-        ...(readsClip(input)
-          ? { files: await h3WorkflowFiles(env, requestInput, source!, origin) }
-          : {}),
-      });
+      const { template, values } = workflowRun(
+        entry.model,
+        input,
+        job.prompt,
+        take.recipe.workflow,
+        take.recipe.location,
+      );
+      if (take.recipe.deployment)
+        workflowClient = deploymentClient(take.recipe.deployment.url);
+      row.polling_url = await workflowClient.run(
+        template,
+        take.recipe.deployment ? deploymentValues : values,
+        key,
+        {
+          idempotencyKey: job.id,
+          ...(isKleinEdit(requestInput)
+            ? { files: kleinFiles(requestInput) }
+            : {}),
+          ...(readsClip(input)
+            ? {
+                files: await h3WorkflowFiles(
+                  env,
+                  requestInput,
+                  source!,
+                  origin,
+                ),
+              }
+            : {}),
+        },
+      );
       job.status = "Pending";
       await saveJob(env, row, job);
       return job;
@@ -262,7 +299,9 @@ export async function poll(
   session: string,
   key?: string,
   providers: Providers = defaultProviders(),
-  workflowClient: WorkflowClient = new ComfySdkWorkflows(),
+  workflowClient: WorkflowClient = new ComfySdkWorkflows({
+    portableUploads: true,
+  }),
 ) {
   const row = await ownedJob(env, id, session);
   const job = publicJob(row);
@@ -295,6 +334,9 @@ export async function poll(
   // A workflow polls and downloads through the workflow client, by entry.
   const entry = entryFor(job.generator, job.model);
   const viaWorkflow = entry.route === "workflow";
+  const recipe = row.take ? JSON.parse(row.take).recipe : undefined;
+  if (recipe?.deployment)
+    workflowClient = deploymentClient(recipe.deployment.url);
   try {
     delete job.error;
     if (!row.remote_url) {
@@ -302,7 +344,7 @@ export async function poll(
         ? await workflowClient.poll(
             row.polling_url!,
             key,
-            workflowOutput(entry.model),
+            workflowOutput(entry.model, recipe?.workflow),
           )
         : await providerFor(key, providers).poll(row.polling_url!, key);
       if (
@@ -326,6 +368,8 @@ export async function poll(
       if (result.estimate) job.estimate = result.estimate;
       if (result.status === "Ready" && result.result?.sample) {
         providerUrl(result.result.sample, "media");
+        if (recipe?.deployment)
+          await rememberDeploymentAudio(env, row.id, result.companions ?? []);
         row.remote_url = result.result.sample;
         job.status = "copying";
         await saveJob(env, row, job);
@@ -399,6 +443,8 @@ export async function poll(
         objectKey,
         bytes,
       );
+      if (recipe?.deployment)
+        await copyDeploymentAudio(env, row, job, workflowClient);
       job.status = "Ready";
       row.remote_url = null;
     }
@@ -411,6 +457,10 @@ export async function poll(
       job.status = "expired";
   } finally {
     await saveJob(env, row, job);
+    // A failed final save leaves the receipt for the next poll. Once Ready is
+    // durable, failed cleanup can wait for the bounded retention sweep.
+    if (recipe?.deployment && job.status === "Ready")
+      await forgetDeploymentAudio(env, row.id).catch(() => {});
     await env.DB.prepare(
       "UPDATE jobs SET lease_until=? WHERE id=? AND session=?",
     )
@@ -418,35 +468,4 @@ export async function poll(
       .run();
   }
   return { job };
-}
-
-/** Images are small enough to buffer only after enforcing the same bounded byte ceiling. */
-async function readImageResponse(response: Response) {
-  if (
-    Number(response.headers.get("content-length")) > MAX_IMAGE_RESULT_BYTES ||
-    !response.body
-  )
-    throw new AppError(502, "The generated image is too large.");
-  const reader = response.body.getReader(),
-    chunks: Uint8Array[] = [];
-  let size = 0;
-  try {
-    while (true) {
-      const next = await reader.read();
-      if (next.done) break;
-      size += next.value.length;
-      if (size > MAX_IMAGE_RESULT_BYTES)
-        throw new AppError(502, "The generated image is too large.");
-      chunks.push(next.value);
-    }
-  } finally {
-    await reader.cancel().catch(() => {});
-  }
-  const bytes = new Uint8Array(size);
-  let offset = 0;
-  for (const chunk of chunks) {
-    bytes.set(chunk, offset);
-    offset += chunk.length;
-  }
-  return bytes;
 }

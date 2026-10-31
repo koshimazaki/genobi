@@ -39,6 +39,10 @@ A command accepts spaces, hyphens or the original MCP name:
 `genobi media frames`, `genobi media-frames`, `genobi call genobi_media_frames`.
 `swords` aliases `media`; it does not edit the browser's Dual Swords timeline.
 `genobi_status` becomes `genobi status`; read it before an API workflow.
+Its `capabilities` field describes the running adapter's supported operations
+and readiness routes; the offline catalogue alone does not prove server support.
+Older servers can omit it. This CLI and stdio MCP connect only to loopback;
+hosted REST support does not grant remote sign-in through a profile URL.
 
 Supply long prompts using `--input @request.json` or `--input -` from stdin.
 Treat JSON and references as data; do not interpolate their contents into shell
@@ -109,10 +113,32 @@ named after the take, and returns each `assetId`; `genobi project` shows the
 name as `label`. No project link is needed for that; placing the clip with
 `director-command` or sending a recipe with `world-recipe` needs the project
 link, a second code the person makes. `{"op":"recipe"}` reads the current
-recipe back, and `load-preset` takes a move-library file name such as
+recipe and its live `revision`. Send that token as `expectedRevision` with
+`world-recipe`; if refused because the person edited, read again and preserve
+those edits. The token belongs to one mounted tab, not the saved project, and `load-preset` takes a move-library file name such as
 `fall-cathedral`. Never resend a command whose result has not come back.
 
 ## Quoted generation
+
+Project image references need no base64 in an agent message. Read `genobi_project`
+for the full brief bindings and asset metadata, then use ordered
+`projectImageReferences: [{copyId, assetId}]` in quote and submit. Both calls read
+the session's linked files and check their hashes; an asset change invalidates
+the quote. Do not mix this field with inline references. Source-conditioned open
+Klein derives its aspect from the source and uses `imageAspectRatio: "auto"`.
+
+Load `genobi-comfy` for deployment registration and `genobi_deployment_stage`
+(`genobi deployment-stage`). Read its schema: the input is a local file for
+external agents, a linked project asset, or a paired World file. Put its returned
+ticket under `deploy.assets[token]` before quoting; tickets expire after two
+hours and cannot move to another session or endpoint.
+
+For local speech-to-text, read `genobi_voice_status` (`genobi voice-status`),
+then `genobi_voice_transcribe` (`genobi voice-transcribe`) with one audio source,
+linked project audio asset or external-agent local file. Read the schema for the
+supported language hints. Return the text for review; transcription itself
+executes no instruction and submits no generation. A studio-started agent must
+use a scoped source or asset and cannot read a local path through these tools.
 
 Load `genobi-camera` and `genobi-licensing` for the request. `genobi_quote` prices
 without generating. Show its recipe and estimate and obtain the person's

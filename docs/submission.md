@@ -312,8 +312,9 @@ success does not establish that those Cloud routes have been repaired.
   generated clip, edited the title and rendered an MP4 in the browser; not a
   fresh hosted generation
   ([remix verification](director-remix-verification.md#hosted-browser-smoke-and-deferred-api-acceptance)).
-- This snapshot has no verified deployment. Releases are run by hand after
-  checking D1 migrations ([Cloudflare](cloudflare.md#deployment)); nothing in CI deploys.
+- This snapshot has no verified deployment. Production deploys from a push
+  to `main` of this repository, after an approval on the `production` environment
+  ([Cloudflare](cloudflare.md#deployment)).
 
 ### Implemented, not yet shown working
 

@@ -14,10 +14,10 @@ let fixed: boolean;
 let settings: Promise<Response> | undefined;
 const getUserMedia = vi.fn().mockRejectedValue(new Error("Unexpected mic"));
 const request = vi.fn(async (url: string) => {
-  if (url === "/api/settings/run-location")
+  if (url === "/api/health")
     return (
       settings ??
-      Response.json({ revision: 1, location: "cloud", choices: [], fixed })
+      Response.json({ ok: true, hasServerKey: false, hosted: fixed })
     );
   if (url === "/api/voice/status")
     return Response.json({ available: true, maxSeconds: 180 });
@@ -114,9 +114,7 @@ it("waits for hosted detection when the mic is pressed immediately", async () =>
   expect(voiceCalls()).toEqual([]);
   expect(getUserMedia).not.toHaveBeenCalled();
   await act(async () => {
-    answer(
-      Response.json({ revision: 1, location: "cloud", choices: [], fixed }),
-    );
+    answer(Response.json({ ok: true, hasServerKey: false, hosted: fixed }));
   });
   await expectNotice();
 });
@@ -158,6 +156,32 @@ it("explains hosted voice in the Genobi bubble", async () => {
   const { AgentBubble } = await import("../src/agent/AgentBubble");
   await mount(<AgentBubble />);
   await click("Open Genobi activity");
+  await expectNotice();
+});
+
+it("conversation voice entry points open the same hosted explanation without recording", async () => {
+  const { default: VoiceButton } = await import("../src/voice/VoiceButton");
+  const { AgentVoiceButton } = await import("../src/voice/AgentVoiceButton");
+  const { voiceRouting } = await import("../src/voice/destination-store");
+  const session = {
+    id: "selected",
+    runner: "hermes" as const,
+    status: "running" as const,
+    prompt: "Scene",
+    startedAt: "",
+    lines: [],
+  };
+  await mount(
+    <>
+      <VoiceButton />
+      <AgentVoiceButton session={session} />
+    </>,
+  );
+  const speak = [...host.querySelectorAll("button")].find(
+    (button) => button.textContent === "Speak to agent",
+  );
+  await act(async () => speak!.click());
+  expect(voiceRouting().agent?.session.id).toBe("selected");
   await expectNotice();
 });
 
@@ -246,6 +270,6 @@ it("guards every voice client and the recorder on hosted", async () => {
   expect(voiceCalls()).toEqual([]);
   expect(getUserMedia).not.toHaveBeenCalled();
   expect(
-    request.mock.calls.filter(([url]) => url === "/api/settings/run-location"),
+    request.mock.calls.filter(([url]) => url === "/api/health"),
   ).toHaveLength(1);
 });

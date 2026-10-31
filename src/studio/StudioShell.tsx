@@ -52,7 +52,6 @@ import { NinjaResize, useNinjaGrid } from "./NinjaResize";
 import { lazyReload } from "../lazy-reload";
 import { projectAudio } from "../world-builder/project-audio";
 import { queueLayoutTake } from "../layout-take";
-import { useHostedStudio } from "../hosted-studio";
 const Scrolls = lazyReload(() => import("../scrolls/Scrolls"));
 const Director = lazyReload(() => import("../director/Director"));
 const WorldBuilder = lazyReload(() => import("../world-builder/WorldBuilder"));
@@ -66,7 +65,6 @@ const DualEditor = lazyReload(() =>
 const NOTICE_MS = 6000;
 
 export default function StudioShell() {
-  const hosted = useHostedStudio();
   const [preset, setPreset] = useState(() =>
     initialPreset(location.pathname, location.search),
   );
@@ -455,14 +453,10 @@ export default function StudioShell() {
                 active={visible.includes("world")}
                 onAsset={addAsset}
                 projectAudio={projectAudioChoices}
-                onLayoutTake={
-                  hosted
-                    ? undefined
-                    : async (take) => {
-                        await queueLayoutTake(take);
-                        select("camera");
-                      }
-                }
+                onLayoutTake={async (take) => {
+                  await queueLayoutTake(take);
+                  select("camera");
+                }}
               />
             </Suspense>
           )}

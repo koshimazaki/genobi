@@ -2,6 +2,7 @@ import type { RefObject } from "react";
 import type { SceneAdapter } from "./scene-adapter";
 import type { Take } from "./export-take";
 import { send } from "./session-io";
+import { takeRecipe } from "./take-recipe";
 
 /**
  * The embedded hand-offs: the first frame (and its depth) to the connected
@@ -31,12 +32,13 @@ export function sessionHandoffs(
   }
   async function toComfy() {
     const result = take ?? (await api.current!.capture());
+    const recipe = await takeRecipe(result);
     send({
       type: "director:take",
       video: result.video,
       first: result.first,
       depth: result.depth ?? null,
-      recipe: api.current!.getRecipe(),
+      recipe,
       audio: result.audio ?? null,
     });
     setStatus("Take sent to the connected Comfy editor.");

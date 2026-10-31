@@ -46,6 +46,31 @@ async function noOverflow(page, root) {
 }
 const recipe = (page) => page.evaluate(() => window.directorScene.getRecipe());
 
+/** Labels may wrap at spaces, but an export action must not split its words. */
+async function readableExports(panel) {
+  const buttons = panel.locator(".wb-capture-export > button");
+  assert((await buttons.count()) >= 3, "Export actions are present");
+  const broken = await buttons.evaluateAll((buttons) =>
+    buttons.flatMap((button) => {
+      const walker = document.createTreeWalker(button, NodeFilter.SHOW_TEXT);
+      const words = [];
+      for (let text = walker.nextNode(); text; text = walker.nextNode()) {
+        for (const match of text.textContent.matchAll(/\S+/g)) {
+          const range = document.createRange();
+          range.setStart(text, match.index);
+          range.setEnd(text, match.index + match[0].length);
+          const lines = new Set(
+            [...range.getClientRects()].map((r) => Math.round(r.top)),
+          );
+          if (lines.size > 1) words.push(match[0]);
+        }
+      }
+      return words.map((word) => `${button.textContent.trim()}: ${word}`);
+    }),
+  );
+  assert.deepEqual(broken, [], "Export labels wrap only between words");
+}
+
 const report = [];
 try {
   for (const [name, viewport] of Object.entries({
@@ -86,6 +111,11 @@ try {
     const badge = panel.locator(".wb-badge[data-tone]");
     assert.equal(await badge.textContent(), "ARMED");
 
+    const settings = panel.getByText("Capture settings", { exact: true });
+    assert.equal(await settings.evaluate((el) => el.parentElement.open), false);
+    await settings.focus();
+    await page.keyboard.press("Enter");
+    assert.equal(await settings.evaluate((el) => el.parentElement.open), true);
     await button("1:1").click();
     await page.waitForFunction(
       () => window.directorScene.getRecipe().width === 1024,
@@ -121,6 +151,28 @@ try {
     await page.waitForFunction(
       () => window.directorScene.getRecipe().height === 704,
     );
+    const bank = panel.getByRole("radiogroup", { name: "Quick take length" });
+    await bank.getByRole("radio", { name: "4s", exact: true }).focus();
+    for (const [key, label, frames] of [
+      ["ArrowRight", "5s", 121],
+      ["End", "10s", 241],
+      ["Home", "1s", 25],
+      ["ArrowLeft", "10s", 241],
+    ]) {
+      await page.keyboard.press(key);
+      await page.waitForFunction(
+        (frames) => window.directorScene.getRecipe().frames === frames,
+        frames,
+      );
+      const selected = bank.getByRole("radio", { name: label, exact: true });
+      assert.equal(await selected.getAttribute("aria-checked"), "true");
+      assert.equal(
+        await selected.evaluate((el) => document.activeElement === el),
+        true,
+        `${key} selects and focuses ${label}`,
+      );
+      assert.equal(await bank.locator('[tabindex="0"]').count(), 1);
+    }
     await noOverflow(page, ".wb-capture");
     await page.screenshot({ path: `${out}/${name}-docked-armed.png` });
 
@@ -145,6 +197,7 @@ try {
       assert(await button(label).isVisible(), label);
     assert.equal((await recipe(page)).frames, 25);
     await noOverflow(page, ".wb-capture");
+    await readableExports(panel);
     await page.screenshot({ path: `${out}/${name}-docked-ready.png` });
     await panel.screenshot({ path: `${out}/${name}-docked-panel.png` });
 
@@ -165,6 +218,7 @@ try {
         await pip.setViewportSize({ width: 380, height: 640 });
         await pip.waitForTimeout(300);
         await noOverflow(pip, ".wb-capture");
+        await readableExports(pip.locator(".wb-capture"));
         // Playwright's screenshot waits on the window's copied font faces,
         // which a Picture-in-Picture document never finishes loading.
         const cdp = await context.newCDPSession(pip);

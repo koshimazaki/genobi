@@ -1,9 +1,6 @@
 import { z } from "zod";
-import {
-  COPY_ID,
-  DIRECTOR_OPS,
-  parseCommand,
-} from "../shared/director/commands";
+import { COPY_ID, parseCommand } from "../shared/director/commands";
+import { directorCommandSchema } from "./director-command-schema";
 import { parseFeedback } from "../shared/director/feedback";
 import {
   requiredParameters,
@@ -18,6 +15,7 @@ import {
   SUBJECT_ACTIONS,
 } from "../shared/director/directions";
 import type { GraphicsModule, Layer, Project } from "../shared/director/types";
+import type { PromptBrief } from "../src/director/prompt-brief";
 import { findHouseTemplate } from "../shared/templates/catalogue";
 import type { ToolDefinition } from "./definition";
 
@@ -31,7 +29,7 @@ interface ProjectRead {
   revision: number;
   updatedAt: string;
   project: Project;
-  brief: { text: string } | null;
+  brief: PromptBrief | null;
 }
 
 // Two people's projects can share an id (templates reuse them), so an agent
@@ -103,6 +101,8 @@ export function projectSummary(read: ProjectRead) {
     globalPrompt: p.globalPrompt ?? "",
     // The earlier prompt brief, kept as context beside the global prompt.
     prompt: read.brief?.text ?? "",
+    // Preserve token → asset bindings so model references use the owner's actual files.
+    brief: read.brief ?? null,
     template: p.template ?? null,
     preferences: p.preferences ?? null,
     // The revision your last command left, which genobi_project_feedback
@@ -128,6 +128,7 @@ export function projectSummary(read: ProjectRead) {
       label: assetLabel(a.file.path),
       kind: a.kind,
       use: a.use,
+      file: a.file,
       durationSeconds: a.durationSeconds ?? null,
     })),
     recipes: Object.entries(p.modules).map(recipeSummary),
@@ -210,7 +211,7 @@ export const directorTools: ToolDefinition[] = [
     name: "genobi_project",
     title: "Genobi Director project",
     description:
-      "Read one Director project: its revision, globalPrompt (the primary direction for the whole piece), tracks with their clips (frames, in-point, placement with its start and motion end, recipe parameters, and each clip's own prompt and typed directions {shot, lens, camera, action} with directionWords), assets (assetId, label: the name it was added under such as a World take's, or null; kind, use, durationSeconds), graphics recipes with the parameters each takes (recipes, and registryRecipes the project can still bring in with add-graphic), template shots with their camera and prompt, the earlier project prompt brief (prompt), and frame notes (the person's review pinned to a frame and maybe a layer: noteId, frame, layerId, text, author, createdAt, resolved). Act on open notes, then resolve them. Send commands against the revision you read. agentRevision is the revision your last command left; genobi_project_feedback returns what the person changed since then.",
+      "Read one Director project: revision, globalPrompt, tracks/clips with timing, placement, parameters, prompts and directions; assets with assetId, label, kind, use, file path/hash and duration; recipes and registryRecipes; shots; complete brief (text plus reference bindings); and frame notes. Resolve brief.references to assets and pass image references to genobi_quote as projectImageReferences [{copyId,assetId}], in the intended order. The adapter reads the authorized file bytes; never invent references from filenames. Send commands against the revision you read. agentRevision is the revision your last command left; genobi_project_feedback returns the person's changes since then.",
     inputSchema: { copyId },
     tags: ["agents", "mcp", "director", "bundle"],
     docs: [
@@ -253,6 +254,7 @@ export const directorTools: ToolDefinition[] = [
       "Commands: add-clip {layerId (new), assetId, track (track id or new), startFrame, durationFrames, name?, sourceStartFrame? (in-point, source frames, audio and video only)};",
       "add-graphic {layerId (new), moduleId, track, startFrame, durationFrames, name?, parameters? {name: value}} (a recipe from recipes or registryRecipes; parameters go over the settings of a layer already using it, and a recipe no layer uses needs every name in its required list, each checked against its type and range);",
       "move-clip {layerId, startFrame, track?}; trim-clip {layerId, startFrame, durationFrames};",
+      "split-clip {layerId, frame, newLayerId} (cut strictly inside the clip on a composition frame; keeps source samples, animation and track); duplicate-clip {layerId, newLayerId} (independent unlocked copy on a new lane at the top of the stack); remove-clip {layerId} (keeps media/provenance and detaches its review notes to their frames); set-muted {layerId, muted: boolean} (audio mute or visual hide); set-gain {layerId, gain} (audio only, 0 to 2). Split, remove and gain respect locks; copying and mute follow the UI's allowed operations on locked clips without unlocking or changing the original. New ids must not collide with any clip or track.",
       "set-placement {layerId, position? {x?, y?} (composition pixels from the centre, y down), scale? (0-10], opacity? [0,1], rotationDegrees? [-360,360], motion? {scaleTo?, xTo?, yTo?, opacityTo?} (the end it moves to linearly over the clip) or null} (video, image and graphics layers);",
       "set-parameters {layerId, parameters: {name: value}} (a graphics or filter recipe's declared parameters, text included; genobi_project lists each recipe's names, types and ranges);",
       "set-resolution {width, height} (whole pixels 16-4096 per side, width × height <= 1920 × 1080; presets 960×540, 1280×720, 1920×1080; rescales composition-pixel positions and motion offsets, preserving fitted zoom ratios and timing; for Match assets measure the largest video and fit the current aspect ratio within it and the pixel cap, using even dimensions);",
@@ -270,12 +272,9 @@ export const directorTools: ToolDefinition[] = [
         .int()
         .min(1)
         .describe("The revision genobi_project returned"),
-      command: z
-        .object({ op: z.enum(DIRECTOR_OPS as [string, ...string[]]) })
-        .passthrough()
-        .describe(
-          "One command, for example {op: 'move-clip', layerId: 'title', startFrame: 30}",
-        ),
+      command: directorCommandSchema.describe(
+        "One command, for example {op: 'move-clip', layerId: 'title', startFrame: 30}",
+      ),
     },
     // The base revision makes a repeat a refused conflict, not a second edit;
     // every command stays undoable in the studio.

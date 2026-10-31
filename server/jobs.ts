@@ -1,3 +1,4 @@
+import { isKleinEdit, kleinFiles } from "../shared/comfy/klein-edit";
 import { WorkflowDestinations } from "./workflow-destinations";
 import { pollJob } from "./job-poll";
 import { DeploymentAssets } from "./deployment-assets";
@@ -117,8 +118,8 @@ export class JobService {
   /**
    * The checks and price a submission and a quote share, so a quote can never
    * promise a run the submission would refuse or price differently.
-   * `sourceSession` holds an upscale's source: a picked take, or an
-   * approval's quoted clip.
+   * `sourceSession` holds an upscale's source or deployment input tickets:
+   * a picked take, or an approval's explicitly quoted inputs.
    */
   private async price(
     input: GenerateInput,
@@ -134,7 +135,11 @@ export class JobService {
     )
       throw notConfigured({ kind: plan.location });
     if (isDeployModel(model)) {
-      this.deploymentAssets.validate(input, sessionId, plan.deployment!.url);
+      this.deploymentAssets.validate(
+        input,
+        sourceSession,
+        plan.deployment!.url,
+      );
       workflowRun(
         entryFor(input.generator, model).model,
         input,
@@ -328,7 +333,7 @@ export class JobService {
             ? this.deploymentAssets.values(
                 values,
                 input,
-                sessionId,
+                terms?.sourceSession ?? sessionId,
                 take.recipe.deployment.url,
               )
             : values;
@@ -336,6 +341,9 @@ export class JobService {
           idempotencyKey: job.id,
           location: take.recipe.location,
           deployment: take.recipe.deployment,
+          ...(isKleinEdit(requestInput)
+            ? { files: kleinFiles(requestInput) }
+            : {}),
           ...(source
             ? {
                 files: clipFiles(

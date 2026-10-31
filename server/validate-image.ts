@@ -2,7 +2,6 @@ import {
   MAX_IMAGE_REQUEST_BYTES,
   IMAGE_DESCRIPTION_LIMIT,
   imageReference,
-  isKlein,
 } from "../shared/image";
 import { LayoutError, readLayout } from "../shared/image-layout";
 import { entryFor } from "../shared/registry";
@@ -29,11 +28,6 @@ export function validateImage(
   const model = (body.model ?? "flux-3") as GenerateInput["model"];
   if (typeof model !== "string" || !IMAGE_MODELS.has(model))
     throw new AppError(400, "Images run on FLUX 3 or FLUX 3 Image Klein.");
-  if (isKlein(model) && generator !== "image")
-    throw new AppError(
-      400,
-      "Klein makes images here; edits run on FLUX 3 Edit for now.",
-    );
   const controls = entryFor(generator, model).controls;
   if (controls.kind !== "image")
     throw new AppError(400, "Choose supported image settings.");
@@ -91,6 +85,12 @@ export function validateImage(
     Number(tolerance) > 4
   )
     throw new AppError(400, "Choose supported image settings.");
+  if (model === "flux-3-klein" && refs.length && ratio !== "auto")
+    throw new AppError(
+      400,
+      "Klein's open image edits preserve the first reference's aspect ratio. Use auto, or choose the API run for a different canvas.",
+      "invalid_image_aspect",
+    );
   const cameraEnabled = controls.camera && body.cameraEnabled === true;
   let still = {};
   if (cameraEnabled) {

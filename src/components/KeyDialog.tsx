@@ -7,6 +7,7 @@ import { useModalDialog } from "./useModalDialog";
 import { KeySlot, LocalAgentStatus, useLocalKeys } from "./LocalKeys";
 import RunLocationField from "./RunLocationField";
 import { PageKeyForm } from "./PageKeyForm";
+import { CloudWorkflowCheck } from "./CloudWorkflowCheck";
 import type { KeysStatus } from "../../shared/keys";
 import "../styles/studio-settings.css";
 
@@ -103,12 +104,13 @@ export default function KeyDialog({
       <div className="settings-grid">
         <SettingsSection
           title="Studio setup"
-          subtitle="Local ComfyUI, Comfy Cloud or both"
+          subtitle="Local ComfyUI, Comfy Cloud or deployment"
           open
         >
           <RunLocationField />
           <p>
-            Connect with your Comfy API key for Comfy Router and Comfy Cloud.
+            Connect your Comfy API key for Router, Cloud or your deployment.
+            Deployment GPU time is billed to its owning Comfy workspace.
           </p>
           {keychain && keys ? (
             <KeySlot
@@ -126,6 +128,10 @@ export default function KeyDialog({
               ? "Saved in this machine’s macOS Keychain. This page receives connection status only."
               : "One key at a time for this visit. Kept in page memory; cleared on refresh or disconnect."}
           </p>
+          <CloudWorkflowCheck
+            apiKey={value}
+            connectionRevision={`${keys?.comfy.connected ?? false}:${keys?.comfy.revision ?? 0}`}
+          />
         </SettingsSection>
         <SettingsSection
           title="BFL key"

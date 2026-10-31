@@ -8,7 +8,12 @@ import {
 } from "../shared/comfy/deploy-workflows";
 import { isH3 } from "../shared/h3";
 import { isH3Router } from "../shared/comfy/h3-router";
-import { IMAGE_DESCRIPTION_LIMIT, isImage, isKlein } from "../shared/image";
+import {
+  IMAGE_DESCRIPTION_LIMIT,
+  imageEditing,
+  isImage,
+  isKlein,
+} from "../shared/image";
 import { entryFor } from "../shared/registry";
 import { imagePrompt, regionBlocker } from "./image-regions";
 import { ltxBlocked } from "./ltx-composer";
@@ -55,10 +60,10 @@ export function composerBlocked(
   const regions = isKlein(state.model) ? state.imageRegions : [];
   if (!composed.trim()) return true;
   if (
-    imagePrompt(state.description, regions, generator === "edit").length >
+    imagePrompt(state.description, regions, imageEditing(state)).length >
     IMAGE_DESCRIPTION_LIMIT
   )
     return true;
-  if (generator === "edit" && !state.imageReferences?.length) return true;
-  return Boolean(regionBlocker(regions, generator === "edit"));
+  if (imageEditing(state) && !state.imageReferences?.length) return true;
+  return Boolean(regionBlocker(regions, imageEditing(state)));
 }

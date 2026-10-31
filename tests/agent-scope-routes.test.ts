@@ -1,11 +1,10 @@
 // Picks and context (issue #23): one read scope, every route. An agent's
 // session may read, as the person's, exactly its picked takes and the upscale
 // source in "these settings", through every route that reads a job, take or
-// source by id (`SCOPED_READS`), and nothing else. The test acts as the
-// session's Genobi MCP server: the agent mark and the grant the fake runner
+// source by id (`SCOPED_READS`), and nothing else. The test acts as the session's
+// Genobi MCP server: the agent mark and the grant the fake runner
 // reports. It also checks that every route the server registers is either
-// scoped or named below with the reason it is not, so a new one cannot be
-// missed. Fake provider only.
+// scoped or named below with a reason, so none can be missed. Fake provider only.
 import { createHash } from "node:crypto";
 import { readdirSync, readFileSync } from "node:fs";
 import { readFile } from "node:fs/promises";
@@ -21,6 +20,7 @@ import { input } from "./server-harness";
 
 /** Every other route, and why the read scope does not apply to it. */
 const NOT_SCOPED: Record<string, string> = {
+  "GET /api/capabilities": "runtime feature metadata; names no private media",
   "GET /api/agent/sessions":
     "answers no session locally; reads nothing of the person's",
   "GET /api/runner/status": "pairing owner status only; marked agents refused",

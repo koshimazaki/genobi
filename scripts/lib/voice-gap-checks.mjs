@@ -105,6 +105,7 @@ export async function gapChecks({ open, checks, output }) {
     const { context, page, voice, sent } = await open({
       path: "/?workspace=camera",
       text: "Make a video with LTX of a lighthouse.",
+      destination: "camera",
     });
     await ltxTab(page, "Action");
     await speak(page, voice);

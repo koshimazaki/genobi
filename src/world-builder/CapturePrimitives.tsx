@@ -4,7 +4,7 @@
  * Holodeck-LICENSE.txt). The geometry and roles are Holodeck's; the styling
  * is camera-director's tokens in capture-panel.css.
  */
-import type { ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
 import type { CaptureTone } from "./capture-panel";
 
 /** A compact status marker; a dot pulses while something runs. */
@@ -95,17 +95,43 @@ export function SegmentedBank({
   onChange: (value: string) => void;
   disabled?: boolean;
 }) {
+  const buttons = useRef<(HTMLButtonElement | null)[]>([]);
+  const selected = Math.max(
+    0,
+    options.findIndex((option) => option.value === value),
+  );
   return (
     <div className="wb-bank" role="radiogroup" aria-label={label}>
-      {options.map((option) => (
+      {options.map((option, index) => (
         <button
           key={option.value}
+          ref={(element) => {
+            buttons.current[index] = element;
+          }}
           type="button"
           role="radio"
           aria-checked={option.value === value}
+          tabIndex={index === selected ? 0 : -1}
           title={option.title}
           disabled={disabled}
           onClick={() => onChange(option.value)}
+          onKeyDown={(event) => {
+            const next =
+              event.key === "ArrowRight" || event.key === "ArrowDown"
+                ? (index + 1) % options.length
+                : event.key === "ArrowLeft" || event.key === "ArrowUp"
+                  ? (index + options.length - 1) % options.length
+                  : event.key === "Home"
+                    ? 0
+                    : event.key === "End"
+                      ? options.length - 1
+                      : null;
+            if (!disabled && next !== null) {
+              event.preventDefault();
+              onChange(options[next].value);
+              buttons.current[next]?.focus();
+            }
+          }}
         >
           {option.label}
         </button>

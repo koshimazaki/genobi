@@ -3,6 +3,11 @@ import { act, useReducer } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { afterEach, expect, it, vi } from "vitest";
 import ComposerWorkspace from "../src/components/ComposerWorkspace";
+import DeploymentWorkspace from "../src/components/DeploymentWorkspace";
+import {
+  HOSTED_DEPLOY_INPUT_BYTES,
+  LOCAL_DEPLOY_INPUT_BYTES,
+} from "../shared/comfy/deploy-file";
 import {
   layoutComposer,
   useLayoutTake,
@@ -139,3 +144,59 @@ it("keeps a capture pending when its attachment finishes after switching models,
   expect(useLayoutTake.getState().pending).toBeUndefined();
   expect(fetch).not.toHaveBeenCalled();
 });
+
+it.each([
+  [HOSTED_DEPLOY_INPUT_BYTES, false],
+  [LOCAL_DEPLOY_INPUT_BYTES, true],
+])(
+  "validates a 40 MB attachment against the advertised %i byte cap",
+  async (limit, accepted) => {
+    vi.stubGlobal("IS_REACT_ACT_ENVIRONMENT", true);
+    useSettingsStore.setState({
+      runLocation: { ...HOSTED_RUN_LOCATION, deploymentInputBytes: limit },
+    });
+    vi.mocked(request).mockResolvedValue({ id: "attached-take" });
+    const onError = vi.fn();
+    const update = vi.fn();
+    const host = document.createElement("div");
+    root = createRoot(host);
+    act(() =>
+      root!.render(
+        <DeploymentWorkspace
+          state={{ ...initialComposer, model: "ltx-deploy-layout-to-video" }}
+          update={update}
+          apiKey=""
+          onError={onError}
+          onBusy={() => {}}
+          onOpenCamera={() => {}}
+          onOpenAcoustic={() => {}}
+        />,
+      ),
+    );
+    expect(host.textContent).toContain(
+      `up to ${limit / 1_000_000} MB per input`,
+    );
+    const file = new File(["fixture"], "scene.webm", { type: "video/webm" });
+    Object.defineProperty(file, "size", { value: 40_000_000 });
+    const field = host.querySelector<HTMLInputElement>(
+      'input[type="file"][accept=".webm"]',
+    )!;
+    Object.defineProperty(field, "files", { value: [file] });
+    await act(async () =>
+      field.dispatchEvent(new Event("change", { bubbles: true })),
+    );
+    expect(request).toHaveBeenCalledTimes(accepted ? 1 : 0);
+    if (accepted) {
+      expect(update).toHaveBeenCalledExactlyOnceWith({
+        deploy: expect.objectContaining({
+          assets: { TAKE_WEBM: "attached-take" },
+        }),
+      });
+    } else {
+      expect(update).not.toHaveBeenCalled();
+      expect(onError).toHaveBeenLastCalledWith(
+        expect.stringContaining("32 MB"),
+      );
+    }
+  },
+);

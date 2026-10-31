@@ -132,3 +132,25 @@ Input names were read from ComfyUI's source (`comfy_extras/nodes_textgen.py`,
 `sampling_mode.*` inputs. None of this has run: no Cloud or local submission,
 no `/api/object_info` read, and no image made. `tests/klein-workflow.test.ts`
 checks the links, slots, models and the class list above.
+
+## Editing an existing image
+
+A request with references uses the derived graph in `shared/comfy/klein-edit.ts`,
+following Comfy's official `image_flux3_klein_distilled_image_edit.json`. Each
+image is a `LoadImage` input to `ReferenceMultiLatent`, connected to both positive
+and negative conditioning. Its empty latent follows the first reference's aspect;
+the chosen tier sets the reference megapixels. The caption and edit-box rows go
+directly to the encoder so a text-only upsampler cannot remove their coordinates.
+The existing diffusion/encoder/VAE model slots and output node are retained.
+
+Source-conditioned open edits require `imageAspect: "auto"` (or its default).
+An explicit canvas ratio is rejected rather than silently ignored; use the API
+route if the edit needs a different canvas. Local model-file overrides apply
+only to slots present in the derived graph, so a configured text-only
+`upsampler_encoder` does not break image edits.
+
+Local and hosted adapters upload the actual source bytes before the one reserved
+job submission. Hosted uploads use the official low-level SDK transport because
+the high-level SDK's runtime WASM hashing cannot execute in workerd. The server
+computes the asset hash. Validation and mocked submissions pass; no live paid
+edit is claimed by these checks. Boxes guide edits; they are not masks.

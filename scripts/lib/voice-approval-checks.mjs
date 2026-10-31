@@ -10,7 +10,7 @@ import { listening, transcribed } from "./voice-fixture.mjs";
 
 const QUOTE = "0f6c3c2e-6b1a-4f0e-9a43-3d7b0f3c9a11";
 const session = {
-  id: "session-1",
+  id: "11111111-1111-4111-8111-111111111111",
   runner: "claude",
   prompt: "fixture",
   startedAt: "2026-10-21T12:00:00.000Z",
@@ -67,15 +67,15 @@ async function waitingStep(open, answers) {
   const opened = await open({
     agent: agent(answers),
     path: "/",
+    destination: "agent",
   });
   const { page, voice } = opened;
   await voice.click();
   await listening(page);
   await page.waitForTimeout(700);
   await transcribed(page);
-  await page
-    .getByRole("button", { name: /Do it in a session|Send to agent instead/ })
-    .click();
+  await page.getByText(/^Sent to Claude Code\./).waitFor();
+  assert.equal(opened.sent.messages.length, 1);
   await page.getByText("Waiting for your approval").waitFor({ timeout: 8000 });
   return opened;
 }

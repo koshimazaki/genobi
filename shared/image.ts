@@ -63,6 +63,12 @@ export const isImage = (generator: Generator) =>
 /** Either way of running FLUX 3 Image Klein. */
 export const isKlein = (model: VideoModel | undefined) =>
   model === "flux-3-klein" || model === "flux-3-klein-api";
+/** A Klein image with references edits its first image, without a prior generation. */
+export const imageEditing = (
+  input: Pick<GenerateInput, "generator" | "model" | "imageReferences">,
+) =>
+  input.generator === "edit" ||
+  (isKlein(input.model) && Boolean(input.imageReferences?.length));
 export const estimateImageUsd = (
   input: Pick<GenerateInput, "model" | "imageResolution">,
 ) => {

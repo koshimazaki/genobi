@@ -91,7 +91,9 @@ describe("Arena ownership, persistence and concurrent edits", () => {
     const delivered = await send(route, owner);
     expect(delivered.status).toBe(200);
     expect(delivered.headers.get("content-type")).toContain("video/mp4");
-    expect(Buffer.from(await delivered.arrayBuffer())).toEqual(bytes);
+    // Compare every byte in native code: a deep walk of this MP4 can stall
+    // the listener past keep-alive expiry before the next Range request.
+    expect(Buffer.from(await delivered.arrayBuffer()).equals(bytes)).toBe(true);
     const partial = await fetch(studio.base + "/api/arena" + route, {
       headers: { cookie: owner, range: "bytes=0-15" },
     });

@@ -9,6 +9,8 @@
       "meaning": "Plans, sequencing, scope decisions and requirement capture",
       "pages": [
         "agent-workspace.md",
+        "audiovisual-gaps.md",
+        "audiovisual-implementation.md",
         "director-studio-shell.md",
         "dual-editor-editing.md",
         "genmod.md",
@@ -25,6 +27,7 @@
       "pages": [
         "activity-settings.md",
         "architecture.md",
+        "audiovisual-gpu-evaluation.md",
         "cloudflare.md",
         "read-through.md",
         "review-checklist.md",
@@ -38,9 +41,13 @@
       "pages": [
         "akuspace-docker.md",
         "arena.md",
+        "audiovisual-gaps.md",
+        "audiovisual-gpu-evaluation.md",
+        "audiovisual-implementation.md",
         "comfy-cloud-inventory.md",
         "comfy-deploy.md",
         "comfy-deployment.md",
+        "comfy-readiness.md",
         "director-comfy.md",
         "genmod.md",
         "media-space.md",
@@ -161,7 +168,8 @@
         "world-builder-sound.md",
         "world-builder-verification.md",
         "world-builder.md",
-        "world-live.md"
+        "world-live.md",
+        "world-recipe-handoff.md"
       ]
     },
     "sound": {
@@ -172,6 +180,9 @@
         "akuspace-docker.md",
         "anime-teaser-template.md",
         "audio-analysis.md",
+        "audiovisual-gaps.md",
+        "audiovisual-gpu-evaluation.md",
+        "audiovisual-implementation.md",
         "bloom-teaser.md",
         "camera-wording.md",
         "comfy-deploy.md",
@@ -207,6 +218,7 @@
         "arena.md",
         "audio-analysis.md",
         "capabilities.md",
+        "comfy-readiness.md",
         "credits/README.md",
         "director-agent-tools.md",
         "director-bundle/README.md",
@@ -251,13 +263,15 @@
         "voice-mode.md",
         "workflow-reference-library.md",
         "world-builder.md",
-        "world-live.md"
+        "world-live.md",
+        "world-recipe-handoff.md"
       ]
     },
     "setup": {
       "meaning": "First-run setup, keys, harness sign-in and onboarding",
       "pages": [
         "agent-setup.md",
+        "comfy-readiness.md",
         "getting-started.md",
         "teachings.md",
         "troubleshooting.md"
@@ -286,6 +300,8 @@
         "agent-setup.md",
         "architecture.md",
         "audio-analysis.md",
+        "audiovisual-gaps.md",
+        "audiovisual-implementation.md",
         "bfl-key-reuse.md",
         "cloudflare.md",
         "comfy-deploy.md",
@@ -315,10 +331,12 @@
       "meaning": "Comfy Cloud, Comfy Router, workflows and nodes",
       "pages": [
         "akuspace-docker.md",
+        "audiovisual-gpu-evaluation.md",
         "camera-wording.md",
         "comfy-cloud-inventory.md",
         "comfy-deploy.md",
         "comfy-deployment.md",
+        "comfy-readiness.md",
         "director-comfy.md",
         "director-remix-verification.md",
         "getting-started.md",
@@ -426,6 +444,9 @@
       "meaning": "World Builder and Scene Adapter",
       "pages": [
         "adaptive-reverb.md",
+        "audiovisual-gaps.md",
+        "audiovisual-gpu-evaluation.md",
+        "audiovisual-implementation.md",
         "comfy-deploy.md",
         "director-bundle/showcase/adaptive-reverb/README.md",
         "project-assets.md",
@@ -435,7 +456,8 @@
         "world-builder-interface.md",
         "world-builder-sound.md",
         "world-builder-verification.md",
-        "world-builder.md"
+        "world-builder.md",
+        "world-recipe-handoff.md"
       ]
     },
     "bundle": {
@@ -469,6 +491,9 @@
       "meaning": "What was run and what it showed",
       "pages": [
         "adaptive-reverb-proof.md",
+        "audiovisual-gaps.md",
+        "audiovisual-gpu-evaluation.md",
+        "audiovisual-implementation.md",
         "director-remix-verification.md",
         "director-working-version.md",
         "dual-editor.md",
@@ -595,6 +620,9 @@
         "architecture.md",
         "arena.md",
         "audio-analysis.md",
+        "audiovisual-gaps.md",
+        "audiovisual-gpu-evaluation.md",
+        "audiovisual-implementation.md",
         "bfl-key-reuse.md",
         "bloom-teaser.md",
         "camera-wording.md",
@@ -603,6 +631,7 @@
         "comfy-cloud-inventory.md",
         "comfy-deploy.md",
         "comfy-deployment.md",
+        "comfy-readiness.md",
         "construction-motion.md",
         "credits.md",
         "credits/README.md",
@@ -718,7 +747,8 @@
         "world-builder-sound.md",
         "world-builder-verification.md",
         "world-builder.md",
-        "world-live.md"
+        "world-live.md",
+        "world-recipe-handoff.md"
       ]
     },
     {
@@ -856,6 +886,7 @@
         "cloudflare.md",
         "comfy-deploy.md",
         "comfy-deployment.md",
+        "comfy-readiness.md",
         "construction-motion.md",
         "director-bundle/README.md",
         "director-generate.md",
@@ -892,6 +923,59 @@
       "tags": ["sound", "backend", "agents", "mcp"],
       "summary": "Audio analysis on the local server — tempo and a fitted beat grid, a downbeat estimate, onsets per band, intensity and key moments, with no Python; the optional librosa worker; the agent flow through genobi_audio_upload and genobi_audio_analysis.",
       "links": []
+    },
+    {
+      "title": "Audiovisual scene gap audit",
+      "path": "audiovisual-gaps.md",
+      "tags": [
+        "plan",
+        "verification",
+        "world-builder",
+        "sound",
+        "workflows",
+        "backend"
+      ],
+      "summary": "Source-backed audit of the seventeen audiovisual PRD gaps, existing safeguards, proposed fixes, and the evidence still needed before release.",
+      "links": [
+        "adaptive-reverb-proof.md",
+        "audiovisual-gpu-evaluation.md",
+        "audiovisual-implementation.md",
+        "comfy-deploy.md",
+        "licence-strategy.md",
+        "world-builder-sound.md"
+      ]
+    },
+    {
+      "title": "Audiovisual GPU and evaluator runbook",
+      "path": "audiovisual-gpu-evaluation.md",
+      "tags": [
+        "verification",
+        "workflows",
+        "comfy",
+        "world-builder",
+        "sound",
+        "architecture"
+      ],
+      "summary": "Operator runbook for staged audiovisual GPU qualification, CPU-first sound evaluation, managed deployment acceptance and evaluator access.",
+      "links": [
+        "adaptive-reverb-proof.md",
+        "audiovisual-implementation.md",
+        "comfy-deploy.md"
+      ]
+    },
+    {
+      "title": "Audiovisual scene implementation plan",
+      "path": "audiovisual-implementation.md",
+      "tags": [
+        "plan",
+        "verification",
+        "world-builder",
+        "sound",
+        "workflows",
+        "backend"
+      ],
+      "summary": "Ten linked implementation issues, a Camera-consistent user flow, two-agent sequencing, modular scene contracts, and release gates for one reproducible audiovisual template.",
+      "links": ["audiovisual-gaps.md", "audiovisual-gpu-evaluation.md"]
     },
     {
       "title": "Reuse a BFL Dashboard key",
@@ -937,6 +1021,7 @@
         "camera-wording.md",
         "cloudflare.md",
         "comfy-cloud-inventory.md",
+        "comfy-deploy.md",
         "comfy-deployment.md",
         "dimensions-mix.md",
         "director-agent-tools.md",
@@ -1000,7 +1085,7 @@
       "path": "comfy-cloud-inventory.md",
       "tags": ["workflows", "comfy", "models", "licences"],
       "summary": "What Comfy Cloud runs for Genobi today, what needs importing, and what stays local.",
-      "links": ["architecture.md", "machine-check.md"]
+      "links": ["architecture.md", "comfy-readiness.md", "machine-check.md"]
     },
     {
       "title": "Deploy the key LTX and World Builder workflows",
@@ -1022,6 +1107,13 @@
       "tags": ["workflows", "comfy", "backend", "models", "research"],
       "summary": "A Comfy Developer Platform build recipe for the Openjutsu swap, AKUSPACE and Layout-to-Render from one set of pins in comfy-build/; how comfy build push treats weights, the shared ComfyUI version, sizes per workflow and one build versus several.",
       "links": ["akuspace-docker.md", "comfy-deploy.md"]
+    },
+    {
+      "title": "Check Comfy Cloud workflows",
+      "path": "comfy-readiness.md",
+      "tags": ["workflows", "comfy", "agents", "setup"],
+      "summary": "Read-only Comfy Cloud node and model checks from Settings, HTTP, MCP and CLI, with explicit metadata and execution limits.",
+      "links": []
     },
     {
       "title": "Signal: construction video workflows",
@@ -1468,7 +1560,9 @@
       "links": [
         "capabilities.md",
         "hermes-open-route.md",
+        "run-location.md",
         "taste-memory.md",
+        "voice-mode.md",
         "world-live.md"
       ]
     },
@@ -1753,12 +1847,14 @@
         "architecture.md",
         "arena.md",
         "audio-analysis.md",
+        "comfy-deploy.md",
         "credits/README.md",
         "director-agent-tools.md",
         "director-bundle/README.md",
         "director-working-version.md",
         "dual-editor.md",
         "falling-room.md",
+        "genobi-cli.md",
         "hermes-runs.md",
         "licence-strategy.md",
         "machine-check.md",
@@ -1775,8 +1871,10 @@
         "taste-memory.md",
         "templates.md",
         "upscaling.md",
+        "voice-mode.md",
         "world-builder.md",
-        "world-live.md"
+        "world-live.md",
+        "world-recipe-handoff.md"
       ]
     },
     {
@@ -1795,6 +1893,7 @@
         "audio-analysis.md",
         "camera-wording.md",
         "capabilities.md",
+        "comfy-deploy.md",
         "comfy-deployment.md",
         "credits/README.md",
         "director-agent-tools.md",
@@ -1826,8 +1925,10 @@
         "taste-memory.md",
         "templates.md",
         "upscaling.md",
+        "voice-mode.md",
         "world-builder.md",
-        "world-live.md"
+        "world-live.md",
+        "world-recipe-handoff.md"
       ]
     },
     {
@@ -1841,8 +1942,8 @@
       "title": "Run location and workflow swapping",
       "path": "run-location.md",
       "tags": ["workflows", "comfy", "backend", "studio", "mcp"],
-      "summary": "Run location (Local ComfyUI or Comfy Cloud), the local ComfyUI client, workflow swapping and the local model map.",
-      "links": ["comfy-deploy.md", "openjutsu-swap.md"]
+      "summary": "Local ComfyUI, Comfy Cloud and registered deployments; capability-aware controls, workflow swapping and the local model map.",
+      "links": ["comfy-deploy.md", "comfy-readiness.md", "openjutsu-swap.md"]
     },
     {
       "title": "Hosted runner pairing",
@@ -2144,14 +2245,14 @@
       "title": "Voice mode",
       "path": "voice-mode.md",
       "tags": ["agents", "studio", "backend", "models"],
-      "summary": "Voice mode in the studio header — one-click recording, local Qwen3-ASR transcription through a Python worker, the WIE-style LED waveform, where the transcript goes (a spoken generation request to Camera, the prompt on screen, or an agent session), the language setting, setup and what stays on the machine.",
+      "summary": "Local voice transcription with an agent-first remembered destination, pinned conversations, explicit prompt dictation, language selection and hosted limits.",
       "links": [
         "agent-approvals.md",
         "agent-context.md",
         "agent-sessions.md",
         "agent-setup.md",
-        "voice-setup.md",
-        "world-builder.md"
+        "genobi-cli.md",
+        "voice-setup.md"
       ]
     },
     {
@@ -2186,8 +2287,8 @@
       "title": "World Builder · Capture panel",
       "path": "world-builder-capture.md",
       "tags": ["3d", "world-builder"],
-      "summary": "The World Builder Capture panel ported from Holodeck — badge, record button, format, rate and time, passes and outputs.",
-      "links": ["world-builder-controls.md", "world-builder.md"]
+      "summary": "The World Builder Capture panel — current format, capture and output first, with optional format and pass settings.",
+      "links": ["world-builder-controls.md"]
     },
     {
       "title": "World Builder controls",
@@ -2241,7 +2342,8 @@
         "world-builder-interface.md",
         "world-builder-sound.md",
         "world-builder-verification.md",
-        "world-live.md"
+        "world-live.md",
+        "world-recipe-handoff.md"
       ]
     },
     {
@@ -2250,6 +2352,13 @@
       "tags": ["3d", "agents", "mcp"],
       "summary": "Walk, switch characters, animate the local creature, and record camera and character movement through World, API or CLI.",
       "links": ["world-builder.md"]
+    },
+    {
+      "title": "World Builder recipe handoffs",
+      "path": "world-recipe-handoff.md",
+      "tags": ["3d", "world-builder", "agents"],
+      "summary": "Revision-checked agent recipe handoffs, concurrent human edits, target tabs and ephemeral live scene guards.",
+      "links": []
     }
   ]
 }

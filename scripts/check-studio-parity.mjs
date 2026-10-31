@@ -9,7 +9,13 @@ const base = process.env.DIRECTOR_URL ?? "http://127.0.0.1:5496";
 assert(["127.0.0.1", "localhost"].includes(new URL(base).hostname));
 const output = ".local/studio-parity";
 await mkdir(output, { recursive: true });
-const browser = await chromium.launch({ headless: true });
+const browser = await chromium.launch({
+  headless: true,
+  ...(process.env.DIRECTOR_BROWSER_PATH
+    ? { executablePath: process.env.DIRECTOR_BROWSER_PATH }
+    : {}),
+  args: ["--use-angle=swiftshader", "--enable-unsafe-swiftshader"],
+});
 async function pageFor(width) {
   const page = await browser.newPage({ viewport: { width, height: 1000 } });
   await page.addInitScript(() =>
@@ -122,6 +128,25 @@ try {
             exact: true,
           })
           .waitFor();
+      if (workspace === "director" || workspace === "editor") {
+        const intake = page.getByRole("dialog", {
+          name: "Generate my version",
+        });
+        await intake.waitFor();
+        assert(
+          await intake.evaluate(
+            (panel) => panel.scrollWidth <= panel.clientWidth,
+          ),
+          `${workspace} ${width}: generation intake fits without horizontal scrolling`,
+        );
+        await page.screenshot({
+          path: `${output}/${width}-${workspace}-intake.png`,
+        });
+        await intake
+          .getByRole("button", { name: "Close Generate my version" })
+          .click();
+        await intake.waitFor({ state: "detached" });
+      }
       if (workspace === "world")
         await page.getByLabel("World Builder scene", { exact: true }).waitFor();
       if (workspace === "camera")
@@ -138,7 +163,7 @@ try {
         const first = page
           .locator(
             workspace === "gallery"
-              ? ".template-cards"
+              ? ".template-gallery"
               : ".genobi-grid > section:not([hidden])",
           )
           .first();
@@ -277,7 +302,7 @@ try {
     assert.deepEqual(errors, []);
     await page.close();
     console.log(
-      `PASS ${width}: tool headings, Assets alignment, direct Camera generation, 3D menu and Ninja revisit`,
+      `PASS ${width}: tool headings, generation intake, Assets alignment, direct Camera generation, 3D menu and Ninja revisit`,
     );
   }
 } finally {

@@ -17,6 +17,7 @@ import type { JobService } from "./jobs";
 import { requireKey } from "./errors";
 import { validateInput } from "./validation";
 import type { WorkflowSettings } from "./workflow-settings";
+import { takeOutputs } from "../shared/take";
 
 /**
  * What a session start needs from the studio: whether the person owns a
@@ -138,13 +139,40 @@ export function scopeAgentRequest(
   agents: Pick<AgentSessions, "scope">,
   request: express.Request,
   locals: Record<string, unknown>,
+  store?: Store,
 ) {
   if (!locals.agent) return;
   const grant = request.headers[AGENT_RUN_HEADER.toLowerCase()];
-  locals.agentScope = agents.scope(
+  const scope = agents.scope(
     locals.sessionId as string,
     typeof grant === "string" ? grant : undefined,
   );
+  if (!scope || !store) {
+    locals.agentScope = scope;
+    return;
+  }
+  // A picked take grants its actual saved outputs, never a guessed id prefix.
+  // Recomputed per request so outputs finishing after the pick become readable.
+  const readable = new Set(scope.readable);
+  for (const job of store.data.jobs) {
+    if (
+      job.sessionId !== scope.owner ||
+      job.status !== "Ready" ||
+      !scope.readable.has(job.id)
+    )
+      continue;
+    for (const output of takeOutputs(job)) {
+      if (
+        output.available &&
+        store.data.sources.some(
+          (source) =>
+            source.id === output.assetId && source.sessionId === scope.owner,
+        )
+      )
+        readable.add(output.assetId);
+    }
+  }
+  locals.agentScope = { ...scope, readable };
 }
 
 /**

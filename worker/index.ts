@@ -1,8 +1,13 @@
 import { defaultProviders, providerFor } from "../server/providers";
-import { HOSTED_RUN_LOCATION } from "../shared/comfy/run-location";
-import { workflowCatalogue } from "../shared/comfy/workflows";
-import { refuseHostedDeployment } from "../shared/comfy/deploy-catalogue";
+import {
+  deploymentState,
+  deploymentCatalogue,
+  deploymentSettingsRoute,
+  deploymentUpload,
+} from "./deployments";
+import { readExpectation } from "../shared/comfy/expectation";
 import { AppError, requireKey } from "../server/errors";
+import { checkedCloudCatalogue } from "../server/comfy-cloud-check";
 import {
   validateIdempotencyKey,
   validateInput,
@@ -18,6 +23,7 @@ import { sweep } from "./sweep";
 import { galleryPage } from "../shared/gallery/page";
 import { runnerRoute } from "./runner-routes";
 import { RunnerStore, digest } from "./runner-store";
+import { runtimeCapabilities } from "../shared/runtime-capabilities";
 
 const json = (data: unknown, status = 200) =>
   Response.json(data, {
@@ -28,8 +34,11 @@ const json = (data: unknown, status = 200) =>
     },
   });
 /** Bounds a JSON body even for clients using chunked transfer encoding. */
-async function readJson(request: Request): Promise<unknown> {
-  if (Number(request.headers.get("content-length")) > 16 * 1024 * 1024)
+async function readJson(
+  request: Request,
+  maxBytes = 16 * 1024 * 1024,
+): Promise<unknown> {
+  if (Number(request.headers.get("content-length")) > maxBytes)
     throw new AppError(413, "The request is too large.");
   const reader = request.body?.getReader();
   if (!reader) throw new AppError(400, "Expected a request body.");
@@ -39,7 +48,7 @@ async function readJson(request: Request): Promise<unknown> {
     const { value, done } = await reader.read();
     if (done) break;
     bytes += value.byteLength;
-    if (bytes > 16 * 1024 * 1024) {
+    if (bytes > maxBytes) {
       await reader.cancel();
       throw new AppError(413, "The request is too large.");
     }
@@ -54,12 +63,8 @@ async function readJson(request: Request): Promise<unknown> {
   return JSON.parse(new TextDecoder().decode(combined));
 }
 
-/** Local deployment staging is unavailable here, even for incomplete inputs. */
 async function readInput(request: Request) {
-  const body = await readJson(request);
-  if (body && typeof body === "object" && "model" in body)
-    refuseHostedDeployment(body.model);
-  return validateInput(body);
+  return validateInput(await readJson(request));
 }
 
 export default {
@@ -126,6 +131,17 @@ export default {
       const post = request.method === "POST";
       const keyHeader = request.headers.get("x-byo-key");
       const key = keyHeader ? requireKey(keyHeader) : undefined;
+      const settings = await deploymentSettingsRoute(
+        request,
+        env,
+        session,
+        () => readJson(request, 2048),
+      );
+      if (settings) {
+        const response = json(settings);
+        if (cookie) response.headers.append("Set-Cookie", cookie);
+        return response;
+      }
       if (post) {
         if (!key)
           throw new AppError(
@@ -148,7 +164,10 @@ export default {
         await rateLimit(env, "submit", session);
       }
       let response: Response;
-      if (get && url.pathname === "/api/health") {
+      if (get && url.pathname === "/api/capabilities") {
+        await rateLimit(env, "history", session);
+        response = json(runtimeCapabilities("hosted"));
+      } else if (get && url.pathname === "/api/health") {
         // Housekeeping rides on the two routes a page load hits once, never on
         // the 4-second poll, so its cost scales with visits rather than ticks.
         ctx.waitUntil(sweep(env).catch(() => {}));
@@ -168,10 +187,28 @@ export default {
       } else if (get && url.pathname === "/api/settings/run-location") {
         // Hosted runs every workflow on Comfy Cloud and says so.
         await rateLimit(env, "history", session);
-        response = json(HOSTED_RUN_LOCATION);
+        response = json(await deploymentState(env, session));
       } else if (get && url.pathname === "/api/settings/workflows") {
         await rateLimit(env, "history", session);
-        response = json(workflowCatalogue(undefined, true));
+        const catalogue = await deploymentCatalogue(env, session);
+        if (url.searchParams.get("check") === "cloud") {
+          await rateLimit(env, "credits", session);
+          response = json(await checkedCloudCatalogue(catalogue, key));
+        } else response = json(catalogue);
+      } else if (
+        post &&
+        /^\/api\/settings\/deployment-assets\/[^/]+$/.test(url.pathname)
+      ) {
+        response = json(
+          await deploymentUpload(
+            request,
+            env,
+            session,
+            url.pathname.split("/").at(-1)!,
+            key!,
+          ),
+          201,
+        );
       } else if (get && url.pathname === "/api/history") {
         await rateLimit(env, "history", session);
         ctx.waitUntil(sweep(env).catch(() => {}));
@@ -188,6 +225,12 @@ export default {
               key!,
               url.origin,
               validateQuoteId(request.headers.get("quote-id") ?? undefined),
+              undefined,
+              undefined,
+              readExpectation(
+                request.headers.get("genobi-run-location") ?? undefined,
+                request.headers.get("genobi-workflow") ?? undefined,
+              ),
             ),
           },
           202,
@@ -196,7 +239,17 @@ export default {
         // Counted with the paid writes above: a quote prices a paid run.
         response = json(
           {
-            quote: await quote(env, await readInput(request), session, key!),
+            quote: await quote(
+              env,
+              await readInput(request),
+              session,
+              key!,
+              undefined,
+              readExpectation(
+                request.headers.get("genobi-run-location") ?? undefined,
+                request.headers.get("genobi-workflow") ?? undefined,
+              ),
+            ),
           },
           201,
         );

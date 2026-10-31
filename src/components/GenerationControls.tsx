@@ -75,7 +75,7 @@ export function modelOptions(
     openOnly,
     hosted,
     keep,
-    deploymentRegistered,
+    deploymentRegistered: true,
   }).map((entry): SelectOption => ({
     value: entry.id,
     label: entryLabel(entry),
@@ -102,6 +102,12 @@ export function modelOptions(
       note: entry.note,
       tag: "soon",
     }),
+    ...(entry.deploymentOnly &&
+      !deploymentRegistered && {
+        disabled: true,
+        tag: "setup required",
+        note: "Set up a Comfy deployment in your own workspace, then add its endpoint in Settings. Your workspace pays for generation.",
+      }),
     // A row the composer cannot send says where it runs instead.
     ...(entry.status === "ready" &&
       entry.outsideComposer && {

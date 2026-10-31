@@ -9,12 +9,18 @@
  */
 export const RATE_WINDOW_MS = 60_000;
 
+/** Atomic ceiling on anonymous hosted deployment settings retained for thirty days. */
+export const MAX_DEPLOYMENT_SETTINGS = 10_000;
+
 /** Requests per window, per browser session unless noted. */
 export const RATE_LIMITS = {
   /** POST /api/jobs and /api/uploads: paid work, so the tightest ceiling. */
   submit: 8,
   /** The same writes counted per client IP, bounding one visitor's many sessions. */
   submitPerIp: 20,
+  /** Unpaid hosted deployment settings cannot evade limits by rotating sessions. */
+  settingsPerIp: 30,
+  settingsGlobal: 300,
   /** GET /api/credits: one upstream BFL call each. */
   credits: 20,
   /** GET /api/jobs/:id: the studio polls every 4s for each unfinished job. */

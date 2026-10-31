@@ -19,6 +19,16 @@ that would otherwise overwhelm the project README.
 the creative setup alongside the existing camera, reference and editing tools.
 
 Choose FLUX → **FLUX 3 Image Klein** for stills with bounding-box layouts.
+Drop a PNG, JPEG or WebP onto the image stage, or choose **Drop / choose image**,
+to edit an existing image immediately. No initial generation is needed. Klein's
+Open run uploads the source/reference images to Comfy and conditions both sampler
+branches with their latents; API uses BFL's reference-image route. Bounding boxes
+opens the canvas and adds the first box when empty. These are guidance coordinates,
+not a mask or a guarantee of exact preservation.
+
+Drag the image stage's lower-right resize grip to enlarge the preview. Up/Down
+adjust its height, End expands it, and Home or double-click restores its normal
+size. Images keep their aspect ratio, and box coordinates do not change.
 **Bounding boxes** beside Camera controls opens the existing canvas: draw,
 move or resize a box, then select its label to describe what belongs there.
 Shift-drag draws overlapping boxes; arrow keys nudge the selection; Delete
@@ -54,8 +64,8 @@ size and angle. The colored camera sentences below the prompt match the text
 sent to the provider; stills never send movement. Prompts accept up to 12,000
 characters, including any layout instructions. A compact reference grid keeps
 room for the prompt: click a thumbnail to enlarge it, or use the persistent
-Add/drop tile (up to ten references). Klein's API accepts optional references
-in Image mode; the current open text-to-image graph still does not. Edit mode
+Add/drop tile (up to ten references). Klein's Open and API runs accept optional references
+in Image mode; supplying a source selects the open reference-conditioned edit path. Edit mode
 requires a source and a nonempty instruction; it is not an unchanged pass-through.
 
 The minus button on a project asset removes an unused asset from that project,
@@ -147,6 +157,9 @@ examples, recipes, creator credits and licences, in a separate tab. All referenc
 start included for agents; uncheck any or add custom links to build your own Taste
 layer. The local studio saves this selection privately. Browse interactive examples
 directly in each card, with creator credits and a compact link to Teknium’s Uncommon Web.
+Studio settings and the question-mark guide use a wide, two-column layout on
+desktop and stack into one column on smaller screens. Long sections scroll
+inside the dialog; Escape closes it and returns focus to its opener.
 Camera keeps its generation library below the composer, with project Assets and
 Inspirations in the side rail. Preset changes rearrange the existing panels with reduced-motion
 support; edits, frame selections and the 3D set survive switching. The 3D preset opens one Builder viewer with scene and

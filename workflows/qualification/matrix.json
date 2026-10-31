@@ -1,0 +1,404 @@
+{
+  "version": 1,
+  "status": "not_run",
+  "timing": {
+    "fps": 24,
+    "frames": 193,
+    "sample_rate": 48000
+  },
+  "duration_note": "The current production adapters require 193 frames. Shorter GPU pilots need the duration-contract PR first.",
+  "source_policy": "The immutable dry track drives scene motion. Processed or regenerated audio never silently replaces that control source.",
+  "threshold_note": "PRD release limits are retained: rigid landmarks within 2% and walls within 5% of frame diagonal, correct state order, no unexplained disappearance or replacement, and event timing within two frames. Correlation and displacement are supplemental proposed checks. These are acceptance criteria, not achieved measurements.",
+  "release_seed_count": 3,
+  "motion_checks": {
+    "source_max_frame_error": {
+      "max": 1,
+      "min": 0
+    },
+    "generated_motion_correlation": {
+      "min": 0.8,
+      "max": 1
+    },
+    "max_event_lag_frames": {
+      "min": 0,
+      "max": 2
+    },
+    "retained_displacement_ratio": {
+      "min": 0.6,
+      "max": 1.4
+    },
+    "visual_review_pass": {
+      "equals": true
+    },
+    "no_unexplained_disappearance": {
+      "equals": true
+    },
+    "no_unplanned_replacement": {
+      "equals": true
+    }
+  },
+  "cases": [
+    {
+      "id": "object_motion",
+      "phase": "required",
+      "workflow": "layout_studio",
+      "control_audio": "control.wav",
+      "purpose": "A large isolated prop rises on bass bursts. Fixed camera; plain matched look; no moving room or lights.",
+      "metrics": "motion",
+      "artifacts": [
+        "source_recipe",
+        "control_curves",
+        "guide_rgb",
+        "look",
+        "generated_video",
+        "measurements",
+        "media_probe",
+        "capture_receipt",
+        "first_frame",
+        "captured_audio",
+        "executed_inputs"
+      ],
+      "checks": {
+        "max_rigid_landmark_error_diagonal": {
+          "min": 0,
+          "max": 0.02
+        }
+      },
+      "event_basis": "control_bursts",
+      "expected_event_frames": [12, 84, 156]
+    },
+    {
+      "id": "wall_motion",
+      "phase": "required",
+      "workflow": "layout_studio",
+      "control_audio": "control.wav",
+      "purpose": "One room dimension changes on bass bursts. Keep the camera fixed and track projected wall corners.",
+      "metrics": "motion",
+      "artifacts": [
+        "source_recipe",
+        "control_curves",
+        "guide_rgb",
+        "look",
+        "generated_video",
+        "measurements",
+        "media_probe",
+        "capture_receipt",
+        "first_frame",
+        "captured_audio",
+        "executed_inputs"
+      ],
+      "checks": {
+        "max_wall_landmark_error_diagonal": {
+          "min": 0,
+          "max": 0.05
+        }
+      },
+      "event_basis": "control_bursts",
+      "expected_event_frames": [12, 84, 156]
+    },
+    {
+      "id": "three_states",
+      "phase": "required",
+      "workflow": "layout_studio",
+      "control_audio": "control.wav",
+      "purpose": "This benchmark interpolates three compatible states at frames 0, 96 and 192. The scene schema must support a bounded variable number of states; three is a test fixture, not a product limit.",
+      "metrics": "motion",
+      "artifacts": [
+        "source_recipe",
+        "control_curves",
+        "guide_rgb",
+        "look",
+        "generated_video",
+        "measurements",
+        "media_probe",
+        "capture_receipt",
+        "first_frame",
+        "captured_audio",
+        "executed_inputs"
+      ],
+      "checks": {
+        "max_wall_landmark_error_diagonal": {
+          "min": 0,
+          "max": 0.05
+        },
+        "state_order_correct": {
+          "equals": true
+        },
+        "observed_state_count": {
+          "equals": 3
+        }
+      },
+      "expected_state_frames": [0, 96, 192],
+      "event_basis": "state_keys",
+      "expected_event_frames": [0, 96, 192]
+    },
+    {
+      "id": "combined_funny",
+      "phase": "required",
+      "workflow": "layout_studio",
+      "control_audio": "control.wav",
+      "purpose": "A squash-and-stretch room, bouncing prop and one restrained camera move. Separate visual humour review from timing qualification.",
+      "metrics": "motion",
+      "artifacts": [
+        "source_recipe",
+        "control_curves",
+        "guide_rgb",
+        "look",
+        "generated_video",
+        "measurements",
+        "media_probe",
+        "capture_receipt",
+        "first_frame",
+        "captured_audio",
+        "executed_inputs"
+      ],
+      "checks": {
+        "max_rigid_landmark_error_diagonal": {
+          "min": 0,
+          "max": 0.02
+        },
+        "max_wall_landmark_error_diagonal": {
+          "min": 0,
+          "max": 0.05
+        },
+        "state_order_correct": {
+          "equals": true
+        },
+        "observed_state_count": {
+          "equals": 3
+        }
+      },
+      "expected_state_frames": [0, 96, 192],
+      "event_basis": "control_bursts",
+      "expected_event_frames": [12, 36, 60, 84, 108, 132, 156, 180]
+    },
+    {
+      "id": "audio_swap",
+      "phase": "required",
+      "workflow": "layout_studio",
+      "control_audio": "control-swapped.wav",
+      "purpose": "Shift every diagnostic burst by four frames, rebuild analysis and capture, then render. Old guide hashes must not be reused.",
+      "metrics": "motion",
+      "artifacts": [
+        "source_recipe",
+        "control_curves",
+        "guide_rgb",
+        "look",
+        "generated_video",
+        "measurements",
+        "media_probe",
+        "capture_receipt",
+        "first_frame",
+        "captured_audio",
+        "executed_inputs"
+      ],
+      "checks": {
+        "max_rigid_landmark_error_diagonal": {
+          "min": 0,
+          "max": 0.02
+        },
+        "max_wall_landmark_error_diagonal": {
+          "min": 0,
+          "max": 0.05
+        },
+        "state_order_correct": {
+          "equals": true
+        },
+        "observed_state_count": {
+          "equals": 3
+        }
+      },
+      "expected_state_frames": [0, 96, 192],
+      "event_basis": "control_bursts",
+      "expected_event_frames": [16, 40, 64, 88, 112, 136, 160, 184]
+    },
+    {
+      "id": "light_pulse",
+      "phase": "exploratory",
+      "workflow": "layout_studio",
+      "control_audio": "control.wav",
+      "purpose": "Only the visible lamp pulses to high-band bursts. RGB carries lighting; depth alone cannot. Record failures without blocking geometry work.",
+      "checks": {
+        "max_event_lag_frames": {
+          "min": 0,
+          "max": 2
+        },
+        "visual_review_pass": {
+          "equals": true
+        },
+        "max_rigid_landmark_error_diagonal": {
+          "min": 0,
+          "max": 0.02
+        }
+      },
+      "artifacts": [
+        "source_recipe",
+        "control_curves",
+        "guide_rgb",
+        "look",
+        "generated_video",
+        "measurements",
+        "media_probe",
+        "capture_receipt",
+        "first_frame",
+        "captured_audio",
+        "executed_inputs"
+      ],
+      "event_basis": "control_bursts",
+      "expected_event_frames": [60, 132]
+    },
+    {
+      "id": "cpu_dynamic",
+      "phase": "required_for_dynamic_sound",
+      "workflow": "candidate",
+      "control_audio": "control.wav",
+      "purpose": "Process the dry source with geometry-derived IRs over the full timeline. Preserve audio history and decay tails. Current static graph cannot pass this case.",
+      "checks": {
+        "transition_review_pass": {
+          "equals": true
+        },
+        "tail_preserved": {
+          "equals": true
+        },
+        "nonfinite_samples": {
+          "equals": 0
+        },
+        "clipped_samples": {
+          "equals": 0
+        }
+      },
+      "artifacts": [
+        "source_recipe",
+        "acoustic_timeline",
+        "processed_audio",
+        "ir_schedule",
+        "measurements",
+        "executed_inputs"
+      ]
+    },
+    {
+      "id": "akuspace_sound",
+      "phase": "exploratory",
+      "workflow": "akuspace",
+      "control_audio": "control.wav",
+      "purpose": "Compare learned room sound with the dry reference. The existing mask 0.5 regenerates audio. Record source changes and preference separately; this is not transparent convolution.",
+      "checks": {
+        "audio_review_complete": {
+          "equals": true
+        },
+        "source_change_disclosed": {
+          "equals": true
+        }
+      },
+      "artifacts": [
+        "look",
+        "generated_video",
+        "processed_audio",
+        "measurements",
+        "media_probe",
+        "executed_inputs"
+      ]
+    },
+    {
+      "id": "hybrid_parallel",
+      "phase": "exploratory",
+      "workflow": "candidate",
+      "control_audio": "control.wav",
+      "purpose": "Keep dry-source control timing. Compare CPU, AKUSPACE and a level-matched parallel mix. AKUSPACE output is not assumed wet-only; record delay alignment, source coloration, dry duplication and listening preference.",
+      "checks": {
+        "audio_review_complete": {
+          "equals": true
+        },
+        "source_change_disclosed": {
+          "equals": true
+        },
+        "clipped_samples": {
+          "equals": 0
+        }
+      },
+      "artifacts": [
+        "cpu_audio",
+        "akuspace_audio",
+        "processed_audio",
+        "measurements",
+        "executed_inputs"
+      ]
+    },
+    {
+      "id": "stacked_loras",
+      "phase": "exploratory",
+      "workflow": "candidate",
+      "control_audio": "control.wav",
+      "purpose": "Only after baseline qualification: compare Layout-to-Render plus AKUSPACE in the same model against the qualified picture route. Do not assume LoRA compatibility or unchanged motion.",
+      "metrics": "motion",
+      "artifacts": [
+        "source_recipe",
+        "control_curves",
+        "guide_rgb",
+        "look",
+        "generated_video",
+        "processed_audio",
+        "measurements",
+        "media_probe",
+        "capture_receipt",
+        "first_frame",
+        "captured_audio",
+        "executed_inputs"
+      ],
+      "checks": {
+        "max_rigid_landmark_error_diagonal": {
+          "min": 0,
+          "max": 0.02
+        },
+        "max_wall_landmark_error_diagonal": {
+          "min": 0,
+          "max": 0.05
+        },
+        "state_order_correct": {
+          "equals": true
+        },
+        "observed_state_count": {
+          "equals": 3
+        }
+      },
+      "expected_state_frames": [0, 96, 192],
+      "event_basis": "control_bursts",
+      "expected_event_frames": [12, 36, 60, 84, 108, 132, 156, 180]
+    },
+    {
+      "id": "serial_cpu_akuspace",
+      "phase": "exploratory",
+      "workflow": "candidate",
+      "control_audio": "control.wav",
+      "purpose": "After the CPU scene demo qualifies: feed CPU-treated source into subtle AKUSPACE, preserving original/control, CPU and generated stems. Compare original-dry versus CPU-treated aligned reference explicitly. Check endings, source changes, phase/alignment and optional localized repair; no promise of improvement or training requirement.",
+      "checks": {
+        "audio_review_complete": {
+          "equals": true
+        },
+        "source_change_disclosed": {
+          "equals": true
+        },
+        "ending_review_complete": {
+          "equals": true
+        },
+        "repair_disclosed": {
+          "equals": true
+        },
+        "clipped_samples": {
+          "equals": 0
+        }
+      },
+      "artifacts": [
+        "cpu_audio",
+        "akuspace_audio",
+        "reference_audio",
+        "processed_audio",
+        "repair_manifest",
+        "measurements",
+        "executed_inputs"
+      ],
+      "requires_model": true
+    }
+  ],
+  "priority_note": "CPU scene authoring and source correctness come first. Object/wall GPU feasibility precedes dynamic-state template qualification. AKUSPACE and both hybrid routes are optional experiments, never blockers for the CPU demo."
+}

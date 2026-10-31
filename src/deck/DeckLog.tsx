@@ -6,6 +6,7 @@ import { OPEN_BUBBLE } from "../agent/useAgentSession";
 import { OPEN_DEVELOPMENT } from "../supervisor/store";
 import { useShell } from "../studio/ShellContext";
 import { studioStore } from "../studio/store";
+import { AgentVoiceButton } from "../voice/AgentVoiceButton";
 
 /**
  * The open deck's log: what is working now, then the whole received log of
@@ -85,6 +86,7 @@ export default function DeckLog({
           </p>
         )}
       <div className="deck-actions">
+        <AgentVoiceButton session={session} className="deck-development" />
         {session && (
           <button
             type="button"

@@ -4,6 +4,7 @@
 // refused, the search stays bounded, and "Use this one" links the copy into
 // a new install with the download step skipped.
 import {
+  access,
   chmod,
   mkdir,
   mkdtemp,
@@ -28,6 +29,11 @@ import {
   installFixture,
   settled,
 } from "./voice-install-harness";
+
+vi.mock("node:fs/promises", async (original) => {
+  const fs = await original<typeof import("node:fs/promises")>();
+  return { ...fs, access: vi.fn(fs.access) };
+});
 
 const roots: string[] = [];
 afterEach(async () => {
@@ -162,11 +168,15 @@ describe("finding an existing voice model", () => {
     expect(await defaultVoiceFolder(checkout, root)).toBe(
       path.join(checkout, "models"),
     );
-    await chmod(checkout, 0o500);
+    // chmod does not deny root's access(W_OK). Exercise the same EACCES
+    // response on every CI/container user without changing production code.
+    vi.mocked(access).mockRejectedValueOnce(
+      Object.assign(new Error("Permission denied"), { code: "EACCES" }),
+    );
     expect(await defaultVoiceFolder(checkout, root)).toBe(
       path.join(root, "Documents", "Genobi"),
     );
-    await chmod(checkout, 0o700);
+    expect(access).toHaveBeenLastCalledWith(checkout, 2);
   });
 });
 

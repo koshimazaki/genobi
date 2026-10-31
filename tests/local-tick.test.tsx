@@ -48,6 +48,8 @@ beforeEach(() => {
   vi.stubGlobal(
     "fetch",
     vi.fn(async (url: string, init?: RequestInit) => {
+      if (url === "/api/health")
+        return Response.json({ ok: true, hasServerKey: false });
       if (url.startsWith("/api/settings/workflows"))
         return Response.json({ local: { reachable: true, templates: {} } });
       if (init?.method === "POST") {
@@ -164,4 +166,27 @@ describe("the Local tick", () => {
     expect(tick("Local").checked).toBe(false);
     expect(tags()).toEqual(["Open weights", "Comfy Cloud"]);
   });
+});
+
+it("cannot select Local on an editable hosted deployment adapter", async () => {
+  server = {
+    ...answer("cloud"),
+    fixed: false,
+    choices: ["cloud", "deployment"],
+    local: null,
+  };
+  const changes = await mount();
+  expect(tick("Local").disabled).toBe(true);
+  await act(async () => tick("Local").click());
+  expect(posts).toEqual([]);
+  expect(changes).toEqual([]);
+});
+
+it("uses the advertised local choice when Both is unavailable", async () => {
+  server = { ...answer("cloud"), choices: ["cloud", "local"] };
+  await mount();
+  await act(async () => tick("Local").click());
+  await flush();
+  expect(posts).toEqual(["local"]);
+  expect(tick("Local").checked).toBe(true);
 });

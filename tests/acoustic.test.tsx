@@ -360,7 +360,9 @@ describe("the toolbar and the top bar", () => {
         serverKey={false}
       />,
     );
-    expect(key).toContain("Connect with your Comfy API key");
+    expect(key).toContain(
+      "Connect your Comfy API key for Router, Cloud or your deployment.",
+    );
     expect(key).not.toContain("Paste your");
     expect(key).toContain(
       `<a href="${SOURCE_URL}" target="_blank" rel="noopener noreferrer">read the code</a>`,

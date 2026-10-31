@@ -12,9 +12,11 @@ The hosted app uses your own BFL key. Connect it in the header: the balance chec
 ## Runtime
 
 - Pages static frontend + advanced-mode Worker: same-origin API with the existing D1/R2 bindings.
-- Comfy Deploy runs from the local studio. Hosted quote and job routes return
-  `501 deployment_local_only` for its models before validating generation inputs
-  or calling a provider; deployment registration and input staging stay local.
+- Comfy deployments can be registered per browser session in Settings. The endpoint
+  must be an HTTPS `*.run.comfy.app` origin. The visitor supplies its workspace's
+  Comfy key on each upload, quote, submission and poll; no provider key is persisted.
+  The owning workspace pays. Standard Router/Cloud generation remains available
+  without a custom endpoint. Hosted deployment uploads are capped at 32 MB each.
 - D1: session-owned jobs, unique submission IDs, copy leases, source metadata and temporary input links.
 - R2: private uploaded/generated MP4s. The public library is not in R2: its clips are static assets under `/media`, listed in `public/media/gallery.json`. Recorded runs carry their prompt, camera terms, settings and confirmed cost; supplied clips carry model provenance without an invented setup. Cards use separate small previews; imports and upscales keep the full files ([media preparation](media-previews.md)).
 - Icons: `public/favicon.svg` is the Genobi mask from `src/components/GenobiMark.tsx` with its colours fixed (lime outline and band, dark face), so it reads on light and dark tabs. `npm run favicon` renders it into `public/favicon.ico` (one 32 px PNG in an ICO container) and the 180 px `public/apple-touch-icon.png` with the Playwright Chromium the browser checks use; rerun it after changing the SVG. Pages serves all three as static assets outside `_routes.json`, and the local server serves them from `public/` (Vite) or `dist/` (production).
@@ -28,16 +30,36 @@ Standard, non-fragmented MP4s with one video track are supported. Uploads: 50 MB
 
 Submissions, credits, job polling, history and private media have per-minute limits. The health endpoint is not rate-limited by the application. `shared/limits.ts` holds the numbers once; the Worker counts them in D1 so all isolates share a window, and the local Express server counts the same buckets in memory. The local server reads `localRateLimit`, which raises only `history` to 600: its reads are memory reads on the owner's machine, and one page load makes about twenty of them, so the hosted 60 ran out after a few reloads.
 
-| Bucket        | Per minute              | Route                                            |
-| ------------- | ----------------------- | ------------------------------------------------ |
-| `submit`      | 8 per session           | `POST /api/jobs`, `POST /api/uploads`            |
-| `submitPerIp` | 20 per IP               | the same writes, hashed client IP (Worker only)  |
-| `credits`     | 20 per session          | `GET /api/credits`                               |
-| `poll`        | 120 per session         | `GET /api/jobs/:id`                              |
-| `history`     | 60 per session          | `GET /api/history`                               |
-| `media`       | 600 per session or link | `GET`/`HEAD /api/clips/:id`, `/api/input/:token` |
+| Bucket           | Per minute                | Route                                            |
+| ---------------- | ------------------------- | ------------------------------------------------ |
+| `submit`         | 8 per session             | `POST /api/jobs`, `POST /api/uploads`            |
+| `submitPerIp`    | 20 per IP                 | the same writes, hashed client IP (Worker only)  |
+| `settingsPerIp`  | 30 per IP                 | unpaid deployment endpoint/preset settings       |
+| `settingsGlobal` | 300 across the deployment | the same settings writes                         |
+| `credits`        | 20 per session            | `GET /api/credits`                               |
+| `poll`           | 120 per session           | `GET /api/jobs/:id`                              |
+| `history`        | 60 per session            | `GET /api/history`                               |
+| `media`          | 600 per session or link   | `GET`/`HEAD /api/clips/:id`, `/api/input/:token` |
 
 These bound this deployment's own Worker, D1 and R2 usage. They are not a spending control: generation is charged to the visitor's own BFL key, which the pre-submission balance check covers separately.
+
+Unpaid deployment settings apply the hashed-IP and deployment-wide limits before
+their per-session limit or body parsing, so a fresh cookie does not reset the
+caller’s allowance. Settings bodies are limited to 2 KB while streaming, including
+requests without `Content-Length`. At most 10,000 session settings records can
+exist. At that ceiling a new session displaces the least recently saved record in
+the same transaction instead of being refused, so rotating cookies cannot lock
+every visitor out until records expire; existing sessions update in place, and
+jobs keep polling the endpoint recorded on their take. Choosing the default Cloud setting does not
+create a record for a new session. Settings expire after 30 days.
+
+Every hosted workflow quote records its location and template, including ordinary
+Comfy Cloud runs. `Genobi-Run-Location` and `Genobi-Workflow` expectations must
+match before pricing or submission; a mismatched Cloud request is refused too.
+Paused chains also compare their quote with the current location, template and
+deployment endpoint. After a settings change, reading a chain with its caller key
+quotes the stage again without submitting it; a keyless read hides the stale quote
+and asks for the key. The refreshed quote still needs a separate approval.
 
 **Project media is a local limit.** The Editor's per-file and per-project limits
 (`DIRECTOR_MEDIA_BYTES` and `DIRECTOR_PROJECT_BYTES` in `shared/director/types.ts`,
@@ -82,19 +104,30 @@ npx wrangler dev
 
 ## Deployment
 
-Releases are run by hand with `npm run deploy:pages`. The workflow can deploy
-on a push to `main` and deliberately holds no credential to do it: Cloudflare's
-`Cloudflare Pages: Edit` and `D1: Edit` are account-scoped, so the narrowest
-token this repository could hold would still let a public repository's CI reach
-every Pages project and D1 database in the account. Without the secrets the job
-skips rather than fails, so `main` stays green.
+Production is deployed from this public repository. The `Deploy production`
+job in [CI](https://github.com/koshimazaki/genobi/blob/main/.github/workflows/ci.yml) runs only on a push to `main` of
+`koshimazaki/genobi`, after the verify and Cloudflare jobs pass. It builds the
+Pages bundle, applies pending D1 migrations to `flux-studio-lite`, deploys that
+exact bundle to the `genobi` Pages project and checks `/api/health`. The same
+workflow file lives in the private camera-director repository, where a
+repository guard keeps the job from running even if a credential is added
+there, so production has one deployment path. The Pages project, D1 database
+and R2 bucket are the existing ones; the older resource names are kept on
+purpose, so no data moves.
 
-To enable it, add `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` to a
-GitHub environment named `production`, restricted to `main`; the workflow needs
-no edit. It then builds, applies pending migrations, deploys that bundle and
-checks `/api/health`. Keep production migrations additive. The token reaches
-only the migration and deploy steps — never pull-request CI, `npm ci` or the
-build — and fork pull requests are never given secrets at all.
+The job reads `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` from a GitHub
+environment named `production`. Without them it skips rather than fails, so
+`main` stays green on a fork. Cloudflare's `Cloudflare Pages: Edit` and
+`D1: Edit` are account-scoped, so restrict that environment to the `main`
+branch and add a required reviewer: a merge then waits for an explicit
+approval before production data is touched. The token reaches only the
+migration and deploy steps — never pull-request CI, `npm ci` or the build — and
+fork pull requests are never given secrets at all. Keep production migrations
+additive, so the previous deployment keeps working while Pages switches
+versions.
+
+`npm run deploy:pages` remains the manual fallback from a clean checkout of
+`main`; it records the checkout's commit hash on the Pages deployment.
 
 For another account, set `CLOUDFLARE_ACCOUNT_ID` and update the database/bucket bindings in `wrangler.pages.json`. The original Workers target still uses `wrangler.jsonc`. The earlier catalogue kept its clips in R2 under `library/`. Those objects are now unreferenced: the app serves library clips as static assets, and the sweep only collects keys it can derive from a job, so they will not be cleaned up automatically. Delete them by hand once the new catalogue is live:
 
@@ -111,6 +144,21 @@ npx wrangler d1 migrations apply flux-studio-lite --remote
 ```
 
 Do not provision a BFL secret: each visitor supplies their own key. Do not log request headers or provider bodies. The Worker only forwards keys to allowed BFL API hosts and refuses redirects. Input-video capability links expire after two hours. Normal clip playback requires the owning browser's HttpOnly cookie.
+
+Apply additive migration `0009_deployments.sql` before publishing this version.
+It creates session endpoint/preset settings, two-hour input receipts and temporary
+companion-output delivery records. Housekeeping removes expired receipts/delivery
+records and settings older than 30 days. It introduces no provider secret or binding.
+
+Companion delivery receipts remain until the job’s Ready state and all audio
+links are durably saved. If that final save fails, the next poll reconstructs
+the links from the receipt and the already saved audio sources without another
+generation. Cleanup after a successful save is best-effort; the retention sweep
+reclaims a receipt whose immediate deletion failed.
+Each recovered audio source must also have its R2 object. A missing object is
+copied again from the retained receipt. If source insertion succeeds but quota
+eviction fails, cleanup preserves the verified bytes owned by that source;
+invalid bytes and a failed insertion with no source row are removed.
 
 ## Verification boundary
 

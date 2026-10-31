@@ -23,9 +23,17 @@ const session = {
   lines: [],
 };
 const server = vi.fn(async (url: string, init?: RequestInit) => {
-  if (url === "/api/health") return Response.json({ hosted: fixed });
+  if (url === "/api/health")
+    return (
+      settings ??
+      Response.json({ ok: true, hasServerKey: false, hosted: fixed })
+    );
   if (url === "/api/settings/run-location")
-    return settings ?? Response.json({ ...HOSTED_RUN_LOCATION, fixed });
+    return Response.json({
+      ...HOSTED_RUN_LOCATION,
+      fixed: false,
+      choices: ["cloud", "deployment"],
+    });
   if (url === "/api/keys") return Response.json({ keys: { keychain: false } });
   if (url === "/api/agent/runners")
     return Response.json({ runners: [{ id: "hermes", installed: true }] });
@@ -202,11 +210,9 @@ it("Connect waits for detection, then preserves confirmed-local setup and saving
     <SetupConnect draft={{ selection: { agent: "hermes" } }} next={next} />,
   );
   expect(host.textContent).toContain("Checking studio connection");
-  expect(server.mock.calls.map(([url]) => url)).toEqual([
-    "/api/settings/run-location",
-  ]);
+  expect(server.mock.calls.map(([url]) => url)).toEqual(["/api/health"]);
   await act(async () =>
-    resolve(Response.json({ ...HOSTED_RUN_LOCATION, fixed: false })),
+    resolve(Response.json({ ok: true, hasServerKey: false })),
   );
   expect(host.textContent).toContain("Check sign-in again");
   expect(host.textContent).not.toContain("Create pairing code");
@@ -260,7 +266,9 @@ it.each(["failed", "invalid"])(
     expect(host.querySelector("output")!.textContent).toBe("true");
     expect(await readHostedStudio()).toBe(true);
     expect(
-      server.mock.calls.filter(([url]) => url === "/api/settings/run-location"),
+      server.mock.calls.filter(
+        ([url, init]) => url === "/api/health" && init?.cache === "no-store",
+      ),
     ).toHaveLength(3);
     expect(host.textContent).toContain("Create pairing code");
     expect(

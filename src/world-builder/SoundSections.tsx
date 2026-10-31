@@ -8,8 +8,8 @@ import { inComfyNode } from "./host";
 import type { SignalScope } from "./useSignalScopes";
 
 /**
- * The Sound panel below its transport, in Holodeck's order: Signal scopes,
- * Mod matrix, Audio assets, Clear audio. Hidden while the panel is folded.
+ * The Sound panel below its transport: audio response, optional signal scopes,
+ * audio assets and Clear audio. Hidden while the panel is folded.
  * Hook-free: `AudioControls` owns the scope loop and passes it in.
  */
 export function SoundSections({
@@ -28,7 +28,8 @@ export function SoundSections({
   folded: boolean;
 }) {
   const r = s.recipe,
-    comfy = inComfyNode();
+    comfy = inComfyNode(),
+    active = r.audioRoutes.filter((route) => route.enabled).length;
   return (
     <div className="wb-sound-sections" hidden={folded}>
       {!s.audioName && (
@@ -38,17 +39,21 @@ export function SoundSections({
             : "Load or drop a track on the scene: it plays at once and drives the set on the capture frame grid."}
         </p>
       )}
-      <Fold title="Signal scopes" open>
-        <SignalScopes scope={scope} live={s.playing && !!s.audioURL} />
-      </Fold>
       {/* Live during Play: routes apply to the next frame drawn. */}
-      <Fold title="Mod matrix">
+      <Fold title="Audio response" open>
+        <p className="wb-hint">
+          Mod matrix · {active} active {active === 1 ? "route" : "routes"}.
+          Choose which sounds move the scene, then press Play to preview.
+        </p>
         <ModMatrixEditor
           recipe={r}
           frame={s.frame}
           selected={selected}
           change={s.tune}
         />
+      </Fold>
+      <Fold title="Signal scopes">
+        <SignalScopes scope={scope} live={s.playing && !!s.audioURL} />
       </Fold>
       {/* Inside Comfy the list is the graph's audio outputs (SaveAudio,
           PreviewAudio, Inputs) plus this browser's recent tracks. */}

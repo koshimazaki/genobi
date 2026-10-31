@@ -56,6 +56,10 @@ export interface ApprovalPlan {
   /** A workflow entry's run location. */
   location?: DestinationKind;
   workflow?: string;
+  /** A GPU-time billed quote has no reliable USD estimate. */
+  billing?: string;
+  /** The validated endpoint the quoted workflow will reach. */
+  deployment?: { url: string; name: string };
   /** An upscale: what it reads and makes, from the server's measured source. */
   upscale?: UpscalePlan;
 }
@@ -168,6 +172,10 @@ export function approvalPlan(
       : {}),
     ...(quote.recipe.location ? { location: quote.recipe.location } : {}),
     ...(quote.recipe.workflow ? { workflow: quote.recipe.workflow } : {}),
+    ...(quote.billing ? { billing: quote.billing } : {}),
+    ...(quote.recipe.deployment
+      ? { deployment: { ...quote.recipe.deployment } }
+      : {}),
   };
   if (input.generator === "upscale") {
     if (!source || source.id !== input.sourceId)

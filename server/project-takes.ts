@@ -34,6 +34,7 @@ import { derivedMedia } from "./project-derived";
 import { handInIds, holding, readMedia, type HandIn } from "./project-media";
 import { ProjectCopies } from "./projects";
 import type { Store } from "./store";
+import { takeOutputs } from "../shared/take";
 
 const JOB_ID = /^[A-Za-z0-9_-]{1,64}$/;
 const EXTENSION: Record<string, string> = {
@@ -64,6 +65,7 @@ export class AgentProjectCopies extends ProjectCopies {
           assetId,
           record.revision,
           false,
+          held.kind,
           record.project.generations.find((g) => g.id === held.generationId)
             ?.derivation,
         );
@@ -153,7 +155,7 @@ export class AgentProjectCopies extends ProjectCopies {
       // Announced as an agent write with no command: the studio reloads the
       // copy, fetching the new file from it.
       this.emit(next, { baseRevision: record.revision, source: "command" });
-      return answer(assetId, next.revision, true, derivation);
+      return answer(assetId, next.revision, true, media.kind, derivation);
     });
   }
 }
@@ -162,8 +164,15 @@ const answer = (
   assetId: string,
   revision: number,
   added: boolean,
+  kind: Asset["kind"],
   derivation?: Derivation,
-) => ({ assetId, revision, added, ...(derivation ? { derivation } : {}) });
+) => ({
+  assetId,
+  revision,
+  added,
+  kind,
+  ...(derivation ? { derivation } : {}),
+});
 
 /**
  * The take a session owns (or, for an agent, a take its person picked), read
@@ -174,6 +183,7 @@ async function takeMedia(
   store: Store,
   jobId: string,
   sessionId: string,
+  outputId?: string,
 ): Promise<HandIn> {
   const job = service.owned(jobId, sessionId);
   if (job.status !== "Ready" || !job.take)
@@ -184,13 +194,22 @@ async function takeMedia(
     );
   const missing = () =>
     new AppError(404, "The take's media is no longer stored.", "take_missing");
-  const source = store.data.sources.find(
-    (s) => s.id === job.id && s.sessionId === sessionId,
+  const selected = takeOutputs(job).find(
+    (output) => output.assetId === (outputId ?? job.id),
   );
-  if (!source || job.mediaAvailable === false) throw missing();
-  const kind = job.mediaType ?? "video";
+  if (!selected)
+    throw new AppError(
+      404,
+      "That output does not belong to this take.",
+      "take_missing",
+    );
+  const source = store.data.sources.find(
+    (s) => s.id === selected.assetId && s.sessionId === sessionId,
+  );
+  if (!source || !selected.available) throw missing();
+  const kind = selected.mediaType;
   return {
-    ...handInIds("take", job.id),
+    ...handInIds("take", selected.assetId),
     kind,
     ...(await readMedia(source.filePath, kind, missing)),
     prompt: job.prompt,
@@ -200,7 +219,7 @@ async function takeMedia(
 }
 
 /**
- * `POST /api/projects/:id/takes` with `{jobId, baseRevision}` for a take, or
+ * `POST /api/projects/:id/takes` with `{jobId, baseRevision, outputId?}` for a take, or
  * `{sourceId, baseRevision}` for a media tool's result.
  */
 export function takeToProject(
@@ -216,12 +235,16 @@ export function takeToProject(
     const job = isObject(body) && "jobId" in body;
     if (
       !isObject(body) ||
-      !exactKeys(body, ["jobId", "sourceId", "baseRevision"]) ||
+      !exactKeys(body, ["jobId", "sourceId", "baseRevision", "outputId"]) ||
       "jobId" in body === "sourceId" in body ||
       (job
         ? typeof body.jobId !== "string" || !JOB_ID.test(body.jobId)
         : typeof body.sourceId !== "string" ||
           !MEDIA_SOURCE_ID.test(body.sourceId)) ||
+      (body.outputId !== undefined &&
+        (!job ||
+          typeof body.outputId !== "string" ||
+          !MEDIA_SOURCE_ID.test(body.outputId))) ||
       !Number.isSafeInteger(body.baseRevision) ||
       (body.baseRevision as number) < 1
     )
@@ -236,7 +259,13 @@ export function takeToProject(
     const id = String(job ? body.jobId : body.sourceId);
     const reader = readerOf(response.locals, id);
     const media = job
-      ? await takeMedia(service, store, id, reader)
+      ? await takeMedia(
+          service,
+          store,
+          id,
+          reader,
+          body.outputId as string | undefined,
+        )
       : await derivedMedia(service, store, id, reader, (step) =>
           readerOf(response.locals, step),
         );

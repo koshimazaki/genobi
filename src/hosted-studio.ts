@@ -1,5 +1,4 @@
 import { useEffect, useSyncExternalStore } from "react";
-import { readRunLocation } from "./run-settings";
 
 let answer: Promise<boolean | undefined> | undefined;
 type Detection = boolean | "pending" | "failed";
@@ -18,11 +17,23 @@ function publish(value: Detection) {
 
 /** Shared detection: undefined on failure, so local-only clients can refuse access. */
 export function readHostedStudio(): Promise<boolean | undefined> {
-  answer ??= readRunLocation()
-    .then(
-      (state) => state?.fixed,
-      () => undefined,
-    )
+  answer ??= fetch("/api/health", { cache: "no-store" })
+    .then(async (response) => {
+      if (!response.ok) return undefined;
+      const state: unknown = await response.json();
+      if (!state || typeof state !== "object") return undefined;
+      const health = state as Record<string, unknown>;
+      if (
+        health.ok !== true ||
+        typeof health.hasServerKey !== "boolean" ||
+        (health.hosted !== undefined && typeof health.hosted !== "boolean")
+      )
+        return undefined;
+      // The local server's health predates the hosted flag. Its valid shape
+      // remains local; settings being editable says nothing about the adapter.
+      return health.hosted === true;
+    })
+    .catch(() => undefined)
     .then((value) => {
       publish(value ?? "failed");
       return value;
@@ -53,9 +64,9 @@ export function useHostedStudioDetection(): Detection {
 }
 
 /**
- * Whether the hosted Worker serves this page: its run location is the fixed
- * Comfy Cloud one (`HOSTED_RUN_LOCATION`), the local server's never is. Read
- * once per page unless a failed read is explicitly retried. False while pending
+ * Whether the hosted Worker serves this page, from its stable health identity.
+ * Editable generation settings do not identify the server. Read once per page
+ * unless a failed read is explicitly retried. False while pending
  * or failed, so the local studio never loses an entry to a slow read.
  */
 export function useHostedStudio(): boolean {

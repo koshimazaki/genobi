@@ -7,7 +7,7 @@ summary: The three key adaptive-reverb workflows, one remote-model LTX build wit
 
 One shared deployment, **genobi-ltx-world**, serves two GPU workflow selectors.
 The CPU reverb workflow stays local. These are API-format graphs; selecting a
-name fills a graph on that shared service. The local studio can register its
+name fills a graph on that shared service. The hosted and local studios can register its
 endpoint and run these two GPU workflows from Camera.
 
 | Selector          | Workflow                                 | Runtime                                                    |
@@ -21,12 +21,41 @@ and [endpoint manifest](https://github.com/koshimazaki/Genobi/blob/main/workflow
 are the catalogue. Layout-to-video's `--preset studio` only changes guide and
 mask dimensions; it shares the same endpoint and models.
 
+## Deploy your own endpoint, or test as a team
+
+Use a deployment and Comfy API key from the **same workspace**. The deployment's
+workspace pays for its GPU worker time and model storage; a caller's key does
+not move that bill to another workspace. Comfy's
+[v2 API contract](https://github.com/Comfy-Org/docs/blob/main/openapi-v2.yaml)
+checks deployment ownership against the caller's workspace. Someone else's
+workspace key is not an access pass to your endpoint.
+
+For a Comfy team evaluation, one deployment in the team's workspace is enough.
+Use that workspace's authorized API keys and endpoint in Genobi; each tester
+does not need a separate deployment. Check workspace membership and permissions
+with the workspace owner rather than distributing the owner's key. Comfy's
+[deployment guide and billing FAQ](https://support.comfy.org/articles/2703236295-comfy-api-deploy-your-comfyui-workflow-as-an-api)
+describe workspace billing and current plan requirements.
+
+| What the team wants to test                              | Available path                                                                                                                                                                                                                        |
+| -------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Layout-to-video with scene acoustics and reverb          | Register the team's deployment endpoint in Settings on hosted or local Genobi, then connect a key from its workspace. The GPU runs at Comfy either way.                                                                               |
+| The same custom workflows entirely on `genobi.pages.dev` | Supported. Hosted Settings saves the endpoint for the session, and the studio stages inputs, quotes and submits. Hosted inputs are capped at 32 MB per file where local allows 150 MB, and nothing runs until the quote is confirmed. |
+| A hosted agent paired to a local runner                  | Pairing relays agent prompts and progress; it is not the media path. Results reach the studio through Settings, and paid approvals stay in the studio bubble.                                                                         |
+
+To deploy your own copy, authenticate in your workspace, generate the build spec
+below, then follow the [four push/release/deploy commands](#owner-commands-push-release-deploy).
+The build fetches the nine model files from pinned remote sources; only the
+local custom-node pack is uploaded. Paste the resulting endpoint URL and use
+your workspace's key in the local studio. Keep someone else's endpoint for
+explicitly arranged access; it is not a free public generation service.
+
 ## Use it from Camera
 
-Run Genobi locally and connect your Comfy key. In Settings → Generation setup,
+Open hosted or local Genobi and connect your Comfy key. In Settings → Generation setup,
 register the deployment's `https://<deployment>.run.comfy.app` URL. Registration
 saves the endpoint for this session, not the key, and submits nothing. Camera's
-LTX menu then offers **Comfy Deploy · layout-to-video** and **Comfy Deploy ·
+LTX menu labels these workflows **setup required** until an endpoint is registered, then offers **Comfy Deploy · layout-to-video** and **Comfy Deploy ·
 akuspace**. Layout-to-video also offers Party and Studio input presets.
 
 Attach the selected graph's files and, for Layout-to-video, its matching capture
@@ -43,7 +72,7 @@ audio noise mask zero. The final video uses Reverb's wet/dry mix, not generated
 AKUSPACE audio. IR and wet audio are saved alongside it. Two sampler stages are
 internal to one submitted job, not two generation requests or an audio rerun.
 
-In local 3D → Capture, choose **Layout-to-video capture preset** (1024 × 576,
+In 3D → Capture, choose **Use Layout-to-video format** (1024 × 576,
 193 frames, 24 fps), load your track and capture. **Use take in Layout-to-video**
 opens Camera with the frozen capture recipe and scene prompt. **Attach captured
 scene** explicitly stages its colour/depth take, first frame and matching WAV
@@ -67,14 +96,43 @@ workflow or input invalidates the quote. Polling uses the recorded endpoint even
 if Settings changes later. Ready video and companion IR/wet/audio files are
 saved under the studio session's ownership and linked from the result card.
 
+The output contract names the final video node and every required audio node.
+Cloud, deployment and local polling require those exact node IDs and media kinds;
+another video (such as a guide preview) cannot stand in for a missing result.
+A completed workflow missing a required companion reports an output error instead
+of becoming a partially delivered Ready take. Link-read failures remain retryable
+unless the asset has expired; polling never submits another generation.
+
 MCP/CLI generation does not yet expose deployment input staging. Their model
 discovery omits these Camera-only entries; use Camera for this route. Director
 agent handoffs keep their existing quoted generation tools.
 
-The Cloudflare studio has no deployment registry or staging route. It hides these
-entries and refuses direct deployment requests before provider work, explaining
-that Comfy Deploy runs from the local studio. Registering a deployment does not
-make the hosted Worker a GPU proxy.
+### Whose account pays?
+
+A key alone runs supported Comfy Router and Cloud models. The custom deployment
+workflows also need Genobi's build deployed in **your own Comfy workspace**.
+Create that deployment using the commands below, paste its endpoint in Settings,
+and connect a key authorised for that workspace. **Comfy bills the workspace that
+owns the deployment**; using someone else's endpoint with your key does not move
+its charges to your account. Genobi has no shared generation key or fallback.
+
+Hosted settings keep only the session's endpoint/preset in D1. Keys remain in page
+and request memory and must be re-entered after refresh. Upload receipts bind the
+session, endpoint and input role for two hours. Hosted inputs are capped at 32 MB
+per file to bound Worker memory; local inputs keep their 150 MB ceiling. The hosted
+adapter uses the official low-level SDK upload transport without the optional
+client-side WASM dedup hash; Comfy hashes the uploaded bytes on its server.
+
+Hosted settings writes are bounded by caller IP and across the deployment as well
+as by session, with 2 KB streamed request bodies and a ceiling of 10,000 settings records,
+where a new session displaces the least recently saved one. Choosing Cloud for a new session stores no settings row.
+Companion-output receipts are retained until the Ready job and its audio links
+have been saved, so a failed final save can recover those links on the next poll.
+
+Registering an endpoint uploads nothing and starts no GPU job. Attaching files is
+explicit; Generate obtains a quote and confirmation before one reserved submission.
+Comfy may bill storage or warm-worker time separately from a generation. Use
+scale-to-zero and review your workspace's deployment settings.
 
 ## Exact shared build
 

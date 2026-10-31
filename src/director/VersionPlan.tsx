@@ -1,5 +1,8 @@
 import { readyEntry } from "../../shared/registry";
-import type { HouseTemplate } from "../../shared/templates/types";
+import type {
+  HouseTemplate,
+  TemplateInputs,
+} from "../../shared/templates/types";
 import { versionSlots } from "../../shared/templates/version";
 import type { Bundle } from "./bundle";
 import { projectPlan } from "./house-template";
@@ -8,19 +11,29 @@ export default function VersionPlan({
   template,
   bundle,
   make,
+  inputs,
+  needsAgent,
 }: {
   template: HouseTemplate;
   bundle: Bundle;
   make: string[];
+  inputs: TemplateInputs;
+  needsAgent: boolean;
 }) {
   const shots = template.mix ? [] : projectPlan(template, bundle.project).shots;
   return (
     <section aria-label="Generation plan" className="dir-version-plan">
       <p>
-        Your agent reviews the current files, requested replacements and
-        timeline. It shows the actual route, quotes and total before any paid
-        step. Keeping existing media needs no generation.
+        {needsAgent
+          ? "Your agent reviews the current files, requested replacements and timeline. It shows the actual route, quotes and total before any paid step. Keeping existing media needs no generation."
+          : "You are keeping the current media. Apply your swaps and words to continue editing here. No agent or paid generation is needed."}
       </p>
+      <dl className="dir-version-words-review">
+        <dt>{template.inputs.subject.label}</dt>
+        <dd>{inputs.subject}</dd>
+        <dt>{template.inputs.title.label}</dt>
+        <dd>{inputs.title}</dd>
+      </dl>
       <ul>
         {versionSlots(template).map((slot) => {
           const entry =
@@ -57,10 +70,13 @@ export default function VersionPlan({
           local studio.
         </p>
       ))}
-      <p>
-        Results return through the linked project with revision checks. Existing
-        media stays in place until an approved replacement is available.
-      </p>
+      {needsAgent && (
+        <p>
+          Results return through the linked project with revision checks.
+          Existing media stays in place until an approved replacement is
+          available.
+        </p>
+      )}
     </section>
   );
 }

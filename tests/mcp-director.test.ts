@@ -59,6 +59,72 @@ async function linkedStudio() {
 }
 
 describe("Director commands over MCP", () => {
+  it("discovers and runs timeline controls against the same protected project revision", async () => {
+    const { owner, call, client } = await linkedStudio();
+    const { code } = await owner("/link", "POST");
+    const { copyId } = await call("genobi_link_project", {
+      code: String(code),
+    });
+    const discovered = (await client.listTools()).tools.find(
+      (t) => t.name === "genobi_director_command",
+    )!;
+    const command = discovered.inputSchema.properties?.command as {
+      anyOf: { properties: Record<string, { const?: string }> }[];
+    };
+    const schemas = command.anyOf.filter((s) => s.properties.op.const);
+    expect(schemas.map((s) => s.properties.op.const)).toEqual([
+      "remove-clip",
+      "duplicate-clip",
+      "split-clip",
+      "set-muted",
+      "set-gain",
+    ]);
+    expect(
+      schemas.find((s) => s.properties.op.const === "split-clip")?.properties,
+    ).toHaveProperty("newLayerId");
+    const commands = [
+      { op: "duplicate-clip", layerId: "plate", newLayerId: "plate-copy" },
+      {
+        op: "split-clip",
+        layerId: "plate-copy",
+        frame: 90,
+        newLayerId: "plate-end",
+      },
+      { op: "set-muted", layerId: "plate-end", muted: true },
+      { op: "set-gain", layerId: "score", gain: 0.5 },
+      { op: "remove-clip", layerId: "plate-end" },
+    ];
+    for (const [index, command] of commands.entries()) {
+      const args = { copyId, baseRevision: index + 1, command };
+      expect(await call("genobi_director_command", args)).toMatchObject({
+        revision: index + 2,
+      });
+      expect(await call("genobi_director_command", args)).toEqual({
+        error: expect.stringContaining("revision_conflict"),
+      });
+    }
+    expect(
+      await call("genobi_director_command", {
+        copyId,
+        baseRevision: 6,
+        command: { op: "remove-clip", layerId: "labels" },
+      }),
+    ).toEqual({ error: expect.stringContaining("Unlock") });
+    const stored = await owner("", "GET");
+    expect(stored.revision).toBe(6);
+    const project = stored.project as Project;
+    expect(project.layers.some((l) => l.id === "plate-end")).toBe(false);
+    expect(project.layers.find((l) => l.id === "plate")).toMatchObject({
+      startFrame: 0,
+      durationFrames: 180,
+    });
+    expect(project.layers.find((l) => l.id === "score")).toMatchObject({
+      gain: 0.5,
+    });
+    expect(project.assets.video).toBeDefined();
+    await client.close();
+  });
+
   it("lists, links, reads and commands the studio's project", async () => {
     const { project, owner, call, client } = await linkedStudio();
     expect(await call("genobi_projects")).toEqual([]);

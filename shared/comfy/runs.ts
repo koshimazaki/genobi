@@ -1,3 +1,4 @@
+import { isKleinEdit, kleinEditTemplate, kleinEditValues } from "./klein-edit";
 import type { GenerateInput } from "../types";
 import {
   requireTemplateFor,
@@ -44,6 +45,11 @@ export function workflowRun(
   location?: DestinationKind,
 ) {
   const choice = choiceFor(model, templateId);
+  if (choice.id === "flux-3-klein-t2i" && isKleinEdit(input))
+    return {
+      template: kleinEditTemplate(input.imageReferences!.length),
+      values: kleinEditValues(input, prompt),
+    };
   const hosts = choice.template.hosts as readonly string[] | undefined;
   if (hosts && !hosts.includes(location ?? "cloud"))
     throw unsent(

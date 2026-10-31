@@ -3,7 +3,7 @@ import type { GenerateInput } from "../shared/types";
 import { imagePrompt } from "./image-regions";
 import { isDeployModel } from "../shared/comfy/deploy-catalogue";
 import { isH3, takesVideoReferences } from "../shared/h3";
-import { isImage, isKlein } from "../shared/image";
+import { imageEditing, isImage, isKlein } from "../shared/image";
 import { entryFor } from "../shared/registry";
 import { takesCamera } from "../shared/controls";
 import { cameraClauses } from "../shared/camera";
@@ -21,6 +21,7 @@ export function requestInput({
   deploy,
   ...state
 }: Omit<ComposerState, "slots" | "light" | "lightEdits">): GenerateInput {
+  const edit = imageEditing({ ...state, imageReferences });
   const entry = entryFor(state.generator, state.model);
   const { controls } = entry;
   if (!isKlein(state.model)) imageRegions = [];
@@ -34,25 +35,20 @@ export function requestInput({
       : {}),
     ...(isImage(state.generator)
       ? {
-          description: imagePrompt(
-            state.description,
-            imageRegions,
-            state.generator === "edit",
-          ),
+          description: imagePrompt(state.description, imageRegions, edit),
           // A run that takes no references is sent none; they stay in the tray.
           imageReferences:
             controls.kind === "image" && !controls.references
               ? []
               : (imageReferences ?? []),
           imageResolution: imageResolution ?? "1k",
-          imageAspectRatio:
-            state.generator === "edit" && imageRegions.length
-              ? "auto"
-              : state.generator === "image" &&
-                  imageRegions.length &&
-                  (!imageAspectRatio || imageAspectRatio === "auto")
-                ? "1:1"
-                : (imageAspectRatio ?? "auto"),
+          imageAspectRatio: edit
+            ? "auto"
+            : !edit &&
+                imageRegions.length &&
+                (!imageAspectRatio || imageAspectRatio === "auto")
+              ? "1:1"
+              : (imageAspectRatio ?? "auto"),
           imageGrounding: imageGrounding ?? false,
           imageSafetyTolerance: imageSafetyTolerance ?? 2,
         }

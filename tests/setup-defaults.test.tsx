@@ -109,4 +109,36 @@ describe("setup defaults", () => {
     );
     expect(posts).toEqual([]);
   });
+
+  it("does not apply a saved Local preference to editable hosted settings", async () => {
+    localStorage.setItem(
+      "genobi-model-selection-v1",
+      JSON.stringify({ execution: "local" }),
+    );
+    mount();
+    await act(() =>
+      readSetting("run-location", async () => ({
+        ...cloud,
+        choices: ["cloud", "deployment"],
+      })),
+    );
+    act(() => saveSetup({ selection: { execution: "local" } }));
+    expect(posts).toEqual([]);
+    expect(useSettingsStore.getState().runLocation?.location).toBe("cloud");
+  });
+
+  it("uses Local when the adapter offers no Both mode", async () => {
+    localStorage.setItem(
+      "genobi-model-selection-v1",
+      JSON.stringify({ execution: "local" }),
+    );
+    mount();
+    await act(() =>
+      readSetting("run-location", async () => ({
+        ...cloud,
+        choices: ["local", "cloud"],
+      })),
+    );
+    expect(posts).toEqual(["local"]);
+  });
 });

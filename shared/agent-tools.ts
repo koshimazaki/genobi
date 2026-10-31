@@ -11,9 +11,17 @@ export const GENOBI_TOOLS = [
   // Comparison records/media only; explicit one-use Arena pairing.
   "genobi_arena",
   "genobi_models",
+  // Read-only node/model metadata checks, including explicit Comfy Cloud reads.
+  "genobi_workflows",
   "genobi_jobs",
   "genobi_job",
   "genobi_quote",
+  "genobi_template_plan",
+  "genobi_world_recipe",
+  "genobi_audio_analysis",
+  "genobi_deployment_stage",
+  "genobi_voice_status",
+  "genobi_voice_transcribe",
   "genobi_take",
   // Never spends: copies a take (its own, or one the person picked) into the
   // project the agent is linked to, as the Director skill asks.

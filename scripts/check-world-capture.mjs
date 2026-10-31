@@ -175,7 +175,8 @@ async function cathedralTake(name, patch, shot) {
     const withCharacter = await still(page, `${dir}/with-character.png`);
     await configure(page, { avatar: false });
     const without = await still(page, `${dir}/without-character.png`);
-    await configure(page, { avatar: false, objects: [] });
+    // Removing all props must also remove routes addressed to those props.
+    await configure(page, { avatar: false, objects: [], audioRoutes: [] });
     const blank = await still(page, `${dir}/blank-set.png`);
     await configure(page, recipe);
     const files = await captureTake(page, app, dir);

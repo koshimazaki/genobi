@@ -1,8 +1,10 @@
 import { Comfy } from "@comfyorg/sdk";
+import { ComfyLow } from "@comfyorg/sdk/low";
 import { AppError } from "./errors";
 import { isComfyKey, mediaUrl, type Fetcher } from "../shared/provider";
 import type { ProviderResult } from "../shared/provider";
 import { type ApiGraph } from "../shared/comfy/slots";
+import { selectWorkflowOutputs } from "../shared/comfy/outputs";
 import { workflowAssetGraph, type SdkAssets } from "./comfy-assets";
 import { runFailure, type RunFailure } from "./comfy-run-failure";
 import {
@@ -125,14 +127,17 @@ export interface ComfySdkOptions {
   connect?: Connect;
   /** The process environment the SDK reads; `process.env` where there is one. */
   env?: Record<string, string | undefined>;
+  portableUploads?: boolean;
 }
 
 export class ComfySdkWorkflows implements WorkflowClient {
   private readonly destination: WorkflowDestination;
   private readonly fetcher: Fetcher;
   private readonly connect: Connect;
+  private readonly portableUploads: boolean;
   private readonly env: Record<string, string | undefined>;
   constructor(options: ComfySdkOptions = {}) {
+    this.portableUploads = options.portableUploads ?? false;
     this.destination = options.destination ?? DEFAULT_DESTINATION;
     this.fetcher = options.fetcher ?? ((...args) => fetch(...args));
     this.connect = options.connect ?? connectSdk;
@@ -211,7 +216,30 @@ export class ComfySdkWorkflows implements WorkflowClient {
       template,
       values,
       files,
-      client.assets,
+      this.portableUploads
+        ? {
+            fromBytes: (bytes, options) => ({
+              asReference: async (signal) => {
+                const low = new ComfyLow(this.base, key, {
+                  fetch: destinationFetch(this.base, this.fetcher),
+                  clientInfo: "genobi",
+                });
+                const asset = await low.postAssets(
+                  new Blob([new Uint8Array(bytes)]),
+                  options.contentType,
+                  options.filename,
+                  { signal },
+                );
+                if (
+                  typeof asset.id !== "string" ||
+                  !/^[a-zA-Z0-9-]{1,128}$/.test(asset.id)
+                )
+                  throw new Error("Invalid asset receipt");
+                return { __type: "core/ASSET", info: { id: asset.id } };
+              },
+            }),
+          }
+        : client.assets,
     );
     let job: { id: string };
     try {
@@ -257,37 +285,32 @@ export class ComfySdkWorkflows implements WorkflowClient {
     }
     if (status !== "Ready")
       return progress === undefined ? { id, status } : { id, status, progress };
-    // The template's own output node; any file of that kind otherwise.
-    const files = job.outputs.filter((o) => o.type === expected.media);
-    const output =
-      files.find((o) => o.nodeId === expected.nodeId) ?? files.at(0);
-    if (!output) return { id, status: "Error" };
-    let url: string;
+    const selected = selectWorkflowOutputs(job.outputs, expected);
+    if (!selected.ok) return { id, status: "Error", error: selected.error };
+    let links: { url: string }[];
     try {
-      ({ url } = await output.getDownloadUrl());
+      links = await Promise.all([
+        selected.primary.getDownloadUrl(),
+        ...selected.companions.map(({ output }) => output.getDownloadUrl()),
+      ]);
     } catch (error) {
       const failure = pollError(error);
       if (failure === "gone") return { id, status: "Task not found" };
       throw failure;
     }
     try {
-      const companions = await Promise.all(
-        (expected.companions ?? []).map(async ({ nodeId, label }) => {
-          const audio = job.outputs.find(
-            (o) => o.nodeId === nodeId && o.type === "audio",
-          );
-          if (!audio) return [];
-          const { url } = await audio.getDownloadUrl();
-          return [{ nodeId, label, url: mediaUrl(url).href }];
+      const companions = selected.companions.map(
+        ({ nodeId, label }, index) => ({
+          nodeId,
+          label,
+          url: mediaUrl(links[index + 1].url).href,
         }),
       );
       return {
         id,
         status: "Ready",
-        result: { sample: mediaUrl(url).href },
-        ...(expected.companions?.length
-          ? { companions: companions.flat() }
-          : {}),
+        result: { sample: mediaUrl(links[0].url).href },
+        ...(expected.companions?.length ? { companions } : {}),
       };
     } catch {
       throw new AppError(

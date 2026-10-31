@@ -5,6 +5,8 @@ import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import GenerateVersionAction from "../src/director/GenerateVersionAction";
 import { studioStore } from "../src/studio/store";
 import { versionCharacter, versionMix } from "./director-version-fixtures";
+import { readBrief, writeBrief } from "../src/director/prompt-brief";
+import { cleanInstruction } from "../shared/director/regenerate";
 import type { Bundle } from "../src/director/bundle";
 
 const state = vi.hoisted(() => ({
@@ -27,7 +29,8 @@ vi.mock("../src/director/MediaTile", () => ({
   default: () => <span>Media preview</span>,
 }));
 vi.mock("../src/director/feedback-file", () => ({ feedbackOf: () => ({}) }));
-vi.mock("../shared/director/prompt-send", () => ({
+vi.mock("../shared/director/prompt-send", async (original) => ({
+  ...(await original<object>()),
   promptsInstruction: () => ({ text: "My current direction and edits" }),
 }));
 (
@@ -88,7 +91,7 @@ it("opens inputs when a template is selected and hands a finished mix to the age
   );
   expect(choices.length).toBeGreaterThan(0);
   await act(async () => {
-    choices[0].click();
+    if (!choices[0].checked) choices[0].click();
     button("Review generation plan").click();
   });
   expect(document.body.textContent).toContain("Generate replacement");
@@ -98,11 +101,12 @@ it("opens inputs when a template is selected and hands a finished mix to the age
   });
   expect(state.send).toHaveBeenCalledOnce();
   const message = state.send.mock.calls[0][0];
-  expect(message).toContain("Generate a replacement");
-  expect(message).toContain("Reuse current media");
-  expect(message).toContain("My current direction and edits");
+  expect(message).toContain("Replace slot IDs: mix-01.");
+  expect(message).toContain("Reuse other media");
+  expect(cleanInstruction(message)).toBe(message);
+  expect(message).toContain("brief/prompt.json");
   expect(message).toContain("wait for explicit approval");
-  expect(message).toContain("never retry an uncertain submission");
+  expect(message).toContain("never retry uncertain submissions");
   expect(fetch).not.toHaveBeenCalled();
   expect(document.querySelector("dialog")).toBeNull();
 });
@@ -112,8 +116,10 @@ it("allows an undoable asset swap without starting an agent", async () => {
   await mount(bundle);
   await act(async () => {
     button("Apply swaps only").click();
+    // Failed polls must not format the bundle's megabytes of media bytes:
+    // that synchronous work can delay the validation/commit we are awaiting.
     await vi.waitFor(() =>
-      expect(studioStore.getState().director.bundle).not.toBe(bundle),
+      expect(studioStore.getState().director.bundle === bundle).toBe(false),
     );
   });
   expect(document.body.textContent).toContain("Nothing was generated");
@@ -128,13 +134,90 @@ it("offers a project ZIP handoff on hosted and never sends unavailable media", a
   act(() => button("Review generation plan").click());
   expect(button("Prepare with Genobi").disabled).toBe(true);
   expect(button("Save project ZIP")).toBeDefined();
-  expect(
-    document.querySelector('a[href="http://127.0.0.1:4317"]'),
-  ).not.toBeNull();
+  const link = document.querySelector<HTMLAnchorElement>(
+    'a[href^="http://127.0.0.1:4317/director?"]',
+  )!;
+  expect(new URL(link.href).searchParams.get("example")).toBe(
+    "character-piece",
+  );
+  expect(new URL(link.href).searchParams.get("workspace")).toBe("director");
   expect(document.body.textContent).toContain(
     "pairing alone does not transfer project media",
   );
   expect(state.send).not.toHaveBeenCalled();
+});
+
+it("lets a hosted finished mix keep existing media and continue editing from review without an agent", async () => {
+  state.copy = false;
+  const bundle = await versionMix();
+  await mount(bundle);
+  const title = document.querySelectorAll<HTMLInputElement>(
+    ".dir-version-words input",
+  )[1];
+  act(() => {
+    Object.getOwnPropertyDescriptor(
+      HTMLInputElement.prototype,
+      "value",
+    )!.set!.call(title, "MY REMIX");
+    title.dispatchEvent(new Event("input", { bubbles: true }));
+    for (const choice of document.querySelectorAll<HTMLInputElement>(
+      'input[type="checkbox"]',
+    ))
+      if (choice.checked) choice.click();
+  });
+  act(() => button("Review generation plan").click());
+  expect(document.body.textContent).toContain(
+    "No agent or paid generation is needed",
+  );
+  expect(button("Prepare with Genobi")).toBeUndefined();
+  expect(button("Apply swaps and continue editing").disabled).toBe(false);
+  await act(async () => {
+    button("Apply swaps and continue editing").click();
+    await vi.waitFor(
+      () =>
+        expect(studioStore.getState().director.bundle === bundle).toBe(false),
+      { timeout: 5000 },
+    );
+  });
+  expect(document.querySelector("dialog")).toBeNull();
+  expect(
+    studioStore.getState().director.bundle?.project.template?.inputs.title,
+  ).toBe("MY REMIX");
+  expect(state.send).not.toHaveBeenCalled();
+  expect(fetch).not.toHaveBeenCalled();
+  act(() => studioStore.getState().actions.undo());
+  expect(
+    studioStore.getState().director.bundle?.project.template?.inputs.title,
+  ).toBe(bundle.project.template?.inputs.title);
+});
+
+it("keeps the advanced brief collapsed by default and preserves it when toggled", async () => {
+  const original = await versionCharacter();
+  const brief = readBrief(original);
+  const text =
+    "Keep the original camera; make the room breathe to the bass. [Image 1]";
+  await mount(writeBrief(original, { ...brief, text }));
+  const advanced = document.querySelector<HTMLDetailsElement>(
+    ".dir-version-advanced",
+  )!;
+  const field = document.querySelector<HTMLTextAreaElement>(
+    'textarea[aria-label="Make it yours description"]',
+  )!;
+  expect(advanced.open).toBe(false);
+  act(() => advanced.querySelector("summary")!.click());
+  expect(advanced.open).toBe(true);
+  expect(field.value).toBe(text);
+  act(() => advanced.querySelector("summary")!.click());
+  expect(advanced.open).toBe(false);
+  expect(field.value).toBe(text);
+  act(() => button("Review generation plan").click());
+  await act(async () => {
+    button("Prepare with Genobi").click();
+    await vi.waitFor(() => expect(state.send).toHaveBeenCalledOnce());
+  });
+  expect(readBrief(studioStore.getState().director.bundle!).text).toBe(text);
+  expect(state.send.mock.calls[0][0]).toContain(text);
+  expect(fetch).not.toHaveBeenCalled();
 });
 
 it("keeps Gallery free of the template modal and does not reopen a dismissed panel on an edit", async () => {
@@ -162,4 +245,27 @@ it("keeps Gallery free of the template modal and does not reopen a dismissed pan
     }),
   );
   expect(document.querySelector("dialog")).not.toBeNull();
+});
+
+it("keeps Make it yours description and character/style bindings in the prepared project", async () => {
+  const original = await versionCharacter();
+  const brief = readBrief(original);
+  const text = `Character: [${brief.references[0].label}]\nStyle: quiet watercolor, keep the red coat`;
+  const bundle = writeBrief(original, { ...brief, text });
+  await mount(bundle);
+  expect(
+    document.querySelector<HTMLTextAreaElement>(
+      'textarea[aria-label="Make it yours description"]',
+    )?.value,
+  ).toBe(text);
+  act(() => button("Review generation plan").click());
+  await act(async () => {
+    button("Prepare with Genobi").click();
+    await vi.waitFor(() => expect(state.send).toHaveBeenCalledOnce());
+  });
+  const saved = readBrief(studioStore.getState().director.bundle!);
+  expect(saved.text).toBe(text);
+  expect(saved.references).toEqual(brief.references);
+  expect(state.send.mock.calls[0][0]).toContain("quiet watercolor");
+  expect(fetch).not.toHaveBeenCalled();
 });

@@ -121,7 +121,7 @@ describe("genobi_project", () => {
       revision: 1,
       updatedAt: "2026-10-29T00:00:00.000Z",
       project: directed(),
-      brief: { text: "Earlier brief" },
+      brief: { version: 1, text: "Earlier brief", references: [] },
     });
     expect(summary.globalPrompt).toBe(directed().globalPrompt);
     expect(summary.prompt).toBe("Earlier brief");

@@ -25,6 +25,7 @@ export interface Proposal {
   /**
    * The session that held an upscale's source when it was quoted: the
    * person's (a picked take, through the read scope) or the agent's own.
+   * For a deployment this is the agent session that staged its quoted tickets.
    */
   sourceSession: string;
 }
@@ -81,8 +82,9 @@ export type SetSource = MeasuredSource & {
 /**
  * What an approval adds to the ordinary quoted submission, checked inside
  * `JobService.reserve` under the key lock: the payer the person saw, and the
- * agent's session, which may hold the quoted upscale's source (read for this
- * one submission only).
+ * input session, which may hold the quoted upscale's source or deployment
+ * tickets (read for this one submission only). It is assigned by the server's
+ * proposal, never accepted from the HTTP request.
  */
 export interface ApprovalTerms {
   payer: ApprovalPayer;

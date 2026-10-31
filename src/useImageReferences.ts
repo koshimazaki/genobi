@@ -1,3 +1,4 @@
+import { imageEditing } from "../shared/image";
 import { videoReferenceLimit } from "../shared/h3";
 import { useRef, useState } from "react";
 import type { ComposerState } from "./useComposer";
@@ -100,7 +101,7 @@ export function useImageReferences(
       refs = current.imageReferences ?? [];
     // Removing the source must not promote an unrelated reference into its place.
     const order =
-      index === 0 && current.generator === "edit"
+      index === 0 && imageEditing(current)
         ? []
         : refs.map((_, i) => i).filter((i) => i !== index);
     update({
@@ -109,7 +110,7 @@ export function useImageReferences(
         index === 0 ? [] : remapReferences(current.imageRegions, order),
     });
     setNotice(
-      index === 0 && current.generator === "edit"
+      index === 0 && imageEditing(current)
         ? "Source and its references cleared."
         : "Image numbers changed; check any numbers typed in your prompt.",
     );

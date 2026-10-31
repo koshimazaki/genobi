@@ -1,6 +1,5 @@
 import type { Layer, Project } from "../../shared/director/types";
 import { reorderLane } from "../../shared/director/tracks";
-import { duplicateLayer } from "../../shared/director/duplicate";
 import Inspector from "./Inspector";
 
 export default function LayerInspector({
@@ -13,6 +12,7 @@ export default function LayerInspector({
   select,
   replace,
   command,
+  report,
 }: {
   project: Project;
   layer?: Layer;
@@ -23,6 +23,7 @@ export default function LayerInspector({
   select: (id: string) => void;
   replace: () => void;
   command: (command: unknown) => string;
+  report: (error: unknown) => void;
 }) {
   return (
     <Inspector
@@ -36,12 +37,19 @@ export default function LayerInspector({
       duplicate={() => {
         if (!layer) return;
         const id = `layer-${crypto.randomUUID().slice(0, 8)}`;
-        changeList(duplicateLayer(project, layer.id, id).layers);
-        select(id);
+        const error = command({
+          op: "duplicate-clip",
+          layerId: layer.id,
+          newLayerId: id,
+        });
+        if (error) report(new Error(error));
+        else select(id);
       }}
-      remove={() =>
-        layer && changeList(project.layers.filter((l) => l.id !== layer.id))
-      }
+      remove={() => {
+        if (!layer) return;
+        const error = command({ op: "remove-clip", layerId: layer.id });
+        if (error) report(new Error(error));
+      }}
       reorder={(delta) =>
         layer &&
         changeList(reorderLane(project.layers, layer.id, delta > 0 ? 1 : -1))

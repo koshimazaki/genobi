@@ -11,6 +11,7 @@ import type express from "express";
 import { GENOBI_CLIENT_HEADER } from "../shared/agent-session-events";
 import { readsSourceClip } from "../shared/openjutsu";
 import type { GenerateInput, JobOrigin } from "../shared/types";
+import { takeOutputs } from "../shared/take";
 import { readerOf } from "./agent-scope";
 import type { Made } from "./jobs";
 import { loadSamples } from "./media";
@@ -51,7 +52,19 @@ export function jobForReader(job: StoredJob, sessionId: string) {
  */
 export function sharedOwner(store: Store, id: string, sessionId: string) {
   const job = store.data.jobs.find((item) => item.id === id);
-  return job && shareable(job, sessionId) ? job.sessionId : undefined;
+  if (job && shareable(job, sessionId)) return job.sessionId;
+  // A separate output is shared only through its recorded, visible parent
+  // and a real source belonging to that parent's owner. Never match prefixes.
+  return store.data.jobs.find(
+    (item) =>
+      shareable(item, sessionId) &&
+      takeOutputs(item).some(
+        (output) => output.assetId === id && output.available,
+      ) &&
+      store.data.sources.some(
+        (source) => source.id === id && source.sessionId === item.sessionId,
+      ),
+  )?.sessionId;
 }
 
 /**
@@ -88,6 +101,15 @@ export async function historyOf(
   const sharedIds = new Set(
     jobs.filter((job) => job.sessionId !== sessionId).map((job) => job.id),
   );
+  const sharedOutputs = new Map(
+    jobs
+      .filter((job) => sharedIds.has(job.id))
+      .flatMap((job) =>
+        takeOutputs(job)
+          .filter((output) => output.available)
+          .map((output) => [output.assetId, job.sessionId] as const),
+      ),
+  );
   // Terminal activity must not evict the studio's own history or stop its
   // poller from collecting an unfinished run. Bound each list independently.
   const visibleIds = new Set([
@@ -110,7 +132,8 @@ export async function historyOf(
       ...store.data.sources
         .filter(
           (source) =>
-            source.sessionId === sessionId || sharedIds.has(source.id),
+            source.sessionId === sessionId ||
+            sharedOutputs.get(source.id) === source.sessionId,
         )
         .map(publicSource),
     ],

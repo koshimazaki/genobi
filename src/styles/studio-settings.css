@@ -1,5 +1,5 @@
 .key-dialog.studio-settings {
-  width: min(920px, calc(100vw - 32px));
+  width: min(1120px, calc(100vw - 48px));
   max-height: calc(100dvh - 32px);
   overflow-y: auto;
 }
@@ -15,7 +15,7 @@
 }
 .settings-grid {
   display: grid;
-  grid-template-columns: 1.15fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
   align-items: start;
 }
@@ -99,7 +99,7 @@
 .studio-settings button {
   min-height: 40px;
 }
-@media (max-width: 640px) {
+@media (max-width: 800px) {
   .key-dialog.studio-settings {
     width: calc(100vw - 20px);
     max-height: calc(100dvh - 20px);

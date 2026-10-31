@@ -27,9 +27,8 @@ React composer → same-origin /api/* ──┤
 
 ## Registered Comfy deployments
 
-The local studio binds validated Comfy URLs to quotes/takes and requires
-confirmation before reserving and submitting once.
-Tickets stay in memory; outputs become private media. [Camera steps and hosted refusal](comfy-deploy.md#use-it-from-camera).
+Both adapters bind validated Comfy URLs to quotes/takes and require confirmation before reserving and submitting once.
+Local tickets stay in memory; hosted tickets stay in session-owned D1 rows for two hours. Outputs become private media. [Camera steps and deployment setup](comfy-deploy.md#use-it-from-camera).
 
 ## Browser Recreate inputs
 
@@ -81,8 +80,8 @@ The landing Gallery and Director read one `shared/templates/` catalogue.
 HTML. Express and the Worker serve `/watch/<template-id>` and
 `/embed/<template-id>` before private API handling. These routes use only curated
 catalogue media, never visitor jobs or storage. The embed alone permits framing.
-See [gallery and sharing](template-gallery.md). Voice mode's mic sits in the
-same header, in every section; its routes are local only (below).
+See [gallery and sharing](template-gallery.md). Local-only [voice](voice-mode.md)
+defaults to a remembered agent destination, with explicit prompt dictation.
 
 One Comfy key serves two routes, and the wording the studio uses for them is "partner and hosted models via Comfy Router; open workflows via Comfy Cloud (API v2)". `router` runs partner and Router-hosted models by id (`shared/comfy/router.ts`). `workflow` runs Genobi's own API-format graphs through the official SDK, `@comfyorg/sdk` (MIT), against Comfy API v2 (`server/comfy-sdk.ts` behind the `WorkflowClient` interface in `shared/comfy/workflow.ts`). Router cannot run a graph and does not front Cloud, so neither wraps the other. `bfl` is BFL's own API, used for Klein's API and for a FLUX Router entry when the key is BFL's.
 
@@ -90,9 +89,9 @@ The upscale is one of those Router entries: Router lists BFL's upscaler as `bfl/
 
 MiniMax H3 is also a Router entry, `minimax-h3-router` on `minimax/minimax-h3` ([schema](https://docs.comfy.org/router-schemas/minimax/minimax-h3.json), version `c0e2e941ffff`, checked 27 October 2026): reference to video from two images and no guide, beside the four guided OmniRef workflows. `h3RouterBody` (`shared/comfy/h3-router.ts`) is the only place its body is built, for both adapters: `content` is one text item and the two references as `image_url` items with `role: "reference_image"` (the character sheet, then the storyboard), sent as the data URLs the person gave, which the schema accepts; `duration` 4 to 15 whole seconds; `resolution` `768P` for HD and `2K` for Full HD; `ratio` one of the schema's six, from the aspect. The schema states no image size or count, so the studio's own reference bounds apply (each under 5 MB, all under about 11 MB). The result is the terminal task document; `ComfyRouter.poll` reads `task.content.url` once `task.status` is `succeeded`, and any other status or a `task.error` is an error with its credits kept. That link lasts usually 12 hours (Router's signed re-host), shorter if Router falls back to MiniMax's own link, and has no refresh route; the job copies it on the first poll after completion, and a `403`, `404` or `410` from it marks the run expired rather than retrying. The quote uses Comfy's published H3 Reference to Video rate (27.16 credits a second at 768P, 39.22 at 2K, [partner-node pricing](https://docs.comfy.org/tutorials/partner-nodes/pricing), checked 27 October 2026); Router states no rate of its own, so the first approved run's credits header shows whether Router bills the same. None of this has run against Router yet.
 
-The SDK imports `node:crypto`, `node:fs`, `node:path` and `node:stream` at load, so it cannot sit in `shared/`. Both adapters import the same client; the Worker bundle leaves `node:*` external (`scripts/build-pages.mjs`) and workerd resolves it under `nodejs_compat`. `tests/worker-workflow.test.ts` runs that path inside workerd against a fake Comfy Cloud; it has not run against the deployed Pages project. The SDK hashes uploads with WebAssembly compiled at runtime, which Workers refuse; only the local studio stages deployment inputs through that SDK.
+The SDK imports `node:crypto`, `node:fs`, `node:path` and `node:stream` at load, so it cannot sit in `shared/`. Both adapters import the same client; the Worker bundle leaves `node:*` external (`scripts/build-pages.mjs`) and workerd resolves it under `nodejs_compat`. `tests/worker-workflow.test.ts` runs that path inside workerd against a fake Comfy Cloud; it has not run against the deployed Pages project. The SDK hashes uploads with WebAssembly compiled at runtime, which Workers refuse; the hosted adapter therefore uploads through the official low-level SDK transport, omitting the optional dedup hint and letting Comfy hash the bytes. The local studio retains the high-level SDK upload path.
 
-Where workflows run is the **run location**, one setting every `workflow` entry follows: Local ComfyUI, Comfy Cloud or a registered Comfy deployment ([run location](run-location.md)). The local server reads its default from `GENOBI_WORKFLOW_DESTINATION` and keeps a per-session choice the studio and agents share (`/api/settings`); the take records the location and template a run used, and a quote cannot be spent under another. Comfy Cloud runs through the SDK; a local ComfyUI runs through `server/comfy-local.ts`, a client of ComfyUI's own HTTP API (`/object_info`, `/upload/image`, `/prompt`, `/queue`, `/history`, `/view`), because the SDK reads a deployment URL only from the process-wide `COMFY_BASE_URL`. `server/workflow-destinations.ts` sends a run where its take says and a poll to the client whose address the handle names. A Comfy API deployment (a Comfy Developer Platform deployment's https URL, the server's default destination or `GENOBI_DEPLOYMENT_URL`) runs through the same SDK on its own base URL: the SDK reads a base only from `COMFY_BASE_URL` while a client is constructed, so the deployment client sets it for that one synchronous construction and restores it (`withBaseUrl` in `server/comfy-sdk.ts`), and its fetch reaches that origin only. The hosted Worker is always Comfy Cloud and says so. The SDK client refuses to run while the operator's own `COMFY_BASE_URL` is set rather than let it redirect a visitor's key.
+Where workflows run is the **run location**, one setting every `workflow` entry follows: Local ComfyUI, Comfy Cloud or a registered Comfy deployment ([run location](run-location.md)). The local server reads its default from `GENOBI_WORKFLOW_DESTINATION` and keeps a per-session choice the studio and agents share (`/api/settings`); the take records the location and template a run used, and a quote cannot be spent under another. Comfy Cloud runs through the SDK; a local ComfyUI runs through `server/comfy-local.ts`, a client of ComfyUI's own HTTP API (`/object_info`, `/upload/image`, `/prompt`, `/queue`, `/history`, `/view`), because the SDK reads a deployment URL only from the process-wide `COMFY_BASE_URL`. `server/workflow-destinations.ts` sends a run where its take says and a poll to the client whose address the handle names. A Comfy API deployment (a Comfy Developer Platform deployment's https URL, the server's default destination or `GENOBI_DEPLOYMENT_URL`) runs through the same SDK on its own base URL: the SDK reads a base only from `COMFY_BASE_URL` while a client is constructed, so the deployment client sets it for that one synchronous construction and restores it (`withBaseUrl` in `server/comfy-sdk.ts`), and its fetch reaches that origin only. The hosted Worker defaults to Comfy Cloud and also supports per-session registered Comfy deployments. `/api/health` identifies the runtime independently of editable workflow settings; `/api/capabilities` lists supported operations and their readiness probes on both adapters. The SDK client refuses to run while the operator's own `COMFY_BASE_URL` is set rather than let it redirect a visitor's key.
 
 A template may list the only hosts that can run it (`WorkflowTemplate.hosts`): the [Openjutsu character swap](openjutsu-swap.md) needs a custom node pack, so it runs only on the server's Comfy deployment, built from the pins in `comfy-build/` ([Comfy Developer Platform deployment](comfy-deployment.md)), never on Cloud or a local ComfyUI. The take records it (`recipe.location`: `deployment`); the studio's Local or Cloud expectation does not apply to it. Its quote carries a `billing` line in place of a price. A take an earlier build recorded at a location this build has no client for (`isRetiredLocation` in `shared/comfy/destination.ts`) still loads: polling closes it as expired, holds no key slot and sends nothing.
 
@@ -376,6 +375,13 @@ Tucking it away preserves polling and leaves an avatar to reopen the session.
 
 ## Keys, and what follows from them
 
+Workflow compatibility is an explicit, read-only account check: both adapters
+serve `GET /api/settings/workflows?check=cloud` through the same bounded Cloud
+catalogue reader. Settings, MCP and CLI expose it without submitting a job or
+changing the chosen destination. Reports distinguish missing resources, unknown
+metadata and deployment-only templates. They do not claim GPU execution or
+quality. See [Cloud workflow checks](comfy-readiness.md).
+
 The deployment accepts visitor keys only. No shared BFL key or secret is deployed.
 
 A key is held in live page state, sent as a header when needed, and cleared on navigation and page restoration. Legacy Web Storage credentials are deleted without being read. Browser and server persistence were both rejected for the deployment: an operator cannot honestly offer operator-blind keys using a secret they themselves control.
@@ -397,13 +403,21 @@ Upscaling a private clip mints a random, two-hour, object-specific capability UR
   its pointer/keyboard grip changes neither prompt text nor generation settings.
   All composer modes share the same minimum footprint at each breakpoint.
 - **Express locally.** Readable same-origin endpoints and established byte-range responses. Node's filesystem and process APIs are the local adapter, not Cloudflare-compatible code.
+- **Protected production deployment from the public repository.** A push to `main` of
+  `koshimazaki/genobi` can deploy after the verification and Cloudflare jobs pass,
+  using credentials in the `production` environment. Cloudflare's Pages and D1
+  permissions are account-scoped, so configure that environment for `main` only
+  with a required reviewer before enabling its credentials. Pull-request jobs
+  receive no deployment credentials. The deployment builds first, applies additive
+  migrations, publishes to the existing Pages project and checks `/api/health`;
+  without credentials it skips. Manual deployment remains an operator fallback.
+  See [Cloudflare operations](cloudflare.md#deployment).
 
 ### Rejected, and why
 
 - **Free camera dragging.** No continuous model control has been demonstrated. Named, optional terms are honest and inspectable.
 - **A seed parameter.** Neither FLUX 3 video nor video upscale documents one, so run-to-run variation is the provider's own and there is nothing to record. Sending an unknown field risks a 422 on every generation.
 - **A public community feed.** Every platform running one has accounts: an owner who accepted terms, who can be banned, and who can delete their own work. This app is deliberately anonymous, so a published clip would have no one to attribute, ban or honour a takedown from.
-- **A CI deployment token.** Cloudflare's Pages and D1 permissions are account-scoped, so the narrowest token would still expose every project in the account to a public repository's CI. Releases stay manual.
 - **Presenting a library clip as a camera finding.** Existing media previews the pipeline; it is not a controlled comparison.
 
 ## Limits
@@ -418,7 +432,8 @@ See [Cloudflare operations](cloudflare.md) for deployment, migrations and hosted
 
 Image/Edit share `shared/image.ts` for schema choices, prices, byte limits and
 PNG/JPEG/WebP header inspection. Each reference is checked for media type,
-dimensions and size. Incoming reference bytes are request-only; persisted replay
+dimensions and size. Klein sources and references select the source-conditioned graph in `shared/comfy/klein-edit.ts`, using Comfy’s `ReferenceMultiLatent` on both conditioning branches. The source determines the output aspect; the resolution tier sets the area. Hosted uploads use the portable official SDK transport without runtime WASM hashing.
+Incoming reference bytes are request-only; persisted replay
 state contains SHA-256 fingerprints, and public jobs expose only their count.
 The browser does not persist references. The same idempotency key with changed
 reference content or settings is a conflict on both adapters.

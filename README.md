@@ -61,6 +61,7 @@ experimental route for room-conditioned generated audio/video.
 
 ## Create, edit and revise
 
+- **Edit an existing Klein image.** Drop your source straight onto Image layout, add bounding boxes and describe changes. Resize the preview from its corner for detailed work.
 - **Direct across models.** Camera controls adapt to FLUX video, LTX and
   MiniMax H3 using their documented prompting language. Klein has image framing,
   layouts and first-frame references. [Camera wording and sources](docs/camera-wording.md).
@@ -71,7 +72,8 @@ experimental route for room-conditioned generated audio/video.
   back. Dual Swords compares footage and extracts exact frames.
 - **Bring your own harness.** Connect Hermes, Claude Code or Codex through
   MCP, CLI and skills. The local studio also supports voice directions using
-  Qwen3-ASR and a Development workspace for extending the app.
+  Qwen3-ASR and a Development workspace for extending the app. Voice defaults
+  to the agent, remembers your destination and offers explicit prompt dictation.
 - **Build your Taste layer.** Celebrate creative work with links and credit to
   its creators, then add your own favourite references. Save personal selections
   in the local studio or extend the catalogue in your fork. Project memory keeps
@@ -99,6 +101,9 @@ Comfy Cloud and the BFL API are the primary hosted generation choices.
 Run the studio locally to add local agent, voice and project integrations;
 choose local ComfyUI when you want supported workflows on your own hardware.
 
+**Check Comfy Cloud workflows** in Settings reads your account's node and model
+availability before a render. Agents can use the same [read-only check](docs/comfy-readiness.md).
+
 | Setup                        | What you need                                                         | Good for                                                        |
 | ---------------------------- | --------------------------------------------------------------------- | --------------------------------------------------------------- |
 | Hosted studio                | A browser; your provider key for generation                           | Trying examples, browser editing and supported cloud generation |
@@ -114,9 +119,9 @@ and [current limitations](docs/troubleshooting.md).
 Editable templates open **Generate my version** in Director or Editor: reuse
 assets, upload replacements, apply undoable swaps, or ask your linked agent to
 prepare new media. Paid generation waits for approval in the bubble. See
-[the version guide](docs/director-generate.md). Local Camera can also register
+[the version guide](docs/director-generate.md). Camera on the hosted or local studio can register
 [a Comfy deployment](docs/comfy-deploy.md#use-it-from-camera) for Layout-to-video
-and AKUSPACE; hosted visits keep their existing Cloud routes.
+and AKUSPACE. These require a deployment in your own Comfy workspace and an authorised key; that workspace pays for GPU usage. Other cloud generations only need their supported provider key.
 
 ### Run locally
 

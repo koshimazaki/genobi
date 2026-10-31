@@ -183,7 +183,15 @@ export interface Job extends GenerateInput {
   /** Comfy credits a Router run reported in its result header. */
   costCredits?: number;
   resultUrl?: string;
-  companions?: { label: string; url: string }[];
+  companions?: {
+    label: string;
+    url: string;
+    /** Optional on older runs; new producers record measured output metadata. */
+    assetId?: string;
+    mediaType?: "audio";
+    contentType?: string;
+    available?: boolean;
+  }[];
   /** False when retention or quota kept the run record but removed its media. */
   mediaAvailable?: false;
   error?: string;

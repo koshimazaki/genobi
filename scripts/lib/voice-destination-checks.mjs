@@ -1,231 +1,198 @@
-/**
- * Where the transcript goes (issue #23), for check-voice-overlay: with a
- * prompt on screen it goes straight in, says which, focuses the priced
- * Generate and submits nothing; with none on screen the overlay says so and
- * offers a session without switching the section; Send to agent instead (or
- * Do it in a session) asks the agent status first and starts a session only
- * when the route is there and available. Fixture routes only.
- */
+/** Explicit voice routing, retained conversation and prompt targets. Fixtures only. */
 import assert from "node:assert/strict";
-import {
-  HANDLE,
-  layout,
-  listening,
-  overflow,
-  SEND,
-  transcribed,
-  TRANSCRIPT,
-} from "./voice-fixture.mjs";
+import { listening, overflow, transcribed } from "./voice-fixture.mjs";
 
-const NOT_SET_UP = "Agent sessions aren't set up on this server.";
-const STARTED = {
-  status: { available: true, runner: "claude" },
-  session: {
-    status: 201,
-    json: {
-      id: "session-1",
-      runner: "claude",
-      status: "starting",
-      prompt: "fixture",
-      startedAt: "2026-10-21T12:00:00.000Z",
-      lines: ["Starting Claude Code…"],
-    },
-  },
+const SESSION = {
+  id: "11111111-1111-4111-8111-111111111111",
+  runner: "claude",
+  status: "running",
+  prompt: "Fixture scene direction",
+  startedAt: "2026-10-31T00:00:00Z",
+  lines: ["Fixture agent"],
+  live: true,
 };
-
-/** Opens the pill (which records), stops it and returns the transcript. */
-async function speak(page, voice) {
+const AGENT = {
+  status: { available: true, runner: "claude" },
+  read: SESSION,
+  session: { json: SESSION },
+};
+const REQUEST = "Make an image with FLUX of a penguin.";
+const speak = async (page, voice) => {
   await voice.click();
   await listening(page);
   await page.waitForTimeout(700);
-  return transcribed(page);
-}
-
-const UPDATE = "Update prompt";
-const onGenerate = (page) =>
-  page.waitForFunction(() =>
-    document.activeElement?.classList.contains("generate-button"),
+  await transcribed(page);
+};
+const delivered = async (page, sent, count) => {
+  await page.waitForFunction(() =>
+    document
+      .querySelector(".voice-routed")
+      ?.textContent?.startsWith("Sent to Claude Code."),
   );
-const button = (page, name) => page.getByRole("button", { name, exact: true });
+  assert.equal(sent.messages.length, count);
+};
 
 export async function destinationChecks({ open, checks, output }) {
-  // A prompt on screen: Camera takes the transcript with no picker, and
-  // focus ends on the priced Generate, which nothing presses.
-  let { context, page, voice, sent } = await open({
-    path: "/?workspace=camera",
-  });
-  await speak(page, voice);
-  await page
-    .getByText("In the Camera prompt. Nothing runs until you press Generate.", {
-      exact: true,
-    })
-    .waitFor();
-  assert.equal(await page.locator("#description").inputValue(), TRANSCRIPT);
-  await onGenerate(page);
-  assert.equal(await button(page, "Camera prompt").count(), 0, "no picker");
-  assert(await button(page, SEND).isVisible(), "the session stays offered");
-  assert.equal(sent.agentStatus.length, 0, "a fill asks no agent");
-  await page.waitForTimeout(400);
-  assert.deepEqual(sent.writes, [], "nothing is submitted");
-  await page.screenshot({ path: `${output}/voice-destinations-1440.png` });
-  // A corrected transcript reaches the prompt only through Update prompt.
-  const corrected = "A slow dolly in on a forest shaman.";
-  assert.equal(await button(page, UPDATE).count(), 0, "nothing to update yet");
-  await page.getByLabel("Transcript", { exact: true }).fill(corrected);
-  assert.equal(await page.locator("#description").inputValue(), TRANSCRIPT);
-  await button(page, UPDATE).click();
-  assert.equal(await page.locator("#description").inputValue(), corrected);
-  await onGenerate(page);
-  assert.equal(await button(page, UPDATE).count(), 0, "up to date");
-  // Escape on the handed-off Generate closes Voice and presses nothing.
-  await page.keyboard.press("Escape");
-  assert.equal(await page.getByRole("dialog", { name: "Voice" }).count(), 0);
-  assert(
-    await page.evaluate(() =>
-      document.activeElement?.classList.contains("generate-button"),
-    ),
-    "focus stays on Generate",
-  );
-  await page.waitForTimeout(400);
-  assert.deepEqual(sent.writes, [], "nothing is submitted");
-  await context.close();
-  checks.push(
-    "Camera with a prompt: the transcript goes straight into the Camera prompt, focus ends on the priced Generate and nothing is submitted",
-    "A corrected transcript reaches the Camera prompt through Update prompt; Escape on the focused Generate closes Voice, keeps focus there and submits nothing",
-  );
-
-  // No prompt on screen: Gallery says so, offers a session and stays put.
-  for (const width of [1440, 390]) {
-    ({ context, page, voice, sent } = await open({ width, path: "/" }));
-    const still = await layout(page);
-    await speak(page, voice);
-    await page.getByText("No prompt on this screen.").waitFor();
-    assert.equal(await page.locator(".voice-use").count(), 1);
-    assert.equal(await button(page, SEND).count(), 0);
-    assert(!(await overflow(page)), `no horizontal overflow at ${width}`);
-    await page.screenshot({ path: `${output}/voice-no-prompt-${width}.png` });
-    await button(page, "Do it in a session").click();
-    await page.getByText(NOT_SET_UP, { exact: true }).waitFor();
-    assert.equal(
-      await page.locator(".genobi-shell").getAttribute("data-preset"),
-      "gallery",
-      "no silent switch to Camera",
-    );
-    assert.doesNotMatch(page.url(), /workspace=camera/);
-    assert.deepEqual(await layout(page), still, `Gallery stays at ${width}`);
-    assert.equal(sent.agentStatus.length, 1);
-    assert.equal(sent.sessions.length, 0);
-    await context.close();
-  }
-  checks.push(
-    "No prompt on screen (Gallery, 1440 and 390 px): says so, offers Do it in a session, runs the session path and does not switch section",
-  );
-
-  // Send to agent instead, route missing: says so and sends nothing.
-  ({ context, page, voice, sent } = await open());
-  await speak(page, voice);
-  await button(page, SEND).click();
-  await page.getByText(NOT_SET_UP, { exact: true }).waitFor();
-  assert.deepEqual(sent.agentStatus, ["1"], "status first, with the header");
-  assert.equal(sent.sessions.length, 0, "nothing is sent");
-  assert(await button(page, SEND).isVisible(), "it stays");
-  await context.close();
-  checks.push(
-    "Send to agent instead with no agent route: asks the status, says sessions aren't set up and sends nothing",
-  );
-
-  // Project prompt, not available: the server's message, nothing sent.
-  const reason = "Install Claude Code or Hermes, then restart the server.";
-  ({ context, page, voice, sent } = await open({
-    agent: { status: { available: false, message: reason } },
-  }));
-  await speak(page, voice);
-  await button(page, SEND).click();
-  await page.getByText(`${NOT_SET_UP} ${reason}`, { exact: true }).waitFor();
-  assert.equal(sent.sessions.length, 0);
-  await context.close();
-  checks.push(
-    "Send to agent instead with available: false shows the server's message and sends nothing",
-  );
-
-  // Project prompt, available: posts the transcript and the open project's
-  // copy, says the session started and opens the session panel.
-  for (const width of [1440, 320]) {
-    ({ context, page, voice, sent } = await open({
+  for (const width of [1440, 390, 320]) {
+    // null leaves browser storage empty, exercising the actual default.
+    const { context, page, voice, sent } = await open({
       width,
-      agent: STARTED,
-      copy: true,
-    }));
-    // The studio pushes its copy once the Director project is open.
-    for (let i = 0; i < 50 && !sent.copies.size; i++)
-      await page.waitForTimeout(100);
-    const still = await layout(page);
-    await speak(page, voice);
-    assert(!(await overflow(page)), `no horizontal overflow at ${width}`);
-    await button(page, SEND).click();
-    await page
-      .getByText("Session started with Claude Code on the open project.")
-      .waitFor();
-    await page.screenshot({ path: `${output}/voice-session-${width}.png` });
-    assert.equal(sent.sessions.length, 1);
-    const [{ header, body }] = sent.sessions;
-    const [project] = [...sent.copies];
-    assert(project, "the fixture holds the open project's copy");
-    assert.equal(header, "1");
-    const { context: studio, ...request } = body;
-    assert.deepEqual(request, {
-      prompt: TRANSCRIPT,
-      source: "voice",
-      copyId: `${project}.${HANDLE}`,
+      path: "/",
+      destination: null,
+      agent: AGENT,
+      text: REQUEST,
     });
-    // The studio's context: picks (none made here) and the composer's
-    // settings in genobi_quote's names, with no prompt text and no key.
-    assert(Array.isArray(studio?.picks), "the start carries the picks");
-    assert.equal(typeof studio.settings?.model, "string");
-    assert.equal(typeof studio.settings?.generator, "string");
-    assert(!/key|https?:|description/i.test(JSON.stringify(studio)));
-    await page
-      .getByRole("region", { name: "Agent session" })
-      .waitFor({ timeout: 5000 });
-    // Folding and reopening the transcript keeps the one-session guard.
+    if (width <= 700) {
+      const header = await page.locator(".topbar").boundingBox();
+      const bubble = await page.locator(".agent-bubble").boundingBox();
+      assert(
+        bubble.y >= header.y + header.height,
+        `the open conversation leaves every header control reachable at ${width}`,
+      );
+    }
+    const entry =
+      width === 390
+        ? page
+            .locator(".agent-bubble")
+            .getByRole("button", { name: "Speak to agent" })
+        : voice;
+    await speak(page, entry);
+    await delivered(page, sent, 1);
+    assert.equal(
+      await page.getByLabel("Voice destination").inputValue(),
+      "agent",
+    );
+    assert.equal(sent.messages[0].id, SESSION.id);
+    assert.deepEqual(sent.messages[0].body, {
+      prompt: REQUEST,
+      source: "voice",
+    });
+    assert.equal(sent.messages[0].header, "1");
+    assert.doesNotMatch(page.url(), /workspace=camera/);
+    assert.equal(sent.sessions.length, 0);
+    assert.deepEqual(sent.writes, []);
+    assert(!(await overflow(page)), `no horizontal overflow at ${width}`);
+    await page.screenshot({
+      path: `${output}/voice-agent-default-${width}.png`,
+    });
+    // Folding and reopening the transcript never delivers it again.
     await page.getByRole("button", { name: "Hide transcript" }).click();
     await page.getByRole("button", { name: "Show transcript" }).click();
-    const again = button(page, SEND);
-    assert.equal(await again.getAttribute("aria-disabled"), "true");
-    await again.click({ force: true });
-    await page.waitForTimeout(300);
-    assert.equal(sent.sessions.length, 1, "one session per transcript");
-    assert.deepEqual(await layout(page), still, `nothing moves at ${width}`);
+    assert.equal(sent.messages.length, 1);
+    await page.getByRole("button", { name: "Close voice" }).click();
+    await speak(page, voice);
+    await delivered(page, sent, 2);
+    assert(sent.messages.every(({ id }) => id === SESSION.id));
+    await page
+      .getByLabel("Transcript", { exact: true })
+      .fill("Make it slower.");
+    await page.getByRole("button", { name: "Send correction" }).click();
+    await delivered(page, sent, 3);
+    assert.equal(sent.messages[2].id, SESSION.id);
     await context.close();
   }
   checks.push(
-    "Send to agent instead when available (1440 and 320 px): posts {prompt, copyId, source: voice, context: picks and composer settings} with X-Genobi-Agent, says the session started, opens the session panel; folding keeps the one-session guard",
+    "Fresh browser defaults to Agent, Camera-shaped words stay with the selected conversation, notes and corrections reuse it, and folding never resends.",
   );
 
-  // Project prompt, refused by the server: its message, as an alert.
-  ({ context, page, voice, sent } = await open({
-    agent: {
-      status: { available: true, runner: "hermes" },
-      session: {
-        status: 409,
-        json: { error: "A session is already running." },
-      },
-    },
-  }));
-  await speak(page, voice);
-  await button(page, SEND).click();
-  await page
-    .getByRole("alert")
-    .filter({ hasText: "A session is already running." })
-    .waitFor();
-  assert.equal(sent.sessions.length, 1);
-  assert.equal(
-    await page.getByRole("region", { name: "Agent session" }).count(),
-    0,
-    "a refused session opens no panel",
-  );
-  await context.close();
+  // The activity log selects its own conversation through the same recorder.
+  {
+    const { context, page, sent } = await open({
+      path: "/",
+      destination: null,
+      agent: AGENT,
+      text: REQUEST,
+    });
+    await page.locator(".deck-bar").click();
+    await speak(
+      page,
+      page.locator(".deck-log").getByRole("button", { name: "Speak to agent" }),
+    );
+    await delivered(page, sent, 1);
+    assert.equal(sent.messages[0].id, SESSION.id);
+    assert.equal(sent.sessions.length, 0);
+    assert.deepEqual(sent.writes, []);
+    await context.close();
+  }
   checks.push(
-    "Send to agent instead, refused by the server, shows its message",
+    "Bubble and activity-log microphone entry points reuse the shared recorder and selected conversation.",
+  );
+
+  // Prompt choice is explicit, remembered, and does not resend an existing note.
+  {
+    const { context, page, voice, sent } = await open({
+      path: "/?workspace=camera",
+      destination: "prompt:description",
+      text: "A quiet room.",
+    });
+    await speak(page, voice);
+    await page
+      .getByText(
+        "In the Camera prompt. Nothing runs until you press Generate.",
+        { exact: true },
+      )
+      .waitFor();
+    assert.equal(
+      await page.locator("#description").inputValue(),
+      "A quiet room.",
+    );
+    await page
+      .getByLabel("Transcript", { exact: true })
+      .fill("A large quiet room.");
+    assert.equal(
+      await page.locator("#description").inputValue(),
+      "A quiet room.",
+    );
+    await page.getByRole("button", { name: "Update prompt" }).click();
+    assert.equal(
+      await page.locator("#description").inputValue(),
+      "A large quiet room.",
+    );
+    await page.getByLabel("Voice destination").selectOption("agent");
+    assert.equal(sent.messages.length, 0);
+    assert.equal(sent.sessions.length, 0);
+    assert.equal(
+      await page.evaluate(() =>
+        localStorage.getItem("genobi.voice.destination"),
+      ),
+      "agent",
+    );
+    assert.deepEqual(sent.writes, []);
+    await context.close();
+  }
+  checks.push(
+    "Named prompt dictation is explicit; correction edits the same field; changing the destination only affects later notes until an explicit send.",
+  );
+
+  // A refused message is retained instead of overwriting Camera's prompt.
+  {
+    const { context, page, voice, sent } = await open({
+      path: "/?workspace=camera",
+      destination: "agent",
+      text: REQUEST,
+      agent: {
+        ...AGENT,
+        message: {
+          status: 409,
+          json: {
+            error: "Fixture: conversation is finishing.",
+            code: "agent_session_finishing",
+          },
+        },
+      },
+    });
+    const before = await page.locator("#description").inputValue();
+    await speak(page, voice);
+    await page
+      .getByText("Fixture: conversation is finishing.", { exact: true })
+      .waitFor();
+    assert.equal(await page.locator("#description").inputValue(), before);
+    assert.equal(sent.messages.length, 1);
+    assert.equal(sent.sessions.length, 0);
+    assert.deepEqual(sent.writes, []);
+    await context.close();
+  }
+  checks.push(
+    "A refused agent send keeps the transcript, changes no prompt and makes no automatic retry.",
   );
 }

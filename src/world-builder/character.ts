@@ -65,28 +65,21 @@ export function createBuilderCharacter(world: T.Scene, onTheme = () => {}) {
   }
   const visible = (r: Recipe) =>
     r.avatar && r.avatarAsset !== "mannequin" && r.scene !== "neuro";
-  async function prepare(r: Recipe) {
-    root.visible = visible(r);
-    if (!root.visible) return;
-    assertCreature(r);
-    const next = JSON.stringify([
+  const signatureOf = (r: Recipe) =>
+    JSON.stringify([
       r.avatarAsset,
       r.creatureReference,
       creatureMotionReceipt(),
     ]);
-    if (next === signature) return;
-    if (r.avatarAsset === "blob") {
-      clear();
-      blob = blobActor(onTheme);
-      root.add(blob.group);
-      signature = next;
-      return;
-    }
+  /** Load assets without touching the live actor; the caller guards the commit. */
+  async function prepare(r: Recipe): Promise<() => void> {
+    if (disposed) throw new Error("Scene was closed.");
     const spec = {
       characters: [
         {
           id: "builder-subject",
-          asset: r.avatarAsset,
+          asset:
+            r.avatarAsset === "blob" ? ("mannequin" as const) : r.avatarAsset,
           pose: firstClip(r.avatarMotion),
           position: [0, 0, 0] as [number, number, number],
           rotationY: 0,
@@ -94,13 +87,33 @@ export function createBuilderCharacter(world: T.Scene, onTheme = () => {}) {
         },
       ],
     };
-    await prepareCharacters(spec);
+    if (visible(r)) {
+      assertCreature(r);
+      if (r.avatarAsset !== "blob" && signatureOf(r) !== signature)
+        await prepareCharacters(spec);
+    }
     if (disposed) throw new Error("Scene was closed.");
-    const nextActor = characterGroup(spec);
-    clear();
-    actor = nextActor;
-    root.add(actor.group);
-    signature = next;
+    return () => {
+      if (disposed) throw new Error("Scene was closed.");
+      const show = visible(r);
+      if (show) {
+        // A local model or motion attachment may have changed during preload.
+        assertCreature(r);
+        const next = signatureOf(r);
+        if (next !== signature) {
+          // Construct before clearing: a failed clone keeps the current actor.
+          const nextBlob =
+            r.avatarAsset === "blob" ? blobActor(onTheme) : undefined;
+          const nextActor = nextBlob ? undefined : characterGroup(spec);
+          clear();
+          blob = nextBlob;
+          actor = nextActor;
+          root.add((actor ?? blob)!.group);
+          signature = next;
+        }
+      }
+      root.visible = show;
+    };
   }
   let lastPose: CharacterPose | undefined,
     started = 0;

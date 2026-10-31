@@ -457,6 +457,13 @@ describe(
         expect(source.sessionId).toBe(session);
         expect(source.contentType).toBe("audio/wav");
         expect(await readFile(source.filePath)).toEqual(Buffer.from(wav(1)));
+        expect(ready.companions).toContainEqual({
+          assetId: source.id,
+          label: source.label,
+          url: source.url,
+          mediaType: "audio",
+          contentType: "audio/wav",
+        });
       }
       expect(publicJob(ready)).not.toHaveProperty("companionDownloads");
       expect(s.calls.filter((c) => c.url.endsWith("/jobs"))).toHaveLength(1);

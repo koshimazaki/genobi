@@ -77,7 +77,7 @@ describe("FLUX 3 Image Klein in the registry", () => {
 
   it("resolves a pair no entry makes to the generator's FLUX 3 entry", () => {
     expect(entryFor("video", "flux-3-klein").id).toBe("flux-3-video");
-    expect(entryFor("edit", "flux-3-klein").id).toBe("flux-3-edit");
+    expect(entryFor("edit", "flux-3-klein").id).toBe("flux-3-klein");
     expect(entryFor("image", "flux-3-klein-api").id).toBe("flux-3-klein-api");
   });
 });
@@ -98,7 +98,7 @@ describe("switching between video and Klein", () => {
       model: "flux-3-klein",
       cameraEnabled: true,
       // The open graph is sized by the studio, so auto becomes a named ratio.
-      imageAspectRatio: "1:1",
+      imageAspectRatio: "auto",
       imageResolution: "4k",
       imageGrounding: false,
     });
@@ -122,8 +122,8 @@ describe("switching between video and Klein", () => {
     expect(html).toContain('id="image-run-label"');
     expect(html).toContain('id="camera-label"');
     expect(html).not.toContain("Web grounding");
-    // The open run is sent no references; the API run is.
-    expect(composerInput(held).imageReferences).toEqual([]);
+    // Both runs now receive the source and references.
+    expect(composerInput(held).imageReferences).toEqual(["ref"]);
     const api = update(held, { model: "flux-3-klein-api" });
     expect(composerInput(api).imageReferences).toEqual(["ref"]);
     const flux = renderToStaticMarkup(
@@ -339,9 +339,9 @@ describe("a Klein request", () => {
       "supported image settings",
     );
     // The open graph needs a named ratio; the API takes auto.
-    expect(() =>
-      validateInput({ ...base, imageAspectRatio: "auto" }),
-    ).toThrow();
+    expect(
+      validateInput({ ...base, imageAspectRatio: "auto" }).imageAspectRatio,
+    ).toBe("auto");
     expect(
       validateInput({
         ...base,
@@ -351,17 +351,17 @@ describe("a Klein request", () => {
     ).toBe("auto");
     expect(
       validateInput({ ...base, imageAspectRatio: undefined }),
-    ).toMatchObject({ imageAspectRatio: "1:1" });
+    ).toMatchObject({ imageAspectRatio: "auto" });
   });
-  it("refuses references on the open run, edits and unknown models", () => {
+  it("refuses invalid reference bytes, source-less edits and unknown models", () => {
     expect(() =>
       validateInput({
         ...base,
         imageReferences: ["data:image/png;base64,AAAA"],
       }),
-    ).toThrow("open workflow takes no reference images");
+    ).toThrow("Use a PNG, JPEG, or WebP");
     expect(() => validateInput({ ...base, generator: "edit" })).toThrow(
-      "edits run on FLUX 3 Edit",
+      "Edits need a source image",
     );
     expect(() => validateInput({ ...base, model: "ltx-2.5" })).toThrow(
       "FLUX 3 Image Klein",

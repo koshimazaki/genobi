@@ -37,6 +37,10 @@ user action through every layer.
 
 ## Templates and evidence
 
+- [Audiovisual implementation plan](audiovisual-implementation.md) — ten linked issues, Camera-consistent UI, two-agent sequencing and modular scene scope.
+- [Audiovisual gap audit](audiovisual-gaps.md) — corrected status and ownership for the seventeen PRD gaps.
+- [Audiovisual GPU and evaluator runbook](audiovisual-gpu-evaluation.md) — offline fixtures, real GPU gates, CPU/AKUSPACE comparisons and hosted evaluator acceptance.
+
 - [Supervised workflow checks](supervised-workflow-checks.md) — complete asset-to-project acceptance and deferred project/Arena review follow-ups.
 - [Dimensions mix](dimensions-mix.md) — the first mix template: a finished
   Supernatural Creatures teaser cut to the owner's track at 140 BPM, with
@@ -86,6 +90,8 @@ user action through every layer.
 - [Workflow reference library](workflow-reference-library.md) — future custom nodes
   and workflow candidates, starting with MiniMax H3 loops.
 
+- [Cloud workflow checks](comfy-readiness.md) — inspect an account's node/model
+  metadata from Settings or agents, without generation.
 - [Comfy Cloud inventory](comfy-cloud-inventory.md) — what Comfy Cloud runs
   today, what needs importing, and what stays local.
 - [MP4 and LTX handoff](director-comfy.md) — clean Director export into the
@@ -167,6 +173,8 @@ user action through every layer.
 - [Scene examples](scene-examples.md) — starter sets, characters, hybrids and LTX + AKUSPACE kits.
 - [World Builder and Scene Adapter](world-builder.md) — the set-preparation tool
   beside Director, its agent contract and Comfy integration.
+- [World recipe handoffs](world-recipe-handoff.md) — preserve concurrent human
+  scene edits with a live revision guard.
 - [World Builder sound](world-builder-sound.md) — the Sound panel, the example
   track, the audio mod matrix and the reactive room presets.
 - [World Builder acoustics](world-builder-acoustics.md) — the room's Sabine

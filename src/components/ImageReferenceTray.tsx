@@ -5,6 +5,7 @@ import {
   REFERENCE_DRAG,
   type ImageReferences,
 } from "../useImageReferences";
+import { imageEditing } from "../../shared/image";
 import { entryFor } from "../../shared/registry";
 import Icon from "./Icon";
 import ReferencePreview from "./ReferencePreview";
@@ -49,7 +50,7 @@ export default function ImageReferenceTray({
             {hint ??
               (!takesRefs
                 ? "Not sent on the open run · kept for API"
-                : state.generator === "edit"
+                : imageEditing(state)
                   ? "1 = source · drag a thumbnail onto a box"
                   : "Optional references")}
           </span>
@@ -84,7 +85,7 @@ export default function ImageReferenceTray({
               <div className="image-reference-actions">
                 <button
                   aria-label={
-                    index === 0 && state.generator === "edit"
+                    index === 0 && imageEditing(state)
                       ? "Clear source and references"
                       : `Remove image ${index + 1}`
                   }

@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { describe, expect, it } from "vitest";
 import { canonicalInput } from "../shared/idempotency";
 import { registry } from "../shared/registry";
-import { sha256Hex, startTake, takeOf } from "../shared/take";
+import { sha256Hex, startTake, takeOf, takeOutputs } from "../shared/take";
 import type { GenerateInput, Job } from "../shared/types";
 
 const video: GenerateInput = {
@@ -147,5 +147,40 @@ describe("the take contract", () => {
     for (const entry of registry)
       if (entry.status === "ready")
         expect(Number.isInteger(entry.recipeVersion)).toBe(true);
+  });
+
+  it("discovers only owned companion routes and keeps legacy MIME uncertainty explicit", () => {
+    const companions = [
+      {
+        assetId: "job-1-audio-3",
+        label: "Wet",
+        url: "/api/clips/job-1-audio-3",
+        contentType: "audio/wav",
+      },
+      { label: "Legacy", url: "/api/clips/job-1-audio-4" },
+      { label: "Duplicate", url: "/api/clips/job-1-audio-3" },
+      {
+        assetId: "different",
+        label: "Mismatch",
+        url: "/api/clips/job-1-audio-5",
+      },
+      { label: "Provider", url: "https://delivery.example/secret.wav" },
+    ];
+    const outputs = takeOutputs(ready({ companions }));
+    expect(outputs).toHaveLength(3);
+    expect(outputs[1]).toMatchObject({
+      assetId: "job-1-audio-3",
+      mediaType: "audio",
+      contentType: "audio/wav",
+      label: "Wet",
+    });
+    expect(outputs[2]).toMatchObject({
+      contentType: "application/octet-stream",
+    });
+    expect(
+      takeOutputs(ready({ companions, mediaAvailable: false })).every(
+        (output) => !output.available,
+      ),
+    ).toBe(true);
   });
 });

@@ -107,9 +107,10 @@ sound, so say that the result is LTX reading the words, not the trained
 effect. Selecting the default template switches back:
 `genobi_workflow_select {"entry": "ltx-2-5-akuspace", "template": "ltx-2-5-akuspace-t2v"}`.
 
-A session the studio started cannot call `genobi_run_location`, `genobi_workflows`,
-`genobi_workflow_select` or `genobi_budget`; ask the person to inspect or change
-run settings in the studio. It can still quote and request approval.
+A session the studio started may inspect templates with `genobi_workflows`,
+including `{"checkCloud":true}` or `{"checkLocal":true}`. It cannot call
+`genobi_run_location`, `genobi_workflow_select` or `genobi_budget`; ask the person
+to change run settings in the studio. It can still quote and request approval.
 
 ## Frame and length
 

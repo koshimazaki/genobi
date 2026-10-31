@@ -313,7 +313,9 @@ export class AgentSessions {
     }
     pushLine(
       session,
-      `A paid step is waiting for your approval: about $${quote.estimateUsd.toFixed(2)}.`,
+      quote.billing
+        ? `A paid step is waiting for your approval: ${quote.billing}${quote.recipe.deployment ? ` (${quote.recipe.deployment.name})` : ""}.`
+        : `A paid step is waiting for your approval: about $${quote.estimateUsd.toFixed(2)}.`,
     );
   }
 

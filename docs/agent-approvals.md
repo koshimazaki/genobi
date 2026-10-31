@@ -43,9 +43,9 @@ studio session, where the person could not spend it.
    grants nothing: the request is still an agent's and cannot spend.
 2. **The person sees the plan and the price.** `AgentSession.approvals`
    (`shared/agent-approval.ts`) lists up to six steps, each with the entry and
-   its menu line, the generator and model, the agent's prompt (280
-   characters), duration, ratio, resolution and Draft, the route and a
-   workflow's run location and template, the estimate, the expiry and whose
+   its menu line, the generator and model, the complete prompt (long prompts
+   expand for review), duration, ratio, resolution and Draft, the route and a
+   workflow's run location and template, the pricing terms, the expiry and whose
    key pays (`owner`, the key saved in the Keychain; `server`, the studio's
    demo key; `local`, nobody, on this machine's ComfyUI). An upscale's plan is
    built from what the upscale sends and the server's own record of its
@@ -56,7 +56,13 @@ studio session, where the person could not spend it.
    resolution. An upscale whose source the server cannot read is not
    offered. The bubble opens on
    a waiting step (`src/agent/AgentApprovals.tsx`) with **Approve $x.xx** and
-   **Decline**, and a countdown to the quote's expiry. Past six steps the
+   **Decline**, and a countdown to the quote's expiry. A deployment quote
+   shows its exact endpoint and workspace GPU-time billing instead of the
+   numeric estimate placeholder: no fixed price or cost cap is offered.
+   Its button reads **Approve paid GPU time**, and the key used is shown
+   separately from the workspace's billing. Older deployment plans missing
+   billing metadata also keep this metered wording; they never appear free.
+   Past six steps the
    oldest settled one is dropped, then the oldest still waiting; a step being
    sent or whose outcome is uncertain is never dropped, and when only those
    remain the new quote is not offered and the session says why
@@ -86,7 +92,12 @@ studio session, where the person could not spend it.
      it when the agent quoted it, recorded on the step (`sourceSession`): the
      person's for a take they picked ([the read scope](agent-context.md)),
      or the agent's own for a clip it uploaded, which stays the agent's and
-     which the person's own session still cannot name. Then the usual checks:
+     which the person's own session still cannot name. Deployment inputs use
+     that same server-recorded input session to validate and resolve only the
+     tickets included in the approved quote. Tickets retain their original
+     session, endpoint and expiry; they are not generally transferred to the
+     owner, and the ordinary quote API still refuses another session's tickets.
+     Then the usual checks:
      validation, route, budget, the settings expectation, the quote's
      settings hash and recipe, and the reservation persisted before anything
      is sent. The quote record already names its route (Comfy Router, BFL or
@@ -232,6 +243,11 @@ Local, 22 October 2026, against fakes; no model and no provider were called:
 - `tests/agent-approvals-view.test.tsx`: the bubble's step with its plan
   line, prompt, price, payer and countdown, Approve and Decline only while it
   is open, and each closed state's words.
+- `tests/agent-deployment-approval-view.test.tsx`: a deployment quote shows
+  its endpoint and metered terms before any request; an explicit click sends
+  one approval with the expected settings and idempotency key, then removes
+  Approve when started. Settings changes hold the button. A legacy deployment
+  plan without billing details is still shown as paid GPU time.
 - `node scripts/check-voice-overlay.mjs` against a dev server (fixture routes,
   `scripts/lib/voice-approval-checks.mjs`): a session started from Voice
   reads a quoted step; the bubble shows its plan, price and payer; Approve

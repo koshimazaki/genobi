@@ -5,7 +5,7 @@ import type { Job } from "../shared/types";
 import { StudioError, StudioNoAnswer } from "./api";
 import { JOB_ID, jobSummary, type ToolDefinition } from "./definition";
 import {
-  generationBody,
+  resolvedGenerationBody,
   generationShape,
   idempotencyKeyField,
   quoteIdField,
@@ -74,7 +74,10 @@ export const generationTools: ToolDefinition[] = [
     },
     async run(api, args) {
       const { quote } = await api
-        .post<{ quote: Quote }>("/api/quotes", generationBody(args))
+        .post<{ quote: Quote }>(
+          "/api/quotes",
+          await resolvedGenerationBody(api, args),
+        )
         .catch((error) => Promise.reject(refusal(error)));
       return {
         quoteId: quote.id,
@@ -119,15 +122,16 @@ export const generationTools: ToolDefinition[] = [
     async run(api, args) {
       const quoteId = quoteIdField.parse(args.quoteId);
       const idempotencyKey = idempotencyKeyField.parse(args.idempotencyKey);
+      // A scoped file read can fail, but cannot have submitted a paid run.
+      const body = await resolvedGenerationBody(api, args);
       let job: Job;
       try {
         // One request, never repeated here: a second attempt could pay twice
         // if the first was reserved and its answer lost.
-        ({ job } = await api.post<{ job: Job }>(
-          "/api/jobs",
-          generationBody(args),
-          { "Idempotency-Key": idempotencyKey, "Quote-Id": quoteId },
-        ));
+        ({ job } = await api.post<{ job: Job }>("/api/jobs", body, {
+          "Idempotency-Key": idempotencyKey,
+          "Quote-Id": quoteId,
+        }));
       } catch (error) {
         if (error instanceof StudioNoAnswer)
           throw uncertain(quoteId, idempotencyKey, error.message);

@@ -90,13 +90,13 @@ export const kleinApiControls: ImageControls = {
 };
 /**
  * The open Klein graph: the graph is sized by the studio, so a ratio is
- * always named (`auto` has nothing to read it from), and it takes no image
- * inputs until uploads reach the workflow route.
+ * named for a new image; `auto` uses the first reference when editing.
+ * References use Comfy’s ReferenceMultiLatent graph path.
  */
 export const kleinOpenControls: ImageControls = {
   ...kleinApiControls,
-  aspectRatios: IMAGE_ASPECT_RATIOS.filter((ratio) => ratio !== "auto"),
-  references: false,
+  aspectRatios: IMAGE_ASPECT_RATIOS,
+  references: true,
 };
 /** Whether an entry's controls carry the camera at all. */
 export const takesCamera = (controls: Controls) =>

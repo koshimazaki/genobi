@@ -11,14 +11,20 @@ Shot, Build and Walk; a take freezes it on its frame grid at capture.
 ## The Sound panel
 
 The owner, 29 October: "Look at what we had in Holodeck's World view — that
-was really perfect — do it verbatim, but fit it in our one." The panel follows
-Holodeck's Audio Intel layout (`AudioControls.tsx`, `SoundSections.tsx`):
+was really perfect — do it verbatim, but fit it in our one." The panel keeps
+Holodeck's Audio Intel transport and instruments (`AudioControls.tsx`,
+`SoundSections.tsx`). The audiovisual workflow now follows Camera's hierarchy:
+editable response first, optional diagnostics after it.
 
 - **Transport** at the top: Play/Stop (accented while playing) with a live
   LOW/MID/HIGH/LVL meter strip beside it, Load audio, the **Recent** menu and
   the track's name. Folded in the dock, the panel keeps the transport and its
   meter in view.
-- **Signal scopes**, open by default: band meters with peak hold, a scrolling
+- **Audio response**, open by default: the active-route count and the
+  [mod matrix](#audio-mod-matrix). Choose which bands affect which scene
+  properties, then press Play to preview. Route changes still use the live
+  tuning path without stopping playback.
+- **Signal scopes**, closed by default: band meters with peak hold, a scrolling
   spectrogram and a spectrum. While the track plays they read a live
   AnalyserNode on the World Builder's `<audio>` element
   (`audio-analyser.ts`); otherwise they show the recipe's precomputed
@@ -26,9 +32,10 @@ Holodeck's Audio Intel layout (`AudioControls.tsx`, `SoundSections.tsx`):
   attached only once the browser's audio context is running, so a context it
   keeps suspended never silences the track. One animation loop drives every
   meter (`useSignalScopes.ts`), scheduled on the window that holds the panel,
-  so it keeps running when the panel is popped out.
-- **Mod matrix** ([below](#audio-mod-matrix)), **Audio assets** and **Clear
-  audio**.
+  so it keeps running when the panel is popped out. The native disclosure
+  keeps the instruments mounted when closed; it does not restart the scope
+  loop or reset route values.
+- **Audio assets** and **Clear audio** remain below the response and scopes.
 
 A track a person loads plays at once: a picked file, a drop on the scene, a
 Recent or Audio assets pick, project audio, or a recent row dragged onto the
@@ -134,6 +141,20 @@ VRM is attached under Scene, and the neutral mannequin when it is not
 (`preset-menu.ts`). The node's `examples/rooms/*.json` are these presets as
 recipes, so `small_room.json` names the creature; configured directly, without
 the menu, it needs the creature attached.
+
+## Apply a captured room
+
+In the local studio, **Apply room** uses the room saved in the selected take's
+recipe receipt and processes that take's WAV. Editing the open scene does not
+change an existing take's treatment. To use the edited room, capture a new take
+first. A take without a valid receipt asks for a new capture; the current scene
+is never substituted. Before import starts, the action rechecks the selected take and project and
+discards a result if either changed during processing. Asset import separately
+checks project identity while reading its files.
+
+This action selects the nearest supported room preset and uses the local CPU
+Space route. It does not run the trained AKUSPACE LoRA or the native
+geometry-derived Comfy reverb graph. Those remain separate workflow choices.
 
 ## Inside the Comfy node
 

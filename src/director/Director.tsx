@@ -5,7 +5,7 @@ import RemixPanel from "./RemixPanel";
 import SavedVideos from "./SavedVideos";
 import RenderResult from "./RenderResult";
 import { usePageKey } from "../usePageKey";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { splitLayer } from "../../shared/director/split";
 import { addGraphics } from "./add-graphics";
 import AddTrackDialog from "./AddTrackDialog";
@@ -49,6 +49,7 @@ export default function Director({
   initializeProject?: boolean;
 }) {
   const shell = useShell();
+  const [versionRequest, setVersionRequest] = useState(0);
   const { bundle, history, drafts } = useStudio((s) => s.director);
   const { advanced, selected, addTrackOpen } = useStudio((s) => s.workspace);
   const { imageFrames, units } = useStudio((s) => s.settings);
@@ -242,6 +243,7 @@ export default function Director({
     >
       <StudioPanel id="file">
         <ComposerHeader
+          versionRequest={versionRequest}
           simple={!advanced}
           name={p?.name}
           busy={busy}
@@ -318,6 +320,7 @@ export default function Director({
       <div className={`dir-workspace ${!advanced ? "is-simple" : ""}`}>
         {bundle && (
           <RemixPanel
+            generateVersion={() => setVersionRequest((n) => n + 1)}
             connection={connection}
             bundle={bundle}
             disabled={busy}

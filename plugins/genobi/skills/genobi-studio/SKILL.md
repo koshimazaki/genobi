@@ -14,7 +14,7 @@ metadata:
 
 Genobi is a local video studio: Camera, Director timeline, 3D, Dual Swords
 frame editor and Ninja panels, over Comfy Router (LTX 2.5, FLUX 3), Comfy
-Cloud workflows and, later, a local ComfyUI. This plugin's MCP server is a thin
+Cloud workflows, registered Comfy deployments and a local ComfyUI. This plugin's MCP server is a thin
 client of the studio running on this machine. It holds no keys.
 
 ## Terminal alternative
@@ -41,6 +41,12 @@ questions when choices are already supplied.
 Call `genobi_status`. If it says Genobi is not running, ask the person to run
 `npm run dev` in the camera-director folder; do not start servers yourself
 unless they ask.
+
+Read its `capabilities` for the running adapter's supported operations, limits
+and status routes. This differs from the offline capability catalogue; support
+alone does not prove local models or credentials are configured. An older server
+may omit this field. MCP and CLI are intentionally local stdio/loopback adapters;
+hosted REST routes do not make a remote MCP connection available.
 
 ## Which skill
 
@@ -116,6 +122,8 @@ Routing examples, from request to the skills to load:
 | `genobi_provenance`       | Build the provenance card for finished takes: models, time, cost, tier          |
 | `genobi_audio_upload`     | Bring a local WAV, FLAC or MP3 into the session by path; returns `sourceId`     |
 | `genobi_audio_analysis`   | Tempo, fitted beat grid, onsets, intensity and key moments of an audio file     |
+| `genobi_voice_status`     | Read local speech-to-text readiness, supported languages and duration limit     |
+| `genobi_voice_transcribe` | Transcribe scoped audio or an external agent's file; return text for review     |
 | `genobi_media_tools`      | Whether ffmpeg is installed for the local media tools                           |
 | `genobi_media_probe`      | A clip's duration and video and audio streams                                   |
 | `genobi_media_frames`     | Pull still frames from a video at given times, as PNG sources                   |
@@ -123,8 +131,9 @@ Routing examples, from request to the skills to load:
 | `genobi_media_concat`     | Join two to eight clips end to end into a new source                            |
 | `genobi_media_crossfade`  | Overlap two clips with a fade into a new source                                 |
 | `genobi_media_space`      | Put an AKUSPACE room on a clip's sound in timed segments, as a new source       |
-| `genobi_run_location`     | Read or set where open workflows run: `local` (free, this machine) or `cloud`   |
-| `genobi_workflows`        | List the workflow templates per capability; `checkLocal` checks ComfyUI         |
+| `genobi_run_location`     | Read or set `local`, `cloud`, `both` or a registered `deployment`               |
+| `genobi_deployment_stage` | Stage a scoped input for a deployment and receive a session-bound ticket        |
+| `genobi_workflows`        | List templates; `checkLocal` / `checkCloud` inspect node and model metadata     |
 | `genobi_workflow_select`  | Swap the template behind a workflow model, within its capability                |
 | `genobi_machine`          | This machine's memory, disk and GPU, and which models run here or on Cloud      |
 | `genobi_skill`            | List the skills, or load one by name when the task needs it; never pays         |
@@ -133,6 +142,20 @@ Routing examples, from request to the skills to load:
 | `genobi_develop`          | Start a Developer for a change to the studio itself, or read one; never pays    |
 
 ## Paying for a generation
+
+For speech-to-text, call `genobi_voice_status {}` first. If available, use
+`genobi_voice_transcribe` with exactly one session audio `sourceId`, linked
+`projectAsset: {copyId, assetId}`, or (external agents only) absolute local
+`filePath`. An optional `language` must be in the status list. Review the returned
+text before any action; the tool neither executes the transcript nor installs
+models. Studio-started agents cannot pass a filesystem path.
+
+For generation from project images, read `genobi_project.brief.references` and
+pass ordered `projectImageReferences: [{copyId, assetId}]`. The adapter resolves
+the linked bytes internally for quote and submit. Load `genobi-comfy` to stage
+deployment files and quote a deployment recipe. Staging and transcription are
+available to studio-started agents within their existing project/World/source
+scope; submitting a paid generation remains unavailable.
 
 0. Call `genobi_budget` with the runs and dollars the whole job needs. On the
    studio's demo key the agent's runs are held to three per session per day

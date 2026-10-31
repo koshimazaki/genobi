@@ -1,5 +1,6 @@
 // The Worker under test: one workerd per test file, with isolated D1/R2, every
 // migration applied, and a fake BFL whose submissions the tests count.
+import { fakeDeployment } from "./worker-deploy-provider";
 import { afterAll, beforeAll, beforeEach } from "vitest";
 import {
   Miniflare,
@@ -22,9 +23,12 @@ export const cloudRequests: {
   method: string;
   path: string;
   bearer: boolean;
+  apiKey?: boolean;
   idempotency: string | null;
   body?: Record<string, unknown>;
 }[] = [];
+/** Explicit Cloud discovery fixture; separate from generation requests. */
+export const cloudCatalogue = { body: {} as unknown, status: 200 };
 /** What reached the fake Router's queued submit, without the key itself. */
 export const routerRequests: {
   path: string;
@@ -161,6 +165,8 @@ export function useWorker() {
         r2Buckets: ["MEDIA"],
         serviceBindings: { ASSETS: () => new MFResponse("asset") },
         outboundService: async (request) => {
+          const deployed = await fakeDeployment(request, clip);
+          if (deployed) return deployed;
           const url = new URL(request.url);
           if (url.hostname === "api.bfl.ai" && url.pathname === "/v1/credits") {
             if (faults.holdCredits) await faults.holdCredits;
@@ -227,11 +233,27 @@ export function useWorker() {
               bearer: /^Bearer comfyui-/.test(
                 request.headers.get("authorization") ?? "",
               ),
+              ...(url.pathname === "/api/object_info"
+                ? {
+                    apiKey: /^comfyui-/.test(
+                      request.headers.get("x-api-key") ?? "",
+                    ),
+                  }
+                : {}),
               idempotency: request.headers.get("idempotency-key"),
-              ...(request.method === "POST"
+              ...(request.method === "POST" && url.pathname === "/api/v2/jobs"
                 ? { body: (await request.json()) as Record<string, unknown> }
                 : {}),
             });
+            if (url.pathname === "/api/object_info")
+              return MFResponse.json(cloudCatalogue.body, {
+                status: cloudCatalogue.status,
+              });
+            if (url.pathname === "/api/v2/assets")
+              return MFResponse.json(
+                { id: crypto.randomUUID() },
+                { status: 201 },
+              );
             if (url.pathname === "/api/v2/jobs")
               return MFResponse.json(cloudJob("queued"), { status: 201 });
             if (url.pathname === "/api/v2/jobs/wf-1")

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
-import { HOSTED_RUN_LOCATION } from "../shared/comfy/run-location";
+const HOSTED_HEALTH = { ok: true, hasServerKey: false, hosted: true };
 // The first project-copy import also loads its bundle validators.
 vi.setConfig({ testTimeout: 20_000 });
 
@@ -10,9 +10,9 @@ it.each([true, false, undefined])(
   "project copy probes skip only a confirmed hosted site (fixed: %s)",
   async (fixed) => {
     const detect = vi.fn(async (url: string) => {
-      expect(url).toBe("/api/settings/run-location");
+      expect(url).toBe("/api/health");
       return Response.json(
-        fixed === undefined ? {} : { ...HOSTED_RUN_LOCATION, fixed },
+        fixed === undefined ? {} : { ...HOSTED_HEALTH, hosted: fixed },
       );
     });
     vi.stubGlobal("fetch", detect);
@@ -35,7 +35,7 @@ it.each([true, false, undefined])(
     );
     expect(projects.mock.calls).toHaveLength(fixed !== true ? 2 : 0);
     expect(detect).toHaveBeenCalledOnce();
-    expect(detect.mock.calls[0][0]).toBe("/api/settings/run-location");
+    expect(detect.mock.calls[0][0]).toBe("/api/health");
   },
 );
 
@@ -58,7 +58,7 @@ it("waits for detection before either project request, including an immediate se
     openCopyId("studio-house", projects),
   ]);
   expect(projects).not.toHaveBeenCalled();
-  resolve(Response.json(HOSTED_RUN_LOCATION));
+  resolve(Response.json(HOSTED_HEALTH));
   expect(await pending).toEqual([false, undefined]);
   expect(projects).not.toHaveBeenCalled();
 });

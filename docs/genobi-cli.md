@@ -141,6 +141,56 @@ price. The flag is not an authentication or human-approval mechanism. An uncerta
 outcome returns `outcome_unknown`: read jobs first and follow the recovery
 instructions, retaining the same key. No automatic retry is made.
 
+## Project references, deployments and voice
+
+`genobi status` includes the running adapter's capability manifest, with supported
+operations, status routes and limits. This is separate from the offline
+`genobi capabilities` catalogue. An older server can omit runtime capabilities;
+that omission does not establish support. The CLI and stdio MCP transport connect
+only to a loopback local server. Hosted REST capabilities do not imply that the
+CLI can sign in to a remote hosted studio.
+
+`genobi project` returns the complete bounded `brief` including reference labels
+and asset IDs, plus each asset's bundle-relative file path and hash. For image
+generation, put ordered `projectImageReferences: [{copyId, assetId}]` in the quote
+and submit input. The adapter reads those files through the project's authorized
+routes, verifies their hashes and image types, and supplies the bytes internally.
+Do not mix this form with inline `imageReferences`. Reusing the IDs after the
+owner changes an asset invalidates an older quote. Source-conditioned open Klein
+uses `imageAspectRatio: "auto"` and derives its shape from the source image.
+
+For a registered Comfy deployment, load `genobi-comfy` and inspect these schemas:
+
+```sh
+genobi schema run-location
+genobi schema deployment-stage
+genobi schema quote
+```
+
+An external agent can register `location: "deployment"` with `deploymentUrl`.
+`deployment-stage` accepts exactly one local `filePath`, linked `projectAsset`,
+or paired `worldFile`, plus the manifest's token and matching media content type.
+It returns a two-hour session/endpoint-bound ticket. Put the tickets in
+`deploy.assets`, along with `deploy.seed`, `deploy.negativePrompt` and the capture
+recipe when required. Quote the complete input, disclose the returned GPU-time
+billing, then submit only after agreement. The model catalogue exposes both
+deployment models with `inputModel` and `requiresDeployment`; installation and
+credentials are checked by the server. See [run location](run-location.md).
+
+`genobi voice-status` reads local speech-to-text readiness.
+`genobi voice-transcribe` accepts exactly one local `filePath`, session audio
+`sourceId`, or linked audio `projectAsset`, and an optional supported `language`.
+Readiness, media bytes and duration are checked before transcription. It returns
+text for review, without executing the transcript, installing a model or making a
+generation. Studio-started agents must use scoped assets/sources for voice and
+scoped assets/World files for deployment staging; their local-path variants are
+refused. See [voice mode](voice-mode.md).
+
+`genobi job` and `genobi take` list separate deployment audio in `outputs`.
+To import one, use `take-to-project` with the job `id` and the chosen output's
+`assetId` as `outputId`. Omitting `outputId` imports the primary result. The server
+checks job membership and source ownership before copying the media.
+
 ### Takes appear in the studio
 
 A take you submit from the terminal shows in the studio's gallery once it is

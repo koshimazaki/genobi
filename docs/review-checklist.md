@@ -42,6 +42,7 @@ See [architecture](architecture.md), `shared/idempotency.ts`,
   by the studio alone (`server/shared-takes.ts`) and never by an agent-marked
   request or the hosted Worker? Are
   provider input links scoped and time-limited, with redirects rejected?
+- Does a custom deployment require the visitor’s own endpoint and authorised key, with no shared-key fallback, a quote bound to the endpoint/preset and explicit confirmation?
 - Can a key, provider identifier or private lineage leak through assets, logs,
   errors or public job responses? Inspect the built assets as well as source.
 - Does cleanup remove the intended R2 objects and source rows while preserving
@@ -50,7 +51,8 @@ See [architecture](architecture.md), `shared/idempotency.ts`,
   day without losing, double-counting or reclassifying completed generations?
 - Do rate limits, batch bounds and retention claims match the actual code paths,
   including Pages request-triggered housekeeping and failure recovery?
-- Does the production job remain restricted to a successful `main` push, keep
+- Does the production job remain restricted to a successful `main` push of the
+  public repository, keep
   secrets out of pull requests, serialize deploys and apply only
   backward-compatible migrations before publishing the new bundle?
 

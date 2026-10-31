@@ -7,7 +7,7 @@
  * is a fixture answer: no audio is recorded and no model runs.
  */
 import assert from "node:assert/strict";
-import { listening, overflow, SEND, transcribed } from "./voice-fixture.mjs";
+import { listening, overflow, transcribed } from "./voice-fixture.mjs";
 
 const PENGUIN = "I want to generate an image with FLUX of a penguin.";
 const KLEIN = "Change model: FLUX 3 Image Klein · Image";
@@ -56,6 +56,7 @@ export async function intentChecks({ open, checks, output }) {
   // From the Gallery: Camera opens on Klein with the subject as the prompt.
   for (const width of [1440, 390]) {
     const { context, page, voice, sent } = await open({
+      destination: "camera",
       width,
       path: "/",
       text: PENGUIN,
@@ -72,7 +73,10 @@ export async function intentChecks({ open, checks, output }) {
       )
       .waitFor();
     await onGenerate(page);
-    assert(await page.getByRole("button", { name: SEND }).isVisible());
+    assert.equal(
+      await page.getByLabel("Voice destination").inputValue(),
+      "camera",
+    );
     assert(!(await overflow(page)), `no horizontal overflow at ${width}`);
     // Settled, and long enough for a submission to have shown up.
     await page.waitForTimeout(800);
@@ -95,33 +99,43 @@ export async function intentChecks({ open, checks, output }) {
     );
     await page.waitForTimeout(400);
     assert.deepEqual(sent.writes, [], "nothing is submitted");
-    assert.equal(sent.agentStatus.length, 0, "no agent is asked");
+    assert.equal(sent.sessions.length, 0, "Camera dictation starts no agent");
+    assert.equal(sent.messages.length, 0, "Camera dictation sends no message");
+    assert.equal(sent.approvals.length, 0, "Camera dictation approves no step");
     await context.close();
   }
   checks.push(
     "From the Gallery (1440 and 390 px), “generate an image with FLUX of a penguin” opens Camera, selects FLUX 3 Image Klein, writes “a penguin”, focuses the priced Generate and submits nothing; Update prompt carries a corrected subject (“a pelican”) and Escape on Generate closes Voice",
   );
 
-  // A misheard request from the Gallery goes nowhere; corrected, Try again
+  // A misheard request from the Gallery goes nowhere; an explicit resend
   // reads it once more and routes it.
   {
     const { context, page, voice, sent } = await open({
+      destination: "camera",
       path: "/",
       text: "make an imag of a penguin",
     });
     await speak(page, voice);
     await page
-      .getByText("No prompt on this screen.", { exact: true })
+      .getByText(
+        "No Camera request was recognised. Choose Agent or a prompt to use these words directly.",
+        { exact: true },
+      )
       .waitFor();
     assert.equal(
-      await page.getByRole("button", { name: "Try again" }).count(),
-      0,
-      "nothing to retry until the transcript changes",
+      await page
+        .getByRole("button", { name: "Send to selected destination" })
+        .count(),
+      1,
+      "an explicit send stays available without any automatic retry",
     );
     await page
       .getByLabel("Transcript", { exact: true })
       .fill("make an image of a penguin");
-    await page.getByRole("button", { name: "Try again" }).click();
+    await page
+      .getByRole("button", { name: "Send to selected destination" })
+      .click();
     await page.locator('.genobi-shell[data-preset="camera"]').waitFor();
     await page.getByRole("button", { name: KLEIN }).waitFor();
     assert.equal(await page.locator("#image-prompt").inputValue(), "a penguin");
@@ -131,13 +145,14 @@ export async function intentChecks({ open, checks, output }) {
     await context.close();
   }
   checks.push(
-    "A misheard request in the Gallery (“make an imag of a penguin”) goes nowhere; corrected, Try again opens Camera on Klein with “a penguin” and submits nothing",
+    "A misheard Camera request stays in the transcript; correcting and explicitly sending it opens Camera on Klein and submits nothing",
   );
 
   // From Camera in video: the request moves to an image mode and back to
   // LTX video; the hero, composer, toolbar and gallery stay where they are.
   for (const width of [1440, 390]) {
     let { context, page, voice, sent } = await open({
+      destination: "camera",
       width,
       path: "/?workspace=camera",
       text: "image of a penguin",
@@ -152,6 +167,7 @@ export async function intentChecks({ open, checks, output }) {
     await context.close();
 
     ({ context, page, voice, sent } = await open({
+      destination: "camera",
       width,
       path: "/?workspace=camera",
       text: "Make a video with LTX of a neon street at night.",

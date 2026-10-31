@@ -181,6 +181,20 @@ describe("Aspect selection", () => {
 });
 
 describe("Every existing capture action is still there", () => {
+  it("keeps output ahead of optional mounted capture settings", () => {
+    topLevel();
+    const html = renderToStaticMarkup(
+      <CaptureControls s={session()} a={assets()} shot />,
+    );
+    expect(html.indexOf('aria-label="Output"')).toBeLessThan(
+      html.indexOf("Capture settings"),
+    );
+    expect(html).toMatch(
+      /<details class="wb-fold">\s*<summary>Capture settings/,
+    );
+    expect(html).toContain('aria-label="Quick take length"');
+    expect(html).toContain('aria-label="Passes and sync"');
+  });
   it("offers capture, still, hand-offs and every export", () => {
     topLevel(true);
     const html = renderToStaticMarkup(
