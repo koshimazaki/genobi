@@ -112,6 +112,11 @@ requires `num_frames % 8 == 1`; this local guide compatibility does not increase
 a hosted endpoint's supported duration or remove native decode-memory limits.
 See [capture and hand-off](world-builder-capture.md).
 
+Changing the take length after composing a loop retimes its unchanged scene,
+camera and character paths together, preserving the return to A. Explicitly
+edited character keys retain their timing. A character path that already extends
+beyond the take remains a cropped longer move.
+
 ## Camera and capture ownership
 
 A Shot gesture commits one authored camera update when it ends. Existing camera

@@ -3,6 +3,7 @@ import type { SceneVector } from "./scene-state";
 import { MOD_SOURCES, type ModSource } from "./mod-routes";
 import { cameraPoseAtKeys, linkedCameraPose } from "./scene-camera-blend";
 import { legacyCameraAt, legacyCameraTargetAt } from "./legacy-camera";
+import type { AvatarKey } from "./avatar-path";
 import {
   rotationAt,
   rotateAround,
@@ -170,6 +171,26 @@ export function reverseSceneTravel(recipe: Recipe): Partial<Recipe> {
     throw new Error(
       "Move the final scene and camera keys to the end of the take before reversing travel.",
     );
+  if (recipe.avatarPath?.some((key) => key.ease === "fall"))
+    throw new Error(
+      "Use linear character movement before reversing travel; fall easing cannot be reversed exactly.",
+    );
+  if (recipe.avatarPath && recipe.avatarPath.at(-1)?.frame !== lastFrame)
+    throw new Error(
+      "Move the final character key to the end of the take before reversing travel.",
+    );
+  const characterKeys: AvatarKey[] | undefined = recipe.avatarPath
+    ? [{ frame: 0, pose: recipe.avatarPose }, ...recipe.avatarPath]
+    : undefined;
+  const character = characterKeys
+    ?.map((key, index) => ({
+      frame: lastFrame - key.frame,
+      pose: structuredClone(key.pose),
+      ...(characterKeys[index + 1]?.ease
+        ? { ease: characterKeys[index + 1].ease }
+        : {}),
+    }))
+    .reverse();
   const reverse = <T extends { frame: number; easing: "linear" | "easeInOut" }>(
     keys: T[],
   ) =>
@@ -181,6 +202,12 @@ export function reverseSceneTravel(recipe: Recipe): Partial<Recipe> {
       }))
       .reverse();
   return {
+    ...(character
+      ? {
+          avatarPose: character[0].pose,
+          avatarPath: character.slice(1),
+        }
+      : {}),
     ...(recipe.motion
       ? {
           motion: {

@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 
 /** The session owns each decoded track URL until replacement or unmount. */
-export function useAudioURL() {
-  const [url, setURL] = useState("");
+export function useAudioUrl() {
+  const [url, setUrl] = useState("");
   useEffect(
     () => () => {
       if (url) URL.revokeObjectURL(url);
     },
     [url],
   );
-  return [url, setURL] as const;
+  return [url, setUrl] as const;
 }

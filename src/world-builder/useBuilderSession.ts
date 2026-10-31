@@ -30,7 +30,7 @@ import { reconcileDuration } from "./take-duration";
 import { audioLabel, type AudioSource } from "./audio-history";
 import { hostMessages } from "./host-messages";
 import { useAudioHistory } from "./useAudioHistory";
-import { useAudioURL } from "./useAudioURL";
+import { useAudioUrl } from "./useAudioUrl";
 import { assertWalkEdit } from "./walk-edits";
 import { useTakeChannel } from "./take-channel";
 import type { RecipeGuard, SceneAdapter } from "./scene-adapter";
@@ -64,7 +64,7 @@ export function useBuilderSession() {
     [error, setError] = useState(""),
     [status, setStatus] = useState("Ready to prepare a set."),
     [take, setTake, onTake] = useTakeChannel(),
-    [audioURL, setAudioURL] = useAudioURL(),
+    [audioURL, setAudioURL] = useAudioUrl(),
     [audioName, setAudioName] = useState(""),
     [mediaName, setMediaName] = useState(""),
     [loop, setLoop] = useState(false);
@@ -418,7 +418,7 @@ export function useBuilderSession() {
       live.dispose();
       world.dispose();
     };
-  }, [playingRef, setAudioURL, setPlaying, setTake]);
+  }, [playingRef, setPlaying, setTake, setAudioURL]);
   useScenePlayback({
     playing,
     revision: playback.revision,
