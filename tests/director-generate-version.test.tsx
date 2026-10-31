@@ -116,8 +116,10 @@ it("allows an undoable asset swap without starting an agent", async () => {
   await mount(bundle);
   await act(async () => {
     button("Apply swaps only").click();
+    // Failed polls must not format the bundle's megabytes of media bytes:
+    // that synchronous work can delay the validation/commit we are awaiting.
     await vi.waitFor(() =>
-      expect(studioStore.getState().director.bundle).not.toBe(bundle),
+      expect(studioStore.getState().director.bundle === bundle).toBe(false),
     );
   });
   expect(document.body.textContent).toContain("Nothing was generated");
