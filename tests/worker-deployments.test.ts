@@ -290,7 +290,10 @@ describe("hosted caller-owned Comfy deployments", () => {
     });
     const ready = (await polled.json()) as { job: Job };
     expect(ready.job.status, JSON.stringify(ready)).toBe("Ready");
-    expect(ready.job.companions?.length).toBeGreaterThan(0);
+    expect(ready.job.companions?.map((file) => file.label)).toEqual([
+      "Room impulse response",
+      "Room wet mix",
+    ]);
     expect(
       deploymentRequests
         .filter((r) => r.path.includes("jobs/deployed-1"))
@@ -315,6 +318,45 @@ describe("hosted caller-owned Comfy deployments", () => {
       .first();
     expect(JSON.stringify(persisted)).not.toContain(key);
   });
+  it.each(["video", "ir"] as const)(
+    "rejects an incomplete %s output group without retaining a partial take",
+    async (missing) => {
+      const session = newSession();
+      const body = await staged(session);
+      const quote = await quoted(session, body);
+      const response = await submit(session, body, quote.id);
+      const { job } = (await response.json()) as { job: Job };
+      const before = deploymentRequests.length;
+      deploymentFault.incompleteOutput = missing;
+      try {
+        const result = await call(`/api/jobs/${job.id}`, {
+          headers: headers(session),
+        });
+        expect(result.status).toBe(200);
+        const failed = (await result.json()) as { job: Job };
+        expect(failed.job.status).toBe("Error");
+        expect(failed.job.companions).toBeUndefined();
+        expect(failed.job.error).toContain(
+          missing === "video" ? "expected video" : "required audio",
+        );
+        expect(
+          deploymentRequests
+            .slice(before)
+            .some((request) => request.path.includes("/assets/")),
+        ).toBe(false);
+        expect(
+          await (
+            await mf.getD1Database("DB")
+          )
+            .prepare("SELECT job FROM deployment_outputs WHERE job=?")
+            .bind(job.id)
+            .first(),
+        ).toBeNull();
+      } finally {
+        deploymentFault.incompleteOutput = "";
+      }
+    },
+  );
   it("never resubmits an uncertain paid call", async () => {
     const session = newSession();
     const body = await staged(session);
