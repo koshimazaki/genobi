@@ -9,6 +9,8 @@ import { worldTools } from "../mcp/world-tools";
 
 // The recipe hand-off: an agent linked to a project leaves a recipe for the
 // person's open World Builder, which reports it applied or refused.
+const expectedRevision = "00000000-0000-4000-8000-000000000001:0";
+
 type Linked = { project: { copyId: string } };
 
 async function linked() {
@@ -21,7 +23,24 @@ async function linked() {
   const { project: copy } = (await send(agent, "/link", "POST", {
     code,
   })) as unknown as Linked;
-  return { ...harness, agent, copyId: copy.copyId };
+  const guardedSend: typeof send = (who, path, method = "GET", body) =>
+    send(
+      who,
+      method === "GET" && path.endsWith("/world-recipe")
+        ? `${path}?guarded=1`
+        : path,
+      method,
+      method === "POST" && path.includes("/world-recipe")
+        ? { expectedRevision, ...(body as object) }
+        : body,
+    );
+  return {
+    ...harness,
+    send: guardedSend,
+    legacySend: send,
+    agent,
+    copyId: copy.copyId,
+  };
 }
 
 describe("World Builder recipe hand-off", () => {
@@ -74,6 +93,39 @@ describe("World Builder recipe hand-off", () => {
     ).toMatchObject({ status: 409, code: "recipe_stale" });
   });
 
+  it("refuses unguarded sends, deliveries and acknowledgements from older clients", async () => {
+    const { agent, cookie, send, legacySend, copyId, project } = await linked();
+    const route = `/${copyId}/world-recipe`;
+    expect(
+      await legacySend(agent, route, "POST", { take: "falling-room" }),
+    ).toMatchObject({ status: 428, code: "recipe_revision_required" });
+    expect(await send(agent, route)).toMatchObject({ state: "none" });
+    await send(agent, route, "POST", { take: "falling-room" });
+    const oldRead = await legacySend(cookie, `/${project.id}/world-recipe`);
+    expect(oldRead).toMatchObject({
+      status: 428,
+      code: "recipe_client_update_required",
+    });
+    expect(oldRead.recipe).toBeUndefined();
+    expect(
+      await legacySend(cookie, `/${project.id}/world-recipe/applied`, "POST", {
+        sequence: 1,
+        ok: true,
+      }),
+    ).toMatchObject({ status: 428, code: "recipe_client_update_required" });
+    expect(await send(agent, route)).toMatchObject({
+      state: "waiting",
+      expectedRevision,
+    });
+    expect(
+      await send(cookie, `/${project.id}/world-recipe/applied`, "POST", {
+        sequence: 1,
+        expectedRevision: expectedRevision.replace(":0", ":1"),
+        ok: true,
+      }),
+    ).toMatchObject({ status: 428 });
+  });
+
   it("validates a recipe with the World Builder's own rules", async () => {
     const { agent, send, copyId, cookie, project } = await linked();
     expect(
@@ -119,7 +171,7 @@ describe("World Builder recipe hand-off", () => {
           "Content-Type": "application/json",
           ...headers,
         },
-        body: JSON.stringify({ take: "falling-room" }),
+        body: JSON.stringify({ take: "falling-room", expectedRevision }),
       }).then((r) => r.json() as Promise<{ from: string }>);
     expect(
       (
@@ -172,7 +224,12 @@ describe("World Builder recipe hand-off", () => {
       },
     } as never;
     const copyId = "falling-room.k7qm2xrpab";
-    await tool.run(api, { action: "send", copyId, take: NAMED_TAKE_IDS[0] });
+    await tool.run(api, {
+      action: "send",
+      copyId,
+      take: NAMED_TAKE_IDS[0],
+      expectedRevision,
+    });
     expect(await tool.run(api, { action: "status", copyId })).toEqual({
       state: "waiting",
       recipe: "held",
@@ -184,9 +241,9 @@ describe("World Builder recipe hand-off", () => {
       [
         "POST",
         `/api/projects/${copyId}/world-recipe`,
-        { take: "falling-room" },
+        { take: "falling-room", expectedRevision },
       ],
-      ["GET", `/api/projects/${copyId}/world-recipe`],
+      ["GET", `/api/projects/${copyId}/world-recipe?guarded=1`],
     ]);
   });
 });

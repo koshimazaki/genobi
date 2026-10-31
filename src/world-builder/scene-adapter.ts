@@ -3,6 +3,17 @@ import type { Recipe, parameterSchema } from "./recipe";
 import type { Take } from "./export-take";
 import type { SentTake } from "./send-take";
 
+export interface RecipeGuard {
+  /** An opaque mounted-scene token from getRecipeRevision, not project.revision. */
+  expectedRevision?: string;
+  signal?: AbortSignal;
+}
+
+export interface RecipeConfiguration extends RecipeGuard {
+  /** A named take's dry sound commits with its recipe under the same guard. */
+  sound?: { blob: Blob; label: string };
+}
+
 export interface SceneAdapter {
   live: LiveSession;
   describe(): {
@@ -14,7 +25,8 @@ export interface SceneAdapter {
     capabilities: string[];
   };
   getRecipe(): Recipe;
-  configure(input: unknown): Promise<Recipe>;
+  getRecipeRevision(): string;
+  configure(input: unknown, options?: RecipeConfiguration): Promise<Recipe>;
   render(frame: number): Promise<void>;
   /**
    * Capture a fixed-frame take. From Walk or Build, the viewport is first

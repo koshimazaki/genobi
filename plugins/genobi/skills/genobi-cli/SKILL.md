@@ -113,7 +113,9 @@ named after the take, and returns each `assetId`; `genobi project` shows the
 name as `label`. No project link is needed for that; placing the clip with
 `director-command` or sending a recipe with `world-recipe` needs the project
 link, a second code the person makes. `{"op":"recipe"}` reads the current
-recipe back, and `load-preset` takes a move-library file name such as
+recipe and its live `revision`. Send that token as `expectedRevision` with
+`world-recipe`; if refused because the person edited, read again and preserve
+those edits. The token belongs to one mounted tab, not the saved project, and `load-preset` takes a move-library file name such as
 `fall-cathedral`. Never resend a command whose result has not come back.
 
 ## Quoted generation

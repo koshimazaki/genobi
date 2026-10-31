@@ -169,6 +169,8 @@ user action through every layer.
 - [Scene examples](scene-examples.md) — starter sets, characters, hybrids and LTX + AKUSPACE kits.
 - [World Builder and Scene Adapter](world-builder.md) — the set-preparation tool
   beside Director, its agent contract and Comfy integration.
+- [World recipe handoffs](world-recipe-handoff.md) — preserve concurrent human
+  scene edits with a live revision guard.
 - [World Builder sound](world-builder-sound.md) — the Sound panel, the example
   track, the audio mod matrix and the reactive room presets.
 - [World Builder acoustics](world-builder-acoustics.md) — the room's Sabine

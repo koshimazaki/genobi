@@ -318,23 +318,20 @@ A worked example: eight recipes under
 
 ## Agent hand-off
 
-An agent linked to the open project can put a recipe into the person's
-World Builder without browser scripting: `genobi_world_recipe` (or
-`POST /api/projects/:id/world-recipe` with `{ "recipe": … }` or
-`{ "take": "falling-room" }`) leaves one recipe on the project copy, checked
-by `validateRecipe`, the Builder's own rules. In the studio the open World
-Builder asks for it every two seconds (`useRecipeHandoff.ts`), the way
-Director commands reach the studio, applies it with `configure` once the scene
-is idle (a named take also loads its dry sound), records it as the project's
-recipe (`world/recipe.json`, below) and reports `applied`, or `refused` with
-the reason, to `POST …/world-recipe/applied`, which only the owner may call.
-The agent reads `GET …/world-recipe` for the state, including `from`: `person`
-for the owner's studio, `cli` for the Genobi CLI (which says so on every
-request with `X-Genobi-Client: cli`), and `agent` for an agent session or any
-other session linked to the project. The server keeps only the
-latest recipe per project, in memory: a restart forgets an unapplied one. It
-never captures; the agent captures with `genobi_world` (below), or the person
-with Capture take. Local only, like the project copy.
+An agent can send a recipe or named take to the open World Builder with
+`genobi_world_recipe`. Read the target tab's current recipe and live `revision`
+through `genobi_world` first, then send it as `expectedRevision` together with the
+linked project's `copyId`. Both the World pairing and project link are required.
+
+The target tab applies the recipe and any named-take sound only while its live
+revision still matches. Concurrent human scene edits refuse the handoff without
+changing the scene. Re-read the recipe and preserve those edits before sending
+again. Another tab leaves the handoff waiting; a reload needs a new live revision.
+The guard is separate from the saved Recipe and Director's project revision.
+
+[The handoff contract](world-recipe-handoff.md) covers HTTP/MCP/CLI, guarded
+polling, acknowledgement, older clients and the asynchronous commit boundary.
+Handoffs remain local and in memory; they never capture or submit generation.
 
 ### Agent capture
 

@@ -1,6 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
 import type * as Three from "three";
-import { presetRecipe, validateRecipe } from "../src/world-builder/recipe";
+import {
+  presetRecipe,
+  validateRecipe,
+  type Recipe,
+} from "../src/world-builder/recipe";
 import { menuPreset } from "../src/world-builder/preset-menu";
 import {
   REACTIVE_PROPS,
@@ -14,7 +18,10 @@ import { createWorld } from "../src/world-builder/runtime";
 
 // createWorld without WebGL or assets: a stand-in renderer that keeps the
 // scene it is asked to draw, and inert playground, character and media.
-const drawn = vi.hoisted(() => ({ scene: null as unknown }));
+const drawn = vi.hoisted(() => ({
+  scene: null as unknown,
+  prepare: vi.fn<(recipe: Recipe) => Promise<() => void>>(async () => () => {}),
+}));
 vi.mock("three", async (original) => {
   const T = await original<typeof Three>();
   class WebGLRenderer {
@@ -52,7 +59,7 @@ vi.mock("../src/world-builder/character", async () => {
   return {
     createBuilderCharacter: () => ({
       root: new T.Group(),
-      prepare: async () => {},
+      prepare: drawn.prepare,
       sample() {},
       walk() {},
       freeze() {},
@@ -261,6 +268,47 @@ describe("Orbit in the runtime", () => {
     // Frame 48 is two seconds in: from π, 0.6 rad on, counter-clockwise from above.
     const [x, , z] = first["prop:pulse-sphere"];
     expect(Math.atan2(-z, x)).toBeCloseTo(0.6 - Math.PI, 9);
+    world.dispose();
+  });
+
+  it("retries a frame against the current recipe before committing delayed character preparation", async () => {
+    const world = createWorld(
+      { width: 0, height: 0 } as HTMLCanvasElement,
+      () => {},
+    );
+    const initial = { ...presetRecipe("Club"), avatar: false };
+    world.configure(initial);
+    let finish!: (commit: () => void) => void;
+    let started!: () => void;
+    const preparing = new Promise<void>((resolve) => {
+      started = resolve;
+    });
+    drawn.prepare.mockImplementationOnce(() => {
+      started();
+      return new Promise((resolve) => {
+        finish = resolve;
+      });
+    });
+    const frame = world.renderFrame(48);
+    await preparing;
+    const staleCommit = vi.fn();
+    const currentCommit = vi.fn();
+    drawn.prepare.mockResolvedValueOnce(currentCommit);
+    world.configure({
+      ...initial,
+      objects: initial.objects.map((prop) =>
+        prop.id === "pulse-sphere" ? { ...prop, x: -9, orbit: 0 } : prop,
+      ),
+    });
+    finish(staleCommit);
+    await frame;
+    expect(staleCommit).not.toHaveBeenCalled();
+    expect(currentCommit).toHaveBeenCalledOnce();
+    let sphere: Three.Object3D | undefined;
+    (drawn.scene as Three.Scene).traverse((object) => {
+      if (object.userData.editId === "prop:pulse-sphere") sphere = object;
+    });
+    expect(sphere?.position.x).toBe(-9);
     world.dispose();
   });
 });

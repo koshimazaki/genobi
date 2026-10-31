@@ -89,7 +89,10 @@ export async function connectWorld(
               result = library(adapter.listTakes)();
               break;
             case "recipe":
-              result = { recipe: boundedRecipe(adapter.getRecipe()) };
+              result = {
+                recipe: boundedRecipe(adapter.getRecipe()),
+                revision: adapter.getRecipeRevision(),
+              };
               break;
             case "send-to-project":
               result = await library(adapter.sendTake)(command.take);

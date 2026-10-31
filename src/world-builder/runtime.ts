@@ -341,10 +341,13 @@ export function createWorld(
     poseCharacters(frame);
     renderer.render(world, camera);
   }
-  async function renderFrame(frame: number) {
+  async function renderFrame(frame: number): Promise<HTMLCanvasElement> {
     await loaded;
     if (disposed) throw new Error("Scene was closed.");
-    await character.prepare(recipe);
+    const preparedRecipe = recipe;
+    const commitCharacter = await character.prepare(preparedRecipe);
+    if (recipe !== preparedRecipe) return renderFrame(frame);
+    commitCharacter();
     await media.seek(frame, recipe.fps);
     return draw(frame);
   }

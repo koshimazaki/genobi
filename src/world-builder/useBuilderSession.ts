@@ -22,7 +22,8 @@ import { hostMessages } from "./host-messages";
 import { useAudioHistory } from "./useAudioHistory";
 import { assertWalkEdit } from "./walk-edits";
 import { useTakeChannel } from "./take-channel";
-import type { SceneAdapter } from "./scene-adapter";
+import type { RecipeGuard, SceneAdapter } from "./scene-adapter";
+import { createRecipeRevision } from "./recipe-revision";
 export type { SceneAdapter } from "./scene-adapter";
 declare global {
   interface Window {
@@ -89,6 +90,7 @@ export function useBuilderSession() {
       });
     let alive = true;
     let loading = false;
+    const revision = createRecipeRevision();
     const idle = (allowWalk = false, allowPlay = false) => {
       if (
         loading ||
@@ -98,9 +100,18 @@ export function useBuilderSession() {
       )
         throw new Error("Stop preview or wait for the current operation.");
     };
-    async function applyRecipe(next: Recipe) {
+    async function applyRecipe(
+      next: Recipe,
+      guard?: RecipeGuard,
+      commitAudio?: () => void,
+    ) {
       await previewQueue.current.catch(() => {});
       if (!alive) throw new Error("Scene was closed.");
+      revision.assert(guard);
+      const commitCharacter = await world.prepareCharacter(next);
+      if (!alive) throw new Error("Scene was closed.");
+      revision.assert(guard);
+      commitCharacter();
       if (
         JSON.stringify(next.envelope) !==
         JSON.stringify(current.current.envelope)
@@ -109,15 +120,16 @@ export function useBuilderSession() {
         setAudioURL("");
         setAudioName("");
       }
-      await world.prepareCharacter(next);
       current.current = next;
+      revision.advance();
+      commitAudio?.();
       world.configure(next);
       setRecipe(next);
       setTake(null);
       setStatus("Set updated. Capture a new take when ready.");
       await rewindUnlessPlaying(playingRef.current, setFrame, (n) =>
         world.renderFrame(n),
-      );
+      ).catch((error) => setError(errorText(error)));
     }
     const live = liveSession(
       canvas.current!,
@@ -164,18 +176,44 @@ export function useBuilderSession() {
         capabilities: [...SCENE_CAPABILITIES],
       }),
       getRecipe: () => structuredClone(current.current),
-      async configure(input) {
+      getRecipeRevision: revision.read,
+      async configure(input, guard) {
         // An edit applies live under Play; the preview skips frames meanwhile.
         idle(true, true);
-        const next = validateRecipe(reconcileDuration(current.current, input));
+        revision.assert(guard);
+        const guarded = guard?.expectedRevision !== undefined;
+        if (guarded && world.editor?.dragging)
+          throw new Error(
+            "Finish the transform drag before applying an agent recipe.",
+          );
+        let next = validateRecipe(reconcileDuration(current.current, input));
         if (world.editor?.mode === "walk")
           assertWalkEdit(current.current, next);
         loading = true;
+        const releaseEdits = guarded ? world.editor?.holdEdits() : undefined;
         try {
-          await applyRecipe(next);
+          const sound = guard?.sound;
+          const decoded = sound ? await decodeAudio(sound.blob) : undefined;
+          if (decoded)
+            next = validateRecipe({
+              ...next,
+              envelope: decoded.envelope,
+              bandEnvelopes: decoded.bands,
+            });
+          await applyRecipe(next, guard, () => {
+            if (!decoded || !sound) return;
+            track.current = decoded;
+            setAudioURL(URL.createObjectURL(sound.blob));
+            setAudioName(sound.label);
+          });
+          if (sound)
+            void addRecent
+              .current(sound.blob, "take", sound.label)
+              .catch(() => {});
           return structuredClone(next);
         } finally {
           loading = false;
+          releaseEdits?.();
         }
       },
       snapshot: () => still((n) => world.renderFrame(n)),
@@ -288,8 +326,13 @@ export function useBuilderSession() {
         idle();
         const textures = { ...current.current.textures };
         delete textures[target];
-        world.clearMedia(target);
-        await applyRecipe(validateRecipe({ ...current.current, textures }));
+        loading = true;
+        try {
+          world.clearMedia(target);
+          await applyRecipe(validateRecipe({ ...current.current, textures }));
+        } finally {
+          loading = false;
+        }
       },
       setAudio: (blob) => loadAudio(blob, "agent"),
       cancel() {
@@ -344,7 +387,7 @@ export function useBuilderSession() {
       live.dispose();
       world.dispose();
     };
-  }, []);
+  }, [playingRef, setTake]);
   useEffect(
     () => () => {
       if (audioURL) URL.revokeObjectURL(audioURL);
