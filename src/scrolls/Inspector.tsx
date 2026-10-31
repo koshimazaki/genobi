@@ -100,6 +100,7 @@ export function ScrollInspector({
         Cell prompt
         <textarea
           id="scroll-cell-prompt"
+          data-voice-scope={`${d.id}:${c.id}`}
           value={c.prompt}
           maxLength={1500}
           disabled={s.busy}

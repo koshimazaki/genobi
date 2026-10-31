@@ -339,9 +339,9 @@
       "runs": [{ "route": "local-free" }]
     },
     {
-      "id": "voice-mode", "name": "Voice mode", "status": "verified", "evidence": "2026-10-21 docs/voice-mode.md#verification",
-      "where": "Studio · header microphone",
-      "description": "Speak a prompt or a brief from the header; a local model transcribes it and it goes to the prompt or the running agent.",
+      "id": "voice-mode", "name": "Voice mode", "status": "implemented",
+      "where": "Studio · header microphone, agent bubble and activity deck",
+      "description": "Local voice sends to a remembered agent conversation by default, or an explicitly selected prompt. Routing fixtures pass; capable-browser and real-microphone checks remain open.",
       "mcp": [], "cli": [],
       "skills": [], "docs": ["docs/voice-mode.md", "docs/voice-setup.md"],
       "runs": [{ "route": "local-model", "models": ["qwen3-asr"] }]

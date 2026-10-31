@@ -6,8 +6,8 @@ import { chooseSelect } from "./lib/choose-select.mjs";
  * Asserts Voice is in the header of every section, the pill hangs under the
  * header on the right and leaves the toolbar, gallery and panels where they
  * were, one click on the mic records and the next stops and transcribes,
- * the chevron folds the panel, the transcript goes where it is meant: a
- * spoken request to Camera, else the prompt on screen, else a session
+ * the chevron folds the panel, and explicit routing keeps Agent as default,
+ * pins conversations and offers opt-in prompt dictation and Camera requests
  * (scripts/lib/voice-destination-checks.mjs, voice-intent-checks.mjs and
  * voice-gap-checks.mjs, which also covers LTX's prompt gaps), the
  * recording goes through MediaRecorder as WAV, Escape closes with focus
@@ -31,7 +31,6 @@ import {
   listening,
   overflow,
   pixels,
-  SEND,
   transcribed,
   TRANSCRIPT,
   underHeader,
@@ -104,7 +103,7 @@ try {
     "Fake microphone records through MediaRecorder, prewarms, sends WAV and shows the transcript",
   );
   await page.screenshot({ path: `${output}/voice-transcript-1440.png` });
-  // No picker: the transcript has gone straight into the prompt on screen.
+  // The fixture explicitly selected Current prompt for recorder checks.
   const routed = await page.locator(".voice-routed").textContent();
   const id = {
     "Camera prompt": "description",
@@ -112,11 +111,14 @@ try {
   }[routed.match(/^In the (.+?)\./)?.[1]];
   assert(id, `the transcript names the prompt it filled: ${routed}`);
   assert.equal(await fieldText(page, id), TRANSCRIPT);
-  assert(await page.getByRole("button", { name: SEND }).isVisible());
+  assert.equal(
+    await page.getByLabel("Voice destination").inputValue(),
+    "prompt",
+  );
   assert.equal(sent.agentStatus.length, 0, "filling a prompt asks no agent");
   assert.equal(sent.cancel, 0, "a finished note keeps nothing to cancel");
   checks.push(
-    "No picker: in Ninja the transcript goes straight into the prompt on screen, says which, and offers Send to agent instead",
+    "Explicit Current prompt dictation names the field it filled; Agent is exercised separately as the fresh-browser default",
   );
   await page.getByRole("button", { name: "Close voice" }).click();
   assert.equal(await overlay.count(), 0);
@@ -456,12 +458,11 @@ try {
   await voice.click();
   // The hosted studio has no setup route, so the offer shows where Voice Mode
   // installs (the local-run instructions) and cannot be confirmed.
-  await page.getByText(/^Prefer to clone from GitHub\?$/).waitFor();
-  assert(
-    await page
-      .getByRole("button", { name: "Yes, install Voice Mode", exact: true })
-      .isDisabled(),
-  );
+  await page
+    .getByText(/Voice mode runs in the local studio/)
+    .first()
+    .waitFor();
+  assert.equal(await page.evaluate(() => window.voiceMicRequests), 0);
   await context.close();
   checks.push(
     "Refused microphone (asked once, no loop) and hosted studio each show a message; an unconfigured server offers to install, and installs nothing without a yes",

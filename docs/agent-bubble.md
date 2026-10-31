@@ -29,7 +29,8 @@ small accent label. The studio keeps its existing type and dark surfaces.
   received line follows as **Agent update**; once every turn is answered the
   state reads **Waiting for your next message**. Messages arrive through
   voice's **Send to agent** ([a second message](agent-sessions.md#a-second-message));
-  the bubble itself still has no text field.
+  **Speak to agent** in the footer selects this conversation and opens the
+  shared voice recorder. The bubble itself has no follow-up text field.
 - The close button tucks the bubble into its avatar/status button. The same
   session keeps polling and can be reopened, including after completion.
   Hiding is not Stop. A reply that arrives while the bubble is tucked away
@@ -47,9 +48,13 @@ small accent label. The studio keeps its existing type and dark surfaces.
 - No timed dismissal: requests, errors and results remain inspectable. A waiting
   or failed session stays visible in the avatar even when the bubble is tucked
   away. Connection failures take priority over the last known state.
+- **Speak to agent** is also available in the deck log. It selects the
+  conversation behind that log, and further voice notes keep that destination.
+  The hosted studio explains the local transcription requirement.
 - The Activity shortcut opens the **current** project's existing asset drawer.
   It does not infer which asset was requested. A further message goes to the
-  running session; once it has finished, the next one starts a new session.
+  selected voice conversation. Once it finishes, choose Current agent / new
+  session explicitly before continuing.
 
 ## Timing and accessibility
 

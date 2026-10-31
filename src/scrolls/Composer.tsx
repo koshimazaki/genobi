@@ -70,6 +70,7 @@ export function ScrollComposer({
         <label htmlFor="scroll-prompt">Describe your scroll</label>
         <textarea
           id="scroll-prompt"
+          data-voice-scope={d.id}
           value={d.prompt}
           maxLength={PROMPT_LIMIT}
           disabled={s.busy}
