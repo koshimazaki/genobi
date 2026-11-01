@@ -25,6 +25,7 @@ import { requireRoute } from "../shared/provider";
 import { startTake } from "../shared/take";
 import { imagePrompt } from "../src/image-regions";
 import { setup } from "./server-harness";
+import { kleinBaseWorkflow } from "../shared/comfy/klein-base";
 import { infoFor } from "./comfy-readiness-fixture";
 
 const graph = kleinWorkflow.graph;
@@ -162,8 +163,9 @@ describe("filling the open Klein graph", () => {
 
   it("is chosen by model id for both adapters, and refuses one it lacks", () => {
     expect(workflows["workflow/flux-3-klein-t2i"]).toBe(kleinWorkflow);
+    expect(workflows["workflow/flux-3-klein-base-t2i"]).toBe(kleinBaseWorkflow);
     const run = workflowRun(
-      "workflow/flux-3-klein-t2i",
+      "workflow/flux-3-klein-base-t2i",
       validateInput({
         generator: "image",
         model: "flux-3-klein",
@@ -172,7 +174,7 @@ describe("filling the open Klein graph", () => {
       }),
       "A kite.",
     );
-    expect(run.template).toBe(kleinWorkflow);
+    expect(run.template).toBe(kleinBaseWorkflow);
     expect(run.values).toMatchObject({ upsample: true, width: 1168 });
     expect(workflowOutput("workflow/flux-3-klein-t2i").media).toBe("image");
     expect(workflowOutput("workflow/ltx-2-5-akuspace-t2v")).toEqual({
