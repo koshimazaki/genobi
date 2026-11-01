@@ -32,3 +32,6 @@ docs/hermes-runs/
 # Hand-kept capability map in the layout `npm run capabilities` writes; the
 # check holds it to that layout (scripts/lib/capabilities.ts).
 plugins/genobi/capabilities.json
+
+# Historical GPU-session records are intentionally preserved verbatim.
+scripts/vast/legacy-2026-10-30/
