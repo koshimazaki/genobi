@@ -1,9 +1,10 @@
 # flux-3-klein-t2i
 
-The workflow behind the open run of **FLUX 3 Image Klein** (registry entry
-`flux-3-klein`, route `workflow`, model `workflow/flux-3-klein-t2i`). The same
-model's API run, `flux-3-klein-api`, posts to BFL's
-`POST /v1/flux-3-image-klein` instead and does not use this file.
+The retained **Distilled** alternative for FLUX 3 Image Klein. The default
+open Klein route now uses the supplied **Base** text-to-image and image-edit
+graphs (`flux-3-klein-base-t2i`); see [Base workflow notes](flux-3-klein-base.README.md).
+The same model's BFL API run, `flux-3-klein-api`, posts directly to BFL's
+`POST /v1/flux-3-image-klein` and never uses a Comfy graph.
 
 ## Source
 
