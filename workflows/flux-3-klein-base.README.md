@@ -5,10 +5,10 @@ Genobi, normalized for dynamic studio inputs. They are **not** the Distilled
 workflow. Base is the default open Klein workflow; the original Distilled
 graph remains in `flux-3-klein-t2i.json` as an alternate template.
 
-| Workflow | Model | Sampler | Prompt |
-| --- | --- | --- | --- |
-| `flux-3-klein-base-t2i.json` | `flux3-image-klein-base-int8-convrot.safetensors` | 50 steps, CFG 3.5, Euler/simple | Text plus prompt upsampler |
-| `flux-3-klein-base-edit.json` | Same Base model | 50 steps, CFG 1, Euler/simple | Image-aware `TextGenerate`, with upsampler bypass for box coordinates |
+| Workflow                      | Model                                             | Sampler                         | Prompt                                                                |
+| ----------------------------- | ------------------------------------------------- | ------------------------------- | --------------------------------------------------------------------- |
+| `flux-3-klein-base-t2i.json`  | `flux3-image-klein-base-int8-convrot.safetensors` | 50 steps, CFG 3.5, Euler/simple | Text plus prompt upsampler                                            |
+| `flux-3-klein-base-edit.json` | Same Base model                                   | 50 steps, CFG 1, Euler/simple   | Image-aware `TextGenerate`, with upsampler bypass for box coordinates |
 
 ## Source and normalization
 
