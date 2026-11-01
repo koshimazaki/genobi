@@ -21,14 +21,8 @@
   },
   "4": {
     "inputs": {
-      "text": [
-        "51",
-        0
-      ],
-      "clip": [
-        "2",
-        0
-      ]
+      "text": ["51", 0],
+      "clip": ["2", 0]
     },
     "class_type": "CLIPTextEncode",
     "_meta": {
@@ -43,22 +37,10 @@
       "sampler_name": "euler",
       "scheduler": "simple",
       "denoise": 1,
-      "model": [
-        "59",
-        0
-      ],
-      "positive": [
-        "17",
-        0
-      ],
-      "negative": [
-        "17",
-        1
-      ],
-      "latent_image": [
-        "17",
-        2
-      ]
+      "model": ["59", 0],
+      "positive": ["17", 0],
+      "negative": ["17", 1],
+      "latent_image": ["17", 2]
     },
     "class_type": "KSampler",
     "_meta": {
@@ -67,14 +49,8 @@
   },
   "8": {
     "inputs": {
-      "samples": [
-        "7",
-        0
-      ],
-      "vae": [
-        "3",
-        0
-      ]
+      "samples": ["7", 0],
+      "vae": ["3", 0]
     },
     "class_type": "VAEDecode",
     "_meta": {
@@ -84,10 +60,7 @@
   "9": {
     "inputs": {
       "filename_prefix": "image/FLUX3-Klein-Base_edit",
-      "images": [
-        "8",
-        0
-      ]
+      "images": ["8", 0]
     },
     "class_type": "SaveImage",
     "_meta": {
@@ -98,22 +71,10 @@
     "inputs": {
       "resolution": "resize",
       "resolution.megapixels": 1,
-      "positive": [
-        "4",
-        0
-      ],
-      "negative": [
-        "58",
-        0
-      ],
-      "vae": [
-        "3",
-        0
-      ],
-      "images.image0": [
-        "reference-0",
-        0
-      ]
+      "positive": ["4", 0],
+      "negative": ["58", 0],
+      "vae": ["3", 0],
+      "images.image0": ["reference-0", 0]
     },
     "class_type": "ReferenceMultiLatent",
     "_meta": {
@@ -133,10 +94,7 @@
   },
   "47": {
     "inputs": {
-      "prompt": [
-        "edit-prompt",
-        0
-      ],
+      "prompt": ["edit-prompt", 0],
       "max_length": 3584,
       "sampling_mode": "on",
       "sampling_mode.temperature": 1,
@@ -149,18 +107,9 @@
       "thinking": false,
       "use_default_template": true,
       "mtp": "off",
-      "clip": [
-        "46",
-        0
-      ],
-      "image": [
-        "50",
-        0
-      ],
-      "system_prompt": [
-        "48",
-        0
-      ]
+      "clip": ["46", 0],
+      "image": ["50", 0],
+      "system_prompt": ["48", 0]
     },
     "class_type": "TextGenerate",
     "_meta": {
@@ -178,10 +127,7 @@
   },
   "50": {
     "inputs": {
-      "images.image0": [
-        "reference-0",
-        0
-      ]
+      "images.image0": ["reference-0", 0]
     },
     "class_type": "BatchImagesNode",
     "_meta": {
@@ -191,14 +137,8 @@
   "51": {
     "inputs": {
       "switch": false,
-      "on_false": [
-        "47",
-        0
-      ],
-      "on_true": [
-        "edit-prompt",
-        0
-      ]
+      "on_false": ["47", 0],
+      "on_true": ["edit-prompt", 0]
     },
     "class_type": "ComfySwitchNode",
     "_meta": {
@@ -208,10 +148,7 @@
   "58": {
     "inputs": {
       "text": "",
-      "clip": [
-        "2",
-        0
-      ]
+      "clip": ["2", 0]
     },
     "class_type": "CLIPTextEncode",
     "_meta": {
