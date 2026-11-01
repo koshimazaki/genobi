@@ -77,6 +77,13 @@ it("serves the full keyless pair→claim→launch→progress flow through the Wo
     "X-Genobi-Runner": pair.id,
   };
   await call("/api/runner/poll", "POST", { updates: [] }, runnerHeaders);
+  // Authenticated heartbeats no longer create a runnerPoll rate_limits row.
+  // One D1 UPDATE both refreshes last_seen and enforces the poll budget.
+  expect(
+    f.db
+      .prepare("SELECT count(*) AS n FROM rate_limits WHERE id LIKE ?")
+      .get("runnerPoll:%"),
+  ).toMatchObject({ n: 0 });
   const id = crypto.randomUUID();
   const started = await call(
     "/api/agent/sessions",
