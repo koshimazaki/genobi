@@ -87,7 +87,9 @@ it("bounds runner polls atomically across isolates and resets the window", async
   f.advance(60_001);
   await expect(f.store.poll(f.auth, [])).resolves.toMatchObject({ stops: [] });
   expect(
-    f.db.prepare("SELECT poll_count FROM runner_pairs WHERE id=?").get(f.code.id),
+    f.db
+      .prepare("SELECT poll_count FROM runner_pairs WHERE id=?")
+      .get(f.code.id),
   ).toMatchObject({ poll_count: 1 });
 });
 
