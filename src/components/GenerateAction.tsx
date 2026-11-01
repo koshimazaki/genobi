@@ -3,6 +3,14 @@ import { isImage, isKlein } from "../../shared/image";
 import { isTerminal, type Job } from "../../shared/types";
 import GenerateButton from "./GenerateButton";
 
+/** Only FLUX 3's Router/API run has a selectable key preference. */
+export const imageProviderFor = (
+  state: Pick<ComposerState, "generator" | "model" | "imageProvider">,
+) =>
+  isImage(state.generator) && state.model === "flux-3"
+    ? (state.imageProvider ?? "auto")
+    : "auto";
+
 /** Compose the provider route next to Generate without expanding App's UI tree. */
 export default function GenerateAction({
   state,
