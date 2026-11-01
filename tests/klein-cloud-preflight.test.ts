@@ -6,7 +6,11 @@ import { infoFor } from "./comfy-readiness-fixture";
 
 const OFFICIAL = "flux3-image-klein-int8-convrot.safetensors";
 const LEGACY = "flux3_image_klein_sd_int8_convrot.safetensors";
-const values = kleinValues({ imageAspectRatio: "1:1" }, "A paper kite.", () => 0);
+const values = kleinValues(
+  { imageAspectRatio: "1:1" },
+  "A paper kite.",
+  () => 0,
+);
 
 function cloud(models: string[], status = 200) {
   const info = infoFor(kleinWorkflow.graph);
