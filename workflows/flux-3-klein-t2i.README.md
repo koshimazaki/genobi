@@ -29,7 +29,7 @@ verbatim into `18:14`).
 | `9`           | `SaveImage` prefix `image/FLUX3-Klein_t2i`                                                            |
 | `18:7`        | Seed is a slot; the template's own seed is not kept                                                   |
 | `18:17`       | The template's caption replaced by a placeholder (a slot)                                             |
-| `18:1`        | `unet_name` keeps the official filename; Cloud preflight selects it or a listed legacy alias (see Models)           |
+| `18:1`        | `unet_name` resolved from live Cloud choices (see Models)                                             |
 
 **Boxes are prompt coordinates.** BFL writes boxes into the prompt as a JSON
 array after the caption, `[top, left, bottom, right]` in integers from 0 to
@@ -61,7 +61,7 @@ prompt is not in the template; using it is later work.
 | `width`     | `18:6.width`     | From the ratio and tier, a multiple of 16 (`kleinSize`)                    |
 | `height`    | `18:6.height`    | The same                                                                   |
 | `seed`      | `18:7.seed`      | A fresh random seed                                                        |
-| `unet_name` | `18:1.unet_name` | On Cloud, resolved against the live UNETLoader catalogue; locally operator-configured |
+| `unet_name` | `18:1.unet_name` | Cloud inventory choice; local operator configuration                       |
 
 `text_encoder` (`18:2.clip_name`), `upsampler_encoder` (`18:12.clip_name`) and
 `vae` (`18:3.vae_name`) are model slots too: a local ComfyUI's model map
@@ -79,7 +79,7 @@ ratios only, and a box layout is square unless a ratio is chosen.
 
 | File                                                 | Folder             |
 | ---------------------------------------------------- | ------------------ |
-| `flux3-image-klein-int8-convrot.safetensors`      | `diffusion_models` |
+| `flux3-image-klein-int8-convrot.safetensors`         | `diffusion_models` |
 | `qwen3vl_4b_int8_convrot.safetensors`                | `text_encoders`    |
 | `qwen3.5_9b_flux3_prompt_upsampler_w4a8.safetensors` | `text_encoders`    |
 | `flux2-vae.safetensors`                              | `vae`              |
