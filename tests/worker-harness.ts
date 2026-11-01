@@ -13,7 +13,10 @@ import { randomUUID } from "node:crypto";
 import { JOB_MAX_AGE_MS } from "../shared/lifecycle";
 import { infoFor } from "./comfy-readiness-fixture";
 import { kleinWorkflow } from "../shared/comfy/klein";
-import { kleinBaseWorkflow, kleinBaseEditTemplate } from "../shared/comfy/klein-base";
+import {
+  kleinBaseWorkflow,
+  kleinBaseEditTemplate,
+} from "../shared/comfy/klein-base";
 import { kleinEditTemplate } from "../shared/comfy/klein-edit";
 
 // Read through live bindings by the test files; only the harness assigns them.
