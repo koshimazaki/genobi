@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it } from "vitest";
 import { LocalComfyWorkflows } from "../server/comfy-local";
 import { WorkflowDestinations } from "../server/workflow-destinations";
-import { kleinWorkflow } from "../shared/comfy/klein";
+import { kleinBaseWorkflow } from "../shared/comfy/klein-base";
 import { NotYetWorkflow } from "../shared/comfy/workflow";
 import { fakeComfy, nodesFor, type FakeComfy } from "./fake-comfyui";
 import { input, setup } from "./server-harness";
@@ -22,7 +22,7 @@ afterEach(async () => {
 });
 
 async function studio() {
-  fake = await fakeComfy({ nodes: nodesFor(kleinWorkflow.graph) });
+  fake = await fakeComfy({ nodes: nodesFor(kleinBaseWorkflow.graph) });
   const local = new LocalComfyWorkflows({ url: fake.url });
   const app = await setup(
     undefined,
@@ -56,7 +56,7 @@ describe("settings_changed", () => {
     const refused = await send("/api/jobs", klein, {
       "Idempotency-Key": "expect-local-1",
       "Genobi-Run-Location": "local",
-      "Genobi-Workflow": "flux-3-klein-t2i",
+      "Genobi-Workflow": "flux-3-klein-base-t2i",
     });
     expect(refused.status).toBe(409);
     expect((await refused.json()).code).toBe("settings_changed");
