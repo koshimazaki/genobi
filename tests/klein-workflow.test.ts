@@ -305,9 +305,9 @@ describe("Klein through the SDK", () => {
         }),
       },
     }));
-    const fetcher = vi.fn<typeof fetch>().mockResolvedValue(
-      Response.json(infoFor(kleinWorkflow.graph)),
-    );
+    const fetcher = vi
+      .fn<typeof fetch>()
+      .mockResolvedValue(Response.json(infoFor(kleinWorkflow.graph)));
     const client = new ComfySdkWorkflows({ connect, env: {}, fetcher });
     const values = kleinValues({ imageAspectRatio: "1:1" }, layout, () => 0);
     const handle = await client.run(kleinWorkflow, values, "comfyui-k", {
