@@ -88,7 +88,14 @@ export class JobService {
   credential(input: GenerateInput, sessionId: string, byo?: string) {
     const model = input.model ?? "flux-3";
     const plan = this.settings.planFor(sessionId, input.generator, model);
-    return runCredential(this.keys, input.generator, model, byo, plan.location, input.imageProvider ?? "auto");
+    return runCredential(
+      this.keys,
+      input.generator,
+      model,
+      byo,
+      plan.location,
+      input.imageProvider ?? "auto",
+    );
   }
   private provider(key: string) {
     return providerFor(key, this.providers);
