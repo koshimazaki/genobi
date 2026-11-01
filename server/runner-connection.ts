@@ -35,11 +35,10 @@ type Sessions = Pick<AgentSessions, "status" | "start" | "read" | "stop">;
  * other pages.dev or workers.dev site is refused, so a look-alike deployment
  * cannot pair a local runner through a pasted code.
  */
-export const DEFAULT_HOSTED_ORIGINS = [
-  "https://genobi.pages.dev",
-  // The previous Pages project, kept while visitors move to genobi.pages.dev.
-  "https://fluxstudio.pages.dev",
-];
+// The public Genobi deployment owns production pairing. The legacy
+// fluxstudio Pages origin must be explicitly opted into via
+// GENOBI_HOSTED_ORIGINS, not trusted by default after the cutover.
+export const DEFAULT_HOSTED_ORIGINS = ["https://genobi.pages.dev"];
 export function hostedOrigins(
   env: string | undefined = process.env.GENOBI_HOSTED_ORIGINS,
 ) {
