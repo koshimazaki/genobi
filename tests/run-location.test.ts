@@ -106,7 +106,7 @@ describe("run location", () => {
       recipe: {
         id: "flux-3-klein",
         route: "workflow",
-        workflow: "flux-3-klein-t2i",
+        workflow: "flux-3-klein-base-t2i",
         location: "local",
       },
     });
@@ -119,7 +119,7 @@ describe("run location", () => {
     expect(fake.prompts).toHaveLength(1);
     expect(fake.prompts[0].prompt_id).toBe(job.id);
     expect(fake.prompts[0].prompt["18:1"].inputs.unet_name).toBe(
-      "flux3/klein-local.safetensors",
+      "flux3/klein-base-local.safetensors",
     );
     fake.state = "success";
     const polled = await (await send(`/api/jobs/${job.id}`)).json();
