@@ -22,6 +22,7 @@ export default function ComposerToolbar({
   action,
   frameLock,
   keyKind = null,
+  preferBflForKlein = false,
 }: {
   state: ComposerState;
   /** `useComposer`'s edit path, so every control here marks the edit. */
@@ -39,6 +40,8 @@ export default function ComposerToolbar({
    * it. Null when no key held here can run the entry.
    */
   keyKind?: KeyKind | null;
+  /** Select BFL direct when choosing Klein and the BFL account is connected. */
+  preferBflForKlein?: boolean;
 }) {
   const { generator, model } = state;
   const location = useSettingsStore((s) => s.location);
@@ -52,7 +55,15 @@ export default function ComposerToolbar({
         generator={generator}
         model={model}
         openOnly={state.openOnly}
-        onChoose={(choice) => update(choice)}
+        onChoose={(choice) =>
+          update({
+            ...choice,
+            model:
+              preferBflForKlein && choice.model === "flux-3-klein"
+                ? "flux-3-klein-api"
+                : choice.model,
+          })
+        }
         onOpenOnlyChange={(openOnly) => update({ openOnly })}
       />
       <RunModeLine generator={generator} model={model} keyKind={keyKind} />
