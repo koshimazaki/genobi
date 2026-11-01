@@ -39,6 +39,11 @@ VAE, `ReferenceMultiLatent` or `BatchImagesNode` cause an unsent error
 rather than a charged GPU failure. Genobi never substitutes Distilled weights
 for Base, because their samplers have different settings.
 
+On a local ComfyUI, set `GENOBI_KLEIN_BASE_MODEL` to the Base diffusion
+filename (or use `GENOBI_LOCAL_MODELS` under template id
+`flux-3-klein-base-t2i`). The older `GENOBI_KLEIN_MODEL` remains specific to
+the separate Distilled graph. The two model names are never silently swapped.
+
 No live paid Base inference is claimed by the repository tests; validate an
 actual Base text-to-image and one-reference edit on the connected Cloud account
 before merging.
