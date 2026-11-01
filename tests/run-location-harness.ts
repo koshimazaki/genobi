@@ -4,7 +4,10 @@ import { afterEach } from "vitest";
 import { LocalComfyWorkflows } from "../server/comfy-local";
 import { WorkflowDestinations } from "../server/workflow-destinations";
 import { kleinWorkflow } from "../shared/comfy/klein";
-import { kleinBaseWorkflow } from "../shared/comfy/klein-base";
+import {
+  kleinBaseWorkflow,
+  kleinBaseEditTemplate,
+} from "../shared/comfy/klein-base";
 import type { WorkflowClient } from "../shared/comfy/workflow";
 import { fakeComfy, nodesFor, type FakeComfy } from "./fake-comfyui";
 import { input, setup } from "./server-harness";
@@ -48,6 +51,14 @@ export async function studio(
   reopen?: { fake: FakeComfy; directory: string },
 ) {
   const nodes = nodesFor(kleinBaseWorkflow.graph);
+  // The same ComfyUI provides Base editing (reference and image-aware nodes).
+  for (const [type, inputs] of Object.entries(
+    nodesFor(kleinBaseEditTemplate(1).graph),
+  )) {
+    nodes[type] ??= {};
+    for (const [name, values] of Object.entries(inputs))
+      nodes[type][name] = [...new Set([...(nodes[type][name] ?? []), ...values])];
+  }
   // Base is the new default, Distilled remains explicitly selectable for
   // earlier takes. Their diffusion weights are never interchangeable.
   nodes.UNETLoader.unet_name = [unet, distilledUnet];
