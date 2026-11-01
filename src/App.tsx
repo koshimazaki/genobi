@@ -6,7 +6,6 @@ import { useScrollsBridge } from "./scrolls/bridge";
 import { StudioPanel, useShell } from "./studio/ShellContext";
 import { useEffect, useRef, useState } from "react";
 import { useWorldBuilder } from "./world-builder/useWorldBuilder";
-import { isTerminal } from "../shared/types";
 import { readReference } from "./image-files";
 import { isH3, h3EstimateCredits } from "../shared/h3";
 import { h3RouterCredits, isH3Router } from "../shared/comfy/h3-router";
@@ -14,7 +13,7 @@ import { estimateImageUsd, isImage } from "../shared/image";
 import { MUSIC_ESTIMATE_CREDITS } from "../shared/music";
 import { useImageReferences } from "./useImageReferences";
 import ImageStage from "./components/ImageStage";
-import GenerateAction from "./components/GenerateAction";
+import GenerateAction, { imageProviderFor } from "./components/GenerateAction";
 import type { Job, Source } from "../shared/types";
 import { usePageKey } from "./usePageKey";
 import { useServerKey } from "./useServerKey";
@@ -178,15 +177,7 @@ export default function App() {
         : isH3Router(model)
           ? h3RouterCredits(duration, runResolution)
           : null;
-  const payer = runPayer(
-    key,
-    slots,
-    generator,
-    model,
-    isImage(generator) && model === "flux-3"
-      ? (state.imageProvider ?? "auto")
-      : "auto",
-  );
+  const payer = runPayer(key, slots, generator, model, imageProviderFor(state));
   const estimate = isImage(generator)
     ? estimateImageUsd(state)
     : generator === "audio"
