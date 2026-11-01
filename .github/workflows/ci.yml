@@ -32,13 +32,6 @@ jobs:
       - name: Install
         run: npm ci
 
-      # Temporary formatter diff to pin JSON, fixture and README output.
-      - name: Show exact formatting patches
-        run: |
-          npx prettier --write tests/worker-harness.ts workflows/flux-3-klein-base-edit.json workflows/flux-3-klein-base-t2i.json workflows/flux-3-klein-base.README.md
-          git diff -- tests/worker-harness.ts workflows/flux-3-klein-base-edit.json workflows/flux-3-klein-base-t2i.json workflows/flux-3-klein-base.README.md
-          git restore -- tests/worker-harness.ts workflows/flux-3-klein-base-edit.json workflows/flux-3-klein-base-t2i.json workflows/flux-3-klein-base.README.md
-
       # Ordered cheapest-first, so an obvious failure reports in seconds
       # rather than after a full build.
       - name: Format
