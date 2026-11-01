@@ -10,11 +10,11 @@ import { isTerminal } from "../shared/types";
 import { readReference } from "./image-files";
 import { isH3, h3EstimateCredits } from "../shared/h3";
 import { h3RouterCredits, isH3Router } from "../shared/comfy/h3-router";
-import { estimateImageUsd, isImage, isKlein } from "../shared/image";
+import { estimateImageUsd, isImage } from "../shared/image";
 import { MUSIC_ESTIMATE_CREDITS } from "../shared/music";
 import { useImageReferences } from "./useImageReferences";
 import ImageStage from "./components/ImageStage";
-import GenerateButton from "./components/GenerateButton";
+import GenerateAction from "./components/GenerateAction";
 import type { Job, Source } from "../shared/types";
 import { usePageKey } from "./usePageKey";
 import { useServerKey } from "./useServerKey";
@@ -178,25 +178,6 @@ export default function App() {
         : isH3Router(model)
           ? h3RouterCredits(duration, runResolution)
           : null;
-  // One click runs the displayed route; the adjacent picker changes which key
-  // and endpoint the *next* run will use. Klein's open graph is not Router.
-  const providerChoices = !isImage(generator)
-    ? undefined
-    : isKlein(model)
-      ? [
-          { value: "comfy", label: "Comfy workflow" },
-          { value: "bfl", label: "BFL API" },
-        ]
-      : [
-          { value: "auto", label: "Auto" },
-          { value: "bfl", label: "BFL API" },
-          { value: "comfy", label: "Comfy Router" },
-        ];
-  const providerValue = isKlein(model)
-    ? model === "flux-3-klein"
-      ? "comfy"
-      : "bfl"
-    : (state.imageProvider ?? "auto");
   const payer = runPayer(
     key,
     slots,
@@ -452,36 +433,20 @@ export default function App() {
                 estimateCredits={estimateCredits}
                 keyKind={payer}
                 action={
-                  <GenerateButton
-                    generator={generator}
+                  <GenerateAction
+                    state={state}
+                    jobs={jobs}
                     submitting={submitting}
-                    activeJob={jobs.find(
-                      (job) =>
-                        job.generator === generator && !isTerminal(job.status),
-                    )}
                     hasKey={Boolean(key)}
-                    hold={recreating ? "restoring" : undefined}
+                    recreating={recreating}
                     disabled={
                       uploading ||
                       images.loading ||
                       composerBlocked(state, sourceId, composed)
                     }
-                    providerChoices={providerChoices}
-                    providerValue={providerValue}
-                    onProviderChange={(value) =>
-                      isKlein(model)
-                        ? update({
-                            model:
-                              value === "bfl"
-                                ? "flux-3-klein-api"
-                                : "flux-3-klein",
-                          })
-                        : update({
-                            imageProvider: value as "auto" | "bfl" | "comfy",
-                          })
-                    }
                     onSubmit={() => void submit()}
                     onResume={() => setShowKey(true)}
+                    onUpdate={update}
                   />
                 }
               />
