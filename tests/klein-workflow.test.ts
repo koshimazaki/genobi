@@ -464,7 +464,9 @@ describe("the local server runs open Klein end to end", () => {
       mediaType: "image",
       costEstimateUsd: 0.009,
     });
-    const postCall = calls.find((call) => call.url === "https://cloud.comfy.org/api/v2/jobs");
+    const postCall = calls.find(
+      (call) => call.url === "https://cloud.comfy.org/api/v2/jobs",
+    );
     const { workflow } = JSON.parse(String(postCall?.init?.body));
     expect(workflow["18:16"].inputs.switch).toBe(false);
     expect(workflow["18:20"].inputs.string_b).toContain('"kite_1"');
