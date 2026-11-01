@@ -193,14 +193,18 @@ export default function App() {
           { value: "comfy", label: "Comfy Router" },
         ];
   const providerValue = isKlein(model)
-    ? model === "flux-3-klein" ? "comfy" : "bfl"
+    ? model === "flux-3-klein"
+      ? "comfy"
+      : "bfl"
     : (state.imageProvider ?? "auto");
   const payer = runPayer(
     key,
     slots,
     generator,
     model,
-    isImage(generator) && model === "flux-3" ? state.imageProvider ?? "auto" : "auto",
+    isImage(generator) && model === "flux-3"
+      ? (state.imageProvider ?? "auto")
+      : "auto",
   );
   const estimate = isImage(generator)
     ? estimateImageUsd(state)
@@ -273,7 +277,10 @@ export default function App() {
     composerRef.current?.scrollIntoView(smoothScroll("center"));
   }
   async function submit() {
-    if ((!key && !hasServerKey || (isImage(generator) && !payer)) && !runsKeyless(generator, model)) {
+    if (
+      ((!key && !hasServerKey) || (isImage(generator) && !payer)) &&
+      !runsKeyless(generator, model)
+    ) {
       setShowKey(true);
       return;
     }
@@ -463,8 +470,15 @@ export default function App() {
                     providerValue={providerValue}
                     onProviderChange={(value) =>
                       isKlein(model)
-                        ? update({ model: value === "bfl" ? "flux-3-klein-api" : "flux-3-klein" })
-                        : update({ imageProvider: value as "auto" | "bfl" | "comfy" })
+                        ? update({
+                            model:
+                              value === "bfl"
+                                ? "flux-3-klein-api"
+                                : "flux-3-klein",
+                          })
+                        : update({
+                            imageProvider: value as "auto" | "bfl" | "comfy",
+                          })
                     }
                     onSubmit={() => void submit()}
                     onResume={() => setShowKey(true)}
