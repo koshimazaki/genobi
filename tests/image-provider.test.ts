@@ -3,10 +3,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { createElement } from "react";
 import { validateInput } from "../server/validation";
 import { runCredential, ServerKeys } from "../server/keys";
-import {
-  chooseKey,
-  payingKeyKind,
-} from "../shared/provider";
+import { chooseKey, payingKeyKind } from "../shared/provider";
 import GenerateButton from "../src/components/GenerateButton";
 
 const image = {
@@ -22,8 +19,12 @@ const keys = {
 describe("image provider selection", () => {
   it("keeps Auto compatible with existing jobs, and validates explicit choices", () => {
     expect(validateInput(image).imageProvider).toBe("auto");
-    expect(validateInput({ ...image, imageProvider: "comfy" }).imageProvider).toBe("comfy");
-    expect(validateInput({ ...image, imageProvider: "bfl" }).imageProvider).toBe("bfl");
+    expect(
+      validateInput({ ...image, imageProvider: "comfy" }).imageProvider,
+    ).toBe("comfy");
+    expect(
+      validateInput({ ...image, imageProvider: "bfl" }).imageProvider,
+    ).toBe("bfl");
     expect(() =>
       validateInput({ ...image, imageProvider: "anything" }),
     ).toThrow("provider");
@@ -48,10 +49,12 @@ describe("image provider selection", () => {
     ).toBe("comfy");
     const server = new ServerKeys(keys);
     expect(
-      runCredential(server, "image", "flux-3", undefined, undefined, "comfy").key,
+      runCredential(server, "image", "flux-3", undefined, undefined, "comfy")
+        .key,
     ).toBe(keys.comfy);
     expect(
-      runCredential(server, "image", "flux-3", undefined, undefined, "bfl").key,
+      runCredential(server, "image", "flux-3", undefined, undefined, "bfl")
+        .key,
     ).toBe(keys.bfl);
     expect(() =>
       runCredential(server, "image", "flux-3", keys.bfl, undefined, "comfy"),
@@ -73,11 +76,13 @@ describe("image provider selection", () => {
           onProviderChange: () => {},
         }),
       );
-    expect(render([
-      { value: "auto", label: "Auto" },
-      { value: "comfy", label: "Comfy Router" },
-      { value: "bfl", label: "BFL API" },
-    ])).toContain('aria-label="Generation provider"');
+    expect(
+      render([
+        { value: "auto", label: "Auto" },
+        { value: "comfy", label: "Comfy Router" },
+        { value: "bfl", label: "BFL API" },
+      ]),
+    ).toContain('aria-label="Generation provider"');
     expect(render()).not.toContain('aria-label="Generation provider"');
   });
 });
