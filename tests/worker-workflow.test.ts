@@ -163,8 +163,13 @@ describe("Cloudflare adapter: the workflow route through the Comfy SDK", () => {
     expect(graph["reference-0"].inputs.image).toMatchObject({
       __type: "core/ASSET",
     });
-    expect(graph["18:7"].inputs.latent_image).toEqual(["reference-latents", 2]);
-    expect(graph["18:17"].inputs.value).toContain("src_bbox");
+    // The supplied Base edit graph uses node 17 for reference latents,
+    // node 50 for image-aware prompt upsampling and node 7 for sampling.
+    expect(graph["7"].inputs.latent_image).toEqual(["17", 2]);
+    expect(graph["17"].inputs["images.image0"]).toEqual(["reference-0", 0]);
+    expect(graph["50"].inputs["images.image0"]).toEqual(["reference-0", 0]);
+    expect(graph["edit-prompt"].inputs.value).toContain("src_bbox");
+    expect(graph["51"].inputs.switch).toBe(true);
     expect(sent.filter((r) => r.path === "/api/object_info")).toHaveLength(1);
     expect(sent.find((r) => r.path === "/api/object_info")?.apiKey).toBe(true);
     expect(
