@@ -79,7 +79,8 @@ export async function runnerRoute(
       RELAY_SECRET,
     );
     const pair = await store.authenticate(id, token);
-    await limit("runnerPoll", id);
+    // The per-pair budget is enforced with its heartbeat inside poll(),
+    // not as a second D1 write in rate_limits on each heartbeat.
     const v = await body(request);
     if (!Array.isArray(v.updates) || v.updates.length > 20)
       throw new AppError(400, "Expected at most 20 session updates.");
