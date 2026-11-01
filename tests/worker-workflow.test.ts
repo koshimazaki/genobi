@@ -240,7 +240,7 @@ describe("Cloudflare adapter: the workflow route through the Comfy SDK", () => {
       "ltx-2-5-t2v",
       "ltx-2-5-akuspace-t2v",
       "seedvr2-upscale",
-      "flux-3-klein-t2i",
+      "flux-3-klein-base-t2i",
     ]);
     expect(workflows.capabilities.map((c) => c.id)).not.toContain(
       "text-to-music",
