@@ -5,7 +5,10 @@ import { LocalComfyWorkflows } from "../server/comfy-local";
 import { ServerKeys } from "../server/keys";
 import { WorkflowDestinations } from "../server/workflow-destinations";
 import { kleinWorkflow } from "../shared/comfy/klein";
-import { kleinBaseWorkflow } from "../shared/comfy/klein-base";
+import {
+  kleinBaseWorkflow,
+  kleinBaseEditTemplate,
+} from "../shared/comfy/klein-base";
 import { seedvr2Workflow } from "../shared/comfy/seedvr2";
 import type { WorkflowClient } from "../shared/comfy/workflow";
 import { fakeComfy, nodesFor, type FakeComfy } from "./fake-comfyui";
@@ -29,6 +32,7 @@ function nodes() {
   const merged: Record<string, Record<string, unknown[]>> = {};
   for (const graph of [
     kleinBaseWorkflow.graph,
+    kleinBaseEditTemplate(1).graph,
     kleinWorkflow.graph,
     seedvr2Workflow.graph,
   ])
