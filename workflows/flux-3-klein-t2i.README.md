@@ -53,15 +53,15 @@ prompt is not in the template; using it is later work.
 
 ## Slots
 
-| Slot        | Path             | Value the studio sends                                                     |
-| ----------- | ---------------- | -------------------------------------------------------------------------- |
-| `prompt`    | `18:17.value`    | The caption; `TARGET CANVAS: W:H` first when it is upsampled               |
-| `layout`    | `18:20.string_b` | The layout rows' JSON as written in the prompt, or empty                   |
-| `upsample`  | `18:16.switch`   | `true` without rows, `false` with them                                     |
-| `width`     | `18:6.width`     | From the ratio and tier, a multiple of 16 (`kleinSize`)                    |
-| `height`    | `18:6.height`    | The same                                                                   |
-| `seed`      | `18:7.seed`      | A fresh random seed                                                        |
-| `unet_name` | `18:1.unet_name` | Cloud inventory choice; local operator configuration                       |
+| Slot        | Path             | Value the studio sends                                       |
+| ----------- | ---------------- | ------------------------------------------------------------ |
+| `prompt`    | `18:17.value`    | The caption; `TARGET CANVAS: W:H` first when it is upsampled |
+| `layout`    | `18:20.string_b` | The layout rows' JSON as written in the prompt, or empty     |
+| `upsample`  | `18:16.switch`   | `true` without rows, `false` with them                       |
+| `width`     | `18:6.width`     | From the ratio and tier, a multiple of 16 (`kleinSize`)      |
+| `height`    | `18:6.height`    | The same                                                     |
+| `seed`      | `18:7.seed`      | A fresh random seed                                          |
+| `unet_name` | `18:1.unet_name` | Cloud inventory choice; local operator configuration         |
 
 `text_encoder` (`18:2.clip_name`), `upsampler_encoder` (`18:12.clip_name`) and
 `vae` (`18:3.vae_name`) are model slots too: a local ComfyUI's model map
