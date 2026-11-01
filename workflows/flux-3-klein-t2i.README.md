@@ -90,8 +90,7 @@ repository, under the FLUX Kommunity License ([LICENCES.md](../LICENCES.md)).
 
 **Which diffusion filename.** The pinned graph now follows the official
 Comfy workflow's `flux3-image-klein-int8-convrot.safetensors`. Comfy Cloud
-previously accepted `flux3_image_klein_sd_int8_convrot.safetensors` (October
-2026) and rejected the hyphenated filename then. Since the account's available
+previously accepted `flux3_image_klein_sd_int8_convrot.safetensors` (October 2026) and rejected the hyphenated filename then. Since the account's available
 model names can change, Genobi reads its authenticated `/api/object_info`
 before every Klein Cloud submission, selects the official name when present or
 the recorded alias if explicitly listed, and checks the graph's remaining
