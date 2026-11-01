@@ -23,13 +23,20 @@ function cloud(models: string[], status = 200) {
     },
     jobs: {
       async get() {
-        return { id: "klein-first-job", status: "queued", progress: null, outputs: [] };
+        return {
+          id: "klein-first-job",
+          status: "queued",
+          progress: null,
+          outputs: [],
+        };
       },
     },
   });
   const fetcher: typeof fetch = async (url, init) => {
     requests.push({ url: String(url), method: init?.method });
-    return Response.json(status === 200 ? info : { error: "unavailable" }, { status });
+    return Response.json(status === 200 ? info : { error: "unavailable" }, {
+      status,
+    });
   };
   return {
     requests,
