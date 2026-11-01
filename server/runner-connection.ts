@@ -8,6 +8,7 @@ import {
   RELAY_SECRET,
   relayRequest,
   localRunnerOrigin,
+  runnerPollDelay,
   type RunnerPoll,
   type RunnerUpdate,
 } from "../shared/runner-relay";
@@ -383,7 +384,10 @@ export class RunnerConnection {
     const loop = async () => {
       await this.tick();
       if (!this.stopped) {
-        this.timer = setTimeout(() => void loop(), 3000);
+        // An idle connection needs only a 6s heartbeat; once a local
+        // session starts, progress and Stop retain their 3s cadence.
+        const updates = this.connection ? this.updates(this.connection) : [];
+        this.timer = setTimeout(() => void loop(), runnerPollDelay(updates));
         this.timer.unref();
       }
     };
