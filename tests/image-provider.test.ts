@@ -53,8 +53,7 @@ describe("image provider selection", () => {
         .key,
     ).toBe(keys.comfy);
     expect(
-      runCredential(server, "image", "flux-3", undefined, undefined, "bfl")
-        .key,
+      runCredential(server, "image", "flux-3", undefined, undefined, "bfl").key,
     ).toBe(keys.bfl);
     expect(() =>
       runCredential(server, "image", "flux-3", keys.bfl, undefined, "comfy"),
