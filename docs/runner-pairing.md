@@ -66,6 +66,14 @@ Microphone transcription still runs in the local studio.
   does not expose a raw terminal stream. Local operational history, taste memory,
   files and generation credentials are not synchronized by pairing.
 
+After the production cutover, only `https://genobi.pages.dev` is trusted
+for new local runner pairing by default. The old `fluxstudio.pages.dev`
+origin is not a default trusted host. If it must be used temporarily, the
+operator has to opt into it explicitly with `GENOBI_HOSTED_ORIGINS`. This
+change does not revoke already-running sessions on another deployment:
+revoke the old pairing and stop that Worker separately after confirming the
+public endpoint is healthy.
+
 ## Launch, Stop and failure recovery
 
 The browser supplies a start ID. Repeating that ID with the same validated
@@ -80,8 +88,12 @@ cannot silently execute it again. An uncertain start must be inspected locally.
 The hosted Settings prompt retains its start ID after a failed response, so
 retrying the unchanged prompt can recover the existing request.
 
-The connector polls every three seconds while connected; only changed session
+The connector polls every six seconds while idle and every three seconds
+when a local session is starting, running or waiting; only changed session
 updates are sent. Readiness expires after 20 seconds without a heartbeat.
+The hosted relay combines its authenticated per-pair rate-limit counter and
+`last_seen` update in one atomic D1 write. It still enforces 120 polls per
+60-second window across isolates without another `rate_limits` write.
 Unclaimed prompts older than 20 seconds are stopped before launch. A claimed
 request without acknowledgement remains uncertain and offers Stop; it is not
 automatically requeued. Latest owned session state is restored after page reload.

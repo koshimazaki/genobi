@@ -8,6 +8,9 @@ import { plainText } from "./agent-context";
 export const PAIR_CODE_MS = 10 * 60_000;
 export const PAIR_LIFETIME_MS = 24 * 60 * 60_000;
 export const RUNNER_ONLINE_MS = 20_000;
+/** Idle poll is slower to conserve D1; active sessions still report every 3s. */
+export const RUNNER_ACTIVE_POLL_MS = 3_000;
+export const RUNNER_IDLE_POLL_MS = 6_000;
 export const RELAY_ID =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 export const RELAY_SECRET = /^[0-9a-f]{64}$/;
@@ -18,6 +21,16 @@ export interface RunnerUpdate {
   lines: string[];
   summary?: string;
 }
+/** Keep active progress and Stop responsive, but avoid idle write storms. */
+export const runnerPollDelay = (
+  updates: readonly Pick<RunnerUpdate, "status">[],
+) =>
+  updates.some(({ status }) =>
+    ["starting", "running", "waiting"].includes(status),
+  )
+    ? RUNNER_ACTIVE_POLL_MS
+    : RUNNER_IDLE_POLL_MS;
+
 export interface RunnerPoll {
   command?: { id: string; request: AgentSessionRequest };
   stops: string[];

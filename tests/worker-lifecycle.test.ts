@@ -3,6 +3,7 @@ import { readFile } from "node:fs/promises";
 import { randomUUID } from "node:crypto";
 import { RETENTION_MS, SESSION_STORAGE_BYTES } from "../shared/lifecycle";
 import { RATE_LIMITS } from "../shared/limits";
+import { rollUpDailyStats } from "../observability/rollup";
 import type { Job } from "../shared/types";
 import {
   applyPersistedMediaState,
@@ -121,6 +122,9 @@ describe("Cloudflare adapter lifecycle: expiry, sweep, eviction and read limits"
           .first<{ generations: number }>()
       )?.generations,
     ).toBe(frozen?.generations);
+    // A five-minute sweep must not rewrite unchanged daily_stats rows.
+    const idleChanges = await rollUpDailyStats({ DB: db });
+    expect(idleChanges).toBe(0);
     // Counts only: the rollup stores nothing about what was generated.
     const columns = await db.prepare("SELECT * FROM daily_stats LIMIT 1").all();
     expect(Object.keys(columns.results[0] ?? {})).toEqual([

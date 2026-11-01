@@ -8,6 +8,7 @@ import {
   RELAY_SECRET,
   relayRequest,
   localRunnerOrigin,
+  runnerPollDelay,
   type RunnerPoll,
   type RunnerUpdate,
 } from "../shared/runner-relay";
@@ -34,11 +35,10 @@ type Sessions = Pick<AgentSessions, "status" | "start" | "read" | "stop">;
  * other pages.dev or workers.dev site is refused, so a look-alike deployment
  * cannot pair a local runner through a pasted code.
  */
-export const DEFAULT_HOSTED_ORIGINS = [
-  "https://genobi.pages.dev",
-  // The previous Pages project, kept while visitors move to genobi.pages.dev.
-  "https://fluxstudio.pages.dev",
-];
+// The public Genobi deployment owns production pairing. The legacy
+// fluxstudio Pages origin must be explicitly opted into via
+// GENOBI_HOSTED_ORIGINS, not trusted by default after the cutover.
+export const DEFAULT_HOSTED_ORIGINS = ["https://genobi.pages.dev"];
 export function hostedOrigins(
   env: string | undefined = process.env.GENOBI_HOSTED_ORIGINS,
 ) {
@@ -383,7 +383,10 @@ export class RunnerConnection {
     const loop = async () => {
       await this.tick();
       if (!this.stopped) {
-        this.timer = setTimeout(() => void loop(), 3000);
+        // An idle connection needs only a 6s heartbeat; once a local
+        // session starts, progress and Stop retain their 3s cadence.
+        const updates = this.connection ? this.updates(this.connection) : [];
+        this.timer = setTimeout(() => void loop(), runnerPollDelay(updates));
         this.timer.unref();
       }
     };

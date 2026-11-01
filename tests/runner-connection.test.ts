@@ -220,6 +220,10 @@ it("pairs only with trusted studios and their own deployments", () => {
     );
   expect(hostedOrigins("")).toEqual(DEFAULT_HOSTED_ORIGINS);
   expect(DEFAULT_HOSTED_ORIGINS[0]).toBe("https://genobi.pages.dev");
+  expect(DEFAULT_HOSTED_ORIGINS).toEqual(["https://genobi.pages.dev"]);
+  expect(() => cloudRunnerOrigin("https://fluxstudio.pages.dev")).toThrow(
+    "GENOBI_HOSTED_ORIGINS",
+  );
   expect(
     cloudRunnerOrigin(
       "https://1a2b3c4d.genobi.pages.dev",

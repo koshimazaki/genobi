@@ -6,7 +6,10 @@ import {
   PAIR_CODE_MS,
   RUNNER_ONLINE_MS,
   PAIR_LIFETIME_MS,
+  RUNNER_ACTIVE_POLL_MS,
+  RUNNER_IDLE_POLL_MS,
   relayRequest,
+  runnerPollDelay,
 } from "../shared/runner-relay";
 const fixtures: ReturnType<typeof relayFixture>[] = [];
 function fixture() {
@@ -32,6 +35,64 @@ async function paired(f = fixture(), owner = "host-owner") {
   await f.store.poll(auth, []);
   return { ...f, auth, code, token };
 }
+it("keeps active progress at 3s but conserves D1 on idle heartbeats", () => {
+  expect(runnerPollDelay([])).toBe(RUNNER_IDLE_POLL_MS);
+  for (const status of ["starting", "running", "waiting"] as const)
+    expect(runnerPollDelay([{ status }])).toBe(RUNNER_ACTIVE_POLL_MS);
+  for (const status of ["done", "failed", "stopped", "interrupted"] as const)
+    expect(runnerPollDelay([{ status }])).toBe(RUNNER_IDLE_POLL_MS);
+});
+
+it("uses a single D1 heartbeat write, with no per-poll rate_limits record", async () => {
+  const f = await paired();
+  const row = () =>
+    f.db
+      .prepare("SELECT poll_window, poll_count, last_seen FROM runner_pairs")
+      .get() as { poll_window: number; poll_count: number; last_seen: number };
+  const original = row();
+  expect(original.poll_count).toBe(1);
+  expect(
+    f.db
+      .prepare("SELECT count(*) AS n FROM rate_limits WHERE id=?")
+      .get(`runnerPoll:${f.auth.id}`),
+  ).toEqual({ n: 0 });
+  f.advance(6_000);
+  await f.store.poll(f.auth, []);
+  const current = row();
+  expect(current.poll_count).toBe(2);
+  expect(current.poll_window).toBe(original.poll_window);
+  expect(current.last_seen - original.last_seen).toBe(6_000);
+  expect(
+    f.db
+      .prepare("SELECT count(*) AS n FROM rate_limits WHERE id LIKE 'runnerPoll:%'")
+      .get(),
+  ).toEqual({ n: 0 });
+});
+
+it("bounds runner polls atomically across isolates and resets the window", async () => {
+  const f = await paired();
+  const limit = 120;
+  // The initial poll in paired() already counted as one.
+  const others = await Promise.allSettled(
+    Array.from({ length: limit }, () => f.store.poll(f.auth, [])),
+  );
+  expect(others.filter((r) => r.status === "fulfilled")).toHaveLength(
+    limit - 1,
+  );
+  expect(others.filter((r) => r.status === "rejected")).toHaveLength(1);
+  const row = f.db
+    .prepare("SELECT poll_count FROM runner_pairs WHERE id=?")
+    .get(f.code.id) as { poll_count: number };
+  expect(row.poll_count).toBe(limit);
+  f.advance(60_001);
+  await expect(f.store.poll(f.auth, [])).resolves.toMatchObject({ stops: [] });
+  expect(
+    f.db
+      .prepare("SELECT poll_count FROM runner_pairs WHERE id=?")
+      .get(f.code.id),
+  ).toMatchObject({ poll_count: 1 });
+});
+
 it("applies all additive migrations and stores only hashes for one-use credentials", async () => {
   const f = await paired();
   const row = f.db.prepare("SELECT * FROM runner_pairs").get();
