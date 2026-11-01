@@ -245,7 +245,10 @@ function reduce(state: ComposerState, action: Action): ComposerState {
       lightEdits: {},
       imageRegions: [],
       imageReferences: [],
-      imageProvider: action.type === "restore" ? (job.imageProvider ?? "auto") : state.imageProvider,
+      imageProvider:
+        action.type === "restore"
+          ? (job.imageProvider ?? "auto")
+          : state.imageProvider,
       imageResolution:
         action.type === "restore"
           ? (job.imageResolution ?? "1k")
