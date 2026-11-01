@@ -98,6 +98,8 @@ class ComfyClient:
             handlers.append(urllib.request.ProxyHandler({}))
         self.opener = urllib.request.build_opener(*handlers)
         token = os.environ.get("GENOBI_COMFY_BEARER")
+        if token and parsed.scheme != "https" and parsed.hostname not in ("localhost", "127.0.0.1", "::1"):
+            raise ValueError("Bearer credentials require HTTPS or a loopback SSH tunnel.")
         self.headers = {"Authorization": f"Bearer {token}"} if token else {}
 
     def request(self, route, data=None, content_type=None):
