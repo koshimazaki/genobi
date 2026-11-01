@@ -188,25 +188,35 @@ export function scaleAcousticZones(
 ): SceneAcousticZone[] {
   if (!Number.isFinite(factor) || factor <= 0)
     throw new Error("Acoustic zone scale must be positive and finite.");
-  const scaled = zones.map((zone) => ({
-    ...structuredClone(zone),
-    center: zone.center.map(
-      (v, axis) => pivot[axis] + (v - pivot[axis]) * factor,
-    ),
-    dimensions: zone.dimensions.map((v) => v * factor),
-    ...(zone.kind === "room"
-      ? {
-          source: zone.source.map((v) => v * factor),
-          ...(zone.openings
-            ? {
-                openings: zone.openings.map((opening) => ({
-                  ...opening,
-                  areaM2: opening.areaM2 * factor * factor,
-                })),
-              }
-            : {}),
-        }
-      : {}),
-  }));
+  // Validate the source first: scaling must not silently repair invalid openings.
+  validateSceneAcousticZones(zones);
+  const scaled = zones.map((zone) => {
+    const dimensions = zone.dimensions.map((v) => v * factor) as SceneVector;
+    return {
+      ...structuredClone(zone),
+      center: zone.center.map(
+        (v, axis) => pivot[axis] + (v - pivot[axis]) * factor,
+      ),
+      dimensions,
+      ...(zone.kind === "room"
+        ? {
+            source: zone.source.map((v) => v * factor),
+            ...(zone.openings
+              ? {
+                  openings: zone.openings.map((opening) => ({
+                    ...opening,
+                    // Equal geometric areas can differ by one floating-point ULP.
+                    // Keep a full-face aperture valid without changing its ratio.
+                    areaM2: Math.min(
+                      opening.areaM2 * factor * factor,
+                      acousticFaceArea(dimensions, opening.face),
+                    ),
+                  })),
+                }
+              : {}),
+          }
+        : {}),
+    };
+  });
   return validateSceneAcousticZones(scaled);
 }

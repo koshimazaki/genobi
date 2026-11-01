@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { validateRecipe } from "../src/world-builder/recipe";
 import { createStoryPreset } from "../src/world-builder/story-presets";
 import {
+  acousticFaceArea,
   acousticZoneAt,
   acousticZoneAbsorption,
   scaleAcousticZones,
@@ -191,6 +192,30 @@ describe("explicit metre-scale acoustic zones", () => {
       roomRt60({ ...response(original), absorption: original.absorption }),
     );
     expect(original.dimensions).toEqual([24, 28, 36]);
+  });
+  it("retains a full-face opening after fractional scaling without masking invalid input", () => {
+    const original: IndoorAcousticZone = {
+      ...room(),
+      dimensions: [1.1, 3, 1.1],
+      source: [0, 1, 0],
+      openings: [{ face: "ceiling", areaM2: 1.1 * 1.1 }],
+    };
+    const scaled = scaleAcousticZones(
+      [original],
+      1.1,
+      [0, 0, 0],
+    )[0] as IndoorAcousticZone;
+    expect(scaled.openings?.[0].areaM2).toBe(
+      acousticFaceArea(scaled.dimensions, "ceiling"),
+    );
+    expect(acousticZoneAbsorption(scaled).ceiling).toBe(1);
+    expect(() =>
+      scaleAcousticZones(
+        [{ ...original, openings: [{ face: "ceiling", areaM2: 2 }] }],
+        1.1,
+        [0, 0, 0],
+      ),
+    ).toThrow(/fit/);
   });
   it("chooses the actual camera listener and labels the open-shaft estimate, with no street RT60", () => {
     const recipe = descent();
