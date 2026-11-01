@@ -423,6 +423,9 @@ export default function App() {
                 estimate={estimate}
                 estimateCredits={estimateCredits}
                 keyKind={payer}
+                preferBflForKlein={
+                  key ? !key.startsWith("comfyui-") : Boolean(slots?.bfl)
+                }
                 action={
                   <GenerateAction
                     state={state}
