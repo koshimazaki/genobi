@@ -71,7 +71,10 @@ export function kleinBaseEditTemplate(count: number): WorkflowTemplate {
   };
 }
 
-export function kleinBaseEditValues(input: GenerateInput, prompt: string) {
+export function kleinBaseEditValues(
+  input: GenerateInput,
+  prompt: string,
+): Record<string, unknown> {
   // A layout JSON carries exact boxes. Its coordinates must bypass the
   // upsampler, whose supplied system prompt forbids JSON and coordinates.
   const bypassUpsample = Boolean(
