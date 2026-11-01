@@ -21,6 +21,7 @@ import {
 } from "../src/useComposer";
 import { imagePrompt } from "../src/image-regions";
 import ImageControls from "../src/components/ImageControls";
+import GenerateAction from "../src/components/GenerateAction";
 import ComposerActions from "../src/components/ComposerActions";
 import ModeBadge from "../src/components/ModeBadge";
 import CameraDialog from "../src/components/CameraDialog";
@@ -51,7 +52,7 @@ describe("FLUX 3 Image Klein in the registry", () => {
       family: "flux",
       generator: "image",
       route: "workflow",
-      model: "workflow/flux-3-klein-t2i",
+      model: "workflow/flux-3-klein-base-t2i",
       camera: "flux-3",
       open: true,
     });
@@ -119,7 +120,23 @@ describe("switching between video and Klein", () => {
     const html = renderToStaticMarkup(
       <ImageControls state={held} update={() => {}} />,
     );
-    expect(html).toContain('id="image-run-label"');
+    expect(html).not.toContain('id="image-run-label"');
+    const action = renderToStaticMarkup(
+      <GenerateAction
+        state={held}
+        jobs={[]}
+        submitting={false}
+        hasKey
+        recreating={false}
+        disabled={false}
+        onSubmit={() => {}}
+        onResume={() => {}}
+        onUpdate={() => {}}
+      />,
+    );
+    expect(action).toContain('aria-label="Generation provider"');
+    expect(action).toContain("BFL API");
+    expect(action).toContain("Comfy workflow");
     expect(html).toContain('id="camera-label"');
     expect(html).not.toContain("Web grounding");
     // Both runs now receive the source and references.

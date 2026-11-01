@@ -10,6 +10,7 @@ import {
 } from "./akuspace";
 import { h3Workflow } from "./h3";
 import { kleinValues, kleinWorkflow } from "./klein";
+import { kleinBaseWorkflow, kleinBaseValues } from "./klein-base";
 import { swapValues, swapWorkflow } from "./openjutsu";
 import { musicValues, musicWorkflow } from "./music";
 import { seedvr2Values, seedvr2Workflow } from "./seedvr2";
@@ -94,8 +95,15 @@ export const workflowTemplates: TemplateChoice[] = [
     values: ltxValues,
   },
   {
+    id: kleinBaseWorkflow.id,
+    label: "FLUX 3 Image Klein Base · supplied Comfy Cloud workflow (50 steps)",
+    capabilities: ["image"],
+    template: kleinBaseWorkflow,
+    values: kleinBaseValues,
+  },
+  {
     id: kleinWorkflow.id,
-    label: "FLUX 3 Image Klein, Comfy's official text-to-image graph",
+    label: "FLUX 3 Image Klein Distilled · fast Comfy workflow",
     capabilities: ["image"],
     template: kleinWorkflow,
     values: kleinValues,

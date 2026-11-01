@@ -52,8 +52,8 @@ async function readInfo(response: Response) {
  * Never infer that endpoint exists on a deployment, persist a key, or follow
  * a redirect. Nothing in this helper uploads inputs or starts a GPU job.
  */
-export async function checkComfyCloud(
-  templates: readonly WorkflowTemplate[],
+/** One bounded, authenticated node/model catalogue read; never schedules a run. */
+export async function readComfyCloudInfo(
   value: unknown,
   fetcher: Fetcher = fetch,
 ) {
@@ -92,14 +92,20 @@ export async function checkComfyCloud(
     throw unavailable();
   }
   try {
-    return cloudReadiness(
-      templates,
-      await readInfo(response),
-      new Date().toISOString(),
-    );
+    return await readInfo(response);
   } catch {
     throw unavailable();
   }
+}
+
+/** A read-only compatibility report for Settings and the agent tools. */
+export async function checkComfyCloud(
+  templates: readonly WorkflowTemplate[],
+  value: unknown,
+  fetcher: Fetcher = fetch,
+) {
+  const info = await readComfyCloudInfo(value, fetcher);
+  return cloudReadiness(templates, info, new Date().toISOString());
 }
 
 /** Keep the report scoped to templates this runtime actually offers. */

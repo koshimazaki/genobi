@@ -41,9 +41,9 @@ export const kleinWorkflow: WorkflowTemplate = {
     "EmptyFlux2LatentImage",
   ],
   requiredModels: [
-    // Comfy Cloud's catalogue name, the one it accepted on 17 October; a
-    // local ComfyUI names its own file through GENOBI_KLEIN_MODEL.
-    "flux3_image_klein_sd_int8_convrot.safetensors",
+    // Official Comfy template filename; Cloud checks its live catalogue before
+    // sending, falling back to the older account alias only if listed.
+    "flux3-image-klein-int8-convrot.safetensors",
     "qwen3vl_4b_int8_convrot.safetensors",
     "qwen3.5_9b_flux3_prompt_upsampler_w4a8.safetensors",
     "flux2-vae.safetensors",

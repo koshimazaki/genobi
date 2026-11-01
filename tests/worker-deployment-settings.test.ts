@@ -196,7 +196,7 @@ describe("hosted Cloud workflow expectations", () => {
       "content-type": "application/json",
       "x-byo-key": "comfyui-worker-test-key",
       "genobi-run-location": "cloud",
-      "genobi-workflow": "flux-3-klein-t2i",
+      "genobi-workflow": "flux-3-klein-base-t2i",
     };
     const response = await call("/api/quotes", {
       method: "POST",
@@ -209,7 +209,7 @@ describe("hosted Cloud workflow expectations", () => {
     };
     expect(quote.recipe).toMatchObject({
       location: "cloud",
-      workflow: "flux-3-klein-t2i",
+      workflow: "flux-3-klein-base-t2i",
     });
     const submitted = await call("/api/jobs", {
       method: "POST",

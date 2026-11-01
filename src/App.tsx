@@ -6,7 +6,6 @@ import { useScrollsBridge } from "./scrolls/bridge";
 import { StudioPanel, useShell } from "./studio/ShellContext";
 import { useEffect, useRef, useState } from "react";
 import { useWorldBuilder } from "./world-builder/useWorldBuilder";
-import { isTerminal } from "../shared/types";
 import { readReference } from "./image-files";
 import { isH3, h3EstimateCredits } from "../shared/h3";
 import { h3RouterCredits, isH3Router } from "../shared/comfy/h3-router";
@@ -14,7 +13,7 @@ import { estimateImageUsd, isImage } from "../shared/image";
 import { MUSIC_ESTIMATE_CREDITS } from "../shared/music";
 import { useImageReferences } from "./useImageReferences";
 import ImageStage from "./components/ImageStage";
-import GenerateButton from "./components/GenerateButton";
+import GenerateAction, { imageProviderFor } from "./components/GenerateAction";
 import type { Job, Source } from "../shared/types";
 import { usePageKey } from "./usePageKey";
 import { useServerKey } from "./useServerKey";
@@ -178,6 +177,7 @@ export default function App() {
         : isH3Router(model)
           ? h3RouterCredits(duration, runResolution)
           : null;
+  const payer = runPayer(key, slots, generator, model, imageProviderFor(state));
   const estimate = isImage(generator)
     ? estimateImageUsd(state)
     : generator === "audio"
@@ -249,7 +249,10 @@ export default function App() {
     composerRef.current?.scrollIntoView(smoothScroll("center"));
   }
   async function submit() {
-    if (!key && !hasServerKey && !runsKeyless(generator, model)) {
+    if (
+      ((!key && !hasServerKey) || (isImage(generator) && !payer)) &&
+      !runsKeyless(generator, model)
+    ) {
       setShowKey(true);
       return;
     }
@@ -419,17 +422,17 @@ export default function App() {
                 update={update}
                 estimate={estimate}
                 estimateCredits={estimateCredits}
-                keyKind={runPayer(key, slots, generator, model)}
+                keyKind={payer}
+                preferBflForKlein={
+                  key ? !key.startsWith("comfyui-") : Boolean(slots?.bfl)
+                }
                 action={
-                  <GenerateButton
-                    generator={generator}
+                  <GenerateAction
+                    state={state}
+                    jobs={jobs}
                     submitting={submitting}
-                    activeJob={jobs.find(
-                      (job) =>
-                        job.generator === generator && !isTerminal(job.status),
-                    )}
                     hasKey={Boolean(key)}
-                    hold={recreating ? "restoring" : undefined}
+                    recreating={recreating}
                     disabled={
                       uploading ||
                       images.loading ||
@@ -437,6 +440,7 @@ export default function App() {
                     }
                     onSubmit={() => void submit()}
                     onResume={() => setShowKey(true)}
+                    onUpdate={update}
                   />
                 }
               />

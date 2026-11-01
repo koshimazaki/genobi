@@ -7,6 +7,8 @@ import { type ApiGraph } from "../shared/comfy/slots";
 import { selectWorkflowOutputs } from "../shared/comfy/outputs";
 import { workflowAssetGraph, type SdkAssets } from "./comfy-assets";
 import { runFailure, type RunFailure } from "./comfy-run-failure";
+import { readComfyCloudInfo } from "./comfy-cloud-check";
+import { comboOptions, inspectWorkflow } from "../shared/comfy/readiness";
 import {
   CLOUD_BASE,
   DEFAULT_DESTINATION,
@@ -202,6 +204,59 @@ export class ComfySdkWorkflows implements WorkflowClient {
     }
   }
 
+  /**
+   * FLUX Klein's official filename and the older Cloud alias differ. Resolve
+   * against this account's actual UNETLoader combo before a paid submission,
+   * never by retrying after a failed job. Other workflows keep their templates.
+   */
+  private async kleinCloudValues(
+    template: WorkflowTemplate,
+    key: string,
+  ): Promise<Record<string, unknown>> {
+    let info: Awaited<ReturnType<typeof readComfyCloudInfo>>;
+    try {
+      info = await readComfyCloudInfo(key, this.fetcher);
+    } catch {
+      throw unsent(
+        "Could not check Comfy Cloud's FLUX 3 Klein models. Verify Cloud API access in Settings, or choose BFL API.",
+      );
+    }
+    // Read the actual model slot: the supplied Base edit graph uses node 59,
+    // while Base T2I and Distilled use 18:1. Never substitute Distilled weights
+    // for Base: their sampler parameters are different.
+    const slotPath = template.slots.unet_name?.path;
+    const separator = slotPath?.indexOf(".") ?? -1;
+    const nodeId = separator > 0 ? slotPath!.slice(0, separator) : "";
+    const inputName = separator > 0 ? slotPath!.slice(separator + 1) : "";
+    const preferred = template.graph[nodeId]?.inputs[inputName];
+    const options = comboOptions(info, "UNETLoader", inputName);
+    const candidates = [
+      preferred,
+      ...(template.id === "flux-3-klein-t2i"
+        ? ["flux3_image_klein_sd_int8_convrot.safetensors"]
+        : []),
+    ];
+    const selected = candidates.find(
+      (name): name is string =>
+        typeof name === "string" && Boolean(options?.includes(name)),
+    );
+    if (!selected)
+      throw unsent(
+        "Comfy Cloud does not list the FLUX 3 Klein diffusion model for this workflow in UNETLoader. Check the Cloud workflow inventory or choose BFL API.",
+      );
+    const graph = structuredClone(template.graph);
+    graph[nodeId].inputs[inputName] = selected;
+    const check = inspectWorkflow(template, graph, info);
+    if (check.missingNodes.length || check.missingModels.length)
+      throw unsent(
+        `This Comfy Cloud account lacks the Klein workflow's ${[
+          ...check.missingNodes,
+          ...check.missingModels,
+        ].join(", ")}. Check the Cloud workflow inventory or choose BFL API.`,
+      );
+    return { unet_name: selected };
+  }
+
   async run(
     template: WorkflowTemplate,
     values: Record<string, unknown>,
@@ -209,12 +264,19 @@ export class ComfySdkWorkflows implements WorkflowClient {
     { idempotencyKey, files = {} }: WorkflowRunOptions,
   ): Promise<string> {
     const client = this.client(key);
+    // Resolve the loader before uploads, reservation's single provider POST,
+    // or any GPU spend. A missing model is a known, unsent refusal.
+    const resolvedValues =
+      this.destination.kind === "cloud" &&
+      template.id.startsWith("flux-3-klein-")
+        ? { ...values, ...(await this.kleinCloudValues(template, key)) }
+        : values;
     // Filled first: a graph that does not match its slots is refused unsent.
     // Cloud keeps the catalogue model names written in the graph; a local
     // ComfyUI's own files are filled by `server/comfy-local.ts`.
     const graph = await workflowAssetGraph(
       template,
-      values,
+      resolvedValues,
       files,
       this.portableUploads
         ? {

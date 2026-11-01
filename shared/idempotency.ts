@@ -65,6 +65,15 @@ export function canonicalInput(input: Partial<GenerateInput>): string {
   if (value.lyrics !== undefined) values.push(["lyrics", value.lyrics]);
   if (value.swap !== undefined) values.push(stable(value.swap));
   if (value.deploy !== undefined) values.push(stable(value.deploy));
+  // Only an explicitly selected non-Auto image provider changes the replay
+  // fingerprint. Old jobs, non-image jobs and Auto retain their original hash.
+  if (
+    (value.generator === "image" || value.generator === "edit") &&
+    value.model === "flux-3" &&
+    value.imageProvider &&
+    value.imageProvider !== "auto"
+  )
+    values.push(["imageProvider", value.imageProvider]);
   return JSON.stringify(values);
 }
 

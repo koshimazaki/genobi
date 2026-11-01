@@ -102,7 +102,7 @@ describe("the workflow template table", () => {
         .template.id,
     ).toBe("ltx-2-5-akuspace-t2v");
     expect(
-      workflowOutput("workflow/flux-3-klein-t2i", "flux-3-klein-t2i"),
+      workflowOutput("workflow/flux-3-klein-base-t2i", "flux-3-klein-t2i"),
     ).toEqual({
       nodeId: "9",
       media: "image",

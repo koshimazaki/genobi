@@ -1,5 +1,6 @@
 import { AppError } from "../../server/errors";
 import { kleinWorkflow } from "./klein";
+import { kleinBaseWorkflow } from "./klein-base";
 import { parseModelFile } from "./destination";
 import { modelSlots, templateById } from "./workflows";
 
@@ -20,6 +21,7 @@ const invalid = (message: string) =>
 export function parseLocalModels(
   map: unknown,
   kleinModel?: unknown,
+  kleinBaseModel?: unknown,
 ): LocalModels {
   const models: LocalModels = {};
   if (map !== undefined && map !== "") {
@@ -65,6 +67,17 @@ export function parseLocalModels(
         "GENOBI_KLEIN_MODEL and GENOBI_LOCAL_MODELS name different Klein files. Set it in one place.",
       );
     (models[kleinWorkflow.id] ??= {}).unet_name = klein;
+  }
+  // A distinct Base override: never apply Distilled weights to the 50-step
+  // Base graph, whose expected model and sampler are not interchangeable.
+  const base = parseModelFile(kleinBaseModel);
+  if (base) {
+    const set = models[kleinBaseWorkflow.id]?.unet_name;
+    if (set && set !== base)
+      throw invalid(
+        "GENOBI_KLEIN_BASE_MODEL and GENOBI_LOCAL_MODELS name different Klein Base files. Set it in one place.",
+      );
+    (models[kleinBaseWorkflow.id] ??= {}).unet_name = base;
   }
   return models;
 }

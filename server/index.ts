@@ -26,12 +26,14 @@ const destination = parseWorkflowDestination(
   process.env.GENOBI_WORKFLOW_URL,
 );
 // The model files a local ComfyUI loads, by workflow and slot, named as
-// ComfyUI lists them. GENOBI_KLEIN_MODEL still names Klein's. Never printed.
+// ComfyUI lists them. Distilled and Base have separate override variables.
+// Never print model paths or file names in provider errors.
 const local = new LocalComfyWorkflows({
   url: destination.kind === "local" ? destination.url : DEFAULT_LOCAL_URL,
   models: parseLocalModels(
     process.env.GENOBI_LOCAL_MODELS,
     process.env.GENOBI_KLEIN_MODEL,
+    process.env.GENOBI_KLEIN_BASE_MODEL,
   ),
 });
 // A Comfy API deployment (a Comfy Developer Platform deployment's https URL):
