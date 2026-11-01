@@ -54,7 +54,8 @@ export function kleinBaseEditTemplate(count: number): WorkflowTemplate {
   // same upload path and connected to both the latent and the vision upsampler.
   for (let i = 0; i < count; i++) {
     const id = `reference-${i}`;
-    if (i > 0) graph[id] = { class_type: "LoadImage", inputs: { image: "pending" } };
+    if (i > 0)
+      graph[id] = { class_type: "LoadImage", inputs: { image: "pending" } };
     graph["17"].inputs[`images.image${i}`] = [id, 0];
     graph["50"].inputs[`images.image${i}`] = [id, 0];
     slots[id] = { path: `${id}.image`, kind: "image" };
