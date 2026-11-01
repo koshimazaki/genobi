@@ -5,6 +5,7 @@ import { LocalComfyWorkflows } from "../server/comfy-local";
 import { ServerKeys } from "../server/keys";
 import { WorkflowDestinations } from "../server/workflow-destinations";
 import { kleinWorkflow } from "../shared/comfy/klein";
+import { kleinBaseWorkflow } from "../shared/comfy/klein-base";
 import { seedvr2Workflow } from "../shared/comfy/seedvr2";
 import type { WorkflowClient } from "../shared/comfy/workflow";
 import { fakeComfy, nodesFor, type FakeComfy } from "./fake-comfyui";
@@ -26,7 +27,11 @@ afterEach(async () => {
 /** Both graphs' node types and files, merged, as one ComfyUI lists them. */
 function nodes() {
   const merged: Record<string, Record<string, unknown[]>> = {};
-  for (const graph of [kleinWorkflow.graph, seedvr2Workflow.graph])
+  for (const graph of [
+    kleinBaseWorkflow.graph,
+    kleinWorkflow.graph,
+    seedvr2Workflow.graph,
+  ])
     for (const [type, inputs] of Object.entries(nodesFor(graph))) {
       merged[type] ??= {};
       for (const [name, list] of Object.entries(inputs))
