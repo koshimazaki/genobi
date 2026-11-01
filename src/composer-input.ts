@@ -17,6 +17,7 @@ export function requestInput({
   imageAspectRatio,
   imageGrounding,
   imageSafetyTolerance,
+  imageProvider,
   lyrics,
   deploy,
   ...state
@@ -42,8 +43,9 @@ export function requestInput({
               ? []
               : (imageReferences ?? []),
           imageResolution: imageResolution ?? "1k",
-          imageProvider:
-            state.model === "flux-3" ? (state.imageProvider ?? "auto") : "auto",
+          ...(state.model === "flux-3"
+            ? { imageProvider: imageProvider ?? "auto" }
+            : {}),
           imageAspectRatio: edit
             ? "auto"
             : !edit &&
