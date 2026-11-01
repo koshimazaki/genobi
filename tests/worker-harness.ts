@@ -11,6 +11,9 @@ import { build } from "esbuild";
 import { readdir, readFile } from "node:fs/promises";
 import { randomUUID } from "node:crypto";
 import { JOB_MAX_AGE_MS } from "../shared/lifecycle";
+import { infoFor } from "./comfy-readiness-fixture";
+import { kleinWorkflow } from "../shared/comfy/klein";
+import { kleinEditTemplate } from "../shared/comfy/klein-edit";
 
 // Read through live bindings by the test files; only the harness assigns them.
 export let mf: Miniflare;
@@ -28,7 +31,13 @@ export const cloudRequests: {
   body?: Record<string, unknown>;
 }[] = [];
 /** Explicit Cloud discovery fixture; separate from generation requests. */
-export const cloudCatalogue = { body: {} as unknown, status: 200 };
+export const cloudCatalogue = {
+  body: {
+    ...infoFor(kleinWorkflow.graph),
+    ...infoFor(kleinEditTemplate(1).graph),
+  } as unknown,
+  status: 200,
+};
 /** What reached the fake Router's queued submit, without the key itself. */
 export const routerRequests: {
   path: string;
