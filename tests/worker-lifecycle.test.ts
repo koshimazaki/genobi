@@ -123,7 +123,7 @@ describe("Cloudflare adapter lifecycle: expiry, sweep, eviction and read limits"
       )?.generations,
     ).toBe(frozen?.generations);
     // A five-minute sweep must not rewrite unchanged daily_stats rows.
-    const idleChanges = await rollUpDailyStats({ DB: db } as Env);
+    const idleChanges = await rollUpDailyStats({ DB: db });
     expect(idleChanges).toBe(0);
     // Counts only: the rollup stores nothing about what was generated.
     const columns = await db.prepare("SELECT * FROM daily_stats LIMIT 1").all();
