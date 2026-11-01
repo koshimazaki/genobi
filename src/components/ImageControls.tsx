@@ -5,6 +5,10 @@ import { Switch } from "./GenerationControls";
 import { entryFor } from "../../shared/registry";
 import { fluxImageControls } from "../../shared/controls";
 
+/** Shared help text also used by Scrolls' image run selector. */
+export const RUN_TITLE =
+  "Open: Klein's open weights as a Comfy graph, on a local ComfyUI or Comfy Cloud (Comfy key). API: BFL's hosted Klein endpoint (BFL key).";
+
 /**
  * A still's row, drawn from the held entry's controls as the video row is:
  * Aspect ratios and tiers
