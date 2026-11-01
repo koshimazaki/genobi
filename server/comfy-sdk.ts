@@ -267,7 +267,8 @@ export class ComfySdkWorkflows implements WorkflowClient {
     // Resolve the loader before uploads, reservation's single provider POST,
     // or any GPU spend. A missing model is a known, unsent refusal.
     const resolvedValues =
-      this.destination.kind === "cloud" && template.id.startsWith("flux-3-klein-")
+      this.destination.kind === "cloud" &&
+      template.id.startsWith("flux-3-klein-")
         ? { ...values, ...(await this.kleinCloudValues(template, key)) }
         : values;
     // Filled first: a graph that does not match its slots is refused unsent.
