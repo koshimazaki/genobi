@@ -133,6 +133,13 @@ class RunTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 remote_file(descriptor, "output")
 
+    def test_bearer_auth_requires_https_or_loopback(self):
+        with patch.dict("os.environ", {"GENOBI_COMFY_BEARER": "offline-test-token"}):
+            with self.assertRaisesRegex(ValueError, "HTTPS or a loopback"):
+                ComfyClient("http://gpu.example.test:8188")
+            for url in ("https://gpu.example.test:443", "http://127.0.0.1:8188"):
+                self.assertEqual(ComfyClient(url).headers["Authorization"], "Bearer offline-test-token")
+
     def test_download_selects_saved_video_not_previews(self):
         entry = {"outputs": {"61": {"images": [{"filename": "candidate.mp4", "subfolder": "genobi-experiments/run", "type": "output"}]},
                              "67": {"images": [{"filename": "preview.png", "type": "temp"}]}}}
