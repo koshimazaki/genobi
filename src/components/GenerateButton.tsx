@@ -99,14 +99,20 @@ export default function GenerateButton({
     </button>
   );
   if (!providerChoices?.length || !onProviderChange) return action;
-  const current = providerChoices.find((choice) => choice.value === providerValue);
+  const current = providerChoices.find(
+    (choice) => choice.value === providerValue,
+  );
   return (
     <div className="generate-split">
       {action}
       <div className="generate-split__selector">
         <select
           aria-label="Generation provider"
-          title={current ? `Generate with ${current.label}` : "Choose generation provider"}
+          title={
+            current
+              ? `Generate with ${current.label}`
+              : "Choose generation provider"
+          }
           value={providerValue}
           disabled={busy || restoring || disabled}
           onChange={(event) => onProviderChange(event.currentTarget.value)}
