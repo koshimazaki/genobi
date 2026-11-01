@@ -44,3 +44,6 @@ What the platform cannot answer is the product question — how many _generation
 ## Known gap
 
 `wrangler.jsonc` carries an `observability` block with `head_sampling_rate: 0.1`, but the live deployment is Cloudflare Pages, whose configuration in `wrangler.pages.json` has none. That setting is therefore inactive for the hosted site, and 10% sampling would show little at this traffic level in any case. Moving the block to the Pages configuration and raising the rate is a deployment change, not an application one.
+
+The five-minute rollup only updates a daily_stats row if an aggregate grows;
+unchanged historical days incur no D1 row writes.
