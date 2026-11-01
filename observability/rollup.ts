@@ -30,7 +30,16 @@ export async function rollUpDailyStats(env: Env) {
       failed=MAX(daily_stats.failed,excluded.failed),
       drafts=MAX(daily_stats.drafts,excluded.drafts),
       upscales=MAX(daily_stats.upscales,excluded.upscales),
-      spend_usd=MAX(daily_stats.spend_usd,excluded.spend_usd)`,
+      spend_usd=MAX(daily_stats.spend_usd,excluded.spend_usd)
+    -- The sweep runs every five minutes, but completed days seldom change.
+    -- Avoid UPDATEs (and billed D1 rows_written) for unchanged aggregates.
+    WHERE excluded.generations > daily_stats.generations
+       OR excluded.sessions > daily_stats.sessions
+       OR excluded.ready > daily_stats.ready
+       OR excluded.failed > daily_stats.failed
+       OR excluded.drafts > daily_stats.drafts
+       OR excluded.upscales > daily_stats.upscales
+       OR excluded.spend_usd > daily_stats.spend_usd`,
   ).run();
   return rolled.meta.changes ?? 0;
 }
