@@ -134,7 +134,7 @@ describe("run location", () => {
     const { take } = await (await send(`/api/takes/${job.id}`)).json();
     expect(take.recipe).toMatchObject({
       location: "local",
-      workflow: "flux-3-klein-t2i",
+      workflow: "flux-3-klein-base-t2i",
     });
     // Nothing went to Comfy Cloud or BFL, and ComfyUI got one prompt.
     expect(cloudRuns()).toBe(0);
