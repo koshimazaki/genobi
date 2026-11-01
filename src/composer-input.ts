@@ -42,7 +42,8 @@ export function requestInput({
               ? []
               : (imageReferences ?? []),
           imageResolution: imageResolution ?? "1k",
-          imageProvider: state.model === "flux-3" ? state.imageProvider ?? "auto" : "auto",
+          imageProvider:
+            state.model === "flux-3" ? (state.imageProvider ?? "auto") : "auto",
           imageAspectRatio: edit
             ? "auto"
             : !edit &&
