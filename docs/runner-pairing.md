@@ -66,6 +66,14 @@ Microphone transcription still runs in the local studio.
   does not expose a raw terminal stream. Local operational history, taste memory,
   files and generation credentials are not synchronized by pairing.
 
+After the production cutover, only `https://genobi.pages.dev` is trusted
+for new local runner pairing by default. The old `fluxstudio.pages.dev`
+origin is not a default trusted host. If it must be used temporarily, the
+operator has to opt into it explicitly with `GENOBI_HOSTED_ORIGINS`. This
+change does not revoke already-running sessions on another deployment:
+revoke the old pairing and stop that Worker separately after confirming the
+public endpoint is healthy.
+
 ## Launch, Stop and failure recovery
 
 The browser supplies a start ID. Repeating that ID with the same validated
