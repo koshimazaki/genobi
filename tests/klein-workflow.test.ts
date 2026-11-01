@@ -230,6 +230,11 @@ describe("the Klein model file for a local ComfyUI", () => {
       [kleinWorkflow.id]: { unet_name: "flux3/klein.safetensors" },
     });
     expect(
+      parseLocalModels(undefined, undefined, "flux3/base.safetensors"),
+    ).toEqual({
+      [kleinBaseWorkflow.id]: { unet_name: "flux3/base.safetensors" },
+    });
+    expect(
       parseLocalModels(
         JSON.stringify({
           [kleinWorkflow.id]: { vae: "flux2/vae.safetensors" },
