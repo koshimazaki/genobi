@@ -423,7 +423,7 @@ describe("the local server runs open Klein end to end", () => {
       const url = String(target);
       calls.push({ url, init });
       if (url === "https://cloud.comfy.org/api/object_info")
-        return Response.json(infoFor(kleinWorkflow.graph));
+        return Response.json(infoFor(kleinBaseWorkflow.graph));
       if (url === "https://cloud.comfy.org/api/v2/jobs")
         return Response.json(job("queued"), { status: 201 });
       if (url === "https://cloud.comfy.org/api/v2/jobs/k-1")
