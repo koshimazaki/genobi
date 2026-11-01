@@ -1,0 +1,81 @@
+#!/bin/sh
+# Vast box setup v4 (proven 30 Oct 2026, Vast PyTorch template, RTX PRO 6000).
+# Run from /workspace after the pack is unpacked there:
+#   sh setup.sh sources   untar the repo, ComfyUI + packs, deps into /venv/comfyui, helpers
+#   sh setup.sh models    every model set (HF_TOKEN in the environment, see RUNBOOK.md)
+#   sh setup.sh start     ComfyUI on 127.0.0.1:18188 (Vast's Caddy holds 8188)
+#   sh setup.sh check     GPU, torch arch, node and model presence
+# The token is read from the environment only, never written or echoed.
+set -eu
+W=/workspace
+C=$W/ComfyUI
+R=$W/camera-director
+PY=/venv/comfyui/bin/python
+PORT=18188
+log() { echo "$(date -u +%H:%M) $*" >> $W/LOG.md; echo "$*"; }
+
+sources() {
+  # The template ships its own ComfyUI here: move it aside, never delete it.
+  if [ -d $C ] && [ ! -f $W/.ours ]; then mv $C $W/ComfyUI.vast-template; fi
+  # install-sources.sh rm -rf's ComfyUI: never re-run it once our models are in.
+  if [ -n "$(find $C/models -name '*.safetensors' 2>/dev/null | head -1)" ]; then
+    echo "models already present in $C; refusing to reinstall sources over them"; exit 1
+  fi
+  apt-get update -qq && apt-get install -y -qq git git-lfs ffmpeg patch curl >/dev/null
+  command -v uv >/dev/null || { curl -LsSf https://astral.sh/uv/install.sh | sh; }
+  export PATH="$HOME/.local/bin:$PATH"
+  [ -d $R ] || tar -xzf $W/camera-director.tar.gz -C $W
+  GIT_LFS_SKIP_SMUDGE=1 sh $R/comfy-build/scripts/install-sources.sh $R/comfy-build/sources.lock $W akuspace layout-to-render
+  touch $W/.ours
+  ln -sfn $R/custom_nodes/director_world_builder $C/custom_nodes/director_world_builder
+  # The venv has no pip and the plain `pip` is the system one; torch 2.10 cu128 stays.
+  cd $C && uv pip install -q --python $PY -r requirements.txt
+  for d in custom_nodes/*/; do [ -f "$d/requirements.txt" ] && uv pip install -q --python $PY -r "$d/requirements.txt"; done
+  [ -d $W/input ] && cp -R $W/input/. $C/input/
+  mkdir -p $W/jobs; touch $W/job_ids.txt
+  [ -f $W/LOG.md ] || printf '# LOG.md, Vast session %s\n' "$(date -u +%F)" > $W/LOG.md
+  uv tool install -q comfy-cli || true
+  log "SOURCES ComfyUI $(tail -1 $C/comfyui_version.py), repo $(cat $W/REPO_COMMIT 2>/dev/null || echo ?), torch $($PY -c 'import torch;print(torch.__version__)')"
+}
+
+models() {
+  : "${HF_TOKEN:?set HF_TOKEN in the environment (the account with LTX-2.5, Layout-to-Render and Klein accepted)}"
+  export HF_TOKEN
+  M=$R/comfy-build/models
+  # Layout-to-Render bf16 + Union Control, the AKUSPACE int8 set + LoRA (t2v/i2v and
+  # the talking beats), SeedVR2, Klein. ~185 GB.
+  python3 -I $R/comfy-build/scripts/models.py $C/models $M/layout-to-render.txt $M/akuspace.txt $W/models-extra.txt
+  # the repo's Klein graph names Comfy Cloud's alias
+  ln -sfn flux3-image-klein-int8-convrot.safetensors $C/models/diffusion_models/flux3_image_klein_sd_int8_convrot.safetensors
+  unset HF_TOKEN
+  log "MODELS done: $(du -sh $C/models | cut -f1)"
+}
+
+start() {
+  cd $C
+  # no --use-flash-attention: int8 SeedVR2 with FlashAttention gives black frames
+  setsid nohup $PY main.py --listen 127.0.0.1 --port $PORT > $W/comfy.log 2>&1 < /dev/null &
+  i=0; until curl -sf 127.0.0.1:$PORT/system_stats >/dev/null; do i=$((i+1)); [ $i -gt 90 ] && { tail -30 $W/comfy.log; exit 1; }; sleep 2; done
+  log "START ComfyUI up on $PORT"
+  check
+}
+
+check() {
+  nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv,noheader
+  $PY -c "import torch;print('torch',torch.__version__,'cuda',torch.version.cuda,'cap',torch.cuda.get_device_capability(),'arch',torch.cuda.get_arch_list())"
+  if curl -sf 127.0.0.1:$PORT/system_stats >/dev/null; then
+    for n in DirectorSceneCapture DirectorSceneAcoustics LTXICLoRALoaderModelOnly LTXAddVideoICLoRAGuide SeedVR2Conditioning TextGenerate; do
+      printf '%s: ' $n; curl -s 127.0.0.1:$PORT/object_info/$n | head -c 60; echo
+    done
+    grep -iE "error|cannot import|failed" $W/comfy.log | head -20 || true
+  fi
+  ls $C/models/diffusion_models $C/models/text_encoders $C/models/loras 2>/dev/null || true
+}
+
+case "${1:-}" in
+  sources) sources ;;
+  models) models ;;
+  start) start ;;
+  check) check ;;
+  *) echo "usage: sh setup.sh sources|models|start|check"; exit 2 ;;
+esac
