@@ -181,8 +181,16 @@ export class LocalComfyWorkflows implements WorkflowClient {
   ) {
     // Runtime variants share the registered template's model configuration,
     // but may remove a loader (Klein editing omits the text-only upsampler).
+    // Klein Base edits use a distinct image-conditioned graph but share the
+    // diffusion/encoder/VAE configuration of its registered Base T2I template.
+    // Otherwise GENOBI_KLEIN_BASE_MODEL works for stills but silently stops
+    // working as soon as a person drops a reference image.
+    const modelId =
+      template.id === "flux-3-klein-base-edit"
+        ? "flux-3-klein-base-t2i"
+        : template.id;
     const overrides = Object.fromEntries(
-      Object.entries(this.models[template.id] ?? {}).filter(
+      Object.entries(this.models[modelId] ?? {}).filter(
         ([slot]) => template.slots[slot]?.kind === "model",
       ),
     );
