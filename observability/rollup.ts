@@ -11,7 +11,14 @@
  * It stores counts and nothing else — no prompt, camera term, session id, key,
  * IP or country. See ./README.md for what is measured and what is not.
  */
-export async function rollUpDailyStats(env: Env) {
+// Keep the rollup portable across Pages/workerd and isolated SQLite tests.
+// The root tsconfig does not include Worker's ambient Env declaration.
+interface DailyStatsDb {
+  prepare(sql: string): {
+    run(): Promise<{ meta: { changes?: number } }>;
+  };
+}
+export async function rollUpDailyStats(env: { DB: DailyStatsDb }) {
   const rolled = await env.DB.prepare(
     `INSERT INTO daily_stats (day,generations,sessions,ready,failed,drafts,upscales,spend_usd)
     SELECT date(created_at/1000,'unixepoch') AS day,
