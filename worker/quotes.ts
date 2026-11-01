@@ -75,7 +75,11 @@ export async function price(
     input.imageProvider !== "auto" &&
     (isComfyKey(key) ? "comfy" : "bfl") !== input.imageProvider
   )
-    throw new AppError(400, "This run selected a different provider from the connected API key. Connect the matching key.", "invalid_key");
+    throw new AppError(
+      400,
+      "This run selected a different provider from the connected API key. Connect the matching key.",
+      "invalid_key",
+    );
   requireRoute(input.generator, input.model ?? "flux-3", key);
   const source =
     input.generator === "upscale" || isH3(input.model)
