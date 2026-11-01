@@ -2,10 +2,7 @@
   "9": {
     "inputs": {
       "filename_prefix": "image/FLUX3-Klein-Base_t2i",
-      "images": [
-        "18:8",
-        0
-      ]
+      "images": ["18:8", 0]
     },
     "class_type": "SaveImage",
     "_meta": {
@@ -43,10 +40,7 @@
   },
   "18:11": {
     "inputs": {
-      "prompt": [
-        "18:17",
-        0
-      ],
+      "prompt": ["18:17", 0],
       "max_length": 3584,
       "sampling_mode": "on",
       "sampling_mode.temperature": 1,
@@ -59,14 +53,8 @@
       "thinking": false,
       "use_default_template": true,
       "mtp": "off",
-      "clip": [
-        "18:12",
-        0
-      ],
-      "system_prompt": [
-        "18:14",
-        0
-      ]
+      "clip": ["18:12", 0],
+      "system_prompt": ["18:14", 0]
     },
     "class_type": "TextGenerate",
     "_meta": {
@@ -85,14 +73,8 @@
   },
   "18:4": {
     "inputs": {
-      "text": [
-        "18:20",
-        0
-      ],
-      "clip": [
-        "18:2",
-        0
-      ]
+      "text": ["18:20", 0],
+      "clip": ["18:2", 0]
     },
     "class_type": "CLIPTextEncode",
     "_meta": {
@@ -118,22 +100,10 @@
       "sampler_name": "euler",
       "scheduler": "simple",
       "denoise": 1,
-      "model": [
-        "18:1",
-        0
-      ],
-      "positive": [
-        "18:4",
-        0
-      ],
-      "negative": [
-        "18:5",
-        0
-      ],
-      "latent_image": [
-        "18:6",
-        0
-      ]
+      "model": ["18:1", 0],
+      "positive": ["18:4", 0],
+      "negative": ["18:5", 0],
+      "latent_image": ["18:6", 0]
     },
     "class_type": "KSampler",
     "_meta": {
@@ -152,14 +122,8 @@
   "18:16": {
     "inputs": {
       "switch": true,
-      "on_false": [
-        "18:17",
-        0
-      ],
-      "on_true": [
-        "18:11",
-        0
-      ]
+      "on_false": ["18:17", 0],
+      "on_true": ["18:11", 0]
     },
     "class_type": "ComfySwitchNode",
     "_meta": {
@@ -180,10 +144,7 @@
   "18:5": {
     "inputs": {
       "text": "",
-      "clip": [
-        "18:2",
-        0
-      ]
+      "clip": ["18:2", 0]
     },
     "class_type": "CLIPTextEncode",
     "_meta": {
@@ -192,14 +153,8 @@
   },
   "18:8": {
     "inputs": {
-      "samples": [
-        "18:7",
-        0
-      ],
-      "vae": [
-        "18:3",
-        0
-      ]
+      "samples": ["18:7", 0],
+      "vae": ["18:3", 0]
     },
     "class_type": "VAEDecode",
     "_meta": {
@@ -209,10 +164,7 @@
   "18:20": {
     "class_type": "StringConcatenate",
     "inputs": {
-      "string_a": [
-        "18:16",
-        0
-      ],
+      "string_a": ["18:16", 0],
       "string_b": "",
       "delimiter": " "
     },
