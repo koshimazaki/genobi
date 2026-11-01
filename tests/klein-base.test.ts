@@ -82,18 +82,29 @@ describe("supplied FLUX 3 Klein Base Comfy workflows", () => {
   it("refuses to substitute Distilled weights when Base is absent", async () => {
     const info = infoFor(kleinBaseWorkflow.graph);
     info.UNETLoader!.input!.required!.unet_name = [[distilledModel]];
-    const fetcher = vi.fn<typeof fetch>().mockResolvedValue(Response.json(info));
+    const fetcher = vi
+      .fn<typeof fetch>()
+      .mockResolvedValue(Response.json(info));
     const submit = vi.fn(async () => ({ id: "unexpected" }));
     const connect: Connect = () => ({
       workflows: { fromJson: (g) => g },
       submit,
-      jobs: { get: async () => ({ id: "", status: "", outputs: [], progress: null }) },
+      jobs: {
+        get: async () => ({ id: "", status: "", outputs: [], progress: null }),
+      },
     });
     const client = new ComfySdkWorkflows({ fetcher, connect, env: {} });
     await expect(
       client.run(
         kleinBaseWorkflow,
-        { prompt: "Kite", layout: "", upsample: true, width: 1024, height: 1024, seed: 4 },
+        {
+          prompt: "Kite",
+          layout: "",
+          upsample: true,
+          width: 1024,
+          height: 1024,
+          seed: 4,
+        },
         "comfyui-test-key",
         { idempotencyKey: "base-only" },
       ),
