@@ -16,10 +16,11 @@
 }
 .generate-split__selector {
   position: relative;
-  flex: 0 0 32px;
+  flex: 0 0 55px;
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 3px;
   border: 1px solid var(--accent-strong);
   border-left: 1px solid color-mix(in srgb, var(--accent-ink) 18%, transparent);
   border-radius: 0 var(--radius-control) var(--radius-control) 0;
@@ -44,6 +45,14 @@
   cursor: pointer;
   border: 0;
   opacity: 0;
+}
+.generate-split__provider {
+  pointer-events: none;
+  font: 9px var(--mono);
+  letter-spacing: -0.03em;
+}
+.generate-split .generate-button:not(.is-generating) .generate-button-icon {
+  display: none;
 }
 .generate-split__selector > select:disabled {
   cursor: not-allowed;
