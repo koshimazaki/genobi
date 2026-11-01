@@ -1,4 +1,5 @@
 import { isKleinEdit, kleinEditTemplate, kleinEditValues } from "./klein-edit";
+import { kleinBaseEditTemplate, kleinBaseEditValues } from "./klein-base";
 import type { GenerateInput } from "../types";
 import {
   requireTemplateFor,
@@ -45,6 +46,11 @@ export function workflowRun(
   location?: DestinationKind,
 ) {
   const choice = choiceFor(model, templateId);
+  if (choice.id === "flux-3-klein-base-t2i" && isKleinEdit(input))
+    return {
+      template: kleinBaseEditTemplate(input.imageReferences!.length),
+      values: kleinBaseEditValues(input, prompt),
+    };
   if (choice.id === "flux-3-klein-t2i" && isKleinEdit(input))
     return {
       template: kleinEditTemplate(input.imageReferences!.length),
