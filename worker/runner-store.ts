@@ -1,6 +1,11 @@
 import { AppError } from "../server/errors";
 import type { AgentSession } from "../shared/agent-session";
 import {
+  RATE_LIMITS,
+  RATE_LIMIT_MESSAGE,
+  RATE_WINDOW_MS,
+} from "../shared/limits";
+import {
   PAIR_CODE_MS,
   PAIR_LIFETIME_MS,
   RUNNER_ONLINE_MS,
@@ -67,7 +72,7 @@ export class RunnerStore {
         `INSERT INTO runner_pairs (id,owner,code_hash,code_expires,expires)
       VALUES (?,?,?,?,?) ON CONFLICT(owner) DO UPDATE SET id=excluded.id,code_hash=excluded.code_hash,
       code_expires=excluded.code_expires,expires=excluded.expires,token_hash=NULL,runner=NULL,
-      local_origin=NULL,last_seen=0,revoked=0`,
+      local_origin=NULL,last_seen=0,revoked=0,poll_window=0,poll_count=0`,
       )
       .bind(
         id,
@@ -260,6 +265,43 @@ export class RunnerStore {
   }
   async poll(pair: Pair, updates: RunnerUpdate[]): Promise<RunnerPoll> {
     const now = this.now();
+    const windowStart = now - RATE_WINDOW_MS;
+    // One atomic write for both the heartbeat and the strict per-pair limit.
+    // Before this, every poll wrote a separate rate_limits row as well,
+    // exhausting the shared D1 Free allowance when a runner stayed online.
+    // The WHERE guard works across Worker isolates and rechecks revocation.
+    const heartbeat = await this.db
+      .prepare(
+        `UPDATE runner_pairs SET last_seen=?,
+        poll_count=CASE WHEN poll_window<? THEN 1 ELSE poll_count+1 END,
+        poll_window=CASE WHEN poll_window<? THEN ? ELSE poll_window END
+        WHERE id=? AND token_hash=? AND revoked=0 AND expires>?
+        AND (poll_window<? OR poll_count<?) RETURNING id`,
+      )
+      .bind(
+        now,
+        windowStart,
+        windowStart,
+        now,
+        pair.id,
+        pair.token_hash,
+        now,
+        windowStart,
+        RATE_LIMITS.runnerPoll,
+      )
+      .first();
+    if (!heartbeat) {
+      // The request may have hit its limit or the pairing may have been
+      // revoked since authenticate(). Do not turn a revoked token into 429.
+      const valid = await this.db
+        .prepare(
+          "SELECT id FROM runner_pairs WHERE id=? AND token_hash=? AND revoked=0 AND expires>?",
+        )
+        .bind(pair.id, pair.token_hash, now)
+        .first();
+      if (valid) throw new AppError(429, RATE_LIMIT_MESSAGE);
+      throw new AppError(401, "Runner pairing revoked.");
+    }
     // Recheck the capability in every mutating SQL statement: revocation can race a poll.
     const live =
       "EXISTS (SELECT 1 FROM runner_pairs WHERE id=? AND token_hash=? AND revoked=0 AND expires>?)";
@@ -300,13 +342,6 @@ export class RunnerStore {
         )
         .run();
     }
-    const refreshed = await this.db
-      .prepare(
-        `UPDATE runner_pairs SET last_seen=? WHERE id=? AND token_hash=? AND revoked=0 AND expires>? RETURNING id`,
-      )
-      .bind(now, pair.id, pair.token_hash, now)
-      .first();
-    if (!refreshed) throw new AppError(401, "Runner pairing revoked.");
     // Claim exactly once. A lost response never makes an uncertain launch eligible again.
     const command = await this.db
       .prepare(
