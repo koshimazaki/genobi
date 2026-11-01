@@ -123,7 +123,14 @@ export default function GenerateButton({
             </option>
           ))}
         </select>
-        <Icon name="chevron" size={12} />
+        <span className="generate-split__provider" aria-hidden="true">
+          {providerValue === "bfl"
+            ? "BFL"
+            : providerValue === "comfy"
+              ? "COMFY"
+              : "AUTO"}
+        </span>
+        <Icon name="chevron" size={10} />
       </div>
     </div>
   );
