@@ -32,6 +32,13 @@ jobs:
       - name: Install
         run: npm ci
 
+      # Temporary formatting diagnostic: no changes are committed by CI.
+      - name: Show exact runner test formatting
+        run: |
+          npx prettier --write tests/runner-relay.test.ts
+          git diff -- tests/runner-relay.test.ts
+          git restore -- tests/runner-relay.test.ts
+
       # Ordered cheapest-first, so an obvious failure reports in seconds
       # rather than after a full build.
       - name: Format
