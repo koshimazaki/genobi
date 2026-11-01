@@ -90,7 +90,7 @@ describe("settings_changed", () => {
     const ran = await send("/api/jobs", klein, {
       "Idempotency-Key": "expect-local-3",
       "Genobi-Run-Location": "local",
-      "Genobi-Workflow": "flux-3-klein-t2i",
+      "Genobi-Workflow": "flux-3-klein-base-t2i",
     });
     expect(ran.status).toBe(202);
     expect(fake.prompts).toHaveLength(1);
