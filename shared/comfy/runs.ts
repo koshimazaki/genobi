@@ -24,10 +24,20 @@ export const workflows: Record<string, WorkflowTemplate> = Object.fromEntries(
 );
 
 function choiceFor(model: string, templateId?: string) {
-  const found = workflowEntryOf(model);
+  // Saved takes from before Klein Base became the default still name the
+  // Distilled model path. Resolve exactly that old path to the same registry
+  // entry, but pin its original Distilled graph and sampler. Never silently
+  // substitute Base for an older paid run or another unknown workflow id.
+  const legacyKlein = model === "workflow/flux-3-klein-t2i";
+  const found = workflowEntryOf(
+    legacyKlein ? "workflow/flux-3-klein-base-t2i" : model,
+  );
   if (!found) throw unsent("This workflow is not in this build.");
   try {
-    return requireTemplateFor(found.entry.id, templateId).choice;
+    return requireTemplateFor(
+      found.entry.id,
+      templateId ?? (legacyKlein ? "flux-3-klein-t2i" : undefined),
+    ).choice;
   } catch {
     throw unsent("This workflow cannot run behind this model.");
   }

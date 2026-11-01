@@ -64,7 +64,9 @@ it("uses a single D1 heartbeat write, with no per-poll rate_limits record", asyn
   expect(current.last_seen - original.last_seen).toBe(6_000);
   expect(
     f.db
-      .prepare("SELECT count(*) AS n FROM rate_limits WHERE id LIKE 'runnerPoll:%'")
+      .prepare(
+        "SELECT count(*) AS n FROM rate_limits WHERE id LIKE 'runnerPoll:%'",
+      )
       .get(),
   ).toEqual({ n: 0 });
 });

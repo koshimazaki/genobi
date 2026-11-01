@@ -395,7 +395,7 @@ describe("Klein's API run on BFL direct", () => {
       ).recipe;
     expect(await recipe("flux-3-klein", true)).toEqual({
       id: "flux-3-klein",
-      version: 1,
+      version: 2,
       route: "workflow",
     });
     expect(await recipe("flux-3-klein-api", false)).toMatchObject({

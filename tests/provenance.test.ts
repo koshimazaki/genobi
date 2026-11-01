@@ -122,7 +122,7 @@ describe("provenance cards", () => {
     });
     expect(card.workflowFiles).toEqual([
       "workflows/ltx-2-5-akuspace-t2v.json",
-      "workflows/flux-3-klein-t2i.json",
+      "workflows/flux-3-klein-base-t2i.json",
     ]);
     expect(card.run.generations).toBe("local");
     expect(card.run.agent).toBe("local");

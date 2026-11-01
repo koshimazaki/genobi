@@ -4,6 +4,10 @@ import { afterEach } from "vitest";
 import { LocalComfyWorkflows } from "../server/comfy-local";
 import { WorkflowDestinations } from "../server/workflow-destinations";
 import { kleinWorkflow } from "../shared/comfy/klein";
+import {
+  kleinBaseWorkflow,
+  kleinBaseEditTemplate,
+} from "../shared/comfy/klein-base";
 import type { WorkflowClient } from "../shared/comfy/workflow";
 import { fakeComfy, nodesFor, type FakeComfy } from "./fake-comfyui";
 import { input, setup } from "./server-harness";
@@ -34,7 +38,8 @@ afterEach(async () => {
   fake = undefined;
 });
 
-const unet = "flux3/klein-local.safetensors";
+const unet = "flux3/klein-base-local.safetensors";
+const distilledUnet = "flux3/klein-distilled-local.safetensors";
 
 /**
  * `keys` replaces the BFL environment key; `reopen` starts the studio again
@@ -45,8 +50,20 @@ export async function studio(
   keys?: ServerKeys,
   reopen?: { fake: FakeComfy; directory: string },
 ) {
-  const nodes = nodesFor(kleinWorkflow.graph);
-  nodes.UNETLoader.unet_name = [unet];
+  const nodes = nodesFor(kleinBaseWorkflow.graph);
+  // The same ComfyUI provides Base editing (reference and image-aware nodes).
+  for (const [type, inputs] of Object.entries(
+    nodesFor(kleinBaseEditTemplate(1).graph),
+  )) {
+    nodes[type] ??= {};
+    for (const [name, values] of Object.entries(inputs))
+      nodes[type][name] = [
+        ...new Set([...(nodes[type][name] ?? []), ...values]),
+      ];
+  }
+  // Base is the new default, Distilled remains explicitly selectable for
+  // earlier takes. Their diffusion weights are never interchangeable.
+  nodes.UNETLoader.unet_name = [unet, distilledUnet];
   for (const type of without) delete nodes[type];
   fake =
     reopen?.fake ??
@@ -72,7 +89,10 @@ export async function studio(
   };
   const local = new LocalComfyWorkflows({
     url: fake.url,
-    models: { [kleinWorkflow.id]: { unet_name: unet } },
+    models: {
+      [kleinBaseWorkflow.id]: { unet_name: unet },
+      [kleinWorkflow.id]: { unet_name: distilledUnet },
+    },
   });
   const app = await setup(
     undefined,
