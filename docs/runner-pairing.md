@@ -80,8 +80,12 @@ cannot silently execute it again. An uncertain start must be inspected locally.
 The hosted Settings prompt retains its start ID after a failed response, so
 retrying the unchanged prompt can recover the existing request.
 
-The connector polls every three seconds while connected; only changed session
+The connector polls every six seconds while idle and every three seconds
+when a local session is starting, running or waiting; only changed session
 updates are sent. Readiness expires after 20 seconds without a heartbeat.
+The hosted relay combines its authenticated per-pair rate-limit counter and
+`last_seen` update in one atomic D1 write. It still enforces 120 polls per
+60-second window across isolates without another `rate_limits` write.
 Unclaimed prompts older than 20 seconds are stopped before launch. A claimed
 request without acknowledgement remains uncertain and offers Stop; it is not
 automatically requeued. Latest owned session state is restored after page reload.
