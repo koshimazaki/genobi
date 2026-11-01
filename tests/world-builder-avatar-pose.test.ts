@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import * as T from "three";
 import { presetRecipe, validateRecipe } from "../src/world-builder/recipe";
+import { WORLD_POSITION_LIMIT } from "../src/world-builder/scene-bounds";
 import {
   applyAvatarPose,
   orient,
@@ -44,11 +45,24 @@ describe("World Builder avatar orientation", () => {
       { x: 0, y: 0, z: 0, yaw: 0, pitch: Number.NaN },
       { x: 0, y: 0, z: 0, yaw: 0, roll: "1" },
       { x: 0, y: 0, z: 0, yaw: 0, tilt: 1 },
-      { x: 41, y: 0, z: 0, yaw: 0 },
+      { x: WORLD_POSITION_LIMIT + 0.01, y: 0, z: 0, yaw: 0 },
+      { x: 0, y: -WORLD_POSITION_LIMIT - 0.01, z: 0, yaw: 0 },
+      { x: 0, y: 0, z: WORLD_POSITION_LIMIT + 0.01, yaw: 0 },
     ]) {
       expect(() => validateAvatarPose(avatarPose)).toThrow();
       expect(() => validateRecipe({ avatarPose })).toThrow();
     }
+  });
+
+  it("accepts exact positive and negative world positions", () => {
+    const avatarPose = {
+      x: WORLD_POSITION_LIMIT,
+      y: -WORLD_POSITION_LIMIT,
+      z: WORLD_POSITION_LIMIT,
+      yaw: 0,
+    };
+    expect(validateAvatarPose(avatarPose)).toEqual(avatarPose);
+    expect(validateRecipe({ avatarPose }).avatarPose).toEqual(avatarPose);
   });
 
   it("applies yaw, then pitch, then roll (Euler YXZ) about the feet", () => {

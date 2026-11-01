@@ -6,7 +6,8 @@ import {
   type SceneVector,
 } from "./scene-state";
 
-export const ROOM_DIMENSION_RANGE = [1, 32] as const;
+export const ROOM_DIMENSION_RANGE = [1, 120] as const;
+export const ROOM_WALL_THICKNESS_RANGE = [0.02, 2] as const;
 export const ROOM_MARGIN = 0.05;
 const clamp = (v: number, lo: number, hi: number) =>
   Math.max(lo, Math.min(v, hi));

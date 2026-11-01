@@ -1,5 +1,6 @@
 import type { Recipe } from "./recipe";
 import { sceneObjects } from "./scene-instances";
+import { PRIMITIVE_AXIS_RANGE } from "./scene-bounds";
 export const shapes = [
   "box",
   "sphere",
@@ -69,7 +70,7 @@ export function validTransform(t: Transform) {
       (v) => v === undefined || number(v, -Math.PI, Math.PI),
     ) &&
     [t.scaleX, t.scaleY, t.scaleZ].every(
-      (v) => v === undefined || number(v, 0.1, 8),
+      (v) => v === undefined || number(v, ...PRIMITIVE_AXIS_RANGE),
     )
   );
 }

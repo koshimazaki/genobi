@@ -1,0 +1,46 @@
+.wb-descent-view {
+  display: grid;
+  gap: 7px;
+  min-width: 0;
+  margin: 0;
+  padding: 9px 0;
+  border: 0;
+  grid-column: 1 / -1;
+}
+.wb-descent-view > label {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+.wb-descent-view .themed-select {
+  width: 100%;
+  min-width: 0;
+}
+.wb-descent-view .wb-descent-lens {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.wb-descent-lens > span:last-child {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.wb-descent-lens input {
+  width: 58px;
+  min-width: 0;
+  text-align: right;
+}
+.wb-descent-view > input[type="range"] {
+  width: 100%;
+  min-width: 0;
+  height: 28px;
+  margin: 0;
+  accent-color: var(--accent-strong);
+}
+.wb-descent-view .wb-hint {
+  margin: 0;
+  font-size: 10px;
+  line-height: 1.5;
+  color: var(--muted);
+}

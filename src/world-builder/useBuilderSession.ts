@@ -9,14 +9,9 @@ import {
   describeBuilderRuntime,
 } from "./builder-runtime";
 import { viewportShotRecipe } from "./camera-viewport";
-import {
-  presetRecipe,
-  validateRecipe,
-  type Recipe,
-  type Shape,
-} from "./recipe";
+import { presetRecipe, validateRecipe, type Recipe } from "./recipe";
 import { exportTake } from "./export-take";
-import { addBuilderPrimitive, builderStill } from "./builder-actions";
+import { builderEdits, builderStill } from "./builder-actions";
 import { viewportEditHandler } from "./viewport-edit";
 import {
   createInputTakeSession,
@@ -79,7 +74,10 @@ export function useBuilderSession() {
     runtime,
     audioElement,
     previewQueue,
-    () => !controller.current && !settling.current(),
+    () =>
+      !controller.current &&
+      !settling.current() &&
+      !api.current?.live.status().recordingBusy,
   );
   const { playing, playingRef, setPlaying, stopping, settled } = playback;
   const [json, setJson] = useState(""),
@@ -438,15 +436,12 @@ export function useBuilderSession() {
     held: () => settling.current(),
   });
   const run = runWork(setError);
-  /** `tune` applies live during Play (Sound routing); `change` stops it first. */
-  const tune = (patch: Partial<Recipe>) =>
-    run(() => api.current!.configure({ ...current.current, ...patch }));
-  const change = (patch: Partial<Recipe>) =>
-    run(
-      stopping(() => api.current!.configure({ ...current.current, ...patch })),
-    );
-  const add = (shape: Shape) =>
-    addBuilderPrimitive(api.current!, current.current, shape);
+  const edits = builderEdits(
+    () => api.current!,
+    () => current.current,
+    run,
+    stopping,
+  );
   const handoff = sessionHandoffs(api, take, setFrame, setStatus);
   const example = useExampleTrack(audioName);
   return {
@@ -482,9 +477,7 @@ export function useBuilderSession() {
     json,
     setJson,
     run,
-    change,
-    tune,
-    add,
+    ...edits,
     ...handoff,
     canSendToDirector: Boolean(host()),
     example,

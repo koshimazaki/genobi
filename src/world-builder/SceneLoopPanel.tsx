@@ -3,6 +3,7 @@ import Icon from "../components/Icon";
 import ThemedSelect from "../components/ThemedSelect";
 import { LoopDurationControl } from "./LoopDurationControl";
 import { SceneLoopOptions } from "./SceneLoopOptions";
+import { SceneSizeControls } from "./SceneSizeControls";
 import { SceneStatePreview } from "./SceneStatePreview";
 import { SCENE_LOOP_SLOTS, type SceneLoopSlot } from "./scene-loop";
 import type { BuilderSession } from "./useBuilderSession";
@@ -130,6 +131,7 @@ export function SceneLoopPanel({
             : `${loop.startLetter} sets the stage; objects and cameras morph. Includes return to ${loop.startLetter}.`}
       </p>
       {settings}
+      <SceneSizeControls s={s} disabled={loop.locked || e.mode === "walk"} />
       <LoopDurationControl
         frames={loop.frames}
         disabled={loop.locked}

@@ -3,7 +3,13 @@ import { modOf, modsAt, type Mods } from "./mod-routes";
 import { orbitPosition } from "./prop-orbit";
 import { loopedSpin, loopPeriod } from "./loop";
 import { motionInstances, sceneObjects } from "./scene-instances";
-import { clampRoomPoint, roomSurfaces, roomSurfaceId } from "./scene-room";
+import {
+  clampRoomPoint,
+  roomSurfaces,
+  roomSurfaceId,
+  ROOM_DIMENSION_RANGE,
+} from "./scene-room";
+import { WORLD_POSITION_LIMIT, PRIMITIVE_SCALE_RANGE } from "./scene-bounds";
 import { evaluateMorphControl } from "./scene-morph-evaluation";
 import type { EvaluatedMorphControl } from "./scene-morph-control";
 import { transitionTransform } from "./scene-transition";
@@ -120,8 +126,7 @@ function evaluatedRoom(
   ].entries())
     dimensions[index] = clamp(
       dimensions[index] + (offsets[property as SceneMappingProperty] ?? 0),
-      1,
-      32,
+      ...ROOM_DIMENSION_RANGE,
     );
   const source = clampRoomPoint(
     mixSceneVector(
@@ -175,10 +180,22 @@ function applyInstanceControls(
   const distance = (1 + controls.spread) * controls.scale;
   return {
     ...p,
-    x: clamp(motion.pivot[0] + point[0] * distance, -40, 40),
-    y: clamp(motion.pivot[1] + point[1] * distance + controls.lift, -40, 40),
-    z: clamp(motion.pivot[2] + point[2] * distance, -40, 40),
-    scale: clamp(p.scale * controls.scale, 0.1, 8),
+    x: clamp(
+      motion.pivot[0] + point[0] * distance,
+      -WORLD_POSITION_LIMIT,
+      WORLD_POSITION_LIMIT,
+    ),
+    y: clamp(
+      motion.pivot[1] + point[1] * distance + controls.lift,
+      -WORLD_POSITION_LIMIT,
+      WORLD_POSITION_LIMIT,
+    ),
+    z: clamp(
+      motion.pivot[2] + point[2] * distance,
+      -WORLD_POSITION_LIMIT,
+      WORLD_POSITION_LIMIT,
+    ),
+    scale: clamp(p.scale * controls.scale, ...PRIMITIVE_SCALE_RANGE),
     rotationX: rotation[0],
     rotation: rotation[1],
     rotationZ: rotation[2],

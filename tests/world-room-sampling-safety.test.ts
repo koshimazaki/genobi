@@ -60,8 +60,8 @@ describe("full-frame acoustic sampling evidence", () => {
             ? 0
             : (frame - from.frame) / (to.frame - from.frame);
       const predicted =
-        from.room.dimensions[0] +
-        (to.room.dimensions[0] - from.room.dimensions[0]) * progress;
+        from.room!.dimensions[0] +
+        (to.room!.dimensions[0] - from.room!.dimensions[0]) * progress;
       error = Math.max(
         error,
         Math.abs(evaluateScene(recipe, frame).room!.dimensions[0] - predicted),

@@ -8,7 +8,8 @@ const bundle = await build({
     contents: `
       export { renderDynamicRoomAudio } from './src/world-builder/dynamic-room-audio';
       export { buildRoomImpulse, ROOM_AUDIO_ENGINE } from './src/world-builder/scene-room-ir';
-      export { acousticWeightsAt } from './src/world-builder/acoustic-schedule';
+      export { acousticWeightsAt, buildAcousticSchedule } from './src/world-builder/acoustic-schedule';
+      export { createStoryPreset } from './src/world-builder/story-presets';
     `,
     resolveDir: process.cwd(),
     loader: "ts",
@@ -35,6 +36,8 @@ try {
       buildRoomImpulse,
       ROOM_AUDIO_ENGINE,
       acousticWeightsAt,
+      buildAcousticSchedule,
+      createStoryPreset,
     } = globalThis.RoomAudio;
     const room = {
       id: "room",
@@ -110,6 +113,45 @@ try {
       stereoError = Math.max(stereoError, channelDifference);
       if (sample >= 3000) tailEnergy += output[sample] ** 2;
     }
+    const storySchedule = buildAcousticSchedule(
+      createStoryPreset("endless-descent"),
+    );
+    const storySource = new Float32Array(
+      Math.round(storySchedule.duration * rate),
+    );
+    for (let sample = 1600; sample < storySource.length; sample += rate * 2)
+      storySource[sample] = 0.08;
+    storySource[storySource.length - 1] = 0.08;
+    const story = await renderDynamicRoomAudio(
+      { channels: [storySource], sampleRate: rate, envelope: [] },
+      storySchedule,
+    );
+    const firstRoom = storySchedule.snapshots.find(
+      (snapshot) => snapshot.room,
+    ).frame;
+    let outdoorError = 0,
+      storyTailEnergy = 0;
+    for (let sample = 0; sample < (firstRoom / 24) * rate; sample++)
+      outdoorError = Math.max(
+        outdoorError,
+        Math.abs(
+          story.track.channels[0][sample] -
+            storySource[sample] * story.peakGain,
+        ),
+      );
+    for (
+      let sample = storySource.length;
+      sample < story.track.channels[0].length;
+      sample++
+    )
+      storyTailEnergy += story.track.channels[0][sample] ** 2;
+    const avenueSchedule = buildAcousticSchedule(
+      createStoryPreset("bass-avenue"),
+    );
+    const avenue = await renderDynamicRoomAudio(
+      { channels: [source], sampleRate: rate, envelope: [] },
+      avenueSchedule,
+    );
     return {
       engine: result.engine,
       frames: output.length,
@@ -121,6 +163,23 @@ try {
       tailEnergy,
       elapsedMs: Math.round(performance.now() - started),
       wavBytes: result.wav.size,
+      story: {
+        pictureFrames: storySchedule.frames,
+        snapshots: storySchedule.snapshots.length,
+        boundaryFrames: storySchedule.snapshots
+          .filter((snapshot) => snapshot.transition === "hold")
+          .map((snapshot) => snapshot.frame),
+        irs: story.irs.length,
+        truncatedIRs: story.irs.filter((ir) => ir.truncated).length,
+        outdoorError,
+        tailEnergy: storyTailEnergy,
+        finite: story.track.channels[0].every(Number.isFinite),
+      },
+      outdoorOnly: {
+        irs: avenue.irs.length,
+        tailSeconds: avenue.tailSeconds,
+        finite: avenue.track.channels[0].every(Number.isFinite),
+      },
     };
   });
   process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
@@ -136,6 +195,20 @@ try {
   );
   assert(report.tailEnergy > 0.001, "The final impulse lost its decay tail");
   assert.equal(report.wavBytes, 44 + 3799 * 4);
+  assert.deepEqual(report.story.boundaryFrames, [193, 289, 337]);
+  assert(
+    report.story.outdoorError < 1e-7,
+    "Outdoor frames received a wet enclosure response",
+  );
+  assert(report.story.tailEnergy > 0, "The final studio lost its decay");
+  assert(report.story.finite, "Story CPU convolution produced invalid samples");
+  assert(
+    report.story.truncatedIRs > 0,
+    "Long cathedral decay must report its response cap",
+  );
+  assert.equal(report.outdoorOnly.irs, 0);
+  assert.equal(report.outdoorOnly.tailSeconds, 0);
+  assert(report.outdoorOnly.finite);
 } finally {
   await browser.close();
 }

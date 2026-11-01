@@ -16,6 +16,20 @@ const same = (a: unknown, b: unknown) => canonical(a) === canonical(b);
 /** Generated shells and external attachments are not silently reconstructed. */
 export function assertLoopCompatibility(slots: SceneLoopSnapshot[]) {
   const first = slots[0].recipe;
+  const zones = (slot: SceneLoopSnapshot) =>
+    slot.recipe.motion?.acousticZones
+      ? {
+          zones: slot.recipe.motion.acousticZones,
+          listener: slot.recipe.motion.acousticListener ?? "camera",
+        }
+      : undefined;
+  const zoneParts = (slot: SceneLoopSnapshot) => ({
+    generator: slot.recipe.motion?.instances?.generator,
+    count: slot.recipe.motion?.instances?.count,
+    primitives: slot.recipe.objects
+      .map((part) => `${part.id}:${part.shape}`)
+      .sort(),
+  });
   const roomShell = (slot: SceneLoopSnapshot) => {
     const room = slot.recipe.motion?.room;
     if (!room) return undefined;
@@ -32,9 +46,20 @@ export function assertLoopCompatibility(slots: SceneLoopSnapshot[]) {
       throw new Error(
         "Keep one Playground layout across loop slots, or use authored Stage primitives.",
       );
+    if (!same(zones(slot), zones(slots[0])))
+      throw new Error(
+        "Keep identical acoustic zones and listeners in every loop slot. Recall one scene and save different camera views, or use Save scene for separate stories.",
+      );
     if (!same(roomShell(slot), roomShell(slots[0])))
       throw new Error(
         "Keep the same acoustic room shell across loop slots; its dimensions and source/listener positions may change.",
+      );
+    if (
+      first.motion?.acousticZones &&
+      !same(zoneParts(slot), zoneParts(slots[0]))
+    )
+      throw new Error(
+        "Keep the same generated blocks and primitive identities in acoustic loop slots. Save scene preserves an independent architectural story.",
       );
     if (Object.keys(recipe.textures).length)
       throw new Error(
@@ -60,6 +85,7 @@ const transform = (part: Prop): SceneTransform => ({
 
 /** Retained known primitives rebuild; authored boxes are split and matched explicitly. */
 export function loopParts(slots: SceneLoopSnapshot[]) {
+  const retainZoneIds = !!slots[0].recipe.motion?.acousticZones;
   const poses = slots.map(
     (slot) =>
       new Map(
@@ -127,7 +153,7 @@ export function loopParts(slots: SceneLoopSnapshot[]) {
     slot.recipe.motion?.instances
       ? motionInstances(slot.recipe.motion.instances)
           .map((part) => poses[index].get(part.id)!)
-          .filter((part) => (part.presence ?? 1) > 0)
+          .filter((part) => retainZoneIds || (part.presence ?? 1) > 0)
           .map(transform)
       : [],
   );
@@ -140,11 +166,16 @@ export function loopParts(slots: SceneLoopSnapshot[]) {
     instances = {
       ...slots[firstVoxel].recipe.motion!.instances!,
       count,
-      columns: Math.min(8, Math.ceil(Math.cbrt(count))),
+      ...(retainZoneIds
+        ? {}
+        : { columns: Math.min(8, Math.ceil(Math.cbrt(count))) }),
     };
     const reference = resampleMorphParts(voxelRows[firstVoxel], count);
     let previous = reference;
     const layouts = voxelRows.map((parts) => {
+      // Zone-bearing scenes declare stable architecture. Retain authored IDs;
+      // nearest-neighbour remapping could exchange a wall with a nearby prop.
+      if (retainZoneIds) return structuredClone(parts);
       if (!parts.length)
         return reference.map((part) => ({ ...part, presence: 0 }));
       const layout = matchLayout(previous, resampleMorphParts(parts, count));

@@ -296,6 +296,9 @@ user action through every layer.
 - [Credits and lineage](credits.md) — design lineage, licence, attributions and
   the BFL documentation the studio follows.
 
+- [Human-scale scene stories](world-builder-stories.md) — continuous descent, responsive streets and scene sizing.
+- [Dynamic acoustic zones](world-builder-acoustic-zones.md) — explicit room dimensions and browser CPU reverb.
+
 ## Outside the wiki
 
 [The project README](https://github.com/koshimazaki/Genobi/blob/main/README.md),

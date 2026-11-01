@@ -1,5 +1,6 @@
 import type { WorldControl } from "../../shared/world-control";
-import { cameraAt } from "./recipe";
+import { cameraAt, parameterSchema } from "./recipe";
+import { factorPrimitiveScale, WORLD_POSITION_LIMIT } from "./scene-bounds";
 import type { WalkState } from "./walk-motion";
 import type { CharacterPose } from "../../shared/scene/characters";
 import * as T from "three";
@@ -118,18 +119,38 @@ export function createInteraction(
     const object = gizmo.object,
       r = getRecipe();
     if (!object || editsLocked) return;
+    let size;
+    try {
+      size = factorPrimitiveScale(
+        object.scale.toArray() as SceneVector,
+        r.objects.find((p) => `prop:${p.id}` === selected)?.scale ?? 1,
+      );
+    } catch {
+      gizmo.reset();
+      render();
+      return;
+    }
     const value = {
-      x: T.MathUtils.clamp(object.position.x, -40, 40),
-      y: T.MathUtils.clamp(object.position.y, -40, 40),
-      z: T.MathUtils.clamp(object.position.z, -40, 40),
+      x: T.MathUtils.clamp(
+        object.position.x,
+        -WORLD_POSITION_LIMIT,
+        WORLD_POSITION_LIMIT,
+      ),
+      y: T.MathUtils.clamp(
+        object.position.y,
+        -WORLD_POSITION_LIMIT,
+        WORLD_POSITION_LIMIT,
+      ),
+      z: T.MathUtils.clamp(
+        object.position.z,
+        -WORLD_POSITION_LIMIT,
+        WORLD_POSITION_LIMIT,
+      ),
       rotation: Math.atan2(
         Math.sin(object.rotation.y),
         Math.cos(object.rotation.y),
       ),
-      scale: 1,
-      scaleX: T.MathUtils.clamp(object.scale.x, 0.1, 8),
-      scaleY: T.MathUtils.clamp(object.scale.y, 0.1, 8),
-      scaleZ: T.MathUtils.clamp(object.scale.z, 0.1, 8),
+      ...size,
       rotationX: Math.atan2(
         Math.sin(object.rotation.x),
         Math.cos(object.rotation.x),
@@ -382,7 +403,8 @@ export function createInteraction(
       orbit.enabled = next === "walk" || !editsLocked;
       orbit.enablePan = next !== "walk";
       orbit.minDistance = next === "shot" ? 0.1 : 2;
-      orbit.maxDistance = next === "shot" ? Infinity : 60;
+      orbit.maxDistance =
+        next === "shot" ? Infinity : parameterSchema.radius.max;
       gizmo.enabled = next === "edit" && !editsLocked;
       attach();
       if (next === "walk") {
@@ -424,15 +446,31 @@ export function createInteraction(
         r = v.length();
       return {
         fov: T.MathUtils.clamp(camera.fov, 15, 100),
-        targetX: T.MathUtils.clamp(orbit.target.x, -40, 40),
-        targetY: T.MathUtils.clamp(orbit.target.y, -5, 15),
-        targetZ: T.MathUtils.clamp(orbit.target.z, -40, 40),
-        radius: T.MathUtils.clamp(r, 2, 60),
+        targetX: T.MathUtils.clamp(
+          orbit.target.x,
+          parameterSchema.targetX.min,
+          parameterSchema.targetX.max,
+        ),
+        targetY: T.MathUtils.clamp(
+          orbit.target.y,
+          parameterSchema.targetY.min,
+          parameterSchema.targetY.max,
+        ),
+        targetZ: T.MathUtils.clamp(
+          orbit.target.z,
+          parameterSchema.targetZ.min,
+          parameterSchema.targetZ.max,
+        ),
+        radius: T.MathUtils.clamp(
+          r,
+          parameterSchema.radius.min,
+          parameterSchema.radius.max,
+        ),
         azimuth: T.MathUtils.radToDeg(Math.atan2(v.x, v.z)),
         elevation: T.MathUtils.clamp(
           T.MathUtils.radToDeg(Math.asin(v.y / r)),
-          -60,
-          80,
+          parameterSchema.elevation.min,
+          parameterSchema.elevation.max,
         ),
       };
     },

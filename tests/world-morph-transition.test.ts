@@ -5,6 +5,7 @@ import { defaultMorphControl } from "../src/world-builder/scene-morph-control";
 import { transitionTransform } from "../src/world-builder/scene-transition";
 import { mixSceneTransform } from "../src/world-builder/scene-transform";
 import { motionRecipe } from "./scene-motion-fixture";
+import { WORLD_POSITION_LIMIT } from "../src/world-builder/scene-bounds";
 
 describe("deterministic retained-part transition paths", () => {
   it.each(["direct", "scatter", "twist", "assemble"] as const)(
@@ -57,8 +58,13 @@ describe("deterministic retained-part transition paths", () => {
 
   it("keeps the default direct path exactly compatible and bounds scatter excursion", () => {
     const motion = motionRecipe(2, 1).motion!;
-    const from = { x: 39, y: 39, z: 39, scale: 1 },
-      to = { ...from, x: 40 };
+    const from = {
+        x: WORLD_POSITION_LIMIT - 1,
+        y: WORLD_POSITION_LIMIT - 1,
+        z: WORLD_POSITION_LIMIT - 1,
+        scale: 1,
+      },
+      to = { ...from, x: WORLD_POSITION_LIMIT };
     expect(transitionTransform(from, to, 0.5, "part", motion)).toEqual(
       mixSceneTransform(from, to, 0.5),
     );
@@ -66,7 +72,8 @@ describe("deterministic retained-part transition paths", () => {
     const scattered = transitionTransform(from, to, 0.5, "part", motion);
     expect(
       [scattered.x, scattered.y, scattered.z].every(
-        (value) => value >= -40 && value <= 40,
+        (value) =>
+          value >= -WORLD_POSITION_LIMIT && value <= WORLD_POSITION_LIMIT,
       ),
     ).toBe(true);
     expect(scattered).not.toEqual(

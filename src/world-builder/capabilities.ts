@@ -40,4 +40,8 @@ export const SCENE_CAPABILITIES = [
   "local-ltx-timing-721-frames",
   "independent-object-camera-rotation",
   "evaluated-room-geometry",
+  "metre-based-scene-sizing",
+  "continuous-descent-stories",
+  "explicit-acoustic-zones",
+  "dynamic-room-sound-cpu",
 ] as const;

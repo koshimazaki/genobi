@@ -85,6 +85,34 @@ describe("a camera move with a duration", () => {
 });
 
 describe("a full turn in one take", () => {
+  it("keeps named shots aimed at life-size subjects above the former 40 metre limit", () => {
+    const recipe = presetRecipe("Studio");
+    const front = validateRecipe({
+      ...recipe,
+      ...shotPatch("front", recipe, [75, 95, -60]),
+    });
+    expect([front.targetX, front.targetY, front.targetZ]).toEqual([
+      75, 95, -60,
+    ]);
+    const orbit = validateRecipe({
+      ...recipe,
+      ...shotPatch("orbit60", recipe, [75, 95, -60]),
+    });
+    expect(orbit.targetY).toBeCloseTo(96.15);
+    const high = validateRecipe({
+      ...recipe,
+      ...shotPatch("front", recipe, [400, 300, -400]),
+    });
+    expect([high.targetX, high.targetY, high.targetZ]).toEqual([
+      200, 200, -200,
+    ]);
+    const low = validateRecipe({
+      ...recipe,
+      ...shotPatch("front", recipe, [-400, -300, 400]),
+    });
+    expect([low.targetX, low.targetY, low.targetZ]).toEqual([-200, -200, 200]);
+  });
+
   it("validates ±360° and refuses more", () => {
     expect(validateRecipe({ orbit: 360 }).orbit).toBe(360);
     expect(validateRecipe({ orbit: -360 }).orbit).toBe(-360);

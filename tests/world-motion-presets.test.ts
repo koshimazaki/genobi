@@ -101,6 +101,13 @@ describe("editable scene motion presets", () => {
 
   it("frames fixed object studies and each traveling city's opening skyline", () => {
     for (const definition of MOTION_PRESETS) {
+      // Stories start inside a set. Their subject visibility and path clearance
+      // are checked frame-by-frame in world-story-presets, not as turntables.
+      if (
+        definition.id === "endless-descent" ||
+        definition.id === "bass-avenue"
+      )
+        continue;
       const recipe = createMotionPreset(definition.id);
       const camera = new PerspectiveCamera(
         recipe.fov,

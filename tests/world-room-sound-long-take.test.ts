@@ -43,7 +43,7 @@ describe("room sound on the expanded scene timeline", () => {
     expect(schedule.approximation?.comparedFrames).toBe(TAKE_FRAMES.max);
     expect(schedule.snapshots.length).toBeLessThanOrEqual(24);
     expect(schedule.snapshots.at(-1)?.frame).toBe(720);
-    expect(schedule.snapshots.at(-1)?.room.dimensions).toEqual(
+    expect(schedule.snapshots.at(-1)?.room!.dimensions).toEqual(
       evaluateScene(recipe, 720).room!.dimensions,
     );
     expect(validateAcousticSchedule(schedule)).toBe(schedule);

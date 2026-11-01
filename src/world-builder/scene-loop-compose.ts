@@ -121,6 +121,13 @@ export function composeSceneLoop(
   if (!["direct", "scatter", "twist", "assemble"].includes(style))
     throw new Error("Choose a supported loop movement.");
   if (
+    slots[0].recipe.motion?.acousticZones &&
+    (style !== "direct" || (options.rotation && options.rotation.turns !== 0))
+  )
+    throw new Error(
+      "Use Direct with no object rotation for a loop with fixed acoustic zones. Camera moves remain available; Save scene keeps the complete story.",
+    );
+  if (
     options.returnToStart !== undefined &&
     typeof options.returnToStart !== "boolean"
   )
@@ -161,6 +168,12 @@ export function composeSceneLoop(
     transitionStyle: style,
     ...(parts.instances ? { instances: parts.instances } : {}),
     ...(first.motion?.room ? { room: first.motion.room } : {}),
+    ...(first.motion?.acousticZones
+      ? {
+          acousticZones: first.motion.acousticZones,
+          acousticListener: first.motion.acousticListener ?? "camera",
+        }
+      : {}),
     ...(options.rotation ? { rotation: options.rotation } : {}),
   };
   const defaults = defaultStateAudio({

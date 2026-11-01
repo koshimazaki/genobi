@@ -1,4 +1,6 @@
 import { roomPresets } from "./room-presets";
+import { WORLD_POSITION_LIMIT, PRIMITIVE_SCALE_RANGE } from "./scene-bounds";
+import { validateSceneSize, type SceneSize } from "./scene-size-contract";
 import { normalizeBandEnvelopes, type BandEnvelopes } from "./audio-bands";
 import {
   BUILDER_CHARACTER_ASSETS as CHARACTER_ASSETS,
@@ -46,11 +48,26 @@ export const parameterSchema = {
   fov: { min: 15, max: 100, step: 1, initial: 55 },
   azimuth: { min: -180, max: 180, step: 1, initial: 25 },
   elevation: { min: -89, max: 89, step: 1, initial: 15 },
-  radius: { min: 2, max: 60, step: 0.5, initial: 12 },
-  targetX: { min: -40, max: 40, step: 0.25, initial: 0 },
-  targetZ: { min: -40, max: 40, step: 0.25, initial: 0 },
-  /** Up to 40 m so a tracking shot can start on a character high in the air. */
-  targetY: { min: -5, max: 40, step: 0.25, initial: 1.5 },
+  radius: { min: 2, max: 240, step: 0.5, initial: 12 },
+  targetX: {
+    min: -WORLD_POSITION_LIMIT,
+    max: WORLD_POSITION_LIMIT,
+    step: 0.25,
+    initial: 0,
+  },
+  targetZ: {
+    min: -WORLD_POSITION_LIMIT,
+    max: WORLD_POSITION_LIMIT,
+    step: 0.25,
+    initial: 0,
+  },
+  /** Metres, including continuous travel through life-size stacked spaces. */
+  targetY: {
+    min: -WORLD_POSITION_LIMIT,
+    max: WORLD_POSITION_LIMIT,
+    step: 0.25,
+    initial: 1.5,
+  },
   /** Degrees per take: ±360 is one full turn. */
   orbit: { min: -360, max: 360, step: 1, initial: 30 },
   dolly: { min: -0.8, max: 2, step: 0.1, initial: 0 },
@@ -117,6 +134,8 @@ export type Recipe = Record<Parameter, number> & {
   screen?: boolean;
   /** Optional dark, distance-faded floor grid; absent preserves the studio. */
   stageLook?: "studio" | "dark-grid";
+  /** Absolute authoring factor already baked into metre-based scene fields. */
+  sceneSize?: SceneSize;
   prompt: string;
   background: string;
   objects: Prop[];
@@ -269,6 +288,7 @@ export function validateRecipe(input: unknown): Recipe {
     "loop",
     "screen",
     "stageLook",
+    "sceneSize",
     "avatarPath",
     "motion",
     "cameraMotion",
@@ -317,6 +337,7 @@ export function validateRecipe(input: unknown): Recipe {
     throw new Error(`Use 8k + 1 frames (9, 17, …, ${TAKE_FRAMES.max}).`);
   if (r.cameraMotion !== undefined)
     r.cameraMotion = validateSceneCamera(r.cameraMotion, r.frames);
+  if (r.sceneSize !== undefined) r.sceneSize = validateSceneSize(r.sceneSize);
   if (
     !color(r.background) ||
     typeof r.prompt !== "string" ||
@@ -371,9 +392,11 @@ export function validateRecipe(input: unknown): Recipe {
             "scaleZ",
           ].includes(k),
       ) ||
-      ![item.x, item.y, item.z].every((v) => finite(v, -40, 40)) ||
+      ![item.x, item.y, item.z].every((v) =>
+        finite(v, -WORLD_POSITION_LIMIT, WORLD_POSITION_LIMIT),
+      ) ||
       !finite(item.rotation, -Math.PI, Math.PI) ||
-      !finite(item.scale, 0.1, 8) ||
+      !finite(item.scale, ...PRIMITIVE_SCALE_RANGE) ||
       !validTransform(item)
     )
       throw new Error("Invalid playground transform.");
@@ -413,14 +436,18 @@ export function validateRecipe(input: unknown): Recipe {
       !color(p.color) ||
       typeof p.prompt !== "string" ||
       p.prompt.length > 1000 ||
-      !finite(p.scale, 0.1, 8) ||
+      !finite(p.scale, ...PRIMITIVE_SCALE_RANGE) ||
       !validTransform(p) ||
       !finite(p.spin, -3, 3) ||
       (p.orbit !== undefined &&
         !finite(p.orbit, ORBIT_RANGE.min, ORBIT_RANGE.max)) ||
-      ![p.orbitX ?? 0, p.orbitZ ?? 0].every((v) => finite(v, -40, 40)) ||
+      ![p.orbitX ?? 0, p.orbitZ ?? 0].every((v) =>
+        finite(v, -WORLD_POSITION_LIMIT, WORLD_POSITION_LIMIT),
+      ) ||
       (p.rotation !== undefined && !finite(p.rotation, -Math.PI, Math.PI)) ||
-      ![p.x, p.y, p.z].every((v) => finite(v, -40, 40))
+      ![p.x, p.y, p.z].every((v) =>
+        finite(v, -WORLD_POSITION_LIMIT, WORLD_POSITION_LIMIT),
+      )
     )
       throw new Error("Invalid primitive.");
     ids.add(p.id);

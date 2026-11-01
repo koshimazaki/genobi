@@ -42,12 +42,12 @@ describe("room sound export provenance", () => {
       trimFadeSeconds: 0.05,
     });
     recipe.motion!.stateKeys[0].room!.dimensions[0] = 22;
-    result.schedule.snapshots[0].room.dimensions[0] = 23;
+    result.schedule.snapshots[0].room!.dimensions[0] = 23;
     result.irs[0].rt60 = 20;
     expect(receipt.recipe.motion!.stateKeys[0].room!.dimensions[0]).not.toBe(
       22,
     );
-    expect(receipt.schedule.snapshots[0].room.dimensions[0]).not.toBe(23);
+    expect(receipt.schedule.snapshots[0].room!.dimensions[0]).not.toBe(23);
     expect(receipt.impulseResponses[0].rt60).toBe(0.7);
   });
   it("hashes the actual fitted PCM, including channel order, rate and changed samples", async () => {

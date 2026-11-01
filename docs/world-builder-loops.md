@@ -10,6 +10,8 @@ and the preset catalogue stay below the view. Camera and music settings open in
 the same sidebar; the scene does not acquire another row of per-object A/B
 buttons or a large music-response block.
 
+The [story templates](world-builder-stories.md) also provide complete continuous takes. **Scene size** resizes the current Stage set and its acoustic dimensions while keeping the mannequin at 1.8 m. A loop bank retains its own duration and saved views; loading a 16-second story does not replace an existing loop composition.
+
 ## The short workflow
 
 1. Load an ordinary scene or motion preset. Scrub to the shape you want.
@@ -69,13 +71,14 @@ The first saved slot sets the loop's shared background, floor, lighting and
 backdrop. The saved objects and cameras move within that stage; another slot's
 environment is retained for recall rather than switched during the loop.
 
-| Geometry                       | Composition behavior                                                                                |
-| ------------------------------ | --------------------------------------------------------------------------------------------------- |
-| Compatible retained primitives | Interpolate transforms and saved colours                                                            |
-| Different ordinary primitives  | Retain a bounded union and shrink/grow absent parts; their exact zero-presence endpoints are hidden |
-| Authored voxel forms           | Split and match boxes deterministically to a common bounded count, preserving endpoint colours      |
-| One shared character model     | Retain the model and existing clip sequence; interpolate saved placements                           |
-| One acoustic enclosure         | Retain the shell and interpolate its permitted dimensions and source/listener positions             |
+| Geometry                       | Composition behavior                                                                                                            |
+| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
+| Compatible retained primitives | Interpolate transforms and saved colours                                                                                        |
+| Different ordinary primitives  | Retain a bounded union and shrink/grow absent parts; their exact zero-presence endpoints are hidden                             |
+| Authored voxel forms           | Split and match boxes deterministically to a common bounded count, preserving endpoint colours                                  |
+| One shared character model     | Retain the model and existing clip sequence; interpolate saved placements                                                       |
+| Fixed acoustic zones           | Retain identical zone layouts/listeners across slots with Direct movement; different zones or whole-object rotation are refused |
+| One acoustic enclosure         | Retain the shell and interpolate its permitted dimensions and source/listener positions                                         |
 
 The recipe keeps the existing limits: 24 ordinary primitives, at most 256 voxel
 parts and 64 KB of saved data, including the prepared soundtrack allowance.

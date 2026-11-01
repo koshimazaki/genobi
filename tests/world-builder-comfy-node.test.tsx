@@ -53,7 +53,12 @@ describe("World Builder inside the Comfy node", () => {
     for (const preset of MOTION_PRESETS) {
       expect(node).toContain(preset.name);
       expect(menuPreset(preset.name).motion?.stateKeys).toHaveLength(
-        preset.id === "fruit-audio-branches" ? 5 : 3,
+        (
+          { "fruit-audio-branches": 5, "bass-avenue": 4 } as Record<
+            string,
+            number
+          >
+        )[preset.id] ?? 3,
       );
     }
   });

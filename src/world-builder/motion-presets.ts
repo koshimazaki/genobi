@@ -1,4 +1,5 @@
 import { defaultRecipe, validateRecipe, type Recipe } from "./recipe";
+import { createStoryPreset, STORY_PRESETS } from "./story-presets";
 import type {
   SceneMapping,
   SceneMotion,
@@ -21,6 +22,7 @@ import {
 } from "./motion-object-layouts";
 
 export const MOTION_PRESETS = [
+  ...STORY_PRESETS,
   {
     id: "city-to-loft",
     name: "Travel · City / loft",
@@ -408,6 +410,8 @@ function presetPatch(id: MotionPresetId): Partial<Recipe> {
 
 /** Every call returns a fresh, fully validated recipe, safe for editing. */
 export function createMotionPreset(id: string): Recipe {
+  if (STORY_PRESETS.some((preset) => preset.id === id))
+    return createStoryPreset(id);
   if (!MOTION_PRESETS.some((preset) => preset.id === id))
     throw new Error("Unknown motion preset.");
   return validateRecipe({

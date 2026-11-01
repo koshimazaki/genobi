@@ -1,0 +1,313 @@
+{
+  "status": "passed",
+  "proof": "Direct createWorld WebGL/SwiftShader, not a schematic or application UI recording.",
+  "audioCapture": "Dry original synthesized regression beat. Offline bands drive poses; room convolution is verified separately.",
+  "assets": {
+    "testMap.glb": {
+      "bytes": 94924,
+      "sha256": "d29afd66039bf68a07b558df73c8e7e662f66d345f08644b549afb582910dc36"
+    },
+    "vehicles.glb": {
+      "bytes": 29620,
+      "sha256": "825137bbd2c9bb9dc08617b77aa9b2a551f8d73b61323170952be5c316af7b3e"
+    },
+    "AnimationLibrary.glb": {
+      "bytes": 6671104,
+      "sha256": "1b7bf67866360665426bb99e4c71bd619f19b408453c24e30f0c3071601eee5c",
+      "skins": 1,
+      "authoredClips": ["Jump_Loop", "Jump_Land", "Dance_Loop"]
+    }
+  },
+  "stories": [
+    {
+      "id": "endless-descent",
+      "view": "first-person",
+      "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "dimensions": [640, 384],
+      "frameCount": 385,
+      "ltxTiming": {
+        "numFrames": 385,
+        "frameRate": 24,
+        "temporalMultiple": 8,
+        "temporalOffset": 1,
+        "lastSampleSeconds": 16
+      },
+      "duration": 16.041666666666668,
+      "fullReverseRgbAndDepthParity": true,
+      "distinctRgbDepthFrames": 385,
+      "rgbFrameDigest": "656018e59ba54110761405d79aecbd700050344180b224b85ce32504a2512f2e",
+      "depthFrameDigest": "3b2b4dc533f4833d18df6758a371bdb6943592831bc14399903bb359891d1d1b",
+      "hiddenMannequin": true,
+      "maxCameraStepMetres": 0.3020833333333428,
+      "characterPixels": [],
+      "audioChecks": [
+        {
+          "source": "low",
+          "peakFrame": 0,
+          "measuredPeak": 0.3164,
+          "movingParts": {
+            "tower": 24,
+            "taxi": 0
+          },
+          "interpretation": "Whole-pose pull can also relax the other timed deformation.",
+          "staticPartsUnchanged": true,
+          "cameraUnchanged": true,
+          "visiblePixelChange": true
+        },
+        {
+          "source": "high",
+          "peakFrame": 18,
+          "measuredPeak": 0.1763,
+          "movingParts": {
+            "tower": 24,
+            "taxi": 10
+          },
+          "interpretation": "Whole-pose pull can also relax the other timed deformation.",
+          "staticPartsUnchanged": true,
+          "cameraUnchanged": true,
+          "visiblePixelChange": true
+        }
+      ],
+      "audio": "Dry original deterministic 120 BPM bass/hat fixture, measured by analyseBands. This capture does not apply room convolution or drum-event detection.",
+      "recipeBytes": 45900,
+      "video": {
+        "file": "world-story-descent.mp4",
+        "programs": [],
+        "streams": [
+          {
+            "width": 640,
+            "height": 384,
+            "r_frame_rate": "24/1",
+            "nb_read_frames": "385"
+          }
+        ],
+        "format": {
+          "duration": "16.041667"
+        },
+        "sha256": "47f6489b4f856aaa60c06d7ab88cbacdf9b50e5bfbafff3d2522944dd92b8f0e"
+      },
+      "depthVideo": {
+        "file": "world-story-descent-depth.mp4",
+        "programs": [],
+        "streams": [
+          {
+            "width": 640,
+            "height": 384,
+            "r_frame_rate": "24/1",
+            "nb_read_frames": "385"
+          }
+        ],
+        "format": {
+          "duration": "16.041667"
+        },
+        "sha256": "e4509c695b0705f9d4934244a2b7ef53077c5a2e2bbaa1baeb51a28dc3fa4b33"
+      },
+      "contactSheet": "world-story-descent-contact.png"
+    },
+    {
+      "id": "descent-follow",
+      "view": "follow",
+      "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "dimensions": [640, 384],
+      "frameCount": 385,
+      "ltxTiming": {
+        "numFrames": 385,
+        "frameRate": 24,
+        "temporalMultiple": 8,
+        "temporalOffset": 1,
+        "lastSampleSeconds": 16
+      },
+      "duration": 16.041666666666668,
+      "fullReverseRgbAndDepthParity": true,
+      "distinctRgbDepthFrames": 385,
+      "rgbFrameDigest": "36d1824a5dfedce11d4024e8087e95b5102f1c41dde7fd85ebeef56548c9d2bb",
+      "depthFrameDigest": "b73ff5e30742cca382ba718dd1499114d77ada0b2cc856b10f0055d780d27d79",
+      "minimumReferenceHeightFraction": 0.11170014573935891,
+      "maxCameraStepMetres": 0.30236382452019284,
+      "characterPixels": [
+        {
+          "frame": 96,
+          "changedPixels": 503
+        },
+        {
+          "frame": 212,
+          "changedPixels": 751
+        },
+        {
+          "frame": 312,
+          "changedPixels": 2179
+        },
+        {
+          "frame": 380,
+          "changedPixels": 2217
+        }
+      ],
+      "audioChecks": [
+        {
+          "source": "low",
+          "peakFrame": 0,
+          "measuredPeak": 0.3164,
+          "movingParts": {
+            "tower": 24,
+            "taxi": 0
+          },
+          "interpretation": "Whole-pose pull can also relax the other timed deformation.",
+          "staticPartsUnchanged": true,
+          "cameraUnchanged": true,
+          "visiblePixelChange": true
+        },
+        {
+          "source": "high",
+          "peakFrame": 186,
+          "measuredPeak": 0.1766,
+          "movingParts": {
+            "tower": 24,
+            "taxi": 10
+          },
+          "interpretation": "Whole-pose pull can also relax the other timed deformation.",
+          "staticPartsUnchanged": true,
+          "cameraUnchanged": true,
+          "visiblePixelChange": true
+        }
+      ],
+      "audio": "Original deterministic 120 BPM bass/hat test fixture; measured by analyseBands, not drum-event detection.",
+      "recipeBytes": 45888,
+      "video": {
+        "file": "world-story-descent-follow.mp4",
+        "programs": [],
+        "streams": [
+          {
+            "width": 640,
+            "height": 384,
+            "r_frame_rate": "24/1",
+            "nb_read_frames": "385"
+          }
+        ],
+        "format": {
+          "duration": "16.041667"
+        },
+        "sha256": "96221cd6b9d1108b17257bbb6cdf706e71aa78040236fd9f968cd5df23345813"
+      },
+      "depthVideo": {
+        "file": "world-story-descent-follow-depth.mp4",
+        "programs": [],
+        "streams": [
+          {
+            "width": 640,
+            "height": 384,
+            "r_frame_rate": "24/1",
+            "nb_read_frames": "385"
+          }
+        ],
+        "format": {
+          "duration": "16.041667"
+        },
+        "sha256": "8fa81a0a835b0bfb67a2b6f2e28b9b034120446b0398908ee9488bba62c5a4cc"
+      },
+      "contactSheet": "world-story-descent-follow-contact.png"
+    },
+    {
+      "id": "bass-avenue",
+      "view": "street",
+      "renderer": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver)",
+      "dimensions": [640, 384],
+      "frameCount": 193,
+      "ltxTiming": {
+        "numFrames": 193,
+        "frameRate": 24,
+        "temporalMultiple": 8,
+        "temporalOffset": 1,
+        "lastSampleSeconds": 8
+      },
+      "duration": 8.041666666666666,
+      "fullReverseRgbAndDepthParity": true,
+      "distinctRgbDepthFrames": 193,
+      "rgbFrameDigest": "7e1280b21548267e27fbae5d15753d563256022c1414e4402407fb6fcd1e32d9",
+      "depthFrameDigest": "0f6a2cfa2c2af999b800c2e711ca1614555069ed04a7cea5151d1b334634e50d",
+      "minimumReferenceHeightFraction": 0.12994747180047928,
+      "characterPixels": [
+        {
+          "frame": 0,
+          "changedPixels": 582
+        },
+        {
+          "frame": 48,
+          "changedPixels": 694
+        },
+        {
+          "frame": 96,
+          "changedPixels": 768
+        },
+        {
+          "frame": 144,
+          "changedPixels": 690
+        }
+      ],
+      "audioChecks": [
+        {
+          "source": "low",
+          "peakFrame": 0,
+          "measuredPeak": 0.31642007972060554,
+          "movingParts": {
+            "tower": 24,
+            "taxi": 0
+          },
+          "interpretation": "Whole-pose pull can also relax the other timed deformation.",
+          "staticPartsUnchanged": true,
+          "cameraUnchanged": true,
+          "visiblePixelChange": true
+        },
+        {
+          "source": "high",
+          "peakFrame": 114,
+          "measuredPeak": 0.17702564601908233,
+          "movingParts": {
+            "tower": 24,
+            "taxi": 10
+          },
+          "interpretation": "Whole-pose pull can also relax the other timed deformation.",
+          "staticPartsUnchanged": true,
+          "cameraUnchanged": true,
+          "visiblePixelChange": true
+        }
+      ],
+      "audio": "Original deterministic 120 BPM bass/hat test fixture; measured by analyseBands, not drum-event detection.",
+      "recipeBytes": 40108,
+      "video": {
+        "file": "world-story-avenue.mp4",
+        "programs": [],
+        "streams": [
+          {
+            "width": 640,
+            "height": 384,
+            "r_frame_rate": "24/1",
+            "nb_read_frames": "193"
+          }
+        ],
+        "format": {
+          "duration": "8.041667"
+        },
+        "sha256": "270f73ca28b5779b5953bbb56d39127944a8673846db07811d90a363866f01b1"
+      },
+      "depthVideo": {
+        "file": "world-story-avenue-depth.mp4",
+        "programs": [],
+        "streams": [
+          {
+            "width": 640,
+            "height": 384,
+            "r_frame_rate": "24/1",
+            "nb_read_frames": "193"
+          }
+        ],
+        "format": {
+          "duration": "8.041667"
+        },
+        "sha256": "1a56e1065fdf180fccde09769e1f142ddaf93e7487df0c7f0b004a068d8744f6"
+      },
+      "contactSheet": "world-story-avenue-contact.png",
+      "cameraPath": "Cyclic sway with matching endpoint views"
+    }
+  ],
+  "errors": []
+}

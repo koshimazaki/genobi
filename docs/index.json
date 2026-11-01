@@ -167,6 +167,7 @@
         "scene-examples.md",
         "vfx-recipes/hologram-turntable.md",
         "vision.md",
+        "world-builder-acoustic-zones.md",
         "world-builder-acoustics.md",
         "world-builder-capture.md",
         "world-builder-controls.md",
@@ -175,6 +176,7 @@
         "world-builder-loops.md",
         "world-builder-motion.md",
         "world-builder-sound.md",
+        "world-builder-stories.md",
         "world-builder-verification.md",
         "world-builder.md",
         "world-live.md",
@@ -209,11 +211,13 @@
         "scrolls.md",
         "templates.md",
         "vision.md",
+        "world-builder-acoustic-zones.md",
         "world-builder-acoustics.md",
         "world-builder-dynamic-sound.md",
         "world-builder-loops.md",
         "world-builder-motion.md",
-        "world-builder-sound.md"
+        "world-builder-sound.md",
+        "world-builder-stories.md"
       ]
     },
     "agents": {
@@ -452,7 +456,8 @@
         "voice-setup.md",
         "world-builder-controls.md",
         "world-builder-interface.md",
-        "world-builder-loops.md"
+        "world-builder-loops.md",
+        "world-builder-stories.md"
       ]
     },
     "dual-editor": {
@@ -470,6 +475,7 @@
         "director-bundle/showcase/adaptive-reverb/README.md",
         "effects-catalogue.md",
         "project-assets.md",
+        "world-builder-acoustic-zones.md",
         "world-builder-acoustics.md",
         "world-builder-capture.md",
         "world-builder-controls.md",
@@ -478,6 +484,7 @@
         "world-builder-loops.md",
         "world-builder-motion.md",
         "world-builder-sound.md",
+        "world-builder-stories.md",
         "world-builder-verification.md",
         "world-builder.md",
         "world-recipe-handoff.md"
@@ -771,6 +778,7 @@
         "voice-mode.md",
         "voice-setup.md",
         "workflow-reference-library.md",
+        "world-builder-acoustic-zones.md",
         "world-builder-acoustics.md",
         "world-builder-capture.md",
         "world-builder-controls.md",
@@ -779,6 +787,7 @@
         "world-builder-loops.md",
         "world-builder-motion.md",
         "world-builder-sound.md",
+        "world-builder-stories.md",
         "world-builder-verification.md",
         "world-builder.md",
         "world-live.md",
@@ -958,7 +967,9 @@
         "template-gallery.md",
         "voice-mode.md",
         "voice-setup.md",
-        "world-builder-motion.md"
+        "world-builder-acoustic-zones.md",
+        "world-builder-motion.md",
+        "world-builder-stories.md"
       ]
     },
     {
@@ -2353,12 +2364,20 @@
       "links": ["comfy-cloud-inventory.md", "run-location.md"]
     },
     {
+      "title": "World Builder: story zones and local CPU room sound",
+      "path": "world-builder-acoustic-zones.md",
+      "tags": ["3d", "sound", "world-builder"],
+      "summary": "Explicit metre-scale room and outdoor zones, local CPU reverb estimates, scene-size coupling and audio rendering evidence.",
+      "links": []
+    },
+    {
       "title": "World Builder acoustics",
       "path": "world-builder-acoustics.md",
       "tags": ["3d", "world-builder", "comfy", "sound"],
       "summary": "World Builder's room acoustics estimate (Sabine RT60 to AKUSPACE presets) and the Reverb node's DSP route.",
       "links": [
         "media-space.md",
+        "world-builder-acoustic-zones.md",
         "world-builder-dynamic-sound.md",
         "world-builder.md"
       ]
@@ -2404,7 +2423,8 @@
       "links": [
         "animations-effects-plan.md",
         "world-builder-capture.md",
-        "world-builder-motion.md"
+        "world-builder-motion.md",
+        "world-builder-stories.md"
       ]
     },
     {
@@ -2415,10 +2435,12 @@
       "links": [
         "audiovisual-gpu-evaluation.md",
         "effects-catalogue.md",
+        "world-builder-acoustic-zones.md",
         "world-builder-capture.md",
         "world-builder-dynamic-sound.md",
         "world-builder-loops.md",
         "world-builder-sound.md",
+        "world-builder-stories.md",
         "world-builder.md"
       ]
     },
@@ -2428,6 +2450,17 @@
       "tags": ["3d", "world-builder", "sound"],
       "summary": "World Builder's Sound panel, the example track, the audio mod matrix, the reactive room presets and what the Comfy node shows of them.",
       "links": ["world-builder-dynamic-sound.md", "world-builder.md"]
+    },
+    {
+      "title": "Stories at human scale",
+      "path": "world-builder-stories.md",
+      "tags": ["3d", "world-builder", "studio", "sound"],
+      "summary": "Human-scale connected sets, continuous descent and street templates, scene sizing and explicit room-sound previews.",
+      "links": [
+        "world-builder-acoustic-zones.md",
+        "world-builder-loops.md",
+        "world-builder-motion.md"
+      ]
     },
     {
       "title": "World Builder verification — 16 October 2026",
@@ -2457,6 +2490,7 @@
         "world-builder-loops.md",
         "world-builder-motion.md",
         "world-builder-sound.md",
+        "world-builder-stories.md",
         "world-builder-verification.md",
         "world-live.md",
         "world-recipe-handoff.md"

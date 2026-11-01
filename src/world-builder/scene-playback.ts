@@ -62,6 +62,7 @@ export function runPreview(p: PreviewLoop) {
       if (live()) p.fail(e);
       return;
     }
+    if (!live()) return;
     if (position.done) return p.finish();
     if (live()) animation = request(() => void tick());
   }

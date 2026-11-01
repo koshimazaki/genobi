@@ -4,6 +4,7 @@ import type { ScenePreset } from "./world-presets";
 import { validateRecipe } from "./recipe";
 import { reconcileDuration, TAKE_FRAMES } from "./take-duration";
 import { createMotionPreset } from "./motion-presets";
+import { DescentViewControls } from "./DescentViewControls";
 
 const DETAIL_GROUPS = [
   {
@@ -104,6 +105,11 @@ export function ScenePresetDetail({
             : preset.summary}
         </p>
         <div className="effect-controls">
+          <DescentViewControls
+            recipe={recipe}
+            disabled={disabled}
+            onChange={setBase}
+          />
           {detail && (
             <label className="effect-control">
               <span>{detail.label}</span>

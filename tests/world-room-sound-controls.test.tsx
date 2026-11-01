@@ -37,7 +37,7 @@ const pcm = (): Awaited<ReturnType<typeof decodeAudio>> => ({
   channels: [new Float32Array(3000).fill(0.05)],
   sampleRate: 8000,
   envelope: [0.8],
-  bands: { sub: [0.1], low: [0.4], mid: [0.3], high: [0.2] },
+  bands: { sub: [0.5], low: [0.4], mid: [0.3], high: [0.2] },
 });
 const file = (name: string) =>
   Object.assign(new NodeBlob([name], { type: "audio/wav" }), {
