@@ -32,14 +32,6 @@ jobs:
       - name: Install
         run: npm ci
 
-      # Temporary PR-only formatting diagnostic. This step will be removed
-      # once the exact upstream Prettier changes are applied to the branch.
-      - name: Show formatting diff
-        run: |
-          npx prettier --write tests/image-provider.test.ts tests/klein-cloud-preflight.test.ts tests/klein-workflow.test.ts workflows/flux-3-klein-t2i.README.md
-          git diff -- tests/image-provider.test.ts tests/klein-cloud-preflight.test.ts tests/klein-workflow.test.ts workflows/flux-3-klein-t2i.README.md
-          git restore -- tests/image-provider.test.ts tests/klein-cloud-preflight.test.ts tests/klein-workflow.test.ts workflows/flux-3-klein-t2i.README.md
-
       # Ordered cheapest-first, so an obvious failure reports in seconds
       # rather than after a full build.
       - name: Format
