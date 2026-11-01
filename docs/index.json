@@ -43,6 +43,7 @@
       "pages": [
         "akuspace-docker.md",
         "arena.md",
+        "audio-reactive-ltx-pilot.md",
         "audiovisual-gaps.md",
         "audiovisual-gpu-evaluation.md",
         "audiovisual-implementation.md",
@@ -59,6 +60,7 @@
         "seedvr2-upscale.md",
         "supervised-workflow-checks.md",
         "upscaling.md",
+        "vast-runner.md",
         "vfx-recipes/README.md",
         "vfx-recipes/anime-opening.md",
         "vfx-recipes/hologram-turntable.md",
@@ -191,6 +193,7 @@
         "akuspace-docker.md",
         "anime-teaser-template.md",
         "audio-analysis.md",
+        "audio-reactive-ltx-pilot.md",
         "audiovisual-gaps.md",
         "audiovisual-gpu-evaluation.md",
         "audiovisual-implementation.md",
@@ -367,6 +370,7 @@
         "seedvr2-upscale.md",
         "troubleshooting.md",
         "upscaling.md",
+        "vast-runner.md",
         "workflow-reference-library.md",
         "world-builder-acoustics.md",
         "world-builder.md"
@@ -468,6 +472,7 @@
       "meaning": "World Builder and Scene Adapter",
       "pages": [
         "adaptive-reverb.md",
+        "audio-reactive-ltx-pilot.md",
         "audiovisual-gaps.md",
         "audiovisual-gpu-evaluation.md",
         "audiovisual-implementation.md",
@@ -601,6 +606,7 @@
         "seedvr2-upscale.md",
         "templates.md",
         "upscaling.md",
+        "vast-runner.md",
         "voice-mode.md",
         "voice-setup.md",
         "workflow-reference-library.md"
@@ -655,6 +661,7 @@
         "architecture.md",
         "arena.md",
         "audio-analysis.md",
+        "audio-reactive-ltx-pilot.md",
         "audiovisual-gaps.md",
         "audiovisual-gpu-evaluation.md",
         "audiovisual-implementation.md",
@@ -768,6 +775,7 @@
         "templates.md",
         "troubleshooting.md",
         "upscaling.md",
+        "vast-runner.md",
         "verification.md",
         "vfx-recipes/README.md",
         "vfx-recipes/anime-opening.md",
@@ -985,6 +993,17 @@
       "tags": ["sound", "backend", "agents", "mcp"],
       "summary": "Audio analysis on the local server — tempo and a fitted beat grid, a downbeat estimate, onsets per band, intensity and key moments, with no Python; the optional librosa worker; the agent flow through genobi_audio_upload and genobi_audio_analysis.",
       "links": []
+    },
+    {
+      "title": "Audio-reactive LTX pilot",
+      "path": "audio-reactive-ltx-pilot.md",
+      "tags": ["workflows", "world-builder", "sound"],
+      "summary": "Capture editable music-driven fruit, architecture and descending-camera studies, then compare two local LTX candidates with the original soundtrack.",
+      "links": [
+        "vast-runner.md",
+        "world-builder-dynamic-sound.md",
+        "world-builder-loops.md"
+      ]
     },
     {
       "title": "Audiovisual scene gap audit",
@@ -2256,6 +2275,13 @@
       "tags": ["workflows", "models", "agents", "mcp", "bfl", "comfy"],
       "summary": "Upscaling video in Genobi - SeedVR2 (open) and FLUX Video Upscale (API), their real limits, run locations and payers, single and split runs (19 s parts plus the remainder, a local GPU's part length), the one-approval agent flow, failures, and the CLI and MCP commands.",
       "links": ["run-location.md", "seedvr2-upscale.md"]
+    },
+    {
+      "title": "Vast runner for the LTX experiments",
+      "path": "vast-runner.md",
+      "tags": ["workflows", "comfy", "models"],
+      "summary": "Prepare a pinned local ComfyUI worker on Vast, connect by SSH and check it before running LTX experiments.",
+      "links": []
     },
     {
       "title": "Verification",

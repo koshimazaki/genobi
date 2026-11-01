@@ -1,6 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { createMotionPreset } from "../src/world-builder/motion-presets";
 import { evaluateScene } from "../src/world-builder/evaluate-scene";
+import { validateRecipe } from "../src/world-builder/recipe";
+import {
+  reconcileDuration,
+  TAKE_FRAMES,
+} from "../src/world-builder/take-duration";
 import {
   buildAcousticSchedule,
   validateAcousticSchedule,
@@ -28,6 +33,65 @@ function fixedRoom() {
 }
 
 describe("full-frame acoustic sampling evidence", () => {
+  it("covers a full-length loop and retains an excursion beyond the old 241-frame limit", () => {
+    const original = fixedRoom();
+    const recipe = validateRecipe(
+      reconcileDuration(original, { ...original, frames: TAKE_FRAMES.max }),
+    );
+    recipe.bandEnvelopes.low = Array.from(
+      { length: recipe.frames },
+      (_, frame) => (frame === 700 ? 1 : 0),
+    );
+    const schedule = buildAcousticSchedule(recipe);
+    expect(validateAcousticSchedule(schedule)).toBe(schedule);
+    expect(schedule.frames).toBe(721);
+    expect(schedule.duration).toBe(721 / 24);
+    expect(schedule.snapshots.at(-1)?.frame).toBe(720);
+    expect(schedule.snapshots.some((snapshot) => snapshot.frame === 700)).toBe(
+      true,
+    );
+    expect(schedule.snapshots.length).toBeLessThanOrEqual(24);
+    expect(schedule.approximation!.comparedFrames).toBe(721);
+    expect(schedule.approximation!.authoredFramesRetained).toBe(3);
+    expect(() =>
+      validateAcousticSchedule({
+        ...schedule,
+        frames: 729,
+        duration: 729 / 24,
+      }),
+    ).toThrow(/schedule/);
+  });
+
+  it("renders the full-length picture duration and preserves finite PCM", async () => {
+    const original = fixedRoom();
+    const recipe = validateRecipe(
+      reconcileDuration(original, { ...original, frames: TAKE_FRAMES.max }),
+    );
+    const schedule = buildAcousticSchedule(recipe, {
+      static: true,
+      maxIRSeconds: 0.1,
+      sampleEveryFrames: 720,
+    });
+    const rate = 8000;
+    const samples = new Float32Array(Math.round(schedule.duration * rate));
+    const late = Math.round((700 * rate) / 24);
+    samples[0] = 0.25;
+    samples[late] = 0.25;
+    const output = await renderDynamicRoomAudio(
+      { channels: [samples], sampleRate: rate, envelope: [] },
+      schedule,
+      { wet: 0, dry: 1, tail: "trim-fade" },
+    );
+    expect(output.track.channels[0].length).toBe(Math.round((721 * rate) / 24));
+    expect(output.track.channels[0][0]).toBe(0.25);
+    expect(output.track.channels[0][late]).toBe(0.25);
+    expect(output.track.channels[0].every(Number.isFinite)).toBe(true);
+    expect(output.wav.size).toBe(44 + samples.length * 2);
+    expect(() =>
+      buildAcousticSchedule(recipe, { sampleEveryFrames: 721 }),
+    ).toThrow(/sampling/);
+  });
+
   it("cannot mistake pulses between uniform sample times for a static room", () => {
     const recipe = fixedRoom();
     recipe.bandEnvelopes.low = Array.from(
