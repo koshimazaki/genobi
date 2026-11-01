@@ -57,7 +57,9 @@ export async function studio(
   )) {
     nodes[type] ??= {};
     for (const [name, values] of Object.entries(inputs))
-      nodes[type][name] = [...new Set([...(nodes[type][name] ?? []), ...values])];
+      nodes[type][name] = [
+        ...new Set([...(nodes[type][name] ?? []), ...values]),
+      ];
   }
   // Base is the new default, Distilled remains explicitly selectable for
   // earlier takes. Their diffusion weights are never interchangeable.
