@@ -165,7 +165,9 @@ describe("Cloudflare adapter: the workflow route through the Comfy SDK", () => {
     });
     expect(graph["18:7"].inputs.latent_image).toEqual(["reference-latents", 2]);
     expect(graph["18:17"].inputs.value).toContain("src_bbox");
-    expect(sent.every((r) => r.bearer)).toBe(true);
+    expect(sent.filter((r) => r.path === "/api/object_info")).toHaveLength(1);
+    expect(sent.find((r) => r.path === "/api/object_info")?.apiKey).toBe(true);
+    expect(sent.filter((r) => r.path !== "/api/object_info").every((r) => r.bearer)).toBe(true);
   });
 
   it("refuses music before any quote, reservation or Cloud request", async () => {
