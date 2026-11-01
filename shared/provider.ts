@@ -171,10 +171,12 @@ export function chooseKey(
   keys: Partial<Record<KeyKind, string>>,
   preference: ProviderChoice = "auto",
 ): string | undefined {
-  const kind = chooseKeyKind(generator, model, {
-    comfy: Boolean(keys.comfy),
-    bfl: Boolean(keys.bfl),
-  }, preference);
+  const kind = chooseKeyKind(
+    generator,
+    model,
+    { comfy: Boolean(keys.comfy), bfl: Boolean(keys.bfl) },
+    preference,
+  );
   return kind && keys[kind];
 }
 
