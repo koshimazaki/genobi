@@ -52,7 +52,7 @@ describe("FLUX 3 Image Klein in the registry", () => {
       family: "flux",
       generator: "image",
       route: "workflow",
-      model: "workflow/flux-3-klein-t2i",
+      model: "workflow/flux-3-klein-base-t2i",
       camera: "flux-3",
       open: true,
     });
