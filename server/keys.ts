@@ -155,11 +155,17 @@ export class ServerKeys {
     return KEY_KINDS.some((kind) => Boolean(this.key(kind)));
   }
   /** The key a run uses: `chooseKey` between Comfy and BFL. */
-  forRun(generator: Generator, model: VideoModel, preference: ProviderChoice = "auto") {
-    return chooseKey(generator, model, {
-      comfy: this.key("comfy"),
-      bfl: this.key("bfl"),
-    }, preference);
+  forRun(
+    generator: Generator,
+    model: VideoModel,
+    preference: ProviderChoice = "auto",
+  ) {
+    return chooseKey(
+      generator,
+      model,
+      { comfy: this.key("comfy"), bfl: this.key("bfl") },
+      preference,
+    );
   }
   /**
    * Whose key `forRun` picked: a key from the environment is the studio's own
@@ -317,7 +323,11 @@ export function runCredential(
   if (byoKey) {
     const entered = requireKey(byoKey);
     if (preference !== "auto" && keyKind(entered) !== preference)
-      throw new AppError(400, `This run selected ${preference === "bfl" ? "BFL" : "Comfy"}, but the connected page key belongs to the other provider.`, "invalid_key");
+      throw new AppError(
+        400,
+        `This run selected ${preference === "bfl" ? "BFL" : "Comfy"}, but the connected page key belongs to the other provider.`,
+        "invalid_key",
+      );
     return { key: entered, mode: "byo" };
   }
   const held = keys.forRun(generator, model, preference);
@@ -328,7 +338,11 @@ export function runCredential(
   // No key at all: name the key this route needs, not BFL for every route.
   if (!held) {
     if (preference !== "auto")
-      throw new AppError(400, `Connect a ${preference === "bfl" ? "BFL" : "Comfy"} key for the selected provider.`, "invalid_key");
+      throw new AppError(
+        400,
+        `Connect a ${preference === "bfl" ? "BFL" : "Comfy"} key for the selected provider.`,
+        "invalid_key",
+      );
     throw missingKeyError(model);
   }
   const key = requireKey(held);
