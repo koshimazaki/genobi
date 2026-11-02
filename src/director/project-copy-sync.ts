@@ -42,14 +42,13 @@ export class CopySync {
   private failed = -1;
   /** Why `failed` was not saved: the server's refusal, or no answer. */
   private failure: CopyProblem = { kind: "unreachable" };
-  /**
-   * Reloads that replaced the person's own edits, and that count when one of
-   * their revisions was last accepted: while they differ, the replaced
-   * version is only in undo history, which leaving the page throws away.
-   */
+  /** Numbers each reload that replaced the person's own edits. */
   private overwritten = 0;
-  /** Projects whose replaced edits await a save or an answer, with the
-   * `overwritten` count of their latest replacement. */
+  /**
+   * Projects whose replaced edits live only in undo history (which leaving
+   * the page throws away) until a save or an answer settles them, with the
+   * `overwritten` number of their latest replacement.
+   */
   private unsettled = new Map<string, number>();
   private timer: ReturnType<typeof setTimeout> | undefined;
   /** Projects whose copy this page has asked about (`openCopy`). */
@@ -274,15 +273,17 @@ export class CopySync {
     const open = this.current()?.project.id;
     return (
       this.holdsCurrent() &&
-      this.unsettled.size === 0 &&
+      !this.unsettled.has(open ?? "") &&
+      // Generate and Regenerate need only the open project; leaving needs all.
       (!allProjects ||
-        Object.values(this.state.director.drafts).every(
-          ({ bundle, history }) =>
-            bundle.project.id === open ||
-            !history.length ||
-            this.synced.get(bundle.project.id)?.local ===
-              bundle.project.revision,
-        ))
+        (this.unsettled.size === 0 &&
+          Object.values(this.state.director.drafts).every(
+            ({ bundle, history }) =>
+              bundle.project.id === open ||
+              !history.length ||
+              this.synced.get(bundle.project.id)?.local ===
+                bundle.project.revision,
+          )))
     );
   }
   /**
@@ -293,7 +294,8 @@ export class CopySync {
    */
   whyNotSaved(): CopyProblem | undefined {
     if (this.current()?.project.revision === this.failed) return this.failure;
-    if (this.holdsCurrent() && this.unsettled.size > 0)
+    const open = this.current()?.project.id;
+    if (this.holdsCurrent() && open && this.unsettled.has(open))
       return { kind: "replaced" };
   }
   /** The server's copy holds the store's current revision (or none is open). */

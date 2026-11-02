@@ -194,8 +194,11 @@ describe("the studio's copy rules", () => {
       "project-b",
     ]);
     decisions[1].keepTheirs!();
-    // A's replaced draft still lives only in Undo: leaving must still ask.
+    // A's replaced draft still lives only in Undo: leaving must still ask,
+    // but B's own save (Generate, Regenerate) is not blocked by A.
     expect(await sync.flush(true)).toBe(false);
+    expect(await sync.flush()).toBe(true);
+    expect(sync.whyNotSaved()).toBeUndefined();
     sync.stop();
   });
 

@@ -6,6 +6,7 @@ const bundle = (revision: number) =>
   ({ project: { id: "p", revision } }) as unknown as Bundle;
 
 function choice(state: {
+  overwrittenAt?: number;
   revision: number;
   local: number;
   server: number;
@@ -19,7 +20,7 @@ function choice(state: {
     id: "p",
     revision: 4,
     kind: "saved-copy",
-    overwrittenAt: 2,
+    overwrittenAt: state.overwrittenAt ?? 2,
     current: () => bundle(state.revision),
     synced: () => ({ local: state.local, server: state.server }),
     latest: () => state.latest,
@@ -52,6 +53,21 @@ describe("the saved-copy choice", () => {
     });
     made.keepTheirs!();
     expect(accept).not.toHaveBeenCalled();
+  });
+
+  it("an older offer cannot settle a newer replacement; the newest can", () => {
+    const older = choice({
+      overwrittenAt: 1,
+      revision: 4,
+      local: 4,
+      server: 4,
+      latest: 2,
+    });
+    older.made.keepTheirs!();
+    expect(older.accept).not.toHaveBeenCalled();
+    const newest = choice({ revision: 4, local: 4, server: 4, latest: 2 });
+    newest.made.keepTheirs!();
+    expect(newest.accept).toHaveBeenCalledOnce();
   });
 
   it("does nothing when this project has nothing left to settle", () => {
