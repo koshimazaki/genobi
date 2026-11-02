@@ -10,7 +10,7 @@ interface CopyChoiceInput {
   overwrittenAt: number;
   current: () => Bundle | undefined;
   synced: () => Synced | undefined;
-  counters: () => { overwritten: number; keptAt: number };
+  counters: () => [overwritten: number, keptAt: number];
   accept: () => void;
   restore: () => void;
 }
@@ -24,7 +24,7 @@ export function copyChoice(input: CopyChoiceInput): CopyConflict {
     keepTheirs: () => {
       const current = input.current()?.project;
       const synced = input.synced();
-      const { overwritten, keptAt } = input.counters();
+      const [overwritten, keptAt] = input.counters();
       // Never clear an earlier unacknowledged revision or accept after a new edit.
       if (
         current?.id === id &&
