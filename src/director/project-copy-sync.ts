@@ -10,6 +10,7 @@ import {
   type CopyManifest,
 } from "./project-copy";
 import type { SyncOptions, Synced } from "./project-copy-sync-options";
+import { copyChoice } from "./project-copy-choice";
 
 /**
  * The rules that keep the server's copy in step with the store, which stays
@@ -181,11 +182,16 @@ export class CopySync {
             ? "Another window changed this project"
             : "This project already had a saved copy");
       // The person's version now lives only in undo history (flush).
+      // Keep the previous draft recoverable through an explicit choice.
+      const mine = this.current()!;
       if (unpushed || why) this.overwritten++;
       this.state.actions.commit(copy);
       this.settle(id, revision);
       this.openedAt.delete(id);
-      if (reason)
+      const savedChoice = why === "This project already had a saved copy";
+      if (savedChoice && this.options.conflict)
+        this.offerMine(id, mine, "saved-copy");
+      else if (reason)
         this.options.notice(
           `${reason}; reloaded revision ${revision} from the project copy. Undo brings back your version.`,
         );
@@ -230,17 +236,7 @@ export class CopySync {
   stop() {
     clearTimeout(this.timer);
   }
-  /**
-   * Saves what is waiting now (leave-guard.ts): waits for a push or reload
-   * already out, pushes again while the revision moved on, and answers
-   * whether the server's copy holds the store's current revision. A revision
-   * the server refused is not retried here, so it answers false, and so does
-   * a copy that holds the current revision only because a reload replaced
-   * the person's edits (a conflict, or another writer such as the linked
-   * agent): their version is then in undo history alone. `allProjects`
-   * (leaving the page) also needs every other project the person edited
-   * and switched away from saved; linking the open copy to an agent does not.
-   */
+  /** Flush pending changes, protecting drafts replaced by a remote copy. */
   async flush(allProjects = false): Promise<boolean> {
     this.stop();
     const kept = () => this.kept(allProjects);
@@ -254,13 +250,7 @@ export class CopySync {
     }
     return kept();
   }
-  /**
-   * What `flush` would answer, without saving, for `beforeunload` (which
-   * cannot wait): nothing out or waiting, the copy holds the current
-   * revision, and no reload replaced the person's edits since their last
-   * saved revision. A push waiting on its 600 ms timer, a refused revision
-   * and a reload held for a render all read as not synced.
-   */
+  /** Read whether all pending work is synced, without performing a write. */
   isSynced() {
     return !this.pushing && !this.reloading && !this.staleId && this.kept(true);
   }
@@ -384,32 +374,41 @@ export class CopySync {
    * replacing the agent's changes, but only once they say so. Their answer
    * builds on the revision they were shown; a newer one asks again.
    */
-  private offerMine(id: string, mine: Bundle) {
+  private offerMine(
+    id: string,
+    mine: Bundle,
+    kind: "agent" | "saved-copy" = "agent",
+  ) {
     const revision = this.synced.get(id)?.server;
     if (!this.options.conflict || revision === undefined) return;
-    this.options.conflict({
-      projectId: id,
-      revision,
-      keepMine: () => {
-        if (this.current()?.project.id !== id) return;
-        if (this.synced.get(id)?.server !== revision)
-          return this.offerMine(id, mine);
-        // Above the agent's revision, so the push builds on it.
-        this.state.actions.commit(mine);
-        this.schedule(0);
-      },
-    });
+    const overwrittenAt = this.overwritten;
+    this.options.conflict(
+      copyChoice({
+        id,
+        revision,
+        kind,
+        overwrittenAt,
+        current: () => this.current(),
+        synced: () => this.synced.get(id),
+        counters: () => [this.overwritten, this.keptAt],
+        accept: () => {
+          this.keptAt = overwrittenAt;
+        },
+        restore: () => {
+          if (this.current()?.project.id !== id) return;
+          if (this.synced.get(id)?.local !== this.current()?.project.revision)
+            return this.options.notice(
+              "Project changed; review before restoring an older draft.",
+            );
+          if (this.synced.get(id)?.server !== revision)
+            return this.offerMine(id, mine, kind);
+          this.state.actions.commit(mine);
+          this.schedule(0);
+        },
+      }),
+    );
   }
-
-  /**
-   * A page's first push of a project asks whether the server already holds
-   * a copy (a reload, another window, an earlier visit). If it does, the
-   * page opens that copy rather than pushing over it, which the server
-   * refuses with 409 `revision_conflict`. A page that only loaded the
-   * project says it opened the saved copy; one with edits of its own says
-   * the copy replaced them and Undo brings them back, as a conflict does.
-   * Answers whether the copy was opened (no push needed).
-   */
+  /** Read a saved project before the first push, without overwriting it. */
   private async openCopy(id: string) {
     this.opened.add(id);
     this.upgraded = "";

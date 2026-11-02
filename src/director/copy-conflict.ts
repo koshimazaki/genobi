@@ -8,11 +8,15 @@
 import { useSyncExternalStore } from "react";
 
 export interface CopyConflict {
+  /** A saved project reopened over a draft, or a conflict with an agent. */
+  kind?: "saved-copy" | "agent";
   projectId: string;
   /** The agent's revision now open in the studio. */
   revision: number;
   /** Puts the person's version back and pushes it over the agent's. */
   keepMine: () => void;
+  /** Acknowledges that the current saved copy is the one to keep. */
+  keepTheirs?: () => void;
 }
 
 let open: CopyConflict | undefined;
@@ -35,6 +39,7 @@ export function answerCopyConflict(keepMine: boolean) {
   open = undefined;
   emit();
   if (keepMine) answered?.keepMine();
+  else answered?.keepTheirs?.();
 }
 
 export const copyConflict = () => open;
