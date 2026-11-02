@@ -113,6 +113,23 @@ and smooth workspace transitions remain planned.
   the drawer fits a 390 px screen with no sideways scroll.
   Run locally only; nothing was deployed.
 
+## Saved local project copies
+
+The local studio keeps a server-side project copy as agents and the browser edit.
+Opening a project with no competing draft restores that copy automatically.
+When a separately chosen template or edited draft has the same project ID as an
+existing copy, Genobi opens the saved revision **and displays a choice**:
+**Keep saved copy** acknowledges it, or **Restore my version** commits the
+earlier draft above the saved revision. The earlier draft is in Undo until the
+page is left, and the app will not silently overwrite a newer agent revision;
+a concurrent edit is subject to the normal revision-conflict check. Neither
+choice starts paid generation.
+
+In the Director/Editor template-media panel, each source's preview, upload
+button and project asset picker stay together in a full-width card when the
+available pane is too narrow for two readable cards. Wider dialogs still
+display multiple columns.
+
 ## Try it
 
 ```sh
