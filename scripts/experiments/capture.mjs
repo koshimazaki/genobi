@@ -23,6 +23,10 @@ const { values } = parseArgs({
     cues: { type: "string" },
     browser: { type: "string" },
     port: { type: "string", default: "4518" },
+    "band-gain": { type: "string", default: "1" },
+    "motion-gain": { type: "string", default: "1" },
+    radius: { type: "string" },
+    orbit: { type: "string" },
     help: { type: "boolean" },
   },
 });
@@ -40,6 +44,35 @@ const dimensions = {
 const start = Number(values.start),
   port = Number(values.port);
 const studies = values.studies.split(",");
+// Audio reactivity knobs. Measured 2 Nov 2026: raw band envelopes average
+// 0.04-0.1 with peaks near 0.3, so the default mapping amounts move a 44-unit
+// scene by a few hundredths of a unit; the guide reads as static between cues.
+// band-gain "auto" rescales each band so its 95th percentile sits at 0.8
+// (clamped to 1); motion-gain multiplies every mapping amount (clamped to its
+// range) and raises motion intensity to 1 when above 1. Both are recorded.
+const bandGain =
+  values["band-gain"] === "auto" ? "auto" : Number(values["band-gain"]);
+const motionGain = Number(values["motion-gain"]);
+if (
+  (bandGain !== "auto" &&
+    !(Number.isFinite(bandGain) && bandGain >= 0.1 && bandGain <= 20)) ||
+  !(Number.isFinite(motionGain) && motionGain >= 0.1 && motionGain <= 20)
+)
+  throw new Error("Use --band-gain auto or 0.1-20 and --motion-gain 0.1-20.");
+// Optional camera pull-back (world units, 2-240) so lifted towers stay in frame.
+const radius = values.radius === undefined ? null : Number(values.radius);
+if (
+  radius !== null &&
+  !(Number.isFinite(radius) && radius >= 2 && radius <= 240)
+)
+  throw new Error("Use --radius 2-240.");
+// Optional camera orbit in degrees over the whole take; 360 is one full turn.
+const orbit = values.orbit === undefined ? null : Number(values.orbit);
+if (
+  orbit !== null &&
+  !(Number.isFinite(orbit) && orbit >= -360 && orbit <= 360)
+)
+  throw new Error("Use --orbit -360..360 degrees.");
 if (
   ![97, 193, 241].includes(dimensions.frames) ||
   [dimensions.width, dimensions.height].some(
@@ -50,7 +83,10 @@ if (
   !Number.isInteger(port) ||
   port < 1024 ||
   port > 65535 ||
-  studies.some((s) => !["fruit", "architecture", "falling", "room"].includes(s))
+  studies.some(
+    (s) =>
+      !["fruit", "architecture", "clockwork", "falling", "room"].includes(s),
+  )
 )
   throw new Error(
     "Use 97/193/241 frames (4 s, 8 s, 10 s), 256–1920 dimensions divisible by 64, a non-negative audio offset and known study IDs.",
@@ -164,7 +200,7 @@ try {
   });
   await page.exposeFunction("savePilotFile", async (name, bytes) => {
     if (
-      !/^(fruit|architecture|falling|room)\/[a-z0-9-]+\.(json|png|wav|webm)$/.test(
+      !/^(fruit|architecture|clockwork|falling|room)\/[a-z0-9-]+\.(json|png|wav|webm)$/.test(
         name,
       )
     )
@@ -177,12 +213,17 @@ try {
   const reports = [];
   for (const study of studies) {
     const report = await page.evaluate(
-      async ({ study, dimensions, cues }) => {
+      async ({ study, dimensions, cues, reactivity }) => {
         const { captureStudy } =
           await import("/scripts/experiments/capture-browser.ts");
-        return captureStudy(study, dimensions, cues);
+        return captureStudy(study, dimensions, cues, reactivity);
       },
-      { study, dimensions, cues },
+      {
+        study,
+        dimensions,
+        cues,
+        reactivity: { bandGain, motionGain, radius, orbit },
+      },
     );
     for (const pass of ["rgb.webm", "depth.webm"]) {
       const probe = inspect(join(output, study, pass), true),

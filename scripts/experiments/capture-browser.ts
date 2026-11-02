@@ -7,6 +7,43 @@ import { renderDynamicRoomAudio } from "../../src/world-builder/dynamic-room-aud
 import { roomSoundReceipt } from "../../src/world-builder/room-sound-receipt";
 import { evaluateScene } from "../../src/world-builder/evaluate-scene";
 import { createStudy, type Cue, type Study } from "./recipes";
+import { SCENE_MAPPING_RANGES } from "../../src/world-builder/scene-state";
+
+export interface Reactivity {
+  /** "auto": per band, scale so the 95th percentile is 0.8, clamped to 1. */
+  bandGain: number | "auto";
+  /** Multiplies every mapping amount within its range; >1 sets intensity 1. */
+  motionGain: number;
+  /** Camera radius override in world units; null keeps the study's own. */
+  radius?: number | null;
+  /** Camera orbit in degrees over the take; null keeps the study's own. */
+  orbit?: number | null;
+}
+
+function percentile(values: number[], q: number) {
+  const sorted = [...values].sort((a, b) => a - b);
+  return (
+    sorted[Math.min(sorted.length - 1, Math.floor(q * sorted.length))] ?? 0
+  );
+}
+
+export function scaleBands<T extends Record<string, number[] | undefined>>(
+  bands: T,
+  gain: number | "auto",
+): { bands: T; gains: Record<string, number> } {
+  const gains: Record<string, number> = {};
+  const out = { ...bands };
+  for (const [name, data] of Object.entries(bands)) {
+    if (!data?.length) continue;
+    const p95 = percentile(data, 0.95);
+    const g = gain === "auto" ? (p95 > 0 ? 0.8 / p95 : 1) : gain;
+    gains[name] = Number(g.toFixed(4));
+    (out as Record<string, number[]>)[name] = data.map((v) =>
+      Math.min(1, Math.max(0, v * g)),
+    );
+  }
+  return { bands: out, gains };
+}
 import { assertAudioExcerpt, serializeRecipe } from "./contracts";
 
 declare global {
@@ -19,19 +56,49 @@ export async function captureStudy(
   study: Study,
   dimensions: { width: number; height: number; frames: number },
   cues?: Cue[],
+  reactivity: Reactivity = {
+    bandGain: 1,
+    motionGain: 1,
+    radius: null,
+    orbit: null,
+  },
 ) {
   const source = await (await fetch("/__pilot_track")).blob();
   const track = await decodeAudio(source);
   assertAudioExcerpt(track, dimensions.frames);
+  const scaled = scaleBands(track.bands!, reactivity.bandGain);
   const { recipe, metadata } = createStudy(
     study,
     {
       envelope: track.envelope,
-      bandEnvelopes: track.bands!,
+      bandEnvelopes: scaled.bands,
     },
     dimensions,
     cues,
   );
+  if (recipe.motion && reactivity.motionGain !== 1) {
+    for (const mapping of recipe.motion.mappings) {
+      const [lo, hi] = SCENE_MAPPING_RANGES[mapping.property];
+      mapping.amount = Math.min(
+        hi,
+        Math.max(lo, mapping.amount * reactivity.motionGain),
+      );
+    }
+    if (reactivity.motionGain > 1) recipe.motion.intensity = 1;
+  }
+  if (reactivity.radius != null) recipe.radius = reactivity.radius;
+  if (reactivity.orbit != null) recipe.orbit = reactivity.orbit;
+  Object.assign(metadata, {
+    reactivity: {
+      radius: recipe.radius,
+      orbit: recipe.orbit,
+      bandGain: reactivity.bandGain,
+      bandGainsApplied: scaled.gains,
+      motionGain: reactivity.motionGain,
+      intensity: recipe.motion?.intensity ?? null,
+      mappings: recipe.motion?.mappings ?? [],
+    },
+  });
   const recipeFile = serializeRecipe(recipe);
   const save = async (name: string, blob: Blob) =>
     window.savePilotFile(

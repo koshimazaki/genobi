@@ -7,7 +7,12 @@ import type {
 } from "../../src/world-builder/scene-state";
 import { assertAnalysisFrames, assertGuideBounds } from "./contracts";
 
-export type Study = "fruit" | "architecture" | "falling" | "room";
+export type Study =
+  | "fruit"
+  | "architecture"
+  | "clockwork"
+  | "falling"
+  | "room";
 export interface Cue {
   frame: number;
   source: "low" | "high" | "authored";
@@ -286,6 +291,84 @@ function falling(recipe: Recipe) {
   return entry;
 }
 
+/** A clockwork mass: stacked discs with vanes that can visibly turn.
+ *  It reuses the preset's exact instance count, so every voxel keeps its id. */
+function clockwork(total: number): SceneTransform[] {
+  const round = (v: number) => Math.round(v * 10000) / 10000;
+  const core = Math.min(8, Math.max(2, Math.round(total / 8)));
+  const layers = 4,
+    vanesTotal = total - core,
+    base = Math.floor(vanesTotal / layers);
+  const out: SceneTransform[] = [];
+  for (let i = 0; i < core; i++)
+    out.push({
+      x: 0,
+      y: round(0.4 + i * 0.56),
+      z: 0,
+      scale: 1,
+      scaleX: round(1.15 - i * 0.06),
+      scaleY: 0.16,
+      scaleZ: round(1.15 - i * 0.06),
+    });
+  let placed = 0;
+  for (let layer = 0; layer < layers; layer++) {
+    const count = base + (layer < vanesTotal - base * layers ? 1 : 0),
+      radius = 1.12 + layer * 0.3,
+      y = round(0.52 + layer * 0.56);
+    for (let vane = 0; vane < count; vane++, placed++) {
+      const raw = (vane / count) * Math.PI * 2 + layer * 0.18;
+      // Rotation is bounded to -pi..pi, so wrap a full turn back into range.
+      const angle = raw > Math.PI ? raw - Math.PI * 2 : raw;
+      out.push({
+        x: round(radius * Math.cos(angle)),
+        y,
+        z: round(radius * Math.sin(angle)),
+        scale: 1,
+        scaleX: 1.45,
+        scaleY: 0.18,
+        scaleZ: 0.34,
+        // Stay clear of +-pi: compact() rounds to 3 decimals, so 3.1415 becomes 3.142.
+        rotation: round(Math.max(-3.141, Math.min(3.141, angle))),
+      });
+    }
+  }
+  return out.slice(0, total);
+}
+
+/** One slow 360 degree orbit around the mass, a key every 30 degrees. *//** One slow 360 degree orbit around the mass, a key every 30 degrees. */
+function orbit360(recipe: Recipe) {
+  const keys = 9,
+    radius = recipe.radius ?? 44,
+    elevation = ((recipe.elevation ?? 18) * Math.PI) / 180,
+    targetY = recipe.targetY ?? 10;
+  const round = (n: number) => Math.round(n * 100) / 100;
+  return {
+    version: 1 as const,
+    enabled: true,
+    keys: Array.from({ length: keys }, (_, i) => {
+      const azimuth = (((360 / (keys - 1)) * i) * Math.PI) / 180;
+      return {
+        id: `orbit-${i}`,
+        frame: Math.round(((recipe.frames ?? 193) - 1) * (i / (keys - 1))),
+        easing: "linear" as const,
+        position: [
+          round(radius * Math.cos(elevation) * Math.sin(azimuth)),
+          round(targetY + radius * Math.sin(elevation)),
+          round(radius * Math.cos(elevation) * Math.cos(azimuth)),
+        ] as [number, number, number],
+        target: [0, targetY, 0] as [number, number, number],
+        fov: recipe.fov ?? 46,
+      };
+    }),
+    audio: {
+      enabled: true,
+      source: "low" as const,
+      amount: 0.12,
+      motion: "push" as const,
+    },
+  };
+}
+
 export function createStudy(
   study: Study,
   analysis: Pick<Recipe, "envelope" | "bandEnvelopes">,
@@ -297,6 +380,7 @@ export function createStudy(
   const preset = {
     fruit: "fruit-morph-fine",
     architecture: "voxel-architecture-128",
+    clockwork: "voxel-architecture-128",
     falling: "city-to-loft",
     room: "apartment-morph",
   }[study];
@@ -306,7 +390,7 @@ export function createStudy(
     last = recipe.frames - 1;
   let cues: Cue[] = [],
     indoorFromFrame: number | null = null;
-  if (study === "fruit" || study === "architecture") {
+  if (study === "fruit" || study === "architecture" || study === "clockwork") {
     const states = structuredClone(motion.stateKeys);
     if (study === "fruit") {
       [states[1], states[2]] = [states[2], states[1]];
@@ -372,8 +456,74 @@ export function createStudy(
       recipe.prompt =
         "A monumental stepped pyramid rearranges into a cluster of tall towers, then a floating faceted diamond. Preserve the same material pieces and exact framing. Warm limestone with subtle metallic edges against a dark minimal environment.";
     }
-    cues = inputCues ?? selectCues(recipe);
-    motion.stateKeys = bakeCues(states, cues, recipe.frames);
+    if (study === "clockwork") {
+      // One mass that twists in place instead of morphing into other shapes:
+      // the shape stays a pyramid, the pieces turn like a clockwork.
+      motion.mappings = [
+        {
+          // Voice turns the mass: the clockwork's main rotation.
+          id: "twist-mid",
+          property: "twistY",
+          source: "mid",
+          amount: 0.9,
+          enabled: true,
+        },
+        {
+          // Bass lifts it off the plate.
+          id: "lift-low",
+          property: "lift",
+          source: "low",
+          amount: 0.5,
+          enabled: true,
+        },
+        {
+          // Hi-hat flickers the pieces apart, the percussive one.
+          id: "spread-high",
+          property: "spread",
+          source: "high",
+          amount: 0.28,
+          enabled: true,
+        },
+        {
+          // The kick rocks it forward and back.
+          id: "rock-sub",
+          property: "twistX",
+          source: "sub",
+          amount: 0.18,
+          enabled: true,
+        },
+      ];
+      states[0] = {
+        ...states[0],
+        label: "Clockwork",
+        // Vanes, not cubes: a twisted cube still reads as a cube.
+        objects: parts(
+          clockwork(Object.keys((states[0] as { objects: object }).objects).length),
+        ),
+      };
+      // One mass only: the other preset states would change the instance set.
+      states.splice(1);
+      motion.stateKeys = [
+        {
+          ...compact(structuredClone(states[0])),
+          id: "start",
+          frame: 0,
+          easing: "easeInOut" as const,
+        },
+      ];
+      // Fill the frame: the preset's 44-unit stand-off renders the mass tiny.
+      recipe.radius = 11.5;
+      recipe.targetY = 2.6;
+      recipe.elevation = 13;
+      recipe.fov = 42;
+      recipe.cameraMotion = orbit360(recipe);
+      recipe.prompt =
+        "A single clockwork pyramid of dark glass and steel voxels twists in place like a Rubik's cube, its terraces turning against each other to the music while cyan light runs along the seams. The camera circles it once, three hundred and sixty degrees. Same mass throughout, no other structure appears.";
+      cues = [];
+    } else {
+      cues = inputCues ?? selectCues(recipe);
+      motion.stateKeys = bakeCues(states, cues, recipe.frames);
+    }
   } else if (study === "falling") indoorFromFrame = falling(recipe);
   else
     motion.stateKeys.forEach((key, i) => {

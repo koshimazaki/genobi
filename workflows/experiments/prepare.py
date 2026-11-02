@@ -11,7 +11,9 @@ from common import HERE, REPO, digest, local_file, read_json, source_version, wr
 from graph import MODES, bindings, candidate, output_timing
 from media import audio_contract, image_contract, probe, video_contract
 
-SOURCE = REPO / "workflows/world-builder-l2r-a2v-studio.json"
+SOURCE = REPO / os.environ.get(
+    "GENOBI_PILOT_WORKFLOW", "workflows/world-builder-l2r-a2v-studio.json"
+)
 
 
 def recipe_contract(path, frames):
