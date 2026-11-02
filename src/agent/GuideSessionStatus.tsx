@@ -2,6 +2,7 @@ import type { AgentSession } from "../../shared/agent-session";
 import { isAgentActive } from "../../shared/agent-session-events";
 import { AgentVoiceButton } from "../voice/AgentVoiceButton";
 import { OPEN_DECK } from "./useAgentSession";
+import { approvable } from "../../shared/agent-approval";
 
 /** The newest received text: the agent's last reply, else its latest line. */
 export function sessionGlance(session: AgentSession) {
@@ -28,11 +29,22 @@ export function GuideSessionStatus({
 }) {
   const active = isAgentActive(session.status);
   const glance = sessionGlance(session);
+  const waiting = !!session.approvals?.some((a) => approvable(a));
   return (
     <div className="agent-bubble-copy" role="status" aria-atomic="true">
       <div className="agent-source">
-        {active ? "Agent working" : "Session finished"}
+        {waiting
+          ? "Approval waiting"
+          : active
+            ? "Agent working"
+            : "Session finished"}
       </div>
+      {waiting && (
+        <p className="agent-guide-note">
+          A paid step waits for your approval in the log below: its plan, price
+          and payer, with Approve and Decline. Nothing runs until you choose.
+        </p>
+      )}
       {glance && <p className="agent-latest">{glance}</p>}
       <p className="agent-guide-note">
         {active
@@ -48,7 +60,7 @@ export function GuideSessionStatus({
             window.dispatchEvent(new Event(OPEN_DECK));
           }}
         >
-          Open log
+          {waiting ? "Review approval" : "Open log"}
         </button>
       </div>
     </div>

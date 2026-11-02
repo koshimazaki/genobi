@@ -14,6 +14,7 @@ import {
 import { useLatestAgentSession } from "./useAgentSession";
 import { GuideSessionStatus } from "./GuideSessionStatus";
 import { isAgentActive } from "../../shared/agent-session-events";
+import { approvable } from "../../shared/agent-approval";
 import "./agent.css";
 import "./agent-header.css";
 
@@ -39,6 +40,12 @@ export function GenobiGuide({
   const pointers = guidePointers(shell?.preset);
   const session = useLatestAgentSession();
   const working = !!session && isAgentActive(session.status);
+  const waiting = !!session?.approvals?.some((a) => approvable(a));
+  const state = waiting
+    ? "Approval waiting"
+    : working
+      ? "Agent working"
+      : "Guide";
   const hide = () => {
     setOpen(false);
     launcher.current?.focus({ preventScroll: true });
@@ -128,7 +135,7 @@ export function GenobiGuide({
         ref={launcher}
         className="agent-launcher"
         aria-label={open ? "Close Genobi guide" : "Open Genobi guide"}
-        title={`Genobi · ${working ? "Agent working" : "Guide"}`}
+        title={`Genobi · ${state}`}
         aria-expanded={open}
         aria-controls={open ? id : undefined}
         onClick={() => (open ? hide() : setOpen(true))}
@@ -139,7 +146,7 @@ export function GenobiGuide({
         </span>
         <span className="agent-launcher-label">
           <strong>Genobi</strong>
-          <span>{working ? "Agent working" : "Guide"}</span>
+          <span>{state}</span>
         </span>
       </button>
     </aside>
