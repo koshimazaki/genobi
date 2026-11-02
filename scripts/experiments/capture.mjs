@@ -41,7 +41,7 @@ const start = Number(values.start),
   port = Number(values.port);
 const studies = values.studies.split(",");
 if (
-  ![97, 193].includes(dimensions.frames) ||
+  ![97, 193, 241].includes(dimensions.frames) ||
   [dimensions.width, dimensions.height].some(
     (n) => !Number.isInteger(n) || n < 256 || n > 1920 || n % 64,
   ) ||
@@ -53,7 +53,7 @@ if (
   studies.some((s) => !["fruit", "architecture", "falling", "room"].includes(s))
 )
   throw new Error(
-    "Use 97/193 frames, 256–1920 dimensions divisible by 64, a non-negative audio offset and known study IDs.",
+    "Use 97/193/241 frames (4 s, 8 s, 10 s), 256–1920 dimensions divisible by 64, a non-negative audio offset and known study IDs.",
   );
 if (
   dimensions.width * dimensions.height * dimensions.frames * 12 >
