@@ -196,9 +196,9 @@ describe("opening the owner's saved copy", () => {
     ]);
     // Undo returns to the copy as it was saved.
     expect(open.history.at(-1)!.project.revision).toBe(79);
-    // The notice row shows the last line: what opened, and what changed.
+    // The notice row shows what the upgrade changed; opening is silent.
     expect(notices.at(-1)).toMatch(
-      /^Opened this project's saved copy \(revision 79\)\. The end card is now the editable End card layer/,
+      /^The end card is now the editable End card layer/,
     );
     expect(await sync.flush()).toBe(true);
     const copy = (await (

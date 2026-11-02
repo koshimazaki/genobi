@@ -87,8 +87,13 @@ export function useDirectorRuntime(
           throw new Error(
             "Wait for playback, import or export to finish first.",
           );
-        if (before) state.actions.commit(opened.bundle, before);
-        else state.actions.initialize(opened.bundle);
+        // Opening is not editing: a saved copy of this project then opens
+        // silently instead of asking to restore an untouched template.
+        // A restored draft holds the person's edits, so it is not "opened".
+        if (before) {
+          state.actions.commit(opened.bundle, before);
+          if (!saved) state.actions.opened();
+        } else state.actions.initialize(opened.bundle);
         // A failed or cancelled load stays retryable on workspace reactivation.
         // Once handled, the same URL must not replace a later bundle import.
         handledRoute.current = routeSearch;

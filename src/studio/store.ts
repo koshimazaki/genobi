@@ -27,8 +27,9 @@ export interface StudioState {
     history: Bundle[];
     drafts: Record<string, Draft>;
     /**
-     * The bundle `initialize` set. While `bundle` is still this object the
-     * person has only loaded the page's project (project-copy-sync.ts).
+     * The bundle `initialize` or a route open set. While `bundle` is still
+     * this object the person has only opened the project, not edited it
+     * (project-copy-sync.ts opens its saved copy silently).
      */
     loaded?: Bundle;
   };
@@ -51,6 +52,8 @@ export interface StudioState {
   actions: {
     initialize: (bundle: Bundle) => void;
     commit: (bundle: Bundle, expected?: Bundle) => void;
+    /** Marks the current bundle as opened by navigation, not edited. */
+    opened: () => void;
     undo: () => void;
     workspace: (patch: Partial<WorkspaceState>) => void;
     /**
@@ -115,6 +118,11 @@ export function createStudioStore(advanced = false) {
             frame: Math.min(30, bundle.project.composition.durationFrames - 1),
           },
         });
+      },
+      opened() {
+        const { director } = get();
+        if (director.bundle)
+          set({ director: { ...director, loaded: director.bundle } });
       },
       commit(next, expected) {
         const state = get(),
