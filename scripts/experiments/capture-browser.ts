@@ -26,6 +26,8 @@ export interface Reactivity {
   bandSmooth?: number;
   /** Peak follower: instant attack, exponential release over this many frames (0 = off). Holds a hit instead of jittering. */
   bandRelease?: number;
+  /** Stage look override ("studio" draws a lit floor so the ground turns with the camera). */
+  stage?: string | null;
 }
 
 function percentile(values: number[], q: number) {
@@ -124,6 +126,8 @@ export async function captureStudy(
   if (reactivity.radius != null) recipe.radius = reactivity.radius;
   if (reactivity.orbit != null) recipe.orbit = reactivity.orbit;
   if (reactivity.elevation != null) recipe.elevation = reactivity.elevation;
+  if (reactivity.stage === "studio" || reactivity.stage === "dark-grid")
+    recipe.stageLook = reactivity.stage;
   if (reactivity.avatar) {
     recipe.avatar = true;
     recipe.avatarAsset = "mannequin";
@@ -139,6 +143,7 @@ export async function captureStudy(
       elevation: recipe.elevation,
       bandSmooth: reactivity.bandSmooth ?? 1,
       bandRelease: reactivity.bandRelease ?? 0,
+      stage: recipe.stageLook ?? null,
       bandGain: reactivity.bandGain,
       bandGainsApplied: scaled.gains,
       motionGain: reactivity.motionGain,

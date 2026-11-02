@@ -31,6 +31,7 @@ const { values } = parseArgs({
     elevation: { type: "string" },
     "band-smooth": { type: "string", default: "1" },
     "band-release": { type: "string", default: "0" },
+    stage: { type: "string" },
     help: { type: "boolean" },
   },
 });
@@ -245,6 +246,7 @@ try {
             values.elevation === undefined ? null : Number(values.elevation),
           bandSmooth: Number(values["band-smooth"]),
           bandRelease: Number(values["band-release"]),
+          stage: values.stage ?? null,
         },
       },
     );
