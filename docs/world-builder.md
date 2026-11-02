@@ -363,7 +363,7 @@ started anywhere in the studio while World Builder is on screen also carries
 `world` in its [context](agent-context.md): that the page is open, the
 project beside it, its last preset and the same summary. The server keeps it
 only for a session linked to that project, and the preset is forgotten when
-World Builder closes or the project changes. Nothing here captures or spends; the agent's
+World Builder closes or the project changes. Nothing here spends, and the agent captures only when asked; the agent's
 paid steps wait for approval as always.
 
 ## Named takes

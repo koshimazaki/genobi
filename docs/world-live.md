@@ -43,6 +43,40 @@ genobi world --input '{"action":"link","code":"CODE_FROM_WORLD"}'
 The result contains `id`. Use it as `session` below; the same CLI profile keeps
 the linked cookie. `--url http://127.0.0.1:PORT` selects a nondefault server.
 
+### Spoken control (no code)
+
+Nobody can speak a 32-character code, so a session the person started or
+spoke to from the studio reaches the open World tab without one. While World
+Builder is on screen and the studio follows a running session (the one the
+bubble shows: a session started from the studio, or the voice destination),
+the tab connects its bridge if it is not already connected and grants that
+run: `POST /api/world/:id/grant` with `{ "run": "<agent session id>" }`. The
+agent then calls `link` with no code and gets the same `id`:
+
+```json
+{ "action": "link" }
+```
+
+The grant is the person's, never the agent's:
+
+- Only the tab's own browser can grant (an agent's request, ticketed browser
+  or MCP server, is refused like any other non-owner), and only one of that
+  person's **running** sessions (`agents.active(owner)`).
+- It reaches that one run. The server reads the run from the request's
+  server-set scope (the run's grant header or its ticketed browser), never
+  from anything the agent sends, and checks the run's owner is the tab's.
+- It ends when the run ends (the scope is gone), on **Disconnect agents** or
+  disconnect, and on the five-minute expiry, like a code link. A connection
+  the tab opened only for a grant closes when World Builder leaves the screen
+  or the run ends; one opened with **Connect agents** stays as before.
+- After **Disconnect agents** the tab does not grant that run again; the next
+  session is granted as usual. A refused grant is not retried.
+
+World shows "Linked to the running agent session" while a grant is open.
+Terminal agents the studio did not start keep pairing with the code.
+`src/world-builder/world-link.ts` holds the tab's side and
+`tests/world-grant.test.ts` and `tests/world-link.test.ts` cover both sides.
+
 ```json
 {
   "action": "command",
@@ -176,8 +210,9 @@ the rules; `tests/world-capture.test.ts` covers them.
 All routes live below `/api/world` on the loopback-only local server, using its
 session cookie and same-origin checks. The owner tab POSTs `connect`, polls
 `/:id/next`, and acknowledges dispatched commands. Agents POST `link` with the
-one-use code, POST `/:id/commands`, GET `/:id/commands/:command`, and GET the
-returned file paths with their paired cookie. Only the owner can dispatch,
+one-use code (or GET `granted` for a run the tab granted, above), POST
+`/:id/commands`, GET `/:id/commands/:command`, and GET the returned file paths
+with their paired cookie. Only the owner can grant a run, dispatch,
 acknowledge, upload, clear `/:id/files` or DELETE `/:id` to disconnect.
 `GET /:id/files` lists the held files. Disconnect stops controls.
 
