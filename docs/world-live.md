@@ -57,6 +57,13 @@ agent then calls `link` with no code and gets the same `id`:
 { "action": "link" }
 ```
 
+**This is intended, and automatic.** The session the studio follows gets
+World control while World Builder is on screen, with no click and no prompt
+per command: it may steer, load presets, read the recipe, capture and send
+takes to the project, as a code-linked agent can. It still never spends.
+**Disconnect agents** declines the current run; the next session is granted
+again.
+
 The grant is the person's, never the agent's:
 
 - Only the tab's own browser can grant (an agent's request, ticketed browser
@@ -212,9 +219,14 @@ session cookie and same-origin checks. The owner tab POSTs `connect`, polls
 `/:id/next`, and acknowledges dispatched commands. Agents POST `link` with the
 one-use code (or GET `granted` for a run the tab granted, above), POST
 `/:id/commands`, GET `/:id/commands/:command`, and GET the returned file paths
-with their paired cookie. Only the owner can grant a run, dispatch,
-acknowledge, upload, clear `/:id/files` or DELETE `/:id` to disconnect.
-`GET /:id/files` lists the held files. Disconnect stops controls.
+with their paired cookie. Linked and granted agents only submit and read
+commands and list and download files; the owner's tab alone grants a run,
+takes commands from `/:id/next`, acknowledges them, uploads, clears
+`/:id/files` and DELETEs `/:id` to disconnect. Disconnect stops controls.
+**Connect agents** replaces the owner's other World sessions; the automatic
+link for a grant connects with `keep`, so a second World view or a remount
+never ends another tab's session. When two views grant the same run,
+`granted` returns the latest grant.
 
 Connections, commands and the latest clip or take are memory-only. Four
 sessions, 16 pending commands and 64 command receipts per session are allowed.
