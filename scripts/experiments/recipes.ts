@@ -291,11 +291,13 @@ function falling(recipe: Recipe, cathedralOnly = false) {
         amount: 0.5,
         enabled: true,
       },
+      // The room box is invisible; the piers are what the eye sees, so the
+      // bass pushes them apart (the distance between the buildings).
       {
         id: "walls",
-        source: "high",
+        source: "low",
         property: "spread",
-        amount: 0.02,
+        amount: 0.12,
         enabled: true,
       },
     ];
@@ -306,17 +308,17 @@ function falling(recipe: Recipe, cathedralOnly = false) {
         {
           id: "nave-a",
           frame: 0,
-          position: [0, 17, 14],
-          target: [0, 2, -12],
-          fov: 60,
+          position: [0, 21, 15],
+          target: [0, 0, -3],
+          fov: 66,
           easing: "easeInOut",
         },
         {
           id: "nave-b",
           frame: last,
-          position: [0, 15, 9],
-          target: [0, 2, -12],
-          fov: 60,
+          position: [0, 19, 11],
+          target: [0, 0, -3],
+          fov: 66,
           easing: "easeInOut",
         },
       ],
