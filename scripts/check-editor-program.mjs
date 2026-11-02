@@ -145,11 +145,11 @@ try {
   await page
     .getByText("Ready · local preview", { exact: true })
     .waitFor({ timeout: 60000 });
-  // The panel is a closed <details>, so the button is read from the page.
+  // The finished render offers its own Add to project assets.
   const keep = await page.evaluate(() => {
     const button = [
-      ...document.querySelectorAll(".dir-saved-videos button"),
-    ].find((b) => /rendered video to/.test(b.textContent));
+      ...document.querySelectorAll(".dir-render-result button"),
+    ].find((b) => /Add to project assets/.test(b.textContent));
     return button ? !button.disabled : null;
   });
   assert.equal(keep, true, "Save the render is still offered and enabled");

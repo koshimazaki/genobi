@@ -20,9 +20,8 @@ with the Dual Swords half of #14.
 | A World Builder library take       | Inspirations PNG, Project MP4     | **Send to Director**, or an agent's `send-to-project` |
 | Dual Swords frame                  | Project, PNG                      | **Export to assets**                                  |
 | Dual Swords kept frame             | Inspirations                      | **Keep frame**                                        |
-| Director render                    | Project, MP4; hosted: library too | **Add rendered video to assets**                      |
-| An MP4 from this computer (Editor) | Project                           | **Import MP4 to project assets**                      |
-| A video saved before this change   | Project                           | **Show earlier saved videos** → **Add**               |
+| Director render                    | Project, MP4; hosted: library too | **Add to project assets** on the finished video       |
+| An MP4 from this computer          | Project                           | Drop it (or choose it) in the Assets rail's Project   |
 | A gallery or Library result        | Project                           | **Send to Director** (+) on the card                  |
 | A take from a terminal or an agent | Project                           | **Send to Director** (+) on its marked gallery card   |
 | A Dual Swords Library item         | Project                           | **Send to Director** on the item                      |
@@ -157,23 +156,25 @@ limits still apply, for example references need both sides at least 256 px.
 
 ## Saved videos
 
-The Editor's former **Saved videos · import and store** panel uploaded to the
-session's server-side library, a store apart from the project. It is now
-**Videos · add to project assets**. Videos saved before stay where they were
-(nothing is deleted); **Show earlier saved videos** lists them and **Add to
-project assets** copies one in. Placing a video on a clip is a drag from the
-Project tab onto the clip.
+The Editor's former **Videos · add to project assets** section was removed
+on 2 November 2026 (#57, swap-only studio). An MP4 from this computer goes in
+through the Assets rail's **Project** drop zone (or its file chooser), the
+same validated `import-asset` path. Videos saved to the session library
+before stay where they were (nothing is deleted) and show in the rail's
+**Generated** collection with the other Camera results. Placing a video on a
+clip is a drag from the Project tab onto the clip.
 
 Where a render lives depends on where the studio runs. Locally the project
 copy on this computer keeps the project's assets, so a render added there
 survives a reload. The hosted site has no project copy: its project assets
 last until the page reloads (download the bundle to keep the project). So on
-the hosted site the button is **Save rendered video to library and assets**:
-it first uploads the render to the visitor's private library (R2, through
-`/api/uploads`, as before; saved videos can expire after 30 days), then adds
-it to the project's assets for the session (`src/director/save-render.ts`).
-The upload uses the page's connected key in its header only; it is never
-stored or logged, and an uncertain upload is never retried.
+the hosted site the finished video's **Add to project assets**
+(`src/director/RenderToAssets.tsx`) first uploads the render to the visitor's
+private library (R2, through `/api/uploads`, as before; saved videos can
+expire after 30 days), then adds it to the project's assets for the session
+(`src/director/save-render.ts`). The upload uses the page's connected key in
+its header only; it is never stored or logged, and an uncertain upload is
+never retried.
 
 ## Seeing and hearing project media
 
@@ -248,7 +249,7 @@ Inspirations and the rail switched to it, and a second send said it was
 already there; Export to assets added a 640 × 360 PNG with no download, and
 that asset dropped on Camera's reference tray (FLUX 3 · Image) became
 reference 1 of 10; the Editor panel copied an earlier saved video and an
-imported MP4 in. **Add rendered video to assets** was not run in a browser; its hosted branch is covered by `tests/save-render.test.ts`.
+imported MP4 in. The finished video's **Add to project assets** was not run in a browser; its hosted branch is covered by `tests/save-render.test.ts`.
 `check-world-workspace.mjs` passed at desktop and phone. Three checks already
 fail on `main` for reasons outside this page: the shell check's header
 comparison in Ninja (the mic button moves when Ninja's configure button
