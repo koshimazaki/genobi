@@ -9,7 +9,9 @@ const plain = (e: MouseEvent) =>
 
 /**
  * "How it was made": a mix template's recorded versions
- * (docs/director-bundle/showcase/), oldest first, each opening in the
+ * (docs/director-bundle/showcase/), newest first (work in progress, then
+ * the latest finished version), so a reviewer opens the current cut without
+ * scrolling past v1. Each opens in the
  * Editor as an editable project of its own. Absent when the template has
  * no record.
  */
@@ -22,11 +24,20 @@ export default function ShowcaseVersions({ template }: { template: string }) {
     <section className="template-recipe" aria-label="How it was made">
       <h3>How it was made</h3>
       <ol className="template-showcase">
-        {record.versions.map((v) => (
+        {record.pending?.map((p) => (
+          <li key={`pending-${p.version}`}>
+            <p>
+              <strong>v{p.version} · in progress</strong>
+            </p>
+            <p>{p.summary}</p>
+          </li>
+        ))}
+        {[...record.versions].reverse().map((v, i) => (
           <li key={v.version}>
             <p>
               <strong>
                 v{v.version} · {v.title}
+                {i === 0 && " · latest"}
               </strong>{" "}
               <span>
                 {v.pr ? `#${v.pr} · ` : ""}
@@ -55,14 +66,6 @@ export default function ShowcaseVersions({ template }: { template: string }) {
                 ? "Opening…"
                 : `Open v${v.version} in the editor`}
             </a>
-          </li>
-        ))}
-        {record.pending?.map((p) => (
-          <li key={`pending-${p.version}`}>
-            <p>
-              <strong>v{p.version} · in progress</strong>
-            </p>
-            <p>{p.summary}</p>
           </li>
         ))}
       </ol>
