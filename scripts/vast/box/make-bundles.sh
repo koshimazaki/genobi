@@ -12,11 +12,14 @@ PY="${PY:-python3}"
 declare -A PROMPT=(
   [diamond]="A single faceted diamond hovers above a flat lit floor and breathes with the music, swelling on every bass hit and settling between them while the camera circles it once. Clean background, one light source, crisp edges."
   [pulse]="A lone pyramid on open ground swells and settles with the music while the camera circles it once. Clean sky, long shadows, still air."
-  [cathedral-walls]="Inside a tall nave the rows of columns slide inward on every bass hit and ease back apart, the vault narrowing with them, seen from a high gallery that does not move. Soft daylight, stone and dust."
+  [cathedral-walls]="Inside a tall nave with pointed arches and a ribbed vault, the rows of clustered columns slide inward on every bass hit and ease back apart, the vault narrowing with them toward a tall arched window at the far end, seen from a high gallery that does not move. Soft daylight, stone and dust."
   [canyon]="Two rows of tall towers seen from above close in across the street on every bass hit and drift apart again, the camera fixed high over the avenue. Evening light, long shadows."
-  [room-walls]="A small apartment whose walls press inward on the beat and open again around a figure dancing in the middle, seen from eye height. Warm lamp light, soft shadows."
-  [pyramid-inside]="Inside a hollow stepped pyramid the terraced walls contract on every bass hit and expand back, a figure standing on the floor for scale, the camera low and slowly turning upward. Dim warm light from above."
-  [fruit-dance]="A figure dances in an open studio while a large fruit circles close around them, changing from apple to banana and back on the beat. Clean floor, soft studio light."
+  [room-walls]="A small empty room whose bare walls press inward on the beat and open again around a figure dancing in the middle, seen from eye height. Warm lamp light, soft shadows."
+  [pyramid-inside]="Inside a vast hollow stepped pyramid the towering terraced walls contract on every bass hit and expand back, a small figure standing on the floor for scale, the camera low and wide, looking up toward the open top. Dim warm light from above."
+  [fruit-dance]="A figure dances in an open studio, seen from the front, while a large fruit beside them changes from apple to banana to papaya and back on the beat. Clean floor, soft studio light, still camera."
+  [fruit-apple]="A single large apple rests on a clean studio floor, seen from the front, swelling gently on every bass hit. Soft studio light, still camera."
+  [fruit-banana]="A single large banana rests on a clean studio floor, seen from the front, swelling gently on every bass hit. Soft studio light, still camera."
+  [fruit-papaya]="A single large papaya rests on a clean studio floor, seen from the front, swelling gently on every bass hit. Soft studio light, still camera."
 )
 mk() { # study mode [extra prepare args]
   local study="$1" mode="$2"; shift 2
@@ -30,5 +33,5 @@ mk() { # study mode [extra prepare args]
     --mode "$mode" --frames "$FRAMES" --seed 42 --output "$out" --label "$study-$mode" --prompt "${PROMPT[$study]}" "$@"
   echo "bundle $out"
 }
-for s in diamond pulse cathedral-walls canyon room-walls pyramid-inside fruit-dance; do mk "$s" layout-audio; done
+for s in diamond pulse cathedral-walls canyon room-walls pyramid-inside fruit-dance fruit-apple fruit-banana fruit-papaya; do mk "$s" layout-audio; done
 for s in cathedral-walls canyon; do mk "$s" union-depth; done

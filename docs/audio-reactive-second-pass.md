@@ -57,7 +57,7 @@ measure follow + sharpness ─► stitch the keepers on beat cuts, dry track + r
 ### 1. Capture
 
 ```sh
-node scripts/experiments/capture.mjs --studies cathedral-walls,canyon,room-walls,pyramid-inside,fruit-dance \
+node scripts/experiments/capture.mjs --studies diamond,cathedral-walls,canyon,room-walls,pyramid-inside,fruit-dance,fruit-apple,fruit-banana,fruit-papaya \
   --output ~/genobi-runs/DATE/guides --frames 97 --width 1024 --height 576 \
   --band-gain auto --band-release 12 --motion-gain 1 --stage studio
 ```
@@ -68,9 +68,7 @@ in distance from the centre line (`morphControl`, so the timeline never moves
 them), with the camera held and the room width and depth shrinking on the
 same bars for the reverb. Measured on the 4-second excerpt: cathedral median
 motion 4.6, correlation with the band's change 0.93 (the earlier `spread`
-version sank and zoomed the whole nave: 9.9 and 0.81). `room-walls` barely
-moves at gain 1 (median 0.39); run it at `--motion-gain 2` (0.70, correlation
-0.67). `pyramid-inside` is a hollow stepped pyramid seen from the floor
+version sank and zoomed the whole nave: 9.9 and 0.81). `room-walls` is an empty small room whose size alone follows the bass. `pyramid-inside` is a hollow stepped pyramid seen from the floor
 (median 4.1, correlation 0.87). Keyframe stills land beside each guide as
 `frame-0000.png`, `frame-closed-NNNN.png` and `frame-open-NNNN.png`, with
 `keyframes.json` giving the index snapped to the 8-frame latent grid.
@@ -160,11 +158,12 @@ dry track and the CPU room reverb are muxed underneath.
    2. `pulse`: the pyramid, the proven control
    3. `cathedral-walls`: piers sliding in, camera held
    4. `canyon`: tower rows closing across the street
-   5. `room-walls` (captured at `--motion-gain 2`): the dancer between closing walls
-   6. `pyramid-inside`: terraces tightening around the figure
-   7. `fruit-dance`: apple and banana swapping on the beats
-   8. `cathedral-walls` and `canyon` again in `union-depth`
-   9. sweep: `cathedral-walls` at motion gain 0.5 and 2
+   5. `room-walls`: the dancer in an empty small room that shrinks on the bass
+   6. `pyramid-inside`: a vast interior from the floor, terraces tightening
+   7. `fruit-apple`, `fruit-banana`, `fruit-papaya`: one fruit each, front view
+   8. `fruit-dance`: front view, the fruit swapping shapes beside the dancer
+   9. `cathedral-walls` and `canyon` again in `union-depth`
+   10. sweep: `cathedral-walls` at motion gain 0.5 and 2
 5. `refine.py convert`, then `refine.py submit` on the best clip of each study.
 6. Copy `/workspace/run` to the Mac, measure, stitch, review.
 
