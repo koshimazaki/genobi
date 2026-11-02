@@ -181,11 +181,18 @@ export class CopySync {
             ? "Another window changed this project"
             : "This project already had a saved copy");
       // The person's version now lives only in undo history (flush).
+      // For an explicitly chosen draft, offer a real recovery decision instead
+      // of a dismiss-only error; never replace the saved copy without consent.
+      const mine = this.current()!;
+      const savedChoice =
+        why === "This project already had a saved copy" &&
+        !!this.options.conflict;
       if (unpushed || why) this.overwritten++;
       this.state.actions.commit(copy);
       this.settle(id, revision);
       this.openedAt.delete(id);
-      if (reason)
+      if (savedChoice) this.offerMine(id, mine, "saved-copy");
+      else if (reason)
         this.options.notice(
           `${reason}; reloaded revision ${revision} from the project copy. Undo brings back your version.`,
         );
@@ -384,17 +391,39 @@ export class CopySync {
    * replacing the agent's changes, but only once they say so. Their answer
    * builds on the revision they were shown; a newer one asks again.
    */
-  private offerMine(id: string, mine: Bundle) {
+  private offerMine(
+    id: string,
+    mine: Bundle,
+    kind: "agent" | "saved-copy" = "agent",
+  ) {
     const revision = this.synced.get(id)?.server;
     if (!this.options.conflict || revision === undefined) return;
+    const overwrittenAt = this.overwritten;
     this.options.conflict({
+      kind,
       projectId: id,
       revision,
+      keepTheirs: () => {
+        // Only acknowledge the specific revision the person reviewed, and
+        // only when no earlier unacknowledged replacement would be hidden.
+        if (
+          this.current()?.project.id !== id ||
+          this.synced.get(id)?.server !== revision ||
+          this.synced.get(id)?.local !== this.current()?.project.revision
+        )
+          return;
+        if (
+          this.overwritten === overwrittenAt &&
+          this.keptAt === overwrittenAt - 1
+        )
+          this.keptAt = overwrittenAt;
+      },
       keepMine: () => {
         if (this.current()?.project.id !== id) return;
         if (this.synced.get(id)?.server !== revision)
-          return this.offerMine(id, mine);
-        // Above the agent's revision, so the push builds on it.
+          return this.offerMine(id, mine, kind);
+        // Put the earlier draft on top of the accepted server revision;
+        // a concurrent agent write still receives the normal 409 guard.
         this.state.actions.commit(mine);
         this.schedule(0);
       },
