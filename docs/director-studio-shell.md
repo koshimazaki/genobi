@@ -100,9 +100,15 @@ Dual embeds its existing media library there. The rail owns its scrolling;
 embedded lists do not nest another scrollbar. With the rail open on desktop,
 the main workspace scrolls separately and there is no document scrollbar beside
 Assets. Smaller widths use a nonmodal right drawer with Hide and Escape.
-The rail starts open only where it docks (wider than 1100 px). Until the
-person opens or hides it, it follows the window, so narrowing a window
-closes it instead of leaving a drawer over the work. Ninja has no rail;
+The rail starts open only where it docks (wider than 1100 px), and never in
+Gallery or the Editor: the Editor is for editing, not adding, so its rail waits
+to be asked for (`railOpen` in `src/studio/ninja-layout.ts`). Until the
+person opens or hides a rail, it follows the window, so narrowing a window
+closes it instead of leaving a drawer over the work. Their choice is kept
+per workspace as soon as they make it (`genobi.ninja-rails.v1`), so neither a
+reload nor crossing the docking width reopens a rail they hid. Switching
+workspace also closes a Project media dialog left open for the last one; a
+button that switches and then opens it still opens it. Ninja has no rail;
 the Assets button keeps its place there, unseen and disabled, so the mic
 and theme controls stay put between sections.
 
@@ -377,8 +383,9 @@ heights, fit and Fill gaps, the same version 3 shape as the layout JSON) and the
 Assets rail choices the person made in the other workspaces. Opening one
 restores the arrangement and reopens or closes each workspace's rail as it
 was, and keeps both as the browser's working layout (`genobi.ninja-layout.v1`
-and `genobi.ninja-rails.v1`), so a reload keeps them. Someone who never opened
-a saved layout keeps each workspace's default rail. Editor's
+and `genobi.ninja-rails.v1`), so a reload keeps them. Opening or hiding a rail
+writes the same key, so the next save captures it. Someone who never chose
+keeps each workspace's default rail. Editor's
 vertical resize heights are not kept; they last for the visit. No project data,
 prompts, media or keys are saved.
 

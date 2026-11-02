@@ -32,6 +32,8 @@ import {
   movePanel,
   openWorkingLayout,
   readWorkingRails,
+  railOpen,
+  storeWorkingRails,
   panelColumns,
   type NinjaPanel,
   type NinjaLayout,
@@ -72,12 +74,14 @@ export default function StudioShell() {
   const [assetViews, setAssetViews] =
     useState<Record<string, boolean>>(readWorkingRails);
   const docked = useDockedRail();
-  // Open by default only where the rail docks; the person's choice wins.
-  const assetsOpen =
-    preset !== "ninja" &&
-    (assetViews[preset] ?? (preset !== "gallery" && docked));
-  const setAssetsOpen = (open: boolean) =>
-    setAssetViews((v) => ({ ...v, [preset]: open }));
+  // Open by default only where the rail docks (never in the Editor); the
+  // person's choice wins and is kept at once, so a reload keeps it too.
+  const assetsOpen = railOpen(preset, assetViews, docked);
+  const setAssetsOpen = (open: boolean) => {
+    const next = { ...assetViews, [preset]: open };
+    setAssetViews(next);
+    storeWorkingRails(pickRails(next));
+  };
   const [restored] = useState(readLayout);
   const [ninjaLayout, setNinjaLayout] = useState(restored.layout);
   const [savedLayout, setSavedLayout] = useState(restored.layout);
@@ -186,8 +190,15 @@ export default function StudioShell() {
           ?.focus({ preventScroll: true });
       });
     setVisited((previous) => new Set([...previous, next]));
-    if (next === "director" || next === "editor")
-      studioStore.getState().actions.workspace({ advanced: next === "editor" });
+    // The project media dialog belongs to the workspace that opened it. A
+    // caller that switches and then opens it (an agent's "Project assets")
+    // sets it again after this, so only a stale request is dropped.
+    studioStore.getState().actions.workspace({
+      drawerOpen: false,
+      ...(next === "director" || next === "editor"
+        ? { advanced: next === "editor" }
+        : {}),
+    });
     if (updateUrl) {
       const url = new URL(location.href);
       url.searchParams.set("workspace", next);
