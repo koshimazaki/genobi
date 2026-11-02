@@ -126,7 +126,8 @@ cd /workspace/genobi-ltx/ComfyUI
 ```
 
 In another terminal, return to the Genobi repository and run the preflight with
-the same Python environment. Supply the experiment's materialized API graph:
+the same Python environment. For a studio graph, supply its materialized API
+export:
 
 ```sh
 /workspace/genobi-ltx/venv/bin/python scripts/vast/preflight.py --comfy-dir /workspace/genobi-ltx/ComfyUI --url http://127.0.0.1:8188 --hash-models --workflow /workspace/run/layout.api.json
@@ -138,11 +139,15 @@ declared dropdown choices. Unfilled workflow placeholders fail the check.
 It reads only `/object_info` and `/system_stats`. It never calls `/prompt`.
 A green report proves those prerequisites, not that the graph fits in VRAM,
 executes correctly or preserves the music's timing. Start with a short pilot.
-On a prepared pilot bundle, `--workflow` checks only after `run.py` has
-uploaded the guide, look and audio: before that, the `LoadImage` and
-`LoadAudio` choices do not list them yet and the check fails by design. Run it
-without `--workflow` before submitting; `run.py` checks node classes, links,
-model choices and the frozen node bindings itself before any reservation.
+The `--workflow` example is for a studio-exported `layout.api.json`. Do not
+point it at a prepared pilot bundle's `workflow.api.json`: that frozen graph
+names its inputs `assets/look.png`, `assets/audio.wav` and so on, which no
+`LoadImage` or `LoadAudio` choice lists, before or after a run, so the check
+fails by design. For a pilot, run `preflight.py` without `--workflow`, then
+`run.py --bundle <bundle> --url http://127.0.0.1:8188` with no other flags,
+which is its read-only preflight (node classes, links and model choices).
+`--submit` repeats those checks and the frozen node-binding check before any
+upload or reservation.
 `assets.py verify --models-dir ...` is also available without a running ComfyUI.
 
 ## Budget and retained evidence
