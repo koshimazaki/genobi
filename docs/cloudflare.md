@@ -131,10 +131,13 @@ versions.
 
 ### Knowing what production serves
 
-A skipped deploy is green, and until the build carried its own identity it was
-indistinguishable from a shipped one: a fix merged into `main` stayed off
-production while CI reported success, and the first evidence of it was a paid
-run failing in a node the fix already covered. Two things close that gap.
+A skipped deploy was green, and until the build carried its own identity
+it was indistinguishable from a shipped one: a fix merged into `main` could
+remain absent from production while CI reported success. Two things close
+that *production* observability gap. This is independent of local development:
+`npm run dev` runs the code in its current checkout, not what Pages serves,
+and its configured generation destination may still be Comfy Cloud. A local
+failure must be reproduced against that checkout and its run location.
 
 `scripts/build-pages.mjs` stamps the commit it builds from into the Worker
 (`__GENOBI_COMMIT__`, read by `shared/build-info.ts`), and `GET /api/health`
