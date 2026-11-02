@@ -29,6 +29,8 @@ const { values } = parseArgs({
     orbit: { type: "string" },
     avatar: { type: "boolean" },
     elevation: { type: "string" },
+    "band-smooth": { type: "string", default: "1" },
+    "band-release": { type: "string", default: "0" },
     help: { type: "boolean" },
   },
 });
@@ -240,6 +242,8 @@ try {
           avatar: Boolean(values.avatar),
           elevation:
             values.elevation === undefined ? null : Number(values.elevation),
+          bandSmooth: Number(values["band-smooth"]),
+          bandRelease: Number(values["band-release"]),
         },
       },
     );

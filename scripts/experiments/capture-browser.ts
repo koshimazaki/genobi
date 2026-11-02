@@ -22,6 +22,10 @@ export interface Reactivity {
   avatar?: boolean;
   /** Camera elevation in degrees; null keeps the study's own. */
   elevation?: number | null;
+  /** Moving-average window in frames applied to each band before gain (1 = off): slower, gentler motion. */
+  bandSmooth?: number;
+  /** Peak follower: instant attack, exponential release over this many frames (0 = off). Holds a hit instead of jittering. */
+  bandRelease?: number;
 }
 
 function percentile(values: number[], q: number) {
@@ -31,14 +35,36 @@ function percentile(values: number[], q: number) {
   );
 }
 
+function smooth(values: number[], window: number) {
+  if (!(window > 1)) return values;
+  const half = Math.floor(window / 2);
+  return values.map((_, i) => {
+    const lo = Math.max(0, i - half),
+      hi = Math.min(values.length - 1, i + half);
+    let sum = 0;
+    for (let k = lo; k <= hi; k++) sum += values[k];
+    return sum / (hi - lo + 1);
+  });
+}
+
+function follow(values: number[], release: number) {
+  if (!(release > 0)) return values;
+  const decay = Math.exp(-1 / release);
+  let v = 0;
+  return values.map((x) => (v = Math.max(x, v * decay)));
+}
+
 export function scaleBands<T extends Record<string, number[] | undefined>>(
   bands: T,
   gain: number | "auto",
+  window = 1,
+  release = 0,
 ): { bands: T; gains: Record<string, number> } {
   const gains: Record<string, number> = {};
   const out = { ...bands };
-  for (const [name, data] of Object.entries(bands)) {
-    if (!data?.length) continue;
+  for (const [name, raw] of Object.entries(bands)) {
+    if (!raw?.length) continue;
+    const data = follow(smooth(raw, window), release);
     const p95 = percentile(data, 0.95);
     const g = gain === "auto" ? (p95 > 0 ? 0.8 / p95 : 1) : gain;
     gains[name] = Number(g.toFixed(4));
@@ -70,7 +96,12 @@ export async function captureStudy(
   const source = await (await fetch("/__pilot_track")).blob();
   const track = await decodeAudio(source);
   assertAudioExcerpt(track, dimensions.frames);
-  const scaled = scaleBands(track.bands!, reactivity.bandGain);
+  const scaled = scaleBands(
+    track.bands!,
+    reactivity.bandGain,
+    reactivity.bandSmooth ?? 1,
+    reactivity.bandRelease ?? 0,
+  );
   const { recipe, metadata } = createStudy(
     study,
     {
@@ -97,6 +128,8 @@ export async function captureStudy(
     recipe.avatar = true;
     recipe.avatarAsset = "mannequin";
     recipe.avatarMotion = "idle";
+    // Inside the room, a step off centre so the camera sees the figure against the far wall.
+    recipe.avatarPose = { x: -1.1, y: 0, z: 0.6, yaw: 0.6 };
   }
   Object.assign(metadata, {
     reactivity: {
@@ -104,6 +137,8 @@ export async function captureStudy(
       orbit: recipe.orbit,
       avatar: recipe.avatar,
       elevation: recipe.elevation,
+      bandSmooth: reactivity.bandSmooth ?? 1,
+      bandRelease: reactivity.bandRelease ?? 0,
       bandGain: reactivity.bandGain,
       bandGainsApplied: scaled.gains,
       motionGain: reactivity.motionGain,
