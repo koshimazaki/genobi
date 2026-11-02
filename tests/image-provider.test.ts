@@ -5,6 +5,8 @@ import { validateInput } from "../server/validation";
 import { runCredential, ServerKeys } from "../server/keys";
 import { chooseKey, payingKeyKind } from "../shared/provider";
 import GenerateButton from "../src/components/GenerateButton";
+import GenerateAction from "../src/components/GenerateAction";
+import { initialComposer } from "../src/useComposer";
 
 const image = {
   generator: "image",
@@ -83,5 +85,55 @@ describe("image provider selection", () => {
       ]),
     ).toContain('aria-label="Generation provider"');
     expect(render()).not.toContain('aria-label="Generation provider"');
+  });
+
+  it("keeps provider menu enabled when Generate is blocked", () => {
+    const markup = renderToStaticMarkup(
+      createElement(GenerateButton, {
+        generator: "image",
+        submitting: false,
+        disabled: true,
+        hasKey: false,
+        onSubmit: () => {},
+        onResume: () => {},
+        providerChoices: [
+          { value: "comfy", label: "Comfy workflow" },
+          { value: "bfl", label: "BFL API" },
+        ],
+        providerValue: "comfy",
+        onProviderChange: () => {},
+        onConfigure: () => {},
+      }),
+    );
+    expect(markup).toContain("Configure API keys / run location…");
+    const selector = markup.match(/<select[^>]*>/)?.[0];
+    expect(selector).toContain('aria-label="Generation provider"');
+    expect(selector).not.toContain("disabled");
+  });
+
+  it("renders Klein providers and API setup in Generate", () => {
+    const markup = renderToStaticMarkup(
+      createElement(GenerateAction, {
+        state: {
+          ...initialComposer,
+          generator: "image",
+          model: "flux-3-klein",
+        },
+        jobs: [],
+        submitting: false,
+        disabled: false,
+        hasKey: false,
+        recreating: false,
+        onSubmit: () => {},
+        onResume: () => {},
+        onUpdate: () => {},
+        onConfigure: () => {},
+      }),
+    );
+    expect(markup).toContain('value="comfy"');
+    expect(markup).toContain('value="bfl"');
+    expect(markup).toContain('value="configure"');
+    expect(markup).toContain("Comfy workflow");
+    expect(markup).toContain("BFL API");
   });
 });
