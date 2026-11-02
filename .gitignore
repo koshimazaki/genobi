@@ -15,6 +15,14 @@ output/
 .claude/worktrees/
 .claude/settings.local.json
 
+# Agent review worktrees and run logs (git worktrees under here stay registered
+# in .git/worktrees, so ignoring the directory does not detach them).
+.runs/
+
+# Python bytecode from the workflow and build scripts.
+__pycache__/
+*.pyc
+
 # Key material never belongs in the repository.
 *.pem
 *.key
