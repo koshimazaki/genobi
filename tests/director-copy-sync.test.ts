@@ -125,6 +125,39 @@ describe("the studio's copy rules", () => {
     sync.stop();
   });
 
+  it("does not restore an old draft over new edits made after the choice", async () => {
+    const { fetcher, store, notices } = await studio();
+    const saved = base();
+    saved.project = { ...saved.project, name: "Server copy", revision: 3 };
+    await pushCopy(saved, null, new Set(), fetcher);
+    const decisions: CopyConflict[] = [];
+    const sync = new CopySync({
+      store,
+      fetcher,
+      notice: (text) => notices.push(text),
+      live: () => {},
+      conflict: (decision) => decisions.push(decision),
+    });
+    store.getState().actions.initialize(base());
+    const first = store.getState().director.bundle!;
+    store.getState().actions.commit({
+      ...first,
+      project: { ...first.project, name: "Earlier draft" },
+    });
+    await sync.push();
+    const open = store.getState().director.bundle!;
+    store.getState().actions.commit({
+      ...open,
+      project: { ...open.project, name: "New edits" },
+    });
+    decisions[0].keepMine();
+    expect(store.getState().director.bundle!.project.name).toBe("New edits");
+    expect(notices).toContain(
+      "Project changed; review before restoring an older draft.",
+    );
+    sync.stop();
+  });
+
   it("acknowledges keeping the saved copy without retrying or overwriting it", async () => {
     const { fetcher, store } = await studio();
     const saved = base();
