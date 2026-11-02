@@ -43,6 +43,14 @@ python3 scripts/vast/assets.py download --models-dir /workspace/genobi-ltx/Comfy
 unset HF_TOKEN
 ```
 
+`--profile second-pass` (on `plan`, `verify` and `download`) adds the Union
+Control and Refine-Details IC-LoRAs pinned in
+[second-pass-models.txt](second-pass-models.txt), about 2.0 GB more. The
+Refine-Details repository is **gated**: the token's Hugging Face account must
+accept its terms on the
+[model page](https://huggingface.co/Lightricks/LTX-2.5-22b-IC-LoRA-Refine-Details)
+before the download is allowed. Union Control is public.
+
 Always check that the appropriate models are already installed before
 downloading. Do not commit access tokens or model weights.
 

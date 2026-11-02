@@ -24,6 +24,21 @@ class VastPreparationTests(unittest.TestCase):
             self.assertNotIn("int8", model.name)
             self.assertNotIn("akuspace", model.name)
 
+    def test_second_pass_profile_adds_exactly_two_pinned_loras(self):
+        layout = assets.selected_models()
+        second = assets.selected_models(profile="second-pass")
+        self.assertEqual(len(second), 8)
+        added = [model for model in second if model not in layout]
+        self.assertEqual({Path(model.path).name for model in added}, assets.SECOND_PASS)
+        for model in added:
+            self.assertEqual(model.folder, "loras")
+            self.assertRegex(model.sha256, r"^[0-9a-f]{64}$")
+            self.assertRegex(model.revision, r"^[0-9a-f]{40}$")
+            self.assertIn(f"/resolve/{model.revision}/", model.url)
+        self.assertEqual(sum(model.size for model in added), 654465352 + 1308787534)
+        self.assertEqual(assets.model_plan(second, profile="second-pass")["profile"], "second-pass-bf16")
+        self.assertEqual(assets.model_plan(layout)["profile"], "layout-bf16")
+
     def test_matching_sidecar_cannot_hide_changed_bytes(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

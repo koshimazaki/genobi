@@ -1,5 +1,7 @@
 """Plan, verify or explicitly download the pinned BF16 Layout-to-Render stack.
 
+Profiles: "layout" is the six-file stack; "second-pass" adds the Union Control
+and Refine-Details IC-LoRAs pinned in second-pass-models.txt beside this file.
 This module deliberately excludes the separate int8/AKUSPACE model profile.
 It reuses the repository's resumable downloader; existing bytes are always
 hashed here instead of trusting a sidecar checksum marker.
@@ -27,14 +29,23 @@ FILENAMES = {
     "ltx-2.5-latent-spatial-upscaler-x2-bf16-1.0.safetensors",
     "ltx-2.5-22b-ic-lora-layout-to-render-1.0.safetensors",
 }
+SECOND_PASS_MANIFEST = Path(__file__).resolve().parent / "second-pass-models.txt"
+SECOND_PASS = {
+    "ltx-2.3-22b-ic-lora-union-control-ref0.5.safetensors",
+    "ltx-2.5-22b-ic-lora-refine-details-1.0.safetensors",
+}
+PROFILES = {"layout": FILENAMES, "second-pass": FILENAMES | SECOND_PASS}
+PROFILE_LABELS = {"layout": "layout-bf16", "second-pass": "second-pass-bf16"}
 RESERVE_BYTES = 12 * 1024**3
 
 
-def selected_models(manifest=MANIFEST):
-    rows = pinned_models.load_sets([str(manifest)])
-    selected = [row for row in rows if Path(row.path).name in FILENAMES]
-    if len(selected) != len(FILENAMES) or any(not row.sha256 for row in selected):
-        raise ValueError("The manifest must pin all six BF16 layout files by SHA-256")
+def selected_models(manifest=MANIFEST, profile="layout"):
+    names = PROFILES[profile]
+    manifests = [str(manifest)] + ([str(SECOND_PASS_MANIFEST)] if profile == "second-pass" else [])
+    rows = pinned_models.load_sets(manifests)
+    selected = [row for row in rows if Path(row.path).name in names]
+    if len(selected) != len(names) or any(not row.sha256 for row in selected):
+        raise ValueError(f"The manifests must pin all {len(names)} {profile} files by SHA-256")
     # Use immutable HF revisions; the existing deployment manifest also has
     # resolver URLs containing /main, whose bytes are protected by hashes.
     return [dataclasses.replace(row, source_uri=None) for row in selected]
@@ -59,7 +70,7 @@ def inspect_model(model, directory, hash_bytes=True):
     return "verified" if sha256_file(path) == model.sha256 else "hash_mismatch"
 
 
-def model_plan(models, directory=None, hash_bytes=False):
+def model_plan(models, directory=None, hash_bytes=False, profile="layout"):
     rows = []
     for model in models:
         row = {
@@ -72,7 +83,7 @@ def model_plan(models, directory=None, hash_bytes=False):
         if directory is not None:
             row["status"] = inspect_model(model, directory, hash_bytes)
         rows.append(row)
-    return {"profile": "layout-bf16", "model_bytes": sum(m.size for m in models), "files": rows}
+    return {"profile": PROFILE_LABELS[profile], "model_bytes": sum(m.size for m in models), "files": rows}
 
 
 def required_download_bytes(models, directory):
@@ -84,7 +95,7 @@ def required_download_bytes(models, directory):
     return needed
 
 
-def download_models(models, directory, token=None):
+def download_models(models, directory, token=None, profile="layout"):
     directory.mkdir(parents=True, exist_ok=True)
     missing = [model for model in models if inspect_model(model, directory) != "verified"]
     needed = required_download_bytes(missing, directory) + RESERVE_BYTES
@@ -93,7 +104,7 @@ def download_models(models, directory, token=None):
     for model in missing:
         print(f"Fetching {model.name} ({model.size / 1e9:.2f} GB)", file=sys.stderr)
         pinned_models.download(model, str(directory), token=token)
-    return model_plan(models, directory, hash_bytes=True)
+    return model_plan(models, directory, hash_bytes=True, profile=profile)
 
 
 def main():
@@ -101,17 +112,18 @@ def main():
     parser.add_argument("action", choices=("plan", "verify", "download"))
     parser.add_argument("--models-dir", type=Path)
     parser.add_argument("--confirm-download", action="store_true")
+    parser.add_argument("--profile", choices=sorted(PROFILES), default="layout")
     args = parser.parse_args()
     if args.action != "plan" and args.models_dir is None:
         parser.error("--models-dir is required for verify/download")
     if args.action == "download" and not args.confirm_download:
         parser.error("Downloading requires --confirm-download; inspect plan first")
     try:
-        models = selected_models()
+        models = selected_models(profile=args.profile)
         if args.action == "download":
-            result = download_models(models, args.models_dir, os.environ.get("HF_TOKEN"))
+            result = download_models(models, args.models_dir, os.environ.get("HF_TOKEN"), args.profile)
         else:
-            result = model_plan(models, args.models_dir, hash_bytes=args.action == "verify")
+            result = model_plan(models, args.models_dir, hash_bytes=args.action == "verify", profile=args.profile)
         print(json.dumps(result, indent=2))
         return int(args.action != "plan" and any(r["status"] != "verified" for r in result["files"]))
     except (OSError, ValueError, pinned_models.FetchError) as error:
