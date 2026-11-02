@@ -125,6 +125,8 @@ page is left, and the app will not silently overwrite a newer agent revision;
 a concurrent edit is subject to the normal revision-conflict check. Neither
 choice starts paid generation.
 
+## Template media cards
+
 In the Director/Editor template-media panel, each source's preview, upload
 button and project asset picker stay together in a full-width card when the
 available pane is too narrow for two readable cards. Wider dialogs still

@@ -34,13 +34,15 @@ export function copyChoice(input: CopyChoiceInput): CopyConflict {
       const current = input.current()?.project;
       const synced = input.synced();
       const [overwritten, keptAt] = input.counters();
-      // Never clear an earlier unacknowledged revision or accept after a new edit.
+      // Never accept after a new edit or a newer replacement; answering the
+      // latest choice also settles earlier unanswered ones (their drafts stay
+      // in Undo).
       if (
         current?.id === id &&
         current.revision === synced?.local &&
         synced?.server === revision &&
         overwritten === overwrittenAt &&
-        keptAt === overwrittenAt - 1
+        keptAt < overwrittenAt
       )
         input.accept();
     },

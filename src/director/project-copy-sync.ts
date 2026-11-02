@@ -56,7 +56,6 @@ export class CopySync {
   private openedAt = new Map<string, number>();
   /** A manifest `openCopy` just read, for the reload to use once. */
   private manifests = new Map<string, CopyManifest>();
-  /** What the last reload's upgrade changed, for the opening notice. */
   /** The bundle an upgrade committed: the studio's edit, not the person's. */
   private automatic: Bundle | undefined;
   constructor(private options: SyncOptions) {}
@@ -187,7 +186,7 @@ export class CopySync {
       this.state.actions.commit(copy);
       this.settle(id, revision);
       this.openedAt.delete(id);
-      if (why === SAVED_COPY && this.options.conflict)
+      if (reason === SAVED_COPY && this.options.conflict)
         this.offerMine(id, mine, "saved-copy");
       else if (reason)
         this.options.notice(

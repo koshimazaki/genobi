@@ -89,9 +89,10 @@ export function useDirectorRuntime(
           );
         // Opening is not editing: a saved copy of this project then opens
         // silently instead of asking to restore an untouched template.
+        // A restored draft holds the person's edits, so it is not "opened".
         if (before) {
           state.actions.commit(opened.bundle, before);
-          state.actions.opened();
+          if (!saved) state.actions.opened();
         } else state.actions.initialize(opened.bundle);
         // A failed or cancelled load stays retryable on workspace reactivation.
         // Once handled, the same URL must not replace a later bundle import.
