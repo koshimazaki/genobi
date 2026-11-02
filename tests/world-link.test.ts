@@ -9,24 +9,41 @@ const NEXT = "22222222-2222-4222-8222-222222222222";
 
 function fake() {
   const grants: string[] = [];
+  const keeps: boolean[] = [];
+  const drops: ((error?: string) => void)[] = [];
   let opened = 0;
   let closed = 0;
-  const connect = vi.fn(async (onDisconnect: (error?: string) => void) => {
-    opened++;
-    return {
-      id: `tab-${opened}`,
-      code: "c".repeat(32),
-      grant: async (run: string) => {
-        grants.push(run);
-      },
-      disconnect: () => {
-        closed++;
-        onDisconnect();
-      },
-    };
-  });
-  const link = new WorldLink(connect as never);
-  return { link, grants, connect, counts: () => ({ opened, closed }) };
+  const connect = vi.fn(
+    async (onDisconnect: (error?: string) => void, keep: boolean) => {
+      opened++;
+      keeps.push(keep);
+      drops.push(onDisconnect);
+      return {
+        id: `tab-${opened}`,
+        code: "c".repeat(32),
+        grant: async (run: string) => {
+          grants.push(run);
+        },
+        disconnect: () => {
+          closed++;
+          onDisconnect();
+        },
+      };
+    },
+  );
+  const errors: string[] = [];
+  const link = new WorldLink(connect as never, (e) => errors.push(e));
+  /** The bridge's poll failed: the last connection drops with an error. */
+  const drop = (error = "World session not found.") => drops.at(-1)!(error);
+  return {
+    link,
+    grants,
+    keeps,
+    errors,
+    drop,
+    connect,
+    counts: () => ({ opened, closed }),
+  };
 }
 
 describe("WorldLink", () => {
@@ -100,5 +117,33 @@ describe("WorldLink", () => {
     await link.follow(RUN, true);
     expect(connect).toHaveBeenCalledTimes(1);
     expect(counts().opened).toBe(0);
+  });
+
+  it("links automatically with keep, and Connect agents without", async () => {
+    const auto = fake();
+    await auto.link.follow(RUN, true);
+    expect(auto.keeps).toEqual([true]);
+    const manual = fake();
+    await manual.link.toggle();
+    expect(manual.keeps).toEqual([false]);
+  });
+
+  it("reconnects a dropped automatic link once, then again when shown", async () => {
+    const { link, grants, errors, drop, counts } = fake();
+    await link.follow(RUN, true);
+    drop();
+    await vi.waitFor(() => expect(grants).toEqual([RUN, RUN]));
+    expect(link.state()).toMatchObject({ connected: true, granted: RUN });
+    expect(errors).toEqual([]);
+    // A second drop is reported and not retried at once.
+    drop();
+    await Promise.resolve();
+    expect(link.state().connected).toBe(false);
+    expect(errors).toEqual(["World session not found."]);
+    expect(counts().opened).toBe(2);
+    // Shown again, it reconnects and grants the run.
+    link.shown();
+    await vi.waitFor(() => expect(grants).toEqual([RUN, RUN, RUN]));
+    expect(counts().opened).toBe(3);
   });
 });

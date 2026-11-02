@@ -17,6 +17,8 @@ function library<T>(method: T | undefined): T {
 export async function connectWorld(
   adapter: SceneAdapter,
   onDisconnect: (error?: string) => void,
+  /** The automatic link for a grant: never ends the owner's other tabs. */
+  keep = false,
 ) {
   async function request(path: string, init?: RequestInit) {
     const response = await fetch(`/api/world${path}`, init);
@@ -47,7 +49,7 @@ export async function connectWorld(
       });
     return files;
   }
-  const connected = await send("/connect", {});
+  const connected = await send("/connect", keep ? { keep: true } : {});
   if (typeof connected.id !== "string" || typeof connected.code !== "string")
     throw new Error("World agent connection needs the local studio server.");
   let stopped = false,

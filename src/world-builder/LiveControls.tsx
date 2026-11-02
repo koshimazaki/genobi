@@ -17,8 +17,8 @@ export function LiveControls({
   active?: boolean;
 }) {
   const [recording, setRecording] = useState(false);
-  const link = useWorldLink(s, active, (onDisconnect) =>
-    connectWorld(s.api.current!, onDisconnect),
+  const link = useWorldLink(s, active, (onDisconnect, keep) =>
+    connectWorld(s.api.current!, onDisconnect, keep),
   );
   const { code, connected, granted } = link.state;
   useEffect(() => {

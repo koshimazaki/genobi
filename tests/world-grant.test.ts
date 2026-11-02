@@ -122,8 +122,12 @@ it("lets only the tab's owner grant their own running session, for that run only
   expect(
     (await call(`/${id}/files`, agentOf(STRANGER_RUN, "stranger"))).status,
   ).toBe(404);
-  // A granted run is still not the tab's browser.
+  // A granted run is still not the tab's browser: no dispatch, no uploads.
   expect((await call(`/${id}/next`, agentOf(RUN))).status).toBe(404);
+  expect(
+    (await call(`/${id}/files/clip.webm`, agentOf(RUN), "POST", {})).status,
+  ).toBe(404);
+  expect((await call(`/${id}/files`, agentOf(RUN), "DELETE")).status).toBe(404);
   expect((await call(`/${id}`, agentOf(RUN), "DELETE")).status).toBe(404);
   // The one-use code keeps working beside the grant.
   const terminal: Caller = { session: "terminal", agent: true };
@@ -157,4 +161,32 @@ it("revokes the grant when the run ends, on disconnect and on expiry", async () 
   vi.spyOn(Date, "now").mockReturnValue(now + 301_000);
   expect((await call("/granted", agentOf(RUN))).status).toBe(404);
   expect((await call(`/${id}/files`, agentOf(RUN))).status).toBe(404);
+});
+
+it("keeps another World view's session when the automatic link connects", async () => {
+  const running = new Map([[RUN, "owner"]]);
+  const call = await harness(running);
+  const first = (await (await call("/connect", {}, "POST", {})).json()).id;
+  await call(`/${first}/grant`, {}, "POST", { run: RUN });
+  // A second view (or a remount) links automatically with keep.
+  const second = (
+    await (await call("/connect", {}, "POST", { keep: true })).json()
+  ).id;
+  expect(second).not.toBe(first);
+  expect((await call(`/${first}/next`)).status).toBe(200);
+  expect((await call(`/${first}/files`, agentOf(RUN))).status).toBe(200);
+  expect(await (await call("/granted", agentOf(RUN))).json()).toEqual({
+    id: first,
+  });
+  // Both grant the run: the latest grant is the one handed out.
+  const now = Date.now();
+  vi.spyOn(Date, "now").mockReturnValue(now + 1_000);
+  await call(`/${second}/grant`, {}, "POST", { run: RUN });
+  expect(await (await call("/granted", agentOf(RUN))).json()).toEqual({
+    id: second,
+  });
+  // Connect agents, explicitly, still replaces the owner's other sessions.
+  await call("/connect", {}, "POST", {});
+  expect((await call(`/${first}/next`)).status).toBe(404);
+  expect((await call(`/${second}/next`)).status).toBe(404);
 });

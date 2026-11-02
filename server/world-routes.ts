@@ -29,8 +29,8 @@ interface Session {
   code?: string;
   seen: number;
   links: Set<string>;
-  /** Agent runs (by session id) the tab's owner granted from the studio. */
-  runs: Set<string>;
+  /** Agent runs (by session id) the tab's owner granted, to when. */
+  runs: Map<string, number>;
   commands: Map<string, Command>;
   files: Map<string, { bytes: Buffer; type: string }>;
 }
@@ -86,12 +86,16 @@ export function worldRouter({
       );
     return s;
   }
-  router.post("/connect", json, (_req, res) => {
+  // Connect agents replaces the owner's other World sessions (one tab per
+  // owner, as before). The tab's automatic link for a grant sends `keep`, so
+  // a second World view or a remount never ends another tab's session.
+  router.post("/connect", json, (req, res) => {
     sweep();
     if (res.locals.agent)
       throw new AppError(403, "Connect agents from the World tab.");
-    for (const [id, s] of sessions)
-      if (s.owner === owner(res)) sessions.delete(id);
+    if (req.body?.keep !== true)
+      for (const [id, s] of sessions)
+        if (s.owner === owner(res)) sessions.delete(id);
     if (sessions.size >= 4)
       throw new AppError(429, "Four World tabs are already connected.");
     const s: Session = {
@@ -100,7 +104,7 @@ export function worldRouter({
       code: randomBytes(16).toString("hex"),
       seen: Date.now(),
       links: new Set(),
-      runs: new Set(),
+      runs: new Map(),
       commands: new Map(),
       files: new Map(),
     };
@@ -128,14 +132,20 @@ export function worldRouter({
     if (!ownsRun(id, owner(res)))
       throw new AppError(404, "That agent session is not running.");
     // A run that has ended is inert (its scope is gone); drop it here.
-    for (const old of s.runs) if (!ownsRun(old, s.owner)) s.runs.delete(old);
-    s.runs.add(id);
+    for (const old of s.runs.keys())
+      if (!ownsRun(old, s.owner)) s.runs.delete(old);
+    s.runs.set(id, Date.now());
     res.json({ granted: true });
   });
-  // A granted run finds its tab without a code.
+  // A granted run finds its tab without a code. With two World views of the
+  // same person granting the same run, the latest grant wins, deterministically;
+  // only that person's own tabs can be candidates (`granted`).
   router.get("/granted", (_req, res) => {
     sweep();
-    const s = [...sessions.values()].find((s) => granted(s, res));
+    const run = (res.locals.agentScope as AgentScope | undefined)?.agentSession;
+    const s = [...sessions.values()]
+      .filter((s) => granted(s, res))
+      .sort((a, b) => (b.runs.get(run!) ?? 0) - (a.runs.get(run!) ?? 0))[0];
     if (!s)
       throw new AppError(
         404,
