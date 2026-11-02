@@ -118,3 +118,33 @@ it("leaves a modal's keys alone unless it hosts the timeline", () => {
   const inDirectorDialog = new FakeElement("BUTTON", { dialog: "host" });
   expect(directorShortcut(key(inDirectorDialog))).toBe("play");
 });
+
+it("undoes with Cmd or Ctrl+Z outside text, and leaves redo alone", () => {
+  const button = new FakeElement("BUTTON", { panel: "timeline" });
+  expect(directorShortcut(key(button, "KeyZ", { metaKey: true }))).toBe("undo");
+  expect(directorShortcut(key(button, "KeyZ", { ctrlKey: true }))).toBe("undo");
+  // There is no redo, so Shift is not claimed; nor is Alt or a plain Z.
+  for (const extra of [
+    { metaKey: true, shiftKey: true },
+    { ctrlKey: true, altKey: true },
+    {},
+  ])
+    expect(directorShortcut(key(button, "KeyZ", extra))).toBe(undefined);
+  // The prompt field keeps its own undo; other tools' panels keep theirs.
+  expect(
+    directorShortcut(
+      key(new FakeElement("DIV", { text: true }), "KeyZ", { metaKey: true }),
+    ),
+  ).toBe(undefined);
+  expect(
+    directorShortcut(
+      key(new FakeElement("BUTTON", { panel: "dual" }), "KeyZ", {
+        metaKey: true,
+      }),
+    ),
+  ).toBe(undefined);
+  // Other modified keys stay with the browser.
+  expect(directorShortcut(key(button, "KeyS", { metaKey: true }))).toBe(
+    undefined,
+  );
+});

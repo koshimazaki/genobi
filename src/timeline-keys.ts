@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-export type TimelineCommand = "play" | "delete" | "split";
+export type TimelineCommand = "play" | "delete" | "split" | "undo";
 /** Decides whether a timeline owns a panel; `undefined` is a standalone page. */
 export type PanelOwner = (panel: string | undefined) => boolean;
 
@@ -16,17 +16,26 @@ const OTHER_DIALOG = "dialog:not([data-timeline-host])";
 const panelOf = (element: Element | null) =>
   element?.closest<HTMLElement>("[data-panel]")?.dataset.panel;
 
-/** Space plays, Delete/Backspace removes the selected clip, C or S splits. */
+/**
+ * Space plays, Delete/Backspace removes the selected clip, C or S splits, and
+ * Cmd/Ctrl+Z undoes. There is no redo, so Shift+Cmd/Ctrl+Z is left alone.
+ * Text entry keeps every key, its own undo included (PromptText).
+ */
 export function timelineCommand(
   event: KeyboardEvent,
   owns: PanelOwner,
   lastPointer: Element | null = null,
 ): TimelineCommand | undefined {
+  const modified = event.ctrlKey || event.metaKey;
+  const undo =
+    modified &&
+    !event.shiftKey &&
+    !event.altKey &&
+    event.key.toLowerCase() === "z";
   if (
     event.defaultPrevented ||
     event.repeat ||
-    event.ctrlKey ||
-    event.metaKey ||
+    (modified && !undo) ||
     event.altKey
   )
     return;
@@ -35,6 +44,7 @@ export function timelineCommand(
   // With nothing focused, the panel last clicked decides.
   const focused = target && !["BODY", "HTML"].includes(target.tagName);
   if (!owns(panelOf(focused ? target : lastPointer))) return;
+  if (undo) return "undo";
   if (event.code === "Space" || event.key === " ") return "play";
   if (event.key === "Delete" || event.key === "Backspace") return "delete";
   if (event.key.toLowerCase() === "c" || event.key.toLowerCase() === "s")
