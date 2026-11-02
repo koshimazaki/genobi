@@ -141,6 +141,57 @@ export default function TemplateDrawer({
         : "Select the text below and copy it.",
     );
   }
+  // A finished cut leads with where to take it; recipes keep their fields
+  // (references, brief) above their primary action.
+  const actions = (
+    <div
+      className="template-actions"
+      data-run={mechanical ? "mechanical" : "agent"}
+    >
+      {mix ? null : mechanical ? (
+        <MechanicalPrimary run={run} disabled={busy !== ""} />
+      ) : (
+        <button
+          type="button"
+          className="template-primary"
+          disabled={busy !== ""}
+          onClick={() => onGenerate(chosen)}
+        >
+          {busy === "generate" ? "Starting…" : "Generate now"}
+          <Icon name="arrow" size={16} />
+        </button>
+      )}
+      {/* A generation opens no project: the result stays in Camera history. */}
+      {!generation && (
+        <a
+          className="template-secondary"
+          href={directorLink(template.id)}
+          aria-disabled={working}
+          onClick={(e) => {
+            if (!plain(e)) return;
+            e.preventDefault();
+            if (!working) onDirector(chosen);
+          }}
+        >
+          {busy === "director" ? "Opening…" : "Take it to Director"}
+        </a>
+      )}
+      {(session || mechanical || mix) && !generation && (
+        <a
+          className="template-secondary"
+          href={editorLink(template.id)}
+          aria-disabled={working}
+          onClick={(e) => {
+            if (!plain(e)) return;
+            e.preventDefault();
+            if (!working) onEditor(mechanical ? chosen : undefined);
+          }}
+        >
+          {busy === "editor" ? "Opening…" : "Take it to the editor"}
+        </a>
+      )}
+    </div>
+  );
   return (
     <aside
       ref={root}
@@ -218,6 +269,7 @@ export default function TemplateDrawer({
           disabled={working}
         />
       )}
+      {mix && actions}
       {mix ? (
         <>
           <MixFields template={template} />
@@ -233,53 +285,7 @@ export default function TemplateDrawer({
           disabled={working}
         />
       )}
-      <div
-        className="template-actions"
-        data-run={mechanical ? "mechanical" : "agent"}
-      >
-        {mix ? null : mechanical ? (
-          <MechanicalPrimary run={run} disabled={busy !== ""} />
-        ) : (
-          <button
-            type="button"
-            className="template-primary"
-            disabled={busy !== ""}
-            onClick={() => onGenerate(chosen)}
-          >
-            {busy === "generate" ? "Starting…" : "Generate now"}
-            <Icon name="arrow" size={16} />
-          </button>
-        )}
-        {/* A generation opens no project: the result stays in Camera history. */}
-        {!generation && (
-          <a
-            className="template-secondary"
-            href={directorLink(template.id)}
-            aria-disabled={working}
-            onClick={(e) => {
-              if (!plain(e)) return;
-              e.preventDefault();
-              if (!working) onDirector(chosen);
-            }}
-          >
-            {busy === "director" ? "Opening…" : "Take it to Director"}
-          </a>
-        )}
-        {(session || mechanical || mix) && !generation && (
-          <a
-            className="template-secondary"
-            href={editorLink(template.id)}
-            aria-disabled={working}
-            onClick={(e) => {
-              if (!plain(e)) return;
-              e.preventDefault();
-              if (!working) onEditor(mechanical ? chosen : undefined);
-            }}
-          >
-            {busy === "editor" ? "Opening…" : "Take it to the editor"}
-          </a>
-        )}
-      </div>
+      {!mix && actions}
       {(error || run.error || intake.refusal) && (
         <p role="alert">{error || run.error || intake.refusal}</p>
       )}

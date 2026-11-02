@@ -5,6 +5,7 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { animeTeaser, sheetToShot } from "../shared/templates/catalogue";
+import { dimensionsMix } from "../shared/templates/dimensions-mix";
 import type { HouseTemplate } from "../shared/templates/types";
 import type { TemplatePicks } from "../src/template-gallery/open-template";
 
@@ -180,5 +181,22 @@ describe("Tab in the drawer", () => {
     expect(nextInRing(ring, a, true)).toBe(bubble);
     // Focus outside the ring keeps the browser's own order.
     expect(nextInRing(ring, null, false)).toBeUndefined();
+  });
+});
+
+describe("the drawer for a finished cut", () => {
+  it("leads with where to take it, then lists versions newest first", async () => {
+    const html = await render(dimensionsMix);
+    const take = html.indexOf("Take it to the editor");
+    const made = html.indexOf("How it was made");
+    expect(take).toBeGreaterThan(-1);
+    // A reviewer reaches the actions without scrolling past the history.
+    expect(take).toBeLessThan(made);
+    const versions = [...html.matchAll(/Open v(\d+) in the editor/g)].map((m) =>
+      Number(m[1]),
+    );
+    expect(versions).toEqual([4, 3, 2, 1]);
+    expect(html).toMatch(/v4 · [^<]* · latest/);
+    expect(html.match(/ · latest/g)).toHaveLength(1);
   });
 });

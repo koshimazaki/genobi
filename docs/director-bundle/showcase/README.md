@@ -11,6 +11,11 @@ and a README that tells the story. Every version opens in the Editor as an
 editable project of its own, so a person can take any version and make it
 theirs, and an agent can continue from one.
 
+On the gallery card, a finished cut leads with **Take it to Director** and
+**Take it to the editor**, then **The cut** and **How it was made**, whose
+versions are listed newest first (in-progress work, then the latest, marked "latest"), so a reviewer opens
+the current cut without scrolling past v1.
+
 | Project                                      | Versions | Gallery card    |
 | -------------------------------------------- | -------- | --------------- |
 | [Dimensions mix](dimensions-mix/README.md)   | v1 to v4 | Dimensions mix  |
