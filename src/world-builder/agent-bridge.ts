@@ -54,6 +54,12 @@ export async function connectWorld(
     throw new Error("World agent connection needs the local studio server.");
   let stopped = false,
     timer: ReturnType<typeof setTimeout>;
+  /** Best effort; keepalive so it is still sent while the page unloads. */
+  const end = () =>
+    void request(`/${connected.id}`, {
+      method: "DELETE",
+      keepalive: true,
+    }).catch(() => {});
   async function poll() {
     try {
       const job = await request(`/${connected.id}/next`);
@@ -129,6 +135,9 @@ export async function connectWorld(
       if (!stopped) {
         stopped = true;
         adapter.live.stop();
+        // The server may still hold the session: end it before reporting,
+        // so a reconnect never leaves the old one (and its files) behind.
+        end();
         onDisconnect(e instanceof Error ? e.message : "World disconnected.");
       }
     }
@@ -153,7 +162,7 @@ export async function connectWorld(
       stopped = true;
       clearTimeout(timer);
       adapter.live.stop();
-      void request(`/${connected.id}`, { method: "DELETE" }).catch(() => {});
+      end();
       onDisconnect();
     },
   };

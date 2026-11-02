@@ -3,6 +3,7 @@
 // closes a connection made only for that, and keeps Connect agents as it was.
 import { describe, expect, it, vi } from "vitest";
 import { WorldLink } from "../src/world-builder/world-link";
+import { connectWorld } from "../src/world-builder/agent-bridge";
 
 const RUN = "11111111-1111-4111-8111-111111111111";
 const NEXT = "22222222-2222-4222-8222-222222222222";
@@ -102,7 +103,7 @@ describe("WorldLink", () => {
     expect(grants).toEqual([RUN, NEXT]);
   });
 
-  it("gives up on a run whose grant is refused, closing what it opened", async () => {
+  it("closes what it opened when a grant is refused, and tries again later", async () => {
     const { link, connect, counts } = fake();
     connect.mockImplementationOnce(async (onDisconnect) => ({
       id: "tab",
@@ -114,9 +115,22 @@ describe("WorldLink", () => {
     }));
     await link.follow(RUN, true);
     expect(link.state().connected).toBe(false);
+    // Not a decline: the next follow (remount, shown, run change) retries.
     await link.follow(RUN, true);
-    expect(connect).toHaveBeenCalledTimes(1);
-    expect(counts().opened).toBe(0);
+    expect(connect).toHaveBeenCalledTimes(2);
+    expect(counts().opened).toBe(1);
+    expect(link.state().granted).toBe(RUN);
+  });
+
+  it("a failed connect (a full server) is retried, not declined", async () => {
+    const { link, connect, grants } = fake();
+    connect.mockRejectedValueOnce(
+      new Error("Four World tabs are already connected."),
+    );
+    await link.follow(RUN, true);
+    expect(link.state().connected).toBe(false);
+    link.shown();
+    await vi.waitFor(() => expect(grants).toEqual([RUN]));
   });
 
   it("links automatically with keep, and Connect agents without", async () => {
@@ -145,5 +159,42 @@ describe("WorldLink", () => {
     link.shown();
     await vi.waitFor(() => expect(grants).toEqual([RUN, RUN, RUN]));
     expect(counts().opened).toBe(3);
+  });
+});
+
+describe("connectWorld", () => {
+  it("ends its server session before reporting a dropped poll", async () => {
+    const calls: string[] = [];
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (url: string, init?: RequestInit) => {
+        const method = init?.method ?? "GET";
+        calls.push(`${method} ${url}`);
+        const json = (status: number, body: unknown) =>
+          new Response(JSON.stringify(body), { status });
+        if (url === "/api/world/connect")
+          return json(200, { id: "tab", code: "c".repeat(32) });
+        if (url === "/api/world/tab/next")
+          return json(404, { error: "World session not found." });
+        return json(200, {});
+      }),
+    );
+    try {
+      const dropped = new Promise<string | undefined>((resolve) =>
+        connectWorld({ live: { stop: () => {} } } as never, (error) => {
+          calls.push(`dropped ${error}`);
+          resolve(error);
+        }),
+      );
+      expect(await dropped).toBe("World session not found.");
+      expect(calls).toEqual([
+        "POST /api/world/connect",
+        "GET /api/world/tab/next",
+        "DELETE /api/world/tab",
+        "dropped World session not found.",
+      ]);
+    } finally {
+      vi.unstubAllGlobals();
+    }
   });
 });

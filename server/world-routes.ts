@@ -29,7 +29,7 @@ interface Session {
   code?: string;
   seen: number;
   links: Set<string>;
-  /** Agent runs (by session id) the tab's owner granted, to when. */
+  /** Agent runs (by session id) the tab's owner granted, to grant order. */
   runs: Map<string, number>;
   commands: Map<string, Command>;
   files: Map<string, { bytes: Buffer; type: string }>;
@@ -39,6 +39,8 @@ const SESSION_BYTES = 144 * 1024 * 1024;
 const isFile = (file: string): file is WorldFile =>
   Object.hasOwn(WORLD_FILES, file);
 const filePath = (id: string, file: string) => `/api/world/${id}/files/${file}`;
+/** A live tab polls every 250 ms; one silent this long has gone. */
+const STALE_MS = 15_000;
 export interface WorldRouterOptions {
   /** True while `run` is `owner`'s own running agent session. */
   ownsRun?: (run: string, owner: string) => boolean;
@@ -48,6 +50,8 @@ export function worldRouter({
 }: WorldRouterOptions = {}) {
   const router = express.Router(),
     sessions = new Map<string, Session>();
+  /** Grant order: a counter, so two grants in one millisecond still order. */
+  let grants = 0;
   const json = express.json({ limit: "128kb" });
   const owner = (res: express.Response) => res.locals.sessionId as string;
   /**
@@ -93,9 +97,12 @@ export function worldRouter({
     sweep();
     if (res.locals.agent)
       throw new AppError(403, "Connect agents from the World tab.");
-    if (req.body?.keep !== true)
-      for (const [id, s] of sessions)
-        if (s.owner === owner(res)) sessions.delete(id);
+    // `keep` still reclaims the owner's tabs that stopped polling (a reload
+    // or a closed window), so reloads never fill the four slots.
+    const keep = req.body?.keep === true;
+    for (const [id, s] of sessions)
+      if (s.owner === owner(res) && (!keep || Date.now() - s.seen > STALE_MS))
+        sessions.delete(id);
     if (sessions.size >= 4)
       throw new AppError(429, "Four World tabs are already connected.");
     const s: Session = {
@@ -134,7 +141,7 @@ export function worldRouter({
     // A run that has ended is inert (its scope is gone); drop it here.
     for (const old of s.runs.keys())
       if (!ownsRun(old, s.owner)) s.runs.delete(old);
-    s.runs.set(id, Date.now());
+    s.runs.set(id, ++grants);
     res.json({ granted: true });
   });
   // The tab takes one grant back (World left while the grant was made).

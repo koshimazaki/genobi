@@ -8,13 +8,15 @@
  *   the tab connects if it is not already and grants that run (once).
  * - A connection made only for a grant ends when World Builder leaves or
  *   the run ends; one opened with Connect agents stays, as before.
- * - Disconnect agents ends both, and the tab does not grant that run again.
+ * - Disconnect agents ends both, and the tab does not grant that run again;
+ *   only that declines a run. A failed connect or grant is tried again on
+ *   the next remount, shown() or run change.
  * - The automatic link connects with `keep`, so it never ends another World
  *   view's session (Connect agents still replaces them, as before). One that
  *   drops (the server forgot it, a poll failed) reconnects once at once and
  *   again when the page is shown, without telling the person.
  */
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import { isAgentActive } from "../../shared/agent-session-events";
 import { useLatestAgentSession } from "../agent/useAgentSession";
 import type { connectWorld } from "./agent-bridge";
@@ -39,8 +41,10 @@ export interface WorldLinkState {
 
 export class WorldLink {
   private connection?: Connection;
-  private pending?: Promise<Connection>;
+  private pending?: { keep: boolean; promise: Promise<Connection> };
   private manual = false;
+  /** The open connection was made by the automatic link (`keep`). */
+  private automatic = false;
   /** Connect agents was pressed and its connection is still opening. */
   private manualPending = false;
   /** Bumped by close(): a Connect agents click from before it is void. */
@@ -89,41 +93,71 @@ export class WorldLink {
     else this.emit();
   }
 
-  private open(keep: boolean) {
+  /**
+   * The open connection, or a new one. A connect still opening is shared
+   * only by a request with the same `keep`, or by the automatic link waiting
+   * on Connect agents (the person's click already chose to replace other
+   * tabs); toggle() never inherits an automatic connect's `keep`.
+   */
+  private open(keep: boolean): Promise<Connection> {
     if (this.connection) return Promise.resolve(this.connection);
-    this.pending ??= this.connect((error) => {
-      const manual = this.manual,
-        run = this.run;
-      this.connection = undefined;
-      this.manual = false;
-      this.granted.clear();
-      this.emit();
-      if (!error) return;
-      // An automatic link that dropped comes back once, quietly.
-      if (!manual && run && !this.retried.has(run)) {
-        this.retried.add(run);
-        void this.follow(run, true);
-      } else this.onError(error);
-    }, keep).then(
+    if (this.pending && (this.pending.keep === keep || keep))
+      return this.pending.promise;
+    const opening = this.pending?.promise.catch(() => undefined);
+    const promise = (async () => {
+      // Connect agents waits for an automatic connect, then replaces it.
+      if (opening) {
+        await opening;
+        this.connection?.disconnect();
+      }
+      /** Set once the connect returns; an end before that is a drop. */
+      const own: { c?: Connection; dropped?: boolean } = {};
+      const c = await this.connect((error) => {
+        // Only this connection's own end clears the link's state.
+        if (!own.c) own.dropped = true;
+        if (!own.c || this.connection !== own.c) return;
+        const manual = this.manual,
+          run = this.run;
+        this.connection = undefined;
+        this.manual = false;
+        this.granted.clear();
+        this.emit();
+        if (!error) return;
+        // An automatic link that dropped comes back once, quietly.
+        if (!manual && run && !this.retried.has(run)) {
+          this.retried.add(run);
+          void this.follow(run, true);
+        } else this.onError(error);
+      }, keep);
+      if (own.dropped) throw new Error("World disconnected.");
+      own.c = c;
+      return c;
+    })();
+    const entry = { keep, promise };
+    this.pending = entry;
+    return promise.then(
       (c) => {
+        if (this.pending === entry) this.pending = undefined;
         this.connection = c;
-        this.pending = undefined;
+        this.automatic = keep;
         // Arrived after World left or unmounted: closed at once.
         this.release();
         return c;
       },
       (e: unknown) => {
-        this.pending = undefined;
+        if (this.pending === entry) this.pending = undefined;
         throw e;
       },
     );
-    return this.pending;
   }
 
   /**
    * The page's state: on screen or not, and the person's running session.
    * Grants that run, connecting first; a connection only a grant needed
-   * closes once there is nothing on screen to grant.
+   * closes once there is nothing on screen to grant. A failed connect or
+   * grant (a full server, a run that ended) is not a decline: the next
+   * remount, shown() or run change tries again. Only Disconnect agents
+   * declines a run.
    */
   async follow(run: string | undefined, onScreen: boolean) {
     this.run = onScreen ? run : undefined;
@@ -146,9 +180,10 @@ export class WorldLink {
         else c.disconnect();
       }
     } catch {
-      // Not again for this run: a failed grant is the manual path's job.
-      this.declined.add(want);
-      this.release();
+      // An automatic connection that could not grant is not kept open.
+      if (this.connection && !this.manual && !this.manualPending)
+        this.connection.disconnect();
+      else this.emit();
     }
   }
 
@@ -163,6 +198,9 @@ export class WorldLink {
     const closes = this.closes;
     this.manualPending = true;
     try {
+      // An open automatic connection is replaced, as Connect agents always
+      // replaced the owner's other World sessions.
+      if (this.connection && this.automatic) this.connection.disconnect();
       await this.open(false);
     } finally {
       this.manualPending = false;
@@ -171,6 +209,8 @@ export class WorldLink {
     if (closes !== this.closes || !this.connection) return this.release();
     this.manual = true;
     this.emit();
+    // The replaced connection took its grant: grant the run again here.
+    if (this.run) void this.follow(this.run, true);
   }
 
   /** The page is shown again: a dropped link may reconnect once more. */
@@ -213,17 +253,33 @@ export function useWorldLink(
   );
   const state = useSyncExternalStore(link.subscribe, link.state, link.state);
   const run = useRunningSession();
+  const wanted = !inComfyNode() && s.ready;
+  const latest = useRef({ run, active, wanted });
+  latest.current = { run, active, wanted };
   useEffect(() => () => link.close(), [link]);
   useEffect(() => {
     const shown = () => {
       if (document.visibilityState === "visible") link.shown();
     };
+    // Leaving the page ends its session now (the DELETE is sent with
+    // keepalive), not after the server's sweep; a page restored from the
+    // back/forward cache links again.
+    const hide = () => link.close();
+    const restore = (event: PageTransitionEvent) => {
+      const { run, active, wanted } = latest.current;
+      if (event.persisted && wanted) void link.follow(run, active);
+    };
     document.addEventListener("visibilitychange", shown);
-    return () => document.removeEventListener("visibilitychange", shown);
+    window.addEventListener("pagehide", hide);
+    window.addEventListener("pageshow", restore);
+    return () => {
+      document.removeEventListener("visibilitychange", shown);
+      window.removeEventListener("pagehide", hide);
+      window.removeEventListener("pageshow", restore);
+    };
   }, [link]);
   useEffect(() => {
-    if (inComfyNode() || !s.ready) return;
-    void link.follow(run, active);
-  }, [link, run, active, s.ready]);
+    if (wanted) void link.follow(run, active);
+  }, [link, run, active, wanted]);
   return { state, toggle: () => link.toggle() };
 }

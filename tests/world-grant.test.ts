@@ -166,10 +166,10 @@ it("revokes the grant when the run ends, on disconnect and on expiry", async () 
   ({ id } = await (await call("/connect", {}, "POST", {})).json());
   await call(`/${id}/grant`, {}, "POST", { run: RUN });
   expect((await call("/granted", agentOf(RUN))).status).toBe(200);
-  const now = Date.now();
-  vi.spyOn(Date, "now").mockReturnValue(now + 301_000);
+  const clock = vi.spyOn(Date, "now").mockReturnValue(Date.now() + 301_000);
   expect((await call("/granted", agentOf(RUN))).status).toBe(404);
   expect((await call(`/${id}/files`, agentOf(RUN))).status).toBe(404);
+  clock.mockRestore();
 });
 
 it("keeps another World view's session when the automatic link connects", async () => {
@@ -187,10 +187,12 @@ it("keeps another World view's session when the automatic link connects", async 
   expect(await (await call("/granted", agentOf(RUN))).json()).toEqual({
     id: first,
   });
-  // Both grant the run: the latest grant is the one handed out.
-  const now = Date.now();
-  vi.spyOn(Date, "now").mockReturnValue(now + 1_000);
+  // Both grant the run, in the same millisecond: the latest grant is the
+  // one handed out (a counter orders them, not the clock).
+  const clock = vi.spyOn(Date, "now").mockReturnValue(Date.now());
+  await call(`/${first}/grant`, {}, "POST", { run: RUN });
   await call(`/${second}/grant`, {}, "POST", { run: RUN });
+  clock.mockRestore();
   expect(await (await call("/granted", agentOf(RUN))).json()).toEqual({
     id: second,
   });
@@ -198,4 +200,32 @@ it("keeps another World view's session when the automatic link connects", async 
   await call("/connect", {}, "POST", {});
   expect((await call(`/${first}/next`)).status).toBe(404);
   expect((await call(`/${second}/next`)).status).toBe(404);
+});
+
+it("lets an automatic link reclaim the owner's silent tabs, never live ones or others'", async () => {
+  const call = await harness(new Map());
+  const keep = () => call("/connect", {}, "POST", { keep: true });
+  const ids: string[] = [];
+  for (let i = 0; i < 4; i++) ids.push((await (await keep()).json()).id);
+  // Four live tabs: the fifth is refused, and none of them is ended.
+  expect((await keep()).status).toBe(429);
+  for (const id of ids) expect((await call(`/${id}/next`)).status).toBe(200);
+  // Reloads: those tabs stopped polling. A new automatic link reclaims them.
+  const clock = vi.spyOn(Date, "now").mockReturnValue(Date.now() + 16_000);
+  const fresh = await keep();
+  expect(fresh.status).toBe(200);
+  for (const id of ids) expect((await call(`/${id}/next`)).status).toBe(404);
+  clock.mockRestore();
+  // Another person's silent tab is never reclaimed by this owner.
+  const theirs = (
+    await (
+      await call("/connect", { session: "stranger" }, "POST", { keep: true })
+    ).json()
+  ).id;
+  const later = vi.spyOn(Date, "now").mockReturnValue(Date.now() + 16_000);
+  expect((await keep()).status).toBe(200);
+  later.mockRestore();
+  expect((await call(`/${theirs}/next`, { session: "stranger" })).status).toBe(
+    200,
+  );
 });

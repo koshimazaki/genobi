@@ -77,7 +77,9 @@ The grant is the person's, never the agent's:
   the tab opened only for a grant closes when World Builder leaves the screen
   or the run ends; one opened with **Connect agents** stays as before.
 - After **Disconnect agents** the tab does not grant that run again; the next
-  session is granted as usual. A refused grant is not retried.
+  session is granted as usual. Only that declines a run: a connect or grant
+  that fails (a full server, a run that just ended) is tried again when
+  World remounts, is shown again or the run changes.
 - Nothing in flight outlives the page: a connection that finishes opening
   after World left, the page unmounted or the run changed is closed at once,
   ungranted, and a grant that lands after that is taken back
@@ -229,8 +231,12 @@ takes commands from `/:id/next`, acknowledges them, uploads, clears
 `/:id/files` and DELETEs `/:id` to disconnect. Disconnect stops controls.
 **Connect agents** replaces the owner's other World sessions; the automatic
 link for a grant connects with `keep`, so a second World view or a remount
-never ends another tab's session. When two views grant the same run,
-`granted` returns the latest grant.
+never ends another tab's session that is still polling; it does reclaim the
+owner's tabs silent for 15 seconds (a reload, a closed window), so reloads
+never fill the four slots. A tab ends its own session on `pagehide` (a
+keepalive DELETE) and when its poll fails, before it reconnects. When two
+views grant the same run, `granted` returns the latest grant, ordered by a
+counter rather than the clock.
 
 Connections, commands and the latest clip or take are memory-only. Four
 sessions, 16 pending commands and 64 command receipts per session are allowed.

@@ -125,3 +125,60 @@ describe("WorldLink in flight", () => {
     expect(t.open()).toBe(1);
   });
 });
+
+describe("WorldLink keep policy", () => {
+  function recording() {
+    const connects: boolean[] = [];
+    const gates: (() => void)[] = [];
+    const connect = (onDisconnect: () => void, keep: boolean) => {
+      connects.push(keep);
+      const n = connects.length;
+      return new Promise((resolve) =>
+        gates.push(() =>
+          resolve({
+            id: `tab-${n}`,
+            code: "c".repeat(32),
+            grant: async () => {},
+            revoke: async () => {},
+            disconnect: () => onDisconnect(),
+          }),
+        ),
+      );
+    };
+    const link = new WorldLink(connect as never);
+    const settle = () => new Promise((r) => setTimeout(r, 0));
+    return { link, connects, gates, settle };
+  }
+
+  it("Connect agents during an automatic connect makes its own, replacing it", async () => {
+    const t = recording();
+    const following = t.link.follow(RUN, true);
+    const toggling = t.link.toggle();
+    await t.settle();
+    expect(t.connects).toEqual([true]);
+    t.gates[0]();
+    await t.settle();
+    expect(t.connects).toEqual([true, false]);
+    t.gates[1]();
+    await Promise.all([toggling, following]);
+    await t.settle();
+    expect(t.link.state()).toMatchObject({
+      code: "c".repeat(32),
+      granted: RUN,
+    });
+  });
+
+  it("the automatic link during Connect agents shares the person's connect", async () => {
+    const t = recording();
+    const toggling = t.link.toggle();
+    const following = t.link.follow(RUN, true);
+    t.gates[0]();
+    await Promise.all([toggling, following]);
+    await t.settle();
+    expect(t.connects).toEqual([false]);
+    expect(t.link.state()).toMatchObject({
+      code: "c".repeat(32),
+      granted: RUN,
+    });
+  });
+});
