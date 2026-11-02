@@ -22,6 +22,7 @@ export default function GenerateAction({
   onSubmit,
   onResume,
   onUpdate,
+  onConfigure,
 }: {
   state: ComposerState;
   jobs: Job[];
@@ -32,6 +33,7 @@ export default function GenerateAction({
   onSubmit: () => void;
   onResume: () => void;
   onUpdate: (changes: Partial<ComposerState>) => void;
+  onConfigure?: () => void;
 }) {
   const { generator, model } = state;
   const providerChoices = !isImage(generator)
@@ -75,6 +77,7 @@ export default function GenerateAction({
       }
       onSubmit={onSubmit}
       onResume={onResume}
+      onConfigure={onConfigure}
     />
   );
 }
