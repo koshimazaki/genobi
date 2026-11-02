@@ -33,7 +33,7 @@
   color: var(--accent-ink);
   cursor: pointer;
 }
-.generate-split__trigger:hover:not(:disabled),
+.generate-split__trigger:hover:not([aria-disabled="true"]),
 .generate-split__trigger[aria-expanded="true"] {
   background: var(--accent-strong);
 }
@@ -41,7 +41,7 @@
   outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
-.generate-split__trigger:disabled {
+.generate-split__trigger[aria-disabled="true"] {
   cursor: not-allowed;
   opacity: 0.55;
 }

@@ -39,21 +39,31 @@ export default function ProviderMenu({
   // The open popover's anchor; null while closed.
   const [anchor, setAnchor] = useState<HTMLElement | null>(null);
   const open = anchor !== null;
-  useEffect(() => {
-    if (disabled) setAnchor(null);
-  }, [disabled]);
   const current = choices.find((choice) => choice.value === value);
+  const columns = Math.min(choices.length, 3);
   const finish = () => {
     setAnchor(null);
     trigger.current?.focus();
   };
+  // A run starting while the panel is open closes it. The trigger only
+  // marks itself unavailable (aria-disabled) rather than `disabled`, so the
+  // keyboard position can come back to it instead of falling to the body.
+  useEffect(() => {
+    if (!disabled || !anchor) return;
+    setAnchor(null);
+    trigger.current?.focus();
+  }, [disabled, anchor]);
   return (
     <div className="generate-split__selector">
       <button
         ref={trigger}
         type="button"
         className="generate-split__trigger"
-        aria-label="Generation provider"
+        aria-label={
+          current
+            ? `Generation provider: ${current.label}`
+            : "Generation provider"
+        }
         aria-haspopup="dialog"
         aria-expanded={open}
         title={
@@ -61,9 +71,12 @@ export default function ProviderMenu({
             ? `Generate with ${current.label}`
             : "Choose generation provider"
         }
-        disabled={disabled}
-        onClick={(event) => setAnchor(open ? null : event.currentTarget)}
+        aria-disabled={disabled || undefined}
+        onClick={(event) => {
+          if (!disabled) setAnchor(open ? null : event.currentTarget);
+        }}
         onKeyDown={(event) => {
+          if (disabled) return;
           if (!open && (event.key === "ArrowDown" || event.key === "ArrowUp")) {
             event.preventDefault();
             setAnchor(event.currentTarget);
@@ -81,6 +94,8 @@ export default function ProviderMenu({
           label="Generation provider"
           close={() => setAnchor(null)}
           width={300}
+          columns={columns}
+          align="end"
           className="dir-direction-popover generate-provider-popover"
         >
           <header>
@@ -100,7 +115,7 @@ export default function ProviderMenu({
             role="group"
             aria-label="Provider"
             style={{
-              gridTemplateColumns: `repeat(${Math.min(choices.length, 3)}, minmax(0, 1fr))`,
+              gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
             }}
           >
             {choices.map((choice) => (
