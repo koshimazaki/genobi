@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent } from "react";
 import AnchoredPopover from "./AnchoredPopover";
 import Icon from "./Icon";
 import "../director/direction-popover.css";
@@ -53,6 +53,41 @@ export default function ProviderMenu({
     setAnchor(null);
     trigger.current?.focus();
   }, [disabled, anchor]);
+  // The provider tile last focused, for Up/Down from Configure to return to.
+  // Opening the panel focuses the current provider, so it starts there.
+  const lastTile = useRef<number | null>(null);
+  /**
+   * Two rows: the provider tiles and the full-width Configure row. Up or
+   * Down from any tile goes to Configure, and from Configure back to the
+   * tile it came from, else the current provider. Left and Right, and a
+   * menu without Configure, keep AnchoredPopover's grid movement.
+   */
+  const betweenRows = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (!onConfigure) return;
+    if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
+    const group = event.currentTarget;
+    const target = event.target as HTMLElement;
+    const configure = group.querySelector<HTMLElement>(
+      ".generate-provider-configure",
+    );
+    const tiles = group.querySelectorAll<HTMLElement>("[data-provider]");
+    let next: HTMLElement | null | undefined;
+    if (target === configure) {
+      const back =
+        lastTile.current ??
+        Math.max(
+          0,
+          choices.findIndex((choice) => choice.value === value),
+        );
+      next = tiles[back];
+    } else if (target.dataset.provider !== undefined) {
+      next = configure;
+    }
+    if (!next) return;
+    event.preventDefault();
+    event.stopPropagation();
+    next.focus();
+  };
   return (
     <div className="generate-split__selector">
       <button
@@ -117,12 +152,17 @@ export default function ProviderMenu({
             style={{
               gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))`,
             }}
+            onKeyDown={betweenRows}
           >
-            {choices.map((choice) => (
+            {choices.map((choice, index) => (
               <button
                 key={choice.value}
                 type="button"
                 data-choice
+                data-provider={index}
+                onFocus={() => {
+                  lastTile.current = index;
+                }}
                 aria-pressed={choice.value === value}
                 onClick={() => {
                   if (choice.value !== value) onChange(choice.value);

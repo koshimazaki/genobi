@@ -124,20 +124,20 @@ describe("the Generate provider menu", () => {
     key(trigger(), "ArrowDown");
     expect(menu()).not.toBeNull();
     expect(document.activeElement).toBe(tile("Comfy workflow"));
-    key(menu()!, "ArrowRight");
+    key(document.activeElement!, "ArrowRight");
     expect(document.activeElement).toBe(tile("BFL API"));
-    key(menu()!, "ArrowLeft");
+    key(document.activeElement!, "ArrowLeft");
     // Down from the first tile drops to the Configure row below the pair.
-    key(menu()!, "ArrowDown");
+    key(document.activeElement!, "ArrowDown");
     expect(document.activeElement).toBe(tile(CONFIGURE));
-    key(menu()!, "ArrowUp");
+    key(document.activeElement!, "ArrowUp");
     expect(document.activeElement).toBe(tile("Comfy workflow"));
-    key(menu()!, "ArrowRight");
+    key(document.activeElement!, "ArrowRight");
     // A focused button activates on Enter natively; jsdom needs the click.
     act(() => (document.activeElement as HTMLButtonElement).click());
     expect(change).toHaveBeenCalledWith("bfl");
     key(trigger(), "ArrowDown");
-    key(menu()!, "Escape");
+    key(document.activeElement!, "Escape");
     expect(menu()).toBeNull();
     expect(document.activeElement).toBe(trigger());
   });
@@ -148,8 +148,41 @@ describe("the Generate provider menu", () => {
     const group = menu()!.querySelector<HTMLElement>('[role="group"]')!;
     expect(group.style.gridTemplateColumns).toBe("repeat(3, minmax(0, 1fr))");
     expect(document.activeElement).toBe(tile("Auto"));
-    key(menu()!, "ArrowDown");
+    key(document.activeElement!, "ArrowDown");
     expect(document.activeElement).toBe(tile(CONFIGURE));
+  });
+
+  for (const [name, routes] of [
+    ["Klein", klein],
+    ["FLUX 3", flux],
+  ] as const) {
+    it(`goes between every ${name} tile and Configure with Up and Down`, () => {
+      mount({ providerChoices: routes, providerValue: routes[0].value });
+      key(trigger(), "ArrowDown");
+      for (const route of routes) {
+        for (const [away, back] of [
+          ["ArrowDown", "ArrowUp"],
+          ["ArrowUp", "ArrowDown"],
+        ]) {
+          act(() => tile(route.label).focus());
+          key(document.activeElement!, away);
+          expect(document.activeElement).toBe(tile(CONFIGURE));
+          key(document.activeElement!, back);
+          expect(document.activeElement).toBe(tile(route.label));
+        }
+      }
+    });
+  }
+
+  it("returns from Configure to the tile Right left it from", () => {
+    mount({ providerChoices: flux, providerValue: "bfl" });
+    key(trigger(), "ArrowDown");
+    expect(document.activeElement).toBe(tile("BFL API"));
+    key(document.activeElement!, "ArrowRight");
+    key(document.activeElement!, "ArrowRight");
+    expect(document.activeElement).toBe(tile(CONFIGURE));
+    key(document.activeElement!, "ArrowUp");
+    expect(document.activeElement).toBe(tile("Comfy Router"));
   });
 
   it("is unavailable while a run is being sent", () => {
