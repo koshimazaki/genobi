@@ -12,6 +12,16 @@ shadow, short pointer, small accent label) in the studio's own type, dark
 surfaces and theme tokens. Its content is now static, curated and local
 (`src/agent/GenobiGuide.tsx`, text in `src/agent/guide-content.ts`):
 
+- **Voice first.** Genobi is driven by voice: the first pointer in every mode
+  is "Press the mic and say what you want", and while a voice (or terminal)
+  session runs, a compact status sits on top (`GuideSessionStatus.tsx`):
+  **Agent working**, the agent's newest reply or line, "Results appear in
+  Camera, the Gallery or World", **Speak to agent** (the same shared voice
+  recorder and `AgentVoiceButton` as before) and **Open log** (the deck). The
+  launcher reads **Agent working** meanwhile. The voice path itself is
+  unchanged: the mic, Send to agent (`agent-destination.ts`, which now opens
+  the deck rather than the old bubble view), World Builder's send
+  (`world-send.ts`) and voice intents.
 - **Here**: two or three pointers for the mode in view, for example "Swap a
   clip: drag a video from Assets onto a template slot", "Drop a track on the
   soundtrack slot", "Need new footage? Create it in Camera". A pointer's button
@@ -22,7 +32,7 @@ surfaces and theme tokens. Its content is now static, curated and local
   Genobi** opens the existing setup dialog. On the hosted studio the hosted
   voice notice explains the local requirement.
 
-The bubble makes no network call, starts nothing, sends nothing and has no
+The bubble makes no network call of its own, starts nothing and has no
 text field. It replaced the session view: the conversation, Activity history,
 **Start Genobi** with a typed brief, **Speak to agent**, the approvals, Stop,
 and the new-reply mark on the avatar.

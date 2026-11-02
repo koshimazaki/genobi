@@ -147,6 +147,30 @@
   color: var(--muted);
   font: 9px var(--mono);
 }
+.agent-guide-note {
+  margin: 8px 0 0;
+  color: var(--soft);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.agent-guide-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+.agent-guide-actions button {
+  min-height: 34px;
+  padding: 4px 8px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  color: var(--soft);
+  font: 10px var(--mono);
+}
+.agent-guide-actions button:hover {
+  color: var(--readout);
+  background: var(--hover-wash);
+}
 .agent-guide-list {
   display: grid;
   gap: 10px;

@@ -73,9 +73,14 @@ const POINTERS: Record<string, GuidePointer[]> = {
   ],
 };
 
-/** The pointers for a studio mode; a sensible default for any other. */
+/** Genobi is voice-first: the mic is the way to talk to the agent. */
+const VOICE: GuidePointer = {
+  text: "Press the mic and say what you want. The agent works on it and the results appear in Camera, the Gallery or World.",
+};
+
+/** The pointers for a studio mode, voice first; a default for any other. */
 export function guidePointers(preset: string | undefined): GuidePointer[] {
-  return (preset && POINTERS[preset]) || SWAP;
+  return [VOICE, ...((preset && POINTERS[preset]) || SWAP)];
 }
 
 /** Setup help, in the order a new local studio needs it. */

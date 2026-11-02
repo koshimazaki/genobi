@@ -11,16 +11,20 @@ import {
   guidePointers,
   type GuideAction,
 } from "./guide-content";
+import { useLatestAgentSession } from "./useAgentSession";
+import { GuideSessionStatus } from "./GuideSessionStatus";
+import { isAgentActive } from "../../shared/agent-session-events";
 import "./agent.css";
 import "./agent-header.css";
 
 /**
  * The Genobi bubble as a guide (#57): the same mark beside the mic, opening
  * the same SIDKIT-style bubble, with static local help — pointers for the
- * mode in view, "Did you know" tips and setup help. It starts no agent, sends
- * nothing and makes no network call. Agent sessions are driven from a
- * terminal (agent API, MCP, CLI) and watched in the footer deck, which also
- * holds a session's approvals and Stop.
+ * mode in view, "Did you know" tips and setup help. It starts no agent and
+ * makes no network call. Genobi is voice-first: while a voice (or terminal)
+ * session runs, a compact status on top says the agent is working, shows its
+ * newest words and where results land, and offers Speak to agent. The full
+ * log, approvals and Stop are in the footer deck.
  */
 export function GenobiGuide({
   defaultOpen = false,
@@ -33,6 +37,8 @@ export function GenobiGuide({
   const launcher = useRef<HTMLButtonElement>(null);
   const id = useId();
   const pointers = guidePointers(shell?.preset);
+  const session = useLatestAgentSession();
+  const working = !!session && isAgentActive(session.status);
   const hide = () => {
     setOpen(false);
     launcher.current?.focus({ preventScroll: true });
@@ -50,7 +56,7 @@ export function GenobiGuide({
     <aside
       className="agent-companion"
       aria-label="Genobi guide"
-      data-status="idle"
+      data-status={session?.status ?? "idle"}
       onKeyDown={(event) => {
         if (event.key !== "Escape" || !open) return;
         event.stopPropagation();
@@ -77,6 +83,7 @@ export function GenobiGuide({
             role="region"
             aria-label="Genobi tips"
           >
+            {session && <GuideSessionStatus session={session} onDeck={hide} />}
             <div className="agent-bubble-copy">
               <div className="agent-source">Here</div>
               <ul className="agent-guide-list" aria-label="Pointers">
@@ -121,7 +128,7 @@ export function GenobiGuide({
         ref={launcher}
         className="agent-launcher"
         aria-label={open ? "Close Genobi guide" : "Open Genobi guide"}
-        title="Genobi · Guide"
+        title={`Genobi · ${working ? "Agent working" : "Guide"}`}
         aria-expanded={open}
         aria-controls={open ? id : undefined}
         onClick={() => (open ? hide() : setOpen(true))}
@@ -132,7 +139,7 @@ export function GenobiGuide({
         </span>
         <span className="agent-launcher-label">
           <strong>Genobi</strong>
-          <span>Guide</span>
+          <span>{working ? "Agent working" : "Guide"}</span>
         </span>
       </button>
     </aside>
