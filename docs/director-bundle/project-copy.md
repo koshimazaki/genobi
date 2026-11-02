@@ -18,11 +18,12 @@ refuses a stale base with `409 revision_conflict` and the current revision,
 so a person's edit and an agent's command cannot overwrite each other. A
 page's first push of a project reads `GET /api/projects/:id` first
 (`CopySync.openCopy`): when a copy exists (a reload, an earlier visit) the
-page opens it in place. It says "Opened this project's saved copy" only when
-the bundle is still the one the page loaded (`initialize`) and no edit came
-while the copy was read. Otherwise (edits, an edit during the download, a
-template the gallery committed) it says the copy replaced them and Undo brings
-them back, and the leave guard and `saveCopies` stay unconfirmed. The
+page opens it in place, silently when the bundle is still the one the page
+loaded (`initialize`) and no edit came while the copy was read (an upgrade of
+an older copy still shows its own note). Otherwise (edits, an edit during the
+download, a template the gallery committed) it opens the copy and asks
+**Keep saved copy** or **Restore my version**; until answered, the leave guard
+and `saveCopies` stay unconfirmed. The
 manifest read for that check is reused for the copy, not read twice.
 It never pushes a freshly loaded template over the copy, which is what
 answered 409 after a reload. Reads never answer 409; a conflict that still

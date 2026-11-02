@@ -10,7 +10,7 @@ import {
   type CopyManifest,
 } from "./project-copy";
 import type { SyncOptions, Synced } from "./project-copy-sync-options";
-import { copyChoice } from "./project-copy-choice";
+import { copyChoice, SAVED_COPY, type CopyKind } from "./project-copy-choice";
 
 /**
  * The rules that keep the server's copy in step with the store, which stays
@@ -57,7 +57,6 @@ export class CopySync {
   /** A manifest `openCopy` just read, for the reload to use once. */
   private manifests = new Map<string, CopyManifest>();
   /** What the last reload's upgrade changed, for the opening notice. */
-  private upgraded = "";
   /** The bundle an upgrade committed: the studio's edit, not the person's. */
   private automatic: Bundle | undefined;
   constructor(private options: SyncOptions) {}
@@ -180,7 +179,7 @@ export class CopySync {
           ? ""
           : synced
             ? "Another window changed this project"
-            : "This project already had a saved copy");
+            : SAVED_COPY);
       // The person's version now lives only in undo history (flush).
       // Keep the previous draft recoverable through an explicit choice.
       const mine = this.current()!;
@@ -188,8 +187,7 @@ export class CopySync {
       this.state.actions.commit(copy);
       this.settle(id, revision);
       this.openedAt.delete(id);
-      const savedChoice = why === "This project already had a saved copy";
-      if (savedChoice && this.options.conflict)
+      if (why === SAVED_COPY && this.options.conflict)
         this.offerMine(id, mine, "saved-copy");
       else if (reason)
         this.options.notice(
@@ -207,7 +205,6 @@ export class CopySync {
     if (!up || this.current() !== opened) return;
     this.state.actions.commit(up.bundle, opened);
     this.automatic = this.current();
-    this.upgraded = up.note;
     this.options.notice(up.note);
   }
 
@@ -236,7 +233,15 @@ export class CopySync {
   stop() {
     clearTimeout(this.timer);
   }
-  /** Flush pending changes, protecting drafts replaced by a remote copy. */
+  /**
+   * Saves what is waiting now (leave-guard.ts) and answers whether the
+   * server's copy holds the store's current revision. A refused revision is
+   * not retried here (false), nor is a copy that holds the current revision
+   * only because a reload replaced the person's edits (a conflict, a saved
+   * copy awaiting their choice, another writer): their version is then in
+   * undo history alone. `allProjects` (leaving the page) also needs every
+   * other edited project saved; linking the open copy to an agent does not.
+   */
   async flush(allProjects = false): Promise<boolean> {
     this.stop();
     const kept = () => this.kept(allProjects);
@@ -250,7 +255,11 @@ export class CopySync {
     }
     return kept();
   }
-  /** Read whether all pending work is synced, without performing a write. */
+  /**
+   * What `flush` would answer, without saving, for `beforeunload`. A push
+   * waiting on its 600 ms timer, a refused revision and a reload held for a
+   * render all read as not synced.
+   */
   isSynced() {
     return !this.pushing && !this.reloading && !this.staleId && this.kept(true);
   }
@@ -374,11 +383,7 @@ export class CopySync {
    * replacing the agent's changes, but only once they say so. Their answer
    * builds on the revision they were shown; a newer one asks again.
    */
-  private offerMine(
-    id: string,
-    mine: Bundle,
-    kind: "agent" | "saved-copy" = "agent",
-  ) {
+  private offerMine(id: string, mine: Bundle, kind: CopyKind = "agent") {
     const revision = this.synced.get(id)?.server;
     if (!this.options.conflict || revision === undefined) return;
     const overwrittenAt = this.overwritten;
@@ -391,27 +396,25 @@ export class CopySync {
         current: () => this.current(),
         synced: () => this.synced.get(id),
         counters: () => [this.overwritten, this.keptAt],
-        accept: () => {
-          this.keptAt = overwrittenAt;
-        },
+        accept: () => void (this.keptAt = overwrittenAt),
+        notice: this.options.notice,
+        reoffer: () => this.offerMine(id, mine, kind),
         restore: () => {
-          if (this.current()?.project.id !== id) return;
-          if (this.synced.get(id)?.local !== this.current()?.project.revision)
-            return this.options.notice(
-              "Project changed; review before restoring an older draft.",
-            );
-          if (this.synced.get(id)?.server !== revision)
-            return this.offerMine(id, mine, kind);
           this.state.actions.commit(mine);
           this.schedule(0);
         },
       }),
     );
   }
-  /** Read a saved project before the first push, without overwriting it. */
+  /**
+   * A first push asks whether the server already holds a copy and opens it
+   * rather than pushing over it (409 `revision_conflict`). A page that only
+   * loaded the project opens it silently; one with its own edits (or a template chosen
+   * over the copy) asks through `conflict` whether to keep the copy or
+   * restore the person's version. Answers whether the copy was opened.
+   */
   private async openCopy(id: string) {
     this.opened.add(id);
-    this.upgraded = "";
     const opening = this.current()!;
     // Recorded before the read: an edit made while the copy downloads
     // changes the revision, and load() then counts it as replaced.
@@ -431,21 +434,14 @@ export class CopySync {
       this.openedAt.delete(id);
       return false;
     }
-    // Only loaded: the bundle `initialize` set, untouched. A template the
-    // gallery committed with nothing open is the person's choice, not this.
+    // Only opened: the bundle `initialize` or a route open set, untouched.
+    // A template the gallery committed over a project is the person's choice.
     const loadedOnly = opening === this.state.director.loaded;
-    const replaced = this.overwritten;
     this.see(id, manifest.project.revision);
     this.manifests.set(id, manifest);
-    await this.reload(
-      id,
-      loadedOnly ? "" : "This project already had a saved copy",
-    );
-    const server = this.synced.get(id)?.server;
-    if (loadedOnly && server !== undefined && this.overwritten === replaced)
-      this.options.notice(
-        `Opened this project's saved copy (revision ${server}).${this.upgraded && ` ${this.upgraded}`}`,
-      );
+    // Opening an untouched page's own saved copy is the expected case and
+    // stays silent; only a choice or an upgrade note is worth a notice.
+    await this.reload(id, loadedOnly ? "" : SAVED_COPY);
     return true;
   }
 

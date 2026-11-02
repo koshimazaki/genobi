@@ -75,7 +75,8 @@ describe("the studio's copy rules", () => {
     expect(live).toEqual([earlier.project.id]);
     expect(sync.serverRevision(earlier.project.id)).toBe(3);
     expect(store.getState().director.bundle!.project.revision).toBe(3);
-    expect(notices).toEqual(["Opened this project's saved copy (revision 3)."]);
+    // Opening the page's own saved copy is expected, so it says nothing.
+    expect(notices).toEqual([]);
     expect(answers.filter((line) => / 409$/.test(line))).toEqual([]);
     expect(answers.some((line) => line.startsWith("PUT"))).toBe(false);
     // Nothing of the person's was replaced: leaving needs no warning.
@@ -122,6 +123,34 @@ describe("the studio's copy rules", () => {
     expect((await readManifest(saved.project.id, fetcher))!.project.name).toBe(
       "My unsaved draft",
     );
+    sync.stop();
+  });
+
+  it("opens a saved copy silently when navigation opened the project unedited", async () => {
+    const { fetcher, store, notices } = await studio();
+    const saved = base();
+    saved.project = { ...saved.project, name: "Server copy", revision: 14 };
+    await pushCopy(saved, null, new Set(), fetcher);
+    const decisions: CopyConflict[] = [];
+    const sync = new CopySync({
+      store,
+      fetcher,
+      debounce: 0,
+      notice: (text) => notices.push(text),
+      live: () => {},
+      conflict: (decision) => decisions.push(decision),
+    });
+    // Another project was open; the route then opens this one (no edits).
+    const other = base();
+    other.project = { ...other.project, id: "another-project" };
+    store.getState().actions.initialize(other);
+    store.getState().actions.commit(base(), store.getState().director.bundle);
+    store.getState().actions.opened();
+    await sync.push();
+    expect(store.getState().director.bundle!.project.name).toBe("Server copy");
+    expect(decisions).toEqual([]);
+    expect(notices).toEqual([]);
+    expect(await sync.flush()).toBe(true);
     sync.stop();
   });
 
