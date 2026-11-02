@@ -3,7 +3,8 @@ import { createServer } from "node:http";
 import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { URL, fileURLToPath } from "node:url";
+import process from "node:process";
 import { promisify } from "node:util";
 import { describe, expect, it } from "vitest";
 
@@ -38,7 +39,7 @@ async function runCheck({ skipped, commits, unavailable = false }) {
   const summaryPath = join(directory, "summary.md");
   await writeFile(summaryPath, "# Deployment\n");
   let code = 0;
-  let stdout = "";
+  let stdout;
   try {
     try {
       const result = await exec(process.execPath, [script], {
