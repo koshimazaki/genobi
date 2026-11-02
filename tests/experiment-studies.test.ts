@@ -23,6 +23,9 @@ const NEW: Study[] = [
   "fruit-dance",
   "room-walls",
   "pyramid-inside",
+  "fruit-apple",
+  "fruit-banana",
+  "fruit-papaya",
 ];
 const dims = (frames: number) => ({ width: 1024, height: 576, frames });
 const bands = (frames: number, low: (i: number) => number, rest = 0.3) => {
@@ -38,23 +41,6 @@ const bands = (frames: number, low: (i: number) => number, rest = 0.3) => {
     },
   };
 };
-const meanDistance = (study: Study, low: number) => {
-  const { recipe } = createStudy(
-    study,
-    bands(97, () => low),
-    dims(97),
-  );
-  const pivot = recipe.motion!.pivot;
-  const scene = evaluateScene(recipe, 48);
-  const voxels = scene.objects.filter((o) => o.id.startsWith("voxel-"));
-  const d =
-    voxels.reduce(
-      (sum, o) => sum + Math.hypot(o.x - pivot[0], o.z - pivot[2]),
-      0,
-    ) / voxels.length;
-  return { d, room: scene.room!.dimensions };
-};
-
 describe("new pilot studies", () => {
   it.each([97, 193, 241])(
     "all build and fit the native recipe bound at %i frames",
@@ -80,71 +66,79 @@ describe("new pilot studies", () => {
     expect(OUTPUT_NAME.test("canyon/rgb.mp4")).toBe(false);
   });
 
+  const layout = (study: Study, low: number, frame: number) => {
+    const { recipe } = createStudy(
+      study,
+      bands(97, () => low),
+      dims(97),
+    );
+    const scene = evaluateScene(recipe, frame);
+    return {
+      parts: scene.objects.filter((o) => o.id.startsWith("voxel-")),
+      room: scene.room!.dimensions,
+    };
+  };
+
   it.each([
-    ["cathedral-walls", "x"],
-    ["canyon", "z"],
-  ] as [Study, "x" | "z"][])(
-    "%s closes sideways only (%s) on the bass, whatever the frame",
-    (study, axis) => {
-      const voxels = (low: number, frame: number) => {
-        const { recipe } = createStudy(
-          study,
-          bands(97, () => low),
-          dims(97),
-        );
-        const scene = evaluateScene(recipe, frame);
-        return {
-          parts: scene.objects.filter((o) => o.id.startsWith("voxel-")),
-          room: scene.room!.dimensions,
-        };
-      };
-      const quiet = voxels(0, 30),
-        loud = voxels(1, 30);
-      const other = axis === "x" ? "z" : "x";
+    ["canyon", ["z"], 0.55],
+    ["pyramid-inside", ["x", "z"], 0.7],
+  ] as [Study, ("x" | "z")[], number][])(
+    "%s closes sideways only on the bass, whatever the frame",
+    (study, axes, fraction) => {
+      const quiet = layout(study, 0, 30),
+        loud = layout(study, 1, 30);
       expect(loud.parts.length).toBe(quiet.parts.length);
       quiet.parts.forEach((q, i) => {
         const l = loud.parts[i];
-        // Loud = closer to the centre line; height and the other axis hold.
-        expect(Math.abs(l[axis])).toBeCloseTo(Math.abs(q[axis]) * 0.55, 6);
+        // Loud = closer to the centre; height (and any other axis) holds.
+        for (const axis of ["x", "z"] as const)
+          expect(l[axis]).toBeCloseTo(
+            axes.includes(axis) ? q[axis] * fraction : q[axis],
+            // Stored positions are rounded to millimetres.
+            2,
+          );
         expect(l.y).toBeCloseTo(q.y, 6);
-        expect(l[other]).toBeCloseTo(q[other], 6);
       });
+      // The reverb box shrinks with the walls.
       expect(loud.room[0]).toBeLessThan(quiet.room[0]);
       expect(loud.room[2]).toBeLessThan(quiet.room[2]);
       // The clock never moves the walls: same band, different frame, same layout.
-      expect(voxels(0, 80).parts).toEqual(quiet.parts);
-      expect(voxels(1, 80).parts).toEqual(loud.parts);
+      expect(layout(study, 0, 80).parts).toEqual(quiet.parts);
+      expect(layout(study, 1, 80).parts).toEqual(loud.parts);
     },
   );
 
-  it.each(["pyramid-inside"] as Study[])(
-    "%s: loud bass pulls the walls closer and shrinks the acoustic box",
-    (study) => {
-      const quiet = meanDistance(study, 0),
-        loud = meanDistance(study, 1);
-      // Negative spread: (1 + spread) multiplies each offset from the pivot.
-      // Spread -0.3 at full bass: walls at 0.7 of their quiet distance.
-      expect(loud.d).toBeLessThan(quiet.d * 0.75);
-      expect(loud.room[0]).toBeLessThan(quiet.room[0]);
-      expect(loud.room[2]).toBeLessThan(quiet.room[2]);
-      const { recipe } = createStudy(
-        study,
-        bands(97, () => 0.5),
-        dims(97),
-      );
-      const spread = recipe.motion!.mappings.find(
-        (m) => m.property === "spread",
-      )!;
-      expect(spread.source).toBe("low");
-      expect(spread.amount).toBeLessThan(0);
-      // No morph: every state holds the same layout.
-      const [a, b, c] = recipe.motion!.stateKeys;
-      expect(b.objects).toEqual(a.objects);
-      expect(c.objects).toEqual(a.objects);
-    },
-  );
+  it("cathedral-walls narrows the whole nave in x while the vault ridge holds", () => {
+    const quiet = layout("cathedral-walls", 0, 30),
+      loud = layout("cathedral-walls", 1, 30);
+    expect(quiet.parts.length).toBeGreaterThan(140);
+    const mean = (parts: typeof quiet.parts) =>
+      parts.reduce((sum, o) => sum + Math.abs(o.x), 0) / parts.length;
+    expect(mean(loud.parts)).toBeLessThan(mean(quiet.parts) * 0.65);
+    quiet.parts.forEach((q, i) => {
+      const l = loud.parts[i];
+      expect(l.z).toBeCloseTo(q.z, 6);
+      expect(Math.abs(l.x)).toBeLessThanOrEqual(Math.abs(q.x) + 1e-6);
+    });
+    // The ridge rib (x 0, y 21) does not move at all.
+    const ridge = quiet.parts.filter((o) => o.x === 0 && o.y === 21);
+    expect(ridge).toHaveLength(6);
+    for (const r of ridge)
+      expect(loud.parts.find((o) => o.id === r.id)).toMatchObject({
+        x: 0,
+        y: 21,
+      });
+    expect(loud.room[0]).toBeLessThan(quiet.room[0]);
+    expect(layout("cathedral-walls", 1, 80).parts).toEqual(loud.parts);
+  });
 
-  it.each(["cathedral-walls", "canyon", "room-walls"] as Study[])(
+  it.each([
+    "cathedral-walls",
+    "canyon",
+    "room-walls",
+    "fruit-dance",
+    "fruit-apple",
+  ] as Study[])(
     "%s holds the camera still whatever the music does",
     (study) => {
       const { recipe } = createStudy(
@@ -165,6 +159,10 @@ describe("new pilot studies", () => {
       dims(97),
     );
     expect(recipe.motion!.room!.visible).toBe(true);
+    // Empty: every apartment piece is hidden.
+    for (const part of Object.values(recipe.motion!.stateKeys[0].objects))
+      expect(part.presence).toBe(0);
+    expect(recipe.motion!.room!.dimensions[0]).toBeLessThan(5);
     expect(recipe.avatar).toBe(true);
     expect(recipe.avatarMotion).toBe("dance");
     const quiet = evaluateScene(recipe, 40).room!.dimensions;
@@ -181,6 +179,8 @@ describe("new pilot studies", () => {
     expect(Math.abs(cam[0])).toBeLessThan(loud[0] / 2);
     expect(Math.abs(loudRecipe.avatarPose.x)).toBeLessThan(loud[0] / 2);
     expect(Math.abs(loudRecipe.avatarPose.z)).toBeLessThan(loud[2] / 2);
+    // At full bass the walls are within 1.5 m of the dancer.
+    expect(loud[0] / 2).toBeLessThan(1.5);
   });
 
   it("fruit-dance changes shape on the strongest bass peaks, at least 2 s apart", () => {
@@ -368,7 +368,7 @@ describe("camera clearance at the loudest bar", () => {
     return { best, recipe };
   };
 
-  it("cathedral-walls never brings a piece within 3 m of the gallery camera", () => {
+  it("cathedral-walls never brings a piece within 3 m of the loft camera", () => {
     for (const low of [0, 1])
       expect(nearest("cathedral-walls", low).best).toBeGreaterThan(3);
   });
@@ -376,9 +376,71 @@ describe("camera clearance at the loudest bar", () => {
   it("pyramid-inside keeps its walls clear of the lens and the figure inside", () => {
     const { best, recipe } = nearest("pyramid-inside", 1);
     expect(best).toBeGreaterThan(2.5);
-    // The base terrace's inner face at full close: 6.4 m x (1 - 0.3) less half its 0.5 m wall.
-    const inner = 6.4 * 0.7 - 0.25;
+    // The base terrace's inner face at full close: 19.2 m x 0.7 less half its 1.5 m wall.
+    const inner = 19.2 * 0.7 - 0.75;
     expect(Math.abs(recipe.avatarPose.x)).toBeLessThan(inner);
     expect(Math.abs(recipe.avatarPose.z)).toBeLessThan(inner);
+  });
+});
+
+describe("single fruit studies", () => {
+  it.each([
+    ["fruit-apple", "Apple"],
+    ["fruit-banana", "Banana"],
+    ["fruit-papaya", "Papaya"],
+  ] as [Study, string][])(
+    "%s holds one %s on the floor, pulses on low, twists a little on mid",
+    (study, label) => {
+      const { recipe } = createStudy(
+        study,
+        bands(97, () => 0),
+        dims(97),
+      );
+      const keys = recipe.motion!.stateKeys;
+      expect(keys.map((k) => k.label)).toEqual([label, label, label]);
+      expect(keys[1].objects).toEqual(keys[0].objects);
+      expect(recipe.avatar).toBe(false);
+      expect(
+        recipe.motion!.mappings.map((m) => [m.property, m.source, m.amount]),
+      ).toEqual([
+        ["scale", "low", 0.3],
+        ["twistY", "mid", 0.2],
+      ]);
+      // Resting on the floor, about half the frame tall or wide.
+      const parts = evaluateScene(recipe, 10).objects;
+      const size = recipe.motion!.instances!.size;
+      const half = (o: (typeof parts)[number]) => (o.scale * size) / 2;
+      const low = Math.min(...parts.map((o) => o.y - half(o)));
+      // Millimetre rounding of the stored layout.
+      expect(low).toBeGreaterThanOrEqual(-0.005);
+      expect(low).toBeLessThan(0.05);
+      const cam = sceneCameraAt(recipe, 0)!;
+      const distance = Math.hypot(
+        ...cam.position.map((v, i) => v - cam.target[i]),
+      );
+      const frame = 2 * distance * Math.tan((cam.fov / 2) * (Math.PI / 180));
+      const height = Math.max(...parts.map((o) => o.y + half(o))) - low;
+      const width =
+        Math.max(...parts.map((o) => o.x + half(o))) -
+        Math.min(...parts.map((o) => o.x - half(o)));
+      const share = Math.max(height / frame, width / (frame * (1024 / 576)));
+      expect(share).toBeGreaterThan(0.45);
+      expect(share).toBeLessThan(0.55);
+    },
+  );
+
+  it("fruit-dance holds a front view with the fruit beside the dancer", () => {
+    const { recipe } = createStudy(
+      "fruit-dance",
+      bands(97, () => 0.2),
+      dims(97),
+    );
+    expect(recipe.motion!.rotation).toBeUndefined();
+    const parts = evaluateScene(recipe, 0).objects.filter((o) =>
+      o.id.startsWith("voxel-"),
+    );
+    const nearest = Math.min(...parts.map((o) => Math.hypot(o.x, o.z)));
+    expect(nearest).toBeGreaterThan(0.4);
+    expect(nearest).toBeLessThan(2);
   });
 });

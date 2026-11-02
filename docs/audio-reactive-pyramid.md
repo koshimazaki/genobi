@@ -97,37 +97,49 @@ during the orbit than a dense city.
 `cathedral-walls`, `canyon`, `room-walls` and `pyramid-inside` hold the camera
 still (pyramid-inside pans 45 degrees) and move the space on the `low` band.
 
-- **Sideways-only close (cathedral-walls, canyon).** Two states that differ
-  only in distance from the centre line: nave x, street z, at 0.55 when
-  closed. `motion.morphControl` blends them with a manual baseline of 0 (open)
-  plus `low × 1.2`, so loud = closed and the timeline clock never moves the
-  walls. `stateAudio` cannot do this because it blends from the timeline pair,
-  so the closed state would sit on the timeline. `--motion-gain` scales the
-  blend amount too, up to 2.
-- **`spread` (pyramid-inside).** `spread` multiplies each piece's distance from
-  `motion.pivot` by `1 + spread`, so a negative amount means loud = closer.
-  The study uses -0.3 with the camera at the centre of the floor: at -0.5 the
-  terraces closed to 0.67 m from the lens and hid the figure. It contracts all three axes, so a nave also sinks and seems to zoom;
-  that is why the two studies above use the blend.
-- **Reverb box.** `roomWidth`/`roomDepth` are negative on `low` in every study,
-  so the reverb box shrinks on the same bars.
-- **Camera clearance.** cathedral-walls holds the gallery view at (0, 23, 18).
-  From the old spot at (0, 21, 15) the nearest bay's vault rib was 1.9 m from
-  the lens at full close and filled the frame. A test now keeps every piece
-  more than 3 m away.
+- **Sideways-only close (cathedral-walls, canyon, pyramid-inside).** Two
+  states that differ only in distance from the centre: nave x, street z (both
+  0.55 when closed), pyramid x and z (0.7). `motion.morphControl` blends them
+  with a manual baseline of 0 (open) plus `low × 1.2`, so loud = closed and
+  the timeline clock never moves the walls. `stateAudio` cannot do this
+  because it blends from the timeline pair, so the closed state would sit on
+  the timeline. `--motion-gain` scales the blend amount too, up to 2.
+- **Why not `spread`.** `spread` multiplies each piece's distance from
+  `motion.pivot` by `1 + spread` (negative = loud closer) on all three axes, so
+  walls also sink and the scene seems to zoom. Only `diamond` and the voxel
+  studies still use it.
+- **Reverb box.** The room box shrinks on the same bars in every study:
+  `roomWidth`/`roomDepth` mappings in cathedral-walls, canyon and room-walls,
+  and a smaller closed-state box (×0.7) in pyramid-inside.
+- **Box sizes.** The engine limits each box axis to 0.1-8 and `scale` to
+  0.1-32, so long pieces carry their length in `scale` (`sized()` in
+  `recipe-parts.ts`).
+- **cathedral-walls** is a 146-piece gothic nave (`cathedral-nave.ts`):
+  clustered columns, a pointed arcade, a clerestory, side aisles with
+  lean-to roofs, a ribbed vault meeting at a 21 m ridge, an apse wall with a
+  pointed window and a floor. Closing narrows the whole nave in x, with rib
+  angles recomputed so the ridge holds. The vault would roof over a high
+  gallery view, so the camera holds a west-end loft below it at (0, 12, 15).
+  The nearest piece stays 4.8 m from the lens at full close.
+- **room-walls** is an empty small room (4.8 × 2.6 × 3.9 m, every apartment
+  piece hidden) with the dancer at the centre and the camera at eye height.
+  At full bass the room is 2.8 × 2.3 m, the walls 1.4 m from the dancer.
+- **pyramid-inside** is a hollow stepped pyramid three times larger, 36 m tall
+  with 128 wall pieces and an oculus. It is shot from 1 m above the floor with
+  an 85 degree lens, panning 45 degrees, the figure 7 m ahead for scale.
 - **diamond** is the simplest object test: one faceted `diamond(128)` at 0.65
   scale, centred 8 m over the floor, in three identical states. It uses
   pulse's mappings (scale on `low` 0.9, lift on `sub` 1.5) plus twistY on
   `mid` 0.3, and orbits once at radius 26, elevation 3.
-- **room-walls** shows the apartment's own room box and hides its two
-  full-height partitions.
-- **pyramid-inside** is a hollow stepped pyramid of 128 wall pieces with an
-  oculus. A room box can only be a rectangle, so a hidden box stands in for
-  the reverb.
-- **fruit-dance** puts the dancing mannequin at the centre, about a third of
-  the frame tall. The fruit is scaled to 0.7 and circles 2 m from the dancer
-  at chest height. It switches apple and banana on the top three `low` peaks
-  at least 2 s apart.
+- **fruit-dance** holds a front view with no orbit. The dancer at the centre
+  is about a third of the frame tall, and the fruit (scaled to 0.7) sits 2 m
+  beside them at chest height. It switches apple and banana on the top three
+  `low` peaks at least 2 s apart.
+- **fruit-apple, fruit-banana, fruit-papaya** share one helper
+  (`singleFruit`). Each shows one fruit from the 96-block preset resting on
+  the floor, no morph and no figure. It is held from the front at 8 degrees
+  and framed to half the frame, pulsing on `low` (scale 0.3) with a twist on
+  `mid` (0.2).
 
 Every capture now writes `keyframes.json` with `frame-0000.png`,
 `frame-closed-NNNN.png` (loudest smoothed `low`) and `frame-open-NNNN.png`
@@ -141,17 +153,23 @@ Measured on 1024×576 captures (auto gain, release 12, studio), 97 frames
 unless marked 193 f. The median is the per-frame change in grey levels. Rows
 marked old predate the camera and spread fixes.
 
-| Study                                  | Median | Corr with low |
-| -------------------------------------- | ------ | ------------- |
-| cathedral-walls blend, old (0, 21, 15) | 4.6    | 0.60          |
-| cathedral-walls blend, 193 f           | 2.8    | 0.38          |
-| cathedral-walls spread, old            | 9.9    | 0.36          |
-| canyon blend                           | 0.67   | 0.52          |
-| fruit-dance                            | 0.84   | 0.53          |
-| room-walls                             | 0.39   | 0.62          |
-| pyramid-inside, old -0.5               | 4.1    | 0.87          |
-| pyramid-inside -0.3, 193 f             | 2.3    | 0.61          |
-| diamond, 193 f                         | 1.3    | 0.60          |
+| Study                            | Median | Corr with low |
+| -------------------------------- | ------ | ------------- |
+| cathedral-walls blend, old ribs  | 4.6    | 0.60          |
+| cathedral-walls nave, 193 f      | 3.5    | 0.50          |
+| cathedral-walls spread, old      | 9.9    | 0.36          |
+| canyon blend                     | 0.67   | 0.52          |
+| fruit-dance, old orbit           | 0.84   | 0.53          |
+| fruit-dance front view, 193 f    | 0.21   | 0.58          |
+| fruit-apple, 193 f               | 0.27   | 0.49          |
+| fruit-banana, 193 f              | 0.40   | 0.52          |
+| fruit-papaya, 193 f              | 0.11   | 0.49          |
+| room-walls, old (8 m, furnished) | 0.39   | 0.62          |
+| room-walls empty small, 193 f    | 0.57   | 0.45          |
+| pyramid-inside, old -0.5         | 4.1    | 0.87          |
+| pyramid-inside -0.3, old, 193 f  | 2.3    | 0.61          |
+| pyramid-inside big blend, 193 f  | 3.2    | 0.42          |
+| diamond, 193 f                   | 1.3    | 0.60          |
 
 For cathedral-walls, the blend calmed the jitter; smoothing did not. Frames
 changing by more than 8 fell from 65 to 18, and the motion follows the band's

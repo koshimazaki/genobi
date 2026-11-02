@@ -5,7 +5,16 @@ import type {
   SceneTransform,
   SceneVector,
 } from "../../src/world-builder/scene-state";
-import { heldCamera, mapping, nave, parts, towers } from "./recipe-parts";
+import {
+  heldCamera,
+  hollowPyramid,
+  mapping,
+  nave,
+  panCamera,
+  parts,
+  towers,
+} from "./recipe-parts";
+import { cathedralNave, NAVE_CAMERA } from "./cathedral-nave";
 
 /**
  * Sign of `spread`: evaluate-scene multiplies each piece's offset from
@@ -70,8 +79,6 @@ function heldStates(
 
 /** How far the walls travel at full blend: 0.55 of their open distance. */
 export const CLOSED_FRACTION = 0.55;
-/** The cathedral's held view; every piece stays 3 m or more from it. */
-export const GALLERY: SceneVector = [0, 23, 18];
 /** Morph progress per unit of `low`; the auto-gained band's p95 (0.8) closes ~fully. */
 export const BLEND_AMOUNT = 1.2;
 
@@ -89,16 +96,22 @@ function bandBlend(
   open: SceneTransform[],
   closed: SceneTransform[],
   room: { dimensions: SceneVector; listener: SceneVector },
+  closedRoom = room,
 ) {
   const motion = recipe.motion!;
   motion.stateKeys = [
-    { id: "open", frame: 0, objects: parts(open) },
-    { id: "closed", frame: recipe.frames - 1, objects: parts(closed) },
+    { id: "open", frame: 0, objects: parts(open), room },
+    {
+      id: "closed",
+      frame: recipe.frames - 1,
+      objects: parts(closed),
+      room: closedRoom,
+    },
   ].map((key) => ({
     ...key,
     label: `${label} (${key.id})`,
     easing: "linear" as const,
-    room: structuredClone(room),
+    room: structuredClone(key.room),
   }));
   motion.transitionStyle = "direct";
   motion.intensity = 1;
@@ -250,36 +263,34 @@ export function falling(recipe: Recipe, cathedralOnly = false): number {
 /** The nave with the camera held in the gallery: the walls do the moving. */
 export function cathedralWalls(recipe: Recipe): RoomDesign {
   falling(recipe, true);
-  const open = nave(),
-    // Only distance from the centre line (x) changes; ribs and floor slabs
-    // narrow with the span so the vault still meets at the ridge.
-    closed = open.map((part) => ({
-      ...part,
-      x: part.x * CLOSED_FRACTION,
-      ...(part.scaleX !== undefined && part.scaleX > 1
-        ? { scaleX: part.scaleX * CLOSED_FRACTION }
-        : {}),
-    }));
+  const open = cathedralNave(1),
+    closed = cathedralNave(CLOSED_FRACTION);
+  recipe.motion!.instances!.count = open.length;
   bandBlend(recipe, "Nave", open, closed, {
-    dimensions: [20, 24, 32],
-    listener: [0, 20, 10],
+    dimensions: [22, 21, 28],
+    listener: [0, 12, 12],
   });
   recipe.motion!.mappings = [
     mapping("width", "low", "roomWidth", -4),
     mapping("depth", "low", "roomDepth", -4),
     mapping("vault", "mid", "roomHeight", -0.8),
   ];
-  // Back and up from the old gallery spot (0, 21, 15): there, the nearest
-  // bay's vault rib sat 2.5 m from the lens open and 1.9 m closed, and the
-  // closing ribs filled the frame with flat shapes.
-  recipe.cameraMotion = heldCamera(GALLERY, [0, 0, -3], 66);
+  // A closed vault would roof over a high gallery view, so the camera holds a
+  // west-end loft below the vault, looking down the nave to the apse window.
+  recipe.cameraMotion = heldCamera(
+    NAVE_CAMERA.position,
+    NAVE_CAMERA.target,
+    NAVE_CAMERA.fov,
+  );
   recipe.prompt =
-    "A still, elevated view from the gallery down a tall gothic cathedral nave towards the altar. The rows of stone piers slide in towards the aisle on the loud beats and back out in the quiet. Warm stone, stained glass light on a pale floor.";
+    "A still view from the west loft down a tall gothic cathedral nave to the pointed window of the apse. The clustered columns and pointed arches slide in towards the aisle on the loud beats and back out in the quiet, under a ribbed stone vault. Warm stone, stained glass light on a pale floor.";
   return {
     indoorFromFrame: 0,
     design: {
-      camera: "held gallery view, no audio push",
-      close: "blend: morphControl open -> closed on low, x only",
+      camera: "held at the west-end loft below the vault, no audio push",
+      nave: `${open.length} pieces: clustered columns, pointed arcade, clerestory, side aisles, ribbed vault with a ridge, apse wall with a pointed window, floor`,
+      close:
+        "blend: morphControl open -> closed on low, the whole nave narrows in x; heights and the ridge hold",
       closedFraction: CLOSED_FRACTION,
       blendAmount: BLEND_AMOUNT,
       roomSign: "negative: the acoustic box shrinks on the same bars",
@@ -324,22 +335,23 @@ export function canyon(recipe: Recipe): RoomDesign {
   };
 }
 
-/** The apartment's own visible room box, closing on the bass around a dancer. */
+/** An empty small room whose size alone follows the bass, a dancer at its centre. */
 export function roomWalls(recipe: Recipe): RoomDesign {
   const motion = recipe.motion!;
-  // The two full-height partitions would fill the lens from eye height; hide
-  // them (presence 0) so the outer walls are what closes in.
-  const furniture = Object.fromEntries(
+  // No furniture at all: every apartment piece is hidden (presence 0).
+  const empty = Object.fromEntries(
     Object.entries(motion.stateKeys[0].objects).map(([id, part]) => [
       id,
-      id === "divider" || id === "cross-wall" ? { ...part, presence: 0 } : part,
+      { ...part, presence: 0 },
     ]),
   );
+  // About 0.6 of the apartment's open room (8 x 3.4 x 6.5), height kept at
+  // 2.6 m so the dancer clears the ceiling line.
   const room = {
-    dimensions: [8, 3.4, 6.5] as SceneVector,
-    listener: [0, 1.6, 1.4] as SceneVector,
+    dimensions: [4.8, 2.6, 3.9] as SceneVector,
+    listener: [0, 1.6, 1.2] as SceneVector,
   };
-  heldStates(recipe, "Closing room", furniture, room);
+  heldStates(recipe, "Small room", empty, room);
   motion.room = {
     ...motion.room!,
     dimensions: room.dimensions,
@@ -350,77 +362,93 @@ export function roomWalls(recipe: Recipe): RoomDesign {
     cutaway: true,
   };
   motion.intensity = 1;
+  // At full bass the room is 2.8 x 2.3 m: the walls 1.4 m from the dancer.
   motion.mappings = [
-    mapping("width", "low", "roomWidth", -3),
-    mapping("depth", "low", "roomDepth", -2.5),
-    mapping("height", "mid", "roomHeight", -0.6),
+    mapping("width", "low", "roomWidth", -2),
+    mapping("depth", "low", "roomDepth", -1.6),
+    mapping("height", "mid", "roomHeight", -0.3),
   ];
   recipe.avatar = true;
   recipe.avatarAsset = "mannequin";
   recipe.avatarMotion = "dance";
-  // Open floor between the bed and the table, 3 m from the lens so the whole
-  // figure is in frame. The camera sits 1.9 m from centre: inside the box even
-  // at the default loudest depth (6.5 - 2.5 = 4 m).
-  recipe.avatarPose = { x: 0.1, y: 0, z: -1.2, yaw: 0 };
-  recipe.cameraMotion = heldCamera([0, 1.6, 1.9], [0, 1.2, -3], 75);
-  recipe.depthFar = 30;
+  recipe.avatarPose = { x: 0, y: 0, z: -0.3, yaw: 0 };
+  // Eye height, 2.1 m from the dancer so the whole figure is in frame.
+  recipe.cameraMotion = heldCamera([0, 1.6, 1.8], [0, 1.1, -2], 75);
+  recipe.depthFar = 20;
   recipe.prompt =
-    "A still eye-level shot inside a small plain room where a person dances alone. The walls slide in towards them on the loud beats and fall back in the quiet. Bare plaster walls, a single warm lamp, an uneasy late-night mood.";
+    "A still eye-level shot of a person dancing alone in a small bare room. The walls slide in around them on the loud beats until it is cramped, then fall back in the quiet. Bare plaster walls, a single warm lamp, an uneasy late-night mood.";
   return {
     indoorFromFrame: 0,
     design: {
-      camera: "held at eye height inside the room, looking across it",
-      roomVisible: true,
+      camera: "held at eye height inside the room",
+      room: "empty, 4.8 x 2.6 x 3.9 m, visible with cutaway",
       roomSign: "negative: loud = walls closer, the box shrinks",
-      avatar: "mannequin, dance",
+      avatar: "mannequin, dance, centre",
     },
   };
 }
 
+/** How big the interior is: three times the base hollow pyramid (36 m tall). */
+export const PYRAMID_SCALE = 3;
+/** The pyramid's terraces close to 0.7 of their open distance at full bass. */
+export const PYRAMID_CLOSED = 0.7;
+
 /**
- * A hollow stepped pyramid seen from inside. The World Builder's room box is a
- * rectangle, so the visible enclosure is the terraced walls themselves (boxes
- * are double-sided slabs, so they read from inside); the invisible room box is
- * the acoustic proxy and shrinks on the same bars.
+ * A big hollow stepped pyramid seen from the floor with a wide lens. The room
+ * box can only be a rectangle, so the visible enclosure is the terraced walls
+ * (double-sided slabs read from inside) and a hidden box carries the reverb.
+ * Walls and box close together through the same open -> closed blend: the
+ * terraces move inwards (x and z) at their own height, and the closed state's
+ * room box is smaller by the same fraction.
  */
-export function pyramidInside(
-  recipe: Recipe,
-  hollow: ReturnType<typeof parts>,
-  pan: Recipe["cameraMotion"],
-): RoomDesign {
+export function pyramidInside(recipe: Recipe): RoomDesign {
   const motion = recipe.motion!;
   motion.instances!.size = 1;
-  const room = {
-    // A box of roughly the pyramid's interior volume (about 650 m3).
-    dimensions: [10, 8, 10] as SceneVector,
-    listener: [0, 1.3, 0.4] as SceneVector,
-  };
-  heldStates(recipe, "Pyramid interior", hollow, room);
-  motion.room = interiorRoom("pyramid-proxy", room.dimensions, room.listener);
-  motion.pivot = [0, 0, 0];
-  motion.intensity = 1;
-  motion.mappings = [
-    mapping("walls", "low", "spread", CLOSE_ON_LOUD),
-    mapping("width", "low", "roomWidth", -4),
-    mapping("depth", "low", "roomDepth", -4),
-    mapping("height", "low", "roomHeight", -3),
-  ];
+  const open = hollowPyramid(PYRAMID_SCALE),
+    closed = open.map((part) => ({
+      ...part,
+      x: part.x * PYRAMID_CLOSED,
+      z: part.z * PYRAMID_CLOSED,
+    }));
+  const listener: SceneVector = [0, 1.3, 2];
+  // Roughly the interior volume: a third of 38.4 m x 38.4 m x 36 m.
+  const dimensions: SceneVector = [32, 18, 32];
+  bandBlend(
+    recipe,
+    "Pyramid interior",
+    open,
+    closed,
+    { dimensions, listener },
+    {
+      dimensions: [32 * PYRAMID_CLOSED, 18, 32 * PYRAMID_CLOSED],
+      listener,
+    },
+  );
+  motion.room = interiorRoom("pyramid-proxy", dimensions, listener);
+  motion.mappings = [];
   recipe.avatar = true;
   recipe.avatarAsset = "mannequin";
   recipe.avatarMotion = "idle";
-  // Ahead of the lens and inside the base even when the walls are closest.
-  recipe.avatarPose = { x: 0.6, y: 0, z: -3.2, yaw: 0 };
-  recipe.cameraMotion = pan;
-  recipe.depthFar = 60;
+  // On the floor 7 m ahead, inside the base even at full close (13.4 m).
+  recipe.avatarPose = { x: 1.2, y: 0, z: -5, yaw: 0 };
+  // Near the floor with a wide lens, panning 45 degrees, looking up and across.
+  recipe.cameraMotion = panCamera(
+    [0, 1, 2],
+    [0, 9, -18],
+    45,
+    85,
+    recipe.frames - 1,
+  );
+  recipe.depthFar = 120;
   recipe.prompt =
-    "Inside a vast stepped stone pyramid, looking up from the floor towards the open apex, a lone figure standing for scale. The terraced walls close in on the loud beats and open in the quiet. Warm sandstone, a shaft of daylight from the oculus, dust in the air.";
+    "From the floor of a vast stepped stone pyramid, a wide view up the towering terraces to the open apex, a lone figure standing small on the floor. The terraced walls close in on the loud beats and open in the quiet. Warm sandstone, a shaft of daylight from the oculus, dust in the air.";
   return {
     indoorFromFrame: 0,
     design: {
-      camera: "fixed near the floor, a slow 45 degree pan looking up",
-      enclosure: "hollow stepped pyramid of 128 wall pieces; room box hidden",
-      spreadSign: "negative: loud = walls closer",
-      roomSign: "negative: the acoustic proxy shrinks in all three axes",
+      camera: "near the floor, 85 degree lens, a slow 45 degree pan looking up",
+      enclosure: `hollow stepped pyramid x${PYRAMID_SCALE} (36 m tall), 128 wall pieces; room box hidden`,
+      close: `blend: morphControl open -> closed on low, terraces to ${PYRAMID_CLOSED} in x and z`,
+      roomSign: "the closed state's reverb box is smaller by the same fraction",
       avatar: "mannequin, idle",
     },
   };

@@ -6,9 +6,7 @@ import {
   clockwork,
   compact,
   diamond,
-  hollowPyramid,
   orbit360,
-  panCamera,
   parts,
   towers,
 } from "./recipe-parts";
@@ -21,7 +19,7 @@ import {
   roomWalls,
   type RoomDesign,
 } from "./recipes-rooms";
-import { fruitDance } from "./recipes-fruit";
+import { fruitDance, singleFruit } from "./recipes-fruit";
 import { diamondStudy } from "./recipes-diamond";
 import { STUDIES } from "./studies.mjs";
 
@@ -41,6 +39,9 @@ const PRESETS: Record<Study, string> = {
   rubik: "voxel-architecture-128",
   "pyramid-inside": "voxel-architecture-128",
   diamond: "voxel-architecture-128",
+  "fruit-apple": "fruit-morph",
+  "fruit-banana": "fruit-morph",
+  "fruit-papaya": "fruit-morph",
   falling: "city-to-loft",
   cathedral: "city-to-loft",
   "cathedral-walls": "city-to-loft",
@@ -287,20 +288,18 @@ export function createStudy(
     cues = built.cues;
     design = built.design;
   } else if (study === "diamond") design = diamondStudy(recipe);
+  else if (
+    study === "fruit-apple" ||
+    study === "fruit-banana" ||
+    study === "fruit-papaya"
+  )
+    design = singleFruit(recipe, study);
   else if (study === "falling") indoorFromFrame = falling(recipe);
   else if (study === "cathedral") indoorFromFrame = falling(recipe, true);
   else if (study === "cathedral-walls") room(cathedralWalls(recipe));
   else if (study === "canyon") room(canyon(recipe));
   else if (study === "room-walls") room(roomWalls(recipe));
-  else if (study === "pyramid-inside")
-    room(
-      pyramidInside(
-        recipe,
-        parts(hollowPyramid()),
-        // Near the floor at the centre, looking up and across the far terraces.
-        panCamera([0, 1.3, 0.4], [0, 4, -4.5], 45, 78, last),
-      ),
-    );
+  else if (study === "pyramid-inside") room(pyramidInside(recipe));
   else
     motion.stateKeys.forEach((key, i) => {
       key.frame = Math.round((last * i) / 2);

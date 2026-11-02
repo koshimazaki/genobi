@@ -8,6 +8,23 @@ import type {
 } from "../../src/world-builder/scene-state";
 import type { SceneCameraMotion } from "../../src/world-builder/scene-camera";
 
+/**
+ * A box of these metre sizes, within the engine's bounds: each axis is 0.1-8
+ * and `scale` (0.1-32) multiplies all three. Long pieces carry their length in
+ * `scale`; an axis that would fall under 0.1 is thickened to the minimum.
+ */
+export function sized(x: number, y: number, z: number) {
+  const scale = Math.max(1, Math.max(x, y, z) / 8);
+  const axis = (v: number) =>
+    Math.round(Math.max(0.1, v / scale) * 1000) / 1000;
+  return {
+    scale: Math.round(scale * 1000) / 1000,
+    scaleX: axis(x),
+    scaleY: axis(y),
+    scaleZ: axis(z),
+  };
+}
+
 export function compact<T>(input: T): T {
   return JSON.parse(
     JSON.stringify(input, (_key, value) =>
@@ -124,28 +141,27 @@ export function nave(): SceneTransform[] {
 /**
  * A hollow stepped pyramid: eight 1.5 m terraces, each a square ring of four
  * walls in four segments (128 pieces), stepping 0.75 m inward per terrace and
- * open at the apex. Seen from inside it is an enclosure with an oculus.
+ * open at the apex. `k` scales the whole pyramid. Seen from inside it is an enclosure with an oculus.
  */
-export function hollowPyramid(): SceneTransform[] {
+export function hollowPyramid(k = 1): SceneTransform[] {
   const out: SceneTransform[] = [];
   for (let layer = 0; layer < 8; layer++) {
-    const w = 6.4 - 0.75 * layer,
-      y = 0.75 + 1.5 * layer,
+    const w = (6.4 - 0.75 * layer) * k,
+      y = (0.75 + 1.5 * layer) * k,
       segment = w / 2;
     for (let side = 0; side < 4; side++)
       for (let j = 0; j < 4; j++) {
         const along = -w + segment * (j + 0.5),
           alongX = side < 2;
         const across = side % 2 ? w : -w;
+        // Segments overlap by the wall thickness so the corners close.
+        const long = segment + 0.5 * k,
+          thick = 0.5 * k;
         out.push({
           x: alongX ? along : across,
           y,
           z: alongX ? across : along,
-          scale: 1,
-          // Segments overlap by the wall thickness so the corners close.
-          scaleX: alongX ? segment + 0.5 : 0.5,
-          scaleY: 1.5,
-          scaleZ: alongX ? 0.5 : segment + 0.5,
+          ...sized(alongX ? long : thick, 1.5 * k, alongX ? thick : long),
         });
       }
   }
