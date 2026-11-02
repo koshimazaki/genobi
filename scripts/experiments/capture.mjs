@@ -7,6 +7,8 @@ import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { parseArgs } from "node:util";
 import { reserveCaptureDirectory } from "./capture-files.mjs";
+import { OUTPUT_NAME, STUDIES } from "./studies.mjs";
+import { writeKeyframes } from "./keyframes.mjs";
 
 const { values } = parseArgs({
   options: {
@@ -37,7 +39,7 @@ const { values } = parseArgs({
 });
 if (values.help) {
   console.log(
-    "node scripts/experiments/capture.mjs --output .local/ltx-pilot [--track PATH --start 16 --studies fruit,architecture,falling,room --browser CHROME --cues cues.json]\nNo model submission. Defaults: 193 frames at 24 fps, 768×448 RGB/depth guides (1536×896 candidate output after 2× upscale), exact soundtrack excerpt, editable recipes, cue and sound receipts. Cues are band-change candidates unless supplied explicitly.",
+    `node scripts/experiments/capture.mjs --output .local/ltx-pilot [--track PATH --start 16 --studies fruit,architecture,falling,room --browser CHROME --cues cues.json]\nStudies: ${STUDIES.join(", ")}.\nNo model submission. Defaults: 193 frames at 24 fps, 768×448 RGB/depth guides (1536×896 candidate output after 2× upscale), exact soundtrack excerpt, editable recipes, cue and sound receipts. Cues are band-change candidates unless supplied explicitly.`,
   );
   process.exit(0);
 }
@@ -88,19 +90,7 @@ if (
   !Number.isInteger(port) ||
   port < 1024 ||
   port > 65535 ||
-  studies.some(
-    (s) =>
-      ![
-        "fruit",
-        "architecture",
-        "clockwork",
-        "pulse",
-        "rubik",
-        "cathedral",
-        "falling",
-        "room",
-      ].includes(s),
-  )
+  studies.some((s) => !STUDIES.includes(s))
 )
   throw new Error(
     "Use 97/193/241 frames (4 s, 8 s, 10 s), 256–1920 dimensions divisible by 64, a non-negative audio offset and known study IDs.",
@@ -213,12 +203,7 @@ try {
     return route.continue();
   });
   await page.exposeFunction("savePilotFile", async (name, bytes) => {
-    if (
-      !/^(fruit|architecture|clockwork|pulse|rubik|cathedral|falling|room)\/[a-z0-9-]+\.(json|png|wav|webm)$/.test(
-        name,
-      )
-    )
-      throw new Error("Invalid pilot output name.");
+    if (!OUTPUT_NAME.test(name)) throw new Error("Invalid pilot output name.");
     const directory = join(output, name.split("/")[0]);
     await mkdir(directory, { recursive: true });
     await writeFile(join(output, name), Buffer.from(bytes));
@@ -339,6 +324,8 @@ try {
         duration: total,
       };
     }
+    // Stills at exact guide frames: frame 0, loudest (closed) and quietest (open).
+    report.keyframes = (await writeKeyframes(dir)).frames;
     await writeFile(join(dir, "study.json"), JSON.stringify(report, null, 2));
     reports.push(report);
     console.log(

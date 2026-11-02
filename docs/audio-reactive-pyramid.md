@@ -92,6 +92,60 @@ centre-cropped with ffmpeg to 1536:896 (768×448 guides) or 1920:1024
 (960×512 guides). A clean background (the desert pyramid) blurs far less
 during the orbit than a dense city.
 
+## New studies: the space moves, the camera holds
+
+`cathedral-walls`, `canyon`, `room-walls` and `pyramid-inside` hold the camera
+still (pyramid-inside pans 45 degrees) and move the space on the `low` band.
+
+- **Sideways-only close (cathedral-walls, canyon).** Two states that differ
+  only in distance from the centre line: nave x, street z, at 0.55 when
+  closed. `motion.morphControl` blends them with a manual baseline of 0 (open)
+  plus `low × 1.2`, so loud = closed and the timeline clock never moves the
+  walls. `stateAudio` cannot do this because it blends from the timeline pair,
+  so the closed state would sit on the timeline. `--motion-gain` scales the
+  blend amount too, up to 2.
+- **`spread` (pyramid-inside).** `spread` multiplies each piece's distance from
+  `motion.pivot` by `1 + spread`, so a negative amount (-0.5) means loud =
+  closer. It contracts all three axes, so a nave also sinks and seems to zoom;
+  that is why the two studies above use the blend.
+- **Reverb box.** `roomWidth`/`roomDepth` are negative on `low` in every study,
+  so the reverb box shrinks on the same bars.
+- **room-walls** shows the apartment's own room box and hides its two
+  full-height partitions.
+- **pyramid-inside** is a hollow stepped pyramid of 128 wall pieces with an
+  oculus. A room box can only be a rectangle, so a hidden box stands in for
+  the reverb.
+- **fruit-dance** puts the dancing mannequin at the centre, about a third of
+  the frame tall. The fruit is scaled to 0.7 and circles 2 m from the dancer
+  at chest height. It switches apple and banana on the top three `low` peaks
+  at least 2 s apart.
+
+Every capture now writes `keyframes.json` with `frame-0000.png`,
+`frame-closed-NNNN.png` (loudest smoothed `low`) and `frame-open-NNNN.png`
+(quietest smoothed `low` from frame 8). `source` is the raw frame of the peak
+or trough. `index` is that frame snapped to LTX's 8-frame latent grid (never 0
+or the last frame), and the PNG is that exact decoded frame of `rgb.webm`.
+`scripts/experiments/sweep.sh --output DIR --studies ID [flags]` captures
+motion gain 0.5, 1 and 2 into `DIR-g05`, `DIR-g10` and `DIR-g20`.
+
+Measured on 97-frame 1024×576 captures (auto gain, release 12, studio). The
+median is the per-frame change in grey levels.
+
+| Study                  | Median | Corr with low |
+| ---------------------- | ------ | ------------- |
+| cathedral-walls blend  | 4.6    | 0.60          |
+| cathedral-walls spread | 9.9    | 0.36          |
+| canyon blend           | 0.67   | 0.52          |
+| fruit-dance            | 0.84   | 0.53          |
+| room-walls             | 0.39   | 0.62          |
+| pyramid-inside         | 4.1    | 0.87          |
+
+For cathedral-walls, the blend calmed the jitter; smoothing did not. Frames
+changing by more than 8 fell from 65 to 18, and the motion follows the band's
+frame-to-frame change at 0.93. Adding `--band-smooth 5` or `9` on top of the
+release leaves the median near 4.6-4.8 and only cuts the largest jump (37 to
+20 and 18). It also moves the closed keyframe from 72 to 32.
+
 ## Run
 
 ```sh

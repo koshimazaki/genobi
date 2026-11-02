@@ -122,13 +122,22 @@ export async function captureStudy(
       );
     }
     if (reactivity.motionGain > 1) recipe.motion.intensity = 1;
+    // A band-driven open/closed blend scales with the same knob (bounded at 2).
+    const blend = recipe.motion.morphControl;
+    if (blend?.enabled)
+      blend.progress.amount = Math.min(
+        2,
+        blend.progress.amount * reactivity.motionGain,
+      );
   }
   if (reactivity.radius != null) recipe.radius = reactivity.radius;
   if (reactivity.orbit != null) recipe.orbit = reactivity.orbit;
   if (reactivity.elevation != null) recipe.elevation = reactivity.elevation;
   if (reactivity.stage === "studio" || reactivity.stage === "dark-grid")
     recipe.stageLook = reactivity.stage;
-  if (reactivity.avatar) {
+  // A study that casts its own figure (fruit-dance, room-walls, pyramid-inside)
+  // keeps its pose and clip; the flag only adds the idle listener elsewhere.
+  if (reactivity.avatar && !recipe.avatar) {
     recipe.avatar = true;
     recipe.avatarAsset = "mannequin";
     recipe.avatarMotion = "idle";
@@ -149,6 +158,7 @@ export async function captureStudy(
       motionGain: reactivity.motionGain,
       intensity: recipe.motion?.intensity ?? null,
       mappings: recipe.motion?.mappings ?? [],
+      blendAmount: recipe.motion?.morphControl?.progress.amount ?? null,
     },
   });
   const recipeFile = serializeRecipe(recipe);

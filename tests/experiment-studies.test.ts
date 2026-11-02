@@ -1,0 +1,272 @@
+import { describe, expect, it } from "vitest";
+import { evaluateScene } from "../src/world-builder/evaluate-scene";
+import { sceneCameraAt } from "../src/world-builder/scene-camera";
+import {
+  STUDIES,
+  createStudy,
+  peakCues,
+  type Study,
+} from "../scripts/experiments/recipes";
+import { serializeRecipe } from "../scripts/experiments/contracts";
+import { MIN_CUE_GAP } from "../scripts/experiments/recipes-fruit";
+import { OUTPUT_NAME } from "../scripts/experiments/studies.mjs";
+import {
+  keyframeFile,
+  pickKeyframes,
+  snapToGrid,
+} from "../scripts/experiments/keyframe-pick.mjs";
+
+const NEW: Study[] = [
+  "cathedral-walls",
+  "canyon",
+  "fruit-dance",
+  "room-walls",
+  "pyramid-inside",
+];
+const dims = (frames: number) => ({ width: 1024, height: 576, frames });
+const bands = (frames: number, low: (i: number) => number, rest = 0.3) => {
+  const flat = Array.from({ length: frames }, () => rest);
+  const lowData = Array.from({ length: frames }, (_, i) => low(i));
+  return {
+    envelope: [...flat],
+    bandEnvelopes: {
+      sub: [...flat],
+      low: lowData,
+      mid: [...flat],
+      high: [...flat],
+    },
+  };
+};
+const meanDistance = (study: Study, low: number) => {
+  const { recipe } = createStudy(
+    study,
+    bands(97, () => low),
+    dims(97),
+  );
+  const pivot = recipe.motion!.pivot;
+  const scene = evaluateScene(recipe, 48);
+  const voxels = scene.objects.filter((o) => o.id.startsWith("voxel-"));
+  const d =
+    voxels.reduce(
+      (sum, o) => sum + Math.hypot(o.x - pivot[0], o.z - pivot[2]),
+      0,
+    ) / voxels.length;
+  return { d, room: scene.room!.dimensions };
+};
+
+describe("new pilot studies", () => {
+  it.each([97, 193, 241])(
+    "all build and fit the native recipe bound at %i frames",
+    (frames) => {
+      for (const study of NEW) {
+        const { recipe, metadata } = createStudy(
+          study,
+          bands(frames, (i) => 0.1 + ((i * 13) % 89) / 100),
+          dims(frames),
+        );
+        expect(serializeRecipe(recipe).bytes).toBeLessThanOrEqual(64_000);
+        expect(metadata.study).toBe(study);
+        expect(metadata.design).toBeTruthy();
+      }
+    },
+  );
+
+  it("allows every study id, and only those, as a capture output name", () => {
+    for (const study of STUDIES)
+      expect(OUTPUT_NAME.test(`${study}/rgb.webm`)).toBe(true);
+    expect(OUTPUT_NAME.test("../x/rgb.webm")).toBe(false);
+    expect(OUTPUT_NAME.test("canyon/../../x.json")).toBe(false);
+    expect(OUTPUT_NAME.test("canyon/rgb.mp4")).toBe(false);
+  });
+
+  it.each([
+    ["cathedral-walls", "x"],
+    ["canyon", "z"],
+  ] as [Study, "x" | "z"][])(
+    "%s closes sideways only (%s) on the bass, whatever the frame",
+    (study, axis) => {
+      const voxels = (low: number, frame: number) => {
+        const { recipe } = createStudy(
+          study,
+          bands(97, () => low),
+          dims(97),
+        );
+        const scene = evaluateScene(recipe, frame);
+        return {
+          parts: scene.objects.filter((o) => o.id.startsWith("voxel-")),
+          room: scene.room!.dimensions,
+        };
+      };
+      const quiet = voxels(0, 30),
+        loud = voxels(1, 30);
+      const other = axis === "x" ? "z" : "x";
+      expect(loud.parts.length).toBe(quiet.parts.length);
+      quiet.parts.forEach((q, i) => {
+        const l = loud.parts[i];
+        // Loud = closer to the centre line; height and the other axis hold.
+        expect(Math.abs(l[axis])).toBeCloseTo(Math.abs(q[axis]) * 0.55, 6);
+        expect(l.y).toBeCloseTo(q.y, 6);
+        expect(l[other]).toBeCloseTo(q[other], 6);
+      });
+      expect(loud.room[0]).toBeLessThan(quiet.room[0]);
+      expect(loud.room[2]).toBeLessThan(quiet.room[2]);
+      // The clock never moves the walls: same band, different frame, same layout.
+      expect(voxels(0, 80).parts).toEqual(quiet.parts);
+      expect(voxels(1, 80).parts).toEqual(loud.parts);
+    },
+  );
+
+  it.each(["pyramid-inside"] as Study[])(
+    "%s: loud bass pulls the walls closer and shrinks the acoustic box",
+    (study) => {
+      const quiet = meanDistance(study, 0),
+        loud = meanDistance(study, 1);
+      // Negative spread: (1 + spread) multiplies each offset from the pivot.
+      expect(loud.d).toBeLessThan(quiet.d * 0.6);
+      expect(loud.room[0]).toBeLessThan(quiet.room[0]);
+      expect(loud.room[2]).toBeLessThan(quiet.room[2]);
+      const { recipe } = createStudy(
+        study,
+        bands(97, () => 0.5),
+        dims(97),
+      );
+      const spread = recipe.motion!.mappings.find(
+        (m) => m.property === "spread",
+      )!;
+      expect(spread.source).toBe("low");
+      expect(spread.amount).toBeLessThan(0);
+      // No morph: every state holds the same layout.
+      const [a, b, c] = recipe.motion!.stateKeys;
+      expect(b.objects).toEqual(a.objects);
+      expect(c.objects).toEqual(a.objects);
+    },
+  );
+
+  it.each(["cathedral-walls", "canyon", "room-walls"] as Study[])(
+    "%s holds the camera still whatever the music does",
+    (study) => {
+      const { recipe } = createStudy(
+        study,
+        bands(97, (i) => (i % 9) / 8),
+        dims(97),
+      );
+      const first = sceneCameraAt(recipe, 0)!;
+      for (const frame of [17, 48, 96])
+        expect(sceneCameraAt(recipe, frame)).toEqual(first);
+    },
+  );
+
+  it("room-walls shows its room box, closes it on the bass and casts a dancer inside", () => {
+    const { recipe } = createStudy(
+      "room-walls",
+      bands(97, () => 0),
+      dims(97),
+    );
+    expect(recipe.motion!.room!.visible).toBe(true);
+    expect(recipe.avatar).toBe(true);
+    expect(recipe.avatarMotion).toBe("dance");
+    const quiet = evaluateScene(recipe, 40).room!.dimensions;
+    const { recipe: loudRecipe } = createStudy(
+      "room-walls",
+      bands(97, () => 1),
+      dims(97),
+    );
+    const loud = evaluateScene(loudRecipe, 40).room!.dimensions;
+    expect(loud[0]).toBeLessThan(quiet[0]);
+    expect(loud[2]).toBeLessThan(quiet[2]);
+    // Camera and dancer stay inside the closed box.
+    const cam = sceneCameraAt(loudRecipe, 40)!.position;
+    expect(Math.abs(cam[0])).toBeLessThan(loud[0] / 2);
+    expect(Math.abs(loudRecipe.avatarPose.x)).toBeLessThan(loud[0] / 2);
+    expect(Math.abs(loudRecipe.avatarPose.z)).toBeLessThan(loud[2] / 2);
+  });
+
+  it("fruit-dance changes shape on the strongest bass peaks, at least 2 s apart", () => {
+    const peaks = new Map([
+      [20, 0.9],
+      [30, 1],
+      [70, 0.95],
+      [150, 0.8],
+      [160, 0.85],
+    ]);
+    const { recipe, metadata } = createStudy(
+      "fruit-dance",
+      bands(193, (i) => peaks.get(i) ?? 0.1),
+      dims(193),
+    );
+    expect(metadata.cues.map((c) => c.frame)).toEqual([30, 160]);
+    expect(metadata.cues.map((c) => c.target)).toEqual(["Banana", "Apple"]);
+    expect(recipe.motion!.stateKeys[0].label).toBe("Apple");
+    expect(recipe.avatar && recipe.avatarMotion).toBe("dance");
+    for (let i = 1; i < metadata.cues.length; i++)
+      expect(
+        metadata.cues[i].frame - metadata.cues[i - 1].frame,
+      ).toBeGreaterThanOrEqual(MIN_CUE_GAP);
+  });
+
+  it("peakCues takes the top peaks with a minimum gap, in time order", () => {
+    const band = Array.from(
+      { length: 193 },
+      (_, i) => 0.2 + 0.1 * Math.sin(i / 3),
+    );
+    band[100] = 1;
+    band[120] = 0.99;
+    band[10] = 0.98;
+    const cues = peakCues(band, 3, 48);
+    expect(cues[0].frame).toBe(10);
+    expect(cues.map((c) => c.frame)).toContain(100);
+    expect(cues.map((c) => c.frame)).not.toContain(120);
+    for (let i = 1; i < cues.length; i++)
+      expect(cues[i].frame - cues[i - 1].frame).toBeGreaterThanOrEqual(48);
+    expect(peakCues(Array(97).fill(0), 3, 48)).toEqual([]);
+  });
+});
+
+describe("keyframe picking", () => {
+  it("finds the loudest and the quietest smoothed frames on a synthetic band", () => {
+    const series = Array.from({ length: 97 }, (_, i) =>
+      i < 8 ? 0 : 0.5 + 0.4 * Math.sin(((i - 8) / 89) * 2 * Math.PI),
+    );
+    const [first, closed, open] = pickKeyframes(series);
+    expect(first).toMatchObject({ role: "first", index: 0, source: 0 });
+    // The sine peaks at a quarter cycle (frame ~30) and dips at three quarters
+    // (~75); LTX snaps guides to multiples of 8, so 32 and 72.
+    expect(closed.role).toBe("closed");
+    expect(Math.abs(closed.source - 30)).toBeLessThanOrEqual(1);
+    expect(closed.index).toBe(32);
+    expect(open.role).toBe("open");
+    expect(Math.abs(open.source - 75)).toBeLessThanOrEqual(1);
+    expect(open.index).toBe(72);
+    expect(keyframeFile("closed", closed.index)).toMatch(
+      /^frame-closed-00\d\d\.png$/,
+    );
+    expect(keyframeFile("first", 0)).toBe("frame-0000.png");
+  });
+
+  it("skips the follower's start-up when looking for the open frame", () => {
+    const series = Array(30).fill(0.5);
+    series[2] = 0;
+    series[20] = 0.1;
+    expect(pickKeyframes(series, { window: 1 })[2]).toMatchObject({
+      source: 20,
+      index: 24,
+    });
+    expect(() => pickKeyframes([0, 1])).toThrow(/longer than 8/);
+  });
+
+  it("snaps to the 8-frame latent grid, never frame 0 or the last frame", () => {
+    expect(snapToGrid(3, 97)).toBe(8);
+    expect(snapToGrid(0, 97)).toBe(8);
+    expect(snapToGrid(36, 97)).toBe(40);
+    expect(snapToGrid(96, 97)).toBe(88);
+    expect(snapToGrid(95, 97)).toBe(88);
+    expect(snapToGrid(192, 193)).toBe(184);
+    for (const frames of [97, 193, 241])
+      for (let i = 0; i < frames; i++) {
+        const n = snapToGrid(i, frames);
+        expect(n % 8).toBe(0);
+        expect(n).toBeGreaterThan(0);
+        expect(n).toBeLessThan(frames - 1);
+      }
+  });
+});
