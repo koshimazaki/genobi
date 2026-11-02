@@ -87,7 +87,7 @@ describe("image provider selection", () => {
     expect(render()).not.toContain('aria-label="Generation provider"');
   });
 
-  it("keeps provider setup accessible when Generate has no valid prompt", () => {
+  it("keeps provider menu enabled when Generate is blocked", () => {
     const markup = renderToStaticMarkup(
       createElement(GenerateButton, {
         generator: "image",
@@ -111,10 +111,14 @@ describe("image provider selection", () => {
     expect(selector).not.toContain("disabled");
   });
 
-  it("shows both Klein providers and configuration in the actual composer action", () => {
+  it("renders Klein providers and API setup in Generate", () => {
     const markup = renderToStaticMarkup(
       createElement(GenerateAction, {
-        state: { ...initialComposer, generator: "image", model: "flux-3-klein" },
+        state: {
+          ...initialComposer,
+          generator: "image",
+          model: "flux-3-klein",
+        },
         jobs: [],
         submitting: false,
         disabled: false,
@@ -132,5 +136,4 @@ describe("image provider selection", () => {
     expect(markup).toContain("Comfy workflow");
     expect(markup).toContain("BFL API");
   });
-
 });
