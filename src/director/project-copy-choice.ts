@@ -15,7 +15,8 @@ interface CopyChoiceInput {
   overwrittenAt: number;
   current: () => Bundle | undefined;
   synced: () => Synced | undefined;
-  counters: () => [overwritten: number, keptAt: number];
+  /** This project's latest unsettled replacement, if any. */
+  latest: () => number | undefined;
   accept: () => void;
   notice: (text: string) => void;
   /** Asks again on the newer revision now open. */
@@ -33,16 +34,13 @@ export function copyChoice(input: CopyChoiceInput): CopyConflict {
     keepTheirs: () => {
       const current = input.current()?.project;
       const synced = input.synced();
-      const [overwritten, keptAt] = input.counters();
-      // Never accept after a new edit or a newer replacement; answering the
-      // latest choice also settles earlier unanswered ones (their drafts stay
-      // in Undo).
+      // Settle only this project, and only the replacement this choice was
+      // for: never after a newer replacement or an edit made since.
       if (
         current?.id === id &&
         current.revision === synced?.local &&
         synced?.server === revision &&
-        overwritten === overwrittenAt &&
-        keptAt < overwrittenAt
+        input.latest() === overwrittenAt
       )
         input.accept();
     },

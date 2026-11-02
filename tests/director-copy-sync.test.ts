@@ -154,6 +154,54 @@ describe("the studio's copy rules", () => {
     sync.stop();
   });
 
+  it("keeping one project's saved copy does not settle another's replaced draft", async () => {
+    const { fetcher, store } = await studio();
+    const savedA = base();
+    savedA.project = { ...savedA.project, name: "A server", revision: 3 };
+    await pushCopy(savedA, null, new Set(), fetcher);
+    const savedB = base();
+    savedB.project = {
+      ...savedB.project,
+      id: "project-b",
+      name: "B server",
+      revision: 5,
+    };
+    await pushCopy(savedB, null, new Set(), fetcher);
+    const decisions: CopyConflict[] = [];
+    const sync = new CopySync({
+      store,
+      fetcher,
+      debounce: 0,
+      notice: () => {},
+      live: () => {},
+      conflict: (decision) => decisions.push(decision),
+    });
+    // A: an edited draft meets its saved copy; the question goes unanswered.
+    store.getState().actions.initialize(base());
+    const a = store.getState().director.bundle!;
+    store.getState().actions.commit({
+      ...a,
+      project: { ...a.project, name: "A draft" },
+    });
+    await sync.push();
+    // B: the same happens, and the person keeps B's saved copy.
+    const b = base();
+    b.project = { ...b.project, id: "project-b", name: "B draft" };
+    store.getState().actions.commit(b, store.getState().director.bundle);
+    await sync.push();
+    expect(decisions.map((d) => d.projectId)).toEqual([
+      savedA.project.id,
+      "project-b",
+    ]);
+    decisions[1].keepTheirs!();
+    // A's replaced draft still lives only in Undo: leaving must still ask,
+    // but B's own save (Generate, Regenerate) is not blocked by A.
+    expect(await sync.flush(true)).toBe(false);
+    expect(await sync.flush()).toBe(true);
+    expect(sync.whyNotSaved()).toBeUndefined();
+    sync.stop();
+  });
+
   it("does not restore an old draft over new edits made after the choice", async () => {
     const { fetcher, store, notices } = await studio();
     const saved = base();
