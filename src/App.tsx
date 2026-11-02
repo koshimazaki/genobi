@@ -441,6 +441,7 @@ export default function App() {
                     onSubmit={() => void submit()}
                     onResume={() => setShowKey(true)}
                     onUpdate={update}
+                    onConfigure={() => setShowKey(true)}
                   />
                 }
               />
