@@ -9,6 +9,7 @@ import shutil
 
 from common import HERE, REPO, digest, local_file, read_json, source_version, write_json
 from graph import MODES, bindings, candidate, output_timing
+from keyframes import keyframe_paths, keyframe_probes
 from media import audio_contract, image_contract, probe, video_contract
 
 SOURCE = REPO / os.environ.get(
@@ -33,7 +34,7 @@ def recipe_contract(path, frames):
 
 
 def prepare(output, recipe, rgb, look, audio, mode="layout", frames=193, seed=42,
-            prompt="", negative="", audio_start=0.0, depth=None, capture_receipt=None, label=None):
+            prompt="", negative="", audio_start=0.0, depth=None, capture_receipt=None, label=None, keyframes=()):
     output = Path(output).expanduser().resolve()
     if output == REPO.resolve() or REPO.resolve() in output.parents:
         raise ValueError("Choose a private output directory outside the tracked repository.")
@@ -46,8 +47,14 @@ def prepare(output, recipe, rgb, look, audio, mode="layout", frames=193, seed=42
              "rgb": local_file(rgb, "RGB guide", {".webm"}),
              "look": local_file(look, "art-directed first-frame look", {".png", ".jpg", ".jpeg", ".webp"}),
              "audio": local_file(audio, "control/original audio", {".wav", ".flac", ".mp3", ".ogg", ".m4a"})}
+    if mode == "union-depth" and not depth:
+        raise ValueError("--mode union-depth needs --depth: the capture's depth track is its guide video.")
     if depth:
         paths["depth"] = local_file(depth, "depth evidence", {".webm"})
+    if frames not in (97, 193, 241):
+        raise ValueError("Frames must be 97, 193 or 241.")
+    key_paths, key_rows = keyframe_paths(list(keyframes or ()), frames)
+    paths.update(key_paths)
     if capture_receipt:
         paths["capture_receipt"] = local_file(capture_receipt, "capture receipt", {".json"})
     scene = recipe_contract(paths["recipe"], frames)
@@ -59,6 +66,7 @@ def prepare(output, recipe, rgb, look, audio, mode="layout", frames=193, seed=42
               "audio": audio_contract(probe(paths["audio"], "a:0"), timing, audio_start)}
     if depth:
         probes["depth"] = video_contract(probe(paths["depth"], "v:0"), timing, "Depth evidence")
+    probes.update(keyframe_probes(paths, key_rows, paths["rgb"], timing))
     assets = {role: {"path": f"assets/{role}{path.suffix.lower()}", "sha256": digest(path),
                      "bytes": path.stat().st_size} for role, path in paths.items()}
     if capture_receipt:
@@ -76,8 +84,8 @@ def prepare(output, recipe, rgb, look, audio, mode="layout", frames=193, seed=42
         if capture.get("sha256", {}).get("first") == assets["look"]["sha256"]:
             raise ValueError("Supply an art-directed look derived from the first frame, not the unmodified guide frame.")
     graph = candidate(read_json(SOURCE), scene, {k: v["path"] for k, v in assets.items()},
-                      mode, seed, prompt, negative, audio_start)
-    roles = bindings(graph)
+                      mode, seed, prompt, negative, audio_start, key_rows)
+    roles = bindings(graph, mode, len(key_rows))
     timing["output"] = output_timing(graph, timing["width"], timing["height"])
     script_hashes = {path.name: digest(path) for path in HERE.glob("*.py") if not path.name.startswith("test_")}
     manifest = {"version": 1, "status": "prepared_not_run", "candidate": True,
@@ -91,6 +99,11 @@ def prepare(output, recipe, rgb, look, audio, mode="layout", frames=193, seed=42
                 "alignment": "first-frame look aspect checked within recorded one-output-pixel rounding bound; geometric/appearance alignment needs visual review",
                 "qualification": "not a passed case in workflows/qualification/matrix.json",
                 "workflow": {"path": "workflow.api.json"}, "inputs_uploaded": False}
+    if mode == "union-depth":
+        manifest.update(guide="depth", depth="guide video: DirectorSceneCapture capture_file, Union Control IC-LoRA",
+                        rgb="archived evidence only; unused by generation; keyframes are checked against it")
+    if key_rows:
+        manifest["keyframes"] = key_rows
     output.mkdir(parents=True, mode=0o700)
     os.chmod(output, 0o700)
     (output / "assets").mkdir(mode=0o700)
@@ -120,6 +133,8 @@ def main():
     parser.add_argument("--depth", type=Path)
     parser.add_argument("--capture-receipt", type=Path)
     parser.add_argument("--label")
+    parser.add_argument("--keyframe", dest="keyframes", action="append", default=[], metavar="PATH@INDEX[@STRENGTH]",
+                        help="Repeatable art-directed still guiding frame INDEX (strength 0.1-1.0, default 1.0)")
     args = parser.parse_args()
     try:
         manifest = prepare(**vars(args))

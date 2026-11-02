@@ -101,3 +101,26 @@ def audio_contract(metadata, timing, start):
     return {"sample_rate": rate, "channels": channels, "source_duration_seconds": duration,
             "start_seconds": start, "start_sample": round(start_sample), "samples": round(samples),
             "duration_seconds": timing["frames"] / timing["fps"]}
+
+
+def raw_frame(path, width, height, index=None):
+    """Decode one frame as packed RGB at the guide size; a still when index is None."""
+    scale = f"scale={width}:{height}:flags=bilinear"
+    filters = ["-vf", scale if index is None else f"select=eq(n\\,{index}),{scale}"]
+    command = ["ffmpeg", "-v", "error", "-nostdin", "-protocol_whitelist", "file,pipe", "-i", str(Path(path).resolve()),
+               *filters, "-frames:v", "1", "-f", "rawvideo", "-pix_fmt", "rgb24", "pipe:1"]
+    try:
+        result = subprocess.run(command, check=True, capture_output=True, timeout=120)
+    except FileNotFoundError:
+        raise ValueError("Install ffmpeg before preparing keyframes.") from None
+    except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
+        raise ValueError(f"ffmpeg could not decode {Path(path).name}.") from None
+    if len(result.stdout) != width * height * 3:
+        raise ValueError(f"{Path(path).name} has no decodable frame at that index.")
+    return result.stdout
+
+
+def guide_frame_difference(guide, index, image, width, height):
+    """Mean absolute 8-bit difference between a still and the guide frame at index."""
+    frame, still = raw_frame(guide, width, height, index), raw_frame(image, width, height)
+    return sum(abs(a - b) for a, b in zip(frame, still)) / len(frame)

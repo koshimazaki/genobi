@@ -14,7 +14,7 @@ import uuid
 
 from common import digest, read_json, safe_bundle_path, write_json
 from comfy_client import ComfyClient, ResponseError, preflight_graph, remote_file
-from graph import BINDING_ROLES
+from graph import role_target
 from media import number, probe, video_contract
 
 RECEIPT = "run.private.json"
@@ -62,20 +62,27 @@ def output_timing_record(manifest):
 
 def check_bindings(graph, bindings):
     """Refuse a moved or retyped node before any upload or reservation is written."""
-    if not isinstance(bindings, dict) or set(bindings) != set(BINDING_ROLES):
+    if (not isinstance(bindings, dict) or not {"look", "audio", "save"} <= set(bindings)
+            or len({"rgb", "depth"} & set(bindings)) != 1 or any(role_target(role) is None for role in bindings)):
         raise ValueError("Bundle records no complete node binding map; prepare a new bundle.")
-    for role in BINDING_ROLES:
-        spec = bindings[role]
+    for role, spec in bindings.items():
         node = graph.get(spec.get("node"), {})
         if node.get("class_type") != spec.get("class_type"):
             raise ValueError(f"Frozen {role} binding no longer matches the graph; prepare a new bundle.")
+        if (spec.get("class_type"), spec.get("field")) != role_target(role):
+            raise ValueError(f"Frozen {role} binding targets an unexpected input; prepare a new bundle.")
     return bindings
+
+
+def upload_roles(bindings):
+    """Every recorded role except the save prefix, in the order preparation wrote them."""
+    return [role for role in bindings if role != "save"]
 
 
 def apply_bindings(graph, bindings, uploads, request_id):
     """Rewrite only the roles the bundle recorded, checking each class still matches."""
     check_bindings(graph, bindings)
-    for role in ("rgb", "look", "audio"):
+    for role in upload_roles(bindings):
         spec = bindings[role]
         graph[spec["node"]]["inputs"][spec["field"]] = uploads[role]["filename"]
     save = bindings["save"]
@@ -104,7 +111,7 @@ def submit_once(root, client, budget_usd):
     try:
         receipt["status"] = "uploading"
         save_receipt(root, receipt)
-        for role in ("rgb", "look", "audio"):
+        for role in upload_roles(manifest["bindings"]):
             asset = manifest["assets"][role]
             remote = client.upload(safe_bundle_path(root, asset["path"]), receipt["request_id"], role, asset["sha256"])
             receipt["uploads"][role] = {"filename": remote, "sha256": asset["sha256"]}

@@ -89,6 +89,60 @@ hashes, source graph hash, seeds, precise timing and measured media metadata.
 Every preparation starts as `prepared_not_run`. Keep bundles outside the repo;
 they can contain private music, recipe data and prompts.
 
+## Keyframes, Union Control and the refine pass
+
+**Extra image guides (`--keyframe`).** Repeat `--keyframe PATH@INDEX[@STRENGTH]`
+to add an art-directed still at guide frame `INDEX` (strictly between 0 and
+`--frames`; strength 0.1–1.0, default 1.0). Each still passes the same
+one-output-pixel aspect check as `--look`, and is refused when it is the
+unmodified guide frame at that index (mean 8-bit difference below 2, decoded with
+`ffmpeg`). Both sampling stages chain a new `LTXAddVideoICLoRAGuide` after the
+look (nodes `key1s1`, `key1s2`, ...; `crop=center`, the look's VAE and
+latent-downscale link), and the stage's guider, crop and AV-concat nodes read the
+last one. The stills are frozen as `key1`, `key2`... and `run.py` uploads and
+rewrites them like `look`. Without `--keyframe` the graph is byte-identical.
+
+```sh
+python3 workflows/experiments/prepare.py --recipe R.json --rgb guide.webm \
+  --look look-000.png --audio control.wav --output /private/bundle-b \
+  --keyframe look-096.png@96 --keyframe look-160.png@160@0.7 \
+  --mode layout-audio --frames 193 --seed 42 --prompt '...'
+```
+
+**Union Control (`--mode union-depth`).** As `layout-audio`, but the IC-LoRA
+loader loads `ltx-2.3-22b-ic-lora-union-control-ref0.5.safetensors` at 1.0 (the
+LoRA Lightricks ships for the 2.5 base in `LTX-2.5_ICLoRA_Union_Control_Distilled.json`)
+and the guide video is the capture's **depth** track: `--depth` is required and
+becomes node 1 `capture_file`. The RGB capture is archived, unused by generation,
+and still the reference for keyframe checks. Output prefix
+`genobi-experiments/union-depth/candidate` at preparation.
+
+**Refine pass (`refine.py`, on the box).** LTX Tiled Fusion video-to-video with
+the Refine-Details IC-LoRA. The upstream graph uses subgraphs and pack nodes, so
+it is converted against the live server's `/object_info`:
+
+```sh
+python3 workflows/experiments/refine.py convert --ui LTX-2.5_V2V_TiledFusion_Upscale.json \
+  --url http://127.0.0.1:8189 --out refine.api.json
+python3 workflows/experiments/refine.py submit --graph refine.api.json --video clip.mp4 \
+  --prompt 'Crisp 35 mm grain, soft warm key light, teal-orange grade.' \
+  --output-size FullHD --seed 42 --url http://127.0.0.1:8189 \
+  --run-dir /workspace/runs/refine-001 --wait-seconds 900
+python3 workflows/experiments/refine.py status --run-dir /workspace/runs/refine-001 \
+  --url http://127.0.0.1:8189 --wait-seconds 600
+```
+
+`convert` expands subgraphs (`<instance>:<inner>` ids), maps saved widget values
+by name (or by server order), folds literal switches so the unused prompt
+enhancer and API encoder drop out, and refuses, listing them, any node type the
+server lacks. `submit` finds nodes by class (`LoadVideo`, the positive/negative
+`PrimitiveStringMultiline`, `LTXVGetTilingSizes`, sampler seeds, `SaveVideo`),
+preflights models, reserves `refine.private.json`, uploads once and POSTs once
+to `genobi-experiments/refine/<request>/refine`. A lost response is
+`submission_unknown` and is never retried. **Prompts describe look and style
+only** (lighting, palette, film stock, sharpness, grade); a named object can
+stamp into every spatial tile. Models: `scripts/vast/assets.py --profile second-pass`.
+
 ## Read-only ComfyUI preflight
 
 Run through an SSH-forwarded or otherwise explicitly configured private ComfyUI
