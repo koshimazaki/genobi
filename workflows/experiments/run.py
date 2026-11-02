@@ -14,6 +14,7 @@ import uuid
 
 from common import digest, read_json, safe_bundle_path, write_json
 from comfy_client import ComfyClient, ResponseError, preflight_graph, remote_file
+from graph import BINDING_ROLES
 from media import number, probe, video_contract
 
 RECEIPT = "run.private.json"
@@ -51,6 +52,36 @@ def save_receipt(root, receipt):
     write_json(root / RECEIPT, receipt)
 
 
+def output_timing_record(manifest):
+    """Use the rendered dimensions recorded at preparation, never a guessed factor."""
+    recorded = (manifest.get("timing") or {}).get("output")
+    if not isinstance(recorded, dict) or not isinstance(recorded.get("width"), int) or not isinstance(recorded.get("height"), int):
+        raise ValueError("Bundle records no output dimensions; prepare a new bundle.")
+    return {**manifest["timing"], "width": recorded["width"], "height": recorded["height"]}
+
+
+def check_bindings(graph, bindings):
+    """Refuse a moved or retyped node before any upload or reservation is written."""
+    if not isinstance(bindings, dict) or set(bindings) != set(BINDING_ROLES):
+        raise ValueError("Bundle records no complete node binding map; prepare a new bundle.")
+    for role in BINDING_ROLES:
+        spec = bindings[role]
+        node = graph.get(spec.get("node"), {})
+        if node.get("class_type") != spec.get("class_type"):
+            raise ValueError(f"Frozen {role} binding no longer matches the graph; prepare a new bundle.")
+    return bindings
+
+
+def apply_bindings(graph, bindings, uploads, request_id):
+    """Rewrite only the roles the bundle recorded, checking each class still matches."""
+    check_bindings(graph, bindings)
+    for role in ("rgb", "look", "audio"):
+        spec = bindings[role]
+        graph[spec["node"]]["inputs"][spec["field"]] = uploads[role]["filename"]
+    save = bindings["save"]
+    graph[save["node"]]["inputs"][save["field"]] = f"genobi-experiments/{request_id}/candidate"
+
+
 def submit_once(root, client, budget_usd):
     if root.joinpath(RECEIPT).exists():
         raise ValueError("This bundle already has a run reservation. Use --resume; submission will not be repeated.")
@@ -59,6 +90,7 @@ def submit_once(root, client, budget_usd):
     manifest, graph, experiment_hash = bundle_snapshot(root)
     info = client.info()
     readiness = preflight_graph(graph, info)
+    check_bindings(graph, manifest.get("bindings"))
     stats = client.stats()
     receipt = {"version": 1, "candidate": True, "request_id": str(uuid.uuid4()), "prompt_id": None,
                "status": "reserved", "created_at": now(), "endpoint": client.base,
@@ -78,9 +110,7 @@ def submit_once(root, client, budget_usd):
             receipt["uploads"][role] = {"filename": remote, "sha256": asset["sha256"]}
             save_receipt(root, receipt)
         graph = copy.deepcopy(graph)
-        for role, node, field in (("rgb", "1", "capture_file"), ("look", "8", "image"), ("audio", "40", "audio")):
-            graph[node]["inputs"][field] = receipt["uploads"][role]["filename"]
-        graph["61"]["inputs"]["filename_prefix"] = f"genobi-experiments/{receipt['request_id']}/candidate"
+        apply_bindings(graph, manifest.get("bindings"), receipt["uploads"], receipt["request_id"])
         write_json(root / "executed-workflow.private.json", graph, exclusive=True)
         receipt["executed_workflow_sha256"] = digest(root / "executed-workflow.private.json")
     except Exception:
@@ -161,7 +191,7 @@ def fetch_output(root, client, receipt, entry, manifest):
         client.download(files[0], target)
     receipt["outputs"] = [{"path": str(target.relative_to(root)), "sha256": digest(target), "bytes": target.stat().st_size, "remote": files[0]}]
     save_receipt(root, receipt)
-    timing = {**manifest["timing"], "width": manifest["timing"]["width"] * 2, "height": manifest["timing"]["height"] * 2}
+    timing = output_timing_record(manifest)
     try:
         measured = video_contract(probe(target, "v:0"), timing, "Generated video")
         audio = probe(target, "a:0")

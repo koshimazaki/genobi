@@ -5,6 +5,51 @@ import json
 STATIC_NODES = {"2", "3", "4", "7", "10", "11", "12", "13"}
 MODES = ("layout", "layout-audio")
 
+# The roles a run rewrites after preparation. They are recorded in the bundle
+# so a renumbered studio graph cannot silently mis-wire an expensive submission:
+# preflight validates each node against its own schema, so a swapped class that
+# still satisfies its inputs would otherwise reach sampling.
+BINDINGS = (
+    ("rgb", "1", "DirectorSceneCapture", "capture_file"),
+    ("look", "8", "LoadImage", "image"),
+    ("audio", "40", "LoadAudio", "audio"),
+    ("save", "61", "SaveVideo", "filename_prefix"),
+)
+BINDING_ROLES = tuple(role for role, *_ in BINDINGS)
+
+# The only upscale the candidate is qualified on. The factor lives in the model
+# filename, so it is derived here once instead of assumed at submit time.
+QUALIFIED_UPSCALE = {"ltx-2.5-latent-spatial-upscaler-x2-bf16-1.0.safetensors": 2}
+
+
+def bindings(graph):
+    """Record every rewrite target with the class it must still be."""
+    rows = {}
+    for role, node_id, class_type, field in BINDINGS:
+        actual = graph.get(node_id, {}).get("class_type")
+        if actual != class_type:
+            raise ValueError(
+                f"{role}: studio node {node_id} is {actual!r}, expected {class_type!r}; review the derivative."
+            )
+        rows[role] = {"node": node_id, "class_type": class_type, "field": field}
+    return rows
+
+
+def output_timing(graph, width, height):
+    """Derive the rendered dimensions from the upscaler the graph actually loads."""
+    names = {
+        node.get("inputs", {}).get("model_name")
+        for node in graph.values()
+        if node.get("class_type") == "LatentUpscaleModelLoader"
+    }
+    if len(names) != 1:
+        raise ValueError("Expected exactly one latent upscale model in the candidate graph.")
+    name = names.pop()
+    factor = QUALIFIED_UPSCALE.get(name)
+    if not factor:
+        raise ValueError(f"Upscale model {name!r} has no recorded factor; qualify it before rendering.")
+    return {"width": width * factor, "height": height * factor, "factor": factor, "upscale_model": name}
+
 
 def linked(value):
     return isinstance(value, list) and len(value) == 2 and isinstance(value[0], str) and type(value[1]) is int

@@ -138,6 +138,11 @@ declared dropdown choices. Unfilled workflow placeholders fail the check.
 It reads only `/object_info` and `/system_stats`. It never calls `/prompt`.
 A green report proves those prerequisites, not that the graph fits in VRAM,
 executes correctly or preserves the music's timing. Start with a short pilot.
+On a prepared pilot bundle, `--workflow` checks only after `run.py` has
+uploaded the guide, look and audio: before that, the `LoadImage` and
+`LoadAudio` choices do not list them yet and the check fails by design. Run it
+without `--workflow` before submitting; `run.py` checks node classes, links,
+model choices and the frozen node bindings itself before any reservation.
 `assets.py verify --models-dir ...` is also available without a running ComfyUI.
 
 ## Budget and retained evidence

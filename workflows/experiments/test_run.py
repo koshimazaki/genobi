@@ -4,7 +4,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from common import REPO, read_json
+from common import REPO, read_json, write_json
 from comfy_client import ComfyClient, ResponseError, checked_url, preflight_graph, remote_file
 from run import RECEIPT, bundle_inputs, output_descriptors, poll_once, submit_once
 from test_support import FakeComfy, audio_metadata, make_bundle, video_metadata
@@ -135,10 +135,35 @@ class RunTests(unittest.TestCase):
 
     def test_bearer_auth_requires_https_or_loopback(self):
         with patch.dict("os.environ", {"GENOBI_COMFY_BEARER": "offline-test-token"}):
-            with self.assertRaisesRegex(ValueError, "HTTPS or a loopback"):
-                ComfyClient("http://gpu.example.test:8188")
             for url in ("https://gpu.example.test:443", "http://127.0.0.1:8188"):
                 self.assertEqual(ComfyClient(url).headers["Authorization"], "Bearer offline-test-token")
+            with patch.dict("os.environ", {}, clear=True):
+                with self.assertRaisesRegex(ValueError, "plaintext remote origins"):
+                    ComfyClient("http://gpu.example.test:8188")
+
+    def test_plaintext_remote_origin_is_refused_without_bearer(self):
+        with self.assertRaisesRegex(ValueError, "plaintext remote origins"):
+            ComfyClient("http://100.84.82.116:8188")
+        with self.assertRaisesRegex(ValueError, "plaintext remote origins"):
+            checked_url("http://gpu.example.test:18188")
+
+    def test_bundle_records_bindings_and_rendered_dimensions(self):
+        manifest = read_json(self.root / "experiment.json")
+        self.assertEqual(set(manifest["bindings"]), {"rgb", "look", "audio", "save"})
+        for role, spec in manifest["bindings"].items():
+            self.assertIs(spec["node"], str(spec["node"]))
+            self.assertEqual(self.graph[spec["node"]]["class_type"], spec["class_type"])
+        output = manifest["timing"]["output"]
+        self.assertEqual((output["factor"], output["width"], output["height"]), (2, 768, 512))
+
+    def test_changed_binding_class_is_refused_before_upload(self):
+        manifest = read_json(self.root / "experiment.json")
+        manifest["bindings"]["audio"]["class_type"] = "LoadImage"
+        write_json(self.root / "experiment.json", manifest)
+        with self.assertRaisesRegex(ValueError, "audio binding no longer matches"):
+            submit_once(self.root, self.client, 10)
+        self.assertEqual(self.client.uploads, [])
+        self.assertEqual(self.client.posts, 0)
 
     def test_download_selects_saved_video_not_previews(self):
         entry = {"outputs": {"61": {"images": [{"filename": "candidate.mp4", "subfolder": "genobi-experiments/run", "type": "output"}]},

@@ -24,10 +24,18 @@ class NoRedirect(urllib.request.HTTPRedirectHandler):
         return None
 
 
+LOOPBACK_HOSTS = ("localhost", "127.0.0.1", "::1")
+
+
 def checked_url(value):
     parsed = urllib.parse.urlsplit(value)
     if any(ord(c) < 32 or ord(c) == 127 for c in value) or parsed.scheme not in ("http", "https") or not parsed.hostname or parsed.username or parsed.password or parsed.query or parsed.fragment:
         raise ValueError("Use an explicit http(s) ComfyUI base URL without credentials, query or fragment.")
+    # Plaintext to a public host would send the graph and its uploads in the
+    # clear; the read-only preflight already refuses it, so submission does too.
+    # Remote workers are reached through an SSH tunnel on loopback.
+    if parsed.scheme == "http" and parsed.hostname not in LOOPBACK_HOSTS:
+        raise ValueError("Use a loopback ComfyUI origin through an SSH tunnel, or https; plaintext remote origins are refused.")
     return value.rstrip("/")
 
 

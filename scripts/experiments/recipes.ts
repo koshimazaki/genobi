@@ -345,10 +345,27 @@ export function createStudy(
       recipe.fov = 46;
       motion.mappings = [
         {
-          id: "pulse",
-          property: "scale",
+          // Bass raises the mass: the towers stand up on the low band.
+          id: "lift-low",
+          property: "lift",
           source: "low",
-          amount: 0.12,
+          amount: 1.2,
+          enabled: true,
+        },
+        {
+          // Voice breathes the mass rather than moving it.
+          id: "scale-mid",
+          property: "scale",
+          source: "mid",
+          amount: 0.18,
+          enabled: true,
+        },
+        {
+          // Hi-hat flicks the pieces apart, the percussive one.
+          id: "spread-high",
+          property: "spread",
+          source: "high",
+          amount: 0.25,
           enabled: true,
         },
       ];
