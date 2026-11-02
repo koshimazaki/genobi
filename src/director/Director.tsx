@@ -11,6 +11,7 @@ import { addGraphics } from "./add-graphics";
 import AddTrackDialog from "./AddTrackDialog";
 import { useTimelineKeys } from "../timeline-keys";
 import { ownedByDirector } from "./shortcuts";
+import { announceDrop } from "./drop-reveal";
 import { useTrimPreview } from "./useTrimPreview";
 import { moveToLane } from "../../shared/director/tracks";
 import { editLayer, type Layer } from "../../shared/director/types";
@@ -177,6 +178,12 @@ export default function Director({
   }
   useTimelineKeys(active && !addTrackOpen, ownedByDirector, (command) => {
     if (studioStore.getState().workspace.drawerOpen) return false;
+    if (command === "undo") {
+      if (busy || !studioStore.getState().director.history.length) return false;
+      actions.undo();
+      setRenderUrl("");
+      return true;
+    }
     if (command === "delete") {
       if (!p || !l || busy) return false;
       if (l.locked) report(new Error("Unlock this layer first"));
@@ -196,7 +203,8 @@ export default function Director({
     }
     return false;
   });
-  async function importTracks(files: File[], name = "") {
+  /** `dropped`: the files came by drag and drop, so the new clip is revealed. */
+  async function importTracks(files: File[], name = "", dropped = false) {
     if (!bundle || busy || !files.length) return;
     setWorkingFile(true);
     try {
@@ -214,6 +222,7 @@ export default function Director({
       commit(next);
       if (added[0]) select(added[0].id);
       setInspectorOpen(false);
+      if (dropped) announceDrop(added[0]?.id);
     } finally {
       setWorkingFile(false);
     }
@@ -237,7 +246,9 @@ export default function Director({
         if (e.dataTransfer.files.length) {
           e.preventDefault();
           if (!busy)
-            void importTracks(Array.from(e.dataTransfer.files)).catch(report);
+            void importTracks(Array.from(e.dataTransfer.files), "", true).catch(
+              report,
+            );
         }
       }}
     >
@@ -417,7 +428,7 @@ export default function Director({
             retrack={retrack}
             changeList={changeList}
             preview={trim.preview}
-            drop={(files) => void importTracks(files).catch(report)}
+            drop={(files) => void importTracks(files, "", true).catch(report)}
             replace={() => {
               replacement.current = l?.id;
               media.current?.click();
