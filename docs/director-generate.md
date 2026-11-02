@@ -5,8 +5,9 @@ summary: Reuse or replace declared template media, apply undoable swaps, and ask
 
 # Generate your version
 
-Open an editable template in Director or Editor. **Generate my version** opens
-with it; reopen the panel from either workspace's header. Closing the panel
+Open an editable template in Director and **Generate my version** opens with
+it. The Editor is for editing, so there it waits for the header button; reopen
+the panel from either workspace's header. Closing the panel
 keeps the project. Switching between Director and Editor uses the same document.
 
 **Make it yours** shows the template’s actual media in a compact grid above the

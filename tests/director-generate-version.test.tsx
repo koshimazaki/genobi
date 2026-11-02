@@ -247,6 +247,17 @@ it("keeps Gallery free of the template modal and does not reopen a dismissed pan
   expect(document.querySelector("dialog")).not.toBeNull();
 });
 
+it("waits for its header button in the Editor, and still greets in Director", async () => {
+  state.preset = "editor";
+  const mounted = await mount(await versionCharacter());
+  // The Editor is for editing: no panel pops up on entry.
+  expect(document.querySelector("dialog")).toBeNull();
+  expect(button("Generate my version")).toBeTruthy();
+  state.preset = "director";
+  mounted.render();
+  expect(document.querySelector("dialog")).not.toBeNull();
+});
+
 it("keeps Make it yours description and character/style bindings in the prepared project", async () => {
   const original = await versionCharacter();
   const brief = readBrief(original);

@@ -96,8 +96,8 @@ not evict unsaved work or add a persistent media cache.
 
 ## Generate a version in Director
 
-[Generate my version](director-generate.md) opens with an editable template and
-from either workspace's header. It lists declared inputs with current media,
+[Generate my version](director-generate.md) opens with an editable template in
+Director (the Editor waits for its button) and from either workspace's header. It lists declared inputs with current media,
 previews, uploads and project-asset choices. Apply swaps is undoable. Generation
 always goes through the linked agent, with each paid step approved in the bubble.
 Hosted editing offers a project ZIP/local-studio handoff; pairing does not

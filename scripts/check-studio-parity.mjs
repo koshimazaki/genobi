@@ -132,6 +132,11 @@ try {
         const intake = page.getByRole("dialog", {
           name: "Generate my version",
         });
+        // Director greets with the panel; the Editor waits for its button.
+        if (workspace === "editor")
+          await page
+            .getByRole("button", { name: "Generate my version", exact: true })
+            .click();
         await intake.waitFor();
         assert(
           await intake.evaluate(
