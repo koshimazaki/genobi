@@ -28,6 +28,7 @@ const { values } = parseArgs({
     radius: { type: "string" },
     orbit: { type: "string" },
     avatar: { type: "boolean" },
+    elevation: { type: "string" },
     help: { type: "boolean" },
   },
 });
@@ -91,6 +92,7 @@ if (
         "architecture",
         "clockwork",
         "pulse",
+        "rubik",
         "falling",
         "room",
       ].includes(s),
@@ -208,7 +210,7 @@ try {
   });
   await page.exposeFunction("savePilotFile", async (name, bytes) => {
     if (
-      !/^(fruit|architecture|clockwork|pulse|falling|room)\/[a-z0-9-]+\.(json|png|wav|webm)$/.test(
+      !/^(fruit|architecture|clockwork|pulse|rubik|falling|room)\/[a-z0-9-]+\.(json|png|wav|webm)$/.test(
         name,
       )
     )
@@ -236,6 +238,8 @@ try {
           radius,
           orbit,
           avatar: Boolean(values.avatar),
+          elevation:
+            values.elevation === undefined ? null : Number(values.elevation),
         },
       },
     );

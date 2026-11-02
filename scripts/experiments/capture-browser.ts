@@ -20,6 +20,8 @@ export interface Reactivity {
   orbit?: number | null;
   /** Place the idle mannequin in the scene (room studies: a listener to read scale). */
   avatar?: boolean;
+  /** Camera elevation in degrees; null keeps the study's own. */
+  elevation?: number | null;
 }
 
 function percentile(values: number[], q: number) {
@@ -90,6 +92,7 @@ export async function captureStudy(
   }
   if (reactivity.radius != null) recipe.radius = reactivity.radius;
   if (reactivity.orbit != null) recipe.orbit = reactivity.orbit;
+  if (reactivity.elevation != null) recipe.elevation = reactivity.elevation;
   if (reactivity.avatar) {
     recipe.avatar = true;
     recipe.avatarAsset = "mannequin";
@@ -100,6 +103,7 @@ export async function captureStudy(
       radius: recipe.radius,
       orbit: recipe.orbit,
       avatar: recipe.avatar,
+      elevation: recipe.elevation,
       bandGain: reactivity.bandGain,
       bandGainsApplied: scaled.gains,
       motionGain: reactivity.motionGain,

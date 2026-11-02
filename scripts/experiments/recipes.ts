@@ -378,6 +378,7 @@ export function createStudy(
     architecture: "voxel-architecture-128",
     clockwork: "voxel-architecture-128",
     pulse: "voxel-architecture-128",
+    rubik: "voxel-architecture-128",
     falling: "city-to-loft",
     room: "apartment-morph",
   }[study];
@@ -391,7 +392,8 @@ export function createStudy(
     study === "fruit" ||
     study === "architecture" ||
     study === "clockwork" ||
-    study === "pulse"
+    study === "pulse" ||
+    study === "rubik"
   ) {
     const states = structuredClone(motion.stateKeys);
     if (study === "fruit") {
@@ -458,7 +460,7 @@ export function createStudy(
       recipe.prompt =
         "A monumental stepped pyramid rearranges into a cluster of tall towers, then a floating faceted diamond. Preserve the same material pieces and exact framing. Warm limestone with subtle metallic edges against a dark minimal environment.";
     }
-    if (study === "pulse") {
+    if (study === "pulse" || study === "rubik") {
       // The simplest audio-reactive case: one pyramid that breathes with the
       // bass and lifts on the kick, no morph; the camera circles it once.
       motion.mappings = [
@@ -484,6 +486,32 @@ export function createStudy(
           enabled: true,
         },
       ];
+      if (study === "rubik")
+        // Terraces turn against each other on the voice (twist grows with
+        // height, so the layers shear like a cube puzzle); bass still swells.
+        motion.mappings = [
+          {
+            id: "twist-mid",
+            property: "twistY",
+            source: "mid",
+            amount: 1.6,
+            enabled: true,
+          },
+          {
+            id: "scale-low",
+            property: "scale",
+            source: "low",
+            amount: 0.45,
+            enabled: true,
+          },
+          {
+            id: "lift-sub",
+            property: "lift",
+            source: "sub",
+            amount: 0.6,
+            enabled: true,
+          },
+        ];
       states.splice(1);
       motion.stateKeys = [
         {
