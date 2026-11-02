@@ -46,22 +46,29 @@ rail: a **Project** asset or a Camera result from **Generated**.
 
 ## Recreate in Camera
 
-Each video and audio slot has one optional action that only navigates
-(`src/director/recreate-in-camera.ts`):
+Every slot (image, video or audio) has one optional action that only
+navigates (`src/director/recreate-in-camera.ts`):
 
-- **Recreate in Camera** when the slot's current media carries a recorded
-  prompt: a generated asset's own `generations[].prompt`, or, for Bloom's
-  untouched bundled takes, the owner's recorded `BLOOM_PROMPT`. Camera opens
-  and that prompt is typed into its prompt field. Bloom's character sheet is
-  named in the button's title; attach it in Camera yourself, since the
-  reference image and model settings are not restored.
+- **Recreate in Camera** when the slot's current media records a prompt. For
+  a generated asset (`generations[]`), Camera is handed, as an ordinary edit:
+  the registry entry that made it (`recipe.id`, so the same model and route
+  are selected, for every ready entry: each LTX option, FLUX 3 video and
+  image-to-video, FLUX 3 Image / Edit / Klein open and API, every MiniMax H3
+  path, the Openjutsu swap, both upscalers, MiniMax Music and the Comfy
+  Deploy entries), the prompt, and the image references and inputs read from
+  the project's own files. A project video the run read (an upscale's or an
+  H3 workflow's source) is not a Camera library clip, so it is named as not
+  stored. Bloom's untouched bundled takes restore the owner's recorded
+  `BLOOM_PROMPT` and character sheet; which H3 entry made them is not
+  recorded, so the model is named as not stored.
 - **Create in Camera** otherwise (Dimensions records cut points, not
-  per-creature prompts; swapped-in uploads record nothing). Camera opens as it
-  was; nothing is invented.
+  per-creature prompts; swapped-in uploads record nothing). Camera opens as
+  it was and says "Settings not stored for this asset"; nothing is invented.
 
-Neither generates, and neither swaps anything in. Camera owns the model,
-settings, price and approval. A Ready result appears in the Assets rail's
-**Generated** collection; return to the template and drop it onto the slot.
+Camera's notice line says what was restored and what was not. Neither action
+generates or swaps anything in. Camera owns the price and the Generate press.
+A Ready result appears in the Assets rail's **Generated** collection; return
+to the template and drop it onto the slot.
 
 ## Hosted editing
 

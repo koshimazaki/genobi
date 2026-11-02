@@ -1,0 +1,57 @@
+import type { Job } from "../shared/types";
+import { isDeployModel } from "../shared/comfy/deploy-catalogue";
+import { isH3, takesVideoReferences } from "../shared/h3";
+import { isImage } from "../shared/image";
+import { restoredRunInputs, type RunInputs } from "./run-inputs";
+
+/**
+ * What a Recreate cannot bring back, by model. Camera's Recreate restores a
+ * run's prompt and settings from its job; some inputs live elsewhere:
+ *
+ * - reference images (every image model, FLUX 3 image-to-video, both H3 paths
+ *   and the Openjutsu swap) live only in this browser's private run inputs
+ *   (`run-inputs.ts`), never in the job;
+ * - the source video (an upscale, the H3 OmniRef workflows) is a library id
+ *   on the job, absent on runs recorded without one;
+ * - a deployment's inputs and the swap's settings are on the job when it
+ *   recorded them.
+ *
+ * Each missing piece is named rather than silently dropped, so Camera can
+ * say "settings not stored" instead of looking restored.
+ */
+export type RecreateGap =
+  "reference images" | "source video" | "deployment inputs" | "swap settings";
+
+/** Which inputs a run of this model needs beyond its prompt and settings. */
+export function recreateNeeds(job: Pick<Job, "generator" | "model">) {
+  return {
+    references: isImage(job.generator) || takesVideoReferences(job.model),
+    source: job.generator === "upscale" || isH3(job.model),
+    deploy: isDeployModel(job.model),
+    swap: job.model === "openjutsu-swap",
+  };
+}
+
+export function recreateGaps(job: Job, inputs?: RunInputs): RecreateGap[] {
+  const needs = recreateNeeds(job);
+  const gaps: RecreateGap[] = [];
+  const restored = restoredRunInputs(job, inputs).imageReferences?.length ?? 0;
+  // An image run without references is a text-to-image run; only a run that
+  // recorded sending some is missing them.
+  if (needs.references && (job.imageReferenceCount ?? 0) > restored)
+    gaps.push("reference images");
+  if (needs.source && !job.sourceId) gaps.push("source video");
+  if (needs.deploy && !job.deploy) gaps.push("deployment inputs");
+  if (needs.swap && !job.swap) gaps.push("swap settings");
+  return gaps;
+}
+
+/** The one sentence Camera shows for a partial Recreate, or "" when whole. */
+export function recreateGapMessage(gaps: readonly RecreateGap[]) {
+  if (!gaps.length) return "";
+  const list =
+    gaps.length === 1
+      ? gaps[0]
+      : `${gaps.slice(0, -1).join(", ")} and ${gaps.at(-1)}`;
+  return `Settings not stored for this run in this browser: ${list}. Camera restored the rest. ${gaps.includes("reference images") ? "Reattach the references" : "Choose them again"} before generating.`;
+}

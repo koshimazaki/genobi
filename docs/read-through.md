@@ -365,6 +365,18 @@ The Bounding boxes action and canvas are Klein-only; other image models park
 regions without sending them. Missing saved inputs ask for reattachment. Boxes guide the model; they
 are prompt coordinates, not pixel masks.
 
+Recreate covers every ready registry entry (`tests/recreate-every-model.test.ts`
+reads the list from source). Beyond the prompt and settings, a run may need
+reference images (image models, FLUX 3 image-to-video, both H3 paths, the
+Openjutsu swap), a source video (upscales, the H3 workflows), a deployment's
+inputs or the swap's settings. The reducer restores each one the job or this
+browser kept; `src/recreate-gaps.ts` names each one it could not ("Settings not
+stored for this run in this browser: …"), so a partial restore never looks
+whole. A Director slot's **Recreate in Camera** hands the composer the same kind
+of edit through `src/camera-recipe-target.ts`: the recorded registry entry
+(model and route), the prompt and the project's own reference images, with a
+note naming what the asset does not store.
+
 The servers read the rows back: `readLayout` (`shared/image-layout.ts`) finds the
 trailing JSON array of rows, and `validateImage` (`server/validate-image.ts`, used
 by both adapters through `validateInput`) refuses a box that is not four integers

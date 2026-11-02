@@ -297,17 +297,22 @@ export default function VersionInputSlot({
             Leave empty
           </button>
         )}
-        {shell && slot.kind !== "image" && (
+        {shell && (
           <button
             type="button"
             title={
-              recipe.prompt
-                ? `Opens Camera with this source's recorded prompt${recipe.reference ? ` (attach its reference ${recipe.reference.split("/").pop()} yourself)` : ""}. Nothing is generated or swapped until you do it.`
-                : "Opens Camera. Nothing is generated or swapped until you do it."
+              recipe.label === "Recreate in Camera"
+                ? "Opens Camera with what this asset records (prompt, model, references). Nothing is generated or swapped until you do it."
+                : "This asset stores no prompt or settings: opens Camera as it is. Nothing is generated or swapped until you do it."
             }
             onClick={() => {
               beforeCamera?.();
-              openInCamera(shell.select, recipe);
+              void openInCamera(
+                shell.select,
+                recipe,
+                bundle.project,
+                bundle.files,
+              );
             }}
           >
             {recipe.label}
