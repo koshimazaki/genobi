@@ -92,11 +92,12 @@ const listen = () => {
 
 it("restores Bloom's recorded owner prompt and sheet, and says the model is not recorded", () => {
   const p = project("bloom-teaser", {
+    // As mixProject builds it: the template's own path, origin uploaded.
     "bloom-h3-a": {
       kind: "video",
       use: "production",
-      file: video,
-      origin: "fixture",
+      file: { ...video, path: "media/bloom-h3-a.mp4" },
+      origin: "uploaded",
     },
   });
   const recipe = cameraRecipe(p, bloomA, ["bloom-h3-a"]);

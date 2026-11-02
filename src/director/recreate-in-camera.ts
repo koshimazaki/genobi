@@ -90,7 +90,13 @@ export function cameraRecipe(
   }
   const template = versionTemplate(project);
   const recorded = template && RECORDED[template.id]?.[slot.id];
-  if (recorded && id === slot.defaultAsset && asset?.origin === "fixture")
+  // The bundled take itself: the slot's own asset at the template's path (a
+  // swap imports a new asset under another id).
+  if (
+    recorded &&
+    id === slot.defaultAsset &&
+    asset?.file.path === template.mix?.media[slot.id]?.path
+  )
     return {
       label: "Recreate in Camera",
       ...recorded,
