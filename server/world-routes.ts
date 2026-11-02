@@ -1,4 +1,9 @@
-/** Explicit, ephemeral pairing between one open World tab and local agents. */
+/**
+ * Explicit, ephemeral pairing between one open World tab and local agents:
+ * a terminal agent links with the tab's one-use code; a session the person
+ * started from the studio is granted by the tab's own browser (`/grant`),
+ * for that run only, so a spoken "move the camera" needs no code.
+ */
 import express from "express";
 import { randomBytes, randomUUID } from "node:crypto";
 import {
@@ -7,6 +12,8 @@ import {
   type WorldCommand,
   type WorldFile,
 } from "../shared/world-control";
+import { AGENT_SESSION_ID } from "../shared/agent-session-events";
+import type { AgentScope } from "./agent-session-types";
 import { AppError } from "./errors";
 import { sameCode } from "./pairing-code";
 interface Command {
@@ -22,6 +29,8 @@ interface Session {
   code?: string;
   seen: number;
   links: Set<string>;
+  /** Agent runs (by session id) the tab's owner granted from the studio. */
+  runs: Set<string>;
   commands: Map<string, Command>;
   files: Map<string, { bytes: Buffer; type: string }>;
 }
@@ -30,11 +39,28 @@ const SESSION_BYTES = 144 * 1024 * 1024;
 const isFile = (file: string): file is WorldFile =>
   Object.hasOwn(WORLD_FILES, file);
 const filePath = (id: string, file: string) => `/api/world/${id}/files/${file}`;
-export function worldRouter() {
+export interface WorldRouterOptions {
+  /** True while `run` is `owner`'s own running agent session. */
+  ownsRun?: (run: string, owner: string) => boolean;
+}
+export function worldRouter({
+  ownsRun = () => false,
+}: WorldRouterOptions = {}) {
   const router = express.Router(),
     sessions = new Map<string, Session>();
   const json = express.json({ limit: "128kb" });
   const owner = (res: express.Response) => res.locals.sessionId as string;
+  /**
+   * Whether the request speaks for a run this tab granted, read from its
+   * server-set scope (`scopeAgentRequest`: the run's grant header or its
+   * ticketed browser), never from the request body. It ends with the run.
+   */
+  const granted = (s: Session, res: express.Response) => {
+    const scope = res.locals.agent
+      ? (res.locals.agentScope as AgentScope | undefined)
+      : undefined;
+    return !!scope && scope.owner === s.owner && s.runs.has(scope.agentSession);
+  };
   function sweep() {
     for (const [id, s] of sessions)
       if (Date.now() - s.seen > 300_000) sessions.delete(id);
@@ -50,7 +76,9 @@ export function worldRouter() {
       !s ||
       (browser
         ? s.owner !== owner(res) || res.locals.agent
-        : s.owner !== owner(res) && !s.links.has(owner(res)))
+        : s.owner !== owner(res) &&
+          !s.links.has(owner(res)) &&
+          !granted(s, res))
     )
       throw new AppError(
         404,
@@ -72,6 +100,7 @@ export function worldRouter() {
       code: randomBytes(16).toString("hex"),
       seen: Date.now(),
       links: new Set(),
+      runs: new Set(),
       commands: new Map(),
       files: new Map(),
     };
@@ -87,6 +116,31 @@ export function worldRouter() {
     if (!s) throw new AppError(404, "Pairing code expired or already used.");
     s.links.add(owner(res));
     s.code = undefined;
+    res.json({ id: s.id });
+  });
+  // The tab's own browser grants one of the person's running agent sessions:
+  // never an agent (session(…, true) refuses one), never another person's run.
+  router.post("/:id/grant", json, (req, res) => {
+    const s = session(req, res, true),
+      id = req.body?.run;
+    if (typeof id !== "string" || !AGENT_SESSION_ID.test(id))
+      throw new AppError(400, "Name the agent session to grant.");
+    if (!ownsRun(id, owner(res)))
+      throw new AppError(404, "That agent session is not running.");
+    // A run that has ended is inert (its scope is gone); drop it here.
+    for (const old of s.runs) if (!ownsRun(old, s.owner)) s.runs.delete(old);
+    s.runs.add(id);
+    res.json({ granted: true });
+  });
+  // A granted run finds its tab without a code.
+  router.get("/granted", (_req, res) => {
+    sweep();
+    const s = [...sessions.values()].find((s) => granted(s, res));
+    if (!s)
+      throw new AppError(
+        404,
+        "No World tab has granted this session. Open World Builder in the studio while the session runs, or pair with World → Connect agents.",
+      );
     res.json({ id: s.id });
   });
   router.delete("/:id", (req, res) => {
