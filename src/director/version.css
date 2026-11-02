@@ -184,7 +184,9 @@
 }
 .dir-version-inputs {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  /* Cards need room for a preview and a real upload target. In the Director's
+     ~700px center pane, two fixed columns squeeze both down to tiny tiles. */
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
   gap: 14px;
   align-items: start;
   min-width: 0;
