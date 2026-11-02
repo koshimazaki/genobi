@@ -23,16 +23,19 @@ authored cues. No LTX setting can add motion the guide does not carry.
 
 ## The capture knobs
 
-`node scripts/experiments/capture.mjs` gained five options, all recorded in
+`node scripts/experiments/capture.mjs` gained these options, all recorded in
 `study.json` under `reactivity`:
 
-| Option             | What it does                                                                          | Value used                                               |
-| ------------------ | ------------------------------------------------------------------------------------- | -------------------------------------------------------- |
-| `--band-gain auto` | per band, scale so the 95th percentile sits at 0.8, clamped to 1                      | `auto`                                                   |
-| `--motion-gain N`  | multiply every mapping amount within its validated range; above 1 sets intensity to 1 | 3 (morph), 1.5 (pulse, rubik), 2.5 (clockwork)           |
-| `--radius N`       | camera distance in world units                                                        | 72 (morph with towers), 26 (pulse, rubik), 9 (clockwork) |
-| `--orbit DEG`      | camera orbit over the take; 360 is one full turn                                      | 360                                                      |
-| `--elevation DEG`  | camera elevation                                                                      | 9 (to match a low reference still)                       |
+| Option             | What it does                                                                                | Value used                                                 |
+| ------------------ | ------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| `--band-gain auto` | per band, scale so the 95th percentile sits at 0.8, clamped to 1                            | `auto`                                                     |
+| `--band-release N` | peak follower: instant attack, exponential release over N frames (a hit holds, then decays) | 10 to 12 (about half a second)                             |
+| `--band-smooth N`  | moving average over N frames before gain                                                    | 9 when no release is used                                  |
+| `--motion-gain N`  | multiply every mapping amount within its validated range; above 1 sets intensity to 1       | 1 (pulse), 3 (morph), 4 (cathedral), 20 (falling)          |
+| `--radius N`       | camera distance in world units                                                              | 26 (pulse, matched to a low still), 72 (morph with towers) |
+| `--elevation DEG`  | camera elevation                                                                            | 3 to 9 for a near-ground still                             |
+| `--orbit DEG`      | camera orbit over the take; 360 is one full turn                                            | 360                                                        |
+| `--avatar`         | the idle mannequin inside the room, for scale                                               | room studies                                               |
 
 Measured on the architecture guide (193 frames):
 
@@ -41,13 +44,44 @@ Measured on the architecture guide (193 frames):
 | stock                        | 0.15          | 0.13      | 0.23       | static between cues              |
 | gain 3                       | 6.2           | 0.42      | 0.62       | towers clip the top at radius 44 |
 | gain 6                       | 14.3          | 0.51      | 0.66       | cubes scatter out of frame       |
-| gain 3, radius 72, orbit 360 | 2.0           | 0.42      | 0.64       | everything in frame; the pick    |
+| gain 3, radius 72, orbit 360 | 2.0           | 0.42      | 0.64       | everything in frame              |
 
-Three studies now exist for the pyramid: `architecture` (pyramid → towers →
-diamond on two cues), `pulse` (one pyramid scaling on the low band and
-lifting on the sub band; motion-to-bass correlation 0.86 at gain 1.5) and
-`rubik` (terraces twisting against each other on the mid band, twist 0.55;
-correlation 0.82). Hermes' `clockwork` (vanes) stays as a fourth.
+Studies for the pyramid: `architecture` (pyramid, towers, diamond on two
+cues), `pulse` (one pyramid scaling on the low band and lifting on the sub
+band; guide motion-to-bass correlation 0.86), `rubik` (terraces twisting
+against each other on the mid band, twist 0.55; at 1.6 the silhouette is
+lost) and Hermes' `clockwork`. For rooms: `falling` (city towers, cathedral
+nave, small room, with the dynamic CPU reverb rendered beside the guide) and
+`cathedral` (one nave held throughout, gallery camera, piers spreading on the
+bass). The room box in those two is invisible, so `roomWidth`, `roomDepth`
+and `roomHeight` mappings move the acoustics only; visible wall distance
+comes from `spread` on the pier objects.
+
+## What the video actually followed
+
+Follow = correlation of per-frame motion, generated against guide, with the
+camera drift high-passed out; bass = correlation of the generated motion with
+the low band. 193 frames unless noted, seed 42, `layout-audio` unless noted.
+
+| Guide                        | Look           | Size      | Follow | Bass |
+| ---------------------------- | -------------- | --------- | ------ | ---- |
+| pulse, release 10, gain 1    | desert         | 1920x1024 | 0.92   | 0.65 |
+| pulse, 97 frames             | desert         | 1920x1024 | 0.84   | 0.76 |
+| pulse                        | desert         | 1536x896  | 0.88   | 0.63 |
+| pulse                        | anime neon     | 1536x896  | 0.76   | 0.64 |
+| pulse                        | cyberpunk city | 1536x896  | 0.55   | 0.32 |
+| orbit morph                  | desert         | 1536x896  | 0.71   | 0.18 |
+| orbit morph (`layout`)       | anime neon     | 1536x896  | 0.78   | 0.08 |
+| orbit morph                  | cyberpunk city | 1536x896  | 0.13   | 0.08 |
+| falling, gain 20             | anime NYC      | 1920x1024 | 0.65   | 0.35 |
+| rubik, twist 0.55, 97 frames | desert         | 1920x1024 | 0.49   | 0.49 |
+
+Three rules fall out. A clean background (desert sky, flat anime) transmits
+the layout's motion; a dense photoreal look absorbs it. Continuous motion
+(scale, lift, spread) transmits the music; discrete state changes are painted
+on top of the previous shape rather than replacing it. A peak-then-decay
+envelope follows best, because the generation cannot keep up with a value
+that jumps every frame.
 
 ## The look still
 
@@ -90,3 +124,5 @@ high 0.32 vs 0.21) at the same motion. 1536×896 ran in about 165–195 s with
   `ControlMaster` connection with a short `ControlPath` (under 104 bytes)
   turns that into one approval per session.
 - Keep ComfyUI on loopback; the image's Caddy listens publicly on 8188.
+- Do not edit `capture-browser.ts` while a capture is running: Vite reloads
+  the page and the capture dies without an error.
