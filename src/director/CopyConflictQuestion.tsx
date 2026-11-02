@@ -1,4 +1,5 @@
 import { answerCopyConflict, useCopyConflict } from "./copy-conflict";
+import "./copy-recovery.css";
 
 /** Asks before the person's version replaces an agent's changes. */
 export default function CopyConflictQuestion({
