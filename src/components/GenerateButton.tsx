@@ -105,6 +105,7 @@ export default function GenerateButton({
   const current = providerChoices.find(
     (choice) => choice.value === providerValue,
   );
+  // Provider choice and API setup remain available when Generate lacks a prompt.
   return (
     <div className="generate-split">
       {action}
@@ -117,8 +118,6 @@ export default function GenerateButton({
               : "Choose generation provider"
           }
           value={providerValue}
-          // Provider selection and API setup remain available even when
-          // Generate is blocked by an unfinished prompt or missing reference.
           disabled={busy || restoring}
           onChange={(event) => {
             if (event.currentTarget.value === "configure") onConfigure?.();
@@ -131,7 +130,9 @@ export default function GenerateButton({
             </option>
           ))}
           {onConfigure && (
-            <option value="configure">Configure API keys / run location…</option>
+            <option value="configure">
+              Configure API keys / run location…
+            </option>
           )}
         </select>
         <span className="generate-split__provider" aria-hidden="true">
