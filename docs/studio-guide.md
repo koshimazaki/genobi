@@ -177,9 +177,10 @@ drafts remain separate; cross-template asset pooling and the full
 generation-result/revise flow remain planned. A saved Ninja layout contains
 only panel preferences; save project media with the editable bundle separately.
 The Project tools
-panel runs explicit JSON commands. A local project-prompt session reports through
-the [Genobi bubble](agent-bubble.md) below the header logo, with expandable
-activity and Stop. Tuck it away into the avatar without stopping the session.
+panel runs explicit JSON commands. A local project-prompt session reports in
+the footer [deck](genobi-deck.md): its log, paid-step approvals and Stop. The
+[Genobi bubble](agent-bubble.md) below the header logo is a guide that shows a
+compact status while it runs.
 
 Gallery, the first view, uses the shared template catalogue, plays previews on
 hover and opens a details panel with template, watch and embed links. See

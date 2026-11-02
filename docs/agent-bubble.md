@@ -50,6 +50,9 @@ Nothing on the agent side was removed:
   approval with plan, price and payer, and **Stop session**
   (`src/deck/DeckSession.tsx`). It opens by itself when a step waits for
   approval, and when voice sends a message to the session (`OPEN_DECK`).
+- A modal dialog (Make my version) covers the deck; while a paid step waits,
+  the dialog says so itself (`ApprovalWaitingNotice`) with **Review
+  approval**, which closes it onto the deck.
 - The Spawn agent dialog (**Start Genobi**) stays mounted in the wordmark and
   is still reached from the Director's agent panel, template actions, Scrolls
   and voice.

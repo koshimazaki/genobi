@@ -35,7 +35,7 @@ send it again.
 | `storyboard` | image | 0–1   | FLUX 3 Edit on Router, our example storyboard as the reference       |
 
 The template shows one drop zone per reference. Generate starts the agent.
-When a reference is missing the agent asks once, in the bubble: "Do you have
+When a reference is missing the agent asks once, in the deck log: "Do you have
 a track, or shall I generate one?" with yes and no; a yes quotes the
 generation like any paid step. MP3 and WAV are both accepted for the track
 (the house-template rule was WAV only and is widened).
@@ -135,7 +135,7 @@ Box 2.2, 27 October 2026, tests only; no paid call and no agent session.
 Not built or not proven: any run; whether H3 is enabled for the key; a
 by-reference image input (the image requests go through the CLI from a
 file); yes and no buttons
-for the question in the bubble (it is the agent's message); placing the
+for the question in the deck log (it is the agent's message); placing the
 second shot's in-point automatically (the agent chooses it).
 
 ## Open

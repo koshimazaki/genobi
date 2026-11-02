@@ -121,7 +121,7 @@ installable, otherwise **Save & start Genobi**. It saves the choices, installs
 voice when ticked and waits for the install to reach connected (`VOICE_READY`,
 after the prewarm), then reads the agent status again and starts a Project
 prompt session (`POST /api/agent/sessions`, typed, `setup: true`, the choices
-as the studio context). The session opens in the Genobi bubble; the dialog
+as the studio context). The session shows in the footer deck; the dialog
 closes, and may already have been closed while voice installed. If the install
 fails or is cancelled, the primary becomes **Start Genobi anyway**, and nothing
 starts until it is pressed.

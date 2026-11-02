@@ -49,9 +49,16 @@ export function recreateGaps(job: Job, inputs?: RunInputs): RecreateGap[] {
 /** The one sentence Camera shows for a partial Recreate, or "" when whole. */
 export function recreateGapMessage(gaps: readonly RecreateGap[]) {
   if (!gaps.length) return "";
-  const list =
-    gaps.length === 1
-      ? gaps[0]
-      : `${gaps.slice(0, -1).join(", ")} and ${gaps.at(-1)}`;
-  return `Settings not stored for this run in this browser: ${list}. Camera restored the rest. ${gaps.includes("reference images") ? "Reattach the references" : "Choose them again"} before generating.`;
+  const join = (items: readonly string[]) =>
+    items.length === 1
+      ? items[0]
+      : `${items.slice(0, -1).join(", ")} and ${items.at(-1)}`;
+  // References are kept per browser; the rest are on the run's own record.
+  const browser = gaps.includes("reference images");
+  const run = gaps.filter((gap) => gap !== "reference images");
+  const parts = [
+    ...(browser ? ["Reference images are not stored in this browser."] : []),
+    ...(run.length ? [`Not stored for this run: ${join(run)}.`] : []),
+  ];
+  return `${parts.join(" ")} Camera restored the rest. ${browser ? "Reattach the references" : "Choose them again"} before generating.`;
 }

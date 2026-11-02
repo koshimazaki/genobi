@@ -161,7 +161,7 @@ export function SpawnAgentView({
               Open in Terminal
             </button>
             <button type="button" onClick={() => onMode("headless")}>
-              Run in the bubble instead
+              Run in the studio instead
             </button>
           </div>
         </>

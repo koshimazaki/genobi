@@ -175,3 +175,36 @@ describe.each(ready.map((e) => [e.id, e] as const))(
     });
   },
 );
+
+it("clears Camera's earlier references when the asset recorded none", async () => {
+  const p = madeWith(ready.find((e) => e.id === "flux-3-i2v"));
+  p.generations[0].referenceAssetIds = [];
+  const recipe = cameraRecipe(p, bloomA, ["mine"]);
+  expect(recipe.imageIds).toEqual([]);
+  listen();
+  await openInCamera(() => {}, recipe, p, new Map());
+  const { patch, note } = received[0];
+  // Replaced, not merged: a stale reference can never reach a paid Generate.
+  expect(patch.imageReferences).toEqual([]);
+  expect(patch.imageRegions).toEqual([]);
+  expect(note).toContain("No references recorded");
+  expect(note).toContain("Restored this asset's prompt and model.");
+  // The composer's update merges, so the empty array is what clears them.
+  const before = { imageReferences: ["data:image/png;base64,c3RhbGU="] };
+  expect({ ...before, ...patch }.imageReferences).toEqual([]);
+});
+
+it("names a source video the run read even when no model was recorded", () => {
+  const p = madeWith(undefined);
+  p.assets.clip = {
+    kind: "video",
+    use: "production",
+    file: { path: "media/clip.mp4", sha256: "c".repeat(64) },
+    origin: "uploaded",
+  };
+  p.generations[0].inputAssetIds = ["clip"];
+  expect(cameraRecipe(p, bloomA, ["mine"]).missing).toEqual([
+    "model and settings",
+    "source video (choose it in Camera)",
+  ]);
+});

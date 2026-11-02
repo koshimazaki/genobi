@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import type { Job } from "../shared/types";
 import { runInputStore } from "./run-inputs";
 import { recreateGapMessage, recreateGaps } from "./recreate-gaps";
-import { onCameraRecipe } from "./camera-recipe-target";
+import { onCameraRecipe, setCameraNotice } from "./camera-recipe-target";
 import { setupChoices, supersedeRestores } from "./settings-store";
 import { restoreRun } from "./useRecreate";
 import type { ComposerState, useComposer } from "./useComposer";
@@ -23,7 +23,9 @@ export function useComposerRecreate(
     () =>
       onCameraRecipe(({ patch, note }) => {
         edit.current.update?.(patch);
-        edit.current.onError(note);
+        // A restore is not an error: its note is a neutral status line.
+        edit.current.onError("");
+        setCameraNotice(note);
       }),
     [],
   );

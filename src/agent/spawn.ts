@@ -320,7 +320,7 @@ async function start(
 
 /** Said when the owner already has a session, which the bubble now shows. */
 export const ALREADY_RUNNING =
-  "Genobi is already running a session, now shown in the bubble. Stop it there to start another.";
+  "Genobi is already running a session, now shown in the Genobi log. Stop it there to start another.";
 
 /**
  * A start refused because the owner's session is still running (a Terminal

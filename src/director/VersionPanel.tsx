@@ -17,6 +17,7 @@ import { saveBundle, type Bundle } from "./bundle";
 import VersionInputSlot, { VersionPreview } from "./VersionInputSlot";
 import { writeBrief } from "./prompt-brief";
 import { readVersionBrief } from "./version-brief";
+import { ApprovalWaitingNotice } from "../agent/ApprovalWaitingNotice";
 
 /**
  * Make my version (#57, swap only): a finished template keeps its timeline,
@@ -110,6 +111,7 @@ export default function VersionPanel({
           Close
         </button>
       </header>
+      <ApprovalWaitingNotice close={close} />
       <p>
         Swap your media into the slots below. The cut, effects and soundtrack
         stay as they are, and Undo restores the original. Nothing is generated

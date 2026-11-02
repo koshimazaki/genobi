@@ -34,7 +34,7 @@ Keep internal preset IDs independent of display names and branding.
 
 The first visit shows Genobi’s optional setup welcome. Its dismissal stays in
 this browser; blocked storage falls back to showing the welcome next visit.
-Reopen setup from the Genobi activity bubble. Closing it preserves the requested
+Reopen setup from the Genobi guide bubble. Closing it preserves the requested
 workspace, including direct links. The header’s question mark opens a separate
 quick guide on demand, without stored dismissal state. Its Open Camera action
 is explicit and never generates.

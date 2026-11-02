@@ -422,7 +422,7 @@ export class DevelopmentTerminal {
     if (!this.supported)
       throw new AppError(
         400,
-        "Opening a session in Terminal needs macOS. Run it in the bubble instead.",
+        "Opening a session in Terminal needs macOS. Run it in the studio instead.",
       );
     if (this.busy)
       throw new AppError(409, "A terminal is already being opened.");

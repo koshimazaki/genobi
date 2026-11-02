@@ -71,7 +71,11 @@ export function GenobiGuide({
       }}
     >
       {open && (
-        <section className="agent-bubble" id={id} aria-label="Genobi guide">
+        <section
+          className="agent-bubble"
+          id={id}
+          aria-label="Genobi guide bubble"
+        >
           <header className="agent-bubble-head">
             <span className="agent-name">Genobi</span>
             <span className="agent-runner">Guide</span>

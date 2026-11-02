@@ -209,7 +209,7 @@ user action through every layer.
   terminal profiles for creative runs and verified repairs, with native updates.
 
 - [Reuse a BFL Dashboard key](bfl-key-reuse.md) — explicitly connect an existing Keychain entry without exposing it.
-- [Settings and activity](activity-settings.md) — optional tool history, setup review and bubble controls.
+- [Settings and activity](activity-settings.md) — optional tool history and setup review.
 - [Hosted runner pairing](runner-pairing.md) — connect a Cloudflare studio to a local agent runner.
 
 - [Genobi CLI](genobi-cli.md) — terminal commands over the MCP definitions, named
@@ -218,8 +218,9 @@ user action through every layer.
 - [Agent workspace](agent-workspace.md) — one shared workspace driven by the
   built-in voice agent or the person's own harness, Genobi speech bubbles
   instead of a chat panel, and portable project memory.
-- [Genobi bubble](agent-bubble.md) — compact session updates below the header
-  logo, with expandable activity, Stop and a persistent avatar.
+- [Genobi bubble](agent-bubble.md) — a static guide below the header logo:
+  voice-first pointers, tips, setup help and a compact status while a session
+  runs; the session's log, approvals and Stop are in the deck.
 - [Genobi deck](genobi-deck.md) — the footer terminal: what is running, the
   agent log and ASCII visualisers; the MVP and the plan to grow it.
 - [Teachings](teachings.md) — short fixed hints, each saying what a part of

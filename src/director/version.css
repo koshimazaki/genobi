@@ -352,3 +352,10 @@
 .dir-version-brief .dir-version-previews {
   margin: 10px 0;
 }
+/* A paid agent step waits behind this modal: say so inside it. */
+.dir-version-approval {
+  padding: 10px 12px;
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  background: var(--sunken);
+}

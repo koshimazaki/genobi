@@ -1,3 +1,4 @@
+import { useSyncExternalStore } from "react";
 import type { ComposerState } from "./useComposer";
 
 /**
@@ -28,4 +29,27 @@ export function applyCameraRecipe(recipe: CameraRecipePatch) {
   if (!target) return false;
   target(recipe);
   return true;
+}
+
+/**
+ * Camera's neutral notice: what a Recreate in Camera restored and what it
+ * did not. Not an error, so `ComposerAlerts` shows it as a status line
+ * with "Dismiss notice"; errors keep their alert.
+ */
+let notice = "";
+const listeners = new Set<() => void>();
+export function setCameraNotice(next: string) {
+  if (notice === next) return;
+  notice = next;
+  listeners.forEach((listener) => listener());
+}
+export function useCameraNotice() {
+  return useSyncExternalStore(
+    (listener) => {
+      listeners.add(listener);
+      return () => void listeners.delete(listener);
+    },
+    () => notice,
+    () => "",
+  );
 }

@@ -233,6 +233,12 @@ export default function Gallery({
                   <RecreateButton
                     onClick={() => onRetry(job)}
                     label={job.status === "Ready" ? "Recreate" : "Try again"}
+                    {...(job.status === "Ready"
+                      ? {}
+                      : {
+                          title:
+                            "Try again: load this run’s prompt and settings to run it again",
+                        })}
                   />
                 ) : null}
               </div>

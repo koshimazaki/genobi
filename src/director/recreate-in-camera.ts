@@ -2,7 +2,6 @@ import type { Project } from "../../shared/director/types";
 import { BLOOM_PROMPT, BLOOM_SHEET } from "../../shared/templates/bloom-teaser";
 import type { VersionSlot } from "../../shared/templates/version";
 import { versionTemplate } from "../../shared/templates/version";
-import { isH3 } from "../../shared/h3";
 import { readyEntry, type ReadyEntry } from "../../shared/registry";
 import { applyCameraRecipe } from "../camera-recipe-target";
 import { fillPrompt, promptById } from "../voice/prompt-target";
@@ -74,11 +73,9 @@ export function cameraRecipe(
     );
     const missing: string[] = [];
     if (!entry) missing.push("model and settings");
-    if (
-      entry &&
-      (entry.generator === "upscale" || isH3(entry.videoModel)) &&
-      read.some((a) => project.assets[a]?.kind === "video")
-    )
+    // A project video the run read is never a Camera library clip, whatever
+    // recorded (or did not record) the model.
+    if (read.some((a) => project.assets[a]?.kind === "video"))
       missing.push("source video (choose it in Camera)");
     return {
       label: "Recreate in Camera",
@@ -147,12 +144,26 @@ export async function recipeImages(
 export function recipeNote(recipe: CameraRecipe, images: number) {
   if (recipe.label === "Create in Camera")
     return "Settings not stored for this asset: Camera opened as it was. Nothing was generated.";
+  const recorded = recipe.imageIds.length + (recipe.reference ? 1 : 0);
   const missing = [...recipe.missing];
-  if (recipe.imageIds.length + (recipe.reference ? 1 : 0) > images)
-    missing.push("reference images (reattach them)");
-  return missing.length
-    ? `Restored this asset's prompt${images ? " and references" : ""}. Not stored: ${missing.join(", ")}. Nothing was generated.`
-    : "Restored this asset's prompt, model and references. Nothing was generated.";
+  if (recorded > images) missing.push("reference images (reattach them)");
+  const restored = [
+    "prompt",
+    ...(recipe.entry ? ["model"] : []),
+    ...(images ? ["references"] : []),
+  ];
+  const list =
+    restored.length > 1
+      ? `${restored.slice(0, -1).join(", ")} and ${restored.at(-1)}`
+      : restored[0];
+  return [
+    `Restored this asset's ${list}.`,
+    // Camera's earlier references are cleared either way, so a Generate
+    // never sends images this asset did not record.
+    ...(recorded ? [] : ["No references recorded; Camera's were cleared."]),
+    ...(missing.length ? [`Not stored: ${missing.join(", ")}.`] : []),
+    "Nothing was generated.",
+  ].join(" ");
 }
 
 /**
@@ -185,7 +196,10 @@ export async function openInCamera(
         ? { upscalePrompt: recipe.prompt }
         : { description: recipe.prompt }
       : {}),
-    ...(images.length ? { imageReferences: images, imageRegions: [] } : {}),
+    // Always replaced, as the restore reducer does: an earlier run's
+    // references or boxes must not ride along into a paid Generate.
+    imageReferences: images,
+    imageRegions: [],
   };
   if (applyCameraRecipe({ patch, note })) return;
   const prompt = recipe.prompt;

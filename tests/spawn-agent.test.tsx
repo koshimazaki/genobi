@@ -360,7 +360,7 @@ describe("the spawn dialog", () => {
       );
     const mode = view({ kind: "mode" });
     expect(mode).toContain("Open in Terminal");
-    expect(mode).toContain("Run in the bubble instead");
+    expect(mode).toContain("Run in the studio instead");
     // Each choice is explained on its own line, not one run-on sentence.
     expect(mode).toContain("Where should Genobi work?");
     expect(mode.match(/<li>/g)).toHaveLength(2);

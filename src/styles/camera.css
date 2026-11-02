@@ -260,6 +260,12 @@
   margin: var(--space-12) 0;
   line-height: 1.6;
 }
+/* Same box, neutral: a Recreate in Camera note is a status, not an error. */
+.composer-notice {
+  background: var(--sunken);
+  border-color: var(--border);
+  color: var(--readout);
+}
 
 .preset-none {
   flex-basis: calc(52 * var(--unit));

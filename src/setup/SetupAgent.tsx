@@ -159,7 +159,7 @@ export function SetupAgentView({
           {readiness.terminal && (
             <button type="button" onClick={() => setPrefersTerminal(!native)}>
               {native
-                ? "Run in the bubble instead"
+                ? "Run in the studio instead"
                 : "Open in Terminal instead"}
             </button>
           )}

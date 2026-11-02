@@ -856,6 +856,7 @@
         "architecture.md",
         "director-agent-tools.md",
         "director-bundle/README.md",
+        "genobi-deck.md",
         "hermes-runs.md",
         "voice-mode.md"
       ]
@@ -2021,6 +2022,7 @@
         "director-working-version.md",
         "dual-editor.md",
         "genobi-cli.md",
+        "genobi-deck.md",
         "getting-started.md",
         "licence-strategy.md",
         "scene-examples.md",
