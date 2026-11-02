@@ -208,3 +208,42 @@ it("names a source video the run read even when no model was recorded", () => {
     "source video (choose it in Camera)",
   ]);
 });
+
+describe("the recorded provider", () => {
+  const fluxStill = ready.find((e) => e.id === "flux-3-image")!;
+  const video = ready.find((e) => e.id === "flux-3-video")!;
+  const withRoute = (entry: ReadyEntry, route?: ReadyEntry["route"]) => {
+    const p = madeWith(entry);
+    const g = p.generations[0];
+    if (route && g.recipe) g.recipe.route = route;
+    if (!route && g.recipe) delete (g.recipe as { route?: string }).route;
+    return p;
+  };
+
+  it.each([
+    ["bfl", "bfl"],
+    ["router", "comfy"],
+  ] as const)(
+    "a FLUX 3 still made on %s reopens on that provider",
+    async (route, provider) => {
+      const p = withRoute(fluxStill, route);
+      const recipe = cameraRecipe(p, bloomA, ["mine"]);
+      expect(recipe.imageProvider).toBe(provider);
+      listen();
+      await openInCamera(() => {}, recipe, p, new Map([[still.path, PNG]]));
+      expect(received[0].patch.imageProvider).toBe(provider);
+    },
+  );
+
+  it("a FLUX 3 still without a recorded route names the provider as missing", () => {
+    const recipe = cameraRecipe(withRoute(fluxStill), bloomA, ["mine"]);
+    expect(recipe.imageProvider).toBeUndefined();
+    expect(recipe.missing).toContain("provider (BFL or Comfy) not recorded");
+  });
+
+  it("a video run on BFL direct is named, since Camera follows the key", () => {
+    const recipe = cameraRecipe(withRoute(video, "bfl"), bloomA, ["mine"]);
+    expect(recipe.missing.join(" ")).toContain("it ran on BFL direct");
+    expect(recipe.imageProvider).toBeUndefined();
+  });
+});

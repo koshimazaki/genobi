@@ -47,6 +47,7 @@ function jobFor(entry: ReadyEntry, complete: boolean): Job {
     ...(complete && needs.deploy
       ? { deploy: { seed: 1, negativePrompt: "", assets: {} } }
       : {}),
+    ...(complete && needs.provider ? { imageProvider: "bfl" as const } : {}),
   };
 }
 
@@ -85,6 +86,7 @@ describe.each(ready.map((entry) => [entry.id, entry] as const))(
       if (needs.source) expect(state.sourceId).toBe("source-clip");
       if (needs.swap) expect(state.swap).toEqual(job.swap);
       if (needs.deploy) expect(state.deploy).toEqual(job.deploy);
+      if (needs.provider) expect(state.imageProvider).toBe("bfl");
       expect(recreateGaps(job, inputs)).toEqual([]);
     });
 
@@ -95,6 +97,7 @@ describe.each(ready.map((entry) => [entry.id, entry] as const))(
         ...(needs.source ? ["source video"] : []),
         ...(needs.deploy ? ["deployment inputs"] : []),
         ...(needs.swap ? ["swap settings"] : []),
+        ...(needs.provider ? ["provider"] : []),
       ];
       expect(recreateGaps(job)).toEqual(expected);
     });
@@ -107,4 +110,32 @@ it("covers every family the Camera menu offers", () => {
     expect(families.has(family as ReadyEntry["family"])).toBe(true);
   expect(ready.some((e) => e.generator === "image")).toBe(true);
   expect(ready.some((e) => e.generator === "audio")).toBe(true);
+});
+
+it.each(["bfl", "comfy"] as const)(
+  "restores a FLUX 3 still's recorded %s provider, not the current one",
+  (provider) => {
+    const entry = ready.find((e) => e.id === "flux-3-image")!;
+    const job = { ...jobFor(entry, true), imageProvider: provider };
+    const other = provider === "bfl" ? "comfy" : "bfl";
+    const state = composerReducer(
+      { ...initialComposer, imageProvider: other },
+      { type: "restore", job, inputs: inputsFor(job) },
+    );
+    expect(state.imageProvider).toBe(provider);
+  },
+);
+
+it("keeps Klein's open and API runs apart", () => {
+  for (const id of ["flux-3-klein", "flux-3-klein-api"]) {
+    const entry = ready.find((e) => e.id === id)!;
+    const job = jobFor(entry, true);
+    const state = composerReducer(initialComposer, {
+      type: "restore",
+      job,
+      inputs: inputsFor(job),
+    });
+    expect(state.model).toBe(entry.videoModel);
+    expect(entryFor(state.generator, state.model).id).toBe(id);
+  }
 });

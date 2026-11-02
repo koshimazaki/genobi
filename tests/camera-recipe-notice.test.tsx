@@ -13,7 +13,6 @@ import { useComposerRecreate } from "../src/useComposerRecreate";
 import { initialComposer } from "../src/useComposer";
 import { ApprovalWaitingNotice } from "../src/agent/ApprovalWaitingNotice";
 import {
-  OPEN_DECK,
   closeAgentSession,
   showAgentSession,
 } from "../src/agent/useAgentSession";
@@ -69,7 +68,7 @@ it("routes a recipe's note to a status line, not the error alert", async () => {
   act(() => root.unmount());
 });
 
-it("says a waiting paid step inside the modal and closes onto the deck", async () => {
+it("puts a waiting paid step's approval card inside the modal", async () => {
   const session: AgentSession = {
     id: "11111111-1111-4111-8111-111111111111",
     runner: "claude",
@@ -99,19 +98,14 @@ it("says a waiting paid step inside the modal and closes onto the deck", async (
       },
     ],
   };
-  const close = vi.fn();
-  const opened = vi.fn();
-  window.addEventListener(OPEN_DECK, opened);
   const root = createRoot(host);
-  await act(async () => root.render(<ApprovalWaitingNotice close={close} />));
+  await act(async () => root.render(<ApprovalWaitingNotice />));
   expect(host.textContent).toBe("");
   await act(async () => showAgentSession(session));
   expect(host.textContent).toContain("waiting for your approval");
-  await act(async () =>
-    host.querySelector<HTMLButtonElement>("button")!.click(),
-  );
-  expect(close).toHaveBeenCalledOnce();
-  expect(opened).toHaveBeenCalledOnce();
-  window.removeEventListener(OPEN_DECK, opened);
+  expect(host.textContent).toContain("Your edits here stay as they are");
+  const labels = [...host.querySelectorAll("button")].map((b) => b.textContent);
+  expect(labels).toContain("Approve $0.85");
+  expect(labels).toContain("Decline");
   act(() => root.unmount());
 });

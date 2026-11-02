@@ -28,6 +28,34 @@ export interface CameraRecipe {
   reference?: string;
   /** What this asset does not record, said in Camera. */
   missing: string[];
+  /** FLUX 3 stills: the provider the run used, as Camera's choice. */
+  imageProvider?: "bfl" | "comfy";
+}
+
+/**
+ * The provider a run used, as far as Camera has a choice for it. Only FLUX 3
+ * stills (image and edit) carry one (`imageProvider`): BFL direct or Comfy
+ * Router. Klein's open and API runs are separate models, restored as such.
+ * Any other entry's route follows the connected key, so a run recorded on a
+ * route the entry does not default to is named, never silently changed.
+ */
+export function recordedProvider(
+  entry: ReadyEntry,
+  route: string | undefined,
+): { imageProvider?: "bfl" | "comfy"; missing?: string } {
+  const still =
+    (entry.generator === "image" || entry.generator === "edit") &&
+    entry.videoModel === "flux-3";
+  if (still) {
+    if (route === "bfl") return { imageProvider: "bfl" };
+    if (route === "router") return { imageProvider: "comfy" };
+    return { missing: "provider (BFL or Comfy) not recorded" };
+  }
+  if (route && route !== entry.route)
+    return {
+      missing: `provider: it ran on ${route === "bfl" ? "BFL direct" : route}; Camera picks the route from your connected key`,
+    };
+  return {};
 }
 
 /**
@@ -73,6 +101,10 @@ export function cameraRecipe(
     );
     const missing: string[] = [];
     if (!entry) missing.push("model and settings");
+    const provider = entry
+      ? recordedProvider(entry, generation.recipe?.route)
+      : {};
+    if (provider.missing) missing.push(provider.missing);
     // A project video the run read is never a Camera library clip, whatever
     // recorded (or did not record) the model.
     if (read.some((a) => project.assets[a]?.kind === "video"))
@@ -81,6 +113,9 @@ export function cameraRecipe(
       label: "Recreate in Camera",
       prompt,
       ...(entry ? { entry } : {}),
+      ...(provider.imageProvider
+        ? { imageProvider: provider.imageProvider }
+        : {}),
       imageIds,
       missing,
     };
@@ -190,6 +225,7 @@ export async function openInCamera(
     ...(recipe.entry
       ? { generator: recipe.entry.generator, model: recipe.entry.videoModel }
       : {}),
+    ...(recipe.imageProvider ? { imageProvider: recipe.imageProvider } : {}),
     // An upscale's words are its own prompt field, not the description.
     ...(recipe.prompt
       ? recipe.entry?.generator === "upscale"

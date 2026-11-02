@@ -51,8 +51,11 @@ Nothing on the agent side was removed:
   (`src/deck/DeckSession.tsx`). It opens by itself when a step waits for
   approval, and when voice sends a message to the session (`OPEN_DECK`).
 - A modal dialog (Make my version) covers the deck; while a paid step waits,
-  the dialog says so itself (`ApprovalWaitingNotice`) with **Review
-  approval**, which closes it onto the deck.
+  the same approval card (plan, price, payer, Approve, Decline) renders inside
+  the dialog (`ApprovalWaitingNotice`), so it is answered without closing the
+  dialog or losing its unsaved edits. `node scripts/check-version-approval.mjs`
+  checks this in a real browser against a local studio (fixture agent routes,
+  nothing spent).
 - The Spawn agent dialog (**Start Genobi**) stays mounted in the wordmark and
   is still reached from the Director's agent panel, template actions, Scrolls
   and voice.

@@ -20,7 +20,11 @@ import { restoredRunInputs, type RunInputs } from "./run-inputs";
  * say "settings not stored" instead of looking restored.
  */
 export type RecreateGap =
-  "reference images" | "source video" | "deployment inputs" | "swap settings";
+  | "provider"
+  | "reference images"
+  | "source video"
+  | "deployment inputs"
+  | "swap settings";
 
 /** Which inputs a run of this model needs beyond its prompt and settings. */
 export function recreateNeeds(job: Pick<Job, "generator" | "model">) {
@@ -29,6 +33,8 @@ export function recreateNeeds(job: Pick<Job, "generator" | "model">) {
     source: job.generator === "upscale" || isH3(job.model),
     deploy: isDeployModel(job.model),
     swap: job.model === "openjutsu-swap",
+    // FLUX 3 stills choose BFL direct or Comfy Router (`imageProvider`).
+    provider: isImage(job.generator) && (job.model ?? "flux-3") === "flux-3",
   };
 }
 
@@ -43,6 +49,7 @@ export function recreateGaps(job: Job, inputs?: RunInputs): RecreateGap[] {
   if (needs.source && !job.sourceId) gaps.push("source video");
   if (needs.deploy && !job.deploy) gaps.push("deployment inputs");
   if (needs.swap && !job.swap) gaps.push("swap settings");
+  if (needs.provider && !job.imageProvider) gaps.push("provider");
   return gaps;
 }
 

@@ -65,6 +65,12 @@ navigates (`src/director/recreate-in-camera.ts`):
   per-creature prompts; swapped-in uploads record nothing). Camera opens as
   it was and says "Settings not stored for this asset"; nothing is invented.
 
+For a FLUX 3 still, the recorded route also sets Camera's provider (BFL
+direct or Comfy Router); with no route recorded the provider is named as
+missing. Klein's open and API runs are separate models. Any other model's
+route follows the connected key, so a run recorded on another route is named
+rather than silently changed.
+
 Camera's notice line says what was restored and what was not. Neither action
 generates or swaps anything in. Camera owns the price and the Generate press.
 A Ready result appears in the Assets rail's **Generated** collection; return

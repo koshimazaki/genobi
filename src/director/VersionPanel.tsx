@@ -111,7 +111,7 @@ export default function VersionPanel({
           Close
         </button>
       </header>
-      <ApprovalWaitingNotice close={close} />
+      <ApprovalWaitingNotice />
       <p>
         Swap your media into the slots below. The cut, effects and soundtrack
         stay as they are, and Undo restores the original. Nothing is generated
