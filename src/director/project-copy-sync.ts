@@ -48,7 +48,9 @@ export class CopySync {
    * version is only in undo history, which leaving the page throws away.
    */
   private overwritten = 0;
-  private keptAt = 0;
+  /** Projects whose replaced edits await a save or an answer, with the
+   * `overwritten` count of their latest replacement. */
+  private unsettled = new Map<string, number>();
   private timer: ReturnType<typeof setTimeout> | undefined;
   /** Projects whose copy this page has asked about (`openCopy`). */
   private opened = new Set<string>();
@@ -182,7 +184,7 @@ export class CopySync {
       // The person's version now lives only in undo history (flush).
       // Keep the previous draft recoverable through an explicit choice.
       const mine = this.current()!;
-      if (unpushed || why) this.overwritten++;
+      if (unpushed || why) this.unsettled.set(id, ++this.overwritten);
       this.state.actions.commit(copy);
       this.settle(id, revision);
       this.openedAt.delete(id);
@@ -272,7 +274,7 @@ export class CopySync {
     const open = this.current()?.project.id;
     return (
       this.holdsCurrent() &&
-      this.keptAt === this.overwritten &&
+      this.unsettled.size === 0 &&
       (!allProjects ||
         Object.values(this.state.director.drafts).every(
           ({ bundle, history }) =>
@@ -291,7 +293,7 @@ export class CopySync {
    */
   whyNotSaved(): CopyProblem | undefined {
     if (this.current()?.project.revision === this.failed) return this.failure;
-    if (this.holdsCurrent() && this.keptAt !== this.overwritten)
+    if (this.holdsCurrent() && this.unsettled.size > 0)
       return { kind: "replaced" };
   }
   /** The server's copy holds the store's current revision (or none is open). */
@@ -329,8 +331,9 @@ export class CopySync {
         if (generation === this.generation) {
           this.synced.set(id, { server: result.revision, local: revision });
           this.generation++;
-          // The person's own revision is saved: nothing is lost to undo.
-          this.keptAt = this.overwritten;
+          // This project's own revision is saved: nothing of it is lost to
+          // undo. Other projects' replaced edits stay unsettled.
+          this.unsettled.delete(id);
         }
         this.options.live(id);
       } else {
@@ -394,8 +397,8 @@ export class CopySync {
         overwrittenAt,
         current: () => this.current(),
         synced: () => this.synced.get(id),
-        counters: () => [this.overwritten, this.keptAt],
-        accept: () => void (this.keptAt = overwrittenAt),
+        latest: () => this.unsettled.get(id),
+        accept: () => void this.unsettled.delete(id),
         notice: this.options.notice,
         reoffer: () => this.offerMine(id, mine, kind),
         restore: () => {
