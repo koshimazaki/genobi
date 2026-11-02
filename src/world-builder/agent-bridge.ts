@@ -143,6 +143,12 @@ export async function connectWorld(
     async grant(run: string) {
       await send(`/${connected.id}/grant`, { run });
     },
+    /** Takes one run's grant back (`DELETE /:id/grant/:run`). */
+    async revoke(run: string) {
+      await request(`/${connected.id}/grant/${encodeURIComponent(run)}`, {
+        method: "DELETE",
+      });
+    },
     disconnect() {
       stopped = true;
       clearTimeout(timer);

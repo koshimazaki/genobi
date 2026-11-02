@@ -147,6 +147,15 @@ it("revokes the grant when the run ends, on disconnect and on expiry", async () 
   expect((await call(`/${id}/grant`, {}, "POST", { run: RUN })).status).toBe(
     404,
   );
+  // The tab takes one grant back; an agent cannot.
+  running.set(RUN, "owner");
+  await call(`/${id}/grant`, {}, "POST", { run: RUN });
+  expect(
+    (await call(`/${id}/grant/${RUN}`, agentOf(RUN), "DELETE")).status,
+  ).toBe(404);
+  expect((await call(`/${id}/files`, agentOf(RUN))).status).toBe(200);
+  expect((await call(`/${id}/grant/${RUN}`, {}, "DELETE")).status).toBe(200);
+  expect((await call(`/${id}/files`, agentOf(RUN))).status).toBe(404);
   // Disconnect ends the tab's session and every grant with it.
   running.set(RUN, "owner");
   await call(`/${id}/grant`, {}, "POST", { run: RUN });

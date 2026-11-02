@@ -137,6 +137,11 @@ export function worldRouter({
     s.runs.set(id, Date.now());
     res.json({ granted: true });
   });
+  // The tab takes one grant back (World left while the grant was made).
+  router.delete("/:id/grant/:run", (req, res) => {
+    session(req, res, true).runs.delete(String(req.params.run));
+    res.json({ revoked: true });
+  });
   // A granted run finds its tab without a code. With two World views of the
   // same person granting the same run, the latest grant wins, deterministically;
   // only that person's own tabs can be candidates (`granted`).

@@ -78,6 +78,10 @@ The grant is the person's, never the agent's:
   or the run ends; one opened with **Connect agents** stays as before.
 - After **Disconnect agents** the tab does not grant that run again; the next
   session is granted as usual. A refused grant is not retried.
+- Nothing in flight outlives the page: a connection that finishes opening
+  after World left, the page unmounted or the run changed is closed at once,
+  ungranted, and a grant that lands after that is taken back
+  (`DELETE /:id/grant/:run`, owner tab only) or closed with its session.
 
 World shows "Linked to the running agent session" while a grant is open.
 Terminal agents the studio did not start keep pairing with the code.

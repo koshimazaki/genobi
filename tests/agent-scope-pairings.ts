@@ -16,6 +16,8 @@ export const PAIRING_ROUTES: Record<string, string> = {
     "World has explicit, ephemeral pairing and owner-only browser dispatch.",
   "POST /api/world/:id/grant":
     "World grant: only the tab's owner browser, for one of their running sessions; marked agents refused.",
+  "DELETE /api/world/:id/grant/:run":
+    "World grant: only the tab's owner browser takes a grant back; marked agents refused.",
   "GET /api/world/granted":
     "World grant: the run is read from its server-set scope; it reads only the tab id that granted it.",
   "DELETE /api/world/:id":

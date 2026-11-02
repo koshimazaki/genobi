@@ -41,6 +41,10 @@ export class WorldLink {
   private connection?: Connection;
   private pending?: Promise<Connection>;
   private manual = false;
+  /** Connect agents was pressed and its connection is still opening. */
+  private manualPending = false;
+  /** Bumped by close(): a Connect agents click from before it is void. */
+  private closes = 0;
   private granted = new Set<string>();
   private declined = new Set<string>();
   /** Runs whose dropped link was reconnected once already. */
@@ -70,6 +74,21 @@ export class WorldLink {
     this.listeners.forEach((listener) => listener());
   }
 
+  /** Whether anything on screen still needs the connection. */
+  private wanted() {
+    return (
+      this.manual ||
+      this.manualPending ||
+      (!!this.run && !this.declined.has(this.run))
+    );
+  }
+
+  /** Closes a connection nothing needs (World left, run ended, unmounted). */
+  private release() {
+    if (this.connection && !this.wanted()) this.connection.disconnect();
+    else this.emit();
+  }
+
   private open(keep: boolean) {
     if (this.connection) return Promise.resolve(this.connection);
     this.pending ??= this.connect((error) => {
@@ -89,7 +108,8 @@ export class WorldLink {
       (c) => {
         this.connection = c;
         this.pending = undefined;
-        this.emit();
+        // Arrived after World left or unmounted: closed at once.
+        this.release();
         return c;
       },
       (e: unknown) => {
@@ -108,23 +128,27 @@ export class WorldLink {
   async follow(run: string | undefined, onScreen: boolean) {
     this.run = onScreen ? run : undefined;
     const want = this.run;
-    if (!want || this.declined.has(want)) {
-      if (this.connection && !this.manual) this.connection.disconnect();
-      else this.emit();
-      return;
-    }
+    if (!want || this.declined.has(want)) return this.release();
     if (this.connection && this.granted.has(want)) return this.emit();
     try {
       const c = await this.open(true);
-      // The page moved on while the connection opened.
-      if (this.run !== want || this.connection !== c) return;
+      // The page moved on while the connection opened: no grant.
+      if (this.run !== want || this.connection !== c) return this.release();
       await c.grant(want);
-      this.granted.add(want);
-      this.emit();
+      if (this.run === want && this.connection === c) {
+        this.granted.add(want);
+        return this.emit();
+      }
+      // It moved on while the grant was made: take it back. A closed
+      // connection took every grant with it already.
+      if (this.connection === c) {
+        if (this.wanted()) await c.revoke(want);
+        else c.disconnect();
+      }
     } catch {
       // Not again for this run: a failed grant is the manual path's job.
       this.declined.add(want);
-      if (this.connection && !this.manual) this.connection.disconnect();
+      this.release();
     }
   }
 
@@ -136,7 +160,15 @@ export class WorldLink {
       this.connection.disconnect();
       return;
     }
-    await this.open(false);
+    const closes = this.closes;
+    this.manualPending = true;
+    try {
+      await this.open(false);
+    } finally {
+      this.manualPending = false;
+    }
+    // Unmounted while it opened: release() has closed it.
+    if (closes !== this.closes || !this.connection) return this.release();
     this.manual = true;
     this.emit();
   }
@@ -147,8 +179,15 @@ export class WorldLink {
     if (this.run) void this.follow(this.run, true);
   }
 
-  /** The page unmounts. */
+  /**
+   * The page unmounts: nothing is wanted any more, so the open connection
+   * closes now and one still opening closes when it arrives, ungranted.
+   */
   close() {
+    this.closes++;
+    this.run = undefined;
+    this.manual = false;
+    this.manualPending = false;
     this.connection?.disconnect();
   }
 }
