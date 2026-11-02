@@ -8,7 +8,9 @@ import { promisify } from "node:util";
 import { describe, expect, it } from "vitest";
 
 const exec = promisify(execFile);
-const script = fileURLToPath(new URL("../scripts/check-production.mjs", import.meta.url));
+const script = fileURLToPath(
+  new URL("../scripts/check-production.mjs", import.meta.url),
+);
 const HEAD = "abcdef1234567890123456789012345678901234";
 
 /**
@@ -26,7 +28,9 @@ async function runCheck({ skipped, commits, unavailable = false }) {
     }
     const commit = commits[Math.min(requests - 1, commits.length - 1)];
     response.setHeader("content-type", "application/json");
-    response.end(JSON.stringify(commit === null ? { ok: true } : { ok: true, commit }));
+    response.end(
+      JSON.stringify(commit === null ? { ok: true } : { ok: true, commit }),
+    );
   });
   await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
   const address = server.address();
@@ -67,24 +71,34 @@ async function runCheck({ skipped, commits, unavailable = false }) {
 }
 
 describe("production deployment identity script", () => {
-  it("warns without failing when credentials are missing and the site is stale", async () => {
+  it("warns for missing credentials and a stale build", async () => {
     const result = await runCheck({ skipped: true, commits: ["1111111"] });
     expect(result.code).toBe(0);
     expect(result.requests).toBe(1);
-    expect(result.stdout).toContain("::warning title=Production was not deployed::");
-    expect(result.summary).toContain("::warning title=Production was not deployed::");
+    expect(result.stdout).toContain(
+      "::warning title=Production was not deployed::",
+    );
+    expect(result.summary).toContain(
+      "::warning title=Production was not deployed::",
+    );
   });
 
-  it("reports an unknown old build rather than treating health HTTP 200 as deployed", async () => {
+  it("rejects an unversioned HTTP 200 build", async () => {
     const result = await runCheck({ skipped: true, commits: [null] });
     expect(result.code).toBe(0);
     expect(result.stdout).toContain("an unversioned build");
   });
 
-  it("treats unavailable health as a warning when deployment was skipped", async () => {
-    const result = await runCheck({ skipped: true, commits: [], unavailable: true });
+  it("warns when health fails and deployment was skipped", async () => {
+    const result = await runCheck({
+      skipped: true,
+      commits: [],
+      unavailable: true,
+    });
     expect(result.code).toBe(0);
-    expect(result.stdout).toContain("::warning title=Production identity unavailable::");
+    expect(result.stdout).toContain(
+      "::warning title=Production identity unavailable::",
+    );
   });
 
   it("accepts a stamped build without retrying", async () => {
@@ -94,7 +108,7 @@ describe("production deployment identity script", () => {
     expect(result.stdout).toContain("serves this commit");
   });
 
-  it("rechecks a successful health response that still names the old build", async () => {
+  it("retries a valid health response naming the old build", async () => {
     const result = await runCheck({
       skipped: false,
       commits: ["1111111", "abcdef1"],
@@ -104,7 +118,7 @@ describe("production deployment identity script", () => {
     expect(result.stdout).toContain("serves this commit");
   }, 15_000);
 
-  it("keeps checkout and Node available when deployment credentials are absent", async () => {
+  it("keeps checkout and Node available without credentials", async () => {
     const ci = await readFile(
       fileURLToPath(new URL("../.github/workflows/ci.yml", import.meta.url)),
       "utf8",
