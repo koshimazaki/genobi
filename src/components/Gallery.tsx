@@ -16,6 +16,7 @@ import type { ChainEntry } from "../chain-state";
 import { modelSignature } from "../generators";
 import { notePick, takePick } from "../agent/studio-context";
 import { libraryMatchesMode, librarySignature } from "../library";
+import "../studio/media-shelf.css";
 /** Where a shared take came from (`server/shared-takes.ts`). */
 export const originLabel = (job: Pick<Job, "origin">) =>
   job.origin === "terminal" ? "From terminal" : "From agent";
@@ -72,11 +73,18 @@ export default function Gallery({
       <header className="gallery-heading">
         <div>
           <h2>
-            {inRail ? "Library" : "Your generations"}
+            {inRail ? "Generated" : "Your generations"}
             <span>
               {visibleCount > 0 ? String(visibleCount).padStart(2, "0") : ""}
             </span>
           </h2>
+          {inRail && (
+            <p className="genobi-shelf-hint">
+              Camera results land here. Drag one onto a template slot or a clip
+              to use it, or + to add it to Project. Nothing is swapped in by
+              itself.
+            </p>
+          )}
         </div>
         <div className="gallery-filters" aria-label="Gallery filter">
           {hiddenCount > 0 && (

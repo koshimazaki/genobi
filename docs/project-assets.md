@@ -93,7 +93,7 @@ Director's undo history are the ones above (`src/studio/send-to-director.ts`,
   and it waits ("Can't undo while the project is busy") while an edit or
   render runs. On a gallery or Library card the answer is a full-width line
   under the card's actions, inside the card. Sent from the rail's own Library
-  tab, the rail stays on Library so that line and its Undo stay in view;
+  tab (Generated), the rail stays there so that line and its Undo stay in view;
   from anywhere else the rail moves to the tab the item landed in.
 - Scrolls' **Send to Director** files a character or style sheet under
   Inspirations, where the Director's prompt takes references, and a panel or
