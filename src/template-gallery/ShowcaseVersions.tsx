@@ -32,42 +32,45 @@ export default function ShowcaseVersions({ template }: { template: string }) {
             <p>{p.summary}</p>
           </li>
         ))}
-        {[...record.versions].reverse().map((v, i) => (
-          <li key={v.version}>
-            <p>
-              <strong>
-                v{v.version} · {v.title}
-                {i === 0 && " · latest"}
-              </strong>{" "}
-              <span>
-                {v.pr ? `#${v.pr} · ` : ""}
-                {v.date.slice(0, 10)}
-              </span>
-            </p>
-            <p>{v.summary}</p>
-            <a
-              className="template-secondary"
-              href={showcaseLink(record.project, v.version)}
-              aria-disabled={busy !== 0}
-              onClick={(e) => {
-                if (!plain(e)) return;
-                e.preventDefault();
-                if (busy) return;
-                setBusy(v.version);
-                setError("");
-                openShowcase(record.project, v.version)
-                  .catch((x) =>
-                    setError(x instanceof Error ? x.message : `${x}`),
-                  )
-                  .finally(() => setBusy(0));
-              }}
-            >
-              {busy === v.version
-                ? "Opening…"
-                : `Open v${v.version} in the editor`}
-            </a>
-          </li>
-        ))}
+        {[...record.versions]
+          // By number, not file order: a hand-kept record may be unsorted.
+          .sort((a, b) => b.version - a.version)
+          .map((v, i) => (
+            <li key={v.version}>
+              <p>
+                <strong>
+                  v{v.version} · {v.title}
+                  {i === 0 && " · latest"}
+                </strong>{" "}
+                <span>
+                  {v.pr ? `#${v.pr} · ` : ""}
+                  {v.date.slice(0, 10)}
+                </span>
+              </p>
+              <p>{v.summary}</p>
+              <a
+                className="template-secondary"
+                href={showcaseLink(record.project, v.version)}
+                aria-disabled={busy !== 0}
+                onClick={(e) => {
+                  if (!plain(e)) return;
+                  e.preventDefault();
+                  if (busy) return;
+                  setBusy(v.version);
+                  setError("");
+                  openShowcase(record.project, v.version)
+                    .catch((x) =>
+                      setError(x instanceof Error ? x.message : `${x}`),
+                    )
+                    .finally(() => setBusy(0));
+                }}
+              >
+                {busy === v.version
+                  ? "Opening…"
+                  : `Open v${v.version} in the editor`}
+              </a>
+            </li>
+          ))}
       </ol>
       {error && <p role="alert">{error}</p>}
     </section>

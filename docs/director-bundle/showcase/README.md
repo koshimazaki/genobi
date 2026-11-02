@@ -12,8 +12,8 @@ editable project of its own, so a person can take any version and make it
 theirs, and an agent can continue from one.
 
 On the gallery card, a finished cut leads with **Take it to Director** and
-**Take it to the editor**, then **How it was made** lists the versions newest
-first (in-progress work, then the latest, marked "latest"), so a reviewer opens
+**Take it to the editor**, then **The cut** and **How it was made**, whose
+versions are listed newest first (in-progress work, then the latest, marked "latest"), so a reviewer opens
 the current cut without scrolling past v1.
 
 | Project                                      | Versions | Gallery card    |

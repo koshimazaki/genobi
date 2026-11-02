@@ -196,6 +196,7 @@ describe("the drawer for a finished cut", () => {
       Number(m[1]),
     );
     expect(versions).toEqual([4, 3, 2, 1]);
-    expect(html).toMatch(/v4 · [^<]*(<!-- -->)? · latest/);
+    expect(html).toMatch(/v4 · [^<]* · latest/);
+    expect(html.match(/ · latest/g)).toHaveLength(1);
   });
 });
