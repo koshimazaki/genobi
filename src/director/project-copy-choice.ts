@@ -29,7 +29,7 @@ export function copyChoice(input: CopyChoiceInput): CopyConflict {
       if (
         current?.id === id &&
         current.revision === synced?.local &&
-        synced.server === revision &&
+        synced?.server === revision &&
         overwritten === overwrittenAt &&
         keptAt === overwrittenAt - 1
       )
