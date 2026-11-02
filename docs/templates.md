@@ -448,7 +448,7 @@ actions, the mechanical run). See also the
 
 ## Make a version in Director
 
-Every editable template opens [Generate my version](director-generate.md), with
-its declared media inputs and current assets. Apply swaps locally or ask the
-linked agent to prepare replacements; every paid step retains approval in the
-bubble. The Gallery's mechanical Generate stays independent of this agent flow.
+Every editable template opens [Make my version](director-generate.md), with
+its declared media inputs and current assets. Swaps are local and undoable;
+nothing in the template editor generates. New media is made in Camera and
+comes back through Assets → Generated.

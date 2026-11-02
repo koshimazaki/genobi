@@ -43,7 +43,7 @@ export default function TemplateMediaInputs({
         template!,
         { ...picks, [id]: imported?.assetIds ?? assets ?? [] },
         versionTextInputs(bundle, template!),
-        // Missing optional/other inputs can be filled later. This never generates.
+        // Other inputs can be filled later. This never generates.
         slots.map((s) => s.id),
       );
       if (Object.values(studioStore.getState().operations).some(Boolean))
@@ -65,8 +65,9 @@ export default function TemplateMediaInputs({
     >
       <h3>Your template assets</h3>
       <p>
-        Preview an asset or drop a replacement. These same assets and your
-        description below are used by Generate my version.
+        Preview an asset, or drop a replacement from your computer or the Assets
+        rail (Project or Generated). Swapping never generates; Recreate in
+        Camera opens Camera for new media.
       </p>
       <div className="dir-version-inputs">
         {slots.map((slot) => (

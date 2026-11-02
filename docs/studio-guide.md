@@ -248,8 +248,8 @@ for agent checkpoints, private exports and the reference-import boundary.
 
 ## Make your own version
 
-Opening an editable template brings up [Generate my version](director-generate.md).
-Reuse current assets, upload replacements or request generated inputs.
-Apply swaps is undoable; generation goes through your linked agent and paid
-approval in the bubble. Hosted users save the project ZIP and import it into
-local Genobi for agent access to its media.
+Opening an editable template brings up [Make my version](director-generate.md).
+Keep current assets or swap in your own (drop a file, or drag from Assets →
+Project or Generated). Swaps are undoable and never generate. New media is
+made in Camera (each slot's **Recreate / Create in Camera**) and shows up in
+Assets → Generated. Hosted users save the project ZIP to keep their edits.

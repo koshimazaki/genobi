@@ -12,6 +12,8 @@ import type { Bundle } from "./bundle";
 import MediaTile from "./MediaTile";
 import { mediaType, useObjectUrl } from "./media-playback";
 import { versionMediaFile } from "./version-results";
+import { useShell } from "../studio/ShellContext";
+import { cameraRecipe, openInCamera } from "./recreate-in-camera";
 
 function AudioWave({ bytes }: { bytes?: Uint8Array<ArrayBuffer> }) {
   const [peaks, setPeaks] = useState<number[]>([]);
@@ -127,21 +129,21 @@ export default function VersionInputSlot({
   ids,
   defaults,
   disabled,
-  make,
   pick,
   upload,
-  generate,
+  beforeCamera,
 }: {
   slot: VersionSlot;
   bundle: Bundle;
   ids: string[];
   defaults?: string[];
   disabled: boolean;
-  make?: boolean;
   pick: (ids: string[]) => void;
   upload: (files: File[]) => Promise<void>;
-  generate?: (make: boolean) => void;
+  /** Runs before Camera opens, e.g. to close a dialog over the studio. */
+  beforeCamera?: () => void;
 }) {
+  const shell = useShell();
   const [owned, setOwned] = useState<Source[]>();
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -180,6 +182,7 @@ export default function VersionInputSlot({
     }
   }
   const chosen = ids[0] ? bundle.project.assets[ids[0]] : undefined;
+  const recipe = cameraRecipe(bundle.project, slot, ids);
   const audioUrl = useObjectUrl(
     chosen?.kind === "audio" ? bundle.files.get(chosen.file.path) : undefined,
     true,
@@ -225,7 +228,6 @@ export default function VersionInputSlot({
             type="button"
             onClick={() => {
               pick(defaults);
-              generate?.(false);
             }}
           >
             Keep default
@@ -243,7 +245,6 @@ export default function VersionInputSlot({
                   .map((o) => o.value)
                   .filter(Boolean),
               );
-              generate?.(false);
             }}
           >
             <option value="">Choose {slot.kind}</option>
@@ -291,23 +292,26 @@ export default function VersionInputSlot({
             type="button"
             onClick={() => {
               pick([]);
-              generate?.(false);
             }}
           >
             Leave empty
           </button>
         )}
-        {generate && (
-          <label>
-            <input
-              type="checkbox"
-              checked={make}
-              onChange={(e) => {
-                generate(e.target.checked);
-              }}
-            />
-            Generate replacement with my agent
-          </label>
+        {shell && slot.kind !== "image" && (
+          <button
+            type="button"
+            title={
+              recipe.prompt
+                ? `Opens Camera with this source's recorded prompt${recipe.reference ? ` (attach its reference ${recipe.reference.split("/").pop()} yourself)` : ""}. Nothing is generated or swapped until you do it.`
+                : "Opens Camera. Nothing is generated or swapped until you do it."
+            }
+            onClick={() => {
+              beforeCamera?.();
+              openInCamera(shell.select, recipe);
+            }}
+          >
+            {recipe.label}
+          </button>
         )}
       </div>
       {error && <p role="alert">{error}</p>}
