@@ -329,7 +329,7 @@ and the status, sign-in and profile reads against `history`.
 `useAgentSession()` and `showAgentSession()` (`useAgentSession.ts`), and
 `AgentSessionPanel`, mounted once in the shell. A caller (the voice overlay's
 **Project prompt**) starts a session with `useAgentSession().start(request)`,
-which opens the [Genobi bubble](agent-bubble.md) downward from the header mark. The
+which shows it in the footer [deck](genobi-deck.md) (since #57; before that it opened the Genobi bubble, as described here). The
 bubble moves no toolbar, hero or gallery; the owner polls while the session
 runs, even when tucked away into its avatar. Its compact state shows the latest
 received update or summary and **Stop session**; Activity expands the original

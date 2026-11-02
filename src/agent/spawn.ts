@@ -132,24 +132,6 @@ export class PromptWithheld<T = unknown> extends Error {
 export const OPEN_PROJECT_PROMPT =
   "Link my open Director project if there is one and look at where it stands, then ask me what I want to make. Quote nothing yet.";
 
-/** The longest brief the bubble takes, well inside the start's 4,000. */
-export const BRIEF_MAX = 3000;
-
-/**
- * The first turn from the bubble's Start Genobi: the fixed opening when the
- * person typed nothing, else their brief after the same instruction to link
- * the open project, so a scripted check needs no microphone.
- */
-export function startPrompt(brief = "") {
-  const words = brief
-    .replace(/[\x00-\x08\x0b-\x1f\x7f]/g, "") // eslint-disable-line no-control-regex
-    .trim()
-    .slice(0, BRIEF_MAX);
-  return words
-    ? `Link my open Director project if there is one, then do this. My brief: ${words}`
-    : OPEN_PROJECT_PROMPT;
-}
-
 /** Said when nothing is saved and this caller cannot ask. */
 export const NO_SAVED_RUNNER =
   "No agent is saved on this server yet. Choose Claude Code or Hermes in setup's Connect step (Sign in or Continue saves it), then start Genobi again.";
