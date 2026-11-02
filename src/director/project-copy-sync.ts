@@ -395,6 +395,8 @@ export class CopySync {
         },
         restore: () => {
           if (this.current()?.project.id !== id) return;
+          if (this.synced.get(id)?.local !== this.current()?.project.revision)
+            return this.options.notice("Project changed; review before restoring an older draft.");
           if (this.synced.get(id)?.server !== revision)
             return this.offerMine(id, mine, kind);
           this.state.actions.commit(mine);
