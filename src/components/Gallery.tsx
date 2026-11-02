@@ -6,6 +6,7 @@ import type { Generator, Job, Source, VideoModel } from "../../shared/types";
 import { isImage } from "../../shared/image";
 import Clip from "./Clip";
 import ClipActions from "./ClipActions";
+import RecreateButton from "./RecreateButton";
 import VideoLightbox, { type ViewingClip } from "./VideoLightbox";
 import Icon from "./Icon";
 import JobMedia, { statusLabel } from "./JobMedia";
@@ -229,10 +230,10 @@ export default function Gallery({
                     }
                   />
                 ) : isTerminal(job.status) ? (
-                  <button onClick={() => onRetry(job)}>
-                    {job.status === "Ready" ? "Recreate" : "Try again"}{" "}
-                    <Icon name="refresh" size={12} />
-                  </button>
+                  <RecreateButton
+                    onClick={() => onRetry(job)}
+                    label={job.status === "Ready" ? "Recreate" : "Try again"}
+                  />
                 ) : null}
               </div>
               {(job.status !== "Ready" || job.mediaAvailable === false) && (

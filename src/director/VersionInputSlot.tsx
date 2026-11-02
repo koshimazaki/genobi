@@ -14,6 +14,7 @@ import { mediaType, useObjectUrl } from "./media-playback";
 import { versionMediaFile } from "./version-results";
 import { useShell } from "../studio/ShellContext";
 import { cameraRecipe, openInCamera } from "./recreate-in-camera";
+import RecreateButton from "../components/RecreateButton";
 
 function AudioWave({ bytes }: { bytes?: Uint8Array<ArrayBuffer> }) {
   const [peaks, setPeaks] = useState<number[]>([]);
@@ -298,8 +299,9 @@ export default function VersionInputSlot({
           </button>
         )}
         {shell && (
-          <button
-            type="button"
+          <RecreateButton
+            label={recipe.label}
+            ariaLabel={`${recipe.label}: ${slot.label}`}
             title={
               recipe.label === "Recreate in Camera"
                 ? "Opens Camera with what this asset records (prompt, model, references). Nothing is generated or swapped until you do it."
@@ -314,9 +316,7 @@ export default function VersionInputSlot({
                 bundle.files,
               );
             }}
-          >
-            {recipe.label}
-          </button>
+          />
         )}
       </div>
       {error && <p role="alert">{error}</p>}
