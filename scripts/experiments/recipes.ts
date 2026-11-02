@@ -8,11 +8,7 @@ import type {
 import { assertAnalysisFrames, assertGuideBounds } from "./contracts";
 
 export type Study =
-  | "fruit"
-  | "architecture"
-  | "clockwork"
-  | "falling"
-  | "room";
+  "fruit" | "architecture" | "clockwork" | "pulse" | "falling" | "room";
 export interface Cue {
   frame: number;
   source: "low" | "high" | "authored";
@@ -335,7 +331,7 @@ function clockwork(total: number): SceneTransform[] {
   return out.slice(0, total);
 }
 
-/** One slow 360 degree orbit around the mass, a key every 30 degrees. *//** One slow 360 degree orbit around the mass, a key every 30 degrees. */
+/** One slow 360 degree orbit around the mass, a key every 30 degrees. */ /** One slow 360 degree orbit around the mass, a key every 30 degrees. */
 function orbit360(recipe: Recipe) {
   const keys = 9,
     radius = recipe.radius ?? 44,
@@ -346,7 +342,7 @@ function orbit360(recipe: Recipe) {
     version: 1 as const,
     enabled: true,
     keys: Array.from({ length: keys }, (_, i) => {
-      const azimuth = (((360 / (keys - 1)) * i) * Math.PI) / 180;
+      const azimuth = ((360 / (keys - 1)) * i * Math.PI) / 180;
       return {
         id: `orbit-${i}`,
         frame: Math.round(((recipe.frames ?? 193) - 1) * (i / (keys - 1))),
@@ -381,6 +377,7 @@ export function createStudy(
     fruit: "fruit-morph-fine",
     architecture: "voxel-architecture-128",
     clockwork: "voxel-architecture-128",
+    pulse: "voxel-architecture-128",
     falling: "city-to-loft",
     room: "apartment-morph",
   }[study];
@@ -390,7 +387,12 @@ export function createStudy(
     last = recipe.frames - 1;
   let cues: Cue[] = [],
     indoorFromFrame: number | null = null;
-  if (study === "fruit" || study === "architecture" || study === "clockwork") {
+  if (
+    study === "fruit" ||
+    study === "architecture" ||
+    study === "clockwork" ||
+    study === "pulse"
+  ) {
     const states = structuredClone(motion.stateKeys);
     if (study === "fruit") {
       [states[1], states[2]] = [states[2], states[1]];
@@ -456,7 +458,50 @@ export function createStudy(
       recipe.prompt =
         "A monumental stepped pyramid rearranges into a cluster of tall towers, then a floating faceted diamond. Preserve the same material pieces and exact framing. Warm limestone with subtle metallic edges against a dark minimal environment.";
     }
-    if (study === "clockwork") {
+    if (study === "pulse") {
+      // The simplest audio-reactive case: one pyramid that breathes with the
+      // bass and lifts on the kick, no morph; the camera circles it once.
+      motion.mappings = [
+        {
+          id: "scale-low",
+          property: "scale",
+          source: "low",
+          amount: 0.9,
+          enabled: true,
+        },
+        {
+          id: "lift-sub",
+          property: "lift",
+          source: "sub",
+          amount: 1.5,
+          enabled: true,
+        },
+        {
+          id: "spread-high",
+          property: "spread",
+          source: "high",
+          amount: 0.3,
+          enabled: true,
+        },
+      ];
+      states.splice(1);
+      motion.stateKeys = [
+        {
+          ...compact(structuredClone(states[0])),
+          id: "start",
+          frame: 0,
+          easing: "easeInOut" as const,
+        },
+      ];
+      recipe.radius = 34;
+      recipe.targetY = 6;
+      recipe.elevation = 16;
+      recipe.fov = 46;
+      recipe.cameraMotion = orbit360(recipe);
+      recipe.prompt =
+        "A monumental stepped pyramid breathes and swells with the music, its terraces lifting on every beat, while the camera circles it once. Same structure throughout, no other shape appears.";
+      cues = [];
+    } else if (study === "clockwork") {
       // One mass that twists in place instead of morphing into other shapes:
       // the shape stays a pyramid, the pieces turn like a clockwork.
       motion.mappings = [
@@ -498,7 +543,9 @@ export function createStudy(
         label: "Clockwork",
         // Vanes, not cubes: a twisted cube still reads as a cube.
         objects: parts(
-          clockwork(Object.keys((states[0] as { objects: object }).objects).length),
+          clockwork(
+            Object.keys((states[0] as { objects: object }).objects).length,
+          ),
         ),
       };
       // One mass only: the other preset states would change the instance set.

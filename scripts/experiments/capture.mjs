@@ -27,6 +27,7 @@ const { values } = parseArgs({
     "motion-gain": { type: "string", default: "1" },
     radius: { type: "string" },
     orbit: { type: "string" },
+    avatar: { type: "boolean" },
     help: { type: "boolean" },
   },
 });
@@ -85,7 +86,14 @@ if (
   port > 65535 ||
   studies.some(
     (s) =>
-      !["fruit", "architecture", "clockwork", "falling", "room"].includes(s),
+      ![
+        "fruit",
+        "architecture",
+        "clockwork",
+        "pulse",
+        "falling",
+        "room",
+      ].includes(s),
   )
 )
   throw new Error(
@@ -200,7 +208,7 @@ try {
   });
   await page.exposeFunction("savePilotFile", async (name, bytes) => {
     if (
-      !/^(fruit|architecture|clockwork|falling|room)\/[a-z0-9-]+\.(json|png|wav|webm)$/.test(
+      !/^(fruit|architecture|clockwork|pulse|falling|room)\/[a-z0-9-]+\.(json|png|wav|webm)$/.test(
         name,
       )
     )
@@ -222,7 +230,13 @@ try {
         study,
         dimensions,
         cues,
-        reactivity: { bandGain, motionGain, radius, orbit },
+        reactivity: {
+          bandGain,
+          motionGain,
+          radius,
+          orbit,
+          avatar: Boolean(values.avatar),
+        },
       },
     );
     for (const pass of ["rgb.webm", "depth.webm"]) {
