@@ -234,3 +234,13 @@ jobs:
       - name: Smoke-check production
         if: steps.creds.outputs.present == 'true'
         run: curl --fail --silent --show-error --retry 6 --retry-delay 5 https://genobi.pages.dev/api/health
+
+      # A skipped deploy used to look exactly like a shipped one: green job,
+      # stale production, a merged fix that is not live. Always say which build
+      # production serves — a warning when the deploy was skipped, a failure
+      # when it ran and production still answers something else.
+      - name: Report the build production serves
+        if: always() && steps.creds.outputs.present != ''
+        env:
+          DEPLOY_SKIPPED: ${{ steps.creds.outputs.present != 'true' }}
+        run: node scripts/check-production.mjs

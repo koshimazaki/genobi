@@ -1,5 +1,20 @@
 import { build } from "esbuild";
 import { cp, mkdir, writeFile, rm, readFile } from "node:fs/promises";
+import { execFileSync } from "node:child_process";
+
+/**
+ * The commit this bundle is built from, stamped into the Worker so
+ * `/api/health` can name the build it serves. `GITHUB_SHA` is the checked-out
+ * commit in CI; a manual build falls back to the checkout's own HEAD.
+ */
+const commit = (() => {
+  const sha = process.env.GITHUB_SHA?.trim();
+  if (sha && /^[0-9a-f]{7,40}$/i.test(sha)) return sha.slice(0, 7);
+  return execFileSync("git", ["rev-parse", "--short=7", "HEAD"], {
+    encoding: "utf8",
+  }).trim();
+})();
+
 // Keep Pages' advanced-mode worker separate from the existing Workers build.
 await rm(".pages", { recursive: true, force: true });
 await mkdir(".pages", { recursive: true });
@@ -12,6 +27,8 @@ await build({
   platform: "browser",
   target: "es2022",
   minify: true,
+  // `shared/build-info.ts` reads this; nothing else may vary per build.
+  define: { __GENOBI_COMMIT__: JSON.stringify(commit) },
   // @comfyorg/sdk imports node: modules; Pages resolves them under nodejs_compat.
   external: ["node:*"],
 });
