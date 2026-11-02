@@ -1,7 +1,8 @@
 import { createHash } from "node:crypto";
 import { describe, expect, it, vi } from "vitest";
 import { createStudioStore } from "../src/studio/store";
-import { pushCopy } from "../src/director/project-copy";
+import { pushCopy, readManifest } from "../src/director/project-copy";
+import type { CopyConflict } from "../src/director/copy-conflict";
 import { CopySync } from "../src/director/project-copy-sync";
 import type { Bundle } from "../src/director/bundle";
 import { base } from "./house-template-fixtures";
@@ -79,6 +80,78 @@ describe("the studio's copy rules", () => {
     expect(answers.some((line) => line.startsWith("PUT"))).toBe(false);
     // Nothing of the person's was replaced: leaving needs no warning.
     expect(await sync.flush()).toBe(true);
+  });
+
+  it("offers an explicit saved-copy decision with a one-click draft restore", async () => {
+    const { fetcher, store, notices } = await studio();
+    const saved = base();
+    saved.project = { ...saved.project, name: "Server copy", revision: 3 };
+    await pushCopy(saved, null, new Set(), fetcher);
+    const decisions: CopyConflict[] = [];
+    const sync = new CopySync({
+      store,
+      fetcher,
+      debounce: 0,
+      notice: (text) => notices.push(text),
+      live: () => {},
+      conflict: (decision) => decisions.push(decision),
+    });
+    store.getState().actions.initialize(base());
+    const first = store.getState().director.bundle!;
+    store.getState().actions.commit({
+      ...first,
+      project: { ...first.project, name: "My unsaved draft" },
+    });
+    await sync.push();
+    expect(store.getState().director.bundle!.project.name).toBe("Server copy");
+    expect(decisions).toEqual([
+      expect.objectContaining({
+        kind: "saved-copy",
+        projectId: saved.project.id,
+        revision: 3,
+      }),
+    ]);
+    expect(notices).toEqual([]);
+    // A recovered draft is not silently considered saved or discarded.
+    expect(await sync.flush()).toBe(false);
+    decisions[0].keepMine();
+    expect(store.getState().director.bundle!.project.name).toBe(
+      "My unsaved draft",
+    );
+    expect(await sync.flush()).toBe(true);
+    expect((await readManifest(saved.project.id, fetcher))!.project.name).toBe(
+      "My unsaved draft",
+    );
+    sync.stop();
+  });
+
+  it("acknowledges keeping the saved copy without retrying or overwriting it", async () => {
+    const { fetcher, store } = await studio();
+    const saved = base();
+    saved.project = { ...saved.project, name: "Server copy", revision: 3 };
+    await pushCopy(saved, null, new Set(), fetcher);
+    const decisions: CopyConflict[] = [];
+    const sync = new CopySync({
+      store,
+      fetcher,
+      notice: () => {},
+      live: () => {},
+      conflict: (decision) => decisions.push(decision),
+    });
+    store.getState().actions.initialize(base());
+    const first = store.getState().director.bundle!;
+    store.getState().actions.commit({
+      ...first,
+      project: { ...first.project, name: "Temporary draft" },
+    });
+    await sync.push();
+    expect(await sync.flush()).toBe(false);
+    decisions[0].keepTheirs?.();
+    expect(await sync.flush()).toBe(true);
+    expect((await readManifest(saved.project.id, fetcher))!.project.name).toBe(
+      "Server copy",
+    );
+    sync.stop();
   });
 
   it("says Undo brings back edits made before the first save", async () => {
