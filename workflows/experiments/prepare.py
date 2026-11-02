@@ -8,7 +8,7 @@ import re
 import shutil
 
 from common import HERE, REPO, digest, local_file, read_json, source_version, write_json
-from graph import MODES, candidate
+from graph import MODES, bindings, candidate, output_timing
 from media import audio_contract, image_contract, probe, video_contract
 
 SOURCE = REPO / "workflows/world-builder-l2r-a2v-studio.json"
@@ -25,8 +25,8 @@ def recipe_contract(path, frames):
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     recipe = module.recipe_data(compact)
-    if frames not in (97, 193) or recipe["frames"] != frames or not isinstance(recipe.get("objects"), list):
-        raise ValueError("Recipe must have objects and exactly the requested 97 or 193 frames; retime and recapture explicitly.")
+    if frames not in (97, 193, 241) or recipe["frames"] != frames or not isinstance(recipe.get("objects"), list):
+        raise ValueError("Recipe must have objects and exactly the requested 97, 193 or 241 frames; retime and recapture explicitly.")
     return recipe
 
 
@@ -75,9 +75,12 @@ def prepare(output, recipe, rgb, look, audio, mode="layout", frames=193, seed=42
             raise ValueError("Supply an art-directed look derived from the first frame, not the unmodified guide frame.")
     graph = candidate(read_json(SOURCE), scene, {k: v["path"] for k, v in assets.items()},
                       mode, seed, prompt, negative, audio_start)
+    roles = bindings(graph)
+    timing["output"] = output_timing(graph, timing["width"], timing["height"])
     script_hashes = {path.name: digest(path) for path in HERE.glob("*.py") if not path.name.startswith("test_")}
     manifest = {"version": 1, "status": "prepared_not_run", "candidate": True,
                 "label": label, "mode": mode, "seed": seed, "timing": timing, "assets": assets,
+                "bindings": roles,
                 "media": probes, "source": {"path": "workflows/world-builder-l2r-a2v-studio.json",
                   "sha256": digest(SOURCE), **source_version(), "experiment_scripts_sha256": script_hashes},
                 "conditioning": "empty frozen audio latent" if mode == "layout" else "frozen original audio latent",
@@ -107,7 +110,7 @@ def main():
         parser.add_argument(f"--{name}", type=Path, required=True)
     parser.add_argument("--look", type=Path, help="Required art-directed still derived from the guide's first frame")
     parser.add_argument("--mode", choices=MODES, default="layout")
-    parser.add_argument("--frames", type=int, choices=(97, 193), default=193)
+    parser.add_argument("--frames", type=int, choices=(97, 193, 241), default=193)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--prompt", required=True)
     parser.add_argument("--negative", default="")

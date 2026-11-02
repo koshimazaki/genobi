@@ -1,6 +1,9 @@
 import type { AudioTrack } from "../../src/world-builder/audio";
 import type { Recipe } from "../../src/world-builder/recipe";
 
+/** The pilot's supported take lengths: 4 s, 8 s and 10 s on the 8k + 1 grid. */
+export const PILOT_FRAMES = [97, 193, 241] as const;
+
 /** Match the native capture decoder before spending time on a local guide. */
 export function assertGuideBounds(dimensions: {
   width: number;
@@ -9,13 +12,13 @@ export function assertGuideBounds(dimensions: {
 }) {
   const { width, height, frames } = dimensions;
   if (
-    ![97, 193].includes(frames) ||
+    !PILOT_FRAMES.includes(frames as (typeof PILOT_FRAMES)[number]) ||
     [width, height].some(
       (n) => !Number.isInteger(n) || n < 256 || n > 1920 || n % 64,
     )
   )
     throw new Error(
-      "Pilot guides require 97/193 frames and 256–1920 dimensions divisible by 64.",
+      "Pilot guides require 97/193/241 frames and 256–1920 dimensions divisible by 64.",
     );
   if (width * height * frames * 12 > 2 * 1024 ** 3)
     throw new Error(
