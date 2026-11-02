@@ -69,6 +69,10 @@ const NOT_SCOPED: Record<string, string> = {
     "World has explicit, ephemeral pairing and owner-only browser dispatch.",
   "POST /api/world/link":
     "World has explicit, ephemeral pairing and owner-only browser dispatch.",
+  "POST /api/world/:id/grant":
+    "World grant: only the tab's owner browser, for one of their running sessions; marked agents refused.",
+  "GET /api/world/granted":
+    "World grant: the run is read from its server-set scope; it reads only the tab id that granted it.",
   "DELETE /api/world/:id":
     "World has explicit, ephemeral pairing and owner-only browser dispatch.",
   "GET /api/world/:id/next":
