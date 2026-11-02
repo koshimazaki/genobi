@@ -494,7 +494,7 @@ export function createStudy(
             id: "twist-mid",
             property: "twistY",
             source: "mid",
-            amount: 1.6,
+            amount: 0.55,
             enabled: true,
           },
           {
