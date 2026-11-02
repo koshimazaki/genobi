@@ -15,6 +15,7 @@
  * the wrong project, a rollback).
  */
 import { execFileSync } from "node:child_process";
+import { appendFileSync } from "node:fs";
 
 const url = (process.env.GENOBI_PRODUCTION_URL ?? "https://genobi.pages.dev")
   .trim()
@@ -30,21 +31,26 @@ const commit = (() => {
   }).trim();
 })();
 
-/** Either commit is the other's prefix, so a short and a long sha still match. */
+/** Only recognize commit-like SHAs, not arbitrary short prefixes. */
 const same = (served, expected) =>
   typeof served === "string" &&
-  served.length > 0 &&
-  (served.startsWith(expected) || expected.startsWith(served));
+  /^[0-9a-f]{7,40}$/i.test(served) &&
+  /^[0-9a-f]{7,40}$/i.test(expected) &&
+  (served.toLowerCase().startsWith(expected.toLowerCase()) ||
+    expected.toLowerCase().startsWith(served.toLowerCase()));
 
 const say = (line) => {
   process.stdout.write(`${line}\n`);
   const summary = process.env.GITHUB_STEP_SUMMARY;
-  if (summary) process.stdout.write(`${line}\n`);
+  if (summary) appendFileSync(summary, `${line}\n`);
 };
 
 async function health() {
   let last;
-  for (let attempt = 1; attempt <= attempts; attempt++) {
+  // An absent credential means no deployment ran: inspect once and report it.
+  // After a real deploy, allow Pages to serve the prior build briefly.
+  const maxAttempts = skipped ? 1 : attempts;
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
       const response = await fetch(`${url}/api/health`, {
         headers: { accept: "application/json" },
@@ -52,17 +58,29 @@ async function health() {
         signal: AbortSignal.timeout(15_000),
       });
       if (!response.ok) throw new Error(`health answered ${response.status}`);
-      return await response.json();
+      const body = await response.json();
+      if (skipped || same(body?.commit, commit) || attempt === maxAttempts)
+        return body;
+      // A 200 response containing the old commit is not yet a deployed fix.
+      // Poll the build identity, not merely the route's HTTP status.
     } catch (error) {
       last = error;
-      // Cloudflare serves the previous deployment for a moment after a cut.
-      await new Promise((resolve) => setTimeout(resolve, 5_000));
     }
+    if (attempt < maxAttempts)
+      await new Promise((resolve) => setTimeout(resolve, 5_000));
   }
-  throw last;
+  throw last ?? new Error("Production health remained unavailable.");
 }
 
-const body = await health();
+let body;
+try {
+  body = await health();
+} catch {
+  say(
+    `::${skipped ? "warning" : "error"} title=Production identity unavailable::${url}/api/health could not be read. ${skipped ? "The deployment was skipped because the production credentials were missing; no code from this push was deployed." : "The deployment ran, but the served build could not be verified."}`,
+  );
+  process.exit(skipped ? 0 : 1);
+}
 const served = typeof body?.commit === "string" ? body.commit : undefined;
 
 if (same(served, commit)) {
