@@ -21,6 +21,7 @@ export default function GenerateButton({
   providerChoices,
   providerValue,
   onProviderChange,
+  onConfigure,
   hold: holdProp,
 }: {
   generator: Generator;
@@ -34,6 +35,8 @@ export default function GenerateButton({
   providerChoices?: readonly { value: string; label: string }[];
   providerValue?: string;
   onProviderChange?: (value: string) => void;
+  /** Open Studio settings to configure provider keys and Comfy run location. */
+  onConfigure?: () => void;
   /** What holds Generate; read from the settings store unless given. */
   hold?: SettingsHold;
 }) {
@@ -114,14 +117,22 @@ export default function GenerateButton({
               : "Choose generation provider"
           }
           value={providerValue}
-          disabled={busy || restoring || disabled}
-          onChange={(event) => onProviderChange(event.currentTarget.value)}
+          // Provider selection and API setup remain available even when
+          // Generate is blocked by an unfinished prompt or missing reference.
+          disabled={busy || restoring}
+          onChange={(event) => {
+            if (event.currentTarget.value === "configure") onConfigure?.();
+            else onProviderChange(event.currentTarget.value);
+          }}
         >
           {providerChoices.map((choice) => (
             <option key={choice.value} value={choice.value}>
               {choice.label}
             </option>
           ))}
+          {onConfigure && (
+            <option value="configure">Configure API keys / run location…</option>
+          )}
         </select>
         <span className="generate-split__provider" aria-hidden="true">
           {providerValue === "bfl"
