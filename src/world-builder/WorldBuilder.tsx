@@ -181,7 +181,7 @@ export default function WorldBuilder({
                         : "SHOT PREVIEW"}
                 </span>
               </div>
-              <LiveControls s={s} e={e} />
+              <LiveControls s={s} e={e} active={active} />
               <div className="wb-take-strip">
                 <button
                   aria-label={s.playing ? "Stop preview" : "Play take"}

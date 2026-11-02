@@ -134,6 +134,13 @@ export async function connectWorld(
   void poll();
   return {
     ...(connected as { id: string; code: string }),
+    /**
+     * Lets one of the person's running agent sessions reach this tab without
+     * the code (`POST /:id/grant`); the server checks the run is theirs.
+     */
+    async grant(run: string) {
+      await send(`/${connected.id}/grant`, { run });
+    },
     disconnect() {
       stopped = true;
       clearTimeout(timer);
