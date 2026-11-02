@@ -16,17 +16,33 @@ export interface CameraRecipePatch {
 type Target = (recipe: CameraRecipePatch) => void;
 let target: Target | undefined;
 
+/**
+ * A recipe handed over before the composer mounted (Camera opening for the
+ * first time): it waits here and lands, patch and note, the moment the
+ * composer registers, so references are replaced on that path too. A held
+ * recipe older than this is dropped rather than landing on a later visit.
+ */
+const HOLD_MS = 15_000;
+let held: { recipe: CameraRecipePatch; at: number } | undefined;
+
 /** Registers the composer; returns the cleanup. The newest wins. */
 export function onCameraRecipe(next: Target) {
   target = next;
+  const waiting = held;
+  held = undefined;
+  if (waiting && Date.now() - waiting.at <= HOLD_MS) next(waiting.recipe);
   return () => {
     if (target === next) target = undefined;
   };
 }
 
-/** True when a composer took the recipe. */
+/** True when a composer took the recipe now; false when it waits for one. */
 export function applyCameraRecipe(recipe: CameraRecipePatch) {
-  if (!target) return false;
+  if (!target) {
+    held = { recipe, at: Date.now() };
+    return false;
+  }
+  held = undefined;
   target(recipe);
   return true;
 }

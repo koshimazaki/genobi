@@ -81,7 +81,7 @@ export function RunnerPairing({ runner }: { runner?: SetupRunner } = {}) {
       setMessage(
         (error as Error).message +
           (pendingStart.current
-            ? " The launch may be uncertain. Keep the same prompt to recover its request; inspect the bubble or local studio before starting different work."
+            ? " The launch may be uncertain. Keep the same prompt to recover its request; inspect the Genobi log or local studio before starting different work."
             : ""),
       );
     } finally {
@@ -134,7 +134,7 @@ export function RunnerPairing({ runner }: { runner?: SetupRunner } = {}) {
                     showAgentSession(session);
                     pendingStart.current = undefined;
                     setMessage(
-                      "Session started. Open the Genobi bubble to follow progress; paid approvals remain local.",
+                      "Session started. Follow its progress in the Genobi log; paid approvals remain local.",
                     );
                   })
                 }

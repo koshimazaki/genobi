@@ -4,7 +4,6 @@ import type { VersionSlot } from "../../shared/templates/version";
 import { versionTemplate } from "../../shared/templates/version";
 import { readyEntry, type ReadyEntry } from "../../shared/registry";
 import { applyCameraRecipe } from "../camera-recipe-target";
-import { fillPrompt, promptById } from "../voice/prompt-target";
 
 /**
  * Recreate in Camera (#57, swap only): a template slot's way to new media.
@@ -203,8 +202,9 @@ export function recipeNote(recipe: CameraRecipe, images: number) {
 
 /**
  * Opens Camera and hands the composer the recipe: model, prompt and
- * references, as an edit. With no composer registered it types the prompt
- * into Camera's field once it is on screen. Generate is never pressed.
+ * references, as an edit. When the composer has not mounted yet, the recipe
+ * waits and lands, whole, as soon as it does (`camera-recipe-target.ts`).
+ * Generate is never pressed.
  */
 export async function openInCamera(
   select: (preset: "camera") => void,
@@ -237,14 +237,5 @@ export async function openInCamera(
     imageReferences: images,
     imageRegions: [],
   };
-  if (applyCameraRecipe({ patch, note })) return;
-  const prompt = recipe.prompt;
-  if (!prompt || typeof requestAnimationFrame === "undefined") return;
-  let frames = 30;
-  const tryFill = () => {
-    const field = promptById("description");
-    if (field) fillPrompt(prompt, field);
-    else if (--frames > 0) requestAnimationFrame(tryFill);
-  };
-  requestAnimationFrame(tryFill);
+  applyCameraRecipe({ patch, note });
 }

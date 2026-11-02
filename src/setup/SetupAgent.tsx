@@ -152,8 +152,8 @@ export function SetupAgentView({
               : "Save & start Genobi starts"}{" "}
             {name} as Genobi with these choices.{" "}
             {native
-              ? "It opens in a Terminal window you can watch and type into; the bubble follows it."
-              : "It opens in the Genobi bubble."}{" "}
+              ? "It opens in a Terminal window you can watch and type into; the Genobi log follows it."
+              : "It runs in the studio; follow it in the Genobi log."}{" "}
             Paid steps still wait for your approval.
           </p>
           {readiness.terminal && (

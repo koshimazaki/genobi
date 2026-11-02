@@ -62,10 +62,19 @@ export function recreateGapMessage(gaps: readonly RecreateGap[]) {
       : `${items.slice(0, -1).join(", ")} and ${items.at(-1)}`;
   // References are kept per browser; the rest are on the run's own record.
   const browser = gaps.includes("reference images");
-  const run = gaps.filter((gap) => gap !== "reference images");
+  const inputs = gaps.filter(
+    (gap) => gap !== "reference images" && gap !== "provider",
+  );
   const parts = [
     ...(browser ? ["Reference images are not stored in this browser."] : []),
-    ...(run.length ? [`Not stored for this run: ${join(run)}.`] : []),
+    ...(inputs.length ? [`Not stored for this run: ${join(inputs)}.`] : []),
+    // Information, not a missing input: the restore keeps Auto.
+    ...(gaps.includes("provider")
+      ? ["Which provider it ran on was not stored; Camera keeps Auto."]
+      : []),
+    "Camera restored the rest.",
+    ...(browser ? ["Reattach the references before generating."] : []),
+    ...(inputs.length ? ["Choose them again before generating."] : []),
   ];
-  return `${parts.join(" ")} Camera restored the rest. ${browser ? "Reattach the references" : "Choose them again"} before generating.`;
+  return parts.join(" ");
 }

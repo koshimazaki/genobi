@@ -375,7 +375,9 @@ images are not stored in this browser." / "Not stored for this run: …"), so a
 partial restore never looks whole. A Recreate in Camera note is a neutral
 status line ("Dismiss notice", `useCameraNotice`), not an error; it always
 replaces Camera's references and boxes (empty when none were recorded), so a
-paid Generate never sends an earlier run's images. A Director slot's **Recreate in Camera** hands the composer the same kind
+paid Generate never sends an earlier run's images. When Camera's composer has
+not mounted yet, the recipe waits (up to 15 s) and lands whole, patch and note,
+as it registers; it is never reduced to typing the prompt alone. A Director slot's **Recreate in Camera** hands the composer the same kind
 of edit through `src/camera-recipe-target.ts`: the recorded registry entry
 (model and route), the prompt and the project's own reference images, with a
 note naming what the asset does not store.
