@@ -197,10 +197,10 @@ jobs:
             echo "and CLOUDFLARE_ACCOUNT_ID to the production environment to enable it."
           fi
 
+      # Reporting a skipped deployment needs this checkout as much as the
+      # actual deploy does. Never gate the diagnostic files on credentials.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-        if: steps.creds.outputs.present == 'true'
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
-        if: steps.creds.outputs.present == 'true'
         with:
           node-version: 22
           cache: npm
@@ -234,3 +234,13 @@ jobs:
       - name: Smoke-check production
         if: steps.creds.outputs.present == 'true'
         run: curl --fail --silent --show-error --retry 6 --retry-delay 5 https://genobi.pages.dev/api/health
+
+      # A skipped deploy used to look exactly like a shipped one: green job,
+      # stale production, a merged fix that is not live. Always say which build
+      # production serves — a warning when the deploy was skipped, a failure
+      # when it ran and production still answers something else.
+      - name: Report the build production serves
+        if: always() && steps.creds.outputs.present != ''
+        env:
+          DEPLOY_SKIPPED: ${{ steps.creds.outputs.present != 'true' }}
+        run: node scripts/check-production.mjs

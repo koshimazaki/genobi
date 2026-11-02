@@ -8,6 +8,7 @@ import {
 import { readExpectation } from "../shared/comfy/expectation";
 import { AppError, requireKey } from "../server/errors";
 import { checkedCloudCatalogue } from "../server/comfy-cloud-check";
+import { BUILD_COMMIT } from "../shared/build-info";
 import {
   validateIdempotencyKey,
   validateInput,
@@ -171,7 +172,15 @@ export default {
         // Housekeeping rides on the two routes a page load hits once, never on
         // the 4-second poll, so its cost scales with visits rather than ticks.
         ctx.waitUntil(sweep(env).catch(() => {}));
-        response = json({ ok: true, hasServerKey: false, hosted: true });
+        response = json({
+          ok: true,
+          hasServerKey: false,
+          hosted: true,
+          // The build this isolate was compiled from. A merged fix is not a
+          // deployed one: the deploy job skips without credentials, so this is
+          // how a caller (and CI) tells the live bundle from the checkout.
+          commit: BUILD_COMMIT,
+        });
       } else if (get && url.pathname === "/api/credits") {
         await rateLimit(env, "credits", session);
         const balanceKey = requireKey(key);

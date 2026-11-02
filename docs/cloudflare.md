@@ -129,6 +129,32 @@ versions.
 `npm run deploy:pages` remains the manual fallback from a clean checkout of
 `main`; it records the checkout's commit hash on the Pages deployment.
 
+### Knowing what production serves
+
+A skipped deploy is green, and until the build carried its own identity it was
+indistinguishable from a shipped one: a fix merged into `main` stayed off
+production while CI reported success. Two things close that gap. This only
+checks production; `npm run dev` runs from its own checkout and can use Comfy
+Cloud independently.
+
+`scripts/build-pages.mjs` stamps the commit it builds from into the Worker
+(`__GENOBI_COMMIT__`, read by `shared/build-info.ts`), and `GET /api/health`
+answers `commit` alongside `ok`, `hosted` and `hasServerKey`. A local server
+and the test harness compile without the stamp and answer `dev`.
+
+The `Report the build production serves` step in CI runs whether or not the
+deploy ran and compares that answer with `GITHUB_SHA`
+(`scripts/check-production.mjs`, `GENOBI_PRODUCTION_URL` to point it
+elsewhere). With no credentials it is a warning naming both commits, because
+production was not touched. With credentials it is a failure, because a deploy
+that reports success and leaves production on another bundle is a real fault:
+a cached bundle, the wrong project, or a rolled-back deployment.
+
+So after a merge, read that step before believing a fix is live. If it warns,
+either add `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` to the
+`production` environment, or deploy by hand with `npm run deploy:pages` from a
+clean checkout of `main` and re-read `/api/health`.
+
 For another account, set `CLOUDFLARE_ACCOUNT_ID` and update the database/bucket bindings in `wrangler.pages.json`. The original Workers target still uses `wrangler.jsonc`. The earlier catalogue kept its clips in R2 under `library/`. Those objects are now unreferenced: the app serves library clips as static assets, and the sweep only collects keys it can derive from a job, so they will not be cleaned up automatically. Delete them by hand once the new catalogue is live:
 
 ```sh

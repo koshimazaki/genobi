@@ -92,6 +92,15 @@ it("recognises a valid local health response without a hosted field", async () =
   expect(await readHostedStudio()).toBe(false);
 });
 
+it("reads a hosted answer that names the build it serves", async () => {
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(async () => Response.json({ ...HOSTED_HEALTH, commit: "e1b7144" })),
+  );
+  const { readHostedStudio } = await import("../src/hosted-studio");
+  expect(await readHostedStudio()).toBe(true);
+});
+
 it.each([
   { ok: true },
   { ok: false, hasServerKey: false },
