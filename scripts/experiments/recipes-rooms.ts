@@ -15,7 +15,9 @@ import { heldCamera, mapping, nave, parts, towers } from "./recipe-parts";
  * the floor the walls also settle lower as they close. Room mappings add metres
  * to the acoustic box, so a negative amount shrinks it on the same bars.
  */
-export const CLOSE_ON_LOUD = -0.5;
+// -0.3, not -0.5: at -0.5 the pyramid's terraces closed to 0.67 m from the
+// floor camera and swallowed the figure at the loudest bar.
+export const CLOSE_ON_LOUD = -0.3;
 
 export interface RoomDesign {
   indoorFromFrame: number | null;
@@ -68,6 +70,8 @@ function heldStates(
 
 /** How far the walls travel at full blend: 0.55 of their open distance. */
 export const CLOSED_FRACTION = 0.55;
+/** The cathedral's held view; every piece stays 3 m or more from it. */
+export const GALLERY: SceneVector = [0, 23, 18];
 /** Morph progress per unit of `low`; the auto-gained band's p95 (0.8) closes ~fully. */
 export const BLEND_AMOUNT = 1.2;
 
@@ -265,7 +269,10 @@ export function cathedralWalls(recipe: Recipe): RoomDesign {
     mapping("depth", "low", "roomDepth", -4),
     mapping("vault", "mid", "roomHeight", -0.8),
   ];
-  recipe.cameraMotion = heldCamera([0, 21, 15], [0, 0, -3], 66);
+  // Back and up from the old gallery spot (0, 21, 15): there, the nearest
+  // bay's vault rib sat 2.5 m from the lens open and 1.9 m closed, and the
+  // closing ribs filled the frame with flat shapes.
+  recipe.cameraMotion = heldCamera(GALLERY, [0, 0, -3], 66);
   recipe.prompt =
     "A still, elevated view from the gallery down a tall gothic cathedral nave towards the altar. The rows of stone piers slide in towards the aisle on the loud beats and back out in the quiet. Warm stone, stained glass light on a pale floor.";
   return {
@@ -386,7 +393,7 @@ export function pyramidInside(
   const room = {
     // A box of roughly the pyramid's interior volume (about 650 m3).
     dimensions: [10, 8, 10] as SceneVector,
-    listener: [0, 1.3, 1.6] as SceneVector,
+    listener: [0, 1.3, 0.4] as SceneVector,
   };
   heldStates(recipe, "Pyramid interior", hollow, room);
   motion.room = interiorRoom("pyramid-proxy", room.dimensions, room.listener);

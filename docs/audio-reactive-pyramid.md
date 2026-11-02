@@ -105,11 +105,20 @@ still (pyramid-inside pans 45 degrees) and move the space on the `low` band.
   so the closed state would sit on the timeline. `--motion-gain` scales the
   blend amount too, up to 2.
 - **`spread` (pyramid-inside).** `spread` multiplies each piece's distance from
-  `motion.pivot` by `1 + spread`, so a negative amount (-0.5) means loud =
-  closer. It contracts all three axes, so a nave also sinks and seems to zoom;
+  `motion.pivot` by `1 + spread`, so a negative amount means loud = closer.
+  The study uses -0.3 with the camera at the centre of the floor: at -0.5 the
+  terraces closed to 0.67 m from the lens and hid the figure. It contracts all three axes, so a nave also sinks and seems to zoom;
   that is why the two studies above use the blend.
 - **Reverb box.** `roomWidth`/`roomDepth` are negative on `low` in every study,
   so the reverb box shrinks on the same bars.
+- **Camera clearance.** cathedral-walls holds the gallery view at (0, 23, 18).
+  From the old spot at (0, 21, 15) the nearest bay's vault rib was 1.9 m from
+  the lens at full close and filled the frame. A test now keeps every piece
+  more than 3 m away.
+- **diamond** is the simplest object test: one faceted `diamond(128)` at 0.65
+  scale, centred 8 m over the floor, in three identical states. It uses
+  pulse's mappings (scale on `low` 0.9, lift on `sub` 1.5) plus twistY on
+  `mid` 0.3, and orbits once at radius 26, elevation 3.
 - **room-walls** shows the apartment's own room box and hides its two
   full-height partitions.
 - **pyramid-inside** is a hollow stepped pyramid of 128 wall pieces with an
@@ -128,17 +137,21 @@ or the last frame), and the PNG is that exact decoded frame of `rgb.webm`.
 `scripts/experiments/sweep.sh --output DIR --studies ID [flags]` captures
 motion gain 0.5, 1 and 2 into `DIR-g05`, `DIR-g10` and `DIR-g20`.
 
-Measured on 97-frame 1024×576 captures (auto gain, release 12, studio). The
-median is the per-frame change in grey levels.
+Measured on 1024×576 captures (auto gain, release 12, studio), 97 frames
+unless marked 193 f. The median is the per-frame change in grey levels. Rows
+marked old predate the camera and spread fixes.
 
-| Study                  | Median | Corr with low |
-| ---------------------- | ------ | ------------- |
-| cathedral-walls blend  | 4.6    | 0.60          |
-| cathedral-walls spread | 9.9    | 0.36          |
-| canyon blend           | 0.67   | 0.52          |
-| fruit-dance            | 0.84   | 0.53          |
-| room-walls             | 0.39   | 0.62          |
-| pyramid-inside         | 4.1    | 0.87          |
+| Study                                  | Median | Corr with low |
+| -------------------------------------- | ------ | ------------- |
+| cathedral-walls blend, old (0, 21, 15) | 4.6    | 0.60          |
+| cathedral-walls blend, 193 f           | 2.8    | 0.38          |
+| cathedral-walls spread, old            | 9.9    | 0.36          |
+| canyon blend                           | 0.67   | 0.52          |
+| fruit-dance                            | 0.84   | 0.53          |
+| room-walls                             | 0.39   | 0.62          |
+| pyramid-inside, old -0.5               | 4.1    | 0.87          |
+| pyramid-inside -0.3, 193 f             | 2.3    | 0.61          |
+| diamond, 193 f                         | 1.3    | 0.60          |
 
 For cathedral-walls, the blend calmed the jitter; smoothing did not. Frames
 changing by more than 8 fell from 65 to 18, and the motion follows the band's

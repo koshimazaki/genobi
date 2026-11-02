@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { Euler, Vector3 } from "three";
 import { evaluateScene } from "../src/world-builder/evaluate-scene";
 import { sceneCameraAt } from "../src/world-builder/scene-camera";
 import {
@@ -122,7 +123,8 @@ describe("new pilot studies", () => {
       const quiet = meanDistance(study, 0),
         loud = meanDistance(study, 1);
       // Negative spread: (1 + spread) multiplies each offset from the pivot.
-      expect(loud.d).toBeLessThan(quiet.d * 0.6);
+      // Spread -0.3 at full bass: walls at 0.7 of their quiet distance.
+      expect(loud.d).toBeLessThan(quiet.d * 0.75);
       expect(loud.room[0]).toBeLessThan(quiet.room[0]);
       expect(loud.room[2]).toBeLessThan(quiet.room[2]);
       const { recipe } = createStudy(
@@ -268,5 +270,115 @@ describe("keyframe picking", () => {
         expect(n).toBeGreaterThan(0);
         expect(n).toBeLessThan(frames - 1);
       }
+  });
+});
+
+describe("diamond study", () => {
+  it.each([97, 193, 241])(
+    "builds within the recipe bound at %i frames",
+    (frames) => {
+      const { recipe, metadata } = createStudy(
+        "diamond",
+        bands(frames, (i) => 0.1 + ((i * 13) % 89) / 100),
+        dims(frames),
+      );
+      expect(serializeRecipe(recipe).bytes).toBeLessThanOrEqual(64_000);
+      expect(metadata.design).toBeTruthy();
+      expect(
+        recipe.motion!.mappings.map((m) => [m.property, m.source, m.amount]),
+      ).toEqual([
+        ["scale", "low", 0.9],
+        ["lift", "sub", 1.5],
+        ["twistY", "mid", 0.3],
+      ]);
+      expect([recipe.radius, recipe.elevation]).toEqual([26, 3]);
+      expect(recipe.cameraMotion!.keys[0].target).toEqual([
+        0,
+        recipe.targetY,
+        0,
+      ]);
+    },
+  );
+
+  it("holds one silhouette: identical states and the same shape at every frame", () => {
+    const { recipe } = createStudy(
+      "diamond",
+      bands(97, () => 0.5),
+      dims(97),
+    );
+    const [a, b, c] = recipe.motion!.stateKeys;
+    expect(b.objects).toEqual(a.objects);
+    expect(c.objects).toEqual(a.objects);
+    const shape = (frame: number) =>
+      evaluateScene(recipe, frame, { editing: true }).objects;
+    expect(shape(60)).toEqual(shape(0));
+    expect(shape(96)).toEqual(shape(0));
+    // It hovers: the lowest facet clears the floor at rest.
+    expect(Math.min(...shape(0).map((o) => o.y))).toBeGreaterThan(2);
+  });
+
+  it("swells on the bass about its own centre", () => {
+    const size = (low: number) => {
+      const { recipe } = createStudy(
+        "diamond",
+        bands(97, () => low),
+        dims(97),
+      );
+      const parts = evaluateScene(recipe, 40).objects;
+      return (
+        Math.max(...parts.map((o) => o.y)) - Math.min(...parts.map((o) => o.y))
+      );
+    };
+    // Intensity stays at the preset 0.5, as in pulse: full bass is x1.45.
+    expect(size(1)).toBeGreaterThan(size(0) * 1.35);
+  });
+});
+
+describe("camera clearance at the loudest bar", () => {
+  // Every box corner, edge midpoint and face centre, rotated, against the lens.
+  const nearest = (study: Study, low: number) => {
+    const { recipe } = createStudy(
+      study,
+      bands(193, () => low),
+      dims(193),
+    );
+    const cam = new Vector3(...sceneCameraAt(recipe, 100)!.position);
+    const size = recipe.motion!.instances?.size ?? 1;
+    let best = Infinity;
+    for (const o of evaluateScene(recipe, 100).objects) {
+      const h = [o.scaleX ?? 1, o.scaleY ?? 1, o.scaleZ ?? 1].map(
+        (v) => (v * o.scale * size) / 2,
+      );
+      const turn = new Euler(
+        o.rotationX ?? 0,
+        o.rotation ?? 0,
+        o.rotationZ ?? 0,
+      );
+      for (let k = 0; k < 27; k++) {
+        const p = new Vector3(
+          ((k % 3) - 1) * h[0],
+          ((Math.floor(k / 3) % 3) - 1) * h[1],
+          (Math.floor(k / 9) - 1) * h[2],
+        )
+          .applyEuler(turn)
+          .add(new Vector3(o.x, o.y, o.z));
+        best = Math.min(best, p.distanceTo(cam));
+      }
+    }
+    return { best, recipe };
+  };
+
+  it("cathedral-walls never brings a piece within 3 m of the gallery camera", () => {
+    for (const low of [0, 1])
+      expect(nearest("cathedral-walls", low).best).toBeGreaterThan(3);
+  });
+
+  it("pyramid-inside keeps its walls clear of the lens and the figure inside", () => {
+    const { best, recipe } = nearest("pyramid-inside", 1);
+    expect(best).toBeGreaterThan(2.5);
+    // The base terrace's inner face at full close: 6.4 m x (1 - 0.3) less half its 0.5 m wall.
+    const inner = 6.4 * 0.7 - 0.25;
+    expect(Math.abs(recipe.avatarPose.x)).toBeLessThan(inner);
+    expect(Math.abs(recipe.avatarPose.z)).toBeLessThan(inner);
   });
 });

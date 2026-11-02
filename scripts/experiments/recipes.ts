@@ -22,6 +22,7 @@ import {
   type RoomDesign,
 } from "./recipes-rooms";
 import { fruitDance } from "./recipes-fruit";
+import { diamondStudy } from "./recipes-diamond";
 import { STUDIES } from "./studies.mjs";
 
 export { bakeCues, bakeSequence, peakCues, selectCues } from "./recipe-cues";
@@ -39,6 +40,7 @@ const PRESETS: Record<Study, string> = {
   pulse: "voxel-architecture-128",
   rubik: "voxel-architecture-128",
   "pyramid-inside": "voxel-architecture-128",
+  diamond: "voxel-architecture-128",
   falling: "city-to-loft",
   cathedral: "city-to-loft",
   "cathedral-walls": "city-to-loft",
@@ -284,7 +286,8 @@ export function createStudy(
     const built = fruitDance(recipe, inputCues);
     cues = built.cues;
     design = built.design;
-  } else if (study === "falling") indoorFromFrame = falling(recipe);
+  } else if (study === "diamond") design = diamondStudy(recipe);
+  else if (study === "falling") indoorFromFrame = falling(recipe);
   else if (study === "cathedral") indoorFromFrame = falling(recipe, true);
   else if (study === "cathedral-walls") room(cathedralWalls(recipe));
   else if (study === "canyon") room(canyon(recipe));
@@ -294,8 +297,8 @@ export function createStudy(
       pyramidInside(
         recipe,
         parts(hollowPyramid()),
-        // Near the floor, looking up and across the far terraces.
-        panCamera([0, 1.3, 1.6], [0, 4, -4.5], 45, 78, last),
+        // Near the floor at the centre, looking up and across the far terraces.
+        panCamera([0, 1.3, 0.4], [0, 4, -4.5], 45, 78, last),
       ),
     );
   else

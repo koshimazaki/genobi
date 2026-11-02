@@ -12,5 +12,6 @@ export declare const STUDIES: readonly [
   "room",
   "room-walls",
   "pyramid-inside",
+  "diamond",
 ];
 export declare const OUTPUT_NAME: RegExp;
