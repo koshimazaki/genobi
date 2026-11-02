@@ -152,15 +152,19 @@ dry track and the CPU room reverb are muxed underneath.
    needs four more files (18 GB), listed in LOOK.md.
 3. Start ComfyUI on 127.0.0.1:8189, then `EXPECT=8 after-download.sh` with
    the bundle names below.
-4. Queue, in this order, so the first result is the one the owner wants most:
-   1. `cathedral-walls` layout-audio, look + closed keyframe, 1024x576 guide, 97 frames
-   2. `canyon` the same
-   3. `room-walls` the same, captured at `--motion-gain 2`, mannequin inside
-   4. `cathedral-walls` union-depth, same stills
-   5. `falling-g20` union-depth with the towers-down look and its closed still (the clip 16 arc, re-rendered)
-   6. `fruit-dance` layout-audio
-   7. `pyramid-inside` layout-audio
-   8. sweep: `cathedral-walls` at motion gain 0.5 and 2 (the gain 1 run is 1)
+4. Queue, in this order, easiest for the model first (all 193 frames,
+   1024x576 guides, `layout-audio`, look at -1 plus the closed still at its
+   frame index; `scripts/vast/box/make-bundles.sh GUIDES LOOKS BUNDLES`
+   builds them all):
+   1. `diamond`: one object, the surest result
+   2. `pulse`: the pyramid, the proven control
+   3. `cathedral-walls`: piers sliding in, camera held
+   4. `canyon`: tower rows closing across the street
+   5. `room-walls` (captured at `--motion-gain 2`): the dancer between closing walls
+   6. `pyramid-inside`: terraces tightening around the figure
+   7. `fruit-dance`: apple and banana swapping on the beats
+   8. `cathedral-walls` and `canyon` again in `union-depth`
+   9. sweep: `cathedral-walls` at motion gain 0.5 and 2
 5. `refine.py convert`, then `refine.py submit` on the best clip of each study.
 6. Copy `/workspace/run` to the Mac, measure, stitch, review.
 
@@ -169,5 +173,8 @@ dry track and the CPU room reverb are muxed underneath.
 - A yes to push `feat/ltx-reactive-capture` and open the PR to `release/v0.14`.
 - The rotated Hugging Face token at download time (typed into the box shell,
   never saved) and the Refine-Details terms accepted.
-- Either prepared stills (desert pyramid, towers-down, cathedral nave, a club
-  room or kitchen later) or an aesthetic sentence per study for `look.py`.
+- Either prepared stills or an aesthetic sentence per study for `look.py`.
+  The guide frames to make them from (first, open, closed, and the banana
+  frame) are captured per study beside each guide; an anime and a realistic
+  look per object is the planned compilation. The 2 November reference set
+  and its images-needed list sit in the owner's Downloads export.
