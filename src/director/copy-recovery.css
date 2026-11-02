@@ -1,0 +1,22 @@
+.dir-conflict-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-left: auto;
+}
+.dir-copy-recovery {
+  flex-direction: column;
+  align-items: stretch;
+  background: var(--sunken);
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+.dir-copy-recovery p {
+  margin: 0;
+}
+.dir-copy-recovery .dir-copy-recovery-primary {
+  border: 1px solid var(--accent);
+  color: var(--accent-ink);
+  background: var(--accent);
+  font-weight: 600;
+}
