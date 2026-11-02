@@ -105,10 +105,12 @@ describe("image provider selection", () => {
         onConfigure: () => {},
       }),
     );
-    expect(markup).toContain("Configure API keys / run location…");
-    const selector = markup.match(/<select[^>]*>/)?.[0];
-    expect(selector).toContain('aria-label="Generation provider"');
-    expect(selector).not.toContain("disabled");
+    const trigger = markup.match(
+      /<button[^>]*aria-label="Generation provider"[^>]*>/,
+    )?.[0];
+    expect(trigger).toBeDefined();
+    expect(trigger).not.toContain("disabled");
+    expect(trigger).toContain('title="Generate with Comfy workflow"');
   });
 
   it("renders Klein providers and API setup in Generate", () => {
@@ -130,10 +132,9 @@ describe("image provider selection", () => {
         onConfigure: () => {},
       }),
     );
-    expect(markup).toContain('value="comfy"');
-    expect(markup).toContain('value="bfl"');
-    expect(markup).toContain('value="configure"');
-    expect(markup).toContain("Comfy workflow");
-    expect(markup).toContain("BFL API");
+    // Closed, the trigger names the current run; the menu lists the rest.
+    expect(markup).toContain('aria-label="Generation provider"');
+    expect(markup).toContain('title="Generate with Comfy workflow"');
+    expect(markup).toContain(">COMFY</span>");
   });
 });

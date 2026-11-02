@@ -135,8 +135,8 @@ describe("switching between video and Klein", () => {
       />,
     );
     expect(action).toContain('aria-label="Generation provider"');
-    expect(action).toContain("BFL API");
-    expect(action).toContain("Comfy workflow");
+    expect(action).toContain('title="Generate with Comfy workflow"');
+    expect(action).toContain(">COMFY</span>");
     expect(html).toContain('id="camera-label"');
     expect(html).not.toContain("Web grounding");
     // Both runs now receive the source and references.
