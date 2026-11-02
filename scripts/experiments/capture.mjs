@@ -95,6 +95,7 @@ if (
         "clockwork",
         "pulse",
         "rubik",
+        "cathedral",
         "falling",
         "room",
       ].includes(s),
@@ -212,7 +213,7 @@ try {
   });
   await page.exposeFunction("savePilotFile", async (name, bytes) => {
     if (
-      !/^(fruit|architecture|clockwork|pulse|rubik|falling|room)\/[a-z0-9-]+\.(json|png|wav|webm)$/.test(
+      !/^(fruit|architecture|clockwork|pulse|rubik|cathedral|falling|room)\/[a-z0-9-]+\.(json|png|wav|webm)$/.test(
         name,
       )
     )

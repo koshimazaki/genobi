@@ -8,7 +8,14 @@ import type {
 import { assertAnalysisFrames, assertGuideBounds } from "./contracts";
 
 export type Study =
-  "fruit" | "architecture" | "clockwork" | "pulse" | "falling" | "room";
+  | "fruit"
+  | "architecture"
+  | "clockwork"
+  | "pulse"
+  | "rubik"
+  | "cathedral"
+  | "falling"
+  | "room";
 export interface Cue {
   frame: number;
   source: "low" | "high" | "authored";
@@ -180,7 +187,7 @@ function nave(): SceneTransform[] {
   });
 }
 
-function falling(recipe: Recipe) {
+function falling(recipe: Recipe, cathedralOnly = false) {
   const last = recipe.frames - 1,
     entry = Math.round(last / 2);
   const motion = recipe.motion!;
@@ -207,9 +214,20 @@ function falling(recipe: Recipe) {
   motion.instances!.count = 96;
   motion.instances!.size = 1;
   motion.instances!.palette = ["#a7b7bb", "#d1c5ac", "#8ca5b2", "#b49c82"];
-  motion.stateKeys = [towers(96, true), church, party].map((layout, i) => ({
+  const layouts = cathedralOnly
+    ? [church, church, church]
+    : [towers(96, true), church, party];
+  if (cathedralOnly) {
+    // One nave throughout: its width and depth breathe with the bass, the
+    // vault lifts on the voice; the camera holds the elevated nave view.
+    dims[0] = dims[2] = dims[1];
+    listeners[0] = listeners[2] = listeners[1];
+  }
+  motion.stateKeys = layouts.map((layout, i) => ({
     id: `space-${i}`,
-    label: ["City towers", "Cathedral proxy", "Party room"][i],
+    label: cathedralOnly
+      ? "Cathedral proxy"
+      : ["City towers", "Cathedral proxy", "Party room"][i],
     frame: [0, entry, last][i],
     easing: "easeInOut",
     objects: parts(layout),
@@ -250,6 +268,65 @@ function falling(recipe: Recipe) {
     },
   ];
   motion.intensity = 0.7;
+  if (cathedralOnly) {
+    motion.mappings = [
+      {
+        id: "width",
+        source: "low",
+        property: "roomWidth",
+        amount: 1.0,
+        enabled: true,
+      },
+      {
+        id: "depth",
+        source: "low",
+        property: "roomDepth",
+        amount: 0.6,
+        enabled: true,
+      },
+      {
+        id: "vault",
+        source: "mid",
+        property: "roomHeight",
+        amount: 0.5,
+        enabled: true,
+      },
+      {
+        id: "walls",
+        source: "high",
+        property: "spread",
+        amount: 0.02,
+        enabled: true,
+      },
+    ];
+    recipe.cameraMotion = {
+      version: 1,
+      enabled: true,
+      keys: [
+        {
+          id: "nave-a",
+          frame: 0,
+          position: [0, 17, 14],
+          target: [0, 2, -12],
+          fov: 60,
+          easing: "easeInOut",
+        },
+        {
+          id: "nave-b",
+          frame: last,
+          position: [0, 15, 9],
+          target: [0, 2, -12],
+          fov: 60,
+          easing: "easeInOut",
+        },
+      ],
+      audio: { enabled: true, source: "low", amount: 0.2, motion: "push" },
+    };
+    recipe.depthFar = 160;
+    recipe.prompt =
+      "An elevated view down a tall gothic cathedral nave towards the altar, stone piers and vaults breathing gently with the music. Warm stone, stained glass light on the floor.";
+    return entry;
+  }
   recipe.cameraMotion = {
     version: 1,
     enabled: true,
@@ -380,6 +457,7 @@ export function createStudy(
     pulse: "voxel-architecture-128",
     rubik: "voxel-architecture-128",
     falling: "city-to-loft",
+    cathedral: "city-to-loft",
     room: "apartment-morph",
   }[study];
   const recipe = createMotionPreset(preset);
@@ -600,6 +678,7 @@ export function createStudy(
       motion.stateKeys = bakeCues(states, cues, recipe.frames);
     }
   } else if (study === "falling") indoorFromFrame = falling(recipe);
+  else if (study === "cathedral") indoorFromFrame = falling(recipe, true);
   else
     motion.stateKeys.forEach((key, i) => {
       key.frame = Math.round((last * i) / 2);
@@ -618,7 +697,7 @@ export function createStudy(
       })),
       indoorFromFrame,
       acousticMeaning:
-        study === "falling"
+        study === "falling" || study === "cathedral"
           ? "Stylized single-room interior proxy; outdoor soundtrack stays dry. No outdoor or coupled-room propagation."
           : study === "room"
             ? "Explicit changing single-room enclosure."
