@@ -188,7 +188,8 @@ export class CopySync {
       this.state.actions.commit(copy);
       this.settle(id, revision);
       this.openedAt.delete(id);
-      if (why === "This project already had a saved copy" && this.options.conflict)
+      const savedChoice = why === "This project already had a saved copy";
+      if (savedChoice && this.options.conflict)
         this.offerMine(id, mine, "saved-copy");
       else if (reason)
         this.options.notice(
@@ -235,7 +236,7 @@ export class CopySync {
   stop() {
     clearTimeout(this.timer);
   }
-  /** Flush pending changes while protecting drafts replaced by a remote revision. */
+  /** Flush pending changes, protecting drafts replaced by a remote copy. */
   async flush(allProjects = false): Promise<boolean> {
     this.stop();
     const kept = () => this.kept(allProjects);
@@ -389,14 +390,16 @@ export class CopySync {
         overwrittenAt,
         current: () => this.current(),
         synced: () => this.synced.get(id),
-        counters: () => ({ overwritten: this.overwritten, keptAt: this.keptAt }),
+        counters: () => [this.overwritten, this.keptAt],
         accept: () => {
           this.keptAt = overwrittenAt;
         },
         restore: () => {
           if (this.current()?.project.id !== id) return;
           if (this.synced.get(id)?.local !== this.current()?.project.revision)
-            return this.options.notice("Project changed; review before restoring an older draft.");
+            return this.options.notice(
+              "Project changed; review before restoring an older draft.",
+            );
           if (this.synced.get(id)?.server !== revision)
             return this.offerMine(id, mine, kind);
           this.state.actions.commit(mine);
@@ -405,7 +408,7 @@ export class CopySync {
       }),
     );
   }
-  /** Before the first push, read an existing saved project rather than overwrite it. */
+  /** Read a saved project before the first push, without overwriting it. */
   private async openCopy(id: string) {
     this.opened.add(id);
     this.upgraded = "";
