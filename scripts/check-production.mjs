@@ -3,10 +3,9 @@
  *
  * `Deploy production` skips when the `production` environment holds no
  * Cloudflare credentials, on purpose, so `main` stays green on a fork. The
- * catch is that a green run then looks exactly like a shipped one: after a
- * merged fix, production kept serving the previous build for a day, and the
- * first sign of it was a Comfy Cloud run failing in a node the fix had
- * already covered.
+ * catch is that a green run then looks exactly like a shipped one:
+ * a merged fix can remain absent from production. A locally run dev server
+ * uses its own checkout and configuration, independently of Cloudflare.
  *
  * The Worker stamps its commit into `/api/health`, so this script can answer
  * the only question that matters here — "is the thing I merged live?" — and
