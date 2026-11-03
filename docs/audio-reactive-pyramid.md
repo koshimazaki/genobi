@@ -237,7 +237,7 @@ still (pyramid-inside pans 45 degrees) and move the space on the `low` band.
 - **car-mecha** (`carMecha`, `recipes-car-mecha.ts`) is ship-mecha's
   mechanism with the `car` catalogue form at rest: a low wedge car of the
   same 128 parts (`motion-car-layout.ts`, about 2.2 x 1.0 x 0.7 m, nose at
-  +z) in gunmetal `#1b2a3a`, the same mecha in `#d9a441` at full bass. Both
+  +z) in gunmetal `#2f4458`, the same mecha in `#d9a441` at full bass. Both
   forms stand on the floor on one vertical axis; the view is a held front
   three-quarter, 35 degrees round and 12 above, the mecha 55% of the frame
   height, turning on `mid` (twistY 0.2). Captured with release 30 and smooth

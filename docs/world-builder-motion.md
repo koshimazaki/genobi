@@ -36,6 +36,7 @@ gallery includes the [editable effects catalogue](effects-catalogue.md).
 | Travel · Neo Tokyo / loft             | Skyline → Street canyon → Open loft           | Original cool night palette and traveling camera                      | No real-city reconstruction                             |
 | Morph · Spacecraft / mecha            | Spacecraft → Mecha → Winged mecha             | 128 persistent authored parts                                         | No enclosure inferred                                   |
 | Morph · Car / mecha                   | Car → Mecha → Winged mecha                    | The same 128 parts, a low wedge car at rest                           | No enclosure inferred                                   |
+| Morph · Bike / brawler / car          | Sports bike → Brawler mecha → Car             | The same 128 parts, each carrying its own colour between forms        | No enclosure inferred                                   |
 | Morph · Mask / crown                  | Mask → Crown → Open mask                      | 96 persistent geometric parts                                         | No enclosure inferred                                   |
 | Motion · Palm grove                   | Upright → Sway → Spread                       | 96 parts form trunks and moving fronds                                | Sculptural motion, not a vegetation simulation          |
 | Morph · Fruit / audio branches        | Banana → Papaya → Apple → Orange → Watermelon | 96 retained parts; separate progress and target controls              | Spectral-band routing; no instrument classification     |
@@ -56,9 +57,9 @@ The catalogue also includes [Endless descent and Bass avenue](world-builder-stor
 ## Choose forms, then choose how they move
 
 **Build a morph** is a separate gallery action. Select two to four forms and
-arrange their order. Fifteen authored forms cover pyramid,
-chamber, cathedral, banana, papaya, apple, orange, watermelon, spacecraft, car, mecha,
-winged mecha, mask, crown and palms. These are individual geometry states; a motion
+arrange their order. Seventeen authored forms cover pyramid,
+chamber, cathedral, banana, papaya, apple, orange, watermelon, spacecraft, car,
+sports bike, mecha, brawler mecha, winged mecha, mask, crown and palms. These are individual geometry states; a motion
 preset is a ready-made sequence with timing, camera and response settings.
 
 Choose **64, 128 or 256 retained parts** and a transition style. More detailed
@@ -83,9 +84,26 @@ remain editable, and **Save scene** keeps the result.
 
 The saved recipe stays within its existing 64 KB bound. The composer reserves
 space for a full prepared soundtrack; combinations that exceed it offer fewer
-blocks or two forms. All fourteen forms work at 64/128 parts, and the enclosed
+blocks or two forms. All seventeen forms work at 64/128 parts, and the enclosed
 architecture sequence supports 256. This does not round the audio or silently
 reduce the requested part count.
+
+### Voxel vehicles
+
+The car, sports bike and brawler mecha are authored in the spacecraft's
+128-part order (torso 32, head 12, arms 32, legs 32, wings 16, joints 4), so a
+part keeps its role in every form: the bike's body slabs become the brawler's
+chest, its cowl and windscreen the helmet, its side fairings the arms, its
+wheels, forks and swingarm the legs, and its lights the neck and hips. The car
+and bike are drawn in metres and built at a scale of 1.8 so they read beside
+the mecha, about 4.6 m tall: the car about 4.0 × 1.8 × 1.3 m, the bike about
+4.9 m long. A round wheel is four slabs at 0, 45, 90 and 135 degrees per half.
+The bike and brawler give every part its own colour, which blends through the
+morph; when the composer pairs one with an uncoloured form, that form's parts
+take a neutral grey. Three coloured forms fit the recipe budget at 64 parts, two
+at 128. Mid-morph frames are linear blends, not a staged fold. Layouts live in
+`src/world-builder/motion-car-layout.ts`, `motion-bike-layout.ts` and
+`motion-brawler-layout.ts`; their presets in `motion-vehicle-presets.ts`.
 
 ## Dark stage and enlarged view
 
@@ -405,7 +423,7 @@ camera path either.
 Use `genobi_world` to list `presets`, then `load-preset` with one of these IDs:
 `voxel-architecture`, `cathedral-street`, `apartment-morph`, `fruit-morph`,
 `fruit-morph-fine`, `city-to-loft`, `neo-tokyo-to-loft`, `spacecraft-mecha`, `car-mecha`,
-`mask-morph`, `palm-grove`, `voxel-architecture-128`, `voxel-architecture-256`,
+`bike-mecha`, `mask-morph`, `palm-grove`, `voxel-architecture-128`, `voxel-architecture-256`,
 `fruit-audio-branches`.
 The returned recipe includes the motion schema. Read `recipe` for its current
 revision, edit state transforms/mappings, and use the existing guarded

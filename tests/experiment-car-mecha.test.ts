@@ -43,9 +43,10 @@ describe("the car form", () => {
     const box = shipBounds(Object.fromEntries(car.map((p, i) => [i, p])), 0.72);
     const [w, h, l] = [0, 1, 2].map((i) => box.max[i] - box.min[i]);
     expect(box.min[1]).toBeCloseTo(0, 2);
-    expect(l).toBeCloseTo(2.2 * CAR_SCALE, 1);
-    expect(w).toBeCloseTo(1.0 * CAR_SCALE, 1);
-    expect(h).toBeCloseTo(0.7 * CAR_SCALE, 1);
+    // Drawn 2.2 x 1.0 x 0.7 m, then built at CAR_SCALE.
+    expect(l / CAR_SCALE).toBeCloseTo(2.2, 1);
+    expect(w / CAR_SCALE).toBeCloseTo(1.0, 1);
+    expect(h / CAR_SCALE).toBeCloseTo(0.7, 1);
     // The nose (+z) sits lower than the rear: the wedge.
     const top = (front: boolean) =>
       Math.max(
@@ -158,11 +159,12 @@ describe("car-mecha", () => {
       else expect(width).toBeGreaterThan(height);
       // Projected at frame 0, the form sits inside the 1024 x 576 frame.
       const { car } = studyRegions("car-mecha", scene);
-      // At rest the car spans 35 to 40% of the frame width (the region
-      // carries REGION_PAD per side, so the box is car.w / 1.16).
+      // At rest, at CAR_SCALE and with the mecha framed to CAR_FILL, the car
+      // spans about a quarter of the frame width (the region carries
+      // REGION_PAD per side, so the box is car.w / 1.16).
       if (key === "Car") {
-        expect(car.w / 1.16 / 1024).toBeGreaterThan(0.33);
-        expect(car.w / 1.16 / 1024).toBeLessThan(0.42);
+        expect(car.w / 1.16 / 1024).toBeGreaterThan(0.22);
+        expect(car.w / 1.16 / 1024).toBeLessThan(0.32);
       }
       expect(car.x).toBeGreaterThan(0);
       expect(car.y).toBeGreaterThan(0);

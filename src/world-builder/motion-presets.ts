@@ -1,11 +1,6 @@
 import { defaultRecipe, validateRecipe, type Recipe } from "./recipe";
 import { createStoryPreset, STORY_PRESETS } from "./story-presets";
-import type {
-  SceneMapping,
-  SceneMotion,
-  SceneRoom,
-  SceneTransform,
-} from "./scene-state";
+import type { SceneMotion, SceneRoom } from "./scene-state";
 import {
   apartmentLayouts,
   apartmentPieces,
@@ -20,8 +15,8 @@ import {
   maskLayouts,
   palmGroveLayouts,
 } from "./motion-object-layouts";
-import { carMechaLayouts } from "./motion-car-layout";
-import { bikeMechaLayouts } from "./motion-bike-layout";
+import { keys, mapping, voxels } from "./motion-preset-parts";
+import { vehiclePresetPatch } from "./motion-vehicle-presets";
 
 export const MOTION_PRESETS = [
   ...STORY_PRESETS,
@@ -126,34 +121,6 @@ export const MOTION_PRESETS = [
 ] as const;
 export type MotionPresetId = (typeof MOTION_PRESETS)[number]["id"];
 
-const frames = [0, 72, 144];
-const mapping = (
-  property: SceneMapping["property"],
-  source: SceneMapping["source"],
-  amount: number,
-): SceneMapping => ({
-  id: `motion-${property}`,
-  property,
-  source,
-  amount,
-  enabled: true,
-});
-
-function keys(labels: string[], layouts: SceneTransform[][], ids?: string[]) {
-  return layouts.map((layout, i) => ({
-    id: `state-${i + 1}`,
-    label: labels[i],
-    frame: frames[i],
-    easing: "easeInOut" as const,
-    objects: Object.fromEntries(
-      layout.map((t, n) => [
-        ids?.[n] ?? `voxel-${String(n).padStart(3, "0")}`,
-        t,
-      ]),
-    ),
-  }));
-}
-
 function room(
   id: string,
   dimensions: SceneRoom["dimensions"],
@@ -177,36 +144,6 @@ function room(
     wallThickness: 0.12,
     visible,
     ...(visible ? { cutaway: true } : {}),
-  };
-}
-
-function voxels(
-  count: number,
-  palette: string[],
-  labels: string[],
-  layouts: SceneTransform[][],
-): SceneMotion {
-  return {
-    version: 1,
-    pivot: [0, 2.2, 0],
-    instances: {
-      generator: "voxel-lattice",
-      version: 1,
-      seed: 173,
-      count,
-      columns: 4,
-      spacing: 0.8,
-      size: 0.72,
-      palette,
-    },
-    stateKeys: keys(labels, layouts),
-    mappings: [
-      mapping("twistY", "low", 0.85),
-      mapping("twistX", "mid", 0.55),
-      mapping("spread", "high", 0.18),
-      mapping("morph", "level", 0.08),
-    ],
-    intensity: 0.65,
   };
 }
 
@@ -287,54 +224,7 @@ function presetPatch(id: MotionPresetId): Partial<Recipe> {
         "Travel from an original geometric city skyline down a street canyon into an open loft. The same 96 architectural parts become floor tiles, beams, windows and furniture. Camera position, look target and lens move on the same timeline. Keep the transition readable; audio adds restrained height and separation offsets.",
     };
   }
-  if (id === "car-mecha") {
-    const motion = voxels(
-      128,
-      ["#2f4458", "#3c5468", "#5fd4e6", "#d9a441"],
-      ["Car", "Mecha", "Winged mecha"],
-      carMechaLayouts(),
-    );
-    motion.mappings = [
-      mapping("twistY", "low", 0.25),
-      mapping("spread", "high", 0.1),
-      mapping("morph", "sub", 0.12),
-    ];
-    return {
-      motion,
-      radius: 14,
-      fov: 46,
-      azimuth: 35,
-      elevation: 14,
-      targetY: 2,
-      background: "#080b12",
-      prompt:
-        "A low wedge car unfolds into a standing mecha, then opens its wings. The same 128 parts retain their identities. Prepared sub-bass gently advances the morph; bass turns the group and highs open the spacing.",
-    };
-  }
-  if (id === "bike-mecha") {
-    const motion = voxels(
-      128,
-      ["#c8262e", "#9b1b22", "#efe6d2", "#e8862a"],
-      ["Bike", "Brawler", "Car"],
-      bikeMechaLayouts(),
-    );
-    motion.mappings = [
-      mapping("twistY", "low", 0.25),
-      mapping("spread", "high", 0.1),
-      mapping("morph", "sub", 0.12),
-    ];
-    return {
-      motion,
-      radius: 14,
-      fov: 46,
-      azimuth: 35,
-      elevation: 14,
-      targetY: 2,
-      background: "#080b12",
-      prompt:
-        "A long red sports bike stands up into a chunky brawler mecha with oversized fists, then folds down into a low car. The same 128 parts retain their identities and carry their colours between forms. Prepared sub-bass gently advances the morph; bass turns the group and highs open the spacing.",
-    };
-  }
+  if (id === "car-mecha" || id === "bike-mecha") return vehiclePresetPatch(id);
   if (id === "spacecraft-mecha" || id === "mask-morph" || id === "palm-grove") {
     const ship = id === "spacecraft-mecha",
       palm = id === "palm-grove";
