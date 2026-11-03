@@ -44,9 +44,13 @@ export async function request<T>(
 ): Promise<T> {
   const response = await fetch(path, { ...options, cache: "no-store" });
   const data = await response.json();
+  // The status rides on the error: a 4xx is a refusal, anything else unknown.
   if (!response.ok)
-    throw new Error(
-      data.error || data.message || "The request could not be completed.",
+    throw Object.assign(
+      new Error(
+        data.error || data.message || "The request could not be completed.",
+      ),
+      { status: response.status },
     );
   return data;
 }

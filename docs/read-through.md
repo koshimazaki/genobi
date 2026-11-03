@@ -147,6 +147,10 @@ build while every other check stays green.
    click dismiss it, and arrow keys navigate choices. Browsing a family does not change the
    model until a ready entry is selected. On a phone, family and summary precede the wrapping
    controls and a full-width Generate button with its cost below.
+   **Generate queues while a run is in flight** (`useGenerationQueue`, over the framework-free
+   `generation-queue.ts`): each click is its own submission, sent once the one before it is
+   accepted, and a refusal or an uncertain answer stops the queue without a retry; see
+   [the generation queue](studio-guide.md#generation-queue).
    `ComposerActions` shows the **Acoustic space** button beside Camera controls only while the
    switch is on. It and the acoustic prompt use a theme-specific accent: light blue with
    Blackstone / Lime, blue indigo with Cyberpunk.

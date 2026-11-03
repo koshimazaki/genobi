@@ -40,7 +40,10 @@ export function maybeDeploymentApproval(input: GenerateInput, key: string) {
   return deployed ? deploymentApproval(input, key) : Promise.resolve(undefined);
 }
 
-/** The quote and submission must see the exact same resolved source/settings. */
+/**
+ * The quote and submission must see the exact same resolved source/settings.
+ * Resolves whether it was sent: `false` when the confirmation was declined.
+ */
 export async function submitWithDeploymentApproval(
   input: GenerateInput,
   key: string,
@@ -50,5 +53,7 @@ export async function submitWithDeploymentApproval(
   ) => Promise<unknown>,
 ) {
   const approval = await maybeDeploymentApproval(input, key);
-  if (approval !== null) await send(input, approval);
+  if (approval === null) return false;
+  await send(input, approval);
+  return true;
 }
