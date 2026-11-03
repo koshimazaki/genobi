@@ -72,7 +72,10 @@ function handoff() {
 it("blocks stale source fallback until the chosen MP4 is uploaded", async () => {
   let resolve!: (id: string) => void;
   const upload = vi.fn(
-    () => new Promise<string>((done) => { resolve = done; }),
+    () =>
+      new Promise<string>((done) => {
+        resolve = done;
+      }),
   );
   mount(upload);
   handoff();
@@ -88,7 +91,12 @@ it("blocks stale source fallback until the chosen MP4 is uploaded", async () => 
 
 it("does not overwrite a source the person chose during the upload", async () => {
   let resolve!: (id: string) => void;
-  mount(() => new Promise<string>((done) => { resolve = done; }));
+  mount(
+    () =>
+      new Promise<string>((done) => {
+        resolve = done;
+      }),
+  );
   handoff();
   act(() => edit({ sourceId: "manual-source" }));
   expect(uploading).toBe(false);
@@ -98,7 +106,12 @@ it("does not overwrite a source the person chose during the upload", async () =>
 
 it("keeps a failed handoff unselected, instead of running an older clip", async () => {
   let reject!: (error: Error) => void;
-  mount(() => new Promise<string>((_done, fail) => { reject = fail; }));
+  mount(
+    () =>
+      new Promise<string>((_done, fail) => {
+        reject = fail;
+      }),
+  );
   handoff();
   await act(async () => reject(new Error("Upload refused")));
   expect(observed.sourceId).toBe(ASSET_UPLOAD_PENDING);
@@ -108,7 +121,12 @@ it("keeps a failed handoff unselected, instead of running an older clip", async 
 
 it("drops the late upload after leaving Upscale", async () => {
   let resolve!: (id: string) => void;
-  mount(() => new Promise<string>((done) => { resolve = done; }));
+  mount(
+    () =>
+      new Promise<string>((done) => {
+        resolve = done;
+      }),
+  );
   handoff();
   act(() => edit({ generator: "image" }));
   expect(uploading).toBe(false);
