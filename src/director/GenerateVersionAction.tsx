@@ -24,11 +24,21 @@ export default function GenerateVersionAction({
   const shell = useShell();
   const [open, setOpen] = useState(false);
   const trigger = useRef<HTMLButtonElement>(null);
+  const projectId = bundle?.project.id;
+  // A remount with an old request count is not a fresh user action.
+  const previousRequest = useRef(request);
+  const previousProject = useRef(projectId);
   const visible =
     !shell || shell.preset === "director" || shell.preset === "editor";
   useEffect(() => {
-    if (request) setOpen(true);
+    if (request > previousRequest.current) setOpen(true);
+    previousRequest.current = request;
   }, [request]);
+  useEffect(() => {
+    // Never carry an open swap dialog to another project's assets.
+    if (previousProject.current !== projectId) setOpen(false);
+    previousProject.current = projectId;
+  }, [projectId]);
   if (!bundle || !template) return null;
   const close = () => {
     setOpen(false);
