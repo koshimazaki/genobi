@@ -44,7 +44,7 @@ afterEach(() => {
   for (const close of unmount.splice(0)) close();
   vi.unstubAllGlobals();
 });
-async function mount(bundle: Bundle, press = true) {
+async function mount(bundle: Bundle, press = true, request = 0) {
   studioStore.setState({
     director: { ...studioStore.getState().director, bundle },
     operations: { workingFile: false, playing: false, rendering: false },
@@ -52,7 +52,10 @@ async function mount(bundle: Bundle, press = true) {
   const host = document.createElement("div");
   document.body.append(host);
   const root = createRoot(host);
-  const render = () => root.render(<GenerateVersionAction disabled={false} />);
+  const render = (nextRequest = request) =>
+    root.render(
+      <GenerateVersionAction disabled={false} request={nextRequest} />,
+    );
   await act(async () => {
     render();
   });
@@ -62,7 +65,7 @@ async function mount(bundle: Bundle, press = true) {
   });
   // The panel opens only on its button: Director opens on the timeline.
   if (press) act(() => trigger().click());
-  return { host, render: () => act(render) };
+  return { host, render: (nextRequest = request) => act(() => render(nextRequest)) };
 }
 const trigger = () =>
   document.querySelector<HTMLButtonElement>(".dir-generate-version")!;
@@ -210,6 +213,25 @@ it("opens Make my version only on request in Editor and Director", async () => {
   // Moving to Director keeps the timeline in front: no panel reopens.
   state.preset = "director";
   mounted.render();
+  expect(document.querySelector("dialog")).toBeNull();
+});
+
+it("ignores a stale request on mount but opens for a new explicit request", async () => {
+  const mounted = await mount(await versionCharacter(), false, 7);
+  expect(document.querySelector("dialog")).toBeNull();
+  mounted.render(8);
+  expect(document.querySelector("dialog")?.open).toBe(true);
+});
+
+it("closes the swap dialog when a different project is opened", async () => {
+  await mount(await versionCharacter());
+  expect(document.querySelector("dialog")?.open).toBe(true);
+  const next = await versionMix();
+  act(() => {
+    studioStore.setState({
+      director: { ...studioStore.getState().director, bundle: next },
+    });
+  });
   expect(document.querySelector("dialog")).toBeNull();
 });
 
