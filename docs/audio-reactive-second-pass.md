@@ -13,11 +13,11 @@ and tested on the Mac before the box is rented; the box runs a queue.
 
 ## The three demos
 
-| Track           | What moves                                                                                                                      | Study                                                       |
-| --------------- | ------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
-| Acoustic space  | walls, piers and buildings close in on the loud bars and open on the quiet ones; the reverb is computed from the same room size | `cathedral-walls`, `canyon`, `room-walls`, `pyramid-inside` |
-| Things in space | objects in an orbiting shot react to the bands, a dancer in the middle                                                          | `fruit-dance`, `fruit-mecha`, `pulse`                       |
-| Changing shapes | state changes on the beats (apple to banana, towers to nave)                                                                    | `fruit-dance` and `fruit-mecha` cues, `falling`             |
+| Track           | What moves                                                                                                                      | Study                                                                                      |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| Acoustic space  | walls, piers and buildings close in on the loud bars and open on the quiet ones; the reverb is computed from the same room size | `cathedral-walls`, `canyon`, `room-walls`, `pyramid-inside`, `party-walls`, `studio-walls` |
+| Things in space | objects in an orbiting shot react to the bands, a dancer in the middle                                                          | `fruit-dance`, `fruit-mecha`, `pulse`                                                      |
+| Changing shapes | state changes on the beats (apple to banana, towers to nave)                                                                    | `fruit-dance` and `fruit-mecha` cues, `falling`                                            |
 
 The owner's words, 2 November 2026: "skyscraper closing walls together,
 moving buildings to audio, and same with cathedral, and we manipulate and
@@ -76,6 +76,27 @@ version sank and zoomed the whole nave: 9.9 and 0.81). `room-walls` is an empty 
 so the sweet spot of change is picked before any image is swapped. Review the
 cathedral at the loudest hit before rendering: at the 0.55 close the ribs pass
 near the gallery camera; `CLOSED_FRACTION` in `recipes-rooms.ts` sets it.
+
+`party-walls` and `studio-walls` (`recipes-walls.ts`) rebuild the last two
+shots of the owner's 30 October cut, framed so frame 0 overlays the owner's
+still in `looks/<study>/look-first.png`. On the bass the long walls clap in,
+x only, to a quarter of the open width (`WALLS_CLOSED`) and spring back,
+everything inside squeezed with them; the hidden reverb box narrows on the
+same bars. Their blend amount is 0.6 (`WALLS_BLEND`), half the other wall
+studies', because they are captured at motion gain 2: the walls shut from
+low 0.83 and stand mostly open in the quiet. The camera is held above every
+wall top in both (tested).
+
+```sh
+node scripts/experiments/capture.mjs --studies party-walls --track 'Adaptive Reverbv2.mp3' --start 16.0833 \
+  --output ~/genobi-runs/DATE/guides-rooms/party-walls/w --frames 193 --width 1024 --height 576 \
+  --band-gain auto --band-release 12 --motion-gain 2 --stage studio   # studio-walls: --start 24.125
+```
+
+A second take of each at `--band-release 6` lands in `w-r6`. Both starts sit
+on a bass hit (low about 0.7 at frame 0), so frame 0 is already partly
+closed against the open still; check the overlay at the guide's first open
+frame before bundling.
 
 ### 2. Looks
 
@@ -174,6 +195,8 @@ dry track and the CPU room reverb are muxed underneath.
    4. `canyon`: tower rows closing across the street
    5. `room-walls`: the dancer in an empty small room that shrinks on the bass
    6. `pyramid-inside`: a vast interior from the floor, terraces tightening
+      - `party-walls` and `studio-walls`: the hall and the booth of the 30
+        October cut, walls clapping in on the bass, from the owner's stills
    7. `fruit-apple`, `fruit-banana`, `fruit-papaya`: one fruit each, front view
    8. `fruit-dance`: front view, the fruit swapping shapes beside the dancer
    9. `fruit-mecha`: the dancer filling the frame between two fruits that both

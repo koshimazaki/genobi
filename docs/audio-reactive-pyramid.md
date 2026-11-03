@@ -124,6 +124,17 @@ still (pyramid-inside pans 45 degrees) and move the space on the `low` band.
 - **room-walls** is an empty small room (4.8 × 2.6 × 3.9 m, every apartment
   piece hidden) with the dancer at the centre and the camera at eye height.
   At full bass the room is 2.8 × 2.3 m, the walls 1.4 m from the dancer.
+- **party-walls** and **studio-walls** (`recipes-walls.ts`) rebuild the last
+  two shots of the 30 October cut from the owner's stills, matched by a 50
+  percent blend of frame 0 over each still. The hall is 13 × 16 × 5.5 m with
+  three tall windows on each of three walls, a DJ table and the dancing
+  mannequin in the middle, the camera held at (0, 6, 14.6) looking at
+  (0, 0, -4.8) with a 27 degree lens, just over the wall tops behind the
+  open near end. The booth is the Small room turned across the frame,
+  3.2 × 2.4 × 2.5 m, four panelled walls, a drum kit left, a desk right and
+  the idle mannequin at the bottom centre with its back to the camera, which
+  is held at (0, 6.4, 1.5) looking at (0, 0, -0.7) with a 38 degree lens.
+  Both clap x only to 0.25 of the open width, blend amount 0.6.
 - **pyramid-inside** is a hollow stepped pyramid three times larger, 36 m tall
   with 128 wall pieces and an oculus. It is shot from 1 m above the floor with
   an 85 degree lens, panning 45 degrees, the figure 7 m ahead for scale.

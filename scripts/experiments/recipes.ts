@@ -22,6 +22,7 @@ import {
 import { fruitDance, singleFruit } from "./recipes-fruit";
 import { diamondStudy } from "./recipes-diamond";
 import { fruitMecha } from "./recipes-fruit-mecha";
+import { partyWalls, studioWalls } from "./recipes-walls";
 import { STUDIES } from "./studies.mjs";
 
 export { bakeCues, bakeSequence, peakCues, selectCues } from "./recipe-cues";
@@ -51,6 +52,9 @@ const PRESETS: Record<Study, string> = {
   canyon: "city-to-loft",
   room: "apartment-morph",
   "room-walls": "apartment-morph",
+  // Their own hall and booth pieces replace the preset layouts.
+  "party-walls": "city-to-loft",
+  "studio-walls": "city-to-loft",
 };
 
 export function createStudy(
@@ -307,6 +311,8 @@ export function createStudy(
   else if (study === "canyon") room(canyon(recipe));
   else if (study === "room-walls") room(roomWalls(recipe));
   else if (study === "pyramid-inside") room(pyramidInside(recipe));
+  else if (study === "party-walls") room(partyWalls(recipe));
+  else if (study === "studio-walls") room(studioWalls(recipe));
   else
     motion.stateKeys.forEach((key, i) => {
       key.frame = Math.round((last * i) / 2);
@@ -333,7 +339,9 @@ export function createStudy(
             ? "Explicit changing single-room enclosure."
             : study === "cathedral-walls" ||
                 study === "canyon" ||
-                study === "pyramid-inside"
+                study === "pyramid-inside" ||
+                study === "party-walls" ||
+                study === "studio-walls"
               ? "Stylized single-room box proxy whose size follows the low band with the visible walls; not the real geometry's acoustics."
               : "No acoustic enclosure.",
       requiredNext:

@@ -33,7 +33,7 @@ export interface RoomDesign {
   design: Record<string, unknown>;
 }
 
-function interiorRoom(
+export function interiorRoom(
   id: string,
   dimensions: SceneVector,
   listener: SceneVector,
@@ -90,7 +90,7 @@ export const BLEND_AMOUNT = 1.2;
  * `stateAudio` cannot do this: it blends from the timeline pair, so the closed
  * state would have to sit on the timeline and the baseline would drift into it.
  */
-function bandBlend(
+export function bandBlend(
   recipe: Recipe,
   label: string,
   open: SceneTransform[],
