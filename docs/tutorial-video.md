@@ -30,7 +30,7 @@ against the [capability map](capabilities.md) as of 3 November 2026.
 | #   | Seconds (45 s) | 30 s | On-screen section                          | Spoken line                                                           | What the viewer sees                                                                                                                                                                                              |
 | --- | -------------- | ---- | ------------------------------------------ | --------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | 1   | 0–5 (5)        | 4    | Studio header, the mic                     | "Say what you want. Genobi listens on your machine."                  | The header microphone opens the voice pill with its LED waveform; the transcript fills in and goes **To** the agent. Caption: "Voice · local studio · transcribed on this machine".                               |
-| 2   | 5–11 (6)       | 4    | Genobi bubble; Project Tools · Development | "Don't want voice? Bring your own agent: Hermes, Claude Code, Codex." | The same direction typed instead; the bubble shows the agent's updates. Three labels: Hermes (open source, on an open model), Claude Code, Codex, each "through the Genobi plugin".                               |
+| 2   | 5–11 (6)       | 4    | Genobi bubble; Project Tools · Development | "Don't want voice? Bring your own agent: Hermes, Claude Code, Codex." | The same direction typed instead; the guide bubble shows compact status and the footer deck shows agent updates. Three labels: Hermes (open source, on an open model), Claude Code, Codex, each "through the Genobi plugin".                               |
 | 3   | 11–17 (6)      | 4    | Assets rail (Project, Inspirations)        | "Drop your files into Assets, then tell the agent what they are."     | Files imported into the Assets rail land under Project and Inspirations; the next line to the agent says "the PNG is the hero, the MP3 is the track".                                                             |
 | 4   | 17–23 (6)      | 4    | Camera and its gallery                     | "The studio is for inspection: what came back, recreate, queue."      | A finished take plays in the gallery; **Recreate** restores its prompt, settings and references; one word changes and Generate shows its price before anything runs. Caption: "Paid steps wait for your Approve". |
 | 5   | 23–29 (6)      | 5    | Director, then Editor                      | "Director and Editor hold the cut you keep editing."                  | The project in the Director, then the same document as Editor lanes; a clip is trimmed by hand and the agent's next read shows the edit.                                                                          |
@@ -51,7 +51,8 @@ grid when cut (step 3 below), so a beat may move by a fraction of a second.
   that works. Real-microphone checks are still open in the capability map, so
   the piece does not claim voice is verified.
 - **Approvals happen in the studio.** An agent's paid step appears in the
-  bubble with its plan and price, and only **Approve** runs it, once
+  footer deck (or in **Make my version** while that dialog is open) with its
+  plan and price, and only **Approve** runs it, once
   ([quote, approve, then spend](agent-approvals.md)). The CLI equivalent is
   `submit --confirm`. The piece shows the caption, never a pressed Approve.
 - **Hermes is the open-source harness.** Hermes runs on an open model (through
@@ -64,8 +65,10 @@ grid when cut (step 3 below), so a beat may move by a fraction of a second.
   list (the teaser and the mixes). Do not add a claim beyond those two.
 - **Name only the models on screen.** If a generated take appears in beat 4,
   its caption names the model that made it and nothing else, as in the teaser.
-- **No Genobi feature is presented as planned-but-done.** The Desktop app,
-  Gen-Mod and Layout-to-Render are planned; none appears.
+- **No Genobi feature is presented as planned-but-done.** The Desktop app and
+  Gen-Mod are not demonstrated here. Layout-to-Render has offline pilot
+  capture/render tooling in `scripts/experiments/` and `workflows/experiments/`,
+  not an integrated hosted-studio generation control, and is not shown here.
 
 ## How to make it
 
