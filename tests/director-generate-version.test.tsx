@@ -65,7 +65,10 @@ async function mount(bundle: Bundle, press = true, request = 0) {
   });
   // The panel opens only on its button: Director opens on the timeline.
   if (press) act(() => trigger().click());
-  return { host, render: (nextRequest = request) => act(() => render(nextRequest)) };
+  return {
+    host,
+    render: (nextRequest = request) => act(() => render(nextRequest)),
+  };
 }
 const trigger = () =>
   document.querySelector<HTMLButtonElement>(".dir-generate-version")!;
