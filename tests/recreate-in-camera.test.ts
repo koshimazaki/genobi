@@ -254,7 +254,9 @@ describe("the recorded provider", () => {
 });
 
 /** The older asset's image may finish loading after another Recreate is chosen. */
-it("keeps the newest Recreate when an earlier reference fetch finishes last", async () => {
+it(
+  "keeps the newest Recreate when an earlier reference fetch finishes last",
+  async () => {
   const p = madeWith(undefined);
   const slow: CameraRecipe = {
     label: "Recreate in Camera",
@@ -286,7 +288,8 @@ it("keeps the newest Recreate when an earlier reference fetch finishes last", as
   // The late first request cannot overwrite the newer model/prompt/references.
   expect(received).toHaveLength(1);
   expect(received[0].patch.description).toBe("new asset");
-});
+  },
+);
 
 it("cancels an in-flight Recreate when Camera is left", async () => {
   const p = madeWith(undefined);
