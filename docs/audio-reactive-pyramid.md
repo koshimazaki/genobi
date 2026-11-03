@@ -144,6 +144,17 @@ still (pyramid-inside pans 45 degrees) and move the space on the `low` band.
   street is squeezed in x to 0.25 (`CLAP_FRACTION`, "walls closing like
   clapping"), sizes included, so the rows nearly meet and nothing collides;
   the camera keeps 2 m from every piece at full close.
+- **cathedral-gallery** (`recipes-clap.ts`) is framed on the owner's gallery
+  still (`looks/cathedral-gallery/look-first.png`) from the old `cathedral`
+  camera, held at (0, 23, 18) looking at (0, 0, -3) with a 66 degree lens.
+  The 90-piece nave has six bays of 30 m piers with pointed arcade heads and
+  a gallery ledge, aisle walls, a far wall with three pointed arches and
+  windows, two blocks of pews, an altar and vault ribs at 31 m, above the
+  camera. On the bass the whole nave is squeezed in x to 0.25.
+  **cathedral-gallery-grow** keeps each side piece's outer face and thickens
+  it inwards until its inner face is at 0.25 of its open distance, while the
+  pews, altar, far wall and ribs squeeze by the same fraction. Both keep the
+  lens 2 m from every piece at full close.
 - **diamond** is the simplest object test: one faceted `diamond(128)` at 0.65
   scale, centred 8 m over the floor, in three identical states. It uses
   pulse's mappings (scale on `low` 0.9, lift on `sub` 1.5) plus twistY on

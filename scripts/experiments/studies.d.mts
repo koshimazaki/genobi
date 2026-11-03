@@ -8,6 +8,8 @@ export declare const STUDIES: readonly [
   "rubik",
   "cathedral",
   "cathedral-walls",
+  "cathedral-gallery",
+  "cathedral-gallery-grow",
   "canyon",
   "towers-descent",
   "falling",

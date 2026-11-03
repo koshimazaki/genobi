@@ -13,6 +13,8 @@ declare -A PROMPT=(
   [diamond]="A single faceted diamond hovers above a flat lit floor and breathes with the music, swelling on every bass hit and settling between them while the camera circles it once. Clean background, one light source, crisp edges."
   [pulse]="A lone pyramid on open ground swells and settles with the music while the camera circles it once. Clean sky, long shadows, still air."
   [cathedral-walls]="Inside a tall nave with pointed arches and a ribbed vault, the rows of clustered columns slide inward on every bass hit and ease back apart, the vault narrowing with them toward a tall arched window at the far end, seen from a high gallery that does not move. Soft daylight, stone and dust."
+  [cathedral-gallery]="Seen from a high gallery at one end of a gothic cathedral, the nave below with pews and an altar, stone piers and arches on both sides closing in toward the centre and opening again on the beat, stained glass at the far end, soft daylight. Still camera."
+  [cathedral-gallery-grow]="Seen from a high gallery at one end of a gothic cathedral, the nave below with pews and an altar; on the beat the stone piers and arches swell inward, thickening toward the centre of the nave, and shrink back as the bass fades, stained glass at the far end, soft daylight. Still camera."
   [canyon]="Two rows of tall towers seen from above close in across the street on every bass hit and drift apart again, the camera fixed high over the avenue. Evening light, long shadows."
   [towers-descent]="Seen from high above, two rows of Manhattan glass office towers at golden hour close in toward the street and open again on the beat while the camera descends between them toward a gothic cathedral facade below. Warm reflections in the glass, hard afternoon light, no people."
   [room-walls]="A small empty room whose bare walls press inward on the beat and open again around a figure dancing in the middle, seen from eye height. Warm lamp light, soft shadows."
@@ -40,5 +42,5 @@ mk() { # study mode [extra prepare args]
     --mode "$mode" --frames "$FRAMES" --seed 42 --output "$out" --label "$study-$mode" --prompt "${PROMPT[$study]}" "$@"
   echo "bundle $out"
 }
-for s in diamond pulse cathedral-walls canyon towers-descent room-walls pyramid-inside pyramid-inside-spin falling fruit-dance fruit-mecha fruit-apple-banana fruit-banana-apple fruit-apple fruit-banana fruit-papaya; do mk "$s" layout-audio; done
+for s in diamond pulse cathedral-walls cathedral-gallery cathedral-gallery-grow canyon towers-descent room-walls pyramid-inside pyramid-inside-spin falling fruit-dance fruit-mecha fruit-apple-banana fruit-banana-apple fruit-apple fruit-banana fruit-papaya; do mk "$s" layout-audio; done
 for s in cathedral-walls canyon; do mk "$s" union-depth; done

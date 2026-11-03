@@ -21,7 +21,7 @@ import {
   type RoomDesign,
 } from "./recipes-rooms";
 import { fruitDance, fruitMorph, singleFruit } from "./recipes-fruit";
-import { towersDescent } from "./recipes-clap";
+import { cathedralGallery, towersDescent } from "./recipes-clap";
 import { diamondStudy } from "./recipes-diamond";
 import { fruitMecha } from "./recipes-fruit-mecha";
 import { STUDIES } from "./studies.mjs";
@@ -55,6 +55,8 @@ const PRESETS: Record<Study, string> = {
   "cathedral-walls": "city-to-loft",
   canyon: "city-to-loft",
   "towers-descent": "city-to-loft",
+  "cathedral-gallery": "city-to-loft",
+  "cathedral-gallery-grow": "city-to-loft",
   room: "apartment-morph",
   "room-walls": "apartment-morph",
 };
@@ -314,6 +316,9 @@ export function createStudy(
   else if (study === "cathedral-walls") room(cathedralWalls(recipe));
   else if (study === "canyon") room(canyon(recipe));
   else if (study === "towers-descent") room(towersDescent(recipe));
+  else if (study === "cathedral-gallery") room(cathedralGallery(recipe));
+  else if (study === "cathedral-gallery-grow")
+    room(cathedralGallery(recipe, true));
   else if (study === "room-walls") room(roomWalls(recipe));
   else if (study === "pyramid-inside") room(pyramidInside(recipe));
   else if (study === "pyramid-inside-spin") room(pyramidInsideSpin(recipe));
@@ -344,6 +349,8 @@ export function createStudy(
             : study === "cathedral-walls" ||
                 study === "canyon" ||
                 study === "towers-descent" ||
+                study === "cathedral-gallery" ||
+                study === "cathedral-gallery-grow" ||
                 study === "pyramid-inside" ||
                 study === "pyramid-inside-spin"
               ? "Stylized single-room box proxy whose size follows the low band with the visible walls; not the real geometry's acoustics."

@@ -13,11 +13,11 @@ and tested on the Mac before the box is rented; the box runs a queue.
 
 ## The three demos
 
-| Track           | What moves                                                                                                                      | Study                                                                                                |
-| --------------- | ------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| Acoustic space  | walls, piers and buildings close in on the loud bars and open on the quiet ones; the reverb is computed from the same room size | `cathedral-walls`, `canyon`, `towers-descent`, `room-walls`, `pyramid-inside`, `pyramid-inside-spin` |
-| Things in space | objects in an orbiting shot react to the bands, a dancer in the middle                                                          | `fruit-dance`, `fruit-mecha`, `pulse`                                                                |
-| Changing shapes | state changes on the beats (apple to banana, towers to nave)                                                                    | `fruit-dance` and `fruit-mecha` cues, `fruit-apple-banana`, `fruit-banana-apple`, `falling`          |
+| Track           | What moves                                                                                                                      | Study                                                                                                                                               |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Acoustic space  | walls, piers and buildings close in on the loud bars and open on the quiet ones; the reverb is computed from the same room size | `cathedral-walls`, `cathedral-gallery`, `cathedral-gallery-grow`, `canyon`, `towers-descent`, `room-walls`, `pyramid-inside`, `pyramid-inside-spin` |
+| Things in space | objects in an orbiting shot react to the bands, a dancer in the middle                                                          | `fruit-dance`, `fruit-mecha`, `pulse`                                                                                                               |
+| Changing shapes | state changes on the beats (apple to banana, towers to nave)                                                                    | `fruit-dance` and `fruit-mecha` cues, `fruit-apple-banana`, `fruit-banana-apple`, `falling`                                                         |
 
 The owner's words, 2 November 2026: "skyscraper closing walls together,
 moving buildings to audio, and same with cathedral, and we manipulate and
@@ -170,7 +170,9 @@ dry track and the CPU room reverb are muxed underneath.
    builds them all and skips a study whose bundle folder already exists):
    1. `diamond`: one object, the surest result
    2. `pulse`: the pyramid, the proven control
-   3. `cathedral-walls`: piers sliding in, camera held
+   3. `cathedral-walls`: piers sliding in, camera held; `cathedral-gallery` is
+      the owner's gallery still with the nave clapping shut on the bass, and
+      `cathedral-gallery-grow` the same view with the stone thickening inwards
    4. `canyon`: tower rows closing across the street; `towers-descent` is the
       owner's top-down Manhattan still, the rows clapping together on the bass
       while the camera descends toward the cathedral

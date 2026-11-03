@@ -9,6 +9,8 @@ export const STUDIES = Object.freeze([
   "rubik",
   "cathedral",
   "cathedral-walls",
+  "cathedral-gallery",
+  "cathedral-gallery-grow",
   "canyon",
   "towers-descent",
   "falling",
