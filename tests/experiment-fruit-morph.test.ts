@@ -138,7 +138,6 @@ describe("fruit colours in the guide", () => {
     "fruit-apple",
     "fruit-banana",
     "fruit-papaya",
-    ...STUDIES,
   ] as const)(
     "%s colours every voxel of each baked key by its fruit",
     (name) => {
@@ -152,20 +151,57 @@ describe("fruit colours in the guide", () => {
     },
   );
 
-  it("blends the colour with the shape through the morph", () => {
+  it.each([...STUDIES, "fruit-mecha-morph"] as const)(
+    "%s flecks a quarter of the body with the other fruit's colour",
+    (name) => {
+      const { recipe } = createStudy(name, bands(193, 0.5), dims(193));
+      const [rest, peak] = recipe.motion!.stateKeys;
+      const ids = Object.keys(rest.objects);
+      // The fruit a voxel belongs to in a key: one per side in the mecha.
+      const own = (key: typeof rest, id: string) => {
+        const labels = key.label.split(" | ");
+        return FRUIT_COLOURS[
+          labels[labels.length > 1 && Number(id.slice(6)) >= 96 ? 1 : 0]
+        ];
+      };
+      let flecked = 0;
+      for (const id of ids) {
+        const a = rest.objects[id].color!,
+          b = peak.objects[id].color!;
+        expect(a).not.toBe(b);
+        if (a !== own(rest, id)) {
+          flecked++;
+          // The inverse pair: rest carries the peak colour and vice versa.
+          expect(a).toBe(own(peak, id));
+          expect(b).toBe(own(rest, id));
+        } else expect(b).toBe(own(peak, id));
+        // Stem voxels never fleck.
+        if (Number(id.slice(6)) % 96 >= 94) expect(a).toBe(own(rest, id));
+      }
+      expect(flecked / ids.length).toBeGreaterThan(0.15);
+      expect(flecked / ids.length).toBeLessThan(0.35);
+    },
+  );
+
+  it("blends each voxel's colour on its own path through the morph", () => {
     const voxel = (low: number) => {
       const { recipe } = createStudy(
         "fruit-apple-banana",
         bands(97, low),
         dims(97),
       );
-      return evaluateScene(recipe, 40).objects.find(
-        (o) => o.id === "voxel-000",
-      )!.color;
+      const [rest, peak] = recipe.motion!.stateKeys;
+      return {
+        colour: evaluateScene(recipe, 40).objects.find(
+          (o) => o.id === "voxel-000",
+        )!.color,
+        rest: rest.objects["voxel-000"].color,
+        peak: peak.objects["voxel-000"].color,
+      };
     };
-    expect(voxel(0)).toBe(FRUIT_COLOURS.Apple);
-    expect(voxel(1)).toBe(FRUIT_COLOURS.Banana);
-    const mid = voxel(0.4);
+    expect(voxel(0).colour).toBe(voxel(0).rest);
+    expect(voxel(1).colour).toBe(voxel(1).peak);
+    const mid = voxel(0.4).colour;
     expect(mid).not.toBe(FRUIT_COLOURS.Apple);
     expect(mid).not.toBe(FRUIT_COLOURS.Banana);
   });

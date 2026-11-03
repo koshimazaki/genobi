@@ -17,7 +17,7 @@ import type {
 } from "../../src/world-builder/scene-state";
 import { heldCamera, mapping } from "./recipe-parts";
 import { peakCues, type Cue } from "./recipe-cues";
-import { MIN_CUE_GAP, tinted } from "./recipes-fruit";
+import { fleck, MIN_CUE_GAP, tinted } from "./recipes-fruit";
 
 /**
  * fruit-dance's three cues would need seven keys of 192 voxels (73 KB); the
@@ -331,7 +331,7 @@ export const MECHA_MORPH_PULSE = MECHA_PULSE;
 /** Morph progress per unit of `low`, as the single-fruit morphs. */
 export const MECHA_MORPH_AMOUNT = 1.2;
 
-export function fruitMechaMorph(recipe: Recipe) {
+export function fruitMechaMorph(recipe: Recipe, rubik = true) {
   const motion = recipe.motion!;
   if (motion.instances?.count !== 192)
     throw new Error("fruit-mecha-morph needs the 192-voxel fine fruit preset.");
@@ -348,13 +348,17 @@ export function fruitMechaMorph(recipe: Recipe) {
     );
   const name = (i: number) =>
     MECHA_SIDES.map((spot) => MECHA_FRUITS[(spot.start + i) % 3]).join(" | ");
+  // Each side is 96 voxels; its last two are the stem.
+  const keyed = rubik
+    ? fleck(at(0), at(1), (n) => n % 96 >= 94)
+    : [at(0), at(1)];
   motion.stateKeys = [0, 1].map((i) => ({
     ...structuredClone(template),
     id: i ? "peak" : "rest",
     label: name(i),
     frame: i ? recipe.frames - 1 : 0,
     easing: "linear" as const,
-    objects: at(i),
+    objects: keyed[i],
   }));
   motion.transitionStyle = "direct";
   motion.morphControl = {

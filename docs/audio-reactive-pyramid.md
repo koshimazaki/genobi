@@ -205,6 +205,16 @@ still (pyramid-inside pans 45 degrees) and move the space on the `low` band.
   is the peak fruit, whatever the frame. The capture's `--motion-gain` scales the
   blend amount too (bounded at 2), so at gain 2 the banana arrives at about
   half the band. `frame-closed` (the loudest bar) is the peak fruit's still.
+- **Rubik flecks.** In the three continuous morphs (fruit-apple-banana,
+  fruit-banana-apple, fruit-mecha-morph) exactly a quarter of the body
+  voxels, picked by a seed per voxel index, swap colours between the two
+  keys: the rest fruit is flecked with the peak fruit's colour and the peak
+  fruit with the rest's ("mixed the colors like a Rubik's cube"). The engine
+  blends each voxel's colour on its own path, so half-way reads as a
+  scrambled cube. Stem voxels keep their colours. Captured with
+  `--band-release 30 --band-smooth 5` so the shape eases over about a second
+  ("the morph transition is fast"); the centred 5-frame average anticipates
+  the hit by two frames rather than delaying it.
 - **Fruit colours.** Every voxel of a fruit state carries its fruit's colour
   (`FRUIT_COLOURS`: banana `#f2d14b`, papaya `#f0a040`, apple `#c8322b`), so
   the RGB guide shows the fruit, and the morph blends the colour with the

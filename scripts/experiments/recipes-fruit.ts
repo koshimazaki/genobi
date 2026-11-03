@@ -35,6 +35,44 @@ export function tinted<T extends { color?: string }>(
   );
 }
 
+/** A repeatable 0-1 value per voxel index and channel. */
+export function voxelSeed(n: number, channel = 0) {
+  const v = Math.sin(n * 12.9898 + channel * 78.233) * 43758.5453;
+  return v - Math.floor(v);
+}
+
+/** The share of body voxels that carry the other fruit's colour as flecks. */
+export const FLECK_SHARE = 0.25;
+
+/**
+ * "Mixed like a Rubik's cube": a seeded quarter of the body voxels (exactly) swap
+ * colours between the two morph keys, so the rest fruit is flecked with the
+ * peak fruit's colour and the peak fruit with the rest's. The engine blends
+ * each voxel's colour on its own path, so half-way reads as a scrambled cube.
+ * Stem voxels (`isStem`) keep their own colours.
+ */
+export function fleck<T extends { color?: string }>(
+  rest: Record<string, T>,
+  peak: Record<string, T>,
+  isStem: (n: number) => boolean,
+): [Record<string, T>, Record<string, T>] {
+  const a = { ...rest },
+    b = { ...peak };
+  // Exactly a quarter of the body, the voxels with the lowest seeds.
+  const body = Object.keys(rest).filter((id) => !isStem(Number(id.slice(6))));
+  const chosen = body
+    .sort(
+      (x, y) =>
+        voxelSeed(Number(x.slice(6)), 5) - voxelSeed(Number(y.slice(6)), 5),
+    )
+    .slice(0, Math.round(body.length * FLECK_SHARE));
+  for (const id of chosen) {
+    a[id] = { ...rest[id], color: peak[id].color };
+    b[id] = { ...peak[id], color: rest[id].color };
+  }
+  return [a, b];
+}
+
 export function fruitDance(recipe: Recipe, inputCues?: Cue[]) {
   const motion = recipe.motion!;
   // Preset order is Banana, Papaya, Apple. Open on the apple, then alternate.
@@ -251,7 +289,10 @@ const MORPH_PROMPTS: Record<FruitMorph, string> = {
  * centre, the single fruits' low pulse and mid twist still apply, and the
  * view is the single fruits' front view framed on the rest fruit.
  */
-export function fruitMorph(recipe: Recipe, study: FruitMorph) {
+/** The 96-voxel preset's last two voxels are the stem. */
+const presetStem = (n: number) => n >= 94;
+
+export function fruitMorph(recipe: Recipe, study: FruitMorph, rubik = true) {
   const motion = recipe.motion!;
   const size = motion.instances?.size ?? 1;
   const [restLabel, peakLabel] = FRUIT_MORPHS[study];
@@ -262,18 +303,25 @@ export function fruitMorph(recipe: Recipe, study: FruitMorph) {
   });
   const base = fruitState(recipe, restLabel);
   const [restId, peakId] = [restLabel, peakLabel].map((l) => l.toLowerCase());
+  const coloured = [
+    tinted(rest.objects, restLabel),
+    tinted(peak.objects, peakLabel),
+  ];
+  const [restObjects, peakObjects] = rubik
+    ? fleck(coloured[0], coloured[1], presetStem)
+    : coloured;
   motion.stateKeys = [
     {
       id: restId,
       label: restLabel,
       frame: 0,
-      objects: tinted(rest.objects, restLabel),
+      objects: restObjects,
     },
     {
       id: peakId,
       label: peakLabel,
       frame: recipe.frames - 1,
-      objects: tinted(peak.objects, peakLabel),
+      objects: peakObjects,
     },
   ].map((key) => ({
     ...compact({ ...base, ...key }),
