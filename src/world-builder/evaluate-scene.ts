@@ -1,5 +1,6 @@
 import type { Prop, Recipe } from "./recipe";
 import { modOf, modsAt, type Mods } from "./mod-routes";
+import { explodeOffset, explodePlan } from "../../shared/scene/explode";
 import { orbitPosition } from "./prop-orbit";
 import { loopedSpin, loopPeriod } from "./loop";
 import { motionInstances, sceneObjects } from "./scene-instances";
@@ -282,6 +283,26 @@ export function evaluateScene(
   const rotation = editing
     ? undefined
     : rotationAt(motion?.rotation, frame, recipe.frames, recipe.loop);
+  // Use the exact authored-prop plan as the WebGL runtime; the evaluator is
+  // also used for deterministic capture receipts and scene measurements.
+  const hasExplode = recipe.objects.some(
+    (part) => modOf(mods, ["primitives", `prop:${part.id}`], "explode") > 0,
+  );
+  const explode = hasExplode
+    ? explodePlan(recipe.objects.map((p) => [p.x, p.y, p.z]))
+    : null;
+  const explodeOffsets = new Map<string, ReturnType<typeof explodeOffset>>();
+  if (explode)
+    recipe.objects.forEach((part, index) => {
+      explodeOffsets.set(
+        part.id,
+        explodeOffset(
+          explode,
+          index,
+          modOf(mods, ["primitives", `prop:${part.id}`], "explode"),
+        ),
+      );
+    });
   const objects = sceneObjects(recipe).map((base) => {
     const from = pair?.from.objects[base.id],
       to = pair?.to.objects[base.id];
@@ -297,6 +318,14 @@ export function evaluateScene(
     if (motion && !editing && instances.has(p.id))
       p = applyInstanceControls(p, instances.get(p.id)!, motion, controls);
     p = applyPropMotion(p, recipe, frame, mods, editing);
+    const displacement = explodeOffsets.get(p.id);
+    if (displacement)
+      p = {
+        ...p,
+        x: p.x + displacement[0],
+        y: p.y + displacement[1],
+        z: p.z + displacement[2],
+      };
     return rotation && motion
       ? rotateSceneObject(p, motion.pivot, rotation)
       : p;

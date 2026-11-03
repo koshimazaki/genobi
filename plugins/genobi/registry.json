@@ -1,6 +1,10 @@
 {
   "generated": "By scripts/registry.ts from mcp/ and plugins/genobi/skills/; run npm run registry. Doc paths are relative to the repository root.",
   "tags": {
+    "design": {
+      "meaning": "Design mocks and port handoffs for a studio surface",
+      "entries": ["ui-teardown"]
+    },
     "workflows": {
       "meaning": "Generation workflows, Comfy graphs and handoffs",
       "entries": [
@@ -58,7 +62,8 @@
         "genobi_world",
         "genobi_world_recipe",
         "falling-room",
-        "genobi-3d"
+        "genobi-3d",
+        "ui-teardown"
       ]
     },
     "sound": {
@@ -161,7 +166,8 @@
         "genobi-teaser",
         "genobi-teaser-run",
         "genobi-upscale",
-        "product-video"
+        "product-video",
+        "ui-teardown"
       ]
     },
     "backend": {
@@ -276,7 +282,7 @@
     },
     "studio": {
       "meaning": "The studio interface, shell, layouts and state",
-      "entries": ["genobi_develop", "genobi-develop"]
+      "entries": ["genobi_develop", "genobi-develop", "ui-teardown"]
     },
     "dual-editor": {
       "meaning": "Dual Editor",
@@ -936,7 +942,8 @@
         "anime-teaser",
         "genobi-director",
         "genobi-scrolls",
-        "genobi-swords"
+        "genobi-swords",
+        "ui-teardown"
       ]
     },
     {
@@ -1285,7 +1292,8 @@
         "docs/3d-tab.md",
         "docs/world-live.md",
         "docs/world-builder.md",
-        "docs/falling-room.md"
+        "docs/falling-room.md",
+        "docs/credits/libraries/teardown/README.md"
       ],
       "path": "plugins/genobi/skills/genobi-3d/SKILL.md",
       "tools": [
@@ -1675,6 +1683,18 @@
         "genobi_provenance",
         "genobi_skill"
       ]
+    },
+    {
+      "kind": "skill",
+      "name": "ui-teardown",
+      "description": "Present a product interface as an exploded view - rebuild the real UI as a working HTML or React replica, split it into a few transparent layers lifted apart along one axis in CSS 3D, number each product part and give every part a sheet (role, spec, note, source at a pinned commit). The UI variant of the 3D teardown pattern, for case studies, teasers and walkthroughs. Nothing is generated or paid for.",
+      "tags": ["agents", "design", "studio", "3d"],
+      "docs": [
+        "docs/credits/libraries/teardown/README.md",
+        "docs/world-builder-sound.md"
+      ],
+      "path": "plugins/genobi/skills/ui-teardown/SKILL.md",
+      "tools": ["genobi_audio_analysis"]
     }
   ]
 }

@@ -42,6 +42,7 @@ of those examples.
 | [play.core](libraries/play-core/README.md)                                       | [Andreas Gysin / ertdfgcvb and contributors](https://github.com/ertdfgcvb)     | Apache-2.0                  | recommended  |
 | [textmode.js](libraries/textmode-js/README.md)                                   | [humanbydefinition and contributors](https://github.com/humanbydefinition)     | MIT                         | recommended  |
 | [Matrix digital rain](libraries/matrix-rain/README.md)                           | [Rezmason and contributors](https://github.com/Rezmason)                       | MIT                         | recommended  |
+| [teardown](libraries/teardown/README.md)                                         | [elvarofficial](https://github.com/elvarofficial)                              | MIT                         | recommended  |
 
 Integrated means used by this app or its supplied video study. Recommended means
 selected for possible future agent work, not automatically installed. Reference
@@ -63,6 +64,18 @@ and `binary` spinners are the first candidates for a future deterministic overla
 ASCII Magic's two photo scenes retain separate rights; textmode.js's development
 source is private despite its MIT published distribution. A catalogue entry is not
 an automatic dependency or a finished Director module.
+
+## Agent skills for 3D
+
+[teardown](libraries/teardown/README.md) is a Claude Code skill rather than a
+library: it builds a real machine as an offline three.js simulator and records
+its tour to a 60 fps MP4 with a synced score. It is listed for 3D explainers,
+cutaways and exploded views; installing it is a separate setup step, and its
+film reaches the Director as an ordinary project asset.
+Genobi took two ideas from it: a generic, audio-reactive explode for World
+Builder props (`shared/scene/explode.ts`, the `explode` audio route) and the
+`ui-teardown` skill, which presents a product interface as layers lifted
+apart with a sheet per part.
 
 ## Uncommon Web and Hermes
 

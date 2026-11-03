@@ -68,19 +68,20 @@ returns matching pages with a one-line summary each, and
 `genobi_docs {}` lists the wiki tags. It works when the plugin runs from a
 clone of camera-director, and never pays.
 
-| Skill                                              | For                                                                              |
-| -------------------------------------------------- | -------------------------------------------------------------------------------- |
-| `genobi-director`                                  | The main surface: a whole job in the person's Director project, any tools        |
-| `genobi-camera`                                    | One shot: a workflow card per model, with its prompt and camera wording          |
-| `genobi-upscale`                                   | Upscale a clip: one run up to 20 s, or a longer one in parts behind one approval |
-| `genobi-akuspace`                                  | Acoustic Space on an LTX-2.5 shot: where the sound is heard, and where it runs   |
-| `genobi-scrolls`                                   | A character sheet or storyboard before the video, timed to a song                |
-| `product-video`, `character-piece`, `audio-visual` | A house template, step by step                                                   |
-| `genobi-hermes`                                    | The open route on Hermes, the Klein box edit and the two-pass run                |
-| `anime-teaser`                                     | The anime teaser run card: four quoted shots, then the cut in the Director       |
-| `genobi-teaser-run`                                | Recreate the Genobi teaser from its brief and prove it: verifier, repeat run     |
-| `genobi-machine`                                   | Which models run on this machine and which on Comfy Cloud, and why               |
-| `genobi-swords`                                    | Dual Swords: probe, pull frames, trim, join and crossfade with ffmpeg            |
+| Skill                                              | For                                                                               |
+| -------------------------------------------------- | --------------------------------------------------------------------------------- |
+| `genobi-director`                                  | The main surface: a whole job in the person's Director project, any tools         |
+| `genobi-camera`                                    | One shot: a workflow card per model, with its prompt and camera wording           |
+| `genobi-upscale`                                   | Upscale a clip: one run up to 20 s, or a longer one in parts behind one approval  |
+| `genobi-akuspace`                                  | Acoustic Space on an LTX-2.5 shot: where the sound is heard, and where it runs    |
+| `genobi-scrolls`                                   | A character sheet or storyboard before the video, timed to a song                 |
+| `product-video`, `character-piece`, `audio-visual` | A house template, step by step                                                    |
+| `genobi-hermes`                                    | The open route on Hermes, the Klein box edit and the two-pass run                 |
+| `anime-teaser`                                     | The anime teaser run card: four quoted shots, then the cut in the Director        |
+| `genobi-teaser-run`                                | Recreate the Genobi teaser from its brief and prove it: verifier, repeat run      |
+| `genobi-machine`                                   | Which models run on this machine and which on Comfy Cloud, and why                |
+| `genobi-swords`                                    | Dual Swords: probe, pull frames, trim, join and crossfade with ffmpeg             |
+| `ui-teardown`                                      | Present a product UI as an exploded view: layers, numbered parts and their sheets |
 
 Load `genobi-3d` to prepare a scene document and its room acoustics; the person
 loads it into the 3D tab for rendering. `genobi-swords` pulls
