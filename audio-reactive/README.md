@@ -132,4 +132,6 @@ unusable. Then change the render prompt's nouns to the new space.
 - Box tooling: [`scripts/vast/box/`](../scripts/vast/box/) (`box-setup.sh`,
   `make-bundles.sh`, `run-queue.sh`, `after-download.sh`) and
   [the Vast runner](../docs/vast-runner.md).
+- [Featured demo templates](featured-demo-templates.md): the two Gallery cards
+  (Mecha × Fruits, Reactive Spaces) and what each swap rebuilds and renders.
 - Agent skill: [`genobi-audio-reactive`](../plugins/genobi/skills/genobi-audio-reactive/SKILL.md).
