@@ -82,7 +82,7 @@ describe("gallery card order", () => {
       "dimensions-mix": "Anime teaser",
       "bloom-teaser": "Sheet to shot",
       "adaptive-reverb": "3D · LTX template",
-      "fruits-swap": "Character swap",
+      "fruits-swap": "Content swap",
     });
     expect(card("bloom-teaser").name).toBe("Bloom");
     // The Dimensions mix keeps its id and name, so links and showcases hold.
