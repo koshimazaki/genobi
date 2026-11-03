@@ -16,8 +16,8 @@ and tested on the Mac before the box is rented; the box runs a queue.
 | Track           | What moves                                                                                                                      | Study                                                       |
 | --------------- | ------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------- |
 | Acoustic space  | walls, piers and buildings close in on the loud bars and open on the quiet ones; the reverb is computed from the same room size | `cathedral-walls`, `canyon`, `room-walls`, `pyramid-inside` |
-| Things in space | objects in an orbiting shot react to the bands, a dancer in the middle                                                          | `fruit-dance`, `pulse`                                      |
-| Changing shapes | state changes on the beats (apple to banana, towers to nave)                                                                    | `fruit-dance` cues, `falling`                               |
+| Things in space | objects in an orbiting shot react to the bands, a dancer in the middle                                                          | `fruit-dance`, `fruit-mecha`, `pulse`                       |
+| Changing shapes | state changes on the beats (apple to banana, towers to nave)                                                                    | `fruit-dance` and `fruit-mecha` cues, `falling`             |
 
 The owner's words, 2 November 2026: "skyscraper closing walls together,
 moving buildings to audio, and same with cathedral, and we manipulate and
@@ -57,7 +57,7 @@ measure follow + sharpness ─► stitch the keepers on beat cuts, dry track + r
 ### 1. Capture
 
 ```sh
-node scripts/experiments/capture.mjs --studies diamond,cathedral-walls,canyon,room-walls,pyramid-inside,fruit-dance,fruit-apple,fruit-banana,fruit-papaya \
+node scripts/experiments/capture.mjs --studies diamond,cathedral-walls,canyon,room-walls,pyramid-inside,fruit-dance,fruit-mecha,fruit-apple,fruit-banana,fruit-papaya \
   --output ~/genobi-runs/DATE/guides --frames 97 --width 1024 --height 576 \
   --band-gain auto --band-release 12 --motion-gain 1 --stage studio
 ```
@@ -176,8 +176,10 @@ dry track and the CPU room reverb are muxed underneath.
    6. `pyramid-inside`: a vast interior from the floor, terraces tightening
    7. `fruit-apple`, `fruit-banana`, `fruit-papaya`: one fruit each, front view
    8. `fruit-dance`: front view, the fruit swapping shapes beside the dancer
-   9. `cathedral-walls` and `canyon` again in `union-depth`
-   10. sweep: `cathedral-walls` at motion gain 0.5 and 2
+   9. `fruit-mecha`: the dancer filling the frame between two fruits that both
+      change on the beats, from the owner's `looks-vox/fruit-mecha` still
+   10. `cathedral-walls` and `canyon` again in `union-depth`
+   11. sweep: `cathedral-walls` at motion gain 0.5 and 2
 5. `refine.py convert`, then `refine.py submit` on the best clip of each study.
 6. Copy `/workspace/run` to the Mac, measure, stitch, review.
 

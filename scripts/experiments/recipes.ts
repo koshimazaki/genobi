@@ -21,6 +21,7 @@ import {
 } from "./recipes-rooms";
 import { fruitDance, singleFruit } from "./recipes-fruit";
 import { diamondStudy } from "./recipes-diamond";
+import { fruitMecha } from "./recipes-fruit-mecha";
 import { STUDIES } from "./studies.mjs";
 
 export { bakeCues, bakeSequence, peakCues, selectCues } from "./recipe-cues";
@@ -33,6 +34,8 @@ const PRESETS: Record<Study, string> = {
   fruit: "fruit-morph-fine",
   // 96 blocks, not 192: up to seven keys (three cues) must fit the 64 KB recipe.
   "fruit-dance": "fruit-morph",
+  // Two 96-voxel fruits side by side: the fine preset's 192 ids split in half.
+  "fruit-mecha": "fruit-morph-fine",
   architecture: "voxel-architecture-128",
   clockwork: "voxel-architecture-128",
   pulse: "voxel-architecture-128",
@@ -285,6 +288,10 @@ export function createStudy(
     }
   } else if (study === "fruit-dance") {
     const built = fruitDance(recipe, inputCues);
+    cues = built.cues;
+    design = built.design;
+  } else if (study === "fruit-mecha") {
+    const built = fruitMecha(recipe, inputCues);
     cues = built.cues;
     design = built.design;
   } else if (study === "diamond") design = diamondStudy(recipe);

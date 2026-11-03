@@ -135,6 +135,18 @@ still (pyramid-inside pans 45 degrees) and move the space on the `low` band.
   is about a third of the frame tall, and the fruit (scaled to 0.7) sits 2 m
   beside them at chest height. It switches apple and banana on the top three
   `low` peaks at least 2 s apart.
+- **fruit-mecha** matches the owner's `looks-vox/fruit-mecha` still: the
+  dancer, held front-on from 1 m with a 40 degree lens, fills 85 percent of
+  the frame (the distance comes from the lens and that share), between two
+  fruits at shoulder height, x -1.1 and +1.1. The 192-voxel fine preset is
+  split in half, one 96-voxel fruit per side, 0.6 to 0.7 m across. Left opens
+  on the banana and right on the apple; on each of the top two `low` peaks
+  (2 s apart) both step Banana, Papaya, Apple, so they always differ. Three
+  cues would need seven 192-voxel keys, 73 KB against the 64 KB recipe bound.
+  Both pulse on `low` (scale 0.3) about a point between them, which pushes
+  them outward, and glow on `low` (0.5) through a `primitives` glow route.
+  No twist: about the shared pivot it would swing them round the dancer.
+  Its median motion (1.37 below) is mostly the dancer, who now fills the frame.
 - **fruit-apple, fruit-banana, fruit-papaya** share one helper
   (`singleFruit`). Each shows one fruit from the 96-block preset resting on
   the floor, no morph and no figure. It is held from the front at 8 degrees
@@ -161,6 +173,7 @@ marked old predate the camera and spread fixes.
 | canyon blend                     | 0.67   | 0.52          |
 | fruit-dance, old orbit           | 0.84   | 0.53          |
 | fruit-dance front view, 193 f    | 0.21   | 0.58          |
+| fruit-mecha, 193 f               | 1.37   | 0.59          |
 | fruit-apple, 193 f               | 0.27   | 0.49          |
 | fruit-banana, 193 f              | 0.40   | 0.52          |
 | fruit-papaya, 193 f              | 0.11   | 0.49          |

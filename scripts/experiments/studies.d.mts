@@ -1,6 +1,7 @@
 export declare const STUDIES: readonly [
   "fruit",
   "fruit-dance",
+  "fruit-mecha",
   "architecture",
   "clockwork",
   "pulse",

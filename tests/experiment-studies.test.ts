@@ -21,6 +21,7 @@ const NEW: Study[] = [
   "cathedral-walls",
   "canyon",
   "fruit-dance",
+  "fruit-mecha",
   "room-walls",
   "pyramid-inside",
   "fruit-apple",
@@ -137,6 +138,7 @@ describe("new pilot studies", () => {
     "canyon",
     "room-walls",
     "fruit-dance",
+    "fruit-mecha",
     "fruit-apple",
   ] as Study[])(
     "%s holds the camera still whatever the music does",
