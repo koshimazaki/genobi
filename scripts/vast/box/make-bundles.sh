@@ -20,6 +20,8 @@ declare -A PROMPT=(
   [room-walls]="A small empty room whose bare walls press inward on the beat and open again around a figure dancing in the middle, seen from eye height. Warm lamp light, soft shadows."
   [pyramid-inside]="Inside a vast hollow stepped pyramid the towering terraced walls contract on every bass hit and expand back, a small figure standing on the floor for scale, the camera low and wide, looking up toward the open top. Dim warm light from above."
   [pyramid-inside-spin]="Inside a vast hollow stepped pyramid the camera stands near the middle of the floor and turns slowly all the way round, looking a little up, while the towering terraced walls tighten on every bass hit and ease back, a small figure standing on the floor for scale. Dim warm light from above."
+  [party-walls]="A high corner view of a big bare hall with tall windows, a crowd dancing on the wooden floor and a DJ at the far end; on the beat the long walls close in toward the dancers and open again. Warm daylight, still camera."
+  [studio-walls]="Straight down into a small wood-panelled recording booth: a drum kit, a mixing desk, a singer with headphones under one warm lamp; on the beat the booth's walls close in and open again. Still camera."
   [falling]="Seen straight down from high above, two rows of Manhattan glass office towers at golden hour, the camera descending between them toward a gothic cathedral facade below. Warm reflections in the glass, hard afternoon light."
   [fruit-dance]="A figure dances in an open studio, seen from the front, while a large fruit beside them changes from apple to banana to papaya and back on the beat. Clean floor, soft studio light, still camera."
   [fruit-mecha]="A blocky mecha figure dances on a dark studio sweep between a banana and an apple floating at shoulder height; on the heavy beats each fruit bursts apart into flying blocks that reassemble as another fruit, and both swell and glow with the bass. Hard studio light, still camera, front view."
@@ -43,5 +45,5 @@ mk() { # study mode [extra prepare args]
     --mode "$mode" --frames "$FRAMES" --seed 42 --output "$out" --label "$study-$mode" --prompt "${PROMPT[$study]}" "$@"
   echo "bundle $out"
 }
-for s in diamond pulse cathedral-walls cathedral-gallery cathedral-gallery-grow canyon towers-descent room-walls pyramid-inside pyramid-inside-spin falling fruit-dance fruit-mecha fruit-mecha-morph fruit-apple-banana fruit-banana-apple fruit-apple fruit-banana fruit-papaya; do mk "$s" layout-audio; done
+for s in diamond pulse cathedral-walls cathedral-gallery cathedral-gallery-grow canyon towers-descent room-walls pyramid-inside pyramid-inside-spin party-walls studio-walls falling fruit-dance fruit-mecha fruit-mecha-morph fruit-apple-banana fruit-banana-apple fruit-apple fruit-banana fruit-papaya; do mk "$s" layout-audio; done
 for s in cathedral-walls canyon; do mk "$s" union-depth; done

@@ -13,11 +13,11 @@ and tested on the Mac before the box is rented; the box runs a queue.
 
 ## The three demos
 
-| Track           | What moves                                                                                                                      | Study                                                                                                                                               |
-| --------------- | ------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Acoustic space  | walls, piers and buildings close in on the loud bars and open on the quiet ones; the reverb is computed from the same room size | `cathedral-walls`, `cathedral-gallery`, `cathedral-gallery-grow`, `canyon`, `towers-descent`, `room-walls`, `pyramid-inside`, `pyramid-inside-spin` |
-| Things in space | objects in an orbiting shot react to the bands, a dancer in the middle                                                          | `fruit-dance`, `fruit-mecha`, `pulse`                                                                                                               |
-| Changing shapes | state changes on the beats (apple to banana, towers to nave)                                                                    | `fruit-dance` and `fruit-mecha` cues, `fruit-apple-banana`, `fruit-banana-apple`, `falling`                                                         |
+| Track           | What moves                                                                                                                      | Study                                                                                                                                                                              |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Acoustic space  | walls, piers and buildings close in on the loud bars and open on the quiet ones; the reverb is computed from the same room size | `cathedral-walls`, `cathedral-gallery`, `cathedral-gallery-grow`, `canyon`, `towers-descent`, `room-walls`, `pyramid-inside`, `pyramid-inside-spin`, `party-walls`, `studio-walls` |
+| Things in space | objects in an orbiting shot react to the bands, a dancer in the middle                                                          | `fruit-dance`, `fruit-mecha`, `pulse`                                                                                                                                              |
+| Changing shapes | state changes on the beats (apple to banana, towers to nave)                                                                    | `fruit-dance` and `fruit-mecha` cues, `fruit-apple-banana`, `fruit-banana-apple`, `falling`                                                                                        |
 
 The owner's words, 2 November 2026: "skyscraper closing walls together,
 moving buildings to audio, and same with cathedral, and we manipulate and
@@ -76,6 +76,37 @@ version sank and zoomed the whole nave: 9.9 and 0.81). `room-walls` is an empty 
 so the sweet spot of change is picked before any image is swapped. Review the
 cathedral at the loudest hit before rendering: at the 0.55 close the ribs pass
 near the gallery camera; `CLOSED_FRACTION` in `recipes-rooms.ts` sets it.
+
+`party-walls` and `studio-walls` (`recipes-walls.ts`) rebuild the last two
+shots of the owner's 30 October cut, framed so frame 0 overlays the owner's
+still in `looks/<study>/look-first.png`. On the bass the long walls clap in,
+x only, and spring back, everything inside squeezed with them: the hall to a
+quarter of its open width (`WALLS_CLOSED`), the booth to 0.35
+(`BOOTH_CLOSED`), so its walls stop clear of the singer and the drum kit and
+desk stay behind her (both tested). The hidden reverb box narrows on the same
+bars. The blend amount is 1.2 (`WALLS_BLEND`), so full bass reaches the closed
+layout at motion gain 1, and the camera is held above
+every wall top in both (tested).
+
+Frame 0 must be open to overlay the open still, so each take starts where the
+low band is quietest within 0.6 s of the cut point: the first planned starts
+(16.0833 and 24.125) sat on a bass hit and opened nearly closed. Read the raw
+band from a 97-frame capture at `--band-gain 1 --band-release 0` starting
+0.6 s early, and take the frame with the lowest value. That gave 15.6916 for
+the hall and 23.6083 for the booth (its quietest frame, 24.4833, leaves
+less than 193 frames of the 32.4 s track). At motion gain 1 the hall
+opens at 0.84 of its width and shuts fully (0.25) on the loudest bars; the
+booth opens at only 0.60, because the auto gain lifts its quiet excerpt,
+and shuts to 0.35. The `w-open` takes used a blend of 0.6 and barely moved.
+
+```sh
+node scripts/experiments/capture.mjs --studies party-walls --track 'Adaptive Reverbv2.mp3' --start 15.6916 \
+  --output ~/genobi-runs/DATE/guides-rooms/party-walls/w-open2 --frames 193 --width 1024 --height 576 \
+  --band-gain auto --band-release 12 --motion-gain 1 --stage studio   # studio-walls: --start 23.6083
+```
+
+The earlier takes at the planned starts and motion gain 2 (`w`, and `w-r6`
+at `--band-release 6`) open almost closed and are kept for comparison only.
 
 ### 2. Looks
 
@@ -180,6 +211,8 @@ dry track and the CPU room reverb are muxed underneath.
    6. `pyramid-inside`: a vast interior from the floor, terraces tightening;
       `pyramid-inside-spin` is the same interior with the camera turning one
       full, uniform 360 degrees on the spot at 1.2 m, looking 10 degrees up
+      - `party-walls` and `studio-walls`: the hall and the booth of the 30
+        October cut, walls clapping in on the bass, from the owner's stills
    7. `fruit-apple`, `fruit-banana`, `fruit-papaya`: one fruit each, front view;
       `fruit-apple-banana` is one fruit that morphs continuously from the apple
       (silence) to the banana (full bass) on the low band, and

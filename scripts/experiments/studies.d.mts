@@ -18,6 +18,8 @@ export declare const STUDIES: readonly [
   "room-walls",
   "pyramid-inside",
   "pyramid-inside-spin",
+  "party-walls",
+  "studio-walls",
   "diamond",
   "fruit-apple",
   "fruit-banana",
