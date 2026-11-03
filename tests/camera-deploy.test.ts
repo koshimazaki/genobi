@@ -242,7 +242,14 @@ describe(
       expect(graph["12"].inputs.text).toBe(a.prompt);
       expect(graph["50"].inputs.noise_seed).toBe(123);
       expect(a.deployment).toEqual({ url: endpoint, name: "genobi" });
-      expect(publicJob(a).deploy).toBeUndefined();
+      // Recreate gets the seed and negative prompt back; the session-bound
+      // file tickets never leave the server.
+      expect(a.deploy!.assets).not.toEqual({});
+      expect(publicJob(a).deploy).toEqual({
+        seed: 123,
+        negativePrompt: "No cuts.",
+        assets: {},
+      });
       await expect(
         s.submit("different-deploy-run", quote.id),
       ).rejects.toMatchObject({ code: "quote_used" });

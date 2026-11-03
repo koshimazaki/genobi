@@ -163,10 +163,24 @@ export function publicJob(job: StoredJob): Job {
     companionDownloads: _downloads,
     lastPolledAt: _last,
     take: _take,
-    deploy: _deploy,
+    deploy,
     ...visible
   } = job;
-  return visible;
+  // A deployment's own inputs come back for Recreate: the seed, the negative
+  // prompt and the capture recipe. Its file tickets are short-lived and
+  // session-bound (`deployment-assets.ts`), so they are never returned; the
+  // person reattaches the files (`recreate-gaps.ts` names them).
+  return deploy
+    ? {
+        ...visible,
+        deploy: {
+          seed: deploy.seed,
+          negativePrompt: deploy.negativePrompt,
+          ...(deploy.recipe === undefined ? {} : { recipe: deploy.recipe }),
+          assets: {},
+        },
+      }
+    : visible;
 }
 export function publicSource(source: StoredSource): Source {
   const {
