@@ -120,10 +120,9 @@ describe("vehicle morph intermediate guide frames", () => {
             object.rotationX ?? 0,
             object.rotationZ ?? 0,
           ];
-          expect(measures.every(Number.isFinite), `${id}/${frame}/${object.id}`).toBe(
-            true,
-          );
-          expect(object.scale, `${id}/${frame}/${object.id}`).toBeGreaterThan(0);
+          const label = `${id}/${frame}/${object.id}`;
+          expect(measures.every(Number.isFinite), label).toBe(true);
+          expect(object.scale, label).toBeGreaterThan(0);
         }
       }
     },
