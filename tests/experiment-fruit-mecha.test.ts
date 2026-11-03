@@ -232,7 +232,8 @@ describe("fruit-mecha", () => {
             (p.scale * (p.scaleX ?? 1)) / 2;
           const inner = Math.min(...fruit.map((p) => Math.abs(p.x) - half(p)));
           const outer = Math.max(...fruit.map((p) => Math.abs(p.x) + half(p)));
-          expect(inner - FIGURE_HALF_WIDTH).toBeGreaterThan(0.3);
+          // 0.15 m: the owner accepts an arm brushing a fruit as dance.
+          expect(inner - FIGURE_HALF_WIDTH).toBeGreaterThan(0.15);
           expect(outer).toBeLessThan(halfWidth);
           const xs = fruit.map((p) => p.x);
           const across = Math.max(...xs) - Math.min(...xs);
@@ -267,6 +268,29 @@ describe("fruit-mecha", () => {
 });
 
 describe("mecha framing", () => {
+  it.each(STUDIES)(
+    "%s keeps the fruit centres within about 1.1 m at full bass",
+    (study) => {
+      const side = sideOf(study);
+      const { recipe } = createStudy(
+        study,
+        bands(97, () => 1),
+        dims(97),
+      );
+      for (const frame of [0, 40, 96]) {
+        const parts = evaluateScene(recipe, frame).objects.filter((o) =>
+          o.id.startsWith("voxel-"),
+        );
+        for (const s of ["left", "right"]) {
+          const fruit = parts.filter((p) => side(p.id) === s);
+          const centre =
+            fruit.reduce((t, p) => t + Math.abs(p.x), 0) / fruit.length;
+          expect(centre).toBeLessThan(1.15);
+        }
+      }
+    },
+  );
+
   it.each(STUDIES)(
     "%s keeps every fruit voxel inside the camera frustum at full bass",
     (study) => {

@@ -166,7 +166,9 @@ still (pyramid-inside pans 45 degrees) and move the space on the `low` band.
 - **fruit-mecha** matches the owner's `looks-vox/fruit-mecha` still: the
   dancer, held front-on from 1 m with a 40 degree lens, fills 85 percent of
   the frame (the distance comes from the lens and that share), between two
-  fruits at shoulder height, x -1.1 and +1.1. Left opens on the banana and
+  fruits at shoulder height, x -0.95 and +0.95 ("too far from the centre" at
+  1.1; the fruits clear the arm line by 0.15 m, and an arm brushing a fruit
+  reads as dance). Left opens on the banana and
   right on the apple; on each of the top two `low` peaks (2 s apart) both
   step Banana, Papaya, Apple, so they always differ. Each change is a burst
   (the owner: "they should explode and then move into the new thing"): the
@@ -185,9 +187,9 @@ still (pyramid-inside pans 45 degrees) and move the space on the `low` band.
 - **fruit-mecha-morph** is the same scene with no cues: two keys, banana |
   apple at rest and papaya | banana at the peak, 96 voxels per fruit from
   the fine preset, blended by `morphControl` on `low` (x 1.2) like the
-  single-fruit morphs, with the glow at 0.6. The pulse stays 0.3: the one
-  pivot between the fruits already pushes them outward as they swell.
-  Both pulse on `low` (scale 0.3) about a point between them, which pushes
+  single-fruit morphs, with the glow at 0.6 and the same 0.15 pulse.
+  Both pulse on `low` (scale 0.15, so their centres stay within about
+  1.1 m at full bass and gain 1) about a point between them, which pushes
   them outward, and glow on `low` (0.5) through a `primitives` glow route.
   No twist: about the shared pivot it would swing them round the dancer.
   Its median motion (1.37 below) is mostly the dancer, who now fills the frame.

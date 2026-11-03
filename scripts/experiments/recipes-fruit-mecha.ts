@@ -31,12 +31,18 @@ export const MECHA_FRUITS = ["Banana", "Papaya", "Apple"] as const;
 const ACROSS = { Banana: 0.7, Papaya: 0.6, Apple: 0.6 } as const;
 /** Left opens on the banana (state 0), right on the apple (state 2). */
 export const MECHA_SIDES = [
-  { side: "left", x: -1.1, y: 1.3, start: 0 },
-  { side: "right", x: 1.1, y: 1.4, start: 2 },
+  // 0.95 m out ("too far from the centre" at 1.1), 0.15 m clear of the arms.
+  { side: "left", x: -0.95, y: 1.3, start: 0 },
+  { side: "right", x: 0.95, y: 1.4, start: 2 },
 ] as const;
 /** Pulse about a point between the fruits: louder pushes them outward. */
 export const MECHA_PIVOT: SceneVector = [0, 1.35, 0];
-export const MECHA_PULSE = 0.3;
+/**
+ * The low pulse scales each fruit's offset from the shared pivot, so it also
+ * carries the fruits outward: at 0.15 the centres reach about 1.1 m at full
+ * bass and gain 1.
+ */
+export const MECHA_PULSE = 0.15;
 /** Emissive intensity at full bass on every fruit voxel (the `primitives` target). */
 export const MECHA_GLOW = 0.5;
 export const MECHA_FOV = 40;
@@ -99,7 +105,7 @@ export const BURST_REACH = [3, 4] as const;
 /** Burst voxels keep this far from the scene's centre line (the dancer, 0.4 m half width). */
 export const BURST_CLEAR = 0.6;
 /** And this far inside the frame edges, in metres at their depth. */
-const FRAME_MARGIN = 0.1;
+const FRAME_MARGIN = 0.15;
 
 /** A repeatable 0-1 value per voxel and channel. */
 function seeded(n: number, channel: number) {
@@ -310,7 +316,7 @@ export function fruitMecha(recipe: Recipe, inputCues?: Cue[]) {
     design: {
       camera: `held front view at ${CAMERA_HEIGHT} m, ${MECHA_FOV} degree lens, dancer ${MECHA_FILL * 100}% of the frame`,
       fruit:
-        "48 voxels each; left at x -1.1 y 1.3, right at x 1.1 y 1.4, 0.6-0.7 m across",
+        "48 voxels each; left at x -0.95 y 1.3, right at x 0.95 y 1.4, 0.6-0.7 m across",
       cueRule: `top ${MECHA_CUES} low-band peaks at least ${MIN_CUE_GAP} frames (2 s) apart`,
       burst: `hold ${BURST_FRAMES} frames before the peak, burst ${BURST_REACH.join("-")} radii out at the peak, the next fruit ${BURST_FRAMES} frames after`,
       left: names(0),
