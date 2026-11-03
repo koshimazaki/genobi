@@ -25,6 +25,12 @@ import {
   type Providers,
 } from "../server/providers";
 import { inspectObject, resolveSource } from "./storage";
+import { entryFor } from "../shared/registry";
+import {
+  requireTesterRun,
+  testerReservation,
+  type TesterAccess,
+} from "./tester";
 
 /** Persisted replay state holds reference fingerprints, never the bytes. */
 export async function hashReferences(input: GenerateInput) {
@@ -45,6 +51,7 @@ export async function price(
   key: string,
   provider: Provider,
   expected?: Expectation,
+  tester?: TesterAccess,
 ) {
   const { plan, values: deploymentValues } = await deploymentPlan(
     env,
@@ -52,6 +59,15 @@ export async function price(
     input,
   );
   requireExpectedPlan(plan, expected);
+  // The operator's key prices and runs only the two deploy workflows, on the
+  // operator's endpoint, while the code has runs left.
+  if (tester)
+    await requireTesterRun(
+      env,
+      tester,
+      plan,
+      entryFor(input.generator, input.model),
+    );
   // The swap needs a custom node pack only its own Comfy deployment holds;
   // the hosted studio does not run it.
   if (isSwap(input.model))
@@ -118,6 +134,7 @@ export async function quote(
   key: string,
   providers: Providers = defaultProviders(),
   expected?: Expectation,
+  tester?: TesterAccess,
 ) {
   input = await hashReferences(input);
   const { estimate, take } = await price(
@@ -127,6 +144,7 @@ export async function quote(
     key,
     providerFor(key, providers),
     expected,
+    tester,
   );
   const record = newQuote(take, estimate);
   await saveQuote(env, record, session);
@@ -180,7 +198,9 @@ export async function findQuote(
  * claimed only while unspent, unexpired, for these settings, and while no run
  * holds this request id; the run is inserted only if this job claimed it. A
  * concurrent replay therefore finds the first run, and a second run can never
- * spend the same quote.
+ * spend the same quote. Under tester access the claim also needs a run left
+ * on the code, and the count rises in the same transaction, only when this
+ * request's job row went in.
  */
 export async function spendQuoteAndReserve(
   env: Env,
@@ -194,12 +214,17 @@ export async function spendQuoteAndReserve(
     take: string;
     createdAt: number;
   },
+  tester?: TesterAccess,
 ) {
-  const [, reservation] = await env.DB.batch([
+  const counted = tester
+    ? testerReservation(env, tester, row.id, session, row.createdAt)
+    : undefined;
+  const results = await env.DB.batch([
+    ...(counted ? [counted.ensure] : []),
     env.DB.prepare(
       `UPDATE quotes SET job=? WHERE id=? AND session=? AND job IS NULL
       AND expires>? AND settings=?
-      AND NOT EXISTS (SELECT 1 FROM jobs WHERE session=? AND idempotency=?)`,
+      AND NOT EXISTS (SELECT 1 FROM jobs WHERE session=? AND idempotency=?)${counted?.capClause ?? ""}`,
     ).bind(
       row.id,
       quote.id,
@@ -208,6 +233,7 @@ export async function spendQuoteAndReserve(
       quote.settings,
       session,
       idempotency,
+      ...(counted?.capBinds ?? []),
     ),
     env.DB.prepare(
       `INSERT OR IGNORE INTO jobs (id,session,idempotency,input,data,take,created_at)
@@ -223,6 +249,7 @@ export async function spendQuoteAndReserve(
       quote.id,
       row.id,
     ),
+    ...(counted ? [counted.count] : []),
   ]);
-  return reservation;
+  return results[counted ? 2 : 1];
 }

@@ -51,6 +51,8 @@ import {
   price,
   spendQuoteAndReserve,
 } from "./quotes";
+import { returnTesterRun, runsLeft, type TesterAccess } from "./tester";
+import { testerRunsUsedUp } from "./tester-errors";
 
 const statuses = new Set<JobStatus>([
   "Pending",
@@ -104,6 +106,7 @@ export async function submit(
     portableUploads: true,
   }),
   expected?: Expectation,
+  tester?: TesterAccess,
 ) {
   const requestInput = input;
   input = await hashReferences(input);
@@ -118,6 +121,7 @@ export async function submit(
     key,
     provider,
     expected,
+    tester,
   );
   if (take.recipe.deployment && !quoteId)
     throw new AppError(
@@ -168,8 +172,17 @@ export async function submit(
     take: JSON.stringify(take),
     createdAt: Date.now(),
   };
+  // Tester runs are always deployment runs, so they always spend a quote.
+  if (tester && !quote) throw testerRunsUsedUp();
   const reservation = quote
-    ? await spendQuoteAndReserve(env, quote, session, idempotency, reserved)
+    ? await spendQuoteAndReserve(
+        env,
+        quote,
+        session,
+        idempotency,
+        reserved,
+        tester,
+      )
     : await env.DB.prepare(
         "INSERT OR IGNORE INTO jobs (id,session,idempotency,input,data,take,created_at) VALUES (?,?,?,?,?,?,?)",
       )
@@ -186,6 +199,8 @@ export async function submit(
   if (!reservation.meta.changes) {
     const prior = await priorJob(env, session, idempotency);
     if (prior) return duplicate(prior, input);
+    // The last test run went to a concurrent request.
+    if (tester && (await runsLeft(env, tester)) <= 0) throw testerRunsUsedUp();
     // Spent or expired between the check above and the transaction.
     if (quote)
       requireQuote(
@@ -287,7 +302,12 @@ export async function submit(
         ? error.message
         : "Submission could not be confirmed. Check BFL usage before trying again.";
     // Refused before anything was sent: a known zero, not an uncertain charge.
-    if (isUnsent(error)) job.costActualUsd = 0;
+    if (isUnsent(error)) {
+      job.costActualUsd = 0;
+      // Nothing reached the deployment, so the test run is returned. An
+      // uncertain submission keeps it: it may have been charged.
+      if (tester) await returnTesterRun(env, tester).catch(() => {});
+    }
   }
   await saveJob(env, row, job);
   return job;
@@ -302,6 +322,7 @@ export async function poll(
   workflowClient: WorkflowClient = new ComfySdkWorkflows({
     portableUploads: true,
   }),
+  tester?: TesterAccess,
 ) {
   const row = await ownedJob(env, id, session);
   const job = publicJob(row);
@@ -324,6 +345,14 @@ export async function poll(
     return { job };
   }
   if (!key) return { job, needsKey: true };
+  // The operator's key polls only a run on the operator's endpoint; any
+  // other job of this session waits for the visitor's own key.
+  if (
+    tester &&
+    (row.take ? JSON.parse(row.take).recipe : undefined)?.deployment?.url !==
+      tester.url
+  )
+    return { job, needsKey: true };
   const now = Date.now();
   const acquired = await env.DB.prepare(
     "UPDATE jobs SET lease_until=? WHERE id=? AND session=? AND lease_until<?",

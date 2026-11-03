@@ -114,7 +114,11 @@ workflows also need Genobi's build deployed in **your own Comfy workspace**.
 Create that deployment using the commands below, paste its endpoint in Settings,
 and connect a key authorised for that workspace. **Comfy bills the workspace that
 owns the deployment**; using someone else's endpoint with your key does not move
-its charges to your account. Genobi has no shared generation key or fallback.
+its charges to your account. Genobi has no shared generation key or fallback,
+with one operator-controlled exception: [tester access](tester-access.md) lets
+the operator hand reviewers an access code with a submission, which runs these
+two workflows a capped number of times on the operator's own deployment and
+key. It is off until the operator sets its secrets.
 
 Hosted settings keep only the session's endpoint/preset in D1. Keys remain in page
 and request memory and must be re-entered after refresh. Upload receipts bind the

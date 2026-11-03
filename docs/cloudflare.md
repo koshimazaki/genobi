@@ -7,7 +7,7 @@ summary: Hosted deployment on Cloudflare Pages, with the runtime, D1 and R2 limi
 
 Live: [Genobi](https://genobi.pages.dev).
 
-The hosted app uses your own BFL key. Connect it in the header: the balance check verifies the connection and shows the remaining account credits as USD. Generation/upscale estimates are separate from that balance. No shared provider key is configured or stored. The key exists temporarily in page/request memory during use; it is not persisted by the app.
+The hosted app uses your own BFL key. Connect it in the header: the balance check verifies the connection and shows the remaining account credits as USD. Generation/upscale estimates are separate from that balance. No shared provider key is configured or stored, except the operator's own key for [tester access](tester-access.md), a Pages secret that is unset by default. The key exists temporarily in page/request memory during use; it is not persisted by the app.
 
 ## Runtime
 
@@ -170,6 +170,13 @@ npx wrangler d1 migrations apply flux-studio-lite --remote
 ```
 
 Do not provision a BFL secret: each visitor supplies their own key. Do not log request headers or provider bodies. The Worker only forwards keys to allowed BFL API hosts and refuses redirects. Input-video capability links expire after two hours. Normal clip playback requires the owning browser's HttpOnly cookie.
+
+Apply additive migration `0011_tester_runs.sql` before publishing tester
+access. It adds the `tester_runs` counter (a SHA-256 of the access code, a
+count and two timestamps). The feature stays off until its Pages secrets are
+set; see [tester access](tester-access.md). Unlock attempts use the
+`testerUnlockPerIp` (5/minute per hashed IP) and `testerUnlockGlobal`
+(30/minute across the deployment) buckets.
 
 Apply additive migration `0009_deployments.sql` before publishing this version.
 It creates session endpoint/preset settings, two-hour input receipts and temporary

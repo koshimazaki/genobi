@@ -8,6 +8,8 @@ import { KeySlot, LocalAgentStatus, useLocalKeys } from "./LocalKeys";
 import RunLocationField from "./RunLocationField";
 import { PageKeyForm } from "./PageKeyForm";
 import { CloudWorkflowCheck } from "./CloudWorkflowCheck";
+import { TesterAccessField } from "./TesterAccessField";
+import { isTesterToken } from "../../shared/tester";
 import type { KeysStatus } from "../../shared/keys";
 import "../styles/studio-settings.css";
 
@@ -71,6 +73,8 @@ export default function KeyDialog({
     onClose();
   };
   const keychain = keys?.keychain === true;
+  // A tester token is not the visitor's key: their own key form stays empty.
+  const ownKey = isTesterToken(value) ? "" : value;
   return (
     <dialog
       ref={ref}
@@ -108,6 +112,7 @@ export default function KeyDialog({
           open
         >
           <RunLocationField />
+          {!keychain && <TesterAccessField value={value} onSave={onSave} />}
           <p>
             Connect your Comfy API key for Router, Cloud or your deployment.
             Deployment GPU time is billed to its owning Comfy workspace.
@@ -121,7 +126,7 @@ export default function KeyDialog({
               onChange={saved}
             />
           ) : (
-            <PageKeyForm kind="comfy" value={value} onSave={connect} />
+            <PageKeyForm kind="comfy" value={ownKey} onSave={connect} />
           )}
           <p className="settings-note">
             {keychain
@@ -129,7 +134,7 @@ export default function KeyDialog({
               : "One key at a time for this visit. Kept in page memory; cleared on refresh or disconnect."}
           </p>
           <CloudWorkflowCheck
-            apiKey={value}
+            apiKey={ownKey}
             connectionRevision={`${keys?.comfy.connected ?? false}:${keys?.comfy.revision ?? 0}`}
           />
         </SettingsSection>
@@ -156,7 +161,7 @@ export default function KeyDialog({
               onChange={saved}
             />
           ) : (
-            <PageKeyForm kind="bfl" value={value} onSave={connect} />
+            <PageKeyForm kind="bfl" value={ownKey} onSave={connect} />
           )}
           <p className="settings-note">
             {keychain

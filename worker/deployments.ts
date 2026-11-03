@@ -28,6 +28,7 @@ import type { GenerateInput } from "../shared/types";
 import { sha256Hex, type WorkflowPlan } from "../shared/take";
 import { rateLimit } from "./storage";
 import { MAX_DEPLOYMENT_SETTINGS } from "../shared/limits";
+import { testerDeploymentOnly } from "./tester-errors";
 
 export { HOSTED_DEPLOY_INPUT_BYTES } from "../shared/comfy/deploy-file";
 /** Unexpired input tickets one session may hold. */
@@ -99,6 +100,32 @@ export async function deploymentCatalogue(env: Env, session: string) {
   );
 }
 
+/**
+ * Saves this session's endpoint. At the ceiling a new session displaces the
+ * least recently saved one in the same transaction, rather than refusing
+ * everyone until rows expire: rotating cookies can then only push out an old
+ * endpoint, which its owner re-enters. Jobs keep polling the endpoint
+ * recorded on their take.
+ */
+export async function saveDeploymentUrl(
+  env: Env,
+  session: string,
+  url: string | null,
+) {
+  await env.DB.batch([
+    env.DB.prepare(
+      `DELETE FROM deployment_settings WHERE session IN (
+        SELECT session FROM deployment_settings ORDER BY updated_at LIMIT max(0,
+          (SELECT count(*) FROM deployment_settings) - ? + 1))
+      AND NOT EXISTS (SELECT 1 FROM deployment_settings WHERE session=?)`,
+    ).bind(MAX_DEPLOYMENT_SETTINGS, session),
+    env.DB.prepare(
+      `INSERT INTO deployment_settings(session,url,revision,updated_at) VALUES(?,?,1,?)
+      ON CONFLICT(session) DO UPDATE SET url=excluded.url, revision=deployment_settings.revision+1,updated_at=excluded.updated_at`,
+    ).bind(session, url, Date.now()),
+  ]);
+}
+
 /** Unpaid, same-origin settings; POSTs need a custom JSON header. */
 export async function deploymentSettingsRoute(
   request: Request,
@@ -148,22 +175,7 @@ export async function deploymentSettingsRoute(
               ? v.deploymentUrl
               : (saved?.url ?? ""),
           ).url;
-    // At the ceiling a new session displaces the least recently saved one in
-    // the same transaction, rather than refusing everyone until rows expire:
-    // rotating cookies can then only push out an old endpoint, which its
-    // owner re-enters. Jobs keep polling the endpoint recorded on their take.
-    await env.DB.batch([
-      env.DB.prepare(
-        `DELETE FROM deployment_settings WHERE session IN (
-          SELECT session FROM deployment_settings ORDER BY updated_at LIMIT max(0,
-            (SELECT count(*) FROM deployment_settings) - ? + 1))
-        AND NOT EXISTS (SELECT 1 FROM deployment_settings WHERE session=?)`,
-      ).bind(MAX_DEPLOYMENT_SETTINGS, session),
-      env.DB.prepare(
-        `INSERT INTO deployment_settings(session,url,revision,updated_at) VALUES(?,?,1,?)
-        ON CONFLICT(session) DO UPDATE SET url=excluded.url, revision=deployment_settings.revision+1,updated_at=excluded.updated_at`,
-      ).bind(session, url, Date.now()),
-    ]);
+    await saveDeploymentUrl(env, session, url);
     return deploymentState(env, session);
   }
   if (v.entry !== "ltx-deploy-layout-to-video")
@@ -188,11 +200,15 @@ export async function deploymentUpload(
   session: string,
   token: string,
   key: string,
+  /** Tester access stages only on the operator's own endpoint. */
+  testerUrl?: string,
 ) {
   if (!isComfyKey(requireKey(key)))
     throw deployInvalid("Use a Comfy key for this deployment.");
   const saved = await readSettings(env, session);
   if (!saved?.url) throw deployInvalid("Register a deployment first.");
+  if (testerUrl !== undefined && saved.url !== testerUrl)
+    throw testerDeploymentOnly();
   const type = request.headers.get("content-type") ?? "";
   // Refuse an unknown role or type before reading up to 32 MB of it.
   if (
