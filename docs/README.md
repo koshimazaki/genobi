@@ -58,6 +58,13 @@ user action through every layer.
   rooms, its reverb changing with each, and Acoustic Space end to end.
 - [Adaptive reverb proof](adaptive-reverb-proof.md) — the 30 October runs: one
   Three.js scene guiding LTX Layout-to-Render picture and scene-derived reverb.
+- [Audio-reactive pyramid](audio-reactive-pyramid.md) — the 2 November runs:
+  the first objects that move with the music, the capture knobs, the
+  measurements and how to repeat them.
+- [Audio-reactive second pass](audio-reactive-second-pass.md) — the runbook
+  for the next box session: walls, rooms and fruit that move to the bass, a
+  second image guide at the closed frame, the refine pass, Klein looks and the
+  stitch.
 - [Showcase projects](director-bundle/showcase/README.md) — finished cuts kept
   version by version, with the memory behind each change:
   [Dimensions mix](director-bundle/showcase/dimensions-mix/README.md) v1 to v4,
