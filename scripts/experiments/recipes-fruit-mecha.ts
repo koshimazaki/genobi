@@ -94,8 +94,12 @@ export function mechaFraming(fov = MECHA_FOV) {
 
 /** Frames from the hold to the burst, and from the burst to the next fruit. */
 export const BURST_FRAMES = 8;
-/** How far each voxel flies out, in fruit radii, at the burst. */
-export const BURST_REACH = [1.5, 2.5] as const;
+/** How far each voxel flies out, in fruit radii, at the burst ("explode more"). */
+export const BURST_REACH = [3, 4] as const;
+/** Burst voxels keep this far from the scene's centre line (the dancer, 0.4 m half width). */
+export const BURST_CLEAR = 0.6;
+/** And this far inside the frame edges, in metres at their depth. */
+const FRAME_MARGIN = 0.1;
 
 /** A repeatable 0-1 value per voxel and channel. */
 function seeded(n: number, channel: number) {
@@ -104,36 +108,69 @@ function seeded(n: number, channel: number) {
 }
 
 /**
- * The fruit blown apart: every voxel pushed out from its fruit's centre by
- * 1.5 to 2.5 fruit radii (fixed per voxel), with a little spin. The burst
- * keeps the outgoing fruit's colour.
+ * Whether a point is inside the held mecha view with a margin, and clear of
+ * the dancer. The frame widens with distance from the lens, so a burst that
+ * flies back (away from the camera) has more room than one that flies forward.
+ */
+export function inMechaView(x: number, y: number, z: number) {
+  const { frame, distance, centre } = mechaFraming();
+  const depth = (distance - z) / distance;
+  if (depth <= 0.2) return false;
+  const halfHeight = (frame / 2) * depth - FRAME_MARGIN,
+    halfWidth = (frame / 2) * (16 / 9) * depth - FRAME_MARGIN;
+  return (
+    Math.abs(x) >= BURST_CLEAR &&
+    Math.abs(x) <= halfWidth &&
+    Math.abs(y - centre) <= halfHeight &&
+    y >= 0.05
+  );
+}
+
+/**
+ * The fruit blown apart: every voxel flies 3 to 4 fruit radii across the
+ * picture (fixed per voxel) from its fruit's centre along its own direction, turned outward
+ * and back from the lens with a wide seeded spread, with a little spin. A
+ * flight that would leave the view or reach the dancer stops at the edge
+ * of what is allowed. The burst keeps the outgoing fruit's colour.
  */
 export function burst(
   objects: Record<string, SceneTransform>,
   centre: SceneVector,
   radius: number,
 ) {
+  const outward = Math.sign(centre[0]) || 1;
   return Object.fromEntries(
     Object.entries(objects).map(([id, part]) => {
       const n = Number(id.slice(6));
-      const d = [part.x - centre[0], part.y - centre[1], part.z - centre[2]];
-      let length = Math.hypot(...d);
-      if (length < 1e-3) {
-        // A voxel at the centre takes a seeded direction.
-        d.splice(0, 3, seeded(n, 1) - 0.5, seeded(n, 2) - 0.5, 0.3);
-        length = Math.hypot(...d);
-      }
-      const reach =
-        radius *
-        (BURST_REACH[0] + (BURST_REACH[1] - BURST_REACH[0]) * seeded(n, 0));
+      const jitter = (c: number) => (seeded(n, c) - 0.5) * 1.6;
+      const d = [
+        outward * Math.abs(part.x - centre[0]) + outward * 0.5 + jitter(1),
+        part.y - centre[1] + jitter(2),
+        -Math.abs(part.z - centre[2]) - 0.4 + jitter(4),
+      ];
+      const length = Math.hypot(...d) || 1;
+      const u = d.map((v) => v / length);
+      // The reach is measured across the picture (x and y), not into it.
+      let reach =
+        (radius *
+          (BURST_REACH[0] + (BURST_REACH[1] - BURST_REACH[0]) * seeded(n, 0))) /
+        Math.max(0.3, Math.hypot(u[0], u[1]));
+      // Centimetre positions, as stored, so the check holds for what is saved.
+      const at = (t: number) =>
+        [part.x + u[0] * t, part.y + u[1] * t, part.z + u[2] * t].map(
+          r2,
+        ) as SceneVector;
+      // Shorten the flight until it lands inside the view.
+      while (reach > 0.05 && !inMechaView(...at(reach))) reach *= 0.9;
+      const [x, y, z] = at(reach);
       return [
         id,
         {
           ...part,
-          x: r2(part.x + (d[0] / length) * reach),
-          y: r2(part.y + (d[1] / length) * reach),
-          z: r2(part.z + (d[2] / length) * reach),
-          rotation: r2((seeded(n, 3) - 0.5) * 2),
+          x,
+          y,
+          z,
+          rotation: r2((seeded(n, 3) - 0.5) * 3),
         },
       ];
     }),

@@ -170,10 +170,12 @@ still (pyramid-inside pans 45 degrees) and move the space on the `low` band.
   right on the apple; on each of the top two `low` peaks (2 s apart) both
   step Banana, Papaya, Apple, so they always differ. Each change is a burst
   (the owner: "they should explode and then move into the new thing"): the
-  fruit holds until 8 frames before the peak, every voxel is 1.5 to 2.5
-  fruit radii out from its centre with a little spin at the peak (fixed per
-  voxel, in the outgoing colour), and the next fruit is whole 8 frames
-  after. Seven keys must fit the 64 KB recipe bound, so the fruits use the
+  fruit holds until 8 frames before the peak; at the peak every voxel has
+  flown 3 to 4 fruit radii across the picture (fixed per voxel, outward and
+  back from the lens with a wide seeded spread, a little spin, the outgoing
+  colour; "having them explode more would be good"), shortened where it
+  would leave the frame or come within 0.6 m of the dancer's centre line;
+  and the next fruit is whole 8 frames after. Seven keys must fit the 64 KB recipe bound, so the fruits use the
   96-voxel preset, 48 coarser voxels each (about 47 KB at 193 frames).
 - **fruit-mecha-morph** is the same scene with no cues: two keys, banana |
   apple at rest and papaya | banana at the peak, 96 voxels per fruit from

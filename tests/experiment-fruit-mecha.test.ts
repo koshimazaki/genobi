@@ -9,6 +9,7 @@ import {
 } from "../scripts/experiments/recipes-fruit";
 import {
   BURST_FRAMES,
+  inMechaView,
   MECHA_GLOW,
   MECHA_MORPH_GLOW,
 } from "../scripts/experiments/recipes-fruit-mecha";
@@ -122,7 +123,10 @@ describe("fruit-mecha", () => {
             .filter(([id]) => side(id) === s)
             .map(([, p]) => Math.hypot(p.x - cx, p.y - cy));
           const mean = out.reduce((t, v) => t + v, 0) / out.length;
-          expect(mean).toBeGreaterThan(radius * 1.5);
+          expect(mean).toBeGreaterThan(radius * 2.2);
+          // Every flown voxel stays in the view and clear of the dancer.
+          for (const [id, p] of Object.entries(burstKey.objects))
+            if (side(id) === s) expect(inMechaView(p.x, p.y, p.z)).toBe(true);
           // The burst keeps the outgoing colour.
           const before = Object.entries(hold.objects).find(
             ([id]) => side(id) === s,
