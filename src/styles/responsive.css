@@ -175,7 +175,8 @@
   .gallery-heading h2 {
     font-size: var(--space-20);
   }
-  .gallery-filters button {
+  .gallery-filters button,
+  .gallery-kinds button {
     font-size: var(--text-small-8);
     padding: var(--space-6) var(--space-7);
   }

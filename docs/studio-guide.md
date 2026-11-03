@@ -194,6 +194,14 @@ The npm package name remains `camera-director`. See [docs/credits.md](credits.md
 
 Hide any of your cards with × and restore it later. Hiding a run does not stop it; the studio keeps checking for its result.
 
+Once the gallery holds more than one kind of media, plain **Images**,
+**Videos** and **Audio** names beside the filter show just that kind (upscales
+count as videos), together with **This session** when both are chosen. Only
+kinds the gallery holds are named. The same filter applies in the Assets rail's
+**Generated** tab, where the session pill keeps its left edge and the names follow
+it. While a kind is chosen, chain review cards are hidden. Nothing is saved: a
+reload shows **All** (`src/gallery-kind.ts`).
+
 On the local server, finished CLI and MCP takes also appear in Camera's gallery,
 labelled **From terminal** or **From agent**. **This session** shows only your
 own jobs, including when you reopen an older shared take. Shared results have
