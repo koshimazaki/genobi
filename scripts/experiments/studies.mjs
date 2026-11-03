@@ -21,6 +21,7 @@ export const STUDIES = Object.freeze([
   "fruit-papaya",
   "fruit-apple-banana",
   "fruit-banana-apple",
+  "ship-mecha",
 ]);
 
 /** `<study>/<file>` as the browser may write it; nothing else reaches disk. */

@@ -13,11 +13,11 @@ and tested on the Mac before the box is rented; the box runs a queue.
 
 ## The three demos
 
-| Track           | What moves                                                                                                                      | Study                                                                                       |
-| --------------- | ------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| Acoustic space  | walls, piers and buildings close in on the loud bars and open on the quiet ones; the reverb is computed from the same room size | `cathedral-walls`, `canyon`, `room-walls`, `pyramid-inside`, `pyramid-inside-spin`          |
-| Things in space | objects in an orbiting shot react to the bands, a dancer in the middle                                                          | `fruit-dance`, `fruit-mecha`, `pulse`                                                       |
-| Changing shapes | state changes on the beats (apple to banana, towers to nave)                                                                    | `fruit-dance` and `fruit-mecha` cues, `fruit-apple-banana`, `fruit-banana-apple`, `falling` |
+| Track           | What moves                                                                                                                      | Study                                                                                                     |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| Acoustic space  | walls, piers and buildings close in on the loud bars and open on the quiet ones; the reverb is computed from the same room size | `cathedral-walls`, `canyon`, `room-walls`, `pyramid-inside`, `pyramid-inside-spin`                        |
+| Things in space | objects in an orbiting shot react to the bands, a dancer in the middle                                                          | `fruit-dance`, `fruit-mecha`, `pulse`                                                                     |
+| Changing shapes | state changes on the beats (apple to banana, towers to nave)                                                                    | `fruit-dance` and `fruit-mecha` cues, `fruit-apple-banana`, `fruit-banana-apple`, `ship-mecha`, `falling` |
 
 The owner's words, 2 November 2026: "skyscraper closing walls together,
 moving buildings to audio, and same with cathedral, and we manipulate and
@@ -57,7 +57,7 @@ measure follow + sharpness ─► stitch the keepers on beat cuts, dry track + r
 ### 1. Capture
 
 ```sh
-node scripts/experiments/capture.mjs --studies diamond,cathedral-walls,canyon,room-walls,pyramid-inside,pyramid-inside-spin,fruit-dance,fruit-mecha,fruit-apple-banana,fruit-banana-apple,fruit-apple,fruit-banana,fruit-papaya \
+node scripts/experiments/capture.mjs --studies diamond,cathedral-walls,canyon,room-walls,pyramid-inside,pyramid-inside-spin,fruit-dance,fruit-mecha,fruit-apple-banana,fruit-banana-apple,ship-mecha,fruit-apple,fruit-banana,fruit-papaya \
   --output ~/genobi-runs/DATE/guides --frames 97 --width 1024 --height 576 \
   --band-gain auto --band-release 12 --motion-gain 1 --stage studio
 ```
@@ -179,7 +179,8 @@ dry track and the CPU room reverb are muxed underneath.
    7. `fruit-apple`, `fruit-banana`, `fruit-papaya`: one fruit each, front view;
       `fruit-apple-banana` is one fruit that morphs continuously from the apple
       (silence) to the banana (full bass) on the low band, and
-      `fruit-banana-apple` the reverse
+      `fruit-banana-apple` the reverse; `ship-mecha` is the same morph from
+      a hovering silver spacecraft (silence) to a gold mecha (full bass)
    8. `fruit-dance`: front view, the fruit swapping shapes beside the dancer
    9. `fruit-mecha`: the dancer filling the frame between two fruits that both
       change on the beats, from the owner's `looks-vox/fruit-mecha` still

@@ -23,6 +23,7 @@ import {
 import { fruitDance, fruitMorph, singleFruit } from "./recipes-fruit";
 import { diamondStudy } from "./recipes-diamond";
 import { fruitMecha } from "./recipes-fruit-mecha";
+import { shipMecha } from "./recipes-ship-mecha";
 import { STUDIES } from "./studies.mjs";
 
 export { bakeCues, bakeSequence, peakCues, selectCues } from "./recipe-cues";
@@ -49,6 +50,8 @@ const PRESETS: Record<Study, string> = {
   "fruit-papaya": "fruit-morph",
   "fruit-apple-banana": "fruit-morph",
   "fruit-banana-apple": "fruit-morph",
+  // The spacecraft and mecha share the preset's 128 retained voxels.
+  "ship-mecha": "spacecraft-mecha",
   falling: "city-to-loft",
   cathedral: "city-to-loft",
   "cathedral-walls": "city-to-loft",
@@ -307,6 +310,7 @@ export function createStudy(
     design = singleFruit(recipe, study);
   else if (study === "fruit-apple-banana" || study === "fruit-banana-apple")
     design = fruitMorph(recipe, study);
+  else if (study === "ship-mecha") design = shipMecha(recipe);
   else if (study === "falling") indoorFromFrame = falling(recipe);
   else if (study === "cathedral") indoorFromFrame = falling(recipe, true);
   else if (study === "cathedral-walls") room(cathedralWalls(recipe));

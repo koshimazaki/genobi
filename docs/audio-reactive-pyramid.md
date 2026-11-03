@@ -170,6 +170,14 @@ still (pyramid-inside pans 45 degrees) and move the space on the `low` band.
   is the peak fruit, whatever the frame. The capture's `--motion-gain` scales the
   blend amount too (bounded at 2), so at gain 2 the banana arrives at about
   half the band. `frame-closed` (the loudest bar) is the peak fruit's still.
+- **ship-mecha** (`shipMecha`, `recipes-ship-mecha.ts`) is the same
+  continuous morph on the `spacecraft-mecha` preset's own 128 retained
+  voxels: the `spacecraft` catalogue form in silence, the `mecha` form at
+  full bass, both coloured per state (spacecraft `#c9ced6`, mecha
+  `#d9a441`). Both forms share one centre, the mecha's feet 0.4 m above the
+  floor, so the spacecraft hovers higher. It is held from the front at 10
+  degrees and framed so the mecha fills 60% of the frame height, turning on
+  `mid` (twistY 0.2) with no scale pulse, so the mecha never leaves the frame.
 - **Fruit colours.** Every voxel of a fruit state carries its fruit's colour
   (`FRUIT_COLOURS`: banana `#f2d14b`, papaya `#f0a040`, apple `#c8322b`), so
   the RGB guide shows the fruit, and the morph blends the colour with the
