@@ -40,6 +40,7 @@ beforeEach(() => {
     frames.push(run);
     return frames.length;
   });
+  vi.stubGlobal("cancelAnimationFrame", vi.fn());
   vi.stubGlobal("matchMedia", () => ({ matches: false }));
   Element.prototype.scrollIntoView = vi.fn();
 });
@@ -139,4 +140,28 @@ it("reveals an asset dropped on the timeline: selected, zoomed, in view, marked"
   vi.advanceTimersByTime(REVEAL_MS);
   expect(clip.dataset.revealed).toBeUndefined();
   expect(studioStore.getState().settings.zoom).toBe(6 * 30);
+});
+
+it("cancels pending drop animation after the Editor unmounts", async () => {
+  function Probe() {
+    useDropReveal(studioStore, 3);
+    return null;
+  }
+  root = createRoot(document.body.appendChild(document.createElement("div")));
+  await act(async () => root!.render(<Probe />));
+  const timeline = document.createElement("div");
+  timeline.className = "dir-timeline";
+  const clip = document.createElement("div");
+  clip.dataset.layerId = "video";
+  timeline.append(clip);
+  document.body.append(timeline);
+
+  announceDrop("video");
+  act(() => root!.unmount());
+  root = undefined;
+  expect(cancelAnimationFrame).toHaveBeenCalled();
+  // Simulate an already-queued callback firing despite cancellation.
+  act(nextFrames);
+  expect(clip.dataset.revealed).toBeUndefined();
+  expect(clip.scrollIntoView).not.toHaveBeenCalled();
 });
