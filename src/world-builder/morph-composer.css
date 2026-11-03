@@ -1,0 +1,249 @@
+.wb-morph-composer {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  padding: 16px;
+  min-width: 0;
+}
+.wb-morph-composer > header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.wb-morph-composer h3 {
+  margin: 5px 0 0;
+  font-weight: 500;
+  font-size: 19px;
+  letter-spacing: -0.4px;
+}
+.wb-morph-composer > p {
+  color: var(--soft);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.wb-morph-assets {
+  margin: 20px 0 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+.wb-morph-assets legend {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font: 11px var(--mono);
+}
+.wb-morph-assets legend span {
+  color: var(--accent-strong);
+}
+.wb-morph-assets > p {
+  margin: 8px 0 12px;
+}
+.wb-morph-asset-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(104px, 1fr));
+  gap: 8px;
+}
+.wb-app label.wb-morph-asset {
+  position: relative;
+  display: grid;
+  gap: 4px;
+  padding: 0 0 9px;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--sunken);
+  cursor: pointer;
+}
+.wb-app .wb-morph-asset:hover {
+  border-color: var(--border-strong);
+}
+.wb-app .wb-morph-asset[data-selected="true"] {
+  border-color: var(--accent);
+  background: var(--accent-ghost);
+}
+.wb-morph-asset[data-disabled="true"] {
+  opacity: 0.5;
+  cursor: default;
+}
+.wb-morph-asset:has(input:focus-visible) {
+  outline: 2px solid var(--accent-strong);
+  outline-offset: 2px;
+}
+.wb-app .wb-morph-asset input[type="checkbox"] {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  z-index: 1;
+}
+.wb-morph-asset-letter {
+  position: absolute;
+  right: 6px;
+  top: 6px;
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  color: var(--accent-strong);
+  background: var(--badge-bg);
+  border-radius: 4px;
+  font: 11px var(--mono);
+}
+.wb-morph-asset > svg {
+  display: block;
+  width: 100%;
+  aspect-ratio: 2 / 1;
+}
+.wb-morph-asset > strong,
+.wb-morph-asset > small {
+  padding: 0 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.wb-morph-asset > strong {
+  margin-top: 3px;
+  color: var(--text);
+  font: 11px var(--mono);
+}
+.wb-morph-asset > small {
+  color: var(--muted);
+  font-size: 9px;
+}
+.wb-morph-forms {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 10px;
+  margin: 16px 0;
+}
+.wb-morph-form {
+  min-width: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.wb-morph-form-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px;
+  font: 10px var(--mono);
+}
+.wb-morph-form-heading span {
+  color: var(--accent-strong);
+}
+.wb-morph-form-heading strong {
+  font-weight: 400;
+  color: var(--soft);
+}
+.wb-morph-form-heading small {
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 8px;
+}
+.wb-morph-draft-preview > svg {
+  width: 100%;
+  aspect-ratio: 2 / 1;
+  display: block;
+  background: var(--sunken);
+}
+.wb-morph-order {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 0 9px 9px;
+}
+.wb-app .wb-morph-order > button {
+  padding: 5px 7px;
+  font-size: 9px;
+}
+.wb-morph-composer-bottom {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(180px, 1fr);
+  gap: 18px;
+}
+.wb-morph-draft-preview,
+.wb-morph-compose-settings {
+  min-width: 0;
+}
+.wb-morph-draft-preview > svg {
+  border-radius: var(--radius-sm);
+}
+.wb-morph-preview-transport {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 10px;
+  font: 10px var(--mono);
+}
+.wb-morph-preview-transport output {
+  color: var(--soft);
+}
+.wb-morph-preview-slider {
+  margin-top: 10px;
+}
+.wb-morph-preview-slider > span {
+  display: flex;
+  justify-content: space-between;
+}
+.wb-morph-preview-slider input {
+  width: 100%;
+  accent-color: var(--accent);
+  margin: 0;
+}
+.wb-morph-compose-settings {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+}
+.wb-morph-compose-settings .effect-note {
+  margin: 0;
+}
+.wb-morph-duration {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+.wb-morph-duration > input[type="range"] {
+  width: 100%;
+  margin: 0;
+  accent-color: var(--accent);
+}
+.wb-morph-duration > output {
+  color: var(--accent-strong);
+  font: 10px var(--mono);
+}
+.wb-morph-duration > small {
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.4;
+}
+.wb-morph-draft-empty {
+  display: grid;
+  place-items: center;
+  min-height: 180px;
+  color: var(--muted);
+  font: 11px var(--mono);
+  border: 1px dashed var(--border);
+}
+@container (max-width: 650px) {
+  .wb-morph-composer-bottom {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 900px) {
+  .wb-morph-composer select,
+  .wb-morph-composer input:not([type="checkbox"]),
+  .preset-scene-settings .effect-control select,
+  .preset-scene-settings .effect-control input {
+    min-height: 44px;
+  }
+}

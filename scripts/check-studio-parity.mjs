@@ -130,12 +130,12 @@ try {
           .waitFor();
       if (workspace === "director" || workspace === "editor") {
         const intake = page.getByRole("dialog", {
-          name: "Generate my version",
+          name: "Make my version",
         });
-        // Director greets with the panel; the Editor waits for its button.
+        // Director greets; Editor keeps the modal closed until asked.
         if (workspace === "editor")
           await page
-            .getByRole("button", { name: "Generate my version", exact: true })
+            .getByRole("button", { name: "Make my version", exact: true })
             .click();
         await intake.waitFor();
         assert(
@@ -148,7 +148,7 @@ try {
           path: `${output}/${width}-${workspace}-intake.png`,
         });
         await intake
-          .getByRole("button", { name: "Close Generate my version" })
+          .getByRole("button", { name: "Close Make my version" })
           .click();
         await intake.waitFor({ state: "detached" });
       }

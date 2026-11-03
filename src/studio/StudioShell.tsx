@@ -22,6 +22,7 @@ import { StudioNavigation } from "./StudioNavigation";
 import { usePanelMotion } from "./usePanelMotion";
 import { useStudio } from "./useStudio";
 import { studioStore } from "./store";
+import { cancelCameraRecipeHandoff } from "../camera-recipe-target";
 import {
   addToProjectAssets,
   addedMessage,
@@ -74,13 +75,18 @@ export default function StudioShell() {
   const [assetViews, setAssetViews] =
     useState<Record<string, boolean>>(readWorkingRails);
   const docked = useDockedRail();
-  // Open by default only where the rail docks (never in the Editor); the
-  // person's choice wins and is kept at once, so a reload keeps it too.
+  // Editor starts without a rail; user rail choices persist immediately.
   const assetsOpen = railOpen(preset, assetViews, docked);
   const setAssetsOpen = (open: boolean) => {
     const next = { ...assetViews, [preset]: open };
     setAssetViews(next);
     storeWorkingRails(pickRails(next));
+    if (open && preset === "world")
+      requestAnimationFrame(() =>
+        document
+          .getElementById("studio-assets")
+          ?.scrollIntoView({ block: "nearest" }),
+      );
   };
   const [restored] = useState(readLayout);
   const [ninjaLayout, setNinjaLayout] = useState(restored.layout);
@@ -180,6 +186,10 @@ export default function StudioShell() {
   const drag = useNinjaDrag(preset === "ninja" && ninjaEditing, move);
   function select(next: Preset, updateUrl = true) {
     if (next === preset) return;
+    // A reference image may still be loading for Recreate in Camera.
+    // Leaving the Camera invalidates that handoff before it can overwrite
+    // prompts or references on a later visit.
+    if (next !== "camera") cancelCameraRecipeHandoff();
     const focusWasInPanel = root.current?.contains(document.activeElement);
     measure();
     setPreset(next);
@@ -190,9 +200,7 @@ export default function StudioShell() {
           ?.focus({ preventScroll: true });
       });
     setVisited((previous) => new Set([...previous, next]));
-    // The project media dialog belongs to the workspace that opened it. A
-    // caller that switches and then opens it (an agent's "Project assets")
-    // sets it again after this, so only a stale request is dropped.
+    // A media dialog is scoped to its workspace, not the next one.
     studioStore.getState().actions.workspace({
       drawerOpen: false,
       ...(next === "director" || next === "editor"

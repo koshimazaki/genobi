@@ -1,0 +1,135 @@
+{
+  "status": "passed",
+  "errors": [],
+  "renderer": "webgl",
+  "encoder": "WebCodecs VP8",
+  "audio": false,
+  "frameCount": 721,
+  "duration": 30.041666666666668,
+  "ltxTiming": {
+    "numFrames": 721,
+    "frameRate": 24,
+    "temporalMultiple": 8,
+    "temporalOffset": 1,
+    "lastSampleSeconds": 30
+  },
+  "recipeBytes": 34208,
+  "sourceInstanceCounts": [64, 96, 64],
+  "composedInstanceCount": 96,
+  "endpointCameras": [
+    {
+      "slot": "A",
+      "frame": 0,
+      "actual": {
+        "position": [18, 14, 26],
+        "target": [0, 3, 0],
+        "fov": 48
+      }
+    },
+    {
+      "slot": "B",
+      "frame": 240,
+      "actual": {
+        "position": [19, 14, 25],
+        "target": [0, 3, 0],
+        "fov": 48
+      }
+    },
+    {
+      "slot": "C",
+      "frame": 480,
+      "actual": {
+        "position": [20, 14, 24],
+        "target": [0, 3, 0],
+        "fov": 48
+      }
+    }
+  ],
+  "maxRelativeColorVolumeError": 0,
+  "primitives": {
+    "rgb": {
+      "0": "901222d11febc2e6225b3c4a7d91cc61cdb13a17cf904afe10a44afbdce64c75",
+      "37": "0dd8a3e699697f5ff105c0882d5e6a759985a30c283500756d2c0803f137f5a4",
+      "96": "d71f0d88a861d3ff268004a17d4d0a7abb9652f5f81677afdfc9f9d888a11c41",
+      "144": "352a552f49dc2789722e4e8115c6373ee8222d4a88e70860bc92617eb2e6656f",
+      "192": "901222d11febc2e6225b3c4a7d91cc61cdb13a17cf904afe10a44afbdce64c75"
+    },
+    "depth": {
+      "0": "47a7425a3bb3042d82d697b5219f67472cd9cf0d672af4f7d620a67cd7332de8",
+      "37": "f6f2e4b16a34ead4c7a8c98add615314176fe31d4fb3b5aafe7e97a385c5cc77",
+      "96": "d6844cc1ff25545b265c6325f77916f64921dc89b44cc7f1ed3000d227e0eb26",
+      "144": "4b66b53ba365381aa10073559172167bd2b945473fa688530b7e3459b41e8ac7",
+      "192": "47a7425a3bb3042d82d697b5219f67472cd9cf0d672af4f7d620a67cd7332de8"
+    },
+    "previewEqualsCapture": true,
+    "reverseSeekExact": true,
+    "rgbRestoredAfterDepth": true,
+    "endpointReferences": [
+      {
+        "frame": 0,
+        "shape": "box",
+        "color": "#ef4848",
+        "exactReferenceHash": "901222d11febc2e6225b3c4a7d91cc61cdb13a17cf904afe10a44afbdce64c75"
+      },
+      {
+        "frame": 96,
+        "shape": "sphere",
+        "color": "#70e489",
+        "exactReferenceHash": "d71f0d88a861d3ff268004a17d4d0a7abb9652f5f81677afdfc9f9d888a11c41"
+      }
+    ]
+  },
+  "loop": {
+    "rgb": {
+      "0": "b0f42624ff3567dc9600c6858bda57bdece735580afbde4e5fdcbfaf0af99913",
+      "120": "e4252788985b3641f584dcdec51f0b0fbfbb1932216571d16083b56859f237de",
+      "240": "92a753cc00dc1ec97c6bf9f9573e9056895b513b6052c2741bd741f591f373aa",
+      "359": "7824c78708794af22e398f7dafe387ff90776490cc87f2bb4e92edf09914df94",
+      "480": "e467bb61f4f6bfd5cd341055c9568b548ed34558e7a17f46cdd33ef59159b4da",
+      "600": "d7515a2c3b57ebba11ac74d6e786b4f5c09e8840e77b7386ac62781ff4fb2b4a",
+      "720": "b0f42624ff3567dc9600c6858bda57bdece735580afbde4e5fdcbfaf0af99913"
+    },
+    "depth": {
+      "0": "971d53c53a7109cb04d43ad825c93905152b449789a84d21c54ebd7a7e7c8e84",
+      "120": "fee3a1047e98eab2578581fa0a98fde9d1b12e2427c1739147033d49e66d5a2e",
+      "240": "59bbce8a9b9337908eedb542204af89affe251d7d244c33708ed4563da51cdd0",
+      "359": "21d53af5e8c6454a1c2587bda442928863def9a56ac6774ddd8f6edd505ef133",
+      "480": "084674ce7494760cb569e0530eca4418b84f16dd388c2d348093f5d75d863786",
+      "600": "19576d6f75a791e5e33afd7a9e02d8218367a95978e443c3d1250227c3ba232c",
+      "720": "971d53c53a7109cb04d43ad825c93905152b449789a84d21c54ebd7a7e7c8e84"
+    },
+    "previewEqualsCapture": true,
+    "reverseSeekExact": true,
+    "rgbRestoredAfterDepth": true
+  },
+  "colour.webm": {
+    "programs": [],
+    "streams": [
+      {
+        "codec_name": "vp8",
+        "width": 384,
+        "height": 256,
+        "r_frame_rate": "24/1",
+        "nb_read_frames": "721"
+      }
+    ],
+    "format": {
+      "duration": "30.041666"
+    }
+  },
+  "depth.webm": {
+    "programs": [],
+    "streams": [
+      {
+        "codec_name": "vp8",
+        "width": 384,
+        "height": 256,
+        "r_frame_rate": "24/1",
+        "nb_read_frames": "721"
+      }
+    ],
+    "format": {
+      "duration": "30.041666"
+    }
+  }
+}

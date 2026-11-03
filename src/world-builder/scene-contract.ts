@@ -1,4 +1,6 @@
 import type { Recipe } from "./recipe";
+import { sceneObjects } from "./scene-instances";
+import { PRIMITIVE_AXIS_RANGE } from "./scene-bounds";
 export const shapes = [
   "box",
   "sphere",
@@ -46,6 +48,8 @@ export const faces = [
   "back",
 ] as const;
 export interface Transform {
+  /** Rebuild presence: zero hides a retained part; intermediate values shrink it. */
+  presence?: number;
   rotation?: number;
   rotationX?: number;
   rotationZ?: number;
@@ -61,11 +65,12 @@ const number = (v: unknown, min: number, max: number) =>
   typeof v === "number" && Number.isFinite(v) && v >= min && v <= max;
 export function validTransform(t: Transform) {
   return (
+    (t.presence === undefined || number(t.presence, 0, 1)) &&
     [t.rotation, t.rotationX, t.rotationZ].every(
       (v) => v === undefined || number(v, -Math.PI, Math.PI),
     ) &&
     [t.scaleX, t.scaleY, t.scaleZ].every(
-      (v) => v === undefined || number(v, 0.1, 8),
+      (v) => v === undefined || number(v, ...PRIMITIVE_AXIS_RANGE),
     )
   );
 }
@@ -75,7 +80,7 @@ export function validSurface(target: string, r: Recipe) {
   if (extra.length) return false;
   if (object.startsWith("world:"))
     return playgroundIds.includes(object.slice(6)) && face === "all";
-  const p = r.objects.find((p) => `prop:${p.id}` === object);
+  const p = sceneObjects(r).find((p) => `prop:${p.id}` === object);
   return (
     !!p &&
     (face === "all" ||
@@ -102,9 +107,10 @@ export function validTextures(v: unknown, r: Recipe): v is SurfaceMap {
   );
 }
 export function scaledAxes(t: Transform & { scale: number }) {
+  const scale = t.scale * (t.presence ?? 1);
   return [
-    t.scale * (t.scaleX ?? 1),
-    t.scale * (t.scaleY ?? 1),
-    t.scale * (t.scaleZ ?? 1),
+    scale * (t.scaleX ?? 1),
+    scale * (t.scaleY ?? 1),
+    scale * (t.scaleZ ?? 1),
   ] as const;
 }

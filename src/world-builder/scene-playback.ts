@@ -26,6 +26,8 @@ export interface PreviewLoop {
   /** A single pass reached its last frame. */
   finish(): void;
   fail(error: unknown): void;
+  /** Optional media clock: loading or stalled audio must hold its picture. */
+  elapsed?: () => number;
   now?: () => number;
   request?: (tick: () => void) => number;
   cancel?: (id: number) => void;
@@ -46,7 +48,7 @@ export function runPreview(p: PreviewLoop) {
     // A tick queued before Stop must not draw over a capture that follows it.
     if (!live()) return;
     const position = previewPosition(
-      (now() - start) / 1000,
+      p.elapsed?.() ?? (now() - start) / 1000,
       p.frames(),
       p.loop(),
     );
@@ -60,6 +62,7 @@ export function runPreview(p: PreviewLoop) {
       if (live()) p.fail(e);
       return;
     }
+    if (!live()) return;
     if (position.done) return p.finish();
     if (live()) animation = request(() => void tick());
   }
@@ -95,8 +98,9 @@ export async function rewindUnlessPlaying(
   playing: boolean,
   setFrame: (frame: number) => void,
   render: (frame: number) => unknown,
+  frame = 0,
 ) {
   if (playing) return;
-  setFrame(0);
-  await render(0);
+  setFrame(frame);
+  await render(frame);
 }

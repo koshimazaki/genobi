@@ -8,10 +8,6 @@ import TemplateMediaInputs from "../src/director/TemplateMediaInputs";
 import VersionMediaDrop from "../src/director/VersionMediaDrop";
 import { versionSlots } from "../shared/templates/version";
 import { characterPiece, dimensionsMix } from "../shared/templates/catalogue";
-import {
-  versionRequestedSlots,
-  versionStudioUrl,
-} from "../src/director/version-handoff";
 import { readBrief, writeBrief } from "../src/director/prompt-brief";
 import { versionPicks } from "../src/director/version-inputs";
 import { readVersionBrief } from "../src/director/version-brief";
@@ -147,18 +143,7 @@ it("commits an inline character replacement to the inputs generation reads, pres
       .character,
   ).toEqual([brief.references[0].assetId]);
 });
-it("opens the same local template/workspace with only declared generation choices and exposes editable template direction", async () => {
-  const slots = versionSlots(dimensionsMix).map((s) => s.id);
-  const url = new URL(
-    versionStudioUrl(dimensionsMix.id, "editor", [slots[0], "unknown"]),
-  );
-  expect(url.pathname).toBe("/director");
-  expect(url.searchParams.get("example")).toBe(dimensionsMix.id);
-  expect(url.searchParams.get("workspace")).toBe("editor");
-  expect(versionRequestedSlots(dimensionsMix.id, url.search)).toEqual([
-    slots[0],
-  ]);
-  expect(url.href).not.toContain("unknown");
+it("exposes editable template direction", async () => {
   const bundle = await versionMix();
   expect(readVersionBrief(bundle).text).toContain(
     `Look: ${dimensionsMix.style.look}`,

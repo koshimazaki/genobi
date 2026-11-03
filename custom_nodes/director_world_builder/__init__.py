@@ -18,33 +18,13 @@ from PIL import Image
 import folder_paths
 
 from .acoustics import DirectorSceneAcoustics
+from .capture_contract import MAX_FRAMES, recipe_data
 from .edges import canny, depth_batch
 from .reverb import DirectorSceneReverb
 from .storyboard import DirectorStoryboardGrid
 from .take_audio import fit_audio
 
 WEB_DIRECTORY = "./web"
-
-
-def recipe_data(text):
-    if not isinstance(text, str) or len(text.encode()) > 64000:
-        raise ValueError("Recipe must be JSON under 64 KB")
-    data = json.loads(text)
-    if not isinstance(data, dict) or data.get("version") != 1 or data.get("fps") != 24:
-        raise ValueError("Expected World Builder recipe v1 at 24 fps")
-    for key in ("width", "height"):
-        n = data.get(key)
-        if type(n) is not int or n < 256 or n > 1920 or n % 64:
-            raise ValueError("Invalid capture dimensions")
-    n = data.get("frames")
-    if type(n) is not int or n < 9 or n > 241 or (n - 1) % 8:
-        raise ValueError("Invalid capture frame count")
-    for key in ("loop", "screen"):
-        if key in data and type(data[key]) is not bool:
-            raise ValueError(f"Recipe {key} must be true or false")
-    if data["width"] * data["height"] * n * 12 > 2 * 1024 * 1024 * 1024:
-        raise ValueError("Decoded take exceeds 2 GiB; reduce size or frames")
-    return data
 
 
 def input_path(name, extensions):
@@ -204,8 +184,8 @@ class DirectorSceneInputs:
         uid = "director-" + uuid.uuid4().hex
         ui = {}
         if images is not None:
-            if images.ndim != 4 or images.shape[-1] != 3 or not 1 <= len(images) <= 241 or min(images.shape[1:3]) < 1:
-                raise ValueError("Use a bounded RGB image batch (at most 241 frames)")
+            if images.ndim != 4 or images.shape[-1] != 3 or not 1 <= len(images) <= MAX_FRAMES or min(images.shape[1:3]) < 1:
+                raise ValueError(f"Use a bounded RGB image batch (at most {MAX_FRAMES} frames)")
             if not 1 <= fps <= 60:
                 raise ValueError("FPS must be 1–60")
             # The screen is a preview: a full-size render (145 frames at

@@ -4,9 +4,7 @@ import {
   dimensionsMix,
   productVideo,
 } from "../shared/templates/catalogue";
-import { cleanInstruction } from "../shared/director/regenerate";
 import { SUBJECT_LIMIT, TITLE_LIMIT } from "../shared/templates/plan";
-import { versionSlots } from "../shared/templates/version";
 import {
   applyVersionInputs,
   versionPicks,
@@ -17,7 +15,6 @@ import {
   resolveBrief,
   writeBrief,
 } from "../src/director/prompt-brief";
-import { versionInstruction } from "../src/director/version-instruction";
 import { buildTemplateBundle } from "../src/director/house-template";
 import {
   versionBase,
@@ -61,8 +58,6 @@ it("keeps reference tokens and bindings valid when a character slot shrinks from
       (g) => g.referenceAssetIds.join() === "character-2",
     ),
   ).toBe(true);
-  const instruction = versionInstruction(next, characterPiece, []);
-  expect(cleanInstruction(instruction)).toBe(instruction);
   expect(readBrief(before).references).toHaveLength(4);
 });
 
@@ -88,10 +83,10 @@ it("clears an optional product slot without leaving an unbound brief token", asy
   );
   expect(resolveBrief(cleared).references).toEqual([]);
   expect(versionPicks(cleared, productVideo).product).toEqual([]);
-  expect(() => versionInstruction(cleared, productVideo, [])).not.toThrow();
+  expect(resolveBrief(cleared).prompt).not.toContain("[Image 1]");
 });
 
-it("hands the current Words to the agent and updates generated brief lines across repeated edits", async () => {
+it("writes the current Words into the project and updates generated brief lines across repeated edits", async () => {
   let bundle = await versionMix();
   for (const [subject, title] of [
     ["a robot with a blue cloak", "MY ROBOT"],
@@ -104,7 +99,6 @@ it("hands the current Words to the agent and updates generated brief lines acros
       { ...versionTextInputs(bundle, dimensionsMix), subject, title },
     );
     const brief = resolveBrief(bundle);
-    const message = versionInstruction(bundle, dimensionsMix, []);
     expect(bundle.project.template?.inputs).toMatchObject({ subject, title });
     expect(brief.prompt).toContain(
       `${dimensionsMix.inputs.subject.label}: ${subject}`,
@@ -112,13 +106,11 @@ it("hands the current Words to the agent and updates generated brief lines acros
     expect(brief.prompt).toContain(
       `${dimensionsMix.inputs.title.label}: ${title}`,
     );
-    expect(message).toContain(JSON.stringify({ subject, title }));
-    expect(message).not.toContain(dimensionsMix.inputs.subject.default);
-    expect(cleanInstruction(message)).toBe(message);
+    expect(brief.prompt).not.toContain(dimensionsMix.inputs.subject.default);
   }
 });
 
-it("preserves a custom description while handing off changed Words separately", async () => {
+it("preserves a custom description while applying changed Words separately", async () => {
   const original = await versionCharacter();
   const description =
     "Style: quiet watercolor; preserve the red coat [Image 1]";
@@ -137,16 +129,17 @@ it("preserves a custom description while handing off changed Words separately", 
     },
   );
   expect(readBrief(next).text).toBe(description);
-  expect(versionInstruction(next, characterPiece, [])).toContain(
-    '"subject":"A painter","title":"MAYA"',
-  );
+  expect(next.project.template?.inputs).toMatchObject({
+    subject: "A painter",
+    title: "MAYA",
+  });
   expect(next.project.layers.find((l) => l.id === "title")).toMatchObject({
     parameters: { text: "MAYA" },
   });
 });
 
 it.each(["x", '"'])(
-  "fits maximum-length Words (%s) and all choices in the handoff",
+  "applies maximum-length Words (%s) without generating anything",
   async (letter) => {
     const base = await versionMix();
     const subject = letter.repeat(SUBJECT_LIMIT);
@@ -157,12 +150,7 @@ it.each(["x", '"'])(
       versionPicks(base, dimensionsMix),
       { ...versionTextInputs(base, dimensionsMix), subject, title },
     );
-    const instruction = versionInstruction(
-      next,
-      dimensionsMix,
-      versionSlots(dimensionsMix).map((slot) => slot.id),
-    );
-    expect(instruction).toContain(JSON.stringify({ subject, title }));
-    expect(cleanInstruction(instruction)).toBe(instruction);
+    expect(next.project.template?.inputs).toMatchObject({ subject, title });
+    expect(next.project.generations).toEqual(base.project.generations);
   },
 );

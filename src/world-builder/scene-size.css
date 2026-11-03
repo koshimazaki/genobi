@@ -1,0 +1,39 @@
+.wb-scene-size {
+  display: grid;
+  gap: 5px;
+  padding: 10px 0;
+  border-block: 1px solid var(--border);
+}
+.wb-scene-size > label,
+.wb-scene-size-value {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  color: var(--muted);
+}
+.wb-scene-size-value input {
+  width: 58px;
+  min-width: 0;
+  text-align: right;
+}
+.wb-scene-size > input[type="range"] {
+  width: 100%;
+  min-width: 0;
+  height: 26px;
+  margin: 0;
+  accent-color: var(--accent-strong);
+}
+.wb-scene-size-preset {
+  width: 100%;
+  min-width: 0;
+}
+.wb-scene-size > output {
+  font-size: 10px;
+  color: var(--text);
+}
+.wb-scene-size > .wb-hint {
+  margin: 0;
+  font-size: 9px;
+  line-height: 1.5;
+}

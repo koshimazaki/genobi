@@ -34,7 +34,7 @@ Keep internal preset IDs independent of display names and branding.
 
 The first visit shows Genobi’s optional setup welcome. Its dismissal stays in
 this browser; blocked storage falls back to showing the welcome next visit.
-Reopen setup from the Genobi activity bubble. Closing it preserves the requested
+Reopen setup from the Genobi guide bubble. Closing it preserves the requested
 workspace, including direct links. The header’s question mark opens a separate
 quick guide on demand, without stored dismissal state. Its Open Camera action
 is explicit and never generates.
@@ -42,8 +42,10 @@ The book immediately left of the mic opens the standalone `/taste` reference
 wiki in a separate tab, preserving the studio. It replaces the floating Taste
 link and stays outside the tool dock. Camera's generation library remains in
 its main column even when Assets is closed; the rail has Project and
-Inspirations. Other workspaces retain their Library tab and Ninja's independent
-Gallery panel. Stable gallery hosts move between these destinations without
+Inspirations. Other workspaces add the Camera results as a third tab, named
+**Generated** since 2 November 2026 (#57; Dual Swords keeps its own **Library**),
+and Ninja keeps its independent Gallery panel. A Generated card is dragged onto
+a template slot or clip, or added with +; nothing is swapped in by itself. Stable gallery hosts move between these destinations without
 recreating the gallery's state.
 
 Ninja means the custom workspace in this shell. Earlier “3D Ninja” planning refers

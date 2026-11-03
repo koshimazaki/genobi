@@ -1,10 +1,5 @@
 import { useEffect } from "react";
-import {
-  refreshActivity,
-  setActivityLogging,
-  setBubbleVisibility,
-  useActivity,
-} from "./store";
+import { refreshActivity, setActivityLogging, useActivity } from "./store";
 import { OPEN_SETUP } from "../setup/state";
 import "./activity.css";
 export function ActivitySettings() {
@@ -29,18 +24,6 @@ export function ActivitySettings() {
         Off by default. Records tool names and outcomes, not prompts, arguments
         or credentials. Turning it off clears this optional history. Generation
         receipts, costs and replay protection remain.
-      </p>
-      <label>
-        <input
-          type="checkbox"
-          checked={state.showBubble}
-          onChange={(e) => setBubbleVisibility(e.target.checked)}
-        />{" "}
-        Open the Genobi bubble for session updates
-      </label>
-      <p>
-        Off by default. You can still open Genobi manually. Closing the bubble
-        never stops a run; pending approvals remain accessible.
       </p>
       {state.warning && <p role="status">{state.warning}</p>}
       {state.preferencePending && (

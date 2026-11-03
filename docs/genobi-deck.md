@@ -19,7 +19,8 @@ characters the spinners, progress bars and agents' `progressLine` use.
 ## Where it is mounted
 
 `<GenobiDeck />` is mounted once, in `src/components/Wordmark.tsx`, beside
-`<AgentSessionPanel />` (the bubble) whose session it reads. The wordmark is
+`<AgentSessionPanel />` (the headless session follower) whose session it
+reads, and the Genobi guide bubble. The wordmark is
 in the studio header (`Topbar`) in every preset and in the standalone World
 Builder's header, so the deck is there too. It is `position: fixed` to the
 bottom right of the window, so where it sits in the markup moves nothing: the
@@ -38,13 +39,12 @@ agents and links to Development. The deck is mounted again where it was, and
 `tests/deck-mounted.test.tsx` renders the studio header and fails if the
 deck (or the bubble) is not in it.
 
-## Bubble for the conversation, deck for the detail
+## The deck holds the session
 
-The bubble is where the person talks to Genobi: the newest update, Stop and
-the approvals. The deck is where the detail is, and it keeps reading with the
-bubble tucked away, so the person can work on the assets:
+Since 2 November 2026 (#57) the [bubble](agent-bubble.md) is a static guide.
+The deck is where an agent session shows, and with it the session's controls:
 
-- **The bar** shows the newest line of the session the bubble shows while it
+- **The bar** shows the newest line of the shown session while it
   works (over a running job's line, since that line is in the log), a running
   job's `progressLine` otherwise, then a finished session's summary, then
   linked agents or the supervisor's state (`src/deck/deck-now.ts`). It is
@@ -52,19 +52,24 @@ bubble tucked away, so the person can work on the assets:
   those, it reads `READY · SPEAK OR TYPE TO START`, then cycles
   [teachings](teachings.md) (`TEACHING · …`) until something real arrives.
 - **Opening the deck** shows the whole log: what is working now, the
-  session's request, every retained update oldest first (up to 40, as the
-  bubble keeps), the summary and linked agents. It opens scrolled to the
-  newest lines and then never moves the reading position. The bubble
-  announces state changes, so the log is not a live region.
-- **Its actions** only move the person: **Open bubble** (where Stop and the
-  approvals are), **Project assets ↗** and **Open Development ↗**. The deck
-  never starts, approves, stops or pays for anything.
+  session's request, every retained update oldest first (up to 40), the
+  summary, the conversation (**YOU ›** / **GENOBI ›**) and linked agents. It
+  opens scrolled to the newest lines and then never moves the reading
+  position. The log is not a live region; the approvals announce their own
+  status.
+- **The session's controls** (`src/deck/DeckSession.tsx`): each paid step
+  waiting for the person with its plan, price and payer, **Approve** /
+  **Decline**, **Open local session** for a relayed one, and **Stop
+  session**. A waiting step opens the deck by itself, and so does a message
+  voice sends to the session (`OPEN_DECK`).
+- **Its other actions** only move the person: **Speak to agent**, **Project
+  assets ↗** and **Open Development ↗**. The deck never starts or pays for
+  anything by itself; Approve is the person's click on a quoted step.
 
 The deck reads the session through `useLatestAgentSession`: the panel's
 newest poll, or the session just shown before its first poll, so a new spawn
 (the spawn store, `src/agent/spawn-store.ts`, ends in `showAgentSession`
-whichever runner and Terminal or bubble mode) reaches the bar at once. The
-avatar's signal for a new reply is Box 1.8, not the deck.
+whichever runner and Terminal or bubble mode) reaches the bar at once.
 
 ## The MVP
 
@@ -190,8 +195,8 @@ a Claude Code band and a Hermes port do not drift apart.
 - Never a number standing in for one: a bar or percentage appears only when the
   provider reported progress; otherwise elapsed time.
 - Decorative motion stops under reduced motion or Pause. Idle visual movement is not job progress.
-- The deck shows; it never starts, approves, stops or pays for anything.
-  Approvals and Stop stay in the bubble.
+- The deck never starts or pays for anything by itself. Approve, Decline
+  and Stop act only on the person's click (moved here from the bubble, #57).
 - It stays mounted in the studio header; `tests/deck-mounted.test.tsx` fails
   if a change drops it.
 - Nothing about the person leaves the browser: the deck's own settings live in

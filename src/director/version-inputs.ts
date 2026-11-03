@@ -177,7 +177,8 @@ export async function applyVersionInputs(
   template: HouseTemplate,
   picks: VersionPicks,
   value: TemplateInputs,
-  make: string[] = [],
+  /** Slots that may stay below their minimum for now (filled in later). */
+  allowMissing: readonly string[] = [],
 ) {
   const inputs = readInputs(template, value);
   const currentInputs = versionTextInputs(bundle, template);
@@ -194,10 +195,10 @@ export async function applyVersionInputs(
   for (const slot of slots) {
     const ids = picks[slot.id] ?? [];
     // A picture's declared static default is valid without an imported asset.
-    const plannedInput = make.includes(slot.id);
     if (
       !(slot.picture && ids.length === 0) &&
-      (ids.length > slot.max || (!plannedInput && ids.length < slot.min))
+      (ids.length > slot.max ||
+        (!allowMissing.includes(slot.id) && ids.length < slot.min))
     )
       throw new Error(
         `${slot.label}: choose ${slot.min} to ${slot.max} files.`,

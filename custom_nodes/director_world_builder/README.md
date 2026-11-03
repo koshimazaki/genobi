@@ -70,6 +70,14 @@ suppression, double threshold), with no extra pip dependency.
   batches into one 2x2, 1x4 or 2x4 sheet for FLUX Klein; empty slots stay black and
   `panels` names each cell. `examples/storyboard/ninja/` holds eight recipes for a 2x4 board.
 
+Recipes with scene `motion` can be captured with matching RGB and depth, but
+the Python **Acoustics** and **Reverb** nodes are static estimators. They reject
+these recipes explicitly so animated voxels or an acoustic proxy never become
+an incorrect open-sky estimate. Use World Builder's dynamic CPU room sound for
+an evaluated timeline. The browser treatment and these native static nodes
+are separate engines; exporting motion does not add LTX conditioning or a
+dynamic Python acoustic scheduler.
+
 `examples/world-builder-acoustics.json` wires all of this into one graph: Capture
 → Acoustics → Koshi_AKUSPACEPrompt (the LoRA route; that node comes from the
 ComfyUI-Koshi-Nodes pack, which must be installed too) and Capture → Reverb →
@@ -90,8 +98,13 @@ It restricts paths to Comfy's input directory, caps decoded takes at 2 GiB
 (including 193 frames at 1024 × 576), and hashes
 file contents for cache invalidation. Exported visual WebM and WAV are separate;
 use the combine node to mux a soundtrack. No audio file produces silence.
+Local captures now allow 9–721 frames on the 24 fps, `8k+1` grid. A 30-second
+move has 721 frames, with its last sample at 30 seconds and an encoded duration
+of 721/24 seconds. The 2 GiB guard still applies: 512 × 320 at 721 frames fits,
+while 1024 × 576 at that length is refused. The fixed hosted Layout-to-video
+deployment remains a separate 193-frame contract.
 Inputs shrinks large image batches to the 320M-value preview budget, keeping
-full-resolution source tensors unchanged; it still allows at most 241 RGB frames.
+full-resolution source tensors unchanged; it still allows at most 721 RGB frames.
 FFprobe must accompany FFmpeg for WebM metadata checks.
 
 Comfy Cloud uses the external World Builder's downloads with supported Load

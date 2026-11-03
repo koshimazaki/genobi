@@ -1,35 +1,38 @@
 import { liveSession } from "./live-session";
-import { SCENE_CAPABILITIES } from "./capabilities";
 import { useScenePlayback } from "./useScenePlayback";
 import { usePlaybackState } from "./usePlaybackState";
 import { rewindUnlessPlaying } from "./scene-playback";
 import { useEffect, useRef, useState } from "react";
-import { createWorld, type WorldRuntime } from "./runtime";
+import type { WorldRuntime } from "./runtime";
 import {
-  presetRecipe,
-  validateRecipe,
-  parameterSchema,
-  type Recipe,
-  type Shape,
-} from "./recipe";
-import { exportTake, png } from "./export-take";
+  createBuilderRuntime,
+  describeBuilderRuntime,
+} from "./builder-runtime";
+import { viewportShotRecipe } from "./camera-viewport";
+import { presetRecipe, validateRecipe, type Recipe } from "./recipe";
+import { exportTake } from "./export-take";
+import { builderEdits, builderStill } from "./builder-actions";
+import { viewportEditHandler } from "./viewport-edit";
+import {
+  createInputTakeSession,
+  type InputTakeSession,
+  type InputTakeState,
+} from "./input-take-session";
 import { withAudioCompanion } from "./take-audio";
 import { validSurface } from "./scene-contract";
 import { decodeAudio, type AudioTrack } from "./audio";
-import { MOVE_SECONDS, reconcileDuration } from "./take-duration";
+import { reconcileDuration } from "./take-duration";
 import { audioLabel, type AudioSource } from "./audio-history";
 import { hostMessages } from "./host-messages";
 import { useAudioHistory } from "./useAudioHistory";
+import { useAudioUrl } from "./useAudioUrl";
 import { assertWalkEdit } from "./walk-edits";
 import { useTakeChannel } from "./take-channel";
 import type { RecipeGuard, SceneAdapter } from "./scene-adapter";
 import { createRecipeRevision } from "./recipe-revision";
+import { sceneFrameAfterEdit } from "./scene-editing";
+import { createLoadingEditLock } from "./edit-lock";
 export type { SceneAdapter } from "./scene-adapter";
-declare global {
-  interface Window {
-    directorScene?: SceneAdapter;
-  }
-}
 import { errorText, host, runWork, send } from "./session-io";
 import { sessionHandoffs } from "./session-handoff";
 import { useExampleTrack } from "./example-track";
@@ -42,6 +45,7 @@ export function useBuilderSession() {
     track = useRef<AudioTrack | null>(null),
     controller = useRef<AbortController | null>(null),
     audioElement = useRef<HTMLAudioElement>(null),
+    inputTake = useRef<InputTakeSession | null>(null),
     history = useAudioHistory(),
     addRecent = useRef(history.add),
     loader = useRef<
@@ -55,28 +59,46 @@ export function useBuilderSession() {
     [error, setError] = useState(""),
     [status, setStatus] = useState("Ready to prepare a set."),
     [take, setTake, onTake] = useTakeChannel(),
-    [audioURL, setAudioURL] = useState(""),
+    [audioURL, setAudioURL] = useAudioUrl(),
     [audioName, setAudioName] = useState(""),
     [mediaName, setMediaName] = useState(""),
     [loop, setLoop] = useState(false);
+  const [inputState, setInputState] = useState<InputTakeState>({
+    phase: "idle",
+    frame: 0,
+  });
   const api = useRef<SceneAdapter | null>(null),
     previewQueue = useRef(Promise.resolve()),
     settling = useRef<() => boolean>(() => false);
-  const { playing, playingRef, setPlaying, stopping, settled } =
-    usePlaybackState(runtime, audioElement, previewQueue);
+  const playback = usePlaybackState(
+    runtime,
+    audioElement,
+    previewQueue,
+    () =>
+      !controller.current &&
+      !settling.current() &&
+      !api.current?.live.status().recordingBusy,
+  );
+  const { playing, playingRef, setPlaying, stopping, settled } = playback;
   const [json, setJson] = useState(""),
-    [ready, setReady] = useState(false);
+    [ready, setReady] = useState(false),
+    [previewOnly, setPreviewOnly] = useState(false);
   useEffect(() => {
     let world: WorldRuntime;
     try {
-      world = createWorld(canvas.current!, (patch) => {
-        void api.current
-          ?.configure({ ...current.current, ...patch })
-          .catch((e) => setError(errorText(e)));
-      });
+      world = createBuilderRuntime(
+        canvas.current!,
+        viewportEditHandler(api, () => ({ world, alive }), setError),
+      );
     } catch (error) {
-      setError(`WebGL could not start: ${errorText(error)}`);
+      setError(errorText(error));
       return;
+    }
+    if (world.kind === "geometry") {
+      setPreviewOnly(true);
+      setStatus(
+        "Geometry preview · WebGL unavailable. Scene motion, camera and audio remain editable; capture, textures and viewport handles need WebGL.",
+      );
     }
     runtime.current = world;
     world.configure(current.current);
@@ -89,11 +111,15 @@ export function useBuilderSession() {
         if (alive) setError(errorText(e));
       });
     let alive = true;
-    let loading = false;
+    const loading = createLoadingEditLock(
+      () => world.editor?.holdEdits(),
+      (value) => alive && setBusy(value),
+    );
+    const lockLoading = loading.set;
     const revision = createRecipeRevision();
     const idle = (allowWalk = false, allowPlay = false) => {
       if (
-        loading ||
+        loading.active ||
         controller.current ||
         (!allowPlay && playingRef.current) ||
         (!allowWalk && world.editor?.mode === "walk")
@@ -120,6 +146,10 @@ export function useBuilderSession() {
         setAudioURL("");
         setAudioName("");
       }
+      const editFrame =
+        next.motion && world.editor?.mode === "edit"
+          ? sceneFrameAfterEdit(current.current, next, world.frame)
+          : 0;
       current.current = next;
       revision.advance();
       commitAudio?.();
@@ -127,8 +157,11 @@ export function useBuilderSession() {
       setRecipe(next);
       setTake(null);
       setStatus("Set updated. Capture a new take when ready.");
-      await rewindUnlessPlaying(playingRef.current, setFrame, (n) =>
-        world.renderFrame(n),
+      await rewindUnlessPlaying(
+        playingRef.current,
+        setFrame,
+        (n) => world.renderFrame(n),
+        editFrame,
       ).catch((error) => setError(errorText(error)));
     }
     const live = liveSession(
@@ -145,40 +178,20 @@ export function useBuilderSession() {
       setError,
       () => idle(true),
     );
-    /** Frame zero as a PNG, under the same capture guard as a take. */
-    async function still(draw: (frame: number) => Promise<HTMLCanvasElement>) {
-      idle();
-      if (world.editor?.mode !== "shot")
-        throw new Error("Return to Shot mode before capture.");
-      loading = true;
-      setBusy(true);
-      try {
-        await previewQueue.current.catch(() => {});
-        world.assertMedia();
-        world.beginCapture();
-        const canvas = await draw(0);
-        setFrame(0);
-        return await png(canvas);
-      } finally {
-        loading = false;
-        if (alive) setBusy(false);
-        world.endCapture();
-        if (alive) await world.renderFrame(0);
-      }
-    }
+    const still = builderStill({
+      world,
+      idle,
+      settle: () => previewQueue.current.catch(() => {}),
+      lock: lockLoading,
+      alive: () => alive,
+      frame: setFrame,
+    });
     const adapter: SceneAdapter = {
       live,
-      describe: () => ({
-        version: 1,
-        renderers: ["stage", "neuro", "playground"],
-        parameters: parameterSchema,
-        seconds: MOVE_SECONDS,
-        capabilities: [...SCENE_CAPABILITIES],
-      }),
+      describe: () => describeBuilderRuntime(world),
       getRecipe: () => structuredClone(current.current),
       getRecipeRevision: revision.read,
       async configure(input, guard) {
-        // An edit applies live under Play; the preview skips frames meanwhile.
         idle(true, true);
         revision.assert(guard);
         const guarded = guard?.expectedRevision !== undefined;
@@ -189,7 +202,7 @@ export function useBuilderSession() {
         let next = validateRecipe(reconcileDuration(current.current, input));
         if (world.editor?.mode === "walk")
           assertWalkEdit(current.current, next);
-        loading = true;
+        lockLoading(true, false);
         const releaseEdits = guarded ? world.editor?.holdEdits() : undefined;
         try {
           const sound = guard?.sound;
@@ -212,7 +225,7 @@ export function useBuilderSession() {
               .catch(() => {});
           return structuredClone(next);
         } finally {
-          loading = false;
+          lockLoading(false, false);
           releaseEdits?.();
         }
       },
@@ -221,7 +234,8 @@ export function useBuilderSession() {
       async render(n) {
         if (!Number.isInteger(n) || n < 0 || n >= current.current.frames)
           throw new Error("Frame is outside the take.");
-        if (controller.current || loading) throw new Error("Scene is busy.");
+        if (controller.current || loading.active)
+          throw new Error("Scene is busy.");
         previewQueue.current = previewQueue.current
           .catch(() => {})
           .then(async () => {
@@ -233,22 +247,20 @@ export function useBuilderSession() {
         await previewQueue.current;
       },
       async capture(options) {
+        if (world.kind === "geometry")
+          throw new Error("Capture needs WebGL; this is a geometry preview.");
         idle(true);
-        if (live.status().recording)
+        if (live.status().recordingBusy)
           throw new Error("Stop live recording first.");
         const editor = world.editor;
         if (editor && editor.mode !== "shot") {
           // Walk or Build: the viewport becomes the shot camera; the take replays it with the recipe's move, from Shot.
-          const next = validateRecipe({
-            ...current.current,
-            ...editor.freeze(),
-            cameraShot: "custom",
-          });
-          loading = true;
+          const next = viewportShotRecipe(current.current, editor.freeze());
+          lockLoading(true, false);
           try {
             await applyRecipe(next);
           } finally {
-            loading = false;
+            lockLoading(false, false);
           }
         }
         world.assertMedia();
@@ -310,28 +322,26 @@ export function useBuilderSession() {
           },
         };
         const next = validateRecipe({ ...current.current, textures });
-        loading = true;
-        setBusy(true);
+        lockLoading(true);
         try {
           await previewQueue.current.catch(() => {});
           await world.setMedia(blob, target);
           await applyRecipe(next);
           setMediaName("Texture loaded");
         } finally {
-          loading = false;
-          if (alive) setBusy(false);
+          lockLoading(false);
         }
       },
       async clearSurface(target) {
         idle();
         const textures = { ...current.current.textures };
         delete textures[target];
-        loading = true;
+        lockLoading(true, false);
         try {
           world.clearMedia(target);
           await applyRecipe(validateRecipe({ ...current.current, textures }));
         } finally {
-          loading = false;
+          lockLoading(false, false);
         }
       },
       setAudio: (blob) => loadAudio(blob, "agent"),
@@ -342,8 +352,7 @@ export function useBuilderSession() {
     /** Sound is live in every mode: a track loads in Shot, Build or Walk. */
     async function loadAudio(blob: Blob, source: AudioSource, label?: string) {
       idle(true);
-      loading = true;
-      setBusy(true);
+      lockLoading(true);
       try {
         const decoded = await decodeAudio(blob);
         await applyRecipe(
@@ -359,12 +368,29 @@ export function useBuilderSession() {
           setAudioName((await addRecent.current(blob, source, label)).label);
         }
       } finally {
-        loading = false;
-        if (alive) setBusy(false);
+        lockLoading(false);
       }
     }
     loader.current = loadAudio;
-    settling.current = () => loading;
+    const input = createInputTakeSession({
+      world,
+      getRecipe: () => current.current,
+      ready() {
+        idle(true, true);
+        if (live.status().recordingBusy || world.editor?.dragging)
+          throw new Error("Stop recording or finish the transform drag first.");
+      },
+      stopPlayback: () => setPlaying(false),
+      settle: () => previewQueue.current.catch(() => {}),
+      lock: lockLoading,
+      alive: () => alive,
+      load: (blob) => loadAudio(blob, "file", "Synth input"),
+      state: setInputState,
+      frame: setFrame,
+      status: setStatus,
+    });
+    inputTake.current = input;
+    settling.current = () => loading.active;
     api.current = adapter;
     window.directorScene = adapter;
     const listener = hostMessages({
@@ -379,6 +405,9 @@ export function useBuilderSession() {
     send({ type: "director:ready" });
     return () => {
       alive = false;
+      input.dispose();
+      lockLoading(false);
+      inputTake.current = null;
       adapter.cancel();
       window.removeEventListener("message", listener);
       if (window.directorScene === adapter) delete window.directorScene;
@@ -387,15 +416,11 @@ export function useBuilderSession() {
       live.dispose();
       world.dispose();
     };
-  }, [playingRef, setTake]);
-  useEffect(
-    () => () => {
-      if (audioURL) URL.revokeObjectURL(audioURL);
-    },
-    [audioURL],
-  );
+  }, [playingRef, setPlaying, setTake, setAudioURL]);
   useScenePlayback({
     playing,
+    revision: playback.revision,
+    soundPreview: playback.soundPreview,
     // A seamless-loop recipe always previews looping, so the seam is seen.
     loop: loop || recipe.loop === true,
     current,
@@ -411,39 +436,19 @@ export function useBuilderSession() {
     held: () => settling.current(),
   });
   const run = runWork(setError);
-  /** `tune` applies live during Play (Sound routing); `change` stops it first. */
-  const tune = (patch: Partial<Recipe>) =>
-    run(() => api.current!.configure({ ...current.current, ...patch }));
-  const change = (patch: Partial<Recipe>) =>
-    run(
-      stopping(() => api.current!.configure({ ...current.current, ...patch })),
-    );
-  const add = async (shape: Shape) => {
-    const id = `${shape}-${crypto.randomUUID().slice(0, 8)}`;
-    await api.current!.configure({
-      ...current.current,
-      objects: [
-        ...current.current.objects,
-        {
-          id,
-          shape,
-          x: current.current.targetX,
-          y: 1,
-          z: current.current.targetZ,
-          scale: 1,
-          spin: 0,
-          color: "#b7cad8",
-          prompt: "",
-        },
-      ],
-    });
-    return id;
-  };
+  const edits = builderEdits(
+    () => api.current!,
+    () => current.current,
+    run,
+    stopping,
+  );
   const handoff = sessionHandoffs(api, take, setFrame, setStatus);
   const example = useExampleTrack(audioName);
   return {
     canvas,
     audioElement,
+    inputTake,
+    inputState,
     recipe,
     frame,
     busy,
@@ -459,6 +464,7 @@ export function useBuilderSession() {
       stopping(() => loader.current(blob, source, label))(),
     mediaName,
     playing,
+    ...playback.sound,
     setPlaying,
     stopping,
     settled,
@@ -467,12 +473,11 @@ export function useBuilderSession() {
     api,
     track,
     ready,
+    previewOnly,
     json,
     setJson,
     run,
-    change,
-    tune,
-    add,
+    ...edits,
     ...handoff,
     canSendToDirector: Boolean(host()),
     example,
@@ -485,5 +490,4 @@ export function useBuilderSession() {
     onTake,
   };
 }
-
 export type BuilderSession = ReturnType<typeof useBuilderSession>;

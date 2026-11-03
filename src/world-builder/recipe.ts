@@ -1,10 +1,14 @@
 import { roomPresets } from "./room-presets";
+import { WORLD_POSITION_LIMIT, PRIMITIVE_SCALE_RANGE } from "./scene-bounds";
+import { validateSceneSize, type SceneSize } from "./scene-size-contract";
+import { normalizeBandEnvelopes, type BandEnvelopes } from "./audio-bands";
 import {
   BUILDER_CHARACTER_ASSETS as CHARACTER_ASSETS,
   BUILDER_CHARACTER_MODELS as CHARACTER_MODELS,
   type BuilderCharacterAsset as CharacterAsset,
 } from "./character-catalog";
 import { validMotion, type AvatarMotion } from "./motion";
+import { validateCharacterAudio, type CharacterAudio } from "./character-audio";
 import {
   parseCreatureReference,
   type CreatureReference,
@@ -16,11 +20,19 @@ import {
   type Transform,
   type SurfaceMap,
 } from "./scene-contract";
-import { framesForSeconds, MOVE_SECONDS } from "./take-duration";
-import { cameraProgressAt } from "./loop";
+import { framesForSeconds, MOVE_SECONDS, TAKE_FRAMES } from "./take-duration";
+import { legacyCameraAt, legacyCameraTargetAt } from "./legacy-camera";
 import { validateAvatarPose, type AvatarPose } from "./avatar-pose";
-import { trackOffset, validateAvatarPath, type AvatarKey } from "./avatar-path";
+import { validateAvatarPath, type AvatarKey } from "./avatar-path";
 import { ORBIT_RANGE } from "./prop-orbit";
+import type { SceneMotion } from "./scene-state";
+import { sceneObjects } from "./scene-instances";
+import { validateSceneMotion } from "./scene-state-validation";
+import {
+  sceneCameraAt,
+  validateSceneCamera,
+  type SceneCameraMotion,
+} from "./scene-camera";
 import {
   LEGACY_AUDIO_FIELDS,
   legacyFromRoutes,
@@ -32,15 +44,30 @@ import {
 export const parameterSchema = {
   width: { min: 256, max: 1920, step: 64, initial: 1280 },
   height: { min: 256, max: 1920, step: 64, initial: 704 },
-  frames: { min: 9, max: 241, step: 8, initial: 97 },
+  frames: { ...TAKE_FRAMES, initial: 97 },
   fov: { min: 15, max: 100, step: 1, initial: 55 },
   azimuth: { min: -180, max: 180, step: 1, initial: 25 },
   elevation: { min: -89, max: 89, step: 1, initial: 15 },
-  radius: { min: 2, max: 60, step: 0.5, initial: 12 },
-  targetX: { min: -40, max: 40, step: 0.25, initial: 0 },
-  targetZ: { min: -40, max: 40, step: 0.25, initial: 0 },
-  /** Up to 40 m so a tracking shot can start on a character high in the air. */
-  targetY: { min: -5, max: 40, step: 0.25, initial: 1.5 },
+  radius: { min: 2, max: 240, step: 0.5, initial: 12 },
+  targetX: {
+    min: -WORLD_POSITION_LIMIT,
+    max: WORLD_POSITION_LIMIT,
+    step: 0.25,
+    initial: 0,
+  },
+  targetZ: {
+    min: -WORLD_POSITION_LIMIT,
+    max: WORLD_POSITION_LIMIT,
+    step: 0.25,
+    initial: 0,
+  },
+  /** Metres, including continuous travel through life-size stacked spaces. */
+  targetY: {
+    min: -WORLD_POSITION_LIMIT,
+    max: WORLD_POSITION_LIMIT,
+    step: 0.25,
+    initial: 1.5,
+  },
   /** Degrees per take: ±360 is one full turn. */
   orbit: { min: -360, max: 360, step: 1, initial: 30 },
   dolly: { min: -0.8, max: 2, step: 0.1, initial: 0 },
@@ -75,6 +102,8 @@ export type Recipe = Record<Parameter, number> & {
   avatar: boolean;
   avatarAsset: CharacterAsset;
   avatarMotion: AvatarMotion;
+  /** Optional prepared-audio clip triggers; transient live input keeps the baseline. */
+  characterAudio?: CharacterAudio;
   creatureReference: CreatureReference | null;
   avatarPose: AvatarPose;
   /** Timed keys after `avatarPose` (frame 0); absent keeps the pose static. */
@@ -93,7 +122,7 @@ export type Recipe = Record<Parameter, number> & {
   cameraCurve: "linear" | "easeInOut";
   cameraShot: string;
   elevationEnd: number | null;
-  bandEnvelopes: { low: number[]; mid: number[]; high: number[] };
+  bandEnvelopes: BandEnvelopes;
   /** The mod matrix (`mod-routes.ts`); the old single-route fields migrate into it. */
   audioRoutes: ModRoute[];
   fps: 24;
@@ -103,9 +132,17 @@ export type Recipe = Record<Parameter, number> & {
   loop?: boolean;
   /** The Stage's backdrop screen; `false` removes it, absent keeps it. */
   screen?: boolean;
+  /** Optional dark, distance-faded floor grid; absent preserves the studio. */
+  stageLook?: "studio" | "dark-grid";
+  /** Absolute authoring factor already baked into metre-based scene fields. */
+  sceneSize?: SceneSize;
   prompt: string;
   background: string;
   objects: Prop[];
+  /** Optional deterministic state animation, bounded voxels and one acoustic room. */
+  motion?: SceneMotion;
+  /** Optional position, target and lens keys on the scene frame clock. */
+  cameraMotion?: SceneCameraMotion;
   envelope: number[];
 };
 export const defaultRecipe: Recipe = {
@@ -124,7 +161,7 @@ export const defaultRecipe: Recipe = {
   cameraCurve: "linear",
   cameraShot: "custom",
   elevationEnd: null,
-  bandEnvelopes: { low: [], mid: [], high: [] },
+  bandEnvelopes: { low: [], mid: [], high: [], sub: [] },
   audioRoutes: legacyRoutes({}, []),
   fps: 24,
   seconds: null,
@@ -243,12 +280,19 @@ const color = (v: unknown) =>
 export function validateRecipe(input: unknown): Recipe {
   if (!plain(input)) throw new Error("Expected a scene recipe object.");
   if (JSON.stringify(input).length > 64_000)
-    throw new Error("Recipe exceeds 64 KB.");
+    throw new Error(
+      "Recipe exceeds 64 KB. Reduce block count, saved states or take duration.",
+    );
   const allowed = new Set([
     ...Object.keys(defaultRecipe),
     "loop",
     "screen",
+    "stageLook",
+    "sceneSize",
     "avatarPath",
+    "motion",
+    "cameraMotion",
+    "characterAudio",
     ...LEGACY_AUDIO_FIELDS,
   ]);
   if (Object.keys(input).some((key) => !allowed.has(key)))
@@ -269,10 +313,15 @@ export function validateRecipe(input: unknown): Recipe {
     throw new Error("loop must be true or false.");
   if (r.screen !== undefined && typeof r.screen !== "boolean")
     throw new Error("screen must be true or false.");
+  if (
+    r.stageLook !== undefined &&
+    !["studio", "dark-grid"].includes(r.stageLook)
+  )
+    throw new Error("Choose a studio or dark-grid stage.");
   if (r.seconds !== null) {
     if (!finite(r.seconds, MOVE_SECONDS.min, MOVE_SECONDS.max))
       throw new Error(
-        `seconds must be between ${MOVE_SECONDS.min} and ${MOVE_SECONDS.max.toFixed(2)} (9 to 241 frames at 24 fps).`,
+        `seconds must be between ${MOVE_SECONDS.min} and ${MOVE_SECONDS.max.toFixed(2)} (9 to ${TAKE_FRAMES.max} frames at 24 fps).`,
       );
     r.frames = framesForSeconds(r.seconds);
   }
@@ -285,7 +334,10 @@ export function validateRecipe(input: unknown): Recipe {
   if (r.width % 64 || r.height % 64)
     throw new Error("Dimensions must be multiples of 64.");
   if (!Number.isInteger(r.frames) || (r.frames - 1) % 8)
-    throw new Error("Use 8k + 1 frames (9, 17, …, 241).");
+    throw new Error(`Use 8k + 1 frames (9, 17, …, ${TAKE_FRAMES.max}).`);
+  if (r.cameraMotion !== undefined)
+    r.cameraMotion = validateSceneCamera(r.cameraMotion, r.frames);
+  if (r.sceneSize !== undefined) r.sceneSize = validateSceneSize(r.sceneSize);
   if (
     !color(r.background) ||
     typeof r.prompt !== "string" ||
@@ -294,7 +346,7 @@ export function validateRecipe(input: unknown): Recipe {
     throw new Error("Invalid background or prompt.");
   if (
     !Array.isArray(r.envelope) ||
-    r.envelope.length > 241 ||
+    r.envelope.length > TAKE_FRAMES.max ||
     r.envelope.some((x) => !finite(x, 0, 1))
   )
     throw new Error("Invalid audio envelope.");
@@ -309,6 +361,11 @@ export function validateRecipe(input: unknown): Recipe {
     r.avatarMotion,
     CHARACTER_MODELS[r.avatarAsset].clips,
   );
+  if (r.characterAudio !== undefined)
+    r.characterAudio = validateCharacterAudio(
+      r.characterAudio,
+      CHARACTER_MODELS[r.avatarAsset].clips,
+    );
   if (r.creatureReference !== null)
     r.creatureReference = parseCreatureReference(r.creatureReference);
   if (r.avatarAsset !== "creature") r.creatureReference = null;
@@ -335,9 +392,11 @@ export function validateRecipe(input: unknown): Recipe {
             "scaleZ",
           ].includes(k),
       ) ||
-      ![item.x, item.y, item.z].every((v) => finite(v, -40, 40)) ||
+      ![item.x, item.y, item.z].every((v) =>
+        finite(v, -WORLD_POSITION_LIMIT, WORLD_POSITION_LIMIT),
+      ) ||
       !finite(item.rotation, -Math.PI, Math.PI) ||
-      !finite(item.scale, 0.1, 8) ||
+      !finite(item.scale, ...PRIMITIVE_SCALE_RANGE) ||
       !validTransform(item)
     )
       throw new Error("Invalid playground transform.");
@@ -356,6 +415,7 @@ export function validateRecipe(input: unknown): Recipe {
             "z",
             "scale",
             "spin",
+            "presence",
             "rotation",
             "rotationX",
             "rotationZ",
@@ -376,18 +436,23 @@ export function validateRecipe(input: unknown): Recipe {
       !color(p.color) ||
       typeof p.prompt !== "string" ||
       p.prompt.length > 1000 ||
-      !finite(p.scale, 0.1, 8) ||
+      !finite(p.scale, ...PRIMITIVE_SCALE_RANGE) ||
       !validTransform(p) ||
       !finite(p.spin, -3, 3) ||
       (p.orbit !== undefined &&
         !finite(p.orbit, ORBIT_RANGE.min, ORBIT_RANGE.max)) ||
-      ![p.orbitX ?? 0, p.orbitZ ?? 0].every((v) => finite(v, -40, 40)) ||
+      ![p.orbitX ?? 0, p.orbitZ ?? 0].every((v) =>
+        finite(v, -WORLD_POSITION_LIMIT, WORLD_POSITION_LIMIT),
+      ) ||
       (p.rotation !== undefined && !finite(p.rotation, -Math.PI, Math.PI)) ||
-      ![p.x, p.y, p.z].every((v) => finite(v, -40, 40))
+      ![p.x, p.y, p.z].every((v) =>
+        finite(v, -WORLD_POSITION_LIMIT, WORLD_POSITION_LIMIT),
+      )
     )
       throw new Error("Invalid primitive.");
     ids.add(p.id);
   }
+  if (r.motion !== undefined) r.motion = validateSceneMotion(r.motion, r);
   if (!validTextures(r.textures, r))
     throw new Error("Invalid surface texture assignments.");
   if (
@@ -397,7 +462,7 @@ export function validateRecipe(input: unknown): Recipe {
     (r.elevationEnd !== null && !finite(r.elevationEnd, -89, 89))
   )
     throw new Error("Invalid camera movement.");
-  const objectIds = r.objects.map((p) => p.id);
+  const objectIds = sceneObjects(r).map((p) => p.id);
   r.audioRoutes =
     // The old single-route fields still describe one route; when present
     // (an older recipe, or an agent patch), they replace the matrix. Fields
@@ -408,38 +473,16 @@ export function validateRecipe(input: unknown): Recipe {
           { ...legacyFromRoutes(input.audioRoutes), ...legacy },
           objectIds,
         );
-  if (
-    !plain(r.bandEnvelopes) ||
-    Object.keys(r.bandEnvelopes).some(
-      (k) => !["low", "mid", "high"].includes(k),
-    ) ||
-    !["low", "mid", "high"].every(
-      (k) =>
-        Array.isArray(r.bandEnvelopes[k as "low"]) &&
-        r.bandEnvelopes[k as "low"].length <= 241 &&
-        r.bandEnvelopes[k as "low"].every((v) => finite(v, 0, 1)),
-    )
-  )
-    throw new Error("Invalid audio routing.");
+  r.bandEnvelopes = normalizeBandEnvelopes(r.bandEnvelopes);
   return r;
 }
 export function cameraAt(r: Recipe, frame: number) {
-  const { turn, sweep } = cameraProgressAt(r, frame);
-  const a = ((r.azimuth + r.orbit * turn) * Math.PI) / 180;
-  const e =
-    ((r.elevation + ((r.elevationEnd ?? r.elevation) - r.elevation) * sweep) *
-      Math.PI) /
-    180;
-  const radius = r.radius * (1 + r.dolly * sweep);
-  const [x, y, z] = cameraTargetAt(r, frame);
-  return [
-    x + Math.sin(a) * Math.cos(e) * radius,
-    y + Math.sin(e) * radius,
-    z + Math.cos(a) * Math.cos(e) * radius,
-  ] as const;
+  return sceneCameraAt(r, frame)?.position ?? legacyCameraAt(r, frame);
 }
 /** Where the camera aims at `frame`: a tracking shot follows the character's path. */
 export function cameraTargetAt(r: Recipe, frame: number) {
-  const [dx, dy, dz] = trackOffset(r, frame);
-  return [r.targetX + dx, r.targetY + dy, r.targetZ + dz] as const;
+  return sceneCameraAt(r, frame)?.target ?? legacyCameraTargetAt(r, frame);
+}
+export function cameraFovAt(r: Recipe, frame: number) {
+  return sceneCameraAt(r, frame)?.fov ?? r.fov;
 }

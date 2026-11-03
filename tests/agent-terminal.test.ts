@@ -130,7 +130,7 @@ describe("DevelopmentTerminal.openAgent", () => {
     expect(terminal.supported).toBe(false);
     await expect(
       terminal.openAgent("x", "claude", "/bin/true", { args: [] }),
-    ).rejects.toThrow("Run it in the bubble instead.");
+    ).rejects.toThrow("Run it in the studio instead.");
   });
 
   it("the launcher passes the plan's grant on, never one from the shell", async () => {
@@ -373,6 +373,6 @@ describe("a Terminal session in the studio", () => {
         source: "typed",
         mode: "terminal",
       }),
-    ).rejects.toThrow("Run the session in the bubble instead.");
+    ).rejects.toThrow("Run the session in the studio instead.");
   });
 });

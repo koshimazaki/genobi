@@ -15,6 +15,7 @@ import { ORBIT_RANGE, orbitPosition } from "../src/world-builder/prop-orbit";
 import { routeValue } from "../src/world-builder/mod-routes";
 import { loopNotes } from "../src/world-builder/loop";
 import { createWorld } from "../src/world-builder/runtime";
+import { WORLD_POSITION_LIMIT } from "../src/world-builder/scene-bounds";
 
 // createWorld without WebGL or assets: a stand-in renderer that keeps the
 // scene it is asked to draw, and inert playground, character and media.
@@ -52,7 +53,12 @@ vi.mock("../src/world-builder/playground", async () => {
   };
 });
 vi.mock("../src/world-builder/interaction", () => ({
-  createInteraction: () => ({ mode: "shot", refresh() {}, dispose() {} }),
+  createInteraction: () => ({
+    mode: "shot",
+    refresh() {},
+    cancelCameraGesture() {},
+    dispose() {},
+  }),
 }));
 vi.mock("../src/world-builder/character", async () => {
   const T = await vi.importActual<typeof Three>("three");
@@ -193,15 +199,21 @@ describe("Prop orbit", () => {
       validateRecipe(prop({ orbit: ORBIT_RANGE.max })),
     ).not.toThrow();
     expect(() =>
-      validateRecipe(prop({ orbit: ORBIT_RANGE.min, orbitX: -40, orbitZ: 40 })),
+      validateRecipe(
+        prop({
+          orbit: ORBIT_RANGE.min,
+          orbitX: -WORLD_POSITION_LIMIT,
+          orbitZ: WORLD_POSITION_LIMIT,
+        }),
+      ),
     ).not.toThrow();
     for (const bad of [
       { orbit: 1.01 },
       { orbit: -1.5 },
       { orbit: Number.NaN },
       { orbit: "0.3" },
-      { orbitX: 41 },
-      { orbitZ: -40.5 },
+      { orbitX: WORLD_POSITION_LIMIT + 0.01 },
+      { orbitZ: -WORLD_POSITION_LIMIT - 0.01 },
     ])
       expect(() => validateRecipe(prop(bad))).toThrow(/Invalid primitive/);
   });

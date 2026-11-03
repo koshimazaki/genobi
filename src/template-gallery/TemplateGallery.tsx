@@ -80,7 +80,7 @@ export default function TemplateGallery({ active }: { active: boolean }) {
       }
       setStarted((ids) => new Set([...ids, template.id]));
       setStatus(
-        "Genobi is working on this template. Approve each paid step in the bubble.",
+        "Genobi is working on this template. Approve each paid step in the Genobi log.",
       );
     });
   };

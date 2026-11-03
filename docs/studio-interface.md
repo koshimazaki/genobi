@@ -94,11 +94,11 @@ same template share an in-flight request, released on either success or
 failure. Open projects remain in the existing project store; this change does
 not evict unsaved work or add a persistent media cache.
 
-## Generate a version in Director
+## Make a version in Director
 
-[Generate my version](director-generate.md) opens with an editable template in
-Director (the Editor waits for its button) and from either workspace's header. It lists declared inputs with current media,
-previews, uploads and project-asset choices. Apply swaps is undoable. Generation
-always goes through the linked agent, with each paid step approved in the bubble.
-Hosted editing offers a project ZIP/local-studio handoff; pairing does not
-synchronize media. Existing files remain until approved replacements are ready.
+[Make my version](director-generate.md) opens with an editable template and
+from either workspace's header. It lists declared inputs with current media,
+previews, uploads and project-asset choices. Apply swaps is undoable and never
+generates; each video or audio slot's **Recreate / Create in Camera** only
+opens Camera. Hosted editing offers a project ZIP; pairing does not
+synchronize media.

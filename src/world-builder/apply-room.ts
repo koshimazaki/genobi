@@ -22,6 +22,8 @@ export interface RoomChoice {
  * by volume. Open sky has no room to apply.
  */
 export function recipeRoom(recipe: Recipe): RoomChoice | undefined {
+  // Animated rooms use their evaluated acoustic schedule, not a static preset.
+  if (recipe.motion) return undefined;
   const size = (id: string) => {
     const p = recipe.objects.find((o) => o.id === id);
     return p && [2 * p.scale * (p.scaleX ?? 1), 2 * p.scale * (p.scaleY ?? 1)];

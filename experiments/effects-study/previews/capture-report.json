@@ -1,0 +1,53 @@
+{
+  "source": {
+    "template": "adaptive-reverb",
+    "asset": "reverb-ltx",
+    "url": "/media/director-templates/adaptive-reverb/reverb-ltx.mp4",
+    "startSeconds": 8,
+    "sha256": "d8c7e053a1a3123f9f5e1b1541903275f8bfd88306f234b120020c9025ccb183"
+  },
+  "shareEncoding": {
+    "codec": "libx264",
+    "preset": "medium",
+    "crf": 27,
+    "audio": false
+  },
+  "captures": [
+    {
+      "file": "field-monitor.mp4",
+      "codec_name": "h264",
+      "width": 960,
+      "height": 540,
+      "r_frame_rate": "24/1",
+      "duration": "4.000000",
+      "nb_frames": "96"
+    },
+    {
+      "file": "liquid-mirror.mp4",
+      "codec_name": "h264",
+      "width": 960,
+      "height": 540,
+      "r_frame_rate": "24/1",
+      "duration": "4.000000",
+      "nb_frames": "96"
+    },
+    {
+      "file": "signal-terrain.mp4",
+      "codec_name": "h264",
+      "width": 960,
+      "height": 540,
+      "r_frame_rate": "24/1",
+      "duration": "4.000000",
+      "nb_frames": "96"
+    },
+    {
+      "file": "three-studies.mp4",
+      "codec_name": "h264",
+      "width": 960,
+      "height": 540,
+      "r_frame_rate": "24/1",
+      "duration": "12.000000",
+      "nb_frames": "288"
+    }
+  ]
+}

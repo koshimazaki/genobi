@@ -4,6 +4,7 @@ import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
 import { scaledAxes } from "./scene-contract";
 import type { Recipe } from "./recipe";
 import { applyAvatarPose } from "./avatar-pose";
+import { BUILDER_CHARACTER_MODELS } from "./character-catalog";
 
 /** Holodeck's frozen EC Playground, at one tenth scale for the capture stage. */
 export async function loadPlayground() {
@@ -152,8 +153,9 @@ export async function loadPlayground() {
   avatar.add(character.scene);
   const bounds = new T.Box3().setFromObject(character.scene),
     height = bounds.max.y - bounds.min.y;
-  character.scene.scale.setScalar(1.6 / height);
-  character.scene.position.y = (-bounds.min.y * 1.6) / height;
+  const humanHeight = BUILDER_CHARACTER_MODELS.mannequin.height;
+  character.scene.scale.setScalar(humanHeight / height);
+  character.scene.position.y = (-bounds.min.y * humanHeight) / height;
   const mixer = new T.AnimationMixer(character.scene);
   // Every authored clip plays at weight zero; `pose` weights the requested one.
   const actions = new Map(

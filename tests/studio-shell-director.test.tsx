@@ -54,7 +54,6 @@ vi.mock("../src/director/mix-template", () => ({
 vi.mock("../src/memory/ProjectMemoryPanel", () => ({ default: () => null }));
 vi.mock("../src/studio/ProjectShelf", () => ({ ProjectShelf: () => null }));
 vi.mock("../src/director/ProjectAssetDrawer", () => ({ default: () => null }));
-vi.mock("../src/director/SavedVideos", () => ({ default: () => null }));
 vi.mock("../src/director/ComposerHeader", () => ({ default: () => null }));
 vi.mock("../src/director/CopyConflictQuestion", () => ({
   default: () => null,

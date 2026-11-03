@@ -17,7 +17,7 @@ import {
 import {
   latestAgentSession,
   showAgentSession,
-  OPEN_BUBBLE,
+  OPEN_DECK,
 } from "../agent/useAgentSession";
 import { studioStore } from "../studio/store";
 import type { VoiceAgentTarget } from "./destination-store";
@@ -82,7 +82,7 @@ export async function sendVoiceToAgent(
       );
     const next = await use.message(session.id, request);
     use.show(next);
-    window.dispatchEvent(new Event(OPEN_BUBBLE));
+    window.dispatchEvent(new Event(OPEN_DECK));
     return { kind: "sent", session: next };
   }
   const currentSession = (session: AgentSession | undefined) => {
