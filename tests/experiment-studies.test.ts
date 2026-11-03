@@ -29,6 +29,7 @@ const NEW: Study[] = [
   "fruit-banana",
   "fruit-papaya",
   "ship-mecha",
+  "car-mecha",
 ];
 const dims = (frames: number) => ({ width: 1024, height: 576, frames });
 const bands = (frames: number, low: (i: number) => number, rest = 0.3) => {

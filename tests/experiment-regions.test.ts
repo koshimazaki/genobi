@@ -53,6 +53,7 @@ describe("swap regions", () => {
   it("a single morph names one group and a study with neither writes none", () => {
     expect(Object.keys(regionsOf("fruit-apple-banana"))).toEqual(["fruit"]);
     expect(Object.keys(regionsOf("ship-mecha"))).toEqual(["ship"]);
+    expect(Object.keys(regionsOf("car-mecha"))).toEqual(["car"]);
     expect(regionsOf("pulse")).toEqual({});
     expect(regionsOf("towers-descent")).toEqual({});
   });

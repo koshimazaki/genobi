@@ -35,6 +35,7 @@ gallery includes the [editable effects catalogue](effects-catalogue.md).
 | Travel · City / loft                  | Skyline → Street canyon → Open loft           | 96 parts become architecture, floor, beams and furniture              | Visual architecture, no outdoor acoustic simulation     |
 | Travel · Neo Tokyo / loft             | Skyline → Street canyon → Open loft           | Original cool night palette and traveling camera                      | No real-city reconstruction                             |
 | Morph · Spacecraft / mecha            | Spacecraft → Mecha → Winged mecha             | 128 persistent authored parts                                         | No enclosure inferred                                   |
+| Morph · Car / mecha                   | Car → Mecha → Winged mecha                    | The same 128 parts, a low wedge car at rest                           | No enclosure inferred                                   |
 | Morph · Mask / crown                  | Mask → Crown → Open mask                      | 96 persistent geometric parts                                         | No enclosure inferred                                   |
 | Motion · Palm grove                   | Upright → Sway → Spread                       | 96 parts form trunks and moving fronds                                | Sculptural motion, not a vegetation simulation          |
 | Morph · Fruit / audio branches        | Banana → Papaya → Apple → Orange → Watermelon | 96 retained parts; separate progress and target controls              | Spectral-band routing; no instrument classification     |
@@ -55,8 +56,8 @@ The catalogue also includes [Endless descent and Bass avenue](world-builder-stor
 ## Choose forms, then choose how they move
 
 **Build a morph** is a separate gallery action. Select two to four forms and
-arrange their order. Fourteen authored forms cover pyramid,
-chamber, cathedral, banana, papaya, apple, orange, watermelon, spacecraft, mecha,
+arrange their order. Fifteen authored forms cover pyramid,
+chamber, cathedral, banana, papaya, apple, orange, watermelon, spacecraft, car, mecha,
 winged mecha, mask, crown and palms. These are individual geometry states; a motion
 preset is a ready-made sequence with timing, camera and response settings.
 
@@ -403,7 +404,7 @@ camera path either.
 
 Use `genobi_world` to list `presets`, then `load-preset` with one of these IDs:
 `voxel-architecture`, `cathedral-street`, `apartment-morph`, `fruit-morph`,
-`fruit-morph-fine`, `city-to-loft`, `neo-tokyo-to-loft`, `spacecraft-mecha`,
+`fruit-morph-fine`, `city-to-loft`, `neo-tokyo-to-loft`, `spacecraft-mecha`, `car-mecha`,
 `mask-morph`, `palm-grove`, `voxel-architecture-128`, `voxel-architecture-256`,
 `fruit-audio-branches`.
 The returned recipe includes the motion schema. Read `recipe` for its current

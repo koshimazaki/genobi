@@ -20,6 +20,7 @@ import {
   maskLayouts,
   palmGroveLayouts,
 } from "./motion-object-layouts";
+import { carMechaLayouts } from "./motion-car-layout";
 
 export const MOTION_PRESETS = [
   ...STORY_PRESETS,
@@ -57,6 +58,12 @@ export const MOTION_PRESETS = [
     id: "spacecraft-mecha",
     name: "Morph · Spacecraft / mecha",
     summary: "Spacecraft → mecha → winged mecha · 128 retained parts",
+    acoustic: "Authored modular forms, ready for audio-driven transformation.",
+  },
+  {
+    id: "car-mecha",
+    name: "Morph · Car / mecha",
+    summary: "Car → mecha → winged mecha · 128 retained parts",
     acoustic: "Authored modular forms, ready for audio-driven transformation.",
   },
   {
@@ -271,6 +278,30 @@ function presetPatch(id: MotionPresetId): Partial<Recipe> {
       },
       prompt:
         "Travel from an original geometric city skyline down a street canyon into an open loft. The same 96 architectural parts become floor tiles, beams, windows and furniture. Camera position, look target and lens move on the same timeline. Keep the transition readable; audio adds restrained height and separation offsets.",
+    };
+  }
+  if (id === "car-mecha") {
+    const motion = voxels(
+      128,
+      ["#1b2a3a", "#3c5468", "#5fd4e6", "#d9a441"],
+      ["Car", "Mecha", "Winged mecha"],
+      carMechaLayouts(),
+    );
+    motion.mappings = [
+      mapping("twistY", "low", 0.25),
+      mapping("spread", "high", 0.1),
+      mapping("morph", "sub", 0.12),
+    ];
+    return {
+      motion,
+      radius: 14,
+      fov: 46,
+      azimuth: 35,
+      elevation: 14,
+      targetY: 2,
+      background: "#080b12",
+      prompt:
+        "A low wedge car unfolds into a standing mecha, then opens its wings. The same 128 parts retain their identities. Prepared sub-bass gently advances the morph; bass turns the group and highs open the spacing.",
     };
   }
   if (id === "spacecraft-mecha" || id === "mask-morph" || id === "palm-grove") {

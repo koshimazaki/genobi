@@ -40,7 +40,7 @@ describe("authored form composer", () => {
   });
 
   it("keeps all authored forms selectable and fresh, with stable geometry at endpoints", () => {
-    expect(MORPH_ASSETS).toHaveLength(14);
+    expect(MORPH_ASSETS).toHaveLength(15);
     for (const asset of MORPH_ASSETS) {
       const other = asset.id === "pyramid" ? "banana" : "pyramid";
       const options = {
