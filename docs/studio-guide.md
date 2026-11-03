@@ -249,7 +249,7 @@ for agent checkpoints, private exports and the reference-import boundary.
 
 ## Make your own version
 
-Opening an editable template brings up [Make my version](director-generate.md).
+Opening an editable template in Director brings up [Make my version](director-generate.md); in Editor, use its header action instead.
 Keep current assets or swap in your own (drop a file, or drag from Assets →
 Project or Generated). Swaps are undoable and never generate. New media is
 made in Camera (each slot's **Recreate / Create in Camera**) and shows up in
