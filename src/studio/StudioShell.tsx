@@ -58,7 +58,6 @@ import { queueLayoutTake } from "../layout-take";
 const Scrolls = lazyReload(() => import("../scrolls/Scrolls"));
 const Director = lazyReload(() => import("../director/Director"));
 const WorldBuilder = lazyReload(() => import("../world-builder/WorldBuilder"));
-// 3D camera plates (#18).
 const Scene3D = lazyReload(() => import("../scene3d/Scene3D"));
 const DualEditor = lazyReload(() =>
   import("../dual-editor/DualEditor").then((m) => ({ default: m.DualEditor })),
@@ -99,8 +98,6 @@ export default function StudioShell() {
   const ninja = ninjaLayout.panels
     .map((p) => p.id)
     .filter((id) => id !== "inputs");
-  // Heavy tools latch their first visit so later layout changes only hide
-  // them. "plates" is the 3D camera panel (#18), latched by itself.
   const [visited, setVisited] = useState<Set<Preset | "plates" | "plateView">>(
     () =>
       new Set([
@@ -120,15 +117,12 @@ export default function StudioShell() {
         ),
       ) as Record<HostId, HTMLDivElement>,
   );
-  // New panel types need a stable destination during an active local preview.
   for (const id of Object.keys(panels) as PanelId[]) {
     hosts[id] ??= document.createElement("div");
   }
   const assetRole = useStudio((s) => s.workspace.assetRole);
   const bundle = useStudio((s) => s.director.bundle);
-  // The 3D Sound tab lists the project's audio; its bytes stay in this tab.
   const projectAudioChoices = useMemo(() => projectAudio(bundle), [bundle]);
-  // `at` restarts the expiry even when two adds read the same.
   const [notice, setNotice] = useState({ text: "", at: 0 });
   const root = useRef<HTMLDivElement>(null);
   const visible = useMemo(
@@ -237,9 +231,6 @@ export default function StudioShell() {
           .forEach((media) => media.pause());
     });
   }, [hosts, visible]);
-  // Every tool's output reaches the project's assets through this one path.
-  // A new asset is announced briefly; a repeat add of the same bytes is not,
-  // because the tool that asked already says so and nothing changed.
   async function addAsset(media: OutputMedia) {
     const added = await addToProjectAssets(media);
     if (added.added) setNotice({ text: addedMessage(added), at: Date.now() });
