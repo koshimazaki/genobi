@@ -74,6 +74,9 @@ const MIX_FOOTAGE: Readonly<Record<string, string[]>> = {
   // Adaptive reverb (30 October 2026): one LTX-2.5 (open weights) take with
   // the AKUSPACE LoRA, nothing else.
   "adaptive-reverb": ["ltx-2-5-akuspace"],
+  // Audio Reactive Drop (3 November 2026): five LTX-2.5 (open weights)
+  // Layout-to-Render rooms through the open workflow, nothing else.
+  "audio-reactive-drop": ["ltx-2-5-open"],
 };
 
 /**
@@ -96,6 +99,7 @@ export const GALLERY_ORDER: readonly string[] = [
   "dimensions-mix",
   "bloom-teaser",
   "adaptive-reverb",
+  "audio-reactive-drop",
   "character-piece-generation",
   "product-video-generation",
   "sheet-to-shot",
@@ -107,6 +111,7 @@ export const GALLERY_SUBTITLE: Readonly<Record<string, string>> = {
   "dimensions-mix": "Anime teaser",
   "bloom-teaser": "Sheet to shot",
   "adaptive-reverb": "3D · LTX template",
+  "audio-reactive-drop": "3D · LTX template · v2",
 };
 
 /**
@@ -215,6 +220,7 @@ export const GALLERY_AUDIO: ReadonlySet<string> = new Set([
   "dimensions-mix",
   "bloom-teaser",
   "adaptive-reverb",
+  "audio-reactive-drop",
   "character-piece-generation",
 ]);
 

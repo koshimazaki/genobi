@@ -43,6 +43,7 @@ describe("gallery card order", () => {
       "Dimensions mix",
       "Bloom",
       "Adaptive reverb",
+      "Audio Reactive Drop",
       "Forest guardian",
       "Toy creatures",
       "Sheet to shot",
@@ -81,6 +82,7 @@ describe("gallery card order", () => {
       "dimensions-mix": "Anime teaser",
       "bloom-teaser": "Sheet to shot",
       "adaptive-reverb": "3D · LTX template",
+      "audio-reactive-drop": "3D · LTX template · v2",
     });
     expect(card("bloom-teaser").name).toBe("Bloom");
     // The Dimensions mix keeps its id and name, so links and showcases hold.
@@ -126,12 +128,37 @@ describe("gallery card order", () => {
     }
   });
 
+  it("places Audio Reactive Drop after Adaptive reverb, at the cut's size", () => {
+    expect(GALLERY_ORDER.indexOf("audio-reactive-drop")).toBe(
+      GALLERY_ORDER.indexOf("adaptive-reverb") + 1,
+    );
+    const media = galleryMedia(card("audio-reactive-drop"))!;
+    expect(media).toMatchObject({
+      width: 1920,
+      height: 1080,
+      poster: "/media/template-gallery/audio-reactive-drop.jpg",
+      demo: false,
+    });
+    const jpg = readFileSync(`public${media.poster}`);
+    const sof = jpg.indexOf(Buffer.from([0xff, 0xc0]));
+    expect([jpg.readUInt16BE(sof + 7), jpg.readUInt16BE(sof + 5)]).toEqual([
+      1920, 1080,
+    ]);
+    expect(statSync(`public${media.video}`).size).toBeLessThan(
+      25 * 1024 * 1024,
+    );
+    expect(galleryBadge(card("audio-reactive-drop")).detail).toBe(
+      "Nothing to generate: a finished cut of LTX-2.5 (open weights) clips",
+    );
+  });
+
   it("leaves the Open only toggle's cards as they were", () => {
     const open = galleryTemplates.filter((t) =>
       matchesFilters(t, { ...emptyFilters, open: "open" }),
     );
     expect(open.map((t) => t.id).sort()).toEqual([
       "adaptive-reverb",
+      "audio-reactive-drop",
       "bloom-teaser",
       "dimensions-mix",
       "genobi-teaser",
@@ -151,6 +178,7 @@ describe("model badges", () => {
       "Dimensions mix": "MiniMax H3 · open weights",
       Bloom: "MiniMax H3 · open weights",
       "Adaptive reverb": "LTX-2.5 · open weights",
+      "Audio Reactive Drop": "LTX-2.5 · open weights",
       "Sheet to shot": "MiniMax H3 · open weights",
       "Forest guardian": "FLUX 3 video · API",
       "Toy creatures": "FLUX 3 video · API",
@@ -209,6 +237,7 @@ describe("footage lines", () => {
       "Dimensions mix": null,
       Bloom: null,
       "Adaptive reverb": null,
+      "Audio Reactive Drop": null,
       "Sheet to shot": null,
       "Forest guardian": null,
       "Toy creatures": "Preview footage · FLUX 3 video",

@@ -16,12 +16,13 @@ On the gallery card, a finished cut leads with **Take it to Director** and
 versions are listed newest first (in-progress work, then the latest, marked "latest"), so a reviewer opens
 the current cut without scrolling past v1.
 
-| Project                                      | Versions | Gallery card    |
-| -------------------------------------------- | -------- | --------------- |
-| [Dimensions mix](dimensions-mix/README.md)   | v1 to v4 | Dimensions mix  |
-| [Genobi teaser](genobi-teaser/README.md)     | v1 to v3 | Genobi teaser   |
-| [Bloom](bloom-teaser/README.md)              | v1       | Bloom           |
-| [Adaptive reverb](adaptive-reverb/README.md) | v1 to v3 | Adaptive reverb |
+| Project                                              | Versions | Gallery card        |
+| ---------------------------------------------------- | -------- | ------------------- |
+| [Dimensions mix](dimensions-mix/README.md)           | v1 to v4 | Dimensions mix      |
+| [Genobi teaser](genobi-teaser/README.md)             | v1 to v3 | Genobi teaser       |
+| [Bloom](bloom-teaser/README.md)                      | v1       | Bloom               |
+| [Adaptive reverb](adaptive-reverb/README.md)         | v1 to v3 | Adaptive reverb     |
+| [Audio Reactive Drop](audio-reactive-drop/README.md) | v1       | Audio Reactive Drop |
 
 ## What a folder holds
 

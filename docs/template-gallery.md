@@ -20,9 +20,10 @@ order since 30 October 2026:
 2. [Dimensions mix](dimensions-mix.md) · Anime teaser
 3. [Bloom](bloom-teaser.md) · Sheet to shot (an anime teaser from a character sheet)
 4. [Adaptive reverb](adaptive-reverb.md) · 3D · LTX template
-5. Forest guardian
-6. Toy creatures
-7. Sheet to shot · Preview coming soon
+5. [Audio Reactive Drop](audio-reactive-drop.md) · 3D · LTX template · v2
+6. Forest guardian
+7. Toy creatures
+8. Sheet to shot · Preview coming soon
 
 Character piece is in `NOT_IN_GALLERY`: its preview is FLUX 3 video,
 represented by Forest guardian, rather than footage from its LTX recipe.
@@ -30,10 +31,10 @@ Its template, Director links and public preview pages stay. Neon bloom and
 Audio-visual also stay hidden, replaced by Bloom and Adaptive reverb.
 `shared/templates/catalogue.ts` keeps its own order for agents and MCP.
 
-The four mixes carry a second line saying what each piece is for
+The five mixes carry a second line saying what each piece is for
 (`GALLERY_SUBTITLE`): "Genobi teaser · Product teaser", "Dimensions mix ·
-Anime teaser", "Bloom · Sheet to shot" and "Adaptive reverb · 3D · LTX
-template", on the card and in the drawer's title. The Dimensions mix
+Anime teaser", "Bloom · Sheet to shot", "Adaptive reverb · 3D · LTX
+template" and "Audio Reactive Drop · 3D · LTX template · v2", on the card and in the drawer's title. The Dimensions mix
 keeps its name and id, so its links, watch page and showcases are unchanged.
 The Genobi teaser's poster is its GENOBI title frame (4.7 s into the v3
 render, the wordmark fully drawn), 1920 × 1080 like the cut. Adaptive
@@ -45,7 +46,10 @@ Regenerate from the bundled render with:
 ffmpeg -ss 10 -i public/media/template-gallery/adaptive-reverb.mp4 -frames:v 1 -q:v 2 -update 1 public/media/template-gallery/adaptive-reverb.jpg
 ```
 
-The four mix templates open as they are: the drawer plays the finished cut,
+Audio Reactive Drop's poster is its cathedral room scan at 10 seconds,
+1920 × 1080 like the cut.
+
+The five mix templates open as they are: the drawer plays the finished cut,
 describes it, and offers Take it to Director and Take it to the editor, never
 Generate, since a mix generates nothing. A mix's preview is a render of the
 template, so it is not labelled preview footage, and it has watch and embed
@@ -69,6 +73,7 @@ or "open + API" when both appear.
 | Character piece, Audio-visual (hidden)             | LTX-2.5 · open weights                 | Their recipes' video model; Klein is the image step                                                         |
 | Dimensions mix                                     | MiniMax H3 · open weights              | Its three clips are the owner's MiniMax H3 outputs                                                          |
 | Adaptive reverb                                    | LTX-2.5 · open weights                 | Its one take is the owner's LTX-2.5 + AKUSPACE LoRA run (`ltx-2-5-akuspace`)                                |
+| Audio Reactive Drop                                | LTX-2.5 · open weights                 | Its five rooms are the owner's LTX-2.5 Layout-to-Render runs through the open workflow (`ltx-2-5-open`)     |
 | Sheet to shot                                      | MiniMax H3 · open weights              | One H3 shot through Router                                                                                  |
 | Forest guardian, Toy creatures (Neon bloom hidden) | FLUX 3 video · API                     | FLUX 3 image to video                                                                                       |
 
@@ -147,8 +152,8 @@ a model the owner assigns.
 A card previews on hover or keyboard focus. Only one card previews at a time;
 hovering another pauses and mutes the previous card, even if it still has
 keyboard focus. A focused offscreen card starts when it scrolls into view.
-The four music pieces (Genobi
-teaser, Dimensions mix, Bloom, Adaptive reverb) play with sound only after a
+The five music pieces (Genobi
+teaser, Dimensions mix, Bloom, Adaptive reverb, Audio Reactive Drop) play with sound only after a
 page gesture; before that, their small **Sound** button enables it explicitly.
 **Mute** switches it off. If a browser still refuses audio, playback falls back
 to muted and offers Sound again. Forest guardian also has an audio stream and
