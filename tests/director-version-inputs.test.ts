@@ -307,11 +307,19 @@ describe("declaration-derived version inputs", () => {
       durationFrames: 120,
       track: "shots",
     });
+    // The fixture's character-1 is an Inspiration, not production footage.
+    expect(() =>
+      versionCommand(before.project, before.project.revision, command),
+    ).toThrow(/is an Inspiration/);
+    const optedIn =
+      command.op === "replace-plate"
+        ? { ...command, allowInspirationAsInput: true }
+        : command;
     expect(
       versionCommand(
         before.project,
         before.project.revision,
-        command,
+        optedIn,
       ).layers.find((l) => l.id === "shot-arrive"),
     ).toMatchObject({ startFrame: 0, durationFrames: 120 });
   });
