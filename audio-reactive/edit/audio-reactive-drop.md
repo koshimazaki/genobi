@@ -1,6 +1,6 @@
-# Audio Reactive Drop: how to repeat it
+# Acoustic Spaces v2: how to repeat it
 
-The pipeline behind the gallery's Audio Reactive Drop template
+The pipeline behind the gallery's Acoustic Spaces v2 template
 ([the template page](../../docs/audio-reactive-drop.md)): five World Builder
 rooms rendered by LTX-2.5 Layout-to-Render on the owner's track "Adaptive
 Reverb v2", assembled on the phrases with each room's own CPU room sound, two

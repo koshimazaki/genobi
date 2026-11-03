@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Audio Reactive Drop, step 4: the pyramid hologram pass (from holo.py).
+"""Acoustic Spaces v2, step 4: the pyramid hologram pass (from holo.py).
 
 The World Builder guide's depth edges, tinted cyan, screen-blended over the LTX render inside and
 outside the pyramid, the opacity following each capture's own low-band envelope. The guide and

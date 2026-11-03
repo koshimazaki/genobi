@@ -1,4 +1,4 @@
-// Audio Reactive Drop, step 8: renders a bundle (drop-build-bundle.mts) through a running local
+// Acoustic Spaces v2, step 8: renders a bundle (drop-build-bundle.mts) through a running local
 // studio's Director (Render MP4, every frame, locally, AAC audio) in headless Chrome and saves it.
 //   DIRECTOR_URL=http://127.0.0.1:4317 node audio-reactive/edit/drop-render.mjs <bundle.zip> <out.mp4>
 // The studio only needs the recipes the bundle uses; the zip carries the project and its media.
@@ -34,7 +34,7 @@ try {
     .locator('main.director > input[type="file"][accept=".zip,.json"]')
     .setInputFiles(zip);
   await page
-    .getByText("Project · Audio Reactive Drop", { exact: true })
+    .getByText("Project · Acoustic Spaces v2", { exact: true })
     .waitFor({ timeout: 180000 });
   await page.waitForFunction(() =>
     [...document.querySelectorAll("button")].some(

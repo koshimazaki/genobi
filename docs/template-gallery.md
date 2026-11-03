@@ -20,7 +20,7 @@ order since 30 October 2026:
 2. [Dimensions mix](dimensions-mix.md) · Anime teaser
 3. [Bloom](bloom-teaser.md) · Sheet to shot (an anime teaser from a character sheet)
 4. [Adaptive reverb](adaptive-reverb.md) · 3D · LTX template
-5. [Audio Reactive Drop](audio-reactive-drop.md) · 3D · LTX template · v2
+5. [Acoustic Spaces v2](audio-reactive-drop.md) · 3D · LTX template
 6. [Dance with Fruits](fruits-swap.md) · Content swap
 7. Forest guardian
 8. Toy creatures
@@ -35,7 +35,7 @@ Audio-visual also stay hidden, replaced by Bloom and Adaptive reverb.
 The six mixes carry a second line saying what each piece is for
 (`GALLERY_SUBTITLE`): "Genobi teaser · Product teaser", "Dimensions mix ·
 Anime teaser", "Bloom · Sheet to shot", "Adaptive reverb · 3D · LTX
-template", "Audio Reactive Drop · 3D · LTX template · v2" and "Dance with
+template", "Acoustic Spaces v2 · 3D · LTX template" and "Dance with
 Fruits · Content swap", on the card and in the drawer's title. The Dimensions mix
 keeps its name and id, so its links, watch page and showcases are unchanged.
 The Genobi teaser's poster is its GENOBI title frame (4.7 s into the v3
@@ -48,7 +48,7 @@ Regenerate from the bundled render with:
 ffmpeg -ss 10 -i public/media/template-gallery/adaptive-reverb.mp4 -frames:v 1 -q:v 2 -update 1 public/media/template-gallery/adaptive-reverb.jpg
 ```
 
-Audio Reactive Drop's poster is its cathedral room scan at 10 seconds,
+Acoustic Spaces v2's poster is its cathedral room scan at 10 seconds,
 1920 × 1080 like the cut.
 
 The six mix templates open as they are: the drawer plays the finished cut,
@@ -75,7 +75,7 @@ or "open + API" when both appear.
 | Character piece, Audio-visual (hidden)             | LTX-2.5 · open weights                 | Their recipes' video model; Klein is the image step                                                             |
 | Dimensions mix                                     | MiniMax H3 · open weights              | Its three clips are the owner's MiniMax H3 outputs                                                              |
 | Adaptive reverb                                    | LTX-2.5 · open weights                 | Its one take is the owner's LTX-2.5 + AKUSPACE LoRA run (`ltx-2-5-akuspace`)                                    |
-| Audio Reactive Drop                                | LTX-2.5 · open weights                 | Its five rooms are the owner's LTX-2.5 Layout-to-Render runs through the open workflow (`ltx-2-5-open`)         |
+| Acoustic Spaces v2                                 | LTX-2.5 · open weights                 | Its five rooms are the owner's LTX-2.5 Layout-to-Render runs through the open workflow (`ltx-2-5-open`)         |
 | Dance with Fruits                                  | LTX-2.5 · open weights                 | Its four renders are the owner's LTX-2.5 Layout-to-Render runs; the badge names the open entry (`ltx-2-5-open`) |
 | Sheet to shot                                      | MiniMax H3 · open weights              | One H3 shot through Router                                                                                      |
 | Forest guardian, Toy creatures (Neon bloom hidden) | FLUX 3 video · API                     | FLUX 3 image to video                                                                                           |
@@ -156,7 +156,7 @@ A card previews on hover or keyboard focus. Only one card previews at a time;
 hovering another pauses and mutes the previous card, even if it still has
 keyboard focus. A focused offscreen card starts when it scrolls into view.
 The six music pieces (Genobi
-teaser, Dimensions mix, Bloom, Adaptive reverb, Audio Reactive Drop, Dance with
+teaser, Dimensions mix, Bloom, Adaptive reverb, Acoustic Spaces v2, Dance with
 Fruits) play with sound only after a
 page gesture; before that, their small **Sound** button enables it explicitly.
 **Mute** switches it off. If a browser still refuses audio, playback falls back
@@ -249,7 +249,7 @@ reads subsequent `popstate` URLs too, including showcase links
 (`?showcase=<project>&version=<n>&workspace=editor`), so a mounted Editor
 opens the requested template/version and restores kept drafts. Both Director
 and Editor default to Dimensions mix through the same loader. The template
-picker offers only Dimensions mix, Genobi teaser, Bloom and Adaptive reverb.
+picker offers the mix templates: Dimensions mix, Genobi teaser, Bloom, Adaptive reverb, Dance with Fruits and Acoustic Spaces v2.
 Character intro, Outfit reveal and Poster in motion are retired placeholders;
 only their slot metadata and fixtures remain for saved-project replacements.
 None of them pays: the agent quotes each paid step and the

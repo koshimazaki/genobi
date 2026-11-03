@@ -1042,10 +1042,10 @@
       "links": []
     },
     {
-      "title": "Audio Reactive Drop: the 3D + LTX template, v2",
+      "title": "Acoustic Spaces v2: the 3D + LTX template",
       "path": "audio-reactive-drop.md",
       "tags": ["director", "sound", "templates", "world-builder"],
-      "summary": "Audio Reactive Drop, the 3D + LTX template v2 - five World Builder rooms rendered by LTX-2.5 Layout-to-Render on one track, each room's own CPU room sound under it, cut on the phrases with every room, the track and every overlay a swappable layer.",
+      "summary": "Acoustic Spaces v2, the 3D + LTX template - five World Builder rooms rendered by LTX-2.5 Layout-to-Render on one track, each room's own CPU room sound under it, cut on the phrases with every room, the track and every overlay a swappable layer.",
       "links": [
         "adaptive-reverb.md",
         "director-bundle/showcase/audio-reactive-drop/README.md",
@@ -1585,10 +1585,10 @@
       "links": ["adaptive-reverb.md"]
     },
     {
-      "title": "Audio Reactive Drop: how it was made",
+      "title": "Acoustic Spaces v2: how it was made",
       "path": "director-bundle/showcase/audio-reactive-drop/README.md",
       "tags": ["director", "sound", "memory", "world-builder"],
-      "summary": "How Audio Reactive Drop, the 3D + LTX template v2, was made - v1, five World Builder rooms in LTX-2.5 on one track, every room, the track and every overlay a swappable layer - and how to recreate it.",
+      "summary": "How Acoustic Spaces v2, the 3D + LTX template, was made - v1, five World Builder rooms in LTX-2.5 on one track, every room, the track and every overlay a swappable layer - and how to recreate it.",
       "links": ["audio-reactive-drop.md"]
     },
     {

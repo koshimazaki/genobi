@@ -43,7 +43,7 @@ describe("gallery card order", () => {
       "Dimensions mix",
       "Bloom",
       "Adaptive reverb",
-      "Audio Reactive Drop",
+      "Acoustic Spaces v2",
       "Dance with Fruits",
       "Forest guardian",
       "Toy creatures",
@@ -83,7 +83,7 @@ describe("gallery card order", () => {
       "dimensions-mix": "Anime teaser",
       "bloom-teaser": "Sheet to shot",
       "adaptive-reverb": "3D · LTX template",
-      "audio-reactive-drop": "3D · LTX template · v2",
+      "audio-reactive-drop": "3D · LTX template",
       "fruits-swap": "Content swap",
     });
     expect(card("bloom-teaser").name).toBe("Bloom");
@@ -130,7 +130,7 @@ describe("gallery card order", () => {
     }
   });
 
-  it("places Audio Reactive Drop after Adaptive reverb, at the cut's size", () => {
+  it("places Acoustic Spaces v2 after Adaptive reverb, at the cut's size", () => {
     expect(GALLERY_ORDER.indexOf("audio-reactive-drop")).toBe(
       GALLERY_ORDER.indexOf("adaptive-reverb") + 1,
     );
@@ -181,7 +181,7 @@ describe("model badges", () => {
       "Dimensions mix": "MiniMax H3 · open weights",
       Bloom: "MiniMax H3 · open weights",
       "Adaptive reverb": "LTX-2.5 · open weights",
-      "Audio Reactive Drop": "LTX-2.5 · open weights",
+      "Acoustic Spaces v2": "LTX-2.5 · open weights",
       "Dance with Fruits": "LTX-2.5 · open weights",
       "Sheet to shot": "MiniMax H3 · open weights",
       "Forest guardian": "FLUX 3 video · API",
@@ -241,7 +241,7 @@ describe("footage lines", () => {
       "Dimensions mix": null,
       Bloom: null,
       "Adaptive reverb": null,
-      "Audio Reactive Drop": null,
+      "Acoustic Spaces v2": null,
       "Dance with Fruits": null,
       "Sheet to shot": null,
       "Forest guardian": null,

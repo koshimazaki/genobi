@@ -1,9 +1,9 @@
 ---
 tags: [director, sound, templates, world-builder]
-summary: Audio Reactive Drop, the 3D + LTX template v2 - five World Builder rooms rendered by LTX-2.5 Layout-to-Render on one track, each room's own CPU room sound under it, cut on the phrases with every room, the track and every overlay a swappable layer.
+summary: Acoustic Spaces v2, the 3D + LTX template - five World Builder rooms rendered by LTX-2.5 Layout-to-Render on one track, each room's own CPU room sound under it, cut on the phrases with every room, the track and every overlay a swappable layer.
 ---
 
-# Audio Reactive Drop: the 3D + LTX template, v2
+# Acoustic Spaces v2: the 3D + LTX template
 
 The fifth **mix** template (`run: "mix"`, [run kinds](templates.md#run-kind-mechanical-or-agent)),
 added on 3 November 2026, and version two of
@@ -15,11 +15,11 @@ in the desert, and a small studio, where the singer of the original Adaptive
 reverb take turns to the camera and smiles while the credit is traced in
 beside her. Nothing is generated, quoted or paid when
 you open it. In the Gallery it is the card right after Adaptive reverb,
-**Audio Reactive Drop · 3D · LTX template · v2**.
+**Acoustic Spaces v2 · 3D · LTX template**.
 
 | Piece    | Where                                                                                                                |
 | -------- | -------------------------------------------------------------------------------------------------------------------- |
-| Template | `shared/templates/audio-reactive-drop.ts`                                                                            |
+| Template | `shared/templates/audio-reactive-drop.ts` (id `audio-reactive-drop`; the pipeline keeps its `drop-` names)           |
 | Cut      | `shared/templates/audio-reactive-drop.cut.json`, written by `drop-make-cut.py`                                       |
 | Media    | `public/media/director-templates/audio-reactive-drop/`                                                               |
 | Pipeline | [`audio-reactive/edit/`](https://github.com/koshimazaki/Genobi/blob/main/audio-reactive/edit/audio-reactive-drop.md) |
@@ -135,8 +135,7 @@ npx tsx audio-reactive/edit/drop-build-bundle.mts out/drop.zip
 DIRECTOR_URL=http://127.0.0.1:4317 node audio-reactive/edit/drop-render.mjs out/drop.zip out/drop.mp4
 ```
 
-Then a gallery copy under 25 MiB (libx264 4 Mb/s, AAC 192 kb/s,
-`+faststart`), a poster from the cathedral readout at frame 240, and the light
+The gallery copy is an encode of the final cut-v2 master render (libx264 CRF 24 at 1920 × 1080, the master's AAC copied, `+faststart`, 23 MiB under the 25 MiB Pages limit), a poster from the cathedral readout at frame 240, and the light
 card previews (`.preview.mp4`, `.preview.jpg`, [media preparation](media-previews.md)).
 
 The template's media is about 64 MiB in all (each file under 25 MiB, the

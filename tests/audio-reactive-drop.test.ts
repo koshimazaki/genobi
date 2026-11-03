@@ -28,11 +28,11 @@ const validate = (moduleId: string, parameters: unknown) =>
 const DIR = "public/media/director-templates/audio-reactive-drop";
 const frames = (seconds: number) => Math.round(seconds * cut.fps);
 
-describe("Audio Reactive Drop, the 3D + LTX template v2", () => {
+describe("Acoustic Spaces v2, the 3D + LTX template", () => {
   it("is a mix template the Director opens", () => {
     expect(findMixTemplate("audio-reactive-drop")).toBe(audioReactiveDrop);
     expect(audioReactiveDrop).toMatchObject({
-      name: "Audio Reactive Drop",
+      name: "Acoustic Spaces v2",
       run: "mix",
       tier: "open",
     });

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Audio Reactive Drop, step 6: the cut as data (a MixSpec), written to
+"""Acoustic Spaces v2, step 6: the cut as data (a MixSpec), written to
 shared/templates/audio-reactive-drop.cut.json.
 
 The track is 136.8 BPM. The cut runs on a DOUBLE-TIME grid (273.6 BPM, eighth notes at 24 fps) so

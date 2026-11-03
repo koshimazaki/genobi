@@ -1,7 +1,7 @@
 {
   "schema": "genobi.showcase.v1",
   "project": "audio-reactive-drop",
-  "name": "Audio Reactive Drop",
+  "name": "Acoustic Spaces v2",
   "template": "audio-reactive-drop",
   "summary": "The 3D + LTX template, version two: five World Builder rooms rendered by LTX-2.5 Layout-to-Render (open weights) on the owner's track, each room's own CPU room sound under it, cut on the phrases on a double-time grid, with every room, the track and every overlay a swappable layer. Nothing is generated.",
   "versions": [
@@ -16,7 +16,7 @@
         "Plain pyramid files listed so the hologram is a swap",
         "Double-time grid: 273.6 BPM, 147.44 beats, 776 frames",
         "No new recipe: screen-open, crt, hud, wire-scan, slice-glitch, gen-title, scan, ui-focus, gen-status, build-panel and end-card-still",
-        "Gallery: Audio Reactive Drop (3D · LTX template · v2) after Adaptive reverb"
+        "Gallery: Acoustic Spaces v2 (3D · LTX template) after Adaptive reverb"
       ],
       "eventIds": [
         "drop-brief",
@@ -104,7 +104,7 @@
         "at": "2026-11-03T19:00:00Z",
         "version": 1,
         "guidance": {
-          "topic": "Audio Reactive Drop · brief",
+          "topic": "Acoustic Spaces v2 · brief",
           "value": "Five room files, one per shot at sourceSeconds 0; the track one file; every overlay its own layer; the hologram swappable through plain pyramid files."
         }
       },
@@ -118,7 +118,7 @@
         "at": "2026-11-03T19:00:00Z",
         "version": 1,
         "guidance": {
-          "topic": "Audio Reactive Drop · grid",
+          "topic": "Acoustic Spaces v2 · grid",
           "value": "Double-time grid so the picture cuts on the phrases while the overlays snap."
         }
       },
@@ -132,7 +132,7 @@
         "at": "2026-11-03T19:00:00Z",
         "version": 1,
         "guidance": {
-          "topic": "Audio Reactive Drop · title",
+          "topic": "Acoustic Spaces v2 · title",
           "value": "The DROP title runs 4 s over 14 track beats."
         }
       },
@@ -146,7 +146,7 @@
         "at": "2026-11-03T19:00:00Z",
         "version": 1,
         "guidance": {
-          "topic": "Audio Reactive Drop · look",
+          "topic": "Acoustic Spaces v2 · look",
           "value": "Variant b of the interface pass, layer for layer."
         }
       },
@@ -170,7 +170,7 @@
         "at": "2026-11-03T20:45:00Z",
         "version": 2,
         "guidance": {
-          "topic": "Audio Reactive Drop · v2",
+          "topic": "Acoustic Spaces v2 · v2",
           "value": "Match the approved v2f render layer for layer; keep every layer separate."
         }
       },
@@ -184,7 +184,7 @@
         "at": "2026-11-03T20:45:00Z",
         "version": 2,
         "guidance": {
-          "topic": "Audio Reactive Drop · ending",
+          "topic": "Acoustic Spaces v2 · ending",
           "value": "The studio shot is the original take's last 97 frames; the credit is a gen-title layer over it."
         }
       },
