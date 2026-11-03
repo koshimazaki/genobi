@@ -125,7 +125,12 @@ export type DirectorCommand =
   | { op: "set-preferences"; preferences: ProjectPreferences | null }
   | { op: "set-camera"; shotId: string; camera: CameraSelection }
   | { op: "set-template-inputs"; inputs: TemplateInputPatch }
-  | { op: "replace-plate"; layerId: string; assetId: string; allowInspirationAsInput?: boolean }
+  | {
+      op: "replace-plate";
+      layerId: string;
+      assetId: string;
+      allowInspirationAsInput?: boolean;
+    }
   | ({ op: "set-placement"; layerId: string } & Placement)
   | { op: "set-parameters"; layerId: string; parameters: Parameters }
   | ({ op: "set-beat-grid" } & BeatGridPatch)
