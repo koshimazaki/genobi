@@ -9,6 +9,29 @@
     "spacesFirstSwap": ["one space"],
     "initialSpacesVideo": "bundled adaptive-reverb cut"
   },
+  "reviewerRoute": {
+    "ownerRender": "rented Vast box with scripts/vast/box/run-queue.sh",
+    "reviewerRender": {
+      "deployment": "genobi-ltx-world",
+      "selector": "layout-to-video",
+      "doc": "docs/comfy-deploy.md",
+      "width": 1024,
+      "height": 576,
+      "frames": 193,
+      "fps": 24,
+      "note": "exactly one template window"
+    },
+    "access": {
+      "mechanism": "docs/tester-access.md (separate PR, off by default)",
+      "unlock": "access code from the competition submission",
+      "paidBy": "owner's workspace",
+      "defaultRunCap": 10,
+      "codeInRepository": false
+    },
+    "regenerationTest": "mecha-fruits",
+    "spacesNote": "Reactive Spaces also needs LTX runs for a new version",
+    "quoteAndConfirmEveryRun": true
+  },
   "galleryCards": [
     {
       "id": "mecha-fruits",
@@ -109,7 +132,8 @@
             "Edit only the regions.robot rectangle of the first still with FLUX 3 Klein (swap the mecha for this character) after a quote and the person's yes",
             "Keep the same rig: the swap changes who the dancer looks like, not how it moves",
             "Change the noun in the render prompt",
-            "Refuse a non-humanoid (vehicle, animal); ship-mecha is a separate Objects study"
+            "Refuse a non-humanoid (vehicle, animal); ship-mecha is a separate Objects study",
+            "Note: a Klein region edit driven by a reference image has not been tested on this workflow; the tested path is a region edit driven by the person's words, and Klein's --aesthetic-image copies composition and is not the mechanism"
           ],
           "windowsRerendered": ["w0", "w2"],
           "paid": true
