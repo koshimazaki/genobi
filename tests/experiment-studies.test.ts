@@ -83,7 +83,8 @@ describe("new pilot studies", () => {
 
   it.each([
     ["canyon", ["z"], 0.55],
-    ["pyramid-inside", ["x", "z"], 0.7],
+    ["pyramid-inside", ["x", "z"], 0.3],
+    ["pyramid-inside-spin", ["x", "z"], 0.3],
   ] as [Study, ("x" | "z")[], number][])(
     "%s closes sideways only on the bass, whatever the frame",
     (study, axes, fraction) => {
@@ -379,8 +380,8 @@ describe("camera clearance at the loudest bar", () => {
   it("pyramid-inside keeps its walls clear of the lens and the figure inside", () => {
     const { best, recipe } = nearest("pyramid-inside", 1);
     expect(best).toBeGreaterThan(2.5);
-    // The base terrace's inner face at full close: 19.2 m x 0.7 less half its 1.5 m wall.
-    const inner = 19.2 * 0.7 - 0.75;
+    // The base terrace's inner face at full close: 19.2 m x 0.3 less half its 1.5 m wall.
+    const inner = 19.2 * 0.3 - 0.75;
     expect(Math.abs(recipe.avatarPose.x)).toBeLessThan(inner);
     expect(Math.abs(recipe.avatarPose.z)).toBeLessThan(inner);
   });

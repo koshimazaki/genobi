@@ -53,7 +53,7 @@ describe("pyramid-inside-spin", () => {
           turned += d;
         }
         previous = heading;
-        // Full close: the lens stays outside every wall piece, with room.
+        // Full close (walls at 0.3): the lens keeps 4 m from every wall piece.
         for (const o of parts) {
           const h = [o.scaleX ?? 1, o.scaleY ?? 1, o.scaleZ ?? 1].map(
             (v) => (v * o.scale * size) / 2,
@@ -63,13 +63,13 @@ describe("pyramid-inside-spin", () => {
             Math.max(0, Math.abs(py - o.y) - h[1]),
             Math.max(0, Math.abs(pz - o.z) - h[2]),
           );
-          expect(gap).toBeGreaterThan(5);
+          expect(gap).toBeGreaterThan(4);
         }
       }
       expect(Math.abs(turned)).toBeCloseTo(2 * Math.PI, 6);
       for (const d of steps) expect(d).toBeCloseTo(turned / last, 9);
       // The figure stays where pyramid-inside puts it.
-      expect(recipe.avatarPose).toEqual({ x: 1.2, y: 0, z: -5, yaw: 0 });
+      expect(recipe.avatarPose).toEqual({ x: 1.2, y: 0, z: -3.5, yaw: 0 });
     },
   );
 });

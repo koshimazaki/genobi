@@ -99,7 +99,9 @@ still (pyramid-inside pans 45 degrees) and move the space on the `low` band.
 
 - **Sideways-only close (cathedral-walls, canyon, pyramid-inside).** Two
   states that differ only in distance from the centre: nave x, street z (both
-  0.55 when closed), pyramid x and z (0.7). `motion.morphControl` blends them
+  0.55 when closed), pyramid x and z (0.3, a much smaller chamber; the
+  blend position is clamped at 1, so `--motion-gain` cannot squeeze past the
+  closed layout, which is why the pyramid has its own fraction). `motion.morphControl` blends them
   with a manual baseline of 0 (open) plus `low × 1.2`, so loud = closed and
   the timeline clock never moves the walls. `stateAudio` cannot do this
   because it blends from the timeline pair, so the closed state would sit on
@@ -110,7 +112,7 @@ still (pyramid-inside pans 45 degrees) and move the space on the `low` band.
   studies still use it.
 - **Reverb box.** The room box shrinks on the same bars in every study:
   `roomWidth`/`roomDepth` mappings in cathedral-walls, canyon and room-walls,
-  and a smaller closed-state box (×0.7) in pyramid-inside.
+  and a smaller closed-state box (×0.3) in pyramid-inside.
 - **Box sizes.** The engine limits each box axis to 0.1-8 and `scale` to
   0.1-32, so long pieces carry their length in `scale` (`sized()` in
   `recipe-parts.ts`).
@@ -126,7 +128,9 @@ still (pyramid-inside pans 45 degrees) and move the space on the `low` band.
   At full bass the room is 2.8 × 2.3 m, the walls 1.4 m from the dancer.
 - **pyramid-inside** is a hollow stepped pyramid three times larger, 36 m tall
   with 128 wall pieces and an oculus. It is shot from 1 m above the floor with
-  an 85 degree lens, panning 45 degrees, the figure 7 m ahead for scale.
+  an 85 degree lens, panning 45 degrees, the figure 5.5 m ahead for scale.
+  At full close the base terrace's inner face is 5 m from the centre, about
+  3 m from the lens.
 - **pyramid-inside-spin** is the same interior, close and figure, with the
   camera 1.2 m above the floor centre (0.5 m off the axis, looking through
   it about 10 degrees up) turning one full 360 degrees. The turn is the

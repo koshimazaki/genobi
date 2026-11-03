@@ -390,8 +390,14 @@ export function roomWalls(recipe: Recipe): RoomDesign {
 
 /** How big the interior is: three times the base hollow pyramid (36 m tall). */
 export const PYRAMID_SCALE = 3;
-/** The pyramid's terraces close to 0.7 of their open distance at full bass. */
-export const PYRAMID_CLOSED = 0.7;
+/**
+ * The pyramid's terraces close to 0.3 of their open distance at full bass: a
+ * much smaller chamber than the 0.55 of cathedral-walls and canyon. The blend
+ * position is clamped at 1, so `--motion-gain` cannot squeeze past this; the
+ * closed layout itself is the limit. At 0.3 the base terrace's inner face is
+ * 5.0 m from the centre.
+ */
+export const PYRAMID_CLOSED = 0.3;
 
 /**
  * A big hollow stepped pyramid seen from the floor with a wide lens. The room
@@ -429,8 +435,8 @@ export function pyramidInside(recipe: Recipe): RoomDesign {
   recipe.avatar = true;
   recipe.avatarAsset = "mannequin";
   recipe.avatarMotion = "idle";
-  // On the floor 7 m ahead, inside the base even at full close (13.4 m).
-  recipe.avatarPose = { x: 1.2, y: 0, z: -5, yaw: 0 };
+  // On the floor 5.5 m ahead, inside the base even at full close (5.0 m).
+  recipe.avatarPose = { x: 1.2, y: 0, z: -3.5, yaw: 0 };
   // Near the floor with a wide lens, panning 45 degrees, looking up and across.
   recipe.cameraMotion = panCamera(
     [0, 1, 2],
