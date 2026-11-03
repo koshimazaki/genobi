@@ -824,6 +824,128 @@
         }
       }
     },
+    "sprite-shower": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/mix-sprite-shower.mjs",
+        "sha256": "73e3fcec8c449d0331cf809517785332cd6691c7b5604f66c89bf13c02c9bdf4"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["density", "speed", "direction", "size", "seed"],
+        "properties": {
+          "density": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 400
+          },
+          "speed": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 4
+          },
+          "direction": {
+            "type": "string",
+            "enum": ["left", "right", "up", "down"]
+          },
+          "size": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 32
+          },
+          "seed": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9999
+          }
+        }
+      }
+    },
+    "box-scan": {
+      "engine": "threejs",
+      "engineVersion": "0.180.0",
+      "mode": "filter",
+      "file": {
+        "path": "graphics/mix-box-scan.mjs",
+        "sha256": "8a47817f008f669cf95f96501f9cbcac4d171434b3046c0b0e81be008b93a37d"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "x",
+          "y",
+          "w",
+          "h",
+          "feather",
+          "posterize",
+          "levels",
+          "wire",
+          "color",
+          "sweep",
+          "trail"
+        ],
+        "properties": {
+          "x": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "y": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "w": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "h": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "feather": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 0.2
+          },
+          "posterize": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "levels": {
+            "type": "integer",
+            "minimum": 2,
+            "maximum": 32
+          },
+          "wire": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "color": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "sweep": {
+            "type": "number",
+            "minimum": 0.1,
+            "maximum": 8
+          },
+          "trail": {
+            "type": "number",
+            "minimum": 0.05,
+            "maximum": 1
+          }
+        }
+      }
+    },
     "gen-title": {
       "engine": "animejs",
       "engineVersion": "4.5.0",

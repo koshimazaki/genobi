@@ -14,49 +14,60 @@ const clip = (name: (typeof CHARACTERS)[number]) => ({
 /**
  * The bundled media: the owner's four LTX-2.5 Layout-to-Render (open
  * weights) renders of one dance guide (window 0 of the explode capture, the
- * same pose and the same 8.04 s of the loop), one character each (the mecha
- * from 2 November, the others 3 November), encoded once from 2048 × 1152 to
- * 1920 × 1080 (CRF 19, no sound), with the swap words baked into the card
- * stills and the gold ninja's drop frames in Retro Gaming (the font file is
- * not bundled), and the owner's
- * "Dance with Fruits" loop (music by Koshimazaki, owner-made): the 9.0 s loop
- * that starts on the voice, played four times and cut at 30.6 s, faded over
- * the end card's last 2.4 s, raised 0.6 dB to -14 LUFS, MP3 320 kb/s. The
- * renders' own audio starts sample-aligned with the loop, so each picture
- * stays on the music it was made for. See docs/fruits-swap.md.
+ * same pose and the same 8.04 s of the loop), one character each (the
+ * opening mecha `mecha-fruit-song-vox` from 2 November, the others
+ * 3 November), encoded once from 2048 × 1152 to 1920 × 1080 (CRF 19, no
+ * sound). The Retro Gaming typography is baked into the media (the font file
+ * is not bundled): the 2.5 s title splash (the voxel apple from the mecha's
+ * frame 0, then DANCE WITH FRUITS), the title typed over the mecha's first
+ * 4.2 s, the swap words on the card stills and WATERMELON over the gold
+ * ninja's drop frames. The owner's "Dance with Fruits" loop (music by
+ * Koshimazaki, owner-made): its last 2.4 s under the splash, then the 9.0 s
+ * loop from the voice four times, cut at 33.0 s, faded over the end card's
+ * last 2.4 s, raised 0.6 dB to -14 LUFS, MP3 320 kb/s. The renders' own audio
+ * starts sample-aligned with the loop, so each picture stays on the music it
+ * was made for. See docs/fruits-swap.md.
  */
 const media: TemplateMix["media"] = {
+  "fruits-swap-splash": {
+    kind: "video",
+    url: `${DIR}/fruits-swap-splash.mp4`,
+    path: "media/fruits-swap-splash.mp4",
+    durationSeconds: 2.5,
+  },
   ...Object.fromEntries(CHARACTERS.map((c) => [`fruits-swap-${c}`, clip(c)])),
   "fruits-swap-track": {
     kind: "audio",
     url: `${DIR}/fruits-swap-track.mp3`,
     path: "media/fruits-swap-track.mp3",
-    durationSeconds: 30.6,
+    durationSeconds: 33.0,
   },
 };
 
 /**
- * Dance with Fruits (3 November 2026, v2): a voxel dancer between two fruits,
- * swapped for another character on the loop. The mecha, its title in a
- * speech bubble, then the gorilla on the loop restart under a surveillance
- * scan that posterizes and turns to wireframe, the gold ninja on the drop
- * beat inside that loop (WATERMELON slammed over the picture), the pink cat on
- * the last loop, and the house end card. The swaps are hard cuts at the same
- * guide frame, so the pose carries across. Nothing is generated:
- * `run: "mix"`. See docs/fruits-swap.md.
+ * Dance with Fruits (3 November 2026, v3): a voxel dancer between two fruits,
+ * swapped for another character on the loop. A title splash (the voxel apple,
+ * then DANCE WITH FRUITS, pixel fruit flying across), the mecha with the
+ * title typed on the beat, the gorilla on the loop restart under a
+ * surveillance scan whose box posterizes and turns to wireframe, the gold
+ * ninja on the drop beat inside that loop (WATERMELON slammed over the
+ * picture), the pink cat on the last loop, a flood of pixel fruit, and the
+ * house end card. The swaps are hard cuts at the same guide frame, so the
+ * pose carries across. Nothing is generated: `run: "mix"`. See
+ * docs/fruits-swap.md.
  */
 export const fruitsSwap: HouseTemplate = {
   id: "fruits-swap",
   name: "Dance with Fruits",
   run: "mix",
   description:
-    "One dance, four characters: LTX-2.5 renders of the same guide swapped on the loop and the drop, with a speech-bubble title, swap words and an end card. Nothing to generate.",
+    "One dance, four characters: LTX-2.5 renders of the same guide swapped on the loop and the drop, with a pixel title splash, typed title, swap words and an end card. Nothing to generate.",
   tier: "open",
   style: {
     name: "Signal swap",
-    look: "The owner's voxel dancers on a grey studio floor, cut hard on the loop, with Space.js swap cards, a speech-bubble title, a CAM 02 surveillance scan that degrades and pixel swap words.",
+    look: "The owner's voxel dancers on a grey studio floor, cut hard on the loop, with Space.js swap cards, an apple-logo title splash, pixel fruit flying, a CAM 02 surveillance scan whose box degrades and pixel swap words.",
     lighting:
-      "The renders' own soft studio light; the overlays add lime readouts, a white bubble and white words.",
+      "The renders' own soft studio light; the overlays add lime readouts, pixel fruit and white words.",
     palette:
       "Studio grey and Signal black, with the fruits' red, yellow and green and lime readouts.",
     swatches: [

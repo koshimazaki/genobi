@@ -139,6 +139,7 @@
         "dual-editor.md",
         "editor-timeline.md",
         "effects-catalogue.md",
+        "fruits-swap-recipes.md",
         "fruits-swap.md",
         "genmod.md",
         "genobi-teaser-run/README.md",
@@ -318,6 +319,7 @@
         "bloom-teaser.md",
         "director-generate.md",
         "falling-room.md",
+        "fruits-swap-recipes.md",
         "fruits-swap.md",
         "media-previews.md",
         "poster-grid-direction.md",
@@ -521,7 +523,8 @@
         "director-bundle/project-copy.md",
         "director-bundle/showcase/README.md",
         "director-prompts.md",
-        "effects-catalogue.md"
+        "effects-catalogue.md",
+        "fruits-swap-recipes.md"
       ]
     },
     "research": {
@@ -747,6 +750,7 @@
         "editor-timeline.md",
         "effects-catalogue.md",
         "falling-room.md",
+        "fruits-swap-recipes.md",
         "fruits-swap.md",
         "genmod.md",
         "genobi-cli.md",
@@ -1527,7 +1531,7 @@
       "links": [
         "dimensions-mix.md",
         "director-bundle/README.md",
-        "fruits-swap.md"
+        "fruits-swap-recipes.md"
       ]
     },
     {
@@ -1704,11 +1708,18 @@
       ]
     },
     {
+      "title": "Dance with Fruits: its recipes",
+      "path": "fruits-swap-recipes.md",
+      "tags": ["director", "bundle", "templates"],
+      "summary": "The three recipes Dance with Fruits added to the trusted registry - a comic speech bubble, a pixel-art fruit shower and a surveillance treatment confined to a box - with their parameters and checks.",
+      "links": ["fruits-swap.md"]
+    },
+    {
       "title": "Dance with Fruits: the swap edit",
       "path": "fruits-swap.md",
       "tags": ["director", "sound", "templates"],
-      "summary": "Dance with Fruits, the character-swap mix template - 31 seconds of the owner's four LTX-2.5 Layout-to-Render (open weights) renders of one dance guide, swapped hard on the loop and the drop, with a speech-bubble title, Retro Gaming swap words baked into the media, a degrading surveillance scan and the house end card. Nothing to generate.",
-      "links": ["templates.md"]
+      "summary": "Dance with Fruits, the character-swap mix template - 33 seconds of the owner's four LTX-2.5 Layout-to-Render (open weights) renders of one dance guide, opened by an apple-logo title splash, swapped hard on the loop and the drop, with Retro Gaming words baked into the media, pixel fruit flying, a surveillance scan confined to the gorilla and the house end card. Nothing to generate.",
+      "links": ["fruits-swap-recipes.md", "templates.md"]
     },
     {
       "title": "Gen-Mod: one take, modified",

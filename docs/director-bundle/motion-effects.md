@@ -25,8 +25,9 @@ frame-exactly and checks their parameters on import and on every command.
 The Dimensions mix adds eight mix recipes on the same interface, among them
 the editable construction end card (`end-card`), whose words are parameters
 like the styled title's ([the end card](../dimensions-mix.md#the-end-card)).
-Dance with Fruits adds a comic `speech-bubble` overlay to the same set
-([the recipe](../fruits-swap.md#the-speech-bubble-recipe)).
+Dance with Fruits adds a comic `speech-bubble`, a pixel-art `sprite-shower`
+and a boxed surveillance filter, `box-scan`, to the same set
+([its recipes](../fruits-swap-recipes.md)).
 
 ## Every frame from its time alone
 

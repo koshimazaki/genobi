@@ -1,9 +1,11 @@
-"""Bakes the swap words in Retro Gaming (the owner's local font, never
-bundled) into the template's media: the two swap-card stills, and a slam of
-WATERMELON over the gold ninja's drop frames (source frames 115-143, the
-two beats the cut shows from 4.79 s). Needs Pillow, ffmpeg, the font
-installed, and the ninja's 2048 x 1152 source as
-$TMP_DIR/gold-ninja-source.mp4. Run with python3 -I. See docs/fruits-swap.md."""
+"""Bakes the Retro Gaming typography (the owner's local font, never bundled)
+into the template's media: the two swap-card stills, a slam of WATERMELON
+over the gold ninja's drop frames (source frames 115-143, the two beats the
+cut shows from 4.79 s), the apple-logo title splash and DANCE WITH FRUITS
+typed on the beat over the opening mecha. Needs Pillow, ffmpeg, the font
+installed, and the 2048 x 1152 sources in $TMP_DIR as gold-ninja-source.mp4
+and vox-source.mp4 (the opening mecha). Run with python3 -I, a step at a
+time: cards, ninja, opening. See docs/fruits-swap.md."""
 import math
 import os
 import subprocess
@@ -22,7 +24,7 @@ WHITE, BLACK = (246, 248, 242, 255), (12, 14, 12, 255)
 SIZE = 160  # a whole multiple of the face's pixel grid keeps edges square
 
 
-def word(text, size=SIZE):
+def word(text, size=SIZE, fill=WHITE):
     """The word in white over a Signal-black offset block, unscaled."""
     font = ImageFont.truetype(FONT, size)
     l, t, r, b = font.getbbox(text)
@@ -31,12 +33,13 @@ def word(text, size=SIZE):
     d = ImageDraw.Draw(img)
     d.fontmode = "1"  # no anti-aliasing: a pixel face stays pixels
     d.text((4 - l + off, 4 - t + off), text, font=font, fill=BLACK)
-    d.text((4 - l, 4 - t), text, font=font, fill=WHITE)
+    d.text((4 - l, 4 - t), text, font=font, fill=fill)
     return img
 
 
 def frame_of(clip, n, path):
-    subprocess.run([FF, "-y", "-v", "error", "-i", f"{OUT}/{clip}", "-vf", f"select=eq(n\\,{n})",
+    src = clip if clip.startswith("/") else f"{OUT}/{clip}"
+    subprocess.run([FF, "-y", "-v", "error", "-i", src, "-vf", f"select=eq(n\\,{n})",
                     "-frames:v", "1", path], check=True)
     return Image.open(path).convert("RGBA")
 
@@ -82,19 +85,33 @@ def slam_frames(text, frames, fps=24, beats=2, bpm=100):
         img.save(f"{TMP}/slam/{f:02d}.png")
 
 
-def bake_ninja(start=115, frames=29):
-    src = f"{TMP}/gold-ninja-source.mp4"
+ENCODE = ["-an", "-c:v", "libx264", "-preset", "slow", "-crf", "19", "-pix_fmt", "yuv420p", "-r", "24",
+          "-movflags", "+faststart"]
+
+
+def burn(src, frames_dir, start, count, out):
+    """Encodes a 2048 x 1152 source at 1920 x 1080 with PNG frames
+    `frames_dir/00.png...` laid over its frames start to start + count - 1."""
     graph = (f"[0:v]scale=1920:1080:flags=lanczos[v];"
              f"[1:v]setpts=PTS-STARTPTS+{start}/24/TB[w];"
-             f"[v][w]overlay=eof_action=pass:enable='between(n,{start},{start + frames - 1})'[o]")
-    subprocess.run([FF, "-y", "-v", "error", "-i", src, "-framerate", "24", "-i", f"{TMP}/slam/%02d.png",
-                    "-filter_complex", graph, "-map", "[o]", "-an", "-c:v", "libx264", "-preset", "slow",
-                    "-crf", "19", "-pix_fmt", "yuv420p", "-r", "24", "-movflags", "+faststart",
-                    f"{OUT}/fruits-swap-gold-ninja.mp4"], check=True)
+             f"[v][w]overlay=eof_action=pass:enable='between(n,{start},{start + count - 1})'[o]")
+    subprocess.run([FF, "-y", "-v", "error", "-i", src, "-framerate", "24", "-i", f"{frames_dir}/%02d.png",
+                    "-filter_complex", graph, "-map", "[o]", *ENCODE, out], check=True)
+
+
+def bake_ninja(start=115, frames=29):
+    burn(f"{TMP}/gold-ninja-source.mp4", f"{TMP}/slam", start, frames, f"{OUT}/fruits-swap-gold-ninja.mp4")
 
 
 if __name__ == "__main__":
+    # python3 -I leaves this folder off the path; the opening lives beside us.
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    from fruits_swap_opening import bake_opening
+
     step = sys.argv[1] if len(sys.argv) > 1 else "all"
+    # The opening first: card 1 holds a frame of the opening mecha.
+    if step in ("all", "opening"):
+        bake_opening(sys.modules[__name__])
     if step in ("all", "cards"):
         # Card 2 reads the ninja's frame 187, which the slam does not touch.
         card("fruits-swap-mecha.mp4", "GORILLA", "fruits-swap-card-1")

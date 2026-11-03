@@ -1,22 +1,30 @@
 {
   "id": "fruits-swap",
   "bpm": 100,
-  "inPointSeconds": 0,
+  "inPointSeconds": 6.5998,
   "fps": 24,
   "width": 1920,
   "height": 1080,
-  "beats": 51,
+  "beats": 55,
   "track": {
     "asset": "fruits-swap-track",
-    "seconds": 30.6
+    "seconds": 33.0
   },
   "trackName": "Track · Dance with Fruits (Koshimazaki)",
   "shots": [
     {
-      "asset": "fruits-swap-mecha",
-      "label": "Mecha · loop 1, from the voice (title bubble)",
+      "asset": "fruits-swap-splash",
+      "label": "Title splash · the apple, then DANCE WITH FRUITS",
       "sourceSeconds": 0,
       "startBeat": 0,
+      "beats": 4,
+      "cropY": null
+    },
+    {
+      "asset": "fruits-swap-mecha",
+      "label": "Mecha · loop 1, from the voice (title typed)",
+      "sourceSeconds": 0,
+      "startBeat": 4,
       "beats": 13,
       "cropY": null
     },
@@ -24,7 +32,7 @@
       "asset": "fruits-swap-gorilla",
       "label": "Gorilla · loop 2 restart (surveillance)",
       "sourceSeconds": 0,
-      "startBeat": 15,
+      "startBeat": 19,
       "beats": 8,
       "cropY": null
     },
@@ -32,7 +40,7 @@
       "asset": "fruits-swap-gold-ninja",
       "label": "Gold ninja · the drop (WATERMELON baked in)",
       "sourceSeconds": 4.79,
-      "startBeat": 23,
+      "startBeat": 27,
       "beats": 5,
       "cropY": null
     },
@@ -40,7 +48,7 @@
       "asset": "fruits-swap-pink-cat",
       "label": "Pink cat · loop 3 restart",
       "sourceSeconds": 0,
-      "startBeat": 30,
+      "startBeat": 34,
       "beats": 13,
       "cropY": null
     }
@@ -52,10 +60,11 @@
       "module": "end-card-still",
       "kind": "graphics",
       "lane": "end",
-      "startBeat": 43,
+      "startBeat": 47,
       "beats": 8,
       "opacity": 1,
       "card": true,
+      "offsetSeconds": 4,
       "parameters": {
         "eyebrow": "MADE WITH",
         "title": "GENOBI",
@@ -77,7 +86,7 @@
       "module": "space-hud",
       "kind": "graphics",
       "lane": "cards",
-      "startBeat": 13,
+      "startBeat": 17,
       "beats": 2,
       "opacity": 1,
       "card": true,
@@ -86,7 +95,7 @@
         "color": "#d5ff70",
         "label": "SWAP // MECHA OUT",
         "credit": "NEXT · GORILLA",
-        "targets": "0.5,0.5,0.24,0.86 / 0.2,0.3,0.16,0.26 / 0.8,0.3,0.16,0.26",
+        "targets": "0.5,0.24,0.2,0.3 / 0.2,0.3,0.16,0.26 / 0.8,0.3,0.16,0.26",
         "interval": 0.3,
         "dim": 0,
         "fadeAt": 0
@@ -98,7 +107,7 @@
       "module": "space-hud",
       "kind": "graphics",
       "lane": "cards",
-      "startBeat": 28,
+      "startBeat": 32,
       "beats": 2,
       "opacity": 1,
       "card": true,
@@ -107,7 +116,7 @@
         "color": "#d5ff70",
         "label": "SWAP // NINJA OUT",
         "credit": "NEXT · PINK CAT",
-        "targets": "0.5,0.5,0.24,0.86 / 0.2,0.3,0.16,0.26 / 0.8,0.3,0.16,0.26",
+        "targets": "0.5,0.24,0.2,0.3 / 0.2,0.3,0.16,0.26 / 0.8,0.3,0.16,0.26",
         "interval": 0.3,
         "dim": 0,
         "fadeAt": 0
@@ -119,100 +128,127 @@
       "module": "crt",
       "kind": "filter",
       "lane": "crt",
-      "startBeat": 15,
+      "startBeat": 19,
       "beats": 8,
       "opacity": 1,
       "parameters": {
-        "amount": 0.45,
+        "amount": 0.35,
         "curvature": 0.03,
-        "rgb": 1.2,
+        "rgb": 1.0,
         "vignette": 0.4
       }
     },
     {
-      "id": "posterize-1",
-      "name": "Posterize · gorilla, step 1",
-      "module": "dither",
+      "id": "box-scan-1",
+      "name": "Surveillance · gorilla box, step 1",
+      "module": "box-scan",
       "kind": "filter",
-      "lane": "posterize",
-      "startBeat": 15,
-      "beats": 2,
-      "opacity": 1,
-      "parameters": {
-        "amount": 0.4,
-        "levels": 8
-      }
-    },
-    {
-      "id": "posterize-2",
-      "name": "Posterize · gorilla, step 2",
-      "module": "dither",
-      "kind": "filter",
-      "lane": "posterize",
-      "startBeat": 17,
-      "beats": 2,
-      "opacity": 1,
-      "parameters": {
-        "amount": 0.6,
-        "levels": 5
-      }
-    },
-    {
-      "id": "posterize-3",
-      "name": "Posterize · gorilla, step 3",
-      "module": "dither",
-      "kind": "filter",
-      "lane": "posterize",
+      "lane": "box-scan",
       "startBeat": 19,
       "beats": 2,
       "opacity": 1,
       "parameters": {
-        "amount": 0.8,
-        "levels": 3
-      }
-    },
-    {
-      "id": "posterize-4",
-      "name": "Posterize · gorilla, step 4",
-      "module": "dither",
-      "kind": "filter",
-      "lane": "posterize",
-      "startBeat": 21,
-      "beats": 2,
-      "opacity": 1,
-      "parameters": {
-        "amount": 1.0,
-        "levels": 2
-      }
-    },
-    {
-      "id": "wire-1",
-      "name": "Wireframe · gorilla, in",
-      "module": "wire-scan",
-      "kind": "filter",
-      "lane": "wire",
-      "startBeat": 21,
-      "beats": 1,
-      "opacity": 1,
-      "parameters": {
+        "x": 0.3,
+        "y": 0.04,
+        "w": 0.4,
+        "h": 0.92,
+        "feather": 0.03,
+        "posterize": 0.4,
+        "levels": 8,
+        "wire": 0,
         "color": "#d5ff70",
-        "amount": 0.45,
         "sweep": 1.2,
         "trail": 0.35
       }
     },
     {
-      "id": "wire-2",
-      "name": "Wireframe · gorilla, full",
-      "module": "wire-scan",
+      "id": "box-scan-2",
+      "name": "Surveillance · gorilla box, step 2",
+      "module": "box-scan",
       "kind": "filter",
-      "lane": "wire",
-      "startBeat": 22,
+      "lane": "box-scan",
+      "startBeat": 21,
+      "beats": 2,
+      "opacity": 1,
+      "parameters": {
+        "x": 0.3,
+        "y": 0.04,
+        "w": 0.4,
+        "h": 0.92,
+        "feather": 0.03,
+        "posterize": 0.6,
+        "levels": 5,
+        "wire": 0,
+        "color": "#d5ff70",
+        "sweep": 1.2,
+        "trail": 0.35
+      }
+    },
+    {
+      "id": "box-scan-3",
+      "name": "Surveillance · gorilla box, step 3",
+      "module": "box-scan",
+      "kind": "filter",
+      "lane": "box-scan",
+      "startBeat": 23,
+      "beats": 2,
+      "opacity": 1,
+      "parameters": {
+        "x": 0.3,
+        "y": 0.04,
+        "w": 0.4,
+        "h": 0.92,
+        "feather": 0.03,
+        "posterize": 0.8,
+        "levels": 3,
+        "wire": 0,
+        "color": "#d5ff70",
+        "sweep": 1.2,
+        "trail": 0.35
+      }
+    },
+    {
+      "id": "box-scan-4",
+      "name": "Surveillance · gorilla box, step 4",
+      "module": "box-scan",
+      "kind": "filter",
+      "lane": "box-scan",
+      "startBeat": 25,
       "beats": 1,
       "opacity": 1,
       "parameters": {
+        "x": 0.3,
+        "y": 0.04,
+        "w": 0.4,
+        "h": 0.92,
+        "feather": 0.03,
+        "posterize": 1.0,
+        "levels": 2,
+        "wire": 0.45,
         "color": "#d5ff70",
-        "amount": 0.9,
+        "sweep": 1.2,
+        "trail": 0.35
+      }
+    },
+    {
+      "id": "box-scan-5",
+      "name": "Surveillance · gorilla box, step 5",
+      "module": "box-scan",
+      "kind": "filter",
+      "lane": "box-scan",
+      "startBeat": 26,
+      "beats": 1,
+      "opacity": 1,
+      "parameters": {
+        "x": 0.3,
+        "y": 0.04,
+        "w": 0.4,
+        "h": 0.92,
+        "feather": 0.03,
+        "posterize": 1.0,
+        "levels": 2,
+        "wire": 0.9,
+        "color": "#d5ff70",
         "sweep": 1.2,
         "trail": 0.35
       }
@@ -223,7 +259,7 @@
       "module": "ui-focus",
       "kind": "graphics",
       "lane": "focus",
-      "startBeat": 15,
+      "startBeat": 19,
       "beats": 4,
       "opacity": 1,
       "parameters": {
@@ -245,7 +281,7 @@
       "module": "scan",
       "kind": "graphics",
       "lane": "scan",
-      "startBeat": 19,
+      "startBeat": 23,
       "beats": 4,
       "opacity": 0.95,
       "parameters": {
@@ -263,7 +299,7 @@
       "module": "hud",
       "kind": "graphics",
       "lane": "hud",
-      "startBeat": 15,
+      "startBeat": 19,
       "beats": 8,
       "opacity": 1,
       "parameters": {
@@ -276,67 +312,96 @@
       }
     },
     {
-      "id": "bubble-title",
-      "name": "Speech bubble · DANCE WITH FRUITS",
-      "module": "speech-bubble",
+      "id": "splash-fruit",
+      "name": "Pixel fruit · across the splash",
+      "module": "sprite-shower",
       "kind": "graphics",
-      "lane": "bubble",
-      "startBeat": 2,
-      "beats": 4,
-      "opacity": 1,
-      "parameters": {
-        "text": "DANCE WITH FRUITS",
-        "font": "IBM Plex Mono",
-        "color": "#0c0e0c",
-        "fill": "#f6f8f2",
-        "x": 0.46,
-        "y": 0.28,
-        "size": 84,
-        "direction": "up-left",
-        "duration": 0.35
-      }
-    },
-    {
-      "id": "open",
-      "name": "Screen open",
-      "module": "screen-open",
-      "kind": "graphics",
-      "lane": "open",
+      "lane": "fruit",
       "startBeat": 0,
       "beats": 2,
       "opacity": 1,
       "parameters": {
-        "color": "#d5ff70",
-        "matte": "#0c0e0c",
-        "duration": 0.6,
-        "glyphs": 28,
-        "seed": 7
+        "density": 40,
+        "speed": 0.8,
+        "direction": "left",
+        "size": 5,
+        "seed": 3
       }
     },
     {
-      "id": "wipe-end",
-      "name": "Wipe · into the end card",
-      "module": "signal-wipe",
+      "id": "splash-fruit-2",
+      "name": "Pixel fruit · under the title",
+      "module": "sprite-shower",
       "kind": "graphics",
-      "lane": "wipe",
-      "startBeat": 42.5,
-      "beats": 1,
+      "lane": "fruit",
+      "startBeat": 2,
+      "beats": 2,
       "opacity": 1,
       "parameters": {
+        "density": 14,
+        "speed": 0.8,
         "direction": "left",
-        "color": "#0c0e0c",
-        "accent": "#d5ff70",
-        "seconds": 0.6,
-        "seed": 43
+        "size": 5,
+        "seed": 5
       }
     },
     {
-      "id": "glitch-13",
-      "name": "Slice glitch · beat 13",
+      "id": "flood-1",
+      "name": "Pixel fruit · flood builds",
+      "module": "sprite-shower",
+      "kind": "graphics",
+      "lane": "fruit",
+      "startBeat": 45,
+      "beats": 1.5,
+      "opacity": 1,
+      "parameters": {
+        "density": 120,
+        "speed": 1.2,
+        "direction": "up",
+        "size": 8,
+        "seed": 41
+      }
+    },
+    {
+      "id": "flood-2",
+      "name": "Pixel fruit · flood",
+      "module": "sprite-shower",
+      "kind": "graphics",
+      "lane": "flood",
+      "startBeat": 46.5,
+      "beats": 1.5,
+      "opacity": 1,
+      "parameters": {
+        "density": 380,
+        "speed": 1.6,
+        "direction": "up",
+        "size": 10,
+        "seed": 42
+      }
+    },
+    {
+      "id": "glitch-4",
+      "name": "Slice glitch · beat 4",
       "module": "slice-glitch",
       "kind": "filter",
       "lane": "glitch",
-      "startBeat": 13,
+      "startBeat": 4,
+      "beats": 0.375,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.8,
+        "slices": 18,
+        "seed": 4,
+        "duration": 0.2
+      }
+    },
+    {
+      "id": "glitch-17",
+      "name": "Slice glitch · beat 17",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 17,
       "beats": 0.375,
       "opacity": 1,
       "parameters": {
@@ -347,12 +412,12 @@
       }
     },
     {
-      "id": "glitch-15",
-      "name": "Slice glitch · beat 15",
+      "id": "glitch-19",
+      "name": "Slice glitch · beat 19",
       "module": "slice-glitch",
       "kind": "filter",
       "lane": "glitch",
-      "startBeat": 15,
+      "startBeat": 19,
       "beats": 0.375,
       "opacity": 1,
       "parameters": {
@@ -363,12 +428,12 @@
       }
     },
     {
-      "id": "glitch-23",
-      "name": "Slice glitch · beat 23",
+      "id": "glitch-27",
+      "name": "Slice glitch · beat 27",
       "module": "slice-glitch",
       "kind": "filter",
       "lane": "glitch",
-      "startBeat": 23,
+      "startBeat": 27,
       "beats": 0.375,
       "opacity": 1,
       "parameters": {
@@ -379,12 +444,12 @@
       }
     },
     {
-      "id": "glitch-28",
-      "name": "Slice glitch · beat 28",
+      "id": "glitch-32",
+      "name": "Slice glitch · beat 32",
       "module": "slice-glitch",
       "kind": "filter",
       "lane": "glitch",
-      "startBeat": 28,
+      "startBeat": 32,
       "beats": 0.375,
       "opacity": 1,
       "parameters": {
@@ -395,18 +460,34 @@
       }
     },
     {
-      "id": "glitch-30",
-      "name": "Slice glitch · beat 30",
+      "id": "glitch-34",
+      "name": "Slice glitch · beat 34",
       "module": "slice-glitch",
       "kind": "filter",
       "lane": "glitch",
-      "startBeat": 30,
+      "startBeat": 34,
       "beats": 0.375,
       "opacity": 1,
       "parameters": {
         "amount": 0.9,
         "slices": 18,
         "seed": 39,
+        "duration": 0.2
+      }
+    },
+    {
+      "id": "glitch-47",
+      "name": "Slice glitch · beat 47",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 47,
+      "beats": 0.375,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.8,
+        "slices": 18,
+        "seed": 47,
         "duration": 0.2
       }
     }
