@@ -28,6 +28,7 @@ declare -A PROMPT=(
   [fruit-mecha-morph]="A blocky grey and gold mecha dances on a dark studio floor between two fruits at shoulder height; on every bass swell the fruits swell and glow and change into other fruits, a banana becoming a papaya and an apple becoming a banana, and relax back as the bass fades. Hard studio light, still camera, energetic dancing."
   [fruit-apple-banana]="A single red apple hovers over a dark studio floor, seen from the front; on every bass swell it stretches and bends into a ripe yellow banana and relaxes back into the apple as the bass fades. Hard studio light, still camera."
   [fruit-banana-apple]="A single ripe yellow banana hovers over a dark studio floor, seen from the front; on every bass swell it curls and rounds into a red apple and relaxes back into the banana as the bass fades. Hard studio light, still camera."
+  [ship-mecha]="A sleek silver spacecraft hovers over a dark studio floor, seen from the front; on every bass swell its hull folds and reassembles into a gold mecha warrior, then relaxes back into the spacecraft as the bass fades, turning slowly. Hard studio light, still camera."
   [fruit-apple]="A single large apple rests on a clean studio floor, seen from the front, swelling gently on every bass hit. Soft studio light, still camera."
   [fruit-banana]="A single large banana rests on a clean studio floor, seen from the front, swelling gently on every bass hit. Soft studio light, still camera."
   [fruit-papaya]="A single large papaya rests on a clean studio floor, seen from the front, swelling gently on every bass hit. Soft studio light, still camera."
@@ -45,5 +46,5 @@ mk() { # study mode [extra prepare args]
     --mode "$mode" --frames "$FRAMES" --seed 42 --output "$out" --label "$study-$mode" --prompt "${PROMPT[$study]}" "$@"
   echo "bundle $out"
 }
-for s in diamond pulse cathedral-walls cathedral-gallery cathedral-gallery-grow canyon towers-descent room-walls pyramid-inside pyramid-inside-spin party-walls studio-walls falling fruit-dance fruit-mecha fruit-mecha-morph fruit-apple-banana fruit-banana-apple fruit-apple fruit-banana fruit-papaya; do mk "$s" layout-audio; done
+for s in diamond pulse cathedral-walls cathedral-gallery cathedral-gallery-grow canyon towers-descent room-walls pyramid-inside pyramid-inside-spin party-walls studio-walls falling fruit-dance fruit-mecha fruit-mecha-morph fruit-apple-banana fruit-banana-apple ship-mecha fruit-apple fruit-banana fruit-papaya; do mk "$s" layout-audio; done
 for s in cathedral-walls canyon; do mk "$s" union-depth; done

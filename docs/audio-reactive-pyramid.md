@@ -221,6 +221,19 @@ still (pyramid-inside pans 45 degrees) and move the space on the `low` band.
   is the peak fruit, whatever the frame. The capture's `--motion-gain` scales the
   blend amount too (bounded at 2), so at gain 2 the banana arrives at about
   half the band. `frame-closed` (the loudest bar) is the peak fruit's still.
+- **ship-mecha** (`shipMecha`, `recipes-ship-mecha.ts`) is the same
+  continuous morph on the `spacecraft-mecha` preset's own 128 retained
+  voxels: the `spacecraft` catalogue form in silence, the `mecha` form at
+  full bass, both coloured per state (spacecraft `#c9ced6`, mecha
+  `#d9a441`). Both forms share one centre, the mecha's feet 0.4 m above the
+  floor, so the spacecraft hovers higher. It is held from the front at 10
+  degrees and framed so the mecha fills 60% of the frame height, turning on
+  `mid` (twistY 0.2) with no scale pulse, so the mecha never leaves the frame.
+  The morph reads the low band as swells above the take's own bass floor
+  (`bassSwells`): its 75th percentile and below are the spacecraft, its 95th
+  percentile and above the mecha, each swell held 8 frames and released
+  over 12. On Dimensions at 40.125 s the auto-gained band never fell under
+  0.54, so the raw band held the mecha all take long.
 - **Rubik flecks.** In the three continuous morphs (fruit-apple-banana,
   fruit-banana-apple, fruit-mecha-morph) exactly a quarter of the body
   voxels, picked by a seed per voxel index, swap colours between the two
