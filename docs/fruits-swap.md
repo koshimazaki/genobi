@@ -1,6 +1,6 @@
 ---
 tags: [director, sound, templates]
-summary: Dance with Fruits, the character-swap mix template - 33 seconds of the owner's four LTX-2.5 Layout-to-Render (open weights) renders of one dance guide, opened by an apple-logo title splash, swapped hard on the loop and the drop, with Retro Gaming words baked into the media, pixel fruit flying, a surveillance scan confined to the gorilla and the house end card. Nothing to generate.
+summary: Dance with Fruits, the content-swap mix template - 33 seconds of the owner's four LTX-2.5 Layout-to-Render (open weights) renders of one dance guide, opened by an apple-logo title splash, swapped hard on the loop and the drop, with Retro Gaming words baked into the media, pixel fruit flying, a surveillance scan confined to the gorilla and the house end card. Nothing to generate.
 ---
 
 # Dance with Fruits: the swap edit
@@ -13,7 +13,7 @@ pose, the fruits, the floor and the camera and changes only the dancer. It
 replaces the ffmpeg build (`audio-reactive/edit/fruits-swap-build.sh`), whose
 Nokia pixel-font cards the owner turned down as "too much"; this cut uses the
 house recipes and three it added ([its recipes](fruits-swap-recipes.md)). In
-the Gallery it is the fifth card, **Dance with Fruits · Character swap**.
+the Gallery it is the fifth card, **Dance with Fruits · Content swap**.
 [Versions](#versions) lists what each review changed.
 
 | Piece    | Where                                                                                                                                                                       |
