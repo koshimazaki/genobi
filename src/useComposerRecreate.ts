@@ -31,7 +31,7 @@ export function useComposerRecreate(
     () =>
       onCameraRecipe(({ patch, note, video }) => {
         const upload = ++uploads.current;
-        const projectId = studioStore.getState().director.bundle?.project.id;
+        const originalBundle = studioStore.getState().director.bundle;
         // Never let the composer silently fall back to a previous source while
         // another MP4 is being uploaded. Generate stays disabled until it ends.
         setUploadingVideo(Boolean(video));
@@ -49,7 +49,7 @@ export function useComposerRecreate(
         }
         const current = () =>
           upload === uploads.current &&
-          studioStore.getState().director.bundle?.project.id === projectId &&
+          studioStore.getState().director.bundle === originalBundle &&
           latest.current.generator === "upscale" &&
           latest.current.sourceId === ASSET_UPLOAD_PENDING;
         send(video)
