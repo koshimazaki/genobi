@@ -20,9 +20,10 @@ order since 30 October 2026:
 2. [Dimensions mix](dimensions-mix.md) · Anime teaser
 3. [Bloom](bloom-teaser.md) · Sheet to shot (an anime teaser from a character sheet)
 4. [Adaptive reverb](adaptive-reverb.md) · 3D · LTX template
-5. Forest guardian
-6. Toy creatures
-7. Sheet to shot · Preview coming soon
+5. [Dance with Fruits](fruits-swap.md) · Character swap
+6. Forest guardian
+7. Toy creatures
+8. Sheet to shot · Preview coming soon
 
 Character piece is in `NOT_IN_GALLERY`: its preview is FLUX 3 video,
 represented by Forest guardian, rather than footage from its LTX recipe.

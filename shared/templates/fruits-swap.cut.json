@@ -1,0 +1,365 @@
+{
+  "id": "fruits-swap",
+  "bpm": 100,
+  "inPointSeconds": 0,
+  "fps": 24,
+  "width": 1920,
+  "height": 1080,
+  "beats": 51,
+  "track": {
+    "asset": "fruits-swap-track",
+    "seconds": 30.6
+  },
+  "trackName": "Track · Dance with Fruits (Koshimazaki)",
+  "shots": [
+    {
+      "asset": "fruits-swap-mecha",
+      "label": "Mecha · loop 1, from the voice",
+      "sourceSeconds": 0,
+      "startBeat": 0,
+      "beats": 13,
+      "cropY": null
+    },
+    {
+      "asset": "fruits-swap-gorilla",
+      "label": "Gorilla · loop 2 restart (surveillance)",
+      "sourceSeconds": 0,
+      "startBeat": 15,
+      "beats": 8,
+      "cropY": null
+    },
+    {
+      "asset": "fruits-swap-gold-ninja",
+      "label": "Gold ninja · the drop, watermelon",
+      "sourceSeconds": 4.79,
+      "startBeat": 23,
+      "beats": 5,
+      "cropY": null
+    },
+    {
+      "asset": "fruits-swap-pink-cat",
+      "label": "Pink cat · loop 3 restart",
+      "sourceSeconds": 0,
+      "startBeat": 30,
+      "beats": 13,
+      "cropY": null
+    }
+  ],
+  "layers": [
+    {
+      "id": "end-card",
+      "name": "End card · Genobi · Dance with Fruits",
+      "module": "end-card-still",
+      "kind": "graphics",
+      "lane": "end",
+      "startBeat": 43,
+      "beats": 8,
+      "opacity": 1,
+      "card": true,
+      "parameters": {
+        "eyebrow": "MADE WITH",
+        "title": "GENOBI",
+        "subtitle": "DANCE WITH FRUITS",
+        "credit1": "MUSIC · DANCE WITH FRUITS",
+        "credit2": "KOSHIMAZAKI · VIDEO LTX-2.5",
+        "font": "\"IBM Plex Mono\", monospace",
+        "color": "#d5ff70",
+        "accent": "#e6a1ff",
+        "steps": "Gathering the dancers / Cutting on the loop / Bringing it into focus",
+        "done": "Swap ready",
+        "duration": 2.4,
+        "still": "/media/director-templates/fruits-swap/fruits-swap-end-card.jpg"
+      }
+    },
+    {
+      "id": "swap-1",
+      "name": "Swap card · mecha out, gorilla next",
+      "module": "space-hud",
+      "kind": "graphics",
+      "lane": "cards",
+      "startBeat": 13,
+      "beats": 2,
+      "opacity": 1,
+      "card": true,
+      "parameters": {
+        "still": "/media/director-templates/fruits-swap/fruits-swap-card-1.jpg",
+        "color": "#d5ff70",
+        "label": "SWAP // MECHA OUT",
+        "credit": "NEXT · GORILLA",
+        "targets": "0.5,0.5,0.24,0.86 / 0.2,0.3,0.16,0.26 / 0.8,0.3,0.16,0.26",
+        "interval": 0.3,
+        "dim": 0.45,
+        "fadeAt": 0
+      }
+    },
+    {
+      "id": "swap-2",
+      "name": "Swap card · gold ninja out, pink cat next",
+      "module": "space-hud",
+      "kind": "graphics",
+      "lane": "cards",
+      "startBeat": 28,
+      "beats": 2,
+      "opacity": 1,
+      "card": true,
+      "parameters": {
+        "still": "/media/director-templates/fruits-swap/fruits-swap-card-2.jpg",
+        "color": "#d5ff70",
+        "label": "SWAP // NINJA OUT",
+        "credit": "NEXT · PINK CAT",
+        "targets": "0.5,0.5,0.24,0.86 / 0.2,0.3,0.16,0.26 / 0.8,0.3,0.16,0.26",
+        "interval": 0.3,
+        "dim": 0.45,
+        "fadeAt": 0
+      }
+    },
+    {
+      "id": "crt",
+      "name": "Surveillance scanlines · gorilla",
+      "module": "crt",
+      "kind": "filter",
+      "lane": "crt",
+      "startBeat": 15,
+      "beats": 8,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.45,
+        "curvature": 0.03,
+        "rgb": 1.2,
+        "vignette": 0.4
+      }
+    },
+    {
+      "id": "track-gorilla",
+      "name": "Target box · SUBJECT 02 · GORILLA",
+      "module": "ui-focus",
+      "kind": "graphics",
+      "lane": "focus",
+      "startBeat": 15,
+      "beats": 4,
+      "opacity": 1,
+      "parameters": {
+        "x": 0.3,
+        "y": 0.04,
+        "w": 0.4,
+        "h": 0.92,
+        "label": "SUBJECT 02 · GORILLA · TRACKING",
+        "color": "#d5ff70",
+        "dim": 0.25,
+        "draw": 0.3,
+        "fadeAt": 2.25,
+        "view": ""
+      }
+    },
+    {
+      "id": "scan-gorilla",
+      "name": "Scan · gorilla head",
+      "module": "scan",
+      "kind": "graphics",
+      "lane": "scan",
+      "startBeat": 19,
+      "beats": 4,
+      "opacity": 0.95,
+      "parameters": {
+        "color": "#f6f8f2",
+        "accent": "#d5ff70",
+        "text": "GORILLA · LOCKED",
+        "x": 0.5,
+        "y": 0.2,
+        "bpm": 100
+      }
+    },
+    {
+      "id": "hud-gorilla",
+      "name": "Surveillance HUD · CAM 02",
+      "module": "hud",
+      "kind": "graphics",
+      "lane": "hud",
+      "startBeat": 15,
+      "beats": 8,
+      "opacity": 1,
+      "parameters": {
+        "color": "#f6f8f2",
+        "accent": "#eaf2df",
+        "bpm": 100,
+        "text": "● REC  CAM 02 // SUBJECT GORILLA",
+        "credit": "MUSIC / DANCE WITH FRUITS",
+        "seconds": 4.8
+      }
+    },
+    {
+      "id": "word-gorilla",
+      "name": "Swap word · GORILLA",
+      "module": "kinetic",
+      "kind": "graphics",
+      "lane": "impact",
+      "startBeat": 13,
+      "beats": 2,
+      "opacity": 1,
+      "parameters": {
+        "text": "GORILLA",
+        "font": "\"IBM Plex Mono\", monospace",
+        "weight": 400,
+        "color": "#f6f8f2",
+        "accent": "#0c0e0c",
+        "bpm": 100,
+        "size": 200,
+        "beats": 2
+      }
+    },
+    {
+      "id": "word-watermelon",
+      "name": "Swap word · WATERMELON (the drop)",
+      "module": "kinetic",
+      "kind": "graphics",
+      "lane": "impact",
+      "startBeat": 23,
+      "beats": 2,
+      "opacity": 1,
+      "parameters": {
+        "text": "WATERMELON",
+        "font": "\"IBM Plex Mono\", monospace",
+        "weight": 400,
+        "color": "#f6f8f2",
+        "accent": "#0c0e0c",
+        "bpm": 100,
+        "size": 200,
+        "beats": 2
+      }
+    },
+    {
+      "id": "word-pink-cat",
+      "name": "Swap word · PINK CAT",
+      "module": "kinetic",
+      "kind": "graphics",
+      "lane": "impact",
+      "startBeat": 28,
+      "beats": 2,
+      "opacity": 1,
+      "parameters": {
+        "text": "PINK CAT",
+        "font": "\"IBM Plex Mono\", monospace",
+        "weight": 400,
+        "color": "#f6f8f2",
+        "accent": "#0c0e0c",
+        "bpm": 100,
+        "size": 200,
+        "beats": 2
+      }
+    },
+    {
+      "id": "open",
+      "name": "Screen open",
+      "module": "screen-open",
+      "kind": "graphics",
+      "lane": "open",
+      "startBeat": 0,
+      "beats": 2,
+      "opacity": 1,
+      "parameters": {
+        "color": "#d5ff70",
+        "matte": "#0c0e0c",
+        "duration": 0.6,
+        "glyphs": 28,
+        "seed": 7
+      }
+    },
+    {
+      "id": "wipe-end",
+      "name": "Wipe · into the end card",
+      "module": "signal-wipe",
+      "kind": "graphics",
+      "lane": "wipe",
+      "startBeat": 42.5,
+      "beats": 1,
+      "opacity": 1,
+      "parameters": {
+        "direction": "left",
+        "color": "#0c0e0c",
+        "accent": "#d5ff70",
+        "seconds": 0.6,
+        "seed": 43
+      }
+    },
+    {
+      "id": "glitch-13",
+      "name": "Slice glitch · beat 13",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 13,
+      "beats": 0.375,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.8,
+        "slices": 18,
+        "seed": 11,
+        "duration": 0.2
+      }
+    },
+    {
+      "id": "glitch-15",
+      "name": "Slice glitch · beat 15",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 15,
+      "beats": 0.375,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.9,
+        "slices": 18,
+        "seed": 18,
+        "duration": 0.2
+      }
+    },
+    {
+      "id": "glitch-23",
+      "name": "Slice glitch · beat 23",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 23,
+      "beats": 0.375,
+      "opacity": 1,
+      "parameters": {
+        "amount": 1.0,
+        "slices": 18,
+        "seed": 25,
+        "duration": 0.2
+      }
+    },
+    {
+      "id": "glitch-28",
+      "name": "Slice glitch · beat 28",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 28,
+      "beats": 0.375,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.8,
+        "slices": 18,
+        "seed": 32,
+        "duration": 0.2
+      }
+    },
+    {
+      "id": "glitch-30",
+      "name": "Slice glitch · beat 30",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 30,
+      "beats": 0.375,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.9,
+        "slices": 18,
+        "seed": 39,
+        "duration": 0.2
+      }
+    }
+  ]
+}

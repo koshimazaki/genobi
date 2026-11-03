@@ -139,6 +139,7 @@
         "dual-editor.md",
         "editor-timeline.md",
         "effects-catalogue.md",
+        "fruits-swap.md",
         "genmod.md",
         "genobi-teaser-run/README.md",
         "genobi-teaser-run/claims.md",
@@ -210,6 +211,7 @@
         "director-bundle/showcase/dimensions-mix/README.md",
         "director-bundle/showcase/genobi-teaser/README.md",
         "falling-room.md",
+        "fruits-swap.md",
         "genobi-teaser-run/decision-table.md",
         "genobi-teaser.md",
         "media-space.md",
@@ -316,6 +318,7 @@
         "bloom-teaser.md",
         "director-generate.md",
         "falling-room.md",
+        "fruits-swap.md",
         "media-previews.md",
         "poster-grid-direction.md",
         "tutorial-video.md"
@@ -744,6 +747,7 @@
         "editor-timeline.md",
         "effects-catalogue.md",
         "falling-room.md",
+        "fruits-swap.md",
         "genmod.md",
         "genobi-cli.md",
         "genobi-deck.md",
@@ -1696,6 +1700,13 @@
       ]
     },
     {
+      "title": "Dance with Fruits: the swap edit",
+      "path": "fruits-swap.md",
+      "tags": ["director", "sound", "templates"],
+      "summary": "Dance with Fruits, the character-swap mix template - 31 seconds of the owner's four LTX-2.5 Layout-to-Render (open weights) renders of one dance guide, swapped hard on the loop and the drop, with Signal swap words, a surveillance scan and the house end card. Nothing to generate.",
+      "links": ["templates.md"]
+    },
+    {
       "title": "Gen-Mod: one take, modified",
       "path": "genmod.md",
       "tags": ["director", "ltx", "workflows", "research", "plan"],
@@ -2300,6 +2311,7 @@
         "bloom-teaser.md",
         "dimensions-mix.md",
         "falling-room.md",
+        "fruits-swap.md",
         "genobi-teaser.md",
         "media-previews.md",
         "project-assets.md",

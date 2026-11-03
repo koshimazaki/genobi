@@ -43,6 +43,7 @@ describe("gallery card order", () => {
       "Dimensions mix",
       "Bloom",
       "Adaptive reverb",
+      "Dance with Fruits",
       "Forest guardian",
       "Toy creatures",
       "Sheet to shot",
@@ -81,6 +82,7 @@ describe("gallery card order", () => {
       "dimensions-mix": "Anime teaser",
       "bloom-teaser": "Sheet to shot",
       "adaptive-reverb": "3D · LTX template",
+      "fruits-swap": "Character swap",
     });
     expect(card("bloom-teaser").name).toBe("Bloom");
     // The Dimensions mix keeps its id and name, so links and showcases hold.
@@ -134,6 +136,7 @@ describe("gallery card order", () => {
       "adaptive-reverb",
       "bloom-teaser",
       "dimensions-mix",
+      "fruits-swap",
       "genobi-teaser",
       "sheet-to-shot",
     ]);
@@ -151,6 +154,7 @@ describe("model badges", () => {
       "Dimensions mix": "MiniMax H3 · open weights",
       Bloom: "MiniMax H3 · open weights",
       "Adaptive reverb": "LTX-2.5 · open weights",
+      "Dance with Fruits": "LTX-2.5 · open weights",
       "Sheet to shot": "MiniMax H3 · open weights",
       "Forest guardian": "FLUX 3 video · API",
       "Toy creatures": "FLUX 3 video · API",
@@ -209,6 +213,7 @@ describe("footage lines", () => {
       "Dimensions mix": null,
       Bloom: null,
       "Adaptive reverb": null,
+      "Dance with Fruits": null,
       "Sheet to shot": null,
       "Forest guardian": null,
       "Toy creatures": "Preview footage · FLUX 3 video",
