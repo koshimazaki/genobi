@@ -238,6 +238,7 @@ export default function Gallery({
                 job.mediaAvailable !== false &&
                 job.resultUrl ? (
                   <ClipActions
+                    job={job}
                     url={job.resultUrl}
                     filename={`genobi-study-${job.id}.${resultExtension(job)}`}
                     onRecreate={() => onRetry(job)}

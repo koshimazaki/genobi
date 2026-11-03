@@ -1,3 +1,4 @@
+import type { Job } from "../../shared/types";
 import Icon from "./Icon";
 import AddToProject from "./AddToProject";
 import RecreateButton from "./RecreateButton";
@@ -8,16 +9,19 @@ export default function ClipActions({
   onRecreate,
   onUpscale,
   onEdit,
+  job,
 }: {
   url: string;
   filename: string;
+  /** The Camera run behind the result, so Send to Director keeps its recipe. */
+  job?: Job;
   onRecreate?: () => void;
   onUpscale?: () => void;
   onEdit?: () => void;
 }) {
   return (
     <div className="clip-actions">
-      <AddToProject url={url} filename={filename} />
+      <AddToProject url={url} filename={filename} job={job} />
       {onRecreate && <RecreateButton onClick={onRecreate} />}
       <a
         className="download-clip"

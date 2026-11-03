@@ -139,6 +139,11 @@ export interface Project {
     >;
     /** A local media tool's result an agent handed in, not a model's output. */
     derivation?: Derivation;
+    /**
+     * A Camera run's public settings, recorded when it was sent to the
+     * Director, so Recreate restores it from the project (`generation-settings.ts`).
+     */
+    settings?: import("./generation-settings").GenerationSettings;
   }[];
   /** The house-style template and inputs that built the project, if any. */
   template?: { id: string; inputs: TemplateInputs };

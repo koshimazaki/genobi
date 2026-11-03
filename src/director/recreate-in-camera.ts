@@ -9,6 +9,12 @@ import {
   currentCameraRecipeHandoff,
 } from "../camera-recipe-target";
 import { studioStore } from "../studio/store";
+import type { Job } from "../../shared/types";
+import {
+  publicGenerationSettings,
+  settingsJob,
+} from "../../shared/director/generation-settings";
+import { recreateGaps } from "../recreate-gaps";
 
 /**
  * Recreate in Camera (#57, swap only): a template slot's way to new media.
@@ -20,6 +26,13 @@ import { studioStore } from "../studio/store";
  * recorded prompt and character sheet. Anything not stored is named in
  * Camera's notice line; nothing is invented. The person runs Camera
  * themselves; the result lands in Assets → Generated.
+ *
+ * A Camera run sent to the Director records its public settings on the
+ * generation (`shared/director/generation-settings.ts`): then the whole run
+ * comes back through Camera's own restore (duration, aspect, resolution,
+ * camera, LTX gaps and Light, swap, a deployment's seed, image options) and
+ * its run location, and `recreate-gaps.ts` names what the project does not
+ * hold.
  */
 export interface CameraRecipe {
   label: "Recreate in Camera" | "Create in Camera";
@@ -34,7 +47,22 @@ export interface CameraRecipe {
   missing: string[];
   /** FLUX 3 stills: the provider the run used, as Camera's choice. */
   imageProvider?: "bfl" | "comfy";
+  /** The recorded settings as a job for Camera's restore, when recorded. */
+  job?: Job;
+  /** A workflow run's recorded run location. */
+  location?: "local" | "cloud";
 }
+
+/** Camera's gap names, in the words a Director notice uses. */
+const GAP_WORDS: Record<string, string | undefined> = {
+  "source video": "source video (choose it in Camera)",
+  "deployment inputs": "deployment inputs",
+  "deployment input files": "deployment input files (reattach them)",
+  "swap settings": "swap settings",
+  // Counted against the images restored, and said by `recordedProvider`.
+  "reference images": undefined,
+  provider: undefined,
+};
 
 /**
  * The provider a run used, as far as Camera has a choice for it. Only FLUX 3
@@ -109,16 +137,44 @@ export function cameraRecipe(
       ? recordedProvider(entry, generation.recipe?.route)
       : {};
     if (provider.missing) missing.push(provider.missing);
+    const settings = publicGenerationSettings(generation.settings);
+    const job =
+      settings && entry
+        ? settingsJob(
+            {
+              ...settings,
+              generator: entry.generator,
+              model: entry.videoModel,
+            },
+            prompt,
+          )
+        : undefined;
+    if (job)
+      for (const gap of recreateGaps(job)) {
+        const words = GAP_WORDS[gap];
+        if (words && !missing.includes(words)) missing.push(words);
+      }
+    else if (entry) missing.push("settings (duration, aspect, camera)");
     // A project video the run read is never a Camera library clip, whatever
     // recorded (or did not record) the model.
-    if (read.some((a) => project.assets[a]?.kind === "video"))
-      missing.push("source video (choose it in Camera)");
+    const source = "source video (choose it in Camera)";
+    if (
+      read.some((a) => project.assets[a]?.kind === "video") &&
+      !missing.includes(source)
+    )
+      missing.push(source);
+    const location = generation.recipe?.location;
     return {
       label: "Recreate in Camera",
       prompt,
       ...(entry ? { entry } : {}),
       ...(provider.imageProvider
         ? { imageProvider: provider.imageProvider }
+        : {}),
+      ...(job ? { job } : {}),
+      ...(entry?.route === "workflow" &&
+      (location === "local" || location === "cloud")
+        ? { location }
         : {}),
       imageIds,
       missing,
@@ -189,6 +245,8 @@ export function recipeNote(recipe: CameraRecipe, images: number) {
   const restored = [
     "prompt",
     ...(recipe.entry ? ["model"] : []),
+    ...(recipe.job ? ["settings"] : []),
+    ...(recipe.location ? ["run location"] : []),
     ...(images ? ["references"] : []),
   ];
   const list =
@@ -251,5 +309,10 @@ export async function openInCamera(
     imageReferences: images,
     imageRegions: [],
   };
-  applyCameraRecipe({ patch, note });
+  applyCameraRecipe({
+    patch,
+    note,
+    ...(recipe.job ? { job: recipe.job } : {}),
+    ...(recipe.location ? { location: recipe.location } : {}),
+  });
 }

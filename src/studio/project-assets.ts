@@ -18,6 +18,10 @@ import {
   DIRECTOR_MEDIA_LIMIT,
 } from "../../shared/director/types";
 import { executeStudioCommand } from "./commands";
+import {
+  importCameraGeneration,
+  type CameraGeneration,
+} from "./project-generation";
 import { studioStore, type createStudioStore } from "./store";
 
 type Store = ReturnType<typeof createStudioStore>;
@@ -32,6 +36,8 @@ export interface OutputMedia {
    * that tab, so the card's own answer and Undo stay in view.
    */
   keepTab?: boolean;
+  /** A Camera run's record: the asset lands as generated, with its recipe. */
+  generation?: CameraGeneration;
 }
 export interface AddedAsset {
   assetId: string;
@@ -74,12 +80,24 @@ export async function addToProjectAssets(
   const before = store.getState().director.bundle;
   if (!before)
     throw new Error("The project is still opening. Try again in a moment.");
-  const result = await executeStudioCommand(
-    { op: "import-asset", revision: before.project.revision, use: checked.use },
-    new File([media.blob], checked.filename, { type: checked.contentType }),
-    store,
-  );
-  const receipt = result.receipt as { assetIds?: string[] };
+  const file = new File([media.blob], checked.filename, {
+    type: checked.contentType,
+  });
+  const receipt = (
+    media.generation
+      ? await importCameraGeneration(file, checked.use, media.generation, store)
+      : (
+          await executeStudioCommand(
+            {
+              op: "import-asset",
+              revision: before.project.revision,
+              use: checked.use,
+            },
+            file,
+            store,
+          )
+        ).receipt
+  ) as { assetIds?: string[] };
   const assetId = receipt.assetIds?.[0];
   if (!assetId) throw new Error("The media did not reach the project.");
   const added: AddedAsset = {
@@ -104,7 +122,7 @@ export async function addServedMediaToProjectAssets(
   filename: string,
   use: AssetUse,
   store: Store = studioStore,
-  options: { keepTab?: boolean } = {},
+  options: { keepTab?: boolean; generation?: CameraGeneration } = {},
 ): Promise<AddedAsset> {
   const before = store.getState().director.bundle;
   if (!before) throw new Error("Open a project first.");

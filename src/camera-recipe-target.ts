@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from "react";
+import type { Job } from "../shared/types";
 import type { ComposerState } from "./useComposer";
 
 /**
@@ -12,6 +13,13 @@ export interface CameraRecipePatch {
   patch: Partial<ComposerState>;
   /** Said in Camera's notice line; "" when everything was restored. */
   note: string;
+  /**
+   * The asset's recorded settings, restored through Camera's own restore
+   * before the patch (references) lands. Absent: the patch alone.
+   */
+  job?: Job;
+  /** A workflow run's recorded run location, saved for the session. */
+  location?: "local" | "cloud";
 }
 type Target = (recipe: CameraRecipePatch) => void;
 let target: Target | undefined;
