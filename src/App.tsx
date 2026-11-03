@@ -1,4 +1,4 @@
-import { submitWithDeploymentApproval } from "./deployment-approval";
+import { useCameraQueue } from "./useGenerationQueue";
 import { useLayoutTakeComposer } from "./useLayoutTakeComposer";
 import { estimateSeedvr2Usd, isSeedvr2 } from "../shared/comfy/seedvr2";
 import ComposerWorkspace from "./components/ComposerWorkspace";
@@ -87,7 +87,6 @@ export default function App() {
   const [key, setKey] = usePageKey();
   const [showKey, setShowKey] = useState(false),
     [keyVerified, setKeyVerified] = useState(false),
-    [submitting, setSubmitting] = useState(false),
     [uploading, setUploading] = useState(false);
   const composerRef = useRef<HTMLDivElement>(null);
   const {
@@ -103,6 +102,8 @@ export default function App() {
     selectedId,
   } = useJobs(key);
   useJobActivity(jobs);
+  // Generate while a run is in flight queues one more (`generation-queue.ts`).
+  const queue = useCameraQueue(key, generate, setError, shell?.visible);
   useScrollsBridge(key, generate, jobs, update);
   useLayoutTakeComposer(update, () => setActiveCatalogueId(null));
   const { hasServerKey, slots, connection, keysChanged } =
@@ -249,7 +250,7 @@ export default function App() {
     set("generator", "upscale");
     composerRef.current?.scrollIntoView(smoothScroll("center"));
   }
-  async function submit() {
+  function submit() {
     if (
       ((!key && !hasServerKey) || (isImage(generator) && !payer)) &&
       !runsKeyless(generator, model)
@@ -257,25 +258,17 @@ export default function App() {
       setShowKey(true);
       return;
     }
-    setSubmitting(true);
-    try {
-      const input = {
+    // The run is taken now: a queued run sends what the composer held.
+    queue.add({
+      input: {
         ...composerInput({ ...state, sourceId }),
         description:
           generator === "upscale"
             ? source?.label || "Upscale"
             : composerInput(state).description,
-      };
-      await submitWithDeploymentApproval(input, key, (input, approval) =>
-        generate(input, approval, state),
-      );
-    } catch (e) {
-      setError(
-        e instanceof Error ? e.message : "The generation could not start.",
-      );
-    } finally {
-      setSubmitting(false);
-    }
+      },
+      composer: state,
+    });
   }
   function retry(job: Job) {
     setImagePreviewRevision((value) => value + 1);
@@ -431,7 +424,9 @@ export default function App() {
                   <GenerateAction
                     state={state}
                     jobs={jobs}
-                    submitting={submitting}
+                    submitting={queue.submitting}
+                    queued={queue.queued}
+                    onClearQueue={queue.clear}
                     hasKey={Boolean(key)}
                     recreating={recreating}
                     disabled={
@@ -439,7 +434,7 @@ export default function App() {
                       images.loading ||
                       composerBlocked(state, sourceId, composed)
                     }
-                    onSubmit={() => void submit()}
+                    onSubmit={submit}
                     onResume={() => setShowKey(true)}
                     onUpdate={update}
                     onConfigure={() => setShowKey(true)}

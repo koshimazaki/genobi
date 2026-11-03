@@ -21,6 +21,13 @@ export const RATE_LIMITS = {
   /** Unpaid hosted deployment settings cannot evade limits by rotating sessions. */
   settingsPerIp: 30,
   settingsGlobal: 300,
+  /**
+   * Hosted tester unlock (`POST /api/tester/unlock`): guesses at the access
+   * code, per hashed IP and across the deployment, so rotating cookies or
+   * addresses cannot brute-force it at speed.
+   */
+  testerUnlockPerIp: 5,
+  testerUnlockGlobal: 30,
   /** GET /api/credits: one upstream BFL call each. */
   credits: 20,
   /** GET /api/jobs/:id: the studio polls every 4s for each unfinished job. */

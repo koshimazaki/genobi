@@ -75,6 +75,7 @@ connection/model preferences, never provider keys, and do not install agents.
 | `genobi-hermes`   | The open route on Hermes, the Klein box edit and the two-pass run        |
 | `genobi-machine`  | The machine check: which models run locally and which on Comfy Cloud     |
 | `genobi-swords`   | Dual Swords: probe, frames, trim, join and crossfade on local ffmpeg     |
+| `ui-teardown`     | An exploded view of a product UI: layers, numbered parts, a sheet each   |
 
 `genobi-camera` follows the model registry (`shared/registry.ts`) and the
 camera wording (`shared/camera.ts`, [camera wording](../../docs/camera-wording.md));

@@ -459,6 +459,14 @@
       "runs": [{ "route": "local-free" }]
     },
     {
+      "id": "exploded-views", "name": "Exploded views: 3D explode and UI teardown", "status": "implemented",
+      "where": "3D · World Builder Sound tab (the explode route); agents (the ui-teardown skill)",
+      "description": "Props move apart from their centre, outermost first, driven by an audio band; and a product UI presented as layers lifted apart with a numbered sheet per part.",
+      "mcp": [], "cli": [],
+      "skills": ["ui-teardown", "genobi-3d"], "docs": ["docs/world-builder-sound.md", "docs/credits/libraries/teardown/README.md"],
+      "runs": [{ "route": "local-free" }]
+    },
+    {
       "id": "openjutsu-swap", "name": "Openjutsu character swap with a Klein first frame", "status": "implemented",
       "where": "Comfy · npm run swap or an agent's quote (local studio only)",
       "description": "Swap the person in a 5 to 15 second part of a clip; Genobi makes the first frame with a Klein box edit, so a box can change a whole person or one item.",

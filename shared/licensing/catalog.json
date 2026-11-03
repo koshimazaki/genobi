@@ -393,5 +393,23 @@
     "conditions": "Preserve copyright and MIT permission notices when copying source or substantial portions. Review chosen dependencies, fonts and media separately. MIT code does not establish rights in every font, texture, soundtrack or franchise asset. Review the selected assets and avoid implying film endorsement. Verify seeking, loop seam and capture before using in a video.",
     "openSource": true,
     "redistribution": "review"
+  },
+  {
+    "id": "teardown",
+    "name": "teardown",
+    "author": "elvarofficial; kit from whaleyxbt/claude-motion",
+    "creatorUrl": "https://github.com/elvarofficial",
+    "license": "MIT",
+    "source": "https://github.com/elvarofficial/teardown",
+    "example": "https://github.com/elvarofficial/teardown#readme",
+    "version": "a91262ac1109051e014662d42ecb0b7bc1f113b1",
+    "checked": "2026-11-03",
+    "status": "recommended",
+    "reason": "A Claude Code skill that builds a real machine as an offline three.js simulator you can take apart, then records its tour frame by frame to 60 fps video with a timeline-synced score.",
+    "use": "Optional 3D workflow skill for mechanical explainers, cutaways and exploded views: one input drives the pose, gauges and film; render(t) is pure; review from contact sheets. Not installed; a teardown film can enter the Director as an ordinary MP4 asset.",
+    "conditions": "Preserve both MIT copyright notices (elvarofficial and whaleyxbt) when copying source. Bundled Inter and JetBrains Mono fonts are OFL-1.1; recorded samples are CC0 per sfx/samples/SOURCES.md; three.js, Playwright and esbuild keep their own licences. Machine names, photos and manuals used as references keep their own rights.",
+    "openSource": true,
+    "redistribution": "conditions",
+    "requires": ["three"]
   }
 ]

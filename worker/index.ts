@@ -30,6 +30,13 @@ import {
   effectVariantResponse,
 } from "../shared/effects/service";
 import { CommandError } from "../shared/director/layer-commands";
+import {
+  resolveTester,
+  testerEnabled,
+  testerStatus,
+  testerUnlock,
+} from "./tester";
+import { testerScoped } from "./tester-routes";
 
 const json = (data: unknown, status = 200) =>
   Response.json(data, {
@@ -155,7 +162,38 @@ export default {
         return response;
       }
       const keyHeader = request.headers.get("x-byo-key");
-      const key = keyHeader ? requireKey(keyHeader) : undefined;
+      let key = keyHeader ? requireKey(keyHeader) : undefined;
+      // A tester token in the key slot becomes the operator's key on the
+      // deployment routes alone; anywhere else the request has no key.
+      const resolved = await resolveTester(env, key, session);
+      const tester = resolved?.access;
+      if (resolved)
+        key = testerScoped(request.method, url.pathname)
+          ? resolved.key
+          : undefined;
+      if (post && url.pathname === "/api/tester/unlock") {
+        const unlocked = await testerUnlock(request, env, session, () =>
+          readJson(request, 1024),
+        );
+        if (!unlocked) throw new AppError(404, "API route not found.");
+        const response = json(unlocked);
+        if (cookie) response.headers.append("Set-Cookie", cookie);
+        return response;
+      }
+      if (get && url.pathname === "/api/tester/status") {
+        if (!testerEnabled(env))
+          throw new AppError(404, "API route not found.");
+        await rateLimit(env, "history", session);
+        if (!tester)
+          throw new AppError(
+            401,
+            "Access code not accepted.",
+            "tester_refused",
+          );
+        const response = json(await testerStatus(env, tester));
+        if (cookie) response.headers.append("Set-Cookie", cookie);
+        return response;
+      }
       const settings = await deploymentSettingsRoute(
         request,
         env,
@@ -200,6 +238,9 @@ export default {
           ok: true,
           hasServerKey: false,
           hosted: true,
+          // True only once the operator has set every tester secret
+          // (docs/tester-access.md); the studio then offers the access code.
+          testerAccess: testerEnabled(env),
           // The build this isolate was compiled from. A merged fix is not a
           // deployed one: the deploy job skips without credentials, so this is
           // how a caller (and CI) tells the live bundle from the checkout.
@@ -207,6 +248,16 @@ export default {
         });
       } else if (get && url.pathname === "/api/credits") {
         await rateLimit(env, "credits", session);
+        // The operator's balance is not the tester's to read.
+        if (tester) {
+          response = json({
+            credits: null,
+            checkedAt: new Date().toISOString(),
+            provider: "comfy",
+          });
+          if (cookie) response.headers.append("Set-Cookie", cookie);
+          return response;
+        }
         const balanceKey = requireKey(key);
         const balance = await providerFor(
           balanceKey,
@@ -239,6 +290,7 @@ export default {
             session,
             url.pathname.split("/").at(-1)!,
             key!,
+            tester?.url,
           ),
           201,
         );
@@ -264,6 +316,7 @@ export default {
                 request.headers.get("genobi-run-location") ?? undefined,
                 request.headers.get("genobi-workflow") ?? undefined,
               ),
+              tester,
             ),
           },
           202,
@@ -282,6 +335,7 @@ export default {
                 request.headers.get("genobi-run-location") ?? undefined,
                 request.headers.get("genobi-workflow") ?? undefined,
               ),
+              tester,
             ),
           },
           201,
@@ -290,7 +344,15 @@ export default {
         // Each poll can spend one upstream BFL call, so it needs its own ceiling.
         await rateLimit(env, "poll", session);
         response = json(
-          await poll(env, url.pathname.split("/").at(-1)!, session, key),
+          await poll(
+            env,
+            url.pathname.split("/").at(-1)!,
+            session,
+            key,
+            undefined,
+            undefined,
+            tester,
+          ),
         );
       } else if (get && /^\/api\/takes\/[^/]+$/.test(url.pathname)) {
         // A stored record, never a provider call: it reads like history.

@@ -13,6 +13,11 @@ export const tasteMedia: Record<
     alt: "Three Plotter Renderer example SVG with visible edges and hatching",
     credit: "Upstream SVG output · Geoff Gaudreault",
   },
+  teardown: {
+    src: "https://raw.githubusercontent.com/elvarofficial/teardown/main/docs/bee.gif",
+    alt: "teardown simulator of the Mellis HB-7 robotic bee with live panels",
+    credit: "Upstream simulator capture · elvarofficial / teardown",
+  },
   hermes: {
     src: "https://raw.githubusercontent.com/NousResearch/hermes-agent/main/assets/banner.png",
     alt: "Hermes Agent project banner",

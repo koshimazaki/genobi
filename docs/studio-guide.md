@@ -9,7 +9,7 @@ Start with [getting started](getting-started.md) for installation, keys and
 your first edit. This guide keeps the detailed controls and workflow notes
 that would otherwise overwhelm the project README.
 
-- [Image and Edit](#image-and-edit), [Music](#music), [Gallery](#gallery-and-saved-results)
+- [Image and Edit](#image-and-edit), [Music](#music), [Generation queue](#generation-queue), [Gallery](#gallery-and-saved-results)
 - [Director](#director-local-template-remixes), [composer](#director-composer), [Dual Swords](#dual-swords), [Arena](#arena)
 - [Workspace presets](#studio-presets), [Taste and credits](#signal-and-the-taste-layer)
 
@@ -190,9 +190,48 @@ fills the prompt; see [voice mode](voice-mode.md).
 
 The npm package name remains `camera-director`. See [docs/credits.md](credits.md) for lineage.
 
+## Generation queue
+
+While a run is in flight in Camera, Generate stays clickable: hovering it reads
+**Add to queue**, and a click queues one more run of what the composer holds at
+that moment. A **+N** badge over the button's corner counts the runs waiting;
+it floats over the toolbar, so it never moves the composer. Click the badge to
+clear the queue.
+
+- **Each run is its own submission.** It gets its own Idempotency-Key and, on a
+  route that asks for one (a Comfy deployment), its own quote and confirmation.
+- **A queued run is sent as soon as the one before it is accepted** by the
+  server, not when that job finishes. It then shows in the gallery as Pending
+  like any other job.
+- **The queue never retries.** A refusal (the budget, the session limit, a bad
+  request), a declined confirmation, or an uncertain submission (a lost
+  connection, a server error, an answer that could not be read) stops it and
+  drops every run still waiting, with a note under the composer saying how many
+  were not sent. An uncertain run may have started, so check the gallery before
+  sending it again. A quote that fails stops it too, and its note says nothing
+  was sent, because the quote comes before any submission.
+- **A queued run keeps what it was queued with**: the prompt, model, provider,
+  references, run location and workflow. If the run location or workflow
+  changed since, the server refuses the run and the queue stops; it is never
+  sent somewhere else. The demo budget is checked for every run on its own.
+- **Seeds.** Camera's composer has no seed field, so a queued run sends the same
+  input a second manual click would; any variation is the provider's own.
+- **Leaving Camera** (closing the composer panel) drops the runs not yet sent,
+  with a notice. Runs already sent are server jobs and keep going in the gallery.
+
+The queue lives in `src/generation-queue.ts` and `src/useGenerationQueue.ts`.
+
 ## Gallery and saved results
 
 Hide any of your cards with × and restore it later. Hiding a run does not stop it; the studio keeps checking for its result.
+
+Once the gallery holds more than one kind of media, plain **Images**,
+**Videos** and **Audio** names beside the filter show just that kind (upscales
+count as videos), together with **This session** when both are chosen. Only
+kinds the gallery holds are named. The same filter applies in the Assets rail's
+**Generated** tab, where the session pill keeps its left edge and the names follow
+it. While a kind is chosen, chain review cards are hidden. Nothing is saved: a
+reload shows **All** (`src/gallery-kind.ts`).
 
 On the local server, finished CLI and MCP takes also appear in Camera's gallery,
 labelled **From terminal** or **From agent**. **This session** shows only your

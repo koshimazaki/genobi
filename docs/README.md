@@ -125,6 +125,9 @@ user action through every layer.
   audio-to-audio and image-to-video workflows.
 - [Key LTX / World Builder deployment](comfy-deploy.md) — the exact two GPU
   workflows, local CPU reverb, remote model sources and comfy-cli 1.24 commands.
+- [Tester access for reviewers](tester-access.md) — an operator-set access
+  code from the submission unlocks a capped number of Comfy Deploy runs on the
+  operator's deployment; off until its secrets are set.
 - [Comfy Developer Platform deployment](comfy-deployment.md) — the pins in
   `comfy-build/` as a `comfy build` recipe, how push treats weights, and one build versus several.
 
@@ -213,6 +216,10 @@ user action through every layer.
   controls, CAD follow-ups and verification.
 - [World Builder verification](world-builder-verification.md) — working paths,
   automated checks and what is still to verify.
+- [teardown](credits/libraries/teardown/README.md) — an external Claude Code
+  skill (MIT, not installed) that builds a real machine as an offline three.js
+  simulator you can take apart and records its tour to a 60 fps MP4; useful
+  rules for 3D explainers, cutaways and exploded views.
 
 ## Sound
 
@@ -356,6 +363,7 @@ from GitHub:
 - [play.core](credits/libraries/play-core/README.md)
 - [textmode.js](credits/libraries/textmode-js/README.md)
 - [Matrix digital rain](credits/libraries/matrix-rain/README.md)
+- [teardown](credits/libraries/teardown/README.md)
 - [Alien.js](credits/libraries/alien-js/README.md)
 - [Anime.js](credits/libraries/animejs/README.md)
 - [Claude Animation Base](credits/libraries/claude-animation-base/README.md)

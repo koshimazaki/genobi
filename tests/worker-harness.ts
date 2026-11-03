@@ -152,8 +152,8 @@ export async function insertStaleJob(
     .run();
 }
 
-/** Starts the Worker for the calling test file and stops it afterwards. */
-export function useWorker() {
+/** Starts the Worker for the calling test file, with any secrets it sets, and stops it afterwards. */
+export function useWorker(secrets: Record<string, string> = {}) {
   beforeEach(() => {
     testIp++;
     imageDelivery = false;
@@ -177,6 +177,7 @@ export function useWorker() {
         compatibilityDate: "2026-09-19",
         compatibilityFlags: ["nodejs_compat"],
         d1Databases: ["DB"],
+        bindings: secrets,
         r2Buckets: ["MEDIA"],
         serviceBindings: { ASSETS: () => new MFResponse("asset") },
         outboundService: async (request) => {

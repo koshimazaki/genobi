@@ -14,7 +14,7 @@ import type { BandEnvelopes } from "./audio-bands";
 export const MOD_SOURCES = ["sub", "low", "mid", "high", "level"] as const;
 export type ModSource = (typeof MOD_SOURCES)[number];
 export type ModProperty =
-  "scale" | "height" | "spin" | "glow" | "light" | "yaw";
+  "scale" | "height" | "spin" | "glow" | "light" | "yaw" | "explode";
 export interface ModRoute {
   id: string;
   enabled: boolean;
@@ -25,7 +25,10 @@ export interface ModRoute {
    */
   target: string;
   property: ModProperty;
-  /** Depth: scale ×(1 + v), height +v m, spin +v rad/s, yaw +v rad, glow v, light +v (key light +3v). */
+  /**
+   * Depth: scale ×(1 + v), height +v m, spin +v rad/s, yaw +v rad, glow v,
+   * light +v (key light +3v), explode v (0 assembled, 1 and above fully apart).
+   */
   amount: number;
   /** Below this level the route is silent (a hard gate, as the single route had). */
   threshold: number;
@@ -47,6 +50,7 @@ export const PROPERTY_LABELS: Record<ModProperty, string> = {
   glow: "Glow",
   light: "Intensity",
   yaw: "Turn",
+  explode: "Explode",
 };
 /** The Playground set pieces the runtime can move (`playground.ts`). */
 export const WORLD_PIECES = [
@@ -83,7 +87,7 @@ export function propertiesForTarget(target: string): ModProperty[] {
   if (target === "avatar") return ["height", "scale", "yaw"];
   if (target === "world" || target.startsWith("world:"))
     return ["scale", "height", "spin"];
-  return ["scale", "height", "spin", "glow"];
+  return ["scale", "height", "spin", "glow", "explode"];
 }
 
 export function validTarget(target: unknown, objectIds: readonly string[]) {

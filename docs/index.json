@@ -110,6 +110,7 @@
         "credits/libraries/play-core/README.md",
         "credits/libraries/space-js/README.md",
         "credits/libraries/svgbob-wasm/README.md",
+        "credits/libraries/teardown/README.md",
         "credits/libraries/textmode-js/README.md",
         "credits/libraries/three-plotter-renderer/README.md",
         "credits/libraries/three/README.md",
@@ -243,6 +244,7 @@
         "capabilities.md",
         "comfy-readiness.md",
         "credits/README.md",
+        "credits/libraries/teardown/README.md",
         "director-agent-tools.md",
         "director-bundle/README.md",
         "director-bundle/motion-effects.md",
@@ -340,6 +342,7 @@
         "openjutsu-swap.md",
         "read-through.md",
         "run-location.md",
+        "tester-access.md",
         "voice-mode.md",
         "voice-setup.md"
       ]
@@ -351,7 +354,8 @@
         "cloudflare.md",
         "media-previews.md",
         "runner-pairing.md",
-        "template-gallery.md"
+        "template-gallery.md",
+        "tester-access.md"
       ]
     },
     "comfy": {
@@ -373,6 +377,7 @@
         "openjutsu-swap.md",
         "run-location.md",
         "seedvr2-upscale.md",
+        "tester-access.md",
         "troubleshooting.md",
         "upscaling.md",
         "vast-runner.md",
@@ -589,6 +594,7 @@
         "credits/libraries/play-core/README.md",
         "credits/libraries/space-js/README.md",
         "credits/libraries/svgbob-wasm/README.md",
+        "credits/libraries/teardown/README.md",
         "credits/libraries/textmode-js/README.md",
         "credits/libraries/three-plotter-renderer/README.md",
         "credits/libraries/three/README.md",
@@ -708,6 +714,7 @@
         "credits/libraries/play-core/README.md",
         "credits/libraries/space-js/README.md",
         "credits/libraries/svgbob-wasm/README.md",
+        "credits/libraries/teardown/README.md",
         "credits/libraries/textmode-js/README.md",
         "credits/libraries/three-plotter-renderer/README.md",
         "credits/libraries/three/README.md",
@@ -785,6 +792,7 @@
         "teachings.md",
         "template-gallery.md",
         "templates.md",
+        "tester-access.md",
         "troubleshooting.md",
         "tutorial-video.md",
         "upscaling.md",
@@ -1141,6 +1149,7 @@
         "comfy-cloud-inventory.md",
         "comfy-deploy.md",
         "comfy-deployment.md",
+        "credits/libraries/teardown/README.md",
         "dimensions-mix.md",
         "director-agent-tools.md",
         "director-bundle/README.md",
@@ -1187,6 +1196,7 @@
         "voice-mode.md",
         "voice-setup.md",
         "world-builder-capture.md",
+        "world-builder-sound.md",
         "world-builder-verification.md",
         "world-builder.md",
         "world-live.md"
@@ -1197,7 +1207,12 @@
       "path": "cloudflare.md",
       "tags": ["architecture", "cloudflare", "backend"],
       "summary": "Hosted deployment on Cloudflare Pages, with the runtime, D1 and R2 limits, lifecycle, reproduction and deployment.",
-      "links": ["media-previews.md", "runner-pairing.md", "template-gallery.md"]
+      "links": [
+        "media-previews.md",
+        "runner-pairing.md",
+        "template-gallery.md",
+        "tester-access.md"
+      ]
     },
     {
       "title": "Comfy Cloud inventory",
@@ -1218,7 +1233,7 @@
         "world-builder"
       ],
       "summary": "The three key adaptive-reverb workflows, one remote-model LTX build with two GPU endpoints, local CPU reverb, comfy-cli 1.24 commands and scale-to-zero costs.",
-      "links": ["adaptive-reverb.md"]
+      "links": ["adaptive-reverb.md", "tester-access.md"]
     },
     {
       "title": "Comfy Developer Platform deployment",
@@ -1273,6 +1288,7 @@
         "credits/libraries/play-core/README.md",
         "credits/libraries/space-js/README.md",
         "credits/libraries/svgbob-wasm/README.md",
+        "credits/libraries/teardown/README.md",
         "credits/libraries/textmode-js/README.md",
         "credits/libraries/three-plotter-renderer/README.md",
         "credits/libraries/three/README.md",
@@ -1415,6 +1431,13 @@
       "tags": ["licences", "director"],
       "summary": "svgbob (WASM) — optional creative use, pinned source and licence boundaries.",
       "links": []
+    },
+    {
+      "title": "teardown",
+      "path": "credits/libraries/teardown/README.md",
+      "tags": ["licences", "agents", "director"],
+      "summary": "teardown — a Claude Code skill for interactive 3D machine simulators and 60 fps explainer films; usage, provenance and licence boundaries.",
+      "links": ["scene-examples.md", "world-builder-sound.md"]
     },
     {
       "title": "textmode.js",
@@ -1926,7 +1949,8 @@
         "director-studio-shell.md",
         "machine-check.md",
         "project-assets.md",
-        "run-location.md"
+        "run-location.md",
+        "studio-guide.md"
       ]
     },
     {
@@ -1945,6 +1969,7 @@
         "camera-wording.md",
         "comfy-deployment.md",
         "credits/README.md",
+        "credits/libraries/teardown/README.md",
         "director-agent-tools.md",
         "director-bundle/README.md",
         "dual-editor.md",
@@ -1974,6 +1999,7 @@
         "templates.md",
         "upscaling.md",
         "vast-runner.md",
+        "world-builder-sound.md",
         "world-builder.md",
         "world-live.md"
       ]
@@ -2043,6 +2069,7 @@
         "comfy-deploy.md",
         "comfy-deployment.md",
         "credits/README.md",
+        "credits/libraries/teardown/README.md",
         "director-agent-tools.md",
         "director-bundle/README.md",
         "director-working-version.md",
@@ -2075,6 +2102,7 @@
         "upscaling.md",
         "vast-runner.md",
         "voice-mode.md",
+        "world-builder-sound.md",
         "world-builder.md",
         "world-live.md",
         "world-recipe-handoff.md"
@@ -2085,7 +2113,7 @@
       "path": "review-checklist.md",
       "tags": ["architecture", "review"],
       "summary": "Questions to answer from source and tests when reviewing a change, including agent and independent review passes.",
-      "links": ["architecture.md", "cloudflare.md"]
+      "links": ["architecture.md", "cloudflare.md", "tester-access.md"]
     },
     {
       "title": "Run location and workflow swapping",
@@ -2295,6 +2323,13 @@
         "template-gallery.md",
         "vision.md"
       ]
+    },
+    {
+      "title": "Tester access for reviewers",
+      "path": "tester-access.md",
+      "tags": ["cloudflare", "comfy", "backend"],
+      "summary": "Operator-enabled reviewer access on the hosted studio, an access code from the submission unlocking a capped number of Comfy Deploy runs paid by the operator's workspace.",
+      "links": ["comfy-deploy.md"]
     },
     {
       "title": "Troubleshooting and workflow limits",
@@ -2533,7 +2568,11 @@
       "path": "world-builder-sound.md",
       "tags": ["3d", "world-builder", "sound"],
       "summary": "World Builder's Sound panel, the example track, the audio mod matrix, the reactive room presets and what the Comfy node shows of them.",
-      "links": ["world-builder-dynamic-sound.md", "world-builder.md"]
+      "links": [
+        "credits/libraries/teardown/README.md",
+        "world-builder-dynamic-sound.md",
+        "world-builder.md"
+      ]
     },
     {
       "title": "Stories at human scale",

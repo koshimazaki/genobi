@@ -44,9 +44,13 @@ export async function request<T>(
 ): Promise<T> {
   const response = await fetch(path, { ...options, cache: "no-store" });
   const data = await response.json();
+  // The status rides on the error: a 4xx is a refusal, anything else unknown.
   if (!response.ok)
-    throw new Error(
-      data.error || data.message || "The request could not be completed.",
+    throw Object.assign(
+      new Error(
+        data.error || data.message || "The request could not be completed.",
+      ),
+      { status: response.status },
     );
   return data;
 }
@@ -253,6 +257,8 @@ export function useJobs(key: string) {
     input: GenerateInput,
     approval?: { quoteId: string; idempotency: string },
     composer?: ComposerState,
+    // A queued run names the location and workflow it was queued under.
+    expected: Record<string, string> = expectedHeaders(input),
   ) {
     setError("");
     const { job } = await request<{ job: Job }>("/api/jobs", {
@@ -263,7 +269,7 @@ export function useJobs(key: string) {
         ...(approval ? { "Quote-Id": approval.quoteId } : {}),
         ...(key ? { "x-byo-key": key } : {}),
         // What the studio shows: the server refuses a run whose settings changed.
-        ...expectedHeaders(input),
+        ...expected,
       },
       body: JSON.stringify(input),
     });

@@ -17,6 +17,14 @@ import type { ChainEntry } from "../chain-state";
 import { modelSignature } from "../generators";
 import { notePick, takePick } from "../agent/studio-context";
 import { libraryMatchesMode, librarySignature } from "../library";
+import {
+  jobKind,
+  kindNoun,
+  presentKinds,
+  sourceKind,
+  type GalleryKindChoice,
+} from "../gallery-kind";
+import GalleryKindFilter from "./GalleryKindFilter";
 import "../studio/media-shelf.css";
 /** Where a shared take came from (`server/shared-takes.ts`). */
 export const originLabel = (job: Pick<Job, "origin">) =>
@@ -59,15 +67,28 @@ export default function Gallery({
   const inRail = !!shell && !["camera", "ninja"].includes(shell.preset);
   const [viewing, setViewing] = useState<ViewingClip | null>(null);
   const [filter, setFilter] = useState<"all" | "session">("all");
+  const [kind, setKind] = useState<GalleryKindChoice>("all");
   const generated = new Set(jobs.map((j) => j.resultUrl).filter(Boolean));
-  const library = sources.filter(
+  const catalogue = sources.filter(
     (s) =>
       s.origin === "sample" &&
       !generated.has(s.url) &&
       libraryMatchesMode(s, generator, model),
   );
+  // Chips name only the kinds held; a kind that has gone falls back to All.
+  const kinds = presentKinds(jobs, catalogue);
+  const activeKind: GalleryKindChoice =
+    kinds.length > 1 && kind !== "all" && kinds.includes(kind) ? kind : "all";
+  const ofKind = activeKind !== "all";
+  const library = catalogue.filter(
+    (s) => !ofKind || sourceKind(s) === activeKind,
+  );
   // "This session" leaves out takes a terminal or an agent made elsewhere.
-  const shown = filter === "all" ? jobs : jobs.filter((job) => !job.shared);
+  const shown = (
+    filter === "all" ? jobs : jobs.filter((job) => !job.shared)
+  ).filter((job) => !ofKind || jobKind(job) === activeKind);
+  // Chain cards are runs in progress, not media of one kind.
+  const chainCards = ofKind ? [] : chains;
   const visibleCount = shown.length + (filter === "all" ? library.length : 0);
   return (
     <section className="gallery" aria-label="Generation gallery">
@@ -87,29 +108,36 @@ export default function Gallery({
             </p>
           )}
         </div>
-        <div className="gallery-filters" aria-label="Gallery filter">
-          {hiddenCount > 0 && (
-            <button onClick={onRestoreHidden}>
-              Restore hidden ({hiddenCount})
+        <div className="gallery-tools">
+          <GalleryKindFilter
+            kinds={kinds}
+            value={activeKind}
+            onChange={setKind}
+          />
+          <div className="gallery-filters" aria-label="Gallery filter">
+            {hiddenCount > 0 && (
+              <button onClick={onRestoreHidden}>
+                Restore hidden ({hiddenCount})
+              </button>
+            )}
+            <button
+              className={filter === "all" ? "active" : ""}
+              onClick={() => setFilter("all")}
+            >
+              All media
             </button>
-          )}
-          <button
-            className={filter === "all" ? "active" : ""}
-            onClick={() => setFilter("all")}
-          >
-            All media
-          </button>
-          <button
-            className={filter === "session" ? "active" : ""}
-            onClick={() => setFilter("session")}
-          >
-            This session
-          </button>
+            <button
+              className={filter === "session" ? "active" : ""}
+              onClick={() => setFilter("session")}
+            >
+              This session
+            </button>
+          </div>
         </div>
       </header>
       <div className="gallery-grid">
         {onReviewChain &&
-          chains.map((entry) => (
+          chainCards.map((entry) => (
             <ChainCard
               key={entry.chain.id}
               entry={entry}
@@ -321,18 +349,21 @@ export default function Gallery({
           ))}
       </div>
       {shown.length === 0 &&
-        chains.length === 0 &&
+        chainCards.length === 0 &&
         (filter === "session" || library.length === 0) && (
           <div className="gallery-empty">
             <Icon name="grid" size={24} />
             <h3>
-              {filter === "all"
-                ? "No examples for this mode yet."
-                : "A space for what comes next."}
+              {ofKind
+                ? `No ${kindNoun(activeKind)} ${filter === "session" ? "in this session" : "here"} yet.`
+                : filter === "all"
+                  ? "No examples for this mode yet."
+                  : "A space for what comes next."}
             </h3>
             <p>
-              Your generations will appear here. Changing models keeps your
-              session results.
+              {ofKind
+                ? "Choose All to see everything the gallery holds."
+                : "Your generations will appear here. Changing models keeps your session results."}
             </p>
           </div>
         )}

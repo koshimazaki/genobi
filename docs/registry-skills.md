@@ -52,7 +52,7 @@ Build and combine editable primitive scene examples—cathedral, house/interior,
 - Tags: `3d`, `agents`, `sound`, `mcp`
 - Instructions: [plugins/genobi/skills/genobi-3d/SKILL.md](https://github.com/koshimazaki/Genobi/blob/main/plugins/genobi/skills/genobi-3d/SKILL.md)
 - Uses: [`genobi_scene`](registry-tools.md#genobi_scene), [`genobi_world`](registry-tools.md#genobi_world), [`genobi_world_recipe`](registry-tools.md#genobi_world_recipe), [`genobi_link_project`](registry-tools.md#genobi_link_project), [`genobi_project`](registry-tools.md#genobi_project)
-- Docs: [docs/scene-examples.md](scene-examples.md), [docs/scene-builder.md](scene-builder.md), [docs/3d-tab.md](3d-tab.md), [docs/world-live.md](world-live.md), [docs/world-builder.md](world-builder.md), [docs/falling-room.md](falling-room.md)
+- Docs: [docs/scene-examples.md](scene-examples.md), [docs/scene-builder.md](scene-builder.md), [docs/3d-tab.md](3d-tab.md), [docs/world-live.md](world-live.md), [docs/world-builder.md](world-builder.md), [docs/falling-room.md](falling-room.md), [docs/credits/libraries/teardown/README.md](credits/libraries/teardown/README.md)
 
 ## `genobi-akuspace`
 
@@ -215,3 +215,12 @@ Make Genobi's Product video house template (Plinth) end to end through the Genob
 - Instructions: [plugins/genobi/skills/product-video/SKILL.md](https://github.com/koshimazaki/Genobi/blob/main/plugins/genobi/skills/product-video/SKILL.md)
 - Uses: [`genobi_status`](registry-tools.md#genobi_status), [`genobi_jobs`](registry-tools.md#genobi_jobs), [`genobi_job`](registry-tools.md#genobi_job), [`genobi_budget`](registry-tools.md#genobi_budget), [`genobi_quote`](registry-tools.md#genobi_quote), [`genobi_submit`](registry-tools.md#genobi_submit), [`genobi_take`](registry-tools.md#genobi_take), [`genobi_link_project`](registry-tools.md#genobi_link_project), [`genobi_project`](registry-tools.md#genobi_project), [`genobi_director_command`](registry-tools.md#genobi_director_command), [`genobi_template_plan`](registry-tools.md#genobi_template_plan), [`genobi_take_to_project`](registry-tools.md#genobi_take_to_project), [`genobi_provenance`](registry-tools.md#genobi_provenance), [`genobi_skill`](registry-tools.md#genobi_skill)
 - Docs: [docs/templates.md](templates.md), [docs/hermes-runs.md](hermes-runs.md)
+
+## `ui-teardown`
+
+Present a product interface as an exploded view - rebuild the real UI as a working HTML or React replica, split it into a few transparent layers lifted apart along one axis in CSS 3D, number each product part and give every part a sheet (role, spec, note, source at a pinned commit). The UI variant of the 3D teardown pattern, for case studies, teasers and walkthroughs. Nothing is generated or paid for.
+
+- Tags: `agents`, `design`, `studio`, `3d`
+- Instructions: [plugins/genobi/skills/ui-teardown/SKILL.md](https://github.com/koshimazaki/Genobi/blob/main/plugins/genobi/skills/ui-teardown/SKILL.md)
+- Uses: [`genobi_audio_analysis`](registry-tools.md#genobi_audio_analysis)
+- Docs: [docs/credits/libraries/teardown/README.md](credits/libraries/teardown/README.md), [docs/world-builder-sound.md](world-builder-sound.md)
