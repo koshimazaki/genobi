@@ -8,8 +8,9 @@ import "./version.css";
 
 /**
  * Make my version, one header action for Director and Editor; opening
- * overlays the stable studio. Swap only (#57): it never starts an agent or a
- * generation.
+ * overlays the stable studio. It opens only when the person presses it (or
+ * the Director's own button asks): Director and Editor open on the timeline.
+ * Swap only (#57): it never starts an agent or a generation.
  */
 export default function GenerateVersionAction({
   disabled,
@@ -21,21 +22,10 @@ export default function GenerateVersionAction({
   const bundle = useStudio((s) => s.director.bundle);
   const template = bundle && versionTemplate(bundle.project);
   const shell = useShell();
-  const opened = useRef<string | undefined>(undefined);
   const [open, setOpen] = useState(false);
   const trigger = useRef<HTMLButtonElement>(null);
-  const projectId = bundle?.project.id;
   const visible =
     !shell || shell.preset === "director" || shell.preset === "editor";
-  // It opens by itself only in Director. The Editor is for editing, not
-  // adding, so there it waits for its header button.
-  const greets = !shell || shell.preset === "director";
-  useEffect(() => {
-    if (greets && template && projectId && opened.current !== projectId) {
-      opened.current = projectId;
-      setOpen(true);
-    }
-  }, [greets, template, projectId]);
   useEffect(() => {
     if (request) setOpen(true);
   }, [request]);

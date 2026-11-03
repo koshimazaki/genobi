@@ -5,8 +5,8 @@ summary: Local project evidence, durable agent checkpoints, scoped taste and ann
 
 # Shared project memory and taste
 
-The local studio owns creative memory. Director's **Project memory & taste**
-records explicit keep/reject/preference decisions and known reasons. Every
+The local studio owns creative memory. Director's **Project memory & taste**, folded below the
+timeline, records explicit keep/reject/preference decisions and known reasons. Every
 successful project revision also records an operational event. Routine edits,
 Undo and technical reruns do not establish a creative preference. The existing
 Director feedback baseline and open notes continue to work.

@@ -254,3 +254,12 @@ it("undoes the last Editor edit with Cmd/Ctrl+Z outside text, with no redo", asy
     (await key(timeline, "z", "KeyZ", { metaKey: true })).defaultPrevented,
   ).toBe(false);
 });
+
+it("opens Director on its editable timeline, with no panel over it", async () => {
+  await mount();
+  await select("director");
+  const panel = document.querySelector<HTMLElement>('[data-panel="timeline"]')!;
+  expect(panel.hidden).toBe(false);
+  expect(panel.querySelector("[data-play]")?.textContent).toBe("Play");
+  expect(document.querySelector("dialog[open]")).toBeNull();
+});

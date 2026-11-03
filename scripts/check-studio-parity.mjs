@@ -132,11 +132,12 @@ try {
         const intake = page.getByRole("dialog", {
           name: "Make my version",
         });
-        // Director greets; Editor keeps the modal closed until asked.
-        if (workspace === "editor")
-          await page
-            .getByRole("button", { name: "Make my version", exact: true })
-            .click();
+        // Both open on the timeline; the modal waits until asked.
+        await page.locator('[data-panel="timeline"]:not([hidden])').waitFor();
+        assert.equal(await intake.count(), 0);
+        await page
+          .getByRole("button", { name: "Make my version", exact: true })
+          .click();
         await intake.waitFor();
         assert(
           await intake.evaluate(

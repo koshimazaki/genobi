@@ -96,8 +96,10 @@ not evict unsaved work or add a persistent media cache.
 
 ## Make a version in Director
 
-[Make my version](director-generate.md) opens automatically with an editable
-template in Director; in Editor it waits for the header action. It lists declared inputs with current media,
+Director opens timeline-first, matching Camera: the editable timeline sits
+under the composition and prompt, with **Project memory & taste** folded below
+it. [Make my version](director-generate.md) opens only from the header action,
+in Director and in Editor. It lists declared inputs with current media,
 previews, uploads and project-asset choices. Apply swaps is undoable and never
 generates; each video or audio slot's **Recreate / Create in Camera** only
 opens Camera. Hosted editing offers a project ZIP; pairing does not

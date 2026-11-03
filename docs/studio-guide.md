@@ -283,12 +283,12 @@ and reference libraries. Open `/taste` in your local studio or use the hosted Ta
 Personal selection persistence and agent context are local-studio features.
 
 Project decisions and scoped reusable preferences are available in the local
-Director under **Project memory & taste**. See [shared project memory](taste-memory.md)
+Director under **Project memory & taste**, folded below the timeline. See [shared project memory](taste-memory.md)
 for agent checkpoints, private exports and the reference-import boundary.
 
 ## Make your own version
 
-Opening an editable template in Director brings up [Make my version](director-generate.md); in Editor, use its header action instead.
+Director and Editor open on the timeline; [Make my version](director-generate.md) opens from the header action.
 Keep current assets or swap in your own (drop a file, or drag from Assets →
 Project or Generated). Swaps are undoable and never generate. New media is
 made in Camera (each slot's **Recreate / Create in Camera**) and shows up in

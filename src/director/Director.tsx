@@ -263,7 +263,6 @@ export default function Director({
           render={() => void exportVideo()}
           switchMode={() => setAdvanced(!advanced)}
         />
-        {p && <ProjectMemoryPanel key={p.id} projectId={p.id} />}
       </StudioPanel>
       <input
         hidden
@@ -438,6 +437,8 @@ export default function Director({
             report={report}
           />
         )}
+        {/* Folded below the timeline: the Director opens on the edit. */}
+        {p && <ProjectMemoryPanel key={p.id} projectId={p.id} />}
       </StudioPanel>
       {addTrackOpen && p && (
         <AddTrackDialog

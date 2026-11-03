@@ -13,9 +13,9 @@ This replaced the earlier **Generate my version** panel with its generation
 plan, **Generate replacement with my agent** checkboxes, preselected
 replacement slots and **Prepare with Genobi** handoff.
 
-Open an editable template in Director and **Make my version** opens
-automatically. In Editor, it waits for the header button instead; either
-workspace can reopen it explicitly. Closing the panel keeps the project. Switching between Director and Editor uses the same document.
+Director and Editor both open on the editable timeline, as Camera opens on its
+preview: **Make my version** waits for the header button and never opens by
+itself. Closing the panel keeps the project. Switching between Director and Editor uses the same document.
 
 ## Swapping media
 

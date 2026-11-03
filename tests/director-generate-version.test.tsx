@@ -44,7 +44,7 @@ afterEach(() => {
   for (const close of unmount.splice(0)) close();
   vi.unstubAllGlobals();
 });
-async function mount(bundle: Bundle) {
+async function mount(bundle: Bundle, press = true) {
   studioStore.setState({
     director: { ...studioStore.getState().director, bundle },
     operations: { workingFile: false, playing: false, rendering: false },
@@ -60,8 +60,12 @@ async function mount(bundle: Bundle) {
     act(() => root.unmount());
     host.remove();
   });
+  // The panel opens only on its button: Director opens on the timeline.
+  if (press) act(() => trigger().click());
   return { host, render: () => act(render) };
 }
+const trigger = () =>
+  document.querySelector<HTMLButtonElement>(".dir-generate-version")!;
 const button = (label: string) =>
   [...document.querySelectorAll<HTMLButtonElement>("button")].find((b) =>
     b.textContent?.includes(label),
@@ -176,23 +180,12 @@ it("keeps the advanced brief collapsed by default and preserves it when applied"
   expect(fetch).not.toHaveBeenCalled();
 });
 
-it("keeps Gallery free of the template modal and does not reopen a dismissed panel on an edit", async () => {
+it("never opens by itself: Director opens on the timeline until the button is pressed", async () => {
   state.preset = "gallery";
-  const mounted = await mount(await versionCharacter());
+  const mounted = await mount(await versionCharacter(), false);
   expect(document.querySelector("dialog")).toBeNull();
   state.preset = "director";
   mounted.render();
-  expect(document.querySelector("dialog")).not.toBeNull();
-  act(() => button("Close").click());
-  const old = studioStore.getState().director.bundle!;
-  act(() =>
-    studioStore.setState({
-      director: {
-        ...studioStore.getState().director,
-        bundle: { ...old, project: { ...old.project, name: "My edit" } },
-      },
-    }),
-  );
   expect(document.querySelector("dialog")).toBeNull();
   const next = await versionMix();
   act(() =>
@@ -200,19 +193,24 @@ it("keeps Gallery free of the template modal and does not reopen a dismissed pan
       director: { ...studioStore.getState().director, bundle: next },
     }),
   );
-  expect(document.querySelector("dialog")).not.toBeNull();
+  expect(document.querySelector("dialog")).toBeNull();
+  act(() => trigger().click());
+  expect(document.querySelector("dialog")?.open).toBe(true);
+  act(() => button("Close").click());
+  expect(document.querySelector("dialog")).toBeNull();
 });
 
-it("opens Make my version only on request in Editor", async () => {
+it("opens Make my version only on request in Editor and Director", async () => {
   state.preset = "editor";
-  const mounted = await mount(await versionCharacter());
+  const mounted = await mount(await versionCharacter(), false);
   expect(document.querySelector("dialog")).toBeNull();
   act(() => button("Make my version").click());
   expect(document.querySelector("dialog")).not.toBeNull();
   act(() => button("Close").click());
+  // Moving to Director keeps the timeline in front: no panel reopens.
   state.preset = "director";
   mounted.render();
-  expect(document.querySelector("dialog")).not.toBeNull();
+  expect(document.querySelector("dialog")).toBeNull();
 });
 
 it("keeps Make it yours description and character/style bindings when applied", async () => {
