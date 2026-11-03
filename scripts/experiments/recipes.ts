@@ -20,7 +20,7 @@ import {
   roomWalls,
   type RoomDesign,
 } from "./recipes-rooms";
-import { fruitDance, singleFruit } from "./recipes-fruit";
+import { fruitDance, fruitMorph, singleFruit } from "./recipes-fruit";
 import { diamondStudy } from "./recipes-diamond";
 import { fruitMecha } from "./recipes-fruit-mecha";
 import { STUDIES } from "./studies.mjs";
@@ -47,6 +47,8 @@ const PRESETS: Record<Study, string> = {
   "fruit-apple": "fruit-morph",
   "fruit-banana": "fruit-morph",
   "fruit-papaya": "fruit-morph",
+  "fruit-apple-banana": "fruit-morph",
+  "fruit-banana-apple": "fruit-morph",
   falling: "city-to-loft",
   cathedral: "city-to-loft",
   "cathedral-walls": "city-to-loft",
@@ -303,6 +305,8 @@ export function createStudy(
     study === "fruit-papaya"
   )
     design = singleFruit(recipe, study);
+  else if (study === "fruit-apple-banana" || study === "fruit-banana-apple")
+    design = fruitMorph(recipe, study);
   else if (study === "falling") indoorFromFrame = falling(recipe);
   else if (study === "cathedral") indoorFromFrame = falling(recipe, true);
   else if (study === "cathedral-walls") room(cathedralWalls(recipe));

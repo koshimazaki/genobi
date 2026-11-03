@@ -157,6 +157,15 @@ still (pyramid-inside pans 45 degrees) and move the space on the `low` band.
   the floor, no morph and no figure. It is held from the front at 8 degrees
   and framed to half the frame, pulsing on `low` (scale 0.3) with a twist on
   `mid` (0.2).
+- **fruit-apple-banana** and **fruit-banana-apple** (`fruitMorph`, one
+  helper on a rest fruit and a peak fruit) use the same floor, framing (on
+  the rest fruit) and mappings, but their two states are the apple and the
+  banana, blended by the engine's
+  continuous morph (`morphControl`, as the wall studies use): progress is
+  `low` x 1.2, clamped at 1, so silence is the rest fruit and the band's p95
+  is the peak fruit, whatever the frame. The capture's `--motion-gain` scales the
+  blend amount too (bounded at 2), so at gain 2 the banana arrives at about
+  half the band. `frame-closed` (the loudest bar) is the peak fruit's still.
 
 Every capture now writes `keyframes.json` with `frame-0000.png`,
 `frame-closed-NNNN.png` (loudest smoothed `low`) and `frame-open-NNNN.png`
