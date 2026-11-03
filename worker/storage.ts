@@ -227,7 +227,10 @@ export async function history(env: Env, session: string) {
     .bind(session)
     .all<{ data: string }>();
   return {
-    jobs: jobs.results.map((r) => JSON.parse(r.data)),
+    // Legacy rows predate write-time ticket removal. Never return them to Camera.
+    jobs: jobs.results.map((r) =>
+      withoutDeployTickets(JSON.parse(r.data) as Job),
+    ),
     sources: [...library, ...sources.results.map((r) => JSON.parse(r.data))],
   };
 }
