@@ -72,7 +72,7 @@ export const fruitsSwap: HouseTemplate = {
       "Studio grey and Signal black, with the fruits' red, yellow and green, neon-pink lines and white words.",
     swatches: [
       { name: "Signal", hex: "#0c0e0c" },
-      { name: "Neon pink", hex: "#ff2bd6" },
+      { name: "Neon pink", hex: "#ff4dff" },
       { name: "White", hex: "#f6f8f2" },
     ],
     negativeSpace:

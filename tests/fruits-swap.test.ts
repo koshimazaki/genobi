@@ -27,8 +27,8 @@ const DIR = "public/media/director-templates/fruits-swap";
 const LOOP = 9.0008;
 /** The splash: four beats before loop 1, over the loop's last 2.4 s. */
 const S = 4;
-/** v5: the cut's one pink, for every line and plate; words are white. */
-const PINK = "#ff2bd6";
+/** v6: the cut's one pink, brighter, for every line and plate; words are white. */
+const PINK = "#ff4dff";
 const layer = (id: string) => cut.layers.find((l) => l.id === id)!;
 const of = (module: string) =>
   cut.layers

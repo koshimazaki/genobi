@@ -14,7 +14,9 @@ from PIL import Image
 BEAT = 0.6  # 100 BPM
 FPS = 24
 TITLE = "DANCE WITH FRUITS"
-PINK = (255, 43, 214, 255)  # #ff2bd6, the cut's one pink
+# The cut's one pink (fruits-swap.cut.json); FRUITS_PINK tries another.
+PINK_HEX = os.environ.get("FRUITS_PINK", "#ff4dff")
+PINK = tuple(int(PINK_HEX[i : i + 2], 16) for i in (1, 3, 5)) + (255,)
 SPLASH_SECONDS = 2.5  # the four splash beats (58 frames) and a margin
 # The opening mecha's known defect: frames 36 to 54 show a third hand near its
 # right shoulder (x 0.42-0.65, y 0.00-0.35). A swarm of pixel fruit flies in
