@@ -35,6 +35,10 @@ user action through every layer.
 - [Vision](vision.md) — what Genobi is for: an open-source video studio for AI
   ninjas, its mission, philosophy and the story video.
 
+## Featured: audio-reactive Layout-to-Render
+
+- [Audio-reactive workflow](https://github.com/koshimazaki/Genobi/blob/main/audio-reactive/README.md) — the repo's featured, repeatable workflow: a World Builder study that moves to a track window, one aligned still and one LTX-2.5 Layout-to-Render graph; three videos (fruits, spaces, pyramid), thirteen presets and the track, subject and space swaps.
+
 ## Templates and evidence
 
 - [Audiovisual implementation plan](audiovisual-implementation.md) — ten linked issues, Camera-consistent UI, two-agent sequencing and modular scene scope.

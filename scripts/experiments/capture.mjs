@@ -325,7 +325,7 @@ try {
       };
     }
     // Stills at exact guide frames: frame 0, loudest (closed) and quietest (open).
-    report.keyframes = (await writeKeyframes(dir)).frames;
+    report.keyframes = (await writeKeyframes(dir, report.regions)).frames;
     await writeFile(join(dir, "study.json"), JSON.stringify(report, null, 2));
     reports.push(report);
     console.log(

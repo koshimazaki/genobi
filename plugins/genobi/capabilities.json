@@ -251,6 +251,14 @@
       "runs": [{ "route": "local-free" }]
     },
     {
+      "id": "audio-reactive", "name": "Audio-reactive Layout-to-Render", "status": "implemented",
+      "where": "3D · World Builder studies captured from the terminal, rendered on a ComfyUI box",
+      "description": "The featured workflow: a World Builder study moves to a track window, one aligned still sets the look and one LTX-2.5 Layout-to-Render graph paints it; presets with track, subject and space swaps.",
+      "mcp": [], "cli": [],
+      "skills": ["genobi-audio-reactive"], "docs": ["audio-reactive/README.md", "docs/audio-reactive-pyramid.md", "docs/audio-reactive-second-pass.md"],
+      "runs": [{ "route": "local-free" }, { "route": "local-model", "models": ["ltx-2-5", "flux-3-klein"] }]
+    },
+    {
       "id": "world-handoff", "name": "World Builder recipes from agents", "status": "verified", "evidence": "2026-10-29 docs/falling-room.md#what-was-run-29-october-2026",
       "where": "3D · World Builder on a linked project",
       "description": "An agent sends a scene recipe or a named take to the open World Builder, which applies it and reports back.",
