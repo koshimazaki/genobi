@@ -75,6 +75,12 @@ try {
     });
     await page.goto(`${base}/director?example=bloom-teaser&workspace=director`);
     const dialog = page.getByRole("dialog", { name: "Make my version" });
+    // The Director opens on its timeline; the dialog waits until asked.
+    // The example's remix panel has its own (disabled) Make my version.
+    await page
+      .getByRole("button", { name: "Make my version", exact: true })
+      .and(page.locator('[aria-haspopup="dialog"]'))
+      .click({ timeout: 60_000 });
     await dialog.waitFor({ timeout: 60_000 });
     assert(
       await dialog.evaluate((d) => d.matches(":modal")),

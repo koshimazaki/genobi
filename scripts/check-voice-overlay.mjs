@@ -263,7 +263,8 @@ try {
 
   // Every section keeps Voice in the header.
   ({ context, page, voice } = await open({ path: "/" }));
-  // Director's first-entry dialog loads lazily and may appear between clicks.
+  // The Director no longer opens Make my version by itself; close it if a
+  // section ever leaves it open, so the header check is never blocked.
   await page.addLocatorHandler(
     page.getByRole("button", { name: "Close Make my version" }),
     (close) => close.click(),
