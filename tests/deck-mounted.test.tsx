@@ -32,9 +32,9 @@ afterEach(() => {
 
 describe("the studio header mounts the deck", () => {
   // 51777ec dropped <GenobiDeck /> from the wordmark inside an unrelated
-  // change and nothing failed. The studio's header is where the bubble and
-  // the deck live in every preset; this fails if either goes again.
-  it("renders the deck once, beside the bubble whose session it reads", () => {
+  // change and nothing failed. The studio's header is where the guide bubble
+  // and the deck live in every preset; this fails if either goes again.
+  it("renders the deck once, beside the Genobi guide bubble", () => {
     const markup = renderToStaticMarkup(
       <Topbar
         apiKey=""
@@ -47,7 +47,9 @@ describe("the studio header mounts the deck", () => {
       />,
     );
     expect(count(markup, DECK)).toBe(1);
-    expect(count(markup, 'aria-label="Genobi activity"')).toBe(1);
+    expect(count(markup, 'aria-label="Genobi guide"')).toBe(1);
+    // The bubble is a guide (#57): no session view or agent entry points.
+    expect(markup).not.toMatch(/Start Genobi|Speak to agent|Genobi activity/);
   });
 });
 
@@ -89,7 +91,7 @@ describe("the deck's bar", () => {
     );
   });
 
-  it("follows the session the bubble shows, before and after its polls", () => {
+  it("follows the shown session, before and after its polls", () => {
     // The deck's hook reads this snapshot (a server render has none).
     const shown = session();
     showAgentSession(shown);
@@ -105,7 +107,7 @@ describe("the deck's bar", () => {
 });
 
 describe("the open deck", () => {
-  it("shows the whole log, the request and the bubble action", () => {
+  it("shows the whole log, the request, the conversation and Stop", () => {
     vi.stubGlobal("localStorage", {
       getItem: () => JSON.stringify({ open: true, program: "rain" }),
       setItem: () => {},
@@ -114,7 +116,14 @@ describe("the open deck", () => {
     const markup = renderToStaticMarkup(
       <DeckLog
         activity={[]}
-        session={session({ summary: "Waiting on your pick" })}
+        session={session({
+          summary: "Waiting on your pick",
+          exchange: [
+            { from: "person", text: "Open the project", at: "a" },
+            { from: "person", text: "Use the second take", at: "b" },
+            { from: "agent", text: "Second take placed", at: "c" },
+          ],
+        })}
         actors={[]}
         linked={[]}
         supervisor={{ connected: false }}
@@ -123,7 +132,12 @@ describe("the open deck", () => {
     for (let i = 1; i <= 12; i++) expect(markup).toContain(`>update ${i}<`);
     expect(markup).toContain("Open the project and cut the teaser");
     expect(markup).toContain("Waiting on your pick");
-    expect(markup).toContain("Open bubble");
-    expect(markup).not.toMatch(/Stop session|Approve/);
+    expect(markup).toContain("YOU › Use the second take");
+    expect(markup).toContain("GENOBI › Second take placed");
+    expect(markup).not.toContain("Open bubble");
+    // A running session's Stop now lives in the deck; with no quoted step
+    // waiting there is nothing to approve.
+    expect(markup).toContain("Stop session");
+    expect(markup).not.toContain("Approve");
   });
 });

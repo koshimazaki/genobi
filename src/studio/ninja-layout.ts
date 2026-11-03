@@ -49,6 +49,35 @@ export function readWorkingRails(): RailChoices {
   }
 }
 /**
+ * Keeps the person's rail choices as soon as they open or hide a rail, so a
+ * reload or a resize across the docking width does not undo the choice.
+ * False when storage is blocked; the choice still holds for this visit.
+ */
+export function storeWorkingRails(rails: RailChoices) {
+  try {
+    localStorage.setItem(RAILS_KEY, JSON.stringify(rails));
+    return true;
+  } catch {
+    return false;
+  }
+}
+/**
+ * Whether a workspace's Assets rail shows: the person's choice, else the
+ * workspace's default. The rail starts open only where it docks, and never in
+ * Gallery or the Editor: the Editor is for editing, not adding, so its rail
+ * waits to be asked for. Ninja has no rail.
+ */
+export function railOpen(
+  preset: string,
+  choices: Record<string, boolean | undefined>,
+  docked: boolean,
+) {
+  if (preset === "ninja") return false;
+  return (
+    choices[preset] ?? (preset !== "gallery" && preset !== "editor" && docked)
+  );
+}
+/**
  * Opens `layout` and its rail choices as the working arrangement. When
  * storage refuses either, the saved baseline stays as it was, so the shell
  * keeps showing unsaved changes and a reload is not mistaken for keeping it.

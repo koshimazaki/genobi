@@ -177,9 +177,10 @@ drafts remain separate; cross-template asset pooling and the full
 generation-result/revise flow remain planned. A saved Ninja layout contains
 only panel preferences; save project media with the editable bundle separately.
 The Project tools
-panel runs explicit JSON commands. A local project-prompt session reports through
-the [Genobi bubble](agent-bubble.md) below the header logo, with expandable
-activity and Stop. Tuck it away into the avatar without stopping the session.
+panel runs explicit JSON commands. A local project-prompt session reports in
+the footer [deck](genobi-deck.md): its log, paid-step approvals and Stop. The
+[Genobi bubble](agent-bubble.md) below the header logo is a guide that shows a
+compact status while it runs.
 
 Gallery, the first view, uses the shared template catalogue, plays previews on
 hover and opens a details panel with template, watch and embed links. See
@@ -274,8 +275,8 @@ for agent checkpoints, private exports and the reference-import boundary.
 
 ## Make your own version
 
-Opening an editable template brings up [Generate my version](director-generate.md).
-Reuse current assets, upload replacements or request generated inputs.
-Apply swaps is undoable; generation goes through your linked agent and paid
-approval in the bubble. Hosted users save the project ZIP and import it into
-local Genobi for agent access to its media.
+Opening an editable template in Director brings up [Make my version](director-generate.md); in Editor, use its header action instead.
+Keep current assets or swap in your own (drop a file, or drag from Assets →
+Project or Generated). Swaps are undoable and never generate. New media is
+made in Camera (each slot's **Recreate / Create in Camera**) and shows up in
+Assets → Generated. Hosted users save the project ZIP to keep their edits.

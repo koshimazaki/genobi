@@ -83,10 +83,10 @@ try {
     await stage.evaluate((el) => el.isConnected),
     "Director canvas was remounted",
   );
-  // Since #67 the Editor's gallery is the Assets rail's Library tab.
+  // Since #67 the Editor's gallery is the Assets rail's Generated tab (#57).
   await page
     .getByRole("tablist", { name: "Asset collection" })
-    .getByRole("tab", { name: "Library", exact: true })
+    .getByRole("tab", { name: "Generated", exact: true })
     .click();
   await page
     .locator("#assets-pane-gallery")

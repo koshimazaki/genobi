@@ -30,8 +30,8 @@ export function outcomeNote(outcome: RegenerateOutcome): Note {
   return {
     text:
       outcome.turn === "next"
-        ? `Sent to ${who} as the next turn on this project. Its progress and any paid step to approve are in the bubble.`
-        : `${who} started on this project with your instruction. Its progress and any paid step to approve are in the bubble.`,
+        ? `Sent to ${who} as the next turn on this project. Its progress and any paid step to approve are in the Genobi log.`
+        : `${who} started on this project with your instruction. Its progress and any paid step to approve are in the Genobi log.`,
   };
 }
 

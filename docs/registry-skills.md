@@ -63,6 +63,15 @@ Give an LTX-2.5 shot an Acoustic Space (AKUSPACE) treatment - where the sound is
 - Uses: [`genobi_job`](registry-tools.md#genobi_job), [`genobi_budget`](registry-tools.md#genobi_budget), [`genobi_quote`](registry-tools.md#genobi_quote), [`genobi_submit`](registry-tools.md#genobi_submit), [`genobi_take`](registry-tools.md#genobi_take), [`genobi_media_space`](registry-tools.md#genobi_media_space), [`genobi_run_location`](registry-tools.md#genobi_run_location), [`genobi_workflows`](registry-tools.md#genobi_workflows), [`genobi_workflow_select`](registry-tools.md#genobi_workflow_select)
 - Docs: [docs/camera-wording.md](camera-wording.md), [docs/run-location.md](run-location.md), [workflows/ltx-2-5-akuspace-t2v.README.md](https://github.com/koshimazaki/Genobi/blob/main/workflows/ltx-2-5-akuspace-t2v.README.md)
 
+## `genobi-audio-reactive`
+
+Regenerate or vary Genobi's featured audio-reactive workflow - a World Builder study that moves to a track window, one aligned still, and one LTX-2.5 Layout-to-Render graph - from its presets (pyramid, towers, cathedral, hall, booth, robot with fruits, fruit morphs, ship to mecha, diamond). Covers the track, subject and space swaps, the knobs that worked, the box render and the review. Every paid step waits for the person's yes.
+
+- Tags: `agents`, `ltx`, `world-builder`, `sound`, `workflows`
+- Instructions: [plugins/genobi/skills/genobi-audio-reactive/SKILL.md](https://github.com/koshimazaki/Genobi/blob/main/plugins/genobi/skills/genobi-audio-reactive/SKILL.md)
+- Uses: [`genobi_quote`](registry-tools.md#genobi_quote), [`genobi_submit`](registry-tools.md#genobi_submit)
+- Docs: [audio-reactive/README.md](https://github.com/koshimazaki/Genobi/blob/main/audio-reactive/README.md), [audio-reactive/presets/README.md](https://github.com/koshimazaki/Genobi/blob/main/audio-reactive/presets/README.md), [docs/audio-reactive-second-pass.md](audio-reactive-second-pass.md), [docs/audio-reactive-pyramid.md](audio-reactive-pyramid.md), [docs/vast-runner.md](vast-runner.md), [docs/genobi-cli.md](genobi-cli.md)
+
 ## `genobi-camera`
 
 Generate a Genobi shot with the right model - one workflow card per model the studio can run (LTX-2.5 Fast, LTX-2.5 Acoustic Space, LTX-2.5 Pro, FLUX 3 video, FLUX Video Upscale, FLUX 3 Image Klein, FLUX 3 Image and Edit, H3 and MiniMax Music 3), each with its route, lengths, sizes, cost, prompt guidance and the camera wording it accepts, always behind a quote the person accepts.

@@ -214,6 +214,7 @@ export default function App() {
     state,
     dispatch,
     setError,
+    update,
   );
   const [layoutRevision, setLayoutRevision] = useState(0);
 

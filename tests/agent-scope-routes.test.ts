@@ -14,6 +14,7 @@ import type { Project } from "../shared/director/types";
 import { agentStudio } from "./agent-harness";
 import { base } from "./house-template-fixtures";
 import { input } from "./server-harness";
+import { PAIRING_ROUTES } from "./agent-scope-pairings";
 
 /** Every other route, and why the read scope does not apply to it. */
 const NOT_SCOPED: Record<string, string> = {
@@ -59,34 +60,7 @@ const NOT_SCOPED: Record<string, string> = {
   "GET /api/arena/:id/files/:hash":
     "Arena has owner checks and explicit one-use pairing; no source/job grant.",
 
-  "POST /api/scrolls/fill":
-    "Scrolls fill: the person's tab asks for its own one-use code; marked agents refused.",
-  "POST /api/scrolls/fill/panels":
-    "Scrolls fill: text panels by a one-use code from the person's Send; reads nothing of theirs.",
-  "GET /api/scrolls/fill/:id":
-    "Scrolls fill: only the tab that asked collects its panels; marked agents refused.",
-  "POST /api/world/connect":
-    "World has explicit, ephemeral pairing and owner-only browser dispatch.",
-  "POST /api/world/link":
-    "World has explicit, ephemeral pairing and owner-only browser dispatch.",
-  "DELETE /api/world/:id":
-    "World has explicit, ephemeral pairing and owner-only browser dispatch.",
-  "GET /api/world/:id/next":
-    "World has explicit, ephemeral pairing and owner-only browser dispatch.",
-  "POST /api/world/:id/commands":
-    "World has explicit, ephemeral pairing and owner-only browser dispatch.",
-  "GET /api/world/:id/commands/:command":
-    "World has explicit, ephemeral pairing and owner-only browser dispatch.",
-  "POST /api/world/:id/commands/:command":
-    "World has explicit, ephemeral pairing and owner-only browser dispatch.",
-  "POST /api/world/:id/files/:file":
-    "World has explicit, ephemeral pairing and owner-only browser dispatch.",
-  "GET /api/world/:id/files/:file":
-    "World has explicit, ephemeral pairing and owner-only browser dispatch.",
-  "GET /api/world/:id/files":
-    "World has explicit, ephemeral pairing and owner-only browser dispatch.",
-  "DELETE /api/world/:id/files":
-    "World has explicit, ephemeral pairing and owner-only browser dispatch.",
+  ...PAIRING_ROUTES,
   "GET /api/memory/taste": "owner profile only; marked agents refused",
   "POST /api/memory/taste": "explicit owner action; marked agents refused",
   "POST /api/memory/taste/shelf":

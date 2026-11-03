@@ -2,6 +2,7 @@ import type { Generator, Job } from "../../shared/types";
 import { isTerminal } from "../../shared/types";
 import GenerationIndicator from "./GenerationIndicator";
 import Icon from "./Icon";
+import ProviderMenu from "./ProviderMenu";
 import { useEffect } from "react";
 import "../styles/generate-provider.css";
 import "../styles/generate-queue.css";
@@ -150,48 +151,17 @@ export default function GenerateButton({
     </>
   );
   if (!providerChoices?.length || !onProviderChange) return action;
-  const current = providerChoices.find(
-    (choice) => choice.value === providerValue,
-  );
   // Provider choice and API setup remain available when Generate lacks a prompt.
   return (
     <div className="generate-split">
       {action}
-      <div className="generate-split__selector">
-        <select
-          aria-label="Generation provider"
-          title={
-            current
-              ? `Generate with ${current.label}`
-              : "Choose generation provider"
-          }
-          value={providerValue}
-          disabled={busy || restoring}
-          onChange={(event) => {
-            if (event.currentTarget.value === "configure") onConfigure?.();
-            else onProviderChange(event.currentTarget.value);
-          }}
-        >
-          {providerChoices.map((choice) => (
-            <option key={choice.value} value={choice.value}>
-              {choice.label}
-            </option>
-          ))}
-          {onConfigure && (
-            <option value="configure">
-              Configure API keys / run location…
-            </option>
-          )}
-        </select>
-        <span className="generate-split__provider" aria-hidden="true">
-          {providerValue === "bfl"
-            ? "BFL"
-            : providerValue === "comfy"
-              ? "COMFY"
-              : "AUTO"}
-        </span>
-        <Icon name="chevron" size={10} />
-      </div>
+      <ProviderMenu
+        choices={providerChoices}
+        value={providerValue}
+        disabled={busy || restoring}
+        onChange={onProviderChange}
+        onConfigure={onConfigure}
+      />
     </div>
   );
 }

@@ -28,7 +28,7 @@ export interface OutputMedia {
   /** `production` shows under Project, `reference` under Inspirations. */
   use: AssetUse;
   /**
-   * Sent from inside the asset rail (its Library tab): the rail stays on
+   * Sent from inside the asset rail (its Generated tab): the rail stays on
    * that tab, so the card's own answer and Undo stay in view.
    */
   keepTab?: boolean;

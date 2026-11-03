@@ -110,7 +110,9 @@ export function AssetRail() {
               ? "Project"
               : id === "inspirations"
                 ? "Inspirations"
-                : "Library"}
+                : shell.preset === "dual"
+                  ? "Library"
+                  : "Generated"}
           </button>
         ))}
       </div>

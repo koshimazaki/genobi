@@ -46,7 +46,7 @@ export function relayRequest(value: unknown): AgentSessionRequest {
   // A Terminal window opens on the machine that serves the studio.
   if (request.mode === "terminal")
     throw new Error(
-      "A Terminal session opens from the local studio only. Run it in the bubble here.",
+      "A Terminal session opens from the local studio only. Run it in the studio here.",
     );
   if (
     request.copyId ||

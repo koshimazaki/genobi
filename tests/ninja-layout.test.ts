@@ -7,6 +7,8 @@ import {
   openWorkingLayout,
   RAILS_KEY,
   readWorkingRails,
+  railOpen,
+  storeWorkingRails,
   parseLayout,
   readLayout,
   resizePanel,
@@ -205,5 +207,30 @@ describe("portable Ninja layout", () => {
       kept: false,
       saved: baseline,
     });
+  });
+  it("opens the Editor's rail only when asked, and keeps each choice at once", () => {
+    // Docked: Camera and the other tools open the rail; Editor and Gallery do not.
+    expect(railOpen("camera", {}, true)).toBe(true);
+    expect(railOpen("editor", {}, true)).toBe(false);
+    expect(railOpen("gallery", {}, true)).toBe(false);
+    expect(railOpen("camera", {}, false)).toBe(false);
+    expect(railOpen("ninja", { ninja: true }, true)).toBe(false);
+    // The person's choice wins either way.
+    expect(railOpen("editor", { editor: true }, false)).toBe(true);
+    expect(railOpen("camera", { camera: false }, true)).toBe(false);
+    const items = new Map<string, string>();
+    vi.stubGlobal("localStorage", {
+      getItem: (key: string) => items.get(key) ?? null,
+      setItem: (key: string, value: string) => void items.set(key, value),
+    });
+    expect(storeWorkingRails({ editor: true, camera: false })).toBe(true);
+    // A reload reads the choice back, as an opened saved layout's is.
+    expect(readWorkingRails()).toEqual({ editor: true, camera: false });
+    vi.stubGlobal("localStorage", {
+      setItem: () => {
+        throw new DOMException("full", "QuotaExceededError");
+      },
+    });
+    expect(storeWorkingRails({ editor: false })).toBe(false);
   });
 });

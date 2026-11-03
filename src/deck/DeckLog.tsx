@@ -2,19 +2,19 @@ import { useEffect, useRef } from "react";
 import type { AgentSession } from "../../shared/agent-session";
 import type { SupervisorActor } from "../../shared/supervisor";
 import type { Activity } from "../busy";
-import { OPEN_BUBBLE } from "../agent/useAgentSession";
 import { OPEN_DEVELOPMENT } from "../supervisor/store";
 import { useShell } from "../studio/ShellContext";
 import { studioStore } from "../studio/store";
 import { AgentVoiceButton } from "../voice/AgentVoiceButton";
+import DeckSession from "./DeckSession";
 
 /**
  * The open deck's log: what is working now, then the whole received log of
- * the session the bubble shows (the request, every retained update oldest
- * first, the summary), then linked agents. The bubble announces state
- * changes, so this narration is not a live region. Its actions only move
- * the person somewhere: the bubble (where Stop and approvals live), the
- * project's assets, Development. Nothing here starts, approves or pays.
+ * the shown agent session (the request, every retained update oldest first,
+ * the summary) with its approvals and Stop (`DeckSession`), then linked
+ * agents. Not a live region; the approvals announce their own status. The
+ * other actions only move the person: Speak to agent, the project's assets,
+ * Development. Approve is the person's own click on a quoted step.
  */
 export default function DeckLog({
   activity,
@@ -58,6 +58,18 @@ export default function DeckLog({
           {session.summary && (
             <p className="deck-line is-summary">{session.summary}</p>
           )}
+          {/* The conversation (Box 1.8), past the first prompt shown above. */}
+          {(session.exchange ?? []).slice(1).map((entry, i) => (
+            <p
+              key={`${entry.at}-${i}`}
+              className={`deck-line${entry.from === "person" ? " is-quiet" : " is-summary"}`}
+            >
+              {entry.from === "person" ? "YOU › " : "GENOBI › "}
+              {entry.text}
+              {entry.pending ? " (not read yet)" : ""}
+            </p>
+          ))}
+          <DeckSession session={session} />
         </>
       )}
       {linked.map((actor) => (
@@ -81,21 +93,12 @@ export default function DeckLog({
         actors.length === 0 &&
         !supervisor.origin && (
           <p className="deck-line is-quiet">
-            No linked agent in this view. Ask Genobi by voice, or connect an
-            external supervisor in Development.
+            No linked agent in this view. Drive Genobi from a terminal (MCP or
+            the genobi CLI), or connect an external supervisor in Development.
           </p>
         )}
       <div className="deck-actions">
         <AgentVoiceButton session={session} className="deck-development" />
-        {session && (
-          <button
-            type="button"
-            className="deck-development"
-            onClick={() => window.dispatchEvent(new Event(OPEN_BUBBLE))}
-          >
-            Open bubble
-          </button>
-        )}
         {shell && session && (
           <button
             type="button"

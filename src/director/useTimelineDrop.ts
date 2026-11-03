@@ -4,6 +4,7 @@ import { useShell } from "../studio/ShellContext";
 import { studioStore } from "../studio/store";
 import { PROJECT_ASSET_DRAG, readAssetDrag } from "./asset-drag";
 import { addAssetTrack } from "./add-asset-track";
+import { addedLayers, announceDrop } from "./drop-reveal";
 
 /**
  * Media dropped on the timeline: a project asset dragged from the drawer, a
@@ -37,11 +38,15 @@ export function useTimelineDrop({
         const bundle = state.director.bundle;
         if (!bundle || Object.values(state.operations).some(Boolean)) return;
         const { assetId } = readAssetDrag(e.dataTransfer, bundle);
-        state.actions.commit(
-          addAssetTrack(bundle, assetId, frame, state.settings.imageFrames),
+        const next = addAssetTrack(
           bundle,
+          assetId,
+          frame,
+          state.settings.imageFrames,
         );
+        state.actions.commit(next, bundle);
         setError("");
+        announceDrop(addedLayers(bundle.project, next.project)[0]);
       } catch (error) {
         setError(String(error));
       }

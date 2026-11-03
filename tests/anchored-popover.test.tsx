@@ -60,3 +60,40 @@ it("keeps the keyboard position when its parent re-renders", () => {
   });
   expect(closes).toBe(1);
 });
+
+it("lines its right edge up with the anchor's only when asked", () => {
+  const anchor = document.createElement("button");
+  anchor.getBoundingClientRect = () =>
+    ({ left: 900, right: 955, top: 500, bottom: 544 }) as DOMRect;
+  const host = document.createElement("div");
+  document.body.append(anchor, host);
+  Object.defineProperty(document.documentElement, "clientWidth", {
+    configurable: true,
+    value: 1440,
+  });
+  root = createRoot(host);
+  const place = (align?: "start" | "end") => {
+    act(() =>
+      root!.render(
+        <AnchoredPopover
+          anchor={anchor}
+          label="Panel"
+          width={300}
+          align={align}
+          close={() => {}}
+        >
+          <button data-choice>Choice</button>
+        </AnchoredPopover>,
+      ),
+    );
+    return parseFloat(
+      document.querySelector<HTMLElement>('[role="dialog"]')!.style.left,
+    );
+  };
+  try {
+    expect(place()).toBe(900);
+    expect(place("end")).toBe(955 - 300);
+  } finally {
+    Reflect.deleteProperty(document.documentElement, "clientWidth");
+  }
+});

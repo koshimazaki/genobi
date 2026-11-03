@@ -38,7 +38,7 @@ export type FillOutcome =
 export const LOCAL_ONLY =
   "Filling panels with Genobi needs the local studio (npm run dev); this studio has no agent hand-off for Scrolls.";
 export const BUSY =
-  "Genobi is still working in the session shown in the bubble. Send again once it finishes; your description stays here.";
+  "Genobi is still working in the session shown in the Genobi log. Send again once it finishes; your description stays here.";
 export const STARTING =
   "Genobi is still starting from elsewhere. Nothing was sent; send again once it has started.";
 

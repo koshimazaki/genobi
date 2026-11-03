@@ -16,6 +16,9 @@ import Timeline from "./Timeline";
 import TimelineHeader from "./TimelineHeader";
 import type { TrimRequest } from "./useTrimPreview";
 import { useStudio } from "../studio/useStudio";
+import { studioStore } from "../studio/store";
+import { useDropReveal } from "./drop-reveal";
+import "./drop-reveal.css";
 
 /** The edit console: timeline header, transport, lanes and the layer drawer. */
 export default function DirectorConsole({
@@ -95,6 +98,7 @@ export default function DirectorConsole({
     width: lanesWidth,
     frames: durationFrames,
   });
+  useDropReveal(studioStore, pixels);
   const updateComposition = (patch: Partial<Project["composition"]>) =>
     commit({
       ...bundle,

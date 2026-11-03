@@ -360,7 +360,7 @@ describe("the spawn dialog", () => {
       );
     const mode = view({ kind: "mode" });
     expect(mode).toContain("Open in Terminal");
-    expect(mode).toContain("Run in the bubble instead");
+    expect(mode).toContain("Run in the studio instead");
     // Each choice is explained on its own line, not one run-on sentence.
     expect(mode).toContain("Where should Genobi work?");
     expect(mode.match(/<li>/g)).toHaveLength(2);
@@ -392,13 +392,11 @@ describe("the spawn dialog", () => {
   });
 });
 
-it("the bubble, the voice panel and the Director call the same action", async () => {
+it("the voice panel and the Director call the same action", async () => {
   const { readFile } = await import("node:fs/promises");
-  for (const file of [
-    "src/agent/AgentBubble.tsx",
-    "src/director/AgentPanel.tsx",
-  ])
-    expect(await readFile(file, "utf8")).toContain("spawnFromStudio({");
+  expect(await readFile("src/director/AgentPanel.tsx", "utf8")).toContain(
+    "spawnFromStudio({",
+  );
   // Voice hands its words to a running session first (Box 1.8), and spawns
   // through the same action only when none runs.
   expect(await readFile("src/voice/agent-destination.ts", "utf8")).toContain(

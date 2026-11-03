@@ -128,26 +128,8 @@
   height: 32px;
   width: 100%;
 }
-.dir-version-plan li {
-  margin: 16px 0;
-}
-.dir-version-plan p {
-  margin: 6px 0;
-}
 .dir-generate-version {
   white-space: nowrap;
-}
-.dir-version-notice {
-  position: fixed;
-  z-index: 70;
-  bottom: 16px;
-  right: 16px;
-  max-width: min(440px, calc(100vw - 32px));
-  padding: 16px;
-  color: var(--text);
-  background: var(--raised);
-  border: 1px solid var(--border);
-  border-radius: 8px;
 }
 @media (min-width: 761px) and (max-width: 1100px) {
   .director .dir-heading {
@@ -176,12 +158,6 @@
 }
 
 /* One shared landscape intake for Director and Editor. */
-.dir-version-steps {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 16px 0;
-}
 .dir-version-inputs {
   display: grid;
   /* Cards need room for a preview and a real upload target. In the Director's
@@ -285,20 +261,9 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-.dir-version-panel .dir-version-connection {
-  padding: 10px 12px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--sunken);
-}
 .dir-version-panel footer {
   margin-top: 18px;
   justify-content: flex-end;
-}
-.dir-version-local {
-  padding: 8px 12px;
-  color: inherit;
-  font-size: 13px;
 }
 @media (max-width: 800px) {
   .dir-version-inputs,
@@ -386,4 +351,11 @@
 }
 .dir-version-brief .dir-version-previews {
   margin: 10px 0;
+}
+/* A paid agent step waits behind this modal: say so inside it. */
+.dir-version-approval {
+  padding: 10px 12px;
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  background: var(--sunken);
 }

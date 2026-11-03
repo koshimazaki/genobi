@@ -353,7 +353,7 @@ export default function RemixPanel({
               disabled={disabled}
               onClick={generateVersion}
             >
-              Generate my version
+              Make my version
             </button>
           )}
         </div>

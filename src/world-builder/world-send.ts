@@ -30,7 +30,7 @@ export async function sendWorldScene(
     case "closed":
       return undefined;
     case "sent":
-      return `Sent to the running ${runnerName(result.session.runner)} session. It changes the scene through Genobi; capture stays yours.`;
+      return `Sent to the running ${runnerName(result.session.runner)} session. It changes the scene through Genobi, captures only when asked and never spends.`;
     case "copied":
       return copiedText(result.copied);
     case "started":
