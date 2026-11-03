@@ -62,8 +62,6 @@ const statuses = new Set<JobStatus>([
   "Content Moderated",
   "Error",
 ]);
-// Older hosted rows may still contain expired deployment asset tickets.
-// Sanitize at the read boundary as well as when a new job is saved.
 const publicJob = (row: JobRow): Job =>
   withoutDeployTickets(JSON.parse(row.data) as Job);
 function duplicate(row: JobRow, input: GenerateInput) {
