@@ -135,7 +135,7 @@ fruit (cube-built fruit, matte red blocks, a dark sweep) under `looks-vox/`.
 Two look sets for one study mean two bundle passes: run `make-bundles.sh` once
 per LOOKS_DIR with its own BUNDLES_DIR, and queue both. Output size
 is twice the guide (the aspect is checked the way `prepare.py` checks
-`--look`). See [LOOK.md](../workflows/experiments/LOOK.md) for the four Klein
+`--look`). See [LOOK.md](https://github.com/koshimazaki/genobi/blob/main/workflows/experiments/LOOK.md) for the four Klein
 files, the aesthetics used and what is unverified until a box run.
 
 ### 3. Bundles

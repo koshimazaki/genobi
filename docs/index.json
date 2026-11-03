@@ -44,6 +44,8 @@
         "akuspace-docker.md",
         "arena.md",
         "audio-reactive-ltx-pilot.md",
+        "audio-reactive-pyramid.md",
+        "audio-reactive-second-pass.md",
         "audiovisual-gaps.md",
         "audiovisual-gpu-evaluation.md",
         "audiovisual-implementation.md",
@@ -355,6 +357,8 @@
       "meaning": "Comfy Cloud, Comfy Router, workflows and nodes",
       "pages": [
         "akuspace-docker.md",
+        "audio-reactive-pyramid.md",
+        "audio-reactive-second-pass.md",
         "audiovisual-gpu-evaluation.md",
         "camera-wording.md",
         "comfy-cloud-inventory.md",
@@ -473,6 +477,8 @@
       "pages": [
         "adaptive-reverb.md",
         "audio-reactive-ltx-pilot.md",
+        "audio-reactive-pyramid.md",
+        "audio-reactive-second-pass.md",
         "audiovisual-gaps.md",
         "audiovisual-gpu-evaluation.md",
         "audiovisual-implementation.md",
@@ -596,6 +602,8 @@
       "meaning": "Which models run where",
       "pages": [
         "akuspace-docker.md",
+        "audio-reactive-pyramid.md",
+        "audio-reactive-second-pass.md",
         "capabilities.md",
         "comfy-cloud-inventory.md",
         "comfy-deploy.md",
@@ -662,6 +670,8 @@
         "arena.md",
         "audio-analysis.md",
         "audio-reactive-ltx-pilot.md",
+        "audio-reactive-pyramid.md",
+        "audio-reactive-second-pass.md",
         "audiovisual-gaps.md",
         "audiovisual-gpu-evaluation.md",
         "audiovisual-implementation.md",
@@ -1004,6 +1014,20 @@
         "world-builder-dynamic-sound.md",
         "world-builder-loops.md"
       ]
+    },
+    {
+      "title": "Audio-reactive pyramid: how to repeat it",
+      "path": "audio-reactive-pyramid.md",
+      "tags": ["workflows", "comfy", "models", "world-builder"],
+      "summary": "How to repeat the audio-reactive pyramid — World Builder guide capture with measured band gain, a look still, LTX-2.5 Layout-to-Render on a rented GPU, and the checks that prove the motion follows the music.",
+      "links": ["vast-runner.md"]
+    },
+    {
+      "title": "Audio-reactive architecture: the second pass",
+      "path": "audio-reactive-second-pass.md",
+      "tags": ["workflows", "comfy", "models", "world-builder"],
+      "summary": "The next Vast session, planned so the box time is renders only — walls that move to the music, a second image guide at the closed-walls frame, Union Control from the depth track, the LTX refine pass, Klein looks made on the box, and the stitch.",
+      "links": ["audio-reactive-pyramid.md"]
     },
     {
       "title": "Audiovisual scene gap audit",

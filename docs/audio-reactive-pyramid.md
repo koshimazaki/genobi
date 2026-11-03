@@ -8,7 +8,7 @@ summary: How to repeat the audio-reactive pyramid — World Builder guide captur
 One repeatable piece: **music → World Builder animation → look still →
 LTX-2.5 Layout-to-Render → the dry track muxed back**. First proven on
 2 November 2026 on a rented RTX PRO 6000 (96 GB). This page is the recipe;
-[the Vast runner](vast-runner.md) and [the experiments README](../workflows/experiments/README.md)
+[the Vast runner](vast-runner.md) and [the experiments README](https://github.com/koshimazaki/genobi/blob/main/workflows/experiments/README.md)
 hold the tool contracts.
 
 ## Why the earlier pilots did not move
