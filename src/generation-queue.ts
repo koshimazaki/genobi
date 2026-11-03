@@ -4,8 +4,8 @@
  * where the route asks, its own quote and confirmation), sent as soon as the
  * one before it has been accepted by the server, not when its job finishes.
  *
- * The queue never retries. A refusal (budget, session limit, a bad request)
- * or an uncertain submission (a lost connection, a server error, an answer
+ * The queue never retries. A failed quote (nothing sent), a refusal (budget,
+ * session limit, a bad request) or an uncertain submission (a lost connection, a server error, an answer
  * that could not be read) stops it, and every run still waiting is dropped
  * with a note, so a paid run can never be sent twice by the queue.
  *
@@ -13,7 +13,21 @@
  */
 
 /** Why the queue stopped, and the words it shows. */
-export type QueueHalt = "refused" | "uncertain" | "declined" | "left";
+export type QueueHalt = "refused" | "uncertain" | "quote" | "declined" | "left";
+
+const QUOTE_FAILED = Symbol("quote failed");
+
+/**
+ * Marks an error raised by the quote read, before any submission: nothing
+ * was sent, so its note must say so and never that a run may have started.
+ */
+export function quoteFailure(error: unknown): Error {
+  const failed = error instanceof Error ? error : new Error(String(error));
+  return Object.assign(failed, { [QUOTE_FAILED]: true });
+}
+
+const isQuoteFailure = (error: unknown) =>
+  Boolean((error as { [QUOTE_FAILED]?: boolean } | null)?.[QUOTE_FAILED]);
 
 /** A 4xx is a server refusal: it answered and created nothing. */
 export function isRefusal(error: unknown): boolean {
@@ -41,6 +55,8 @@ export function haltNote(
   if (kind === "declined")
     return dropped ? `A queued run was not approved.${unsent}` : "";
   const base = message || "The generation could not start.";
+  if (kind === "quote")
+    return `${message || "The quote could not be read."} The quote failed, so nothing was sent.${unsent}`;
   if (kind === "refused") return `${base}${unsent}`;
   const uncertain =
     queued || dropped
@@ -114,7 +130,11 @@ export class GenerationQueue<T> {
         }
       } catch (error) {
         const message = error instanceof Error ? error.message : "";
-        const kind = isRefusal(error) ? "refused" : "uncertain";
+        const kind = isQuoteFailure(error)
+          ? "quote"
+          : isRefusal(error)
+            ? "refused"
+            : "uncertain";
         this.stop(haltNote(kind, this.pending.length, message, queued));
         return;
       }

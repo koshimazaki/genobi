@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { GenerationQueue, haltNote, isRefusal } from "../src/generation-queue";
+import {
+  GenerationQueue,
+  haltNote,
+  isRefusal,
+  quoteFailure,
+} from "../src/generation-queue";
 
 const deferred = <T>() => {
   let resolve!: (value: T) => void;
@@ -82,6 +87,22 @@ describe("generation queue", () => {
     expect(notes).toEqual([
       "This session's generation limit is reached. The queue stopped: 1 queued run was not sent.",
     ]);
+  });
+
+  it("says nothing was sent when a quote fails, even on a 5xx", async () => {
+    const { queue, calls, notes } = harness();
+    queue.add("a");
+    calls[0].answer.resolve(true);
+    await settle();
+    queue.add("b");
+    queue.add("c");
+    calls[1].answer.reject(quoteFailure(refusal("Bad gateway", 502)));
+    await settle();
+    expect(calls).toHaveLength(2);
+    expect(notes).toEqual([
+      "Bad gateway The quote failed, so nothing was sent. The queue stopped: 1 queued run was not sent.",
+    ]);
+    expect(notes[0]).not.toMatch(/may have started|not retried/);
   });
 
   it("stops when a run's confirmation is declined", async () => {

@@ -257,6 +257,8 @@ export function useJobs(key: string) {
     input: GenerateInput,
     approval?: { quoteId: string; idempotency: string },
     composer?: ComposerState,
+    // A queued run names the location and workflow it was queued under.
+    expected: Record<string, string> = expectedHeaders(input),
   ) {
     setError("");
     const { job } = await request<{ job: Job }>("/api/jobs", {
@@ -267,7 +269,7 @@ export function useJobs(key: string) {
         ...(approval ? { "Quote-Id": approval.quoteId } : {}),
         ...(key ? { "x-byo-key": key } : {}),
         // What the studio shows: the server refuses a run whose settings changed.
-        ...expectedHeaders(input),
+        ...expected,
       },
       body: JSON.stringify(input),
     });

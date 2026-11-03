@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { GenerationQueue } from "./generation-queue";
 import { submitWithDeploymentApproval } from "./deployment-approval";
+import { expectedHeaders } from "./settings-store";
 import type { GenerateInput } from "../shared/types";
 import type { ComposerState } from "./useComposer";
 
@@ -51,6 +52,9 @@ export interface CameraRun {
 /**
  * Camera's queue: each run through its own deployment confirmation where the
  * route asks for one, then `generate`, which mints a fresh Idempotency-Key.
+ * The run location and workflow are taken with the run, so a queued run is
+ * sent as it was queued: a setting changed since then is the server's to
+ * refuse, never a different route for a paid run.
  * `visible` is the shell's panels; without the composer, Camera was left.
  */
 export function useCameraQueue(
@@ -59,16 +63,26 @@ export function useCameraQueue(
     input: GenerateInput,
     approval: { quoteId: string; idempotency: string } | undefined,
     composer: ComposerState,
+    expected: Record<string, string>,
   ) => Promise<unknown>,
   onNote: (note: string) => void,
   visible?: readonly string[],
 ) {
-  return useGenerationQueue(
-    (run: CameraRun) =>
-      submitWithDeploymentApproval(run.input, key, (input, approval) =>
-        generate(input, approval, run.composer),
+  const queue = useGenerationQueue(
+    (run: CameraRun & { expected: Record<string, string> }) =>
+      submitWithDeploymentApproval(
+        run.input,
+        key,
+        (input, approval) =>
+          generate(input, approval, run.composer, run.expected),
+        run.expected,
       ),
     onNote,
     Boolean(visible && !visible.includes("composer")),
   );
+  return {
+    ...queue,
+    add: (run: CameraRun) =>
+      queue.add({ ...run, expected: expectedHeaders(run.input) }),
+  };
 }

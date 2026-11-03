@@ -5,12 +5,14 @@ import type { GenerateInput } from "../shared/types";
 import type { Quote } from "../shared/quote";
 import { expectedHeaders } from "./settings-store";
 import { request } from "./useJobs";
+import { quoteFailure } from "./generation-queue";
 
 /** Quote read only, then an explicit confirmation; a cancel submits nothing. */
 export async function deploymentApproval(
   input: GenerateInput,
   key: string,
   confirm: (message: string) => boolean = (message) => window.confirm(message),
+  expected: Record<string, string> = expectedHeaders(input),
 ) {
   const idempotency = crypto.randomUUID();
   const { quote } = await request<{ quote: Quote }>("/api/quotes", {
@@ -18,7 +20,7 @@ export async function deploymentApproval(
     headers: {
       "Content-Type": "application/json",
       ...(key ? { "x-byo-key": key } : {}),
-      ...expectedHeaders(input),
+      ...expected,
     },
     body: JSON.stringify(input),
   });
@@ -32,12 +34,25 @@ export async function deploymentApproval(
     : null;
 }
 
-export function maybeDeploymentApproval(input: GenerateInput, key: string) {
+/**
+ * `expected` is the run location and workflow the run was taken with; a
+ * queued run passes the ones it was queued under, not the current ones.
+ */
+export function maybeDeploymentApproval(
+  input: GenerateInput,
+  key: string,
+  expected?: Record<string, string>,
+) {
+  const location = expected
+    ? expected["Genobi-Run-Location"]
+    : useSettingsStore.getState().location;
   const deployed =
     isDeployModel(input.model) ||
     (entryFor(input.generator, input.model).route === "workflow" &&
-      useSettingsStore.getState().location === "deployment");
-  return deployed ? deploymentApproval(input, key) : Promise.resolve(undefined);
+      location === "deployment");
+  return deployed
+    ? deploymentApproval(input, key, undefined, expected)
+    : Promise.resolve(undefined);
 }
 
 /**
@@ -51,8 +66,14 @@ export async function submitWithDeploymentApproval(
     input: GenerateInput,
     approval: { quoteId: string; idempotency: string } | undefined,
   ) => Promise<unknown>,
+  expected?: Record<string, string>,
 ) {
-  const approval = await maybeDeploymentApproval(input, key);
+  // A quote that fails sent nothing: the note must say so (`quoteFailure`).
+  const approval = await maybeDeploymentApproval(input, key, expected).catch(
+    (error: unknown) => {
+      throw quoteFailure(error);
+    },
+  );
   if (approval === null) return false;
   await send(input, approval);
   return true;

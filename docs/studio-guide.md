@@ -208,7 +208,12 @@ clear the queue.
   connection, a server error, an answer that could not be read) stops it and
   drops every run still waiting, with a note under the composer saying how many
   were not sent. An uncertain run may have started, so check the gallery before
-  sending it again.
+  sending it again. A quote that fails stops it too, and its note says nothing
+  was sent, because the quote comes before any submission.
+- **A queued run keeps what it was queued with**: the prompt, model, provider,
+  references, run location and workflow. If the run location or workflow
+  changed since, the server refuses the run and the queue stops; it is never
+  sent somewhere else. The demo budget is checked for every run on its own.
 - **Seeds.** Camera's composer has no seed field, so a queued run sends the same
   input a second manual click would; any variation is the provider's own.
 - **Leaving Camera** (closing the composer panel) drops the runs not yet sent,
