@@ -64,8 +64,8 @@ export const MOTION_PRESETS = [
   },
   {
     id: "bike-mecha",
-    name: "Morph · Bike / brawler / car",
-    summary: "Sports bike → brawler mecha → car · 128 retained parts",
+    name: "Morph · Bike / brawler",
+    summary: "Sports bike → brawler mecha · 128 retained parts",
     acoustic: "Authored modular forms, ready for audio-driven transformation.",
   },
   {

@@ -45,13 +45,14 @@ describe("the brawler mecha form", () => {
 });
 
 describe("bike-mecha", () => {
-  it("keeps the same 128 parts across bike, brawler and car", () => {
+  it("keeps the same 128 parts from bike to brawler, across the take", () => {
     const layouts = bikeMechaLayouts();
-    expect(layouts).toHaveLength(3);
+    expect(layouts).toHaveLength(2);
     for (const layout of layouts) expect(layout).toHaveLength(128);
     const recipe = createMotionPreset("bike-mecha");
     const keys = recipe.motion!.stateKeys;
-    expect(keys.map((k) => k.label)).toEqual(["Bike", "Brawler", "Car"]);
+    expect(keys.map((k) => k.label)).toEqual(["Bike", "Brawler"]);
+    expect(keys.map((k) => k.frame)).toEqual([0, recipe.frames - 1]);
     const ids = Object.keys(keys[0].objects).sort();
     expect(ids).toHaveLength(128);
     for (const key of keys)

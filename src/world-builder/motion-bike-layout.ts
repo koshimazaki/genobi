@@ -1,6 +1,5 @@
 import type { SceneTransform } from "./scene-state";
 import { compactLayouts, pose } from "./motion-layout-utils";
-import { carLayout } from "./motion-car-layout";
 import { brawlerLayout } from "./motion-brawler-layout";
 
 /** The bike's parts are scaled from this base, on the presets' 0.72 voxel size. */
@@ -270,27 +269,11 @@ export function bikeLayout(): SceneTransform[] {
 }
 
 /**
- * The catalogue's car in the bike's palette family: gunmetal body, glass
- * cabin, black wheels and lit lamps, so its colours morph with its shape.
+ * Bike and brawler mecha: two forms of the same 128 parts, each part carrying
+ * its own colour. A third coloured form (the car) would push the preset past
+ * the 64 KB recipe budget once a full soundtrack is attached, so the car stays
+ * in its own car-mecha preset and joins the bike in the morph composer.
  */
-export function colouredCarLayout(): SceneTransform[] {
-  return carLayout().map((part, index) => {
-    let color = "#2f4458";
-    if (index >= 32 && index < 44) color = "#86d9ea";
-    else if (index >= 44 && index < 76) color = "#3c5468";
-    else if (index >= 76 && index < 108) {
-      // Legs: 16 per side; the first eight of each side are the wheels.
-      const within = (index - 76) % 16;
-      color = within < 8 ? BIKE_COLOURS.tyre : "#2f4458";
-    } else if (index >= 108 && index < 124) color = "#3c5468";
-    else if (index >= 124)
-      color =
-        (index - 124) % 2 ? BIKE_COLOURS.headlight : BIKE_COLOURS.taillight;
-    return { ...part, color };
-  });
-}
-
-/** Bike, brawler mecha and car: three vehicles of the same 128 parts. */
 export function bikeMechaLayouts(): SceneTransform[][] {
-  return compactLayouts([bikeLayout(), brawlerLayout(), colouredCarLayout()]);
+  return compactLayouts([bikeLayout(), brawlerLayout()]);
 }

@@ -36,13 +36,13 @@ gallery includes the [editable effects catalogue](effects-catalogue.md).
 | Travel · Neo Tokyo / loft             | Skyline → Street canyon → Open loft           | Original cool night palette and traveling camera                      | No real-city reconstruction                             |
 | Morph · Spacecraft / mecha            | Spacecraft → Mecha → Winged mecha             | 128 persistent authored parts                                         | No enclosure inferred                                   |
 | Morph · Car / mecha                   | Car → Mecha → Winged mecha                    | The same 128 parts, a low wedge car at rest                           | No enclosure inferred                                   |
-| Morph · Bike / brawler / car          | Sports bike → Brawler mecha → Car             | The same 128 parts, each carrying its own colour between forms        | No enclosure inferred                                   |
+| Morph · Bike / brawler                | Sports bike → Brawler mecha                   | The same 128 parts, each carrying its own colour between forms        | No enclosure inferred                                   |
 | Morph · Mask / crown                  | Mask → Crown → Open mask                      | 96 persistent geometric parts                                         | No enclosure inferred                                   |
 | Motion · Palm grove                   | Upright → Sway → Spread                       | 96 parts form trunks and moving fronds                                | Sculptural motion, not a vegetation simulation          |
 | Morph · Fruit / audio branches        | Banana → Papaya → Apple → Orange → Watermelon | 96 retained parts; separate progress and target controls              | Spectral-band routing; no instrument classification     |
 
 Three-state object studies start with a fixed camera and state keys at frames **0, 72 and
-144**: six seconds of movement in a **6.0417-second** take. City journeys use
+144** (the two-state bike-mecha keys frames 0 and 144): six seconds of movement in a **6.0417-second** take. City journeys use
 frames **0, 96 and 192**, with camera position, look target and lens keys on the
 same clock: eight seconds of movement in an **8.0417-second** take. This follows
 the existing 8k + 1 capture grid. The main Load preset menu and gallery expose
@@ -100,8 +100,9 @@ the mecha, about 4.6 m tall: the car about 4.0 × 1.8 × 1.3 m, the bike about
 4.9 m long. A round wheel is four slabs at 0, 45, 90 and 135 degrees per half.
 The bike and brawler give every part its own colour, which blends through the
 morph; when the composer pairs one with an uncoloured form, that form's parts
-take a neutral grey. Three coloured forms fit the recipe budget at 64 parts, two
-at 128. Mid-morph frames are linear blends, not a staged fold. Layouts live in
+take a neutral grey. Colours cost recipe space: three coloured forms fit the
+64 KB budget at 64 parts, two at 128, so the `bike-mecha` preset is bike to
+brawler and the car stays in `car-mecha`; the composer joins all three. Mid-morph frames are linear blends, not a staged fold. Layouts live in
 `src/world-builder/motion-car-layout.ts`, `motion-bike-layout.ts` and
 `motion-brawler-layout.ts`; their presets in `motion-vehicle-presets.ts`.
 
