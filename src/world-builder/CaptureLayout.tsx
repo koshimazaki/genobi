@@ -11,6 +11,7 @@ export default function CaptureLayout({
 }) {
   const { width, height, frames } = s.recipe;
   const formatMatches = width === 1024 && height === 576 && frames === 193;
+  const animated = !!s.recipe.motion;
   return (
     <div className="wb-layout-handoff">
       <div className="wb-capture-row">
@@ -20,13 +21,15 @@ export default function CaptureLayout({
         </output>
       </div>
       <p className="wb-hint">
-        {formatMatches
-          ? send
-            ? "Capture a take, then send it to Camera to review the generation inputs."
-            : "Capture a take for the Layout-to-video workflow."
-          : send
-            ? "Use the format preset, capture a take, then send it to Camera."
-            : "Use the format preset, then capture a take."}
+        {animated
+          ? "Export this animation's RGB/depth guides from Export take. The combined deployment preset currently supports static room sound only."
+          : formatMatches
+            ? send
+              ? "Capture a take, then send it to Camera to review the generation inputs."
+              : "Capture a take for the Layout-to-video workflow."
+            : send
+              ? "Use the format preset, capture a take, then send it to Camera."
+              : "Use the format preset, then capture a take."}
       </p>
       <div className="wb-panel-actions">
         <button
@@ -39,7 +42,10 @@ export default function CaptureLayout({
           Use Layout-to-video format
         </button>
         {send && (
-          <button disabled={!s.take || s.busy} onClick={() => s.run(send)}>
+          <button
+            disabled={!s.take || s.busy || animated}
+            onClick={() => s.run(send)}
+          >
             Use take in Layout-to-video
           </button>
         )}

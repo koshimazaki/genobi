@@ -56,6 +56,7 @@ describe("World Builder mod matrix editor", () => {
       playing: true,
       audioURL: "blob:x",
       audioName: "",
+      inputState: { phase: "idle", frame: 0 },
       example: { blob: null, label: "", credit: "" },
       history: { recent: [], persisted: true },
       change: () => {},

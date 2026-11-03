@@ -1,0 +1,9 @@
+# Second-pass IC-LoRAs added to the layout profile by `assets.py --profile second-pass`.
+# <folder> <repository> <revision> <path in repository> <bytes> <sha256>
+# Kept apart from comfy-build/models/ltx-world-key.txt: that set must equal the
+# models its deployed endpoints load, and these are box-only experiments.
+# Revision, size and SHA-256 from the Hugging Face API (?blobs=true), 2 November 2026.
+# Union Control: public. Refine Details: gated "auto"; HF_TOKEN's account must
+# accept the terms on its model page before the download is allowed.
+loras Lightricks/LTX-2.3-22b-IC-LoRA-Union-Control 20a580c8606c06a0988d40375a61309e0fe5893d ltx-2.3-22b-ic-lora-union-control-ref0.5.safetensors 654465352 a1b888a87f661d27f08b394ae559e8e1050be33900bcc36a5cdf659e48f88d18
+loras Lightricks/LTX-2.5-22b-IC-LoRA-Refine-Details 4912c478b35dd96b6cdcc5f7c7ff9d72c2c57929 ltx-2.5-22b-ic-lora-refine-details-1.0.safetensors 1308787534 771a84f70e143af89867fc714ebbf7bd6edcaa4974c0360cba4a2d292a99f0e6

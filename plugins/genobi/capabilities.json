@@ -227,6 +227,14 @@
       "runs": [{ "route": "local-free" }]
     },
     {
+      "id": "effects-catalogue", "name": "Configurable animation and effect presets", "status": "implemented",
+      "where": "3D · preset gallery; Editor · Add effects",
+      "description": "Inspect and configure poster, scan/HUD, kinetic title and liquid-mirror presets; insert editable layers atomically and save portable variants with pinned module identities.",
+      "mcp": ["genobi_effects", "genobi_effect_variant", "genobi_director_command"], "cli": ["effects", "effect-variant", "director-command"],
+      "skills": ["genobi-director"], "docs": ["docs/effects-catalogue.md"],
+      "runs": [{ "route": "local-free" }]
+    },
+    {
       "id": "audio-analysis", "name": "Audio analysis and the beat grid", "status": "verified", "evidence": "2026-10-21 docs/audio-analysis.md#verification",
       "where": "Director · track lane and Timing; agents",
       "description": "Tempo, a fitted beat grid, downbeat, onsets per band, intensity and key moments of a track, on the local server.",

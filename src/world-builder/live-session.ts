@@ -5,6 +5,10 @@ import { creatureMotionReceipt } from "../scene3d/creature-fbx";
 import { localCreature } from "../scene3d/creature";
 import { BUILDER_CHARACTER_MODELS } from "./character-catalog";
 import { LOCAL_MOTIONS } from "../scene3d/creature-slots";
+import {
+  availableCharacterClips,
+  characterAudioForAsset,
+} from "./character-audio-options";
 import type { WorldRuntime } from "./runtime";
 import type { SceneAdapter } from "./useBuilderSession";
 import { png, hash, type Take } from "./export-take";
@@ -29,6 +33,7 @@ export function liveSession(
   const status = () => ({
     ...world.editor?.state(),
     recording: recorder?.state === "recording",
+    recordingBusy: recorder !== undefined,
     recipe: adapter.getRecipe(),
     creatureLoaded: !!localCreature(),
     motions: Object.keys(
@@ -99,6 +104,18 @@ export function liveSession(
           avatar: true,
           avatarAsset: input.character,
           avatarMotion: "idle",
+          ...(recipe.characterAudio
+            ? {
+                characterAudio: characterAudioForAsset(
+                  recipe.characterAudio,
+                  input.character,
+                  availableCharacterClips(
+                    input.character,
+                    creatureMotionReceipt(),
+                  ),
+                ),
+              }
+            : {}),
           creatureReference:
             input.character === "creature"
               ? { sha256: CREATURE_SHA256, motions: creatureMotionReceipt() }

@@ -18,6 +18,7 @@ import { effectRecipes } from "./effects";
 import { mixRecipes } from "./mix-recipes";
 import { teaserRecipes } from "./teaser-recipes";
 import { versionMediaRecipes } from "./version-media-recipes";
+import { catalogueEffectRecipes } from "./catalogue-effects";
 export const libraries = { p5, animejs, threejs };
 export const recipes: {
   source: string;
@@ -72,4 +73,5 @@ export const recipes: {
   ...mixRecipes,
   ...teaserRecipes,
   ...versionMediaRecipes,
+  ...catalogueEffectRecipes,
 ];

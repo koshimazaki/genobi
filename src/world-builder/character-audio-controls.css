@@ -1,0 +1,58 @@
+.wb-character-audio,
+.wb-character-audio > fieldset {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+}
+.wb-character-audio > fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+.wb-character-audio-route {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--sunken);
+  padding: 10px;
+  min-width: 0;
+}
+.wb-character-audio-route > header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.wb-character-audio .wb-check {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.wb-character-audio-pair {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 10px;
+}
+.wb-character-audio-pair > label,
+.wb-character-audio-pair input {
+  min-width: 0;
+  width: 100%;
+}
+.wb-character-audio-route details > summary {
+  margin-top: 12px;
+  padding: 8px 0;
+  font: 10px var(--mono);
+  color: var(--soft);
+  cursor: pointer;
+}
+.wb-character-audio-route details > div {
+  margin-top: 8px;
+}
+@media (max-width: 900px) {
+  .wb-app
+    .wb-character-audio
+    :is(button, summary, input:not([type="checkbox"])),
+  .wb-character-audio .wb-check {
+    min-height: 44px;
+  }
+}

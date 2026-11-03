@@ -1,0 +1,22 @@
+.wb-input-take {
+  grid-column: 1 / -1;
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+  min-width: 0;
+}
+.wb-input-take-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.wb-input-take output {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+@media (max-width: 900px) {
+  .wb-input-take button {
+    min-height: 44px;
+  }
+}

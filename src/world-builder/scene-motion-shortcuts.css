@@ -1,0 +1,27 @@
+.wb-motion-shortcuts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 8px;
+  padding: 10px 13px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+}
+.wb-motion-shortcuts > label {
+  display: grid;
+  flex: 1 1 150px;
+  gap: 5px;
+  min-width: 0;
+  color: var(--muted);
+  font: 10px var(--mono);
+}
+.wb-motion-shortcuts > button {
+  min-height: 38px;
+  font: 10px var(--mono);
+}
+@media (max-width: 900px) {
+  .wb-motion-shortcuts > button,
+  .wb-motion-shortcuts .themed-select > button {
+    min-height: 44px;
+  }
+}

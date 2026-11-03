@@ -3,6 +3,7 @@ import { shapeLabels } from "./scene-contract";
 import { Fold } from "./FloatingPanel";
 import { ObjectInspector } from "./ObjectInspector";
 import { CameraControls } from "./CameraControls";
+import { SceneMotionControls } from "./SceneMotionControls";
 import { AudioControls } from "./AudioControls";
 import { CaptureControls } from "./CaptureControls";
 import { RecipeControls } from "./RecipeControls";
@@ -16,6 +17,10 @@ import { MotionList } from "./MotionList";
 import { AvatarPlacement } from "./AvatarPlacement";
 import { CREATURE_SHA256 } from "../../shared/scene/creature-reference";
 import { creatureMotionReceipt } from "../scene3d/creature-fbx";
+import {
+  availableCharacterClips,
+  characterAudioForAsset,
+} from "./character-audio-options";
 import { PanelDock } from "./PanelDock";
 import { WorldSendToGenobi } from "./WorldSendToGenobi";
 import { inComfyNode } from "./host";
@@ -27,6 +32,7 @@ import {
   type DockState,
 } from "./panel-dock";
 import type { DocumentPip } from "./useDocumentPip";
+import type { Recipe } from "./recipe";
 
 export type BuilderPanel = DockPanel;
 
@@ -35,6 +41,7 @@ type PanelProps = {
   e: WorldEditor;
   a: BuilderAssets;
   projectAudio?: RecentAudio[];
+  onCameraChange?: (recipe: Recipe) => void;
 };
 
 /** One panel's controls, wherever it is docked or popped. */
@@ -45,16 +52,34 @@ export function PanelBody({
   a,
   projectAudio,
   folded = false,
+  onCameraChange,
 }: PanelProps & { panel: DockPanel; folded?: boolean }) {
   // An edit here stops Play first, so the panels stay open while it runs.
   const idle = s.ready && !s.busy && e.mode !== "walk";
   switch (panel) {
-    case "camera":
+    case "camera": {
+      const intent =
+        (change: BuilderSession["change"]) =>
+        async (patch: Partial<Recipe>) => {
+          const applied = await change(patch);
+          if (applied && s.api.current)
+            onCameraChange?.(s.api.current.getRecipe());
+          return applied;
+        };
       return (
         <fieldset disabled={!idle}>
-          <CameraControls s={s} e={e} />
+          <CameraControls
+            s={
+              onCameraChange
+                ? { ...s, change: intent(s.change), tune: intent(s.tune) }
+                : s
+            }
+            e={e}
+            compact
+          />
         </fieldset>
       );
+    }
     case "audio":
       // Sound stays live in Shot, Build and Walk.
       return (
@@ -82,19 +107,29 @@ export function PanelBody({
     case "scene":
       return (
         <fieldset disabled={!idle}>
+          <SceneMotionControls s={s} e={e} />
           {s.recipe.avatar && <MotionList s={s} />}
           <CreatureFile
-            onLoad={(pose) =>
+            onLoad={(pose) => {
+              const motions = creatureMotionReceipt();
+              const characterAudio = characterAudioForAsset(
+                s.recipe.characterAudio,
+                "creature",
+                s.recipe.avatarAsset === "creature"
+                  ? undefined
+                  : availableCharacterClips("creature", motions),
+              );
               s.change({
                 avatar: true,
                 avatarAsset: "creature",
                 avatarMotion: pose ?? "idle",
+                ...(characterAudio ? { characterAudio } : {}),
                 creatureReference: {
                   sha256: CREATURE_SHA256,
-                  motions: creatureMotionReceipt(),
+                  motions,
                 },
-              })
-            }
+              });
+            }}
           />
           <label>
             Scene direction
@@ -144,7 +179,7 @@ export function PanelBody({
               </label>
             )}
             <div className="wb-object-list">
-              {s.recipe.objects.map((p) => (
+              {e.objects.map((p) => (
                 <button
                   key={p.id}
                   onClick={() => {
@@ -156,7 +191,7 @@ export function PanelBody({
                   <small>{shapeLabels[p.shape]}</small>
                 </button>
               ))}
-              {!s.recipe.objects.length && (
+              {!e.objects.length && (
                 <p className="wb-hint">Build → Add to place primitives.</p>
               )}
             </div>

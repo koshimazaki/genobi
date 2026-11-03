@@ -76,8 +76,15 @@ export default function StudioShell() {
   const assetsOpen =
     preset !== "ninja" &&
     (assetViews[preset] ?? (preset !== "gallery" && docked));
-  const setAssetsOpen = (open: boolean) =>
+  const setAssetsOpen = (open: boolean) => {
     setAssetViews((v) => ({ ...v, [preset]: open }));
+    if (open && preset === "world")
+      requestAnimationFrame(() =>
+        document
+          .getElementById("studio-assets")
+          ?.scrollIntoView({ block: "nearest" }),
+      );
+  };
   const [restored] = useState(readLayout);
   const [ninjaLayout, setNinjaLayout] = useState(restored.layout);
   const [savedLayout, setSavedLayout] = useState(restored.layout);

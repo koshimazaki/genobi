@@ -34,6 +34,8 @@
         "genobi_taste",
         "genobi_reference",
         "genobi_template_plan",
+        "genobi_effects",
+        "genobi_effect_variant",
         "genobi_take_to_project",
         "anime-teaser",
         "audio-visual",
@@ -111,6 +113,8 @@
         "genobi_taste",
         "genobi_reference",
         "genobi_template_plan",
+        "genobi_effects",
+        "genobi_effect_variant",
         "genobi_take_to_project",
         "genobi_provenance",
         "genobi_audio_upload",
@@ -229,6 +233,8 @@
         "genobi_project_feedback",
         "genobi_director_command",
         "genobi_template_plan",
+        "genobi_effects",
+        "genobi_effect_variant",
         "genobi_take_to_project",
         "genobi_provenance",
         "genobi_audio_upload",
@@ -465,7 +471,7 @@
       "kind": "tool",
       "name": "genobi_world_recipe",
       "title": "Hand a World Builder recipe to the person's tab",
-      "description": "Put a World Builder scene recipe into the person's open World Builder on a linked project. First pair with that tab using genobi_world and read its recipe command. action \"send\" requires expectedRevision from that read, with either take (falling-room: a named take; falling-room is the Cathedral, an orbit60 shot, idle then hit then fall, 145 frames, with a dry impact sound) or recipe (a full recipe as window.directorScene.getRecipe returns it; validated with the World Builder's own rules: 8k + 1 frames from 9 to 241, dimensions divisible by 64, at most 24 primitives and 64 KB). The addressed tab applies it only if its live revision still matches; human recipe edits, audio and texture changes invalidate the guard. A conflict is refused without changing the scene: read the current recipe/revision and preserve those edits before a new send. The revision is ephemeral to one mounted tab, not project.revision or a saved recipe field. Another tab leaves it waiting; after a reload, read the new revision before explicitly replacing the handoff. It does not capture. action \"status\" reads what happened: waiting, applied or refused with the tab's reason. Only the latest recipe is kept. Never resend a waiting recipe. To capture the applied recipe, pair with genobi_world and send its capture command. No paid generation.",
+      "description": "Put a World Builder scene recipe into the person's open World Builder on a linked project. First pair with that tab using genobi_world and read its recipe command. action \"send\" requires expectedRevision from that read, with either take (falling-room: a named take; falling-room is the Cathedral, an orbit60 shot, idle then hit then fall, 145 frames, with a dry impact sound) or recipe (a full recipe as window.directorScene.getRecipe returns it; validated with the World Builder's own rules: 8k + 1 frames from 9 to 721, dimensions divisible by 64, at most 24 primitives and 64 KB). The addressed tab applies it only if its live revision still matches; human recipe edits, audio and texture changes invalidate the guard. A conflict is refused without changing the scene: read the current recipe/revision and preserve those edits before a new send. The revision is ephemeral to one mounted tab, not project.revision or a saved recipe field. Another tab leaves it waiting; after a reload, read the new revision before explicitly replacing the handoff. It does not capture. action \"status\" reads what happened: waiting, applied or refused with the tab's reason. Only the latest recipe is kept. Never resend a waiting recipe. To capture the applied recipe, pair with genobi_world and send its capture command. No paid generation.",
       "tags": ["3d", "agents", "mcp"],
       "docs": [
         "docs/world-recipe-handoff.md",
@@ -732,7 +738,7 @@
       "kind": "tool",
       "name": "genobi_director_command",
       "title": "Genobi Director command",
-      "description": "Apply one Director command to a project at the revision you read; the studio shows it live and can undo it. A stale revision is refused with the current one: read the project again and decide afresh. Frames are composition frames. Commands: add-clip {layerId (new), assetId, track (track id or new), startFrame, durationFrames, name?, sourceStartFrame? (in-point, source frames, audio and video only)}; add-graphic {layerId (new), moduleId, track, startFrame, durationFrames, name?, parameters? {name: value}} (a recipe from recipes or registryRecipes; parameters go over the settings of a layer already using it, and a recipe no layer uses needs every name in its required list, each checked against its type and range); move-clip {layerId, startFrame, track?}; trim-clip {layerId, startFrame, durationFrames}; split-clip {layerId, frame, newLayerId} (cut strictly inside the clip on a composition frame; keeps source samples, animation and track); duplicate-clip {layerId, newLayerId} (independent unlocked copy on a new lane at the top of the stack); remove-clip {layerId} (keeps media/provenance and detaches its review notes to their frames); set-muted {layerId, muted: boolean} (audio mute or visual hide); set-gain {layerId, gain} (audio only, 0 to 2). Split, remove and gain respect locks; copying and mute follow the UI's allowed operations on locked clips without unlocking or changing the original. New ids must not collide with any clip or track. set-placement {layerId, position? {x?, y?} (composition pixels from the centre, y down), scale? (0-10], opacity? [0,1], rotationDegrees? [-360,360], motion? {scaleTo?, xTo?, yTo?, opacityTo?} (the end it moves to linearly over the clip) or null} (video, image and graphics layers); set-parameters {layerId, parameters: {name: value}} (a graphics or filter recipe's declared parameters, text included; genobi_project lists each recipe's names, types and ranges); set-resolution {width, height} (whole pixels 16-4096 per side, width × height <= 1920 × 1080; presets 960×540, 1280×720, 1920×1080; rescales composition-pixel positions and motion offsets, preserving fitted zoom ratios and timing; for Match assets measure the largest video and fit the current aspect ratio within it and the pixel cap, using even dimensions); set-beat-grid {bpm? [20,300], beatOffsetSeconds? [0,3600] (where a downbeat falls, in seconds), beatsPerBar? (whole, 1-16)} (at least one; the others keep their value; a genobi_audio_analysis report's composition applies as is, once the person confirms the downbeat); set-prompt {text} (the earlier prompt brief); set-camera {shotId, camera: {shot-sizes, angles, movements}} (template projects); set-global-prompt {text} (the project's primary direction, up to 12000 characters; empty clears it); set-clip-prompt {layerId, text} (that clip only, up to 1200 characters; empty clears it); set-clip-directions {layerId, directions: {shot?, lens?, camera?, action?}} (each given field set, null clears it, others kept; shot: wide|aerial|medium|close-up|insert|low-angle|crane-wide|pass-by|heroic-medium; lens: 14mm|18mm|24mm|35mm|50mm|85mm|100mm|135mm|200mm (creative feel, not a model parameter); camera: {shot-sizes, angles, movements} as set-camera; action: forward|arc|zigzag|rise|accel|decel|converge|hold|drop|impact|infinity|release). Prompts and directions are separate fields: setting one never changes the other, and none of these quotes, submits or regenerates anything. A locked clip refuses them. set-preferences {preferences: {selection?: {family?: any|flux|ltx|h3|upscale, weights?: any|open-weights|commercial, execution?: any|local|cloud, agent?: any|hermes|claude|codex}, usage?: {purpose: demo|commercial-video|redistribute-source|resell-template, policy: any-licensed|open-source|mit-only}} or null}. Replaces explicit project preferences; null restores global defaults. Use when asked to remember project choices, not for a temporary session instruction. set-template-inputs {inputs: {subject?, title?, acoustic?}}; replace-plate {layerId, assetId}; add-note {noteId (new), frame, text (up to 500 characters), layerId?} (a note pinned to a frame and maybe a layer; author and createdAt are filled in); resolve-note {noteId, resolved? (default true; false reopens it)}; delete-note {noteId}.",
+      "description": "Apply one Director command to a project at the revision you read; the studio shows it live and can undo it. A stale revision is refused with the current one: read the project again and decide afresh. Frames are composition frames. Commands: add-clip {layerId (new), assetId, track (track id or new), startFrame, durationFrames, name?, sourceStartFrame? (in-point, source frames, audio and video only)}; add-graphic {layerId (new), moduleId, track, startFrame, durationFrames, name?, parameters? {name: value}} (a recipe from recipes or registryRecipes; parameters go over the settings of a layer already using it, and a recipe no layer uses needs every name in its required list, each checked against its type and range); apply-effect-preset {presetId, instanceId (fresh lowercase prefix, at most 44 characters), expectedRevision (same as baseRevision), startFrame, durationFrames, parameters?, variant?, sourceLayerId?} inserts every configured layer together. Inspect genobi_effects first. Filter presets require visible picture for the full interval and affect composite-below; sourceLayerId validates a chosen source but does not isolate that clip. Layers stay independently editable; one studio Undo restores the prior composition. move-clip {layerId, startFrame, track?}; trim-clip {layerId, startFrame, durationFrames}; split-clip {layerId, frame, newLayerId} (cut strictly inside the clip on a composition frame; keeps source samples, animation and track); duplicate-clip {layerId, newLayerId} (independent unlocked copy on a new lane at the top of the stack); remove-clip {layerId} (keeps media/provenance and detaches its review notes to their frames); set-muted {layerId, muted: boolean} (audio mute or visual hide); set-gain {layerId, gain} (audio only, 0 to 2). Split, remove and gain respect locks; copying and mute follow the UI's allowed operations on locked clips without unlocking or changing the original. New ids must not collide with any clip or track. set-placement {layerId, position? {x?, y?} (composition pixels from the centre, y down), scale? (0-10], opacity? [0,1], rotationDegrees? [-360,360], motion? {scaleTo?, xTo?, yTo?, opacityTo?} (the end it moves to linearly over the clip) or null} (video, image and graphics layers); set-parameters {layerId, parameters: {name: value}} (a graphics or filter recipe's declared parameters, text included; genobi_project lists each recipe's names, types and ranges); set-resolution {width, height} (whole pixels 16-4096 per side, width × height <= 1920 × 1080; presets 960×540, 1280×720, 1920×1080; rescales composition-pixel positions and motion offsets, preserving fitted zoom ratios and timing; for Match assets measure the largest video and fit the current aspect ratio within it and the pixel cap, using even dimensions); set-beat-grid {bpm? [20,300], beatOffsetSeconds? [0,3600] (where a downbeat falls, in seconds), beatsPerBar? (whole, 1-16)} (at least one; the others keep their value; a genobi_audio_analysis report's composition applies as is, once the person confirms the downbeat); set-prompt {text} (the earlier prompt brief); set-camera {shotId, camera: {shot-sizes, angles, movements}} (template projects); set-global-prompt {text} (the project's primary direction, up to 12000 characters; empty clears it); set-clip-prompt {layerId, text} (that clip only, up to 1200 characters; empty clears it); set-clip-directions {layerId, directions: {shot?, lens?, camera?, action?}} (each given field set, null clears it, others kept; shot: wide|aerial|medium|close-up|insert|low-angle|crane-wide|pass-by|heroic-medium; lens: 14mm|18mm|24mm|35mm|50mm|85mm|100mm|135mm|200mm (creative feel, not a model parameter); camera: {shot-sizes, angles, movements} as set-camera; action: forward|arc|zigzag|rise|accel|decel|converge|hold|drop|impact|infinity|release). Prompts and directions are separate fields: setting one never changes the other, and none of these quotes, submits or regenerates anything. A locked clip refuses them. set-preferences {preferences: {selection?: {family?: any|flux|ltx|h3|upscale, weights?: any|open-weights|commercial, execution?: any|local|cloud, agent?: any|hermes|claude|codex}, usage?: {purpose: demo|commercial-video|redistribute-source|resell-template, policy: any-licensed|open-source|mit-only}} or null}. Replaces explicit project preferences; null restores global defaults. Use when asked to remember project choices, not for a temporary session instruction. set-template-inputs {inputs: {subject?, title?, acoustic?}}; replace-plate {layerId, assetId}; add-note {noteId (new), frame, text (up to 500 characters), layerId?} (a note pinned to a frame and maybe a layer; author and createdAt are filled in); resolve-note {noteId, resolved? (default true; false reopens it)}; delete-note {noteId}.",
       "tags": ["agents", "mcp", "director", "bundle"],
       "docs": [
         "docs/director-agent-tools.md",
@@ -827,6 +833,28 @@
         "genobi-hermes",
         "product-video"
       ]
+    },
+    {
+      "kind": "tool",
+      "name": "genobi_effects",
+      "title": "Genobi effect presets",
+      "description": "List the configurable Animations & Effects catalogue, or inspect presetId for exposed controls, defaults, source requirements, ordered layers and pinned module hashes. Uses the same catalogue as the 3D gallery and Editor. Apply with genobi_director_command's apply-effect-preset using a fresh instanceId and the current expectedRevision; effects treat the composition below, not an isolated clip. Never generates or spends.",
+      "tags": ["agents", "mcp", "director"],
+      "docs": ["docs/effects-catalogue.md"],
+      "readOnly": true,
+      "paid": false,
+      "skills": ["genobi-director"]
+    },
+    {
+      "kind": "tool",
+      "name": "genobi_effect_variant",
+      "title": "Genobi effect variant",
+      "description": "Create a portable configured variant from presetId, name and parameters, or validate an imported variant. Returns bounded JSON containing control values and trusted module identities for the caller to save; does not persist anything on the server, apply an effect, execute imported code, or activate Taste. Reuse the returned variant with apply-effect-preset.",
+      "tags": ["agents", "mcp", "director"],
+      "docs": ["docs/effects-catalogue.md"],
+      "readOnly": true,
+      "paid": false,
+      "skills": ["genobi-director"]
     },
     {
       "kind": "tool",
@@ -1379,11 +1407,12 @@
     {
       "kind": "skill",
       "name": "genobi-director",
-      "description": "Finish a cut in the Genobi Director, the studio's main surface - link or read the person's project, plan the job, then use any studio tool or all of them (camera generation behind a quote, takes handed into the project, audio analysis for the beat grid, Director commands, provenance) and hand the result back to the person.",
+      "description": "Finish a cut in the Genobi Director, the studio's main surface - link or read the person's project, plan the job, then use any studio tool or all of them (camera generation behind a quote, takes handed into the project, configurable effect presets and variants, audio analysis for the beat grid, Director commands, provenance) and hand the result back to the person.",
       "tags": ["agents", "director", "bundle", "mcp"],
       "docs": [
         "docs/director-agent-tools.md",
-        "docs/director-bundle/README.md"
+        "docs/director-bundle/README.md",
+        "docs/effects-catalogue.md"
       ],
       "path": "plugins/genobi/skills/genobi-director/SKILL.md",
       "tools": [
@@ -1399,6 +1428,8 @@
         "genobi_project",
         "genobi_project_feedback",
         "genobi_director_command",
+        "genobi_effects",
+        "genobi_effect_variant",
         "genobi_take_to_project",
         "genobi_provenance",
         "genobi_audio_upload",

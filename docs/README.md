@@ -40,6 +40,8 @@ user action through every layer.
 - [Audiovisual implementation plan](audiovisual-implementation.md) — ten linked issues, Camera-consistent UI, two-agent sequencing and modular scene scope.
 - [Audiovisual gap audit](audiovisual-gaps.md) — corrected status and ownership for the seventeen PRD gaps.
 - [Audiovisual GPU and evaluator runbook](audiovisual-gpu-evaluation.md) — offline fixtures, real GPU gates, CPU/AKUSPACE comparisons and hosted evaluator acceptance.
+- [Audio-reactive LTX pilot](audio-reactive-ltx-pilot.md) — editable fruit, architecture and descending-camera guides, exact music cues and controlled local model comparisons.
+- [Vast runner](vast-runner.md) — pinned worker setup, SSH, model downloads and read-only checks before the first GPU experiment.
 
 - [Supervised workflow checks](supervised-workflow-checks.md) — complete asset-to-project acceptance and deferred project/Arena review follow-ups.
 - [Dimensions mix](dimensions-mix.md) — the first mix template: a finished
@@ -56,6 +58,13 @@ user action through every layer.
   rooms, its reverb changing with each, and Acoustic Space end to end.
 - [Adaptive reverb proof](adaptive-reverb-proof.md) — the 30 October runs: one
   Three.js scene guiding LTX Layout-to-Render picture and scene-derived reverb.
+- [Audio-reactive pyramid](audio-reactive-pyramid.md) — the 2 November runs:
+  the first objects that move with the music, the capture knobs, the
+  measurements and how to repeat them.
+- [Audio-reactive second pass](audio-reactive-second-pass.md) — the runbook
+  for the next box session: walls, rooms and fruit that move to the bass, a
+  second image guide at the closed frame, the refine pass, Klein looks and the
+  stitch.
 - [Showcase projects](director-bundle/showcase/README.md) — finished cuts kept
   version by version, with the memory behind each change:
   [Dimensions mix](director-bundle/showcase/dimensions-mix/README.md) v1 to v4,
@@ -124,6 +133,9 @@ user action through every layer.
 
 ## Director
 
+- [Configurable effects catalogue](effects-catalogue.md) — the 3D and Editor gallery, four editable presets, portable variants and agent commands.
+- [Catalogue effect modules](director-bundle/effects-catalogue/README.md) — deterministic renderers, source hashes and preview/export verification.
+
 - [Composition resolution and monitors](director-resolution.md) — output sizes,
   asset matching, Undo and the responsive Program/Finished video layout.
 
@@ -131,6 +143,10 @@ user action through every layer.
   composer: offline asset foundation, how to try it, rendering and verification.
 - [House-style templates](templates.md) — the product video, character piece
   and audio-visual templates: inputs, tiers, shots, tracks and how to open them.
+- [Animations & Effects plan](animations-effects-plan.md) — editable layer presets,
+  Director/Editor placement, shader research, local studies and implementation backlog.
+- [Poster grid and water grid](poster-grid-direction.md) — restrained treatment windows,
+  temporal continuity and the supplied visual references.
 - [Falling room](falling-room.md) — the owner's generated loop: a brief, the
   World Builder's falling take, one Klein still, the room sound, an edit kept
   through a revision, and the bundle. No longer a gallery card.
@@ -171,12 +187,15 @@ user action through every layer.
 - [Scene builder](scene-builder.md) — agent-built scenes as data, Load and
   Save in the 3D tab, and room acoustics from the scene's geometry.
 - [Scene examples](scene-examples.md) — starter sets, characters, hybrids and LTX + AKUSPACE kits.
+- [Scene motion](world-builder-motion.md) — editable voxel, architecture, apartment and fruit states with deterministic guide capture.
+- [Scene loops](world-builder-loops.md) — frame a view, Save A/B, then play or capture a loop from the global sidebar.
 - [World Builder and Scene Adapter](world-builder.md) — the set-preparation tool
   beside Director, its agent contract and Comfy integration.
 - [World recipe handoffs](world-recipe-handoff.md) — preserve concurrent human
   scene edits with a live revision guard.
 - [World Builder sound](world-builder-sound.md) — the Sound panel, the example
   track, the audio mod matrix and the reactive room presets.
+- [Changing room sound](world-builder-dynamic-sound.md) — local CPU rendering from the evaluated room timeline, independent dry sound, retained convolution history and decay tails.
 - [World Builder acoustics](world-builder-acoustics.md) — the room's Sabine
   RT60 estimate, AKUSPACE presets and the Reverb node.
 - [World Builder controls](world-builder-controls.md) — edits during Play,
@@ -285,6 +304,9 @@ user action through every layer.
 
 - [Credits and lineage](credits.md) — design lineage, licence, attributions and
   the BFL documentation the studio follows.
+
+- [Human-scale scene stories](world-builder-stories.md) — continuous descent, responsive streets and scene sizing.
+- [Dynamic acoustic zones](world-builder-acoustic-zones.md) — explicit room dimensions and browser CPU reverb.
 
 ## Outside the wiki
 

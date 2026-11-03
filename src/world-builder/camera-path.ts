@@ -5,7 +5,13 @@ import {
 } from "../../shared/camera-path";
 import type { CameraMoveKey } from "./camera-moves";
 import { shotPatch } from "./camera-shots";
-import { cameraAt, validateRecipe, type Recipe } from "./recipe";
+import {
+  cameraAt,
+  cameraTargetAt,
+  cameraFovAt,
+  validateRecipe,
+  type Recipe,
+} from "./recipe";
 
 /**
  * A recipe's camera move as a shared camera path. Keys sit on the take's
@@ -27,17 +33,12 @@ export function recipeCameraPath(
   if (frames[frames.length - 1] !== last) frames.push(last);
   if (frames.length > CAMERA_PATH_LIMITS.maxKeys)
     throw new Error("Too many camera keys; use a larger step.");
-  const target: [number, number, number] = [
-    recipe.targetX,
-    recipe.targetY,
-    recipe.targetZ,
-  ];
   return cameraPathFromSamples(
     frames.map((frame) => ({
       time: frame / recipe.fps,
       position: [...cameraAt(recipe, frame)],
-      target,
-      fov: recipe.fov,
+      target: [...cameraTargetAt(recipe, frame)],
+      fov: cameraFovAt(recipe, frame),
     })),
   );
 }

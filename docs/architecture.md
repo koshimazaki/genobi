@@ -73,6 +73,17 @@ vendored, separately licensed construction effect. The local GLB turntable and
 ASCII sample use Three.js. No generation API is called. See [construction
 motion](construction-motion.md) for capture and licence boundaries.
 
+## Scene motion
+
+World Builder optionally stores versioned shape states, a separate camera path, a bounded voxel group and either one acoustic enclosure or up to eight explicit room/outdoor zones in its recipe. `evaluateScene` produces the geometry used by the viewport and both capture passes; camera position, look target and lens use the same frame clock. State edits exclude audio/procedural offsets. The 24-object and 256-instance budgets are separate. Capture receipts bind evaluation inputs, frame-zero geometry and control audio; no provider call is needed. See [scene motion](world-builder-motion.md) for limits and agent entry points. [Metre-based stories](world-builder-stories.md) keep the mannequin at 1.8 m while baking geometry, camera and acoustic size edits into the recipe. The browser [dynamic room-sound engine](world-builder-acoustic-zones.md) follows explicit zones, keeps outdoor space dry, renders an independent dry source and invalidates stale previews; it does not invoke a model.
+
+`shared/effects/` defines the versioned effects catalogue and strict variants.
+The 3D gallery and Editor picker share its controls and the trusted renderer.
+Applying a preset creates ordinary editable layers in one revision-checked Undo
+action. Express and Worker expose the same stateless catalogue and variant
+endpoints; imported variants cannot introduce executable source. See the
+[effects catalogue](effects-catalogue.md) for its source/input boundaries.
+
 ## Routes
 
 The landing Gallery and Director read one `shared/templates/` catalogue.

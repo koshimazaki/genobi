@@ -189,12 +189,23 @@ describe("recipes an agent can add", () => {
     expect(summary.recipes.map((r) => r.moduleId)).toEqual(
       Object.keys(withoutCrt().modules),
     );
-    const others = [
+    const initiallyExpected = [
       "crt",
       "version-end-card-still",
       "version-gen-image",
       "version-space-hud",
     ];
+    const others = Object.keys(TRUSTED_RECIPES).filter(
+      (id) => !Object.hasOwn(withoutCrt().modules, id),
+    );
+    expect(others).toEqual(
+      expect.arrayContaining([
+        ...initiallyExpected,
+        "shake",
+        "effects-poster-window",
+        "effects-kinetic-title",
+      ]),
+    );
     expect(summary.registryRecipes.map((r) => r.moduleId)).toEqual(others);
     for (const moduleId of others) {
       expect(summary.recipes.map((r) => r.moduleId)).not.toContain(moduleId);
