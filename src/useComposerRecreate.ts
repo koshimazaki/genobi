@@ -6,6 +6,10 @@ import { onCameraRecipe, setCameraNotice } from "./camera-recipe-target";
 import { setupChoices, supersedeRestores } from "./settings-store";
 import { restoreRun } from "./useRecreate";
 import type { ComposerState, useComposer } from "./useComposer";
+import { studioStore } from "./studio/store";
+
+/** A non-existent source id suppresses the default source fallback during upload. */
+export const ASSET_UPLOAD_PENDING = "__asset-upload-pending__";
 
 /** Read saved files before changing the composer; newer edits always win. */
 export function useComposerRecreate(
@@ -22,42 +26,74 @@ export function useComposerRecreate(
   const edit = useRef({ update, onError, uploadVideo });
   edit.current = { update, onError, uploadVideo };
   const uploads = useRef(0);
+  const [uploadingVideo, setUploadingVideo] = useState(false);
   useEffect(
     () =>
       onCameraRecipe(({ patch, note, video }) => {
         const upload = ++uploads.current;
-        edit.current.update?.(patch);
-        // A restore is not an error: its note is a neutral status line.
+        const projectId = studioStore.getState().director.bundle?.project.id;
+        // Never let the composer silently fall back to a previous source while
+        // another MP4 is being uploaded. Generate stays disabled until it ends.
+        setUploadingVideo(Boolean(video));
+        edit.current.update?.(
+          video ? { ...patch, sourceId: ASSET_UPLOAD_PENDING } : patch,
+        );
         edit.current.onError("");
         setCameraNotice(note);
+        if (!video) return;
         const send = edit.current.uploadVideo;
-        if (!video || !send) return;
-        send(video).then(
-          (sourceId) => {
-            // A newer handoff, or leaving Upscale while it uploaded, wins.
-            if (upload !== uploads.current) return;
-            if (latest.current.generator !== "upscale") return;
-            edit.current.update?.({ sourceId });
-            setCameraNotice(
-              `${video.name} is Upscale's source. Nothing was generated.`,
-            );
-          },
-          (error: unknown) => {
-            if (upload !== uploads.current) return;
-            setCameraNotice("");
-            edit.current.onError(
-              error instanceof Error ? error.message : "The upload failed.",
-            );
-          },
-        );
+        if (!send) {
+          setUploadingVideo(false);
+          edit.current.onError("Video upload is unavailable.");
+          return;
+        }
+        const current = () =>
+          upload === uploads.current &&
+          studioStore.getState().director.bundle?.project.id === projectId &&
+          latest.current.generator === "upscale" &&
+          latest.current.sourceId === ASSET_UPLOAD_PENDING;
+        send(video)
+          .then(
+            (sourceId) => {
+              // Newer source, new project, workspace change or Recreate wins.
+              if (!current()) return;
+              edit.current.update?.({ sourceId });
+              setCameraNotice(
+                `${video.name} is Upscale's source. Nothing was generated.`,
+              );
+            },
+            (error: unknown) => {
+              if (!current()) return;
+              setCameraNotice("");
+              edit.current.onError(
+                error instanceof Error ? error.message : "The upload failed.",
+              );
+            },
+          )
+          .finally(() => {
+            if (upload === uploads.current) setUploadingVideo(false);
+          });
       }),
     [],
   );
+  // If the person chooses a different source or leaves Upscale, the pending
+  // upload no longer owns the composer, even if the network finishes later.
+  useEffect(() => {
+    if (
+      uploadingVideo &&
+      (state.generator !== "upscale" ||
+        state.sourceId !== ASSET_UPLOAD_PENDING)
+    ) {
+      uploads.current++;
+      setUploadingVideo(false);
+    }
+  }, [state.generator, state.sourceId, uploadingVideo]);
   const sequence = useRef(0);
   const [pending, setPending] = useState(false);
   useEffect(
     () => () => {
       sequence.current++;
+      uploads.current++;
     },
     [],
   );
@@ -86,5 +122,5 @@ export function useComposerRecreate(
       if (sequenceId === sequence.current) setPending(false);
     }
   }
-  return { recreate, pending };
+  return { recreate, pending, uploadingVideo };
 }
