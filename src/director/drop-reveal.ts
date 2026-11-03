@@ -66,6 +66,9 @@ export function useDropReveal(store: StoreApi<StudioState>, pixels: number) {
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout> | undefined;
     let marked: HTMLElement | null = null;
+    let firstFrame = 0;
+    let secondFrame = 0;
+    let active = true;
     const unmark = () => {
       if (marked) delete marked.dataset.revealed;
       marked = null;
@@ -73,8 +76,14 @@ export function useDropReveal(store: StoreApi<StudioState>, pixels: number) {
     const stop = onDrop((layerId) => {
       revealDroppedClip(store, layerId, latest.current);
       // Two frames: one for the store update to render, one for layout.
-      requestAnimationFrame(() =>
-        requestAnimationFrame(() => {
+      // Cancel both on a second drop or unmount, so an abandoned Editor
+      // cannot highlight a clip in a different workspace.
+      if (firstFrame) cancelAnimationFrame(firstFrame);
+      if (secondFrame) cancelAnimationFrame(secondFrame);
+      firstFrame = requestAnimationFrame(() => {
+        if (!active) return;
+        secondFrame = requestAnimationFrame(() => {
+          if (!active) return;
           const clip = [
             ...document.querySelectorAll<HTMLElement>(
               ".dir-timeline [data-layer-id]",
@@ -92,11 +101,14 @@ export function useDropReveal(store: StoreApi<StudioState>, pixels: number) {
             behavior: still ? "auto" : "smooth",
           });
           timer = setTimeout(unmark, REVEAL_MS);
-        }),
-      );
+        });
+      });
     });
     return () => {
+      active = false;
       stop();
+      if (firstFrame) cancelAnimationFrame(firstFrame);
+      if (secondFrame) cancelAnimationFrame(secondFrame);
       clearTimeout(timer);
       unmark();
     };
