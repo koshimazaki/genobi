@@ -12,9 +12,10 @@ does with each thing, and what is proven today. The cut itself is documented in
 Since 3 November 2026 the swap edit is an official mix template,
 **Dance with Fruits** (`fruits-swap`): mecha, gorilla on the loop, gold ninja
 on the drop beat, pink cat, and the house end card, built from the house
-recipes (an apple-logo title splash, the title typed on the beat, Space.js
-swap cards, slice glitches, a surveillance scan whose box alone posterizes and
-turns to wireframe, pixel fruit flooding into the end card) instead of the
+recipes (a splash of flying pixel fruit, the title typed on the beat,
+Space.js swap cards, slice glitches, a neon-pink surveillance scan whose box
+alone posterizes and turns to wireframe, pixel fruit flooding into the end
+card) instead of the
 Nokia pixel cards below, which the owner turned down. The words are set in
 Retro Gaming, baked into the media rather than bundled as a font, and the
 opening mecha is the 2 November `mecha-fruit-song-vox` render. The cut is data

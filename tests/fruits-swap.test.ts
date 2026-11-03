@@ -27,6 +27,8 @@ const DIR = "public/media/director-templates/fruits-swap";
 const LOOP = 9.0008;
 /** The splash: four beats before loop 1, over the loop's last 2.4 s. */
 const S = 4;
+/** v5: the cut's one pink, for every line and plate; words are white. */
+const PINK = "#ff2bd6";
 const layer = (id: string) => cut.layers.find((l) => l.id === id)!;
 const of = (module: string) =>
   cut.layers
@@ -78,11 +80,12 @@ describe("Dance with Fruits, the swap edit", () => {
   });
 
   it("flies pixel fruit across the splash and floods the frame into the end card", () => {
-    const [thick, thin, ...flood] = of("sprite-shower");
-    // Thick while the apple lands, thin once the words do.
-    expect([thick.startBeat, thin.startBeat + thin.beats]).toEqual([0, S]);
-    expect(thin.parameters.density).toBeLessThan(
-      thick.parameters.density as number,
+    const [first, second, ...flood] = of("sprite-shower");
+    // The splash is the shower itself, thickening on beat 2 (v5: no apple,
+    // no words; the typed title on the mecha is the only title).
+    expect([first.startBeat, second.startBeat + second.beats]).toEqual([0, S]);
+    expect(second.parameters.density).toBeGreaterThan(
+      first.parameters.density as number,
     );
     expect(flood.map((l) => l.startBeat)).toEqual([S + 41, S + 42.5]);
     // The flood thickens, and its last layer covers the end card's entry.
@@ -146,8 +149,15 @@ describe("Dance with Fruits, the swap edit", () => {
     const inLoop = (l: (typeof cut.layers)[number]) =>
       l.startBeat >= S + 15 && l.startBeat + l.beats <= S + 23;
     const modules = cut.layers.filter(inLoop).map((l) => l.module);
-    for (const m of ["hud", "ui-focus", "scan", "crt", "box-scan"])
+    for (const m of ["hud", "ui-focus", "scan-lock", "crt", "box-scan"])
       expect(modules).toContain(m);
+    // The lock flips to the owner's line, white on the pink plate.
+    expect(layer("scan-gorilla").parameters).toMatchObject({
+      text: "GORILLA",
+      locked: "GORILLA SALSA / DANCE UNLOCKED",
+      color: "#f6f8f2",
+      accent: PINK,
+    });
     // No whole-frame posterize or wireframe any more.
     expect(of("dither")).toEqual([]);
     expect(of("wire-scan")).toEqual([]);
@@ -197,6 +207,21 @@ describe("Dance with Fruits, the swap edit", () => {
     for (const l of cut.layers)
       if (typeof l.parameters.font === "string")
         expect(l.parameters.font, l.id).toMatch(/^"?IBM Plex Mono/);
+  });
+
+  it("draws every line and plate in one neon pink, no lime left", () => {
+    const json = JSON.stringify(cut).toLowerCase();
+    for (const lime of ["#d5ff70", "#bed782", "#eaf2df"])
+      expect(json).not.toContain(lime);
+    const colours = new Set(
+      cut.layers.flatMap((l) =>
+        ["color", "accent"]
+          .map((k) => l.parameters[k])
+          .filter((v): v is string => typeof v === "string" && v[0] === "#"),
+      ),
+    );
+    // Pink, white type, and Signal black behind the slams' offset only.
+    expect([...colours].sort()).toEqual([PINK, "#f6f8f2"].sort());
   });
 
   it("uses only trusted recipes, each layer valid", () => {

@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { createLayer as boxScan } from "../docs/director-bundle/example/graphics/mix-box-scan.mjs";
+import { createLayer as scanLock } from "../docs/director-bundle/example/graphics/mix-scan-lock.mjs";
 import { createLayer as spriteShower } from "../docs/director-bundle/example/graphics/mix-sprite-shower.mjs";
 import { TRUSTED_RECIPES } from "../shared/director/graphic-commands";
 import validators from "../src/director/generated-validators.mjs";
@@ -103,6 +104,51 @@ describe("sprite shower", () => {
         .sort((m, n) => m - n);
     const [a, b] = [await xs(0), await xs(60)];
     expect(a).toEqual(b);
+  });
+});
+
+describe("scan lock", () => {
+  const lock = {
+    color: "#f6f8f2",
+    accent: "#ff2bd6",
+    text: "GORILLA",
+    locked: "GORILLA SALSA / DANCE UNLOCKED",
+    x: 0.5,
+    y: 0.2,
+    bpm: 100,
+  };
+  const texts = (calls: unknown[][]) =>
+    calls.filter(([k]) => k === "fillText").map(([, t]) => t);
+
+  it("is a trusted overlay whose every parameter is required and checked", () => {
+    expect(TRUSTED_RECIPES["scan-lock"]).toMatchObject({ mode: "overlay" });
+    expect(validate("scan-lock", lock)).toBe(true);
+    for (const key of Object.keys(lock)) {
+      const { [key as keyof typeof lock]: _, ...rest } = lock;
+      expect(validate("scan-lock", rest), key).toBe(false);
+    }
+    for (const bad of [{ locked: "" }, { accent: "pink" }, { bpm: 10 }])
+      expect(validate("scan-lock", { ...lock, ...bad })).toBe(false);
+  });
+
+  it("acquires, then flips to the locked lines on the accent plate", async () => {
+    const { frame } = await overlay(scanLock, lock);
+    // 100 BPM at 30 fps: the lock lands on frame 18.
+    const before = await frame(10);
+    expect(texts(before)).toContain("ACQUIRING");
+    expect(texts(before)).toContain("GORILLA");
+    const after = await frame(24);
+    expect(texts(after)).not.toContain("ACQUIRING");
+    expect(texts(after)).toEqual(
+      expect.arrayContaining(["GORILLA SALSA", "DANCE UNLOCKED"]),
+    );
+    // The plate is filled in the accent once locked.
+    const fills = after.filter(
+      ([k, key, v]) => k === "set" && key === "fillStyle" && v === "#ff2bd6",
+    );
+    expect(fills.length).toBeGreaterThan(0);
+    const { inOrder, scrambled } = await seekOrders(frame, FRAMES);
+    for (const f of FRAMES) expect(scrambled.get(f)).toEqual(inOrder.get(f));
   });
 });
 

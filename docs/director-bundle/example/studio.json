@@ -864,6 +864,57 @@
         }
       }
     },
+    "scan-lock": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/mix-scan-lock.mjs",
+        "sha256": "92c7b41434645f21f6a8c6ef1fe94ca64e33062dc9847aefc652f1ed9f55f98e"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["color", "accent", "text", "locked", "x", "y", "bpm"],
+        "properties": {
+          "color": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "accent": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 32,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "locked": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "x": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "y": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "bpm": {
+            "type": "number",
+            "minimum": 20,
+            "maximum": 300
+          }
+        }
+      }
+    },
     "box-scan": {
       "engine": "threejs",
       "engineVersion": "0.180.0",

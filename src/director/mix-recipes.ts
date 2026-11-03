@@ -15,6 +15,7 @@ import { createLayer as endCardStill } from "../../docs/director-bundle/example/
 import { createLayer as speechBubble } from "../../docs/director-bundle/example/graphics/mix-speech-bubble.mjs";
 import { createLayer as spriteShower } from "../../docs/director-bundle/example/graphics/mix-sprite-shower.mjs";
 import { createLayer as boxScan } from "../../docs/director-bundle/example/graphics/mix-box-scan.mjs";
+import { createLayer as scanLock } from "../../docs/director-bundle/example/graphics/mix-scan-lock.mjs";
 import screenOpenSource from "../../docs/director-bundle/example/graphics/mix-screen-open.mjs?raw";
 import buildPanelSource from "../../docs/director-bundle/example/graphics/mix-build-panel.mjs?raw";
 import scanSource from "../../docs/director-bundle/example/graphics/mix-scan.mjs?raw";
@@ -27,6 +28,7 @@ import endCardStillSource from "../../docs/director-bundle/example/graphics/mix-
 import speechBubbleSource from "../../docs/director-bundle/example/graphics/mix-speech-bubble.mjs?raw";
 import spriteShowerSource from "../../docs/director-bundle/example/graphics/mix-sprite-shower.mjs?raw";
 import boxScanSource from "../../docs/director-bundle/example/graphics/mix-box-scan.mjs?raw";
+import scanLockSource from "../../docs/director-bundle/example/graphics/mix-scan-lock.mjs?raw";
 
 type Create = (
   c: GraphicsContext,
@@ -51,7 +53,8 @@ const filter = (source: string, create: Create) => ({
  * panel, the scan, the kinetic impact screen, the HUD and the construction
  * end card (and its copy with the piece's own still, `end-card-still`, for
  * Bloom), a comic speech bubble (`speech-bubble`) and a pixel-art fruit
- * shower (`sprite-shower`, both Dance with Fruits) as Canvas overlays under
+ * shower (`sprite-shower`) and a scan with its own lock line (`scan-lock`, all
+ * Dance with Fruits) as Canvas overlays under
  * the `animejs` entry, and the wireframe scan, slice glitch and the boxed
  * surveillance treatment (`box-scan`) as Three.js filters. Browser only: the sources come
  * through Vite's `?raw`, and the end card loads the construction effect
@@ -70,4 +73,5 @@ export const mixRecipes = [
   overlay(speechBubbleSource, speechBubble),
   overlay(spriteShowerSource, spriteShower),
   filter(boxScanSource, boxScan),
+  overlay(scanLockSource, scanLock),
 ];

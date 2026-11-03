@@ -18,11 +18,11 @@ const clip = (name: (typeof CHARACTERS)[number]) => ({
  * opening mecha `mecha-fruit-song-vox` from 2 November, the others
  * 3 November), encoded once from 2048 × 1152 to 1920 × 1080 (CRF 19, no
  * sound). The Retro Gaming typography is baked into the media (the font file
- * is not bundled): the 2.5 s title splash (the voxel apple from the mecha's
- * frame 0, then DANCE WITH FRUITS), the title typed over the mecha's first
- * 4.2 s, the swap words on the card stills and WATERMELON over the gold
+ * is not bundled): the title typed over the mecha's first 4.2 s (with a
+ * swarm of the shower's pixel fruit over its shoulder), the swap words on the card stills and WATERMELON over the gold
  * ninja's drop frames. The owner's "Dance with Fruits" loop (music by
- * Koshimazaki, owner-made): its last 2.4 s under the splash, then the 9.0 s
+ * Koshimazaki, owner-made): its last 2.4 s under the 2.5 s Signal-black
+ * splash, then the 9.0 s
  * loop from the voice four times, cut at 33.0 s, faded over the end card's
  * last 2.4 s, raised 0.6 dB to -14 LUFS, MP3 320 kb/s. The renders' own audio
  * starts sample-aligned with the loop, so each picture stays on the music it
@@ -45,11 +45,11 @@ const media: TemplateMix["media"] = {
 };
 
 /**
- * Dance with Fruits (3 November 2026, v3): a voxel dancer between two fruits,
- * swapped for another character on the loop. A title splash (the voxel apple,
- * then DANCE WITH FRUITS, pixel fruit flying across), the mecha with the
- * title typed on the beat, the gorilla on the loop restart under a
- * surveillance scan whose box posterizes and turns to wireframe, the gold
+ * Dance with Fruits (3 November 2026, v5): a voxel dancer between two fruits,
+ * swapped for another character on the loop. A splash of flying pixel fruit,
+ * the mecha with the title typed on the beat, the gorilla on the loop restart
+ * under a neon-pink surveillance scan whose box posterizes and turns to
+ * wireframe (GORILLA SALSA DANCE UNLOCKED), the gold
  * ninja on the drop beat inside that loop (WATERMELON slammed over the
  * picture), the pink cat on the last loop, a flood of pixel fruit, and the
  * house end card. The swaps are hard cuts at the same guide frame, so the
@@ -61,19 +61,18 @@ export const fruitsSwap: HouseTemplate = {
   name: "Dance with Fruits",
   run: "mix",
   description:
-    "One dance, four characters: LTX-2.5 renders of the same guide swapped on the loop and the drop, with a pixel title splash, typed title, swap words and an end card. Nothing to generate.",
+    "One dance, four characters: LTX-2.5 renders of the same guide swapped on the loop and the drop, with a pixel-fruit splash, typed title, swap words and an end card. Nothing to generate.",
   tier: "open",
   style: {
     name: "Signal swap",
-    look: "The owner's voxel dancers on a grey studio floor, cut hard on the loop, with Space.js swap cards, an apple-logo title splash, pixel fruit flying, a CAM 02 surveillance scan whose box degrades and pixel swap words.",
+    look: "The owner's voxel dancers on a grey studio floor, cut hard on the loop, with pixel fruit flying, Space.js swap cards, a neon-pink CAM 02 surveillance scan whose box degrades and pixel words.",
     lighting:
-      "The renders' own soft studio light; the overlays add lime readouts, pixel fruit and white words.",
+      "The renders' own soft studio light; the overlays add neon-pink lines and plates, pixel fruit and white words.",
     palette:
-      "Studio grey and Signal black, with the fruits' red, yellow and green and lime readouts.",
+      "Studio grey and Signal black, with the fruits' red, yellow and green, neon-pink lines and white words.",
     swatches: [
       { name: "Signal", hex: "#0c0e0c" },
-      { name: "Paper", hex: "#eaf2df" },
-      { name: "Lime", hex: "#d5ff70" },
+      { name: "Neon pink", hex: "#ff2bd6" },
       { name: "White", hex: "#f6f8f2" },
     ],
     negativeSpace:

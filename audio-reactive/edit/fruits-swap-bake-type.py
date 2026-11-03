@@ -1,8 +1,9 @@
 """Bakes the Retro Gaming typography (the owner's local font, never bundled)
 into the template's media: the two swap-card stills, a slam of WATERMELON
 over the gold ninja's drop frames (source frames 115-143, the two beats the
-cut shows from 4.79 s), the apple-logo title splash and DANCE WITH FRUITS
-typed on the beat over the opening mecha. Needs Pillow, ffmpeg, the font
+cut shows from 4.79 s), and DANCE WITH FRUITS typed on the beat over the
+opening mecha with the splash behind the pixel-fruit shower
+(fruits_swap_opening.py). Needs Pillow, ffmpeg, the font
 installed, and the 2048 x 1152 sources in $TMP_DIR as gold-ninja-source.mp4
 and vox-source.mp4 (the opening mecha). Run with python3 -I, a step at a
 time: cards, ninja, opening. See docs/fruits-swap.md."""

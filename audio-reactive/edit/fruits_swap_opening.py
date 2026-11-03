@@ -1,119 +1,109 @@
-"""The opening of Dance with Fruits, baked in Retro Gaming (the owner's local
-font, never bundled): the title splash and DANCE WITH FRUITS typed on the
-beat over the opening mecha. Called from fruits-swap-bake-type.py, whose
-helpers it takes as `b`. See docs/fruits-swap.md#the-opening."""
-import colorsys
+"""The opening of Dance with Fruits (v5): a plain Signal-black splash for the
+live pixel-fruit shower to fly over, and over the opening mecha DANCE WITH
+FRUITS typed on the beat in Retro Gaming (the owner's local font, never
+bundled) with a neon-pink cursor, plus a swarm of the shower's pixel fruit
+over the mecha's right shoulder until the clip is clean. Called from
+fruits-swap-bake-type.py, whose helpers it takes as `b`. See
+docs/fruits-swap.md#the-opening."""
 import math
 import os
 import subprocess
 
-from PIL import Image, ImageFilter
+from PIL import Image
 
 BEAT = 0.6  # 100 BPM
 FPS = 24
 TITLE = "DANCE WITH FRUITS"
-LIME = (213, 255, 112, 255)
-SPLASH_FRAMES = 60  # 2.5 s: the four splash beats (58 frames) and a margin
-SPLASH_AT = (0.5, 0.38)  # the apple's centre on the splash
+PINK = (255, 43, 214, 255)  # #ff2bd6, the cut's one pink
+SPLASH_SECONDS = 2.5  # the four splash beats (58 frames) and a margin
 # The opening mecha's known defect: frames 36 to 54 show a third hand near its
-# right shoulder (x 0.42-0.65, y 0.00-0.35; worst at 0.58, 0.20 by frame 48).
-# The apple flies onto that shoulder at the cut and covers it until the clip
-# is clean (from frame 60), then pops off. Covered, not fixed.
-SHOULDER_AT = (0.535, 0.175)
+# right shoulder (x 0.42-0.65, y 0.00-0.35). A swarm of pixel fruit flies in
+# before it, swirls there, and bursts away once the clip is clean (frame 60).
+# Covered, not fixed.
+COVER = (0.40, 0.0, 0.67, 0.42)
 COVER_UNTIL = 60
+GATHER, SETTLED = 20, 32  # the swarm flies in before the defect starts (36)
+SWARM = 120
+RADIUS = 330  # px: the disc reaches past the defect's corners
+# The sprite-shower recipe's own pixel art (mix-sprite-shower.mjs), so the
+# swarm is the same fruit that flies over the splash.
+SPRITES = [
+    ({"r": "#e8343c", "d": "#a51f2a", "w": "#ff9e9e", "g": "#3fa34d", "b": "#6b4423"},
+     [".....b.gg...", ".....bgg....", "..rrrbrrr...", ".rrrrrrrrr..", "rrwrrrrrrrr.", "rwrrrrrrrdr.",
+      "rrrrrrrrrdr.", "rrrrrrrrrdr.", ".rrrrrrrddr.", ".rrrrrrrdd..", "..rrd.ddd...", "............"]),
+    ({"y": "#ffd84a", "o": "#d9a521", "k": "#4a3216"},
+     ["..........k.", ".........yy.", "........yyo.", ".......yyyo.", "......yyyo..", ".....yyyo...",
+      "...yyyyoo...", ".yyyyyoo....", "kyyyooo.....", ".kooo.......", "............", "............"]),
+    ({"r": "#ff4d5e", "k": "#1a1a1a", "l": "#c9f2a0", "g": "#2f8f3a"},
+     ["............", "............", "rrrrrrrrrrrr", "rrkrrrrkrrrr", "rrrrrkrrrrkr", ".rrkrrrrrrr.",
+      ".rrrrrkrrrr.", "..rrrrrrrr..", "..llllllll..", "...gggggg...", "............", "............"]),
+]
 
 
-def apple_logo(b):
-    """The voxel apple from the opening render's frame 0, cut out of the
-    studio's grey by saturation (the grey is near zero, the apple is not)."""
-    frame = b.frame_of(f"{b.TMP}/vox-source.mp4", 0, f"{b.TMP}/vox-000.png")
-    w, h = frame.size
-    # The apple hangs top right of the dancer at frame 0.
-    box = (int(w * 0.62), 0, int(w * 0.9), int(h * 0.5))
-    crop = frame.crop(box)
-    alpha = Image.new("L", crop.size)
-    px, ax = crop.load(), alpha.load()
-    for y in range(crop.height):
-        for x in range(crop.width):
-            r, g, bl, _ = px[x, y]
-            _, s, v = colorsys.rgb_to_hsv(r / 255, g / 255, bl / 255)
-            ax[x, y] = 255 if s > 0.32 and v > 0.06 else 0
-    # Specks of colour off the apple are dropped: an opening (erode, then
-    # dilate) removes anything smaller than the apple's own voxels.
-    alpha = alpha.filter(ImageFilter.MinFilter(9)).filter(ImageFilter.MaxFilter(9))
-    # Solid, not lattice: fill each row between its outermost apple pixels,
-    # so nothing behind the logo shows through the gaps between voxels.
-    ax = alpha.load()
-    for y in range(alpha.height):
-        xs = [x for x in range(alpha.width) if ax[x, y]]
-        for x in range(xs[0], xs[-1] + 1) if xs else ():
-            ax[x, y] = 255
-    crop.putalpha(alpha)
-    return crop.crop(alpha.getbbox())
+def sprite(kind, px):
+    pal, rows = SPRITES[kind]
+    img = Image.new("RGBA", (12 * px, 12 * px), (0, 0, 0, 0))
+    for r, row in enumerate(rows):
+        for c, k in enumerate(row):
+            if k != ".":
+                h = pal[k].lstrip("#")
+                colour = tuple(int(h[i : i + 2], 16) for i in (0, 2, 4)) + (255,)
+                img.paste(colour, (c * px, r * px, (c + 1) * px, (r + 1) * px))
+    return img
 
 
-def sized_logo(b):
-    logo = apple_logo(b)
-    target_h = int(b.H * 0.46)
-    return logo.resize((int(logo.width * target_h / logo.height), target_h), Image.LANCZOS)
+def hash01(n):
+    v = math.sin(n * 127.1 + 311.7) * 43758.5453
+    return v - math.floor(v)
 
 
-def place(img, logo, s, cx, cy):
-    """The logo at scale s, centred on (cx, cy) in pixels."""
-    if s <= 0.01:
-        return
-    lw, lh = max(1, int(logo.width * s)), max(1, int(logo.height * s))
-    img.alpha_composite(logo.resize((lw, lh), Image.LANCZOS), (int(cx) - lw // 2, int(cy) - lh // 2))
+def cluster(b, f):
+    """The swarm at clip frame f: pixel fruit fly in from off frame (frames
+    GATHER to SETTLED), swirl in a round cloud over the shoulder, bobbing on
+    the beat, and burst outward from COVER_UNTIL."""
+    img = Image.new("RGBA", (b.W, b.H), (0, 0, 0, 0))
+    if f < GATHER:
+        return img
+    t = f / FPS
+    cx = (COVER[0] + COVER[2]) / 2 * b.W
+    cy = (COVER[1] + COVER[3]) / 2 * b.H
+    gather = min(1.0, (f - GATHER) / (SETTLED - GATHER))
+    ease = 1 - (1 - gather) ** 3
+    burst = max(0.0, (f - COVER_UNTIL) / FPS)
+    for i in range(SWARM):
+        # Even over the disc (sqrt), the bigger sprites nearer the middle.
+        rad = RADIUS * math.sqrt(hash01(i * 5 + 1))
+        ang = hash01(i * 7 + 2) * 2 * math.pi + t * 0.5
+        px = 12 if rad < RADIUS * 0.6 else 10
+        s = sprite(int(hash01(i * 11 + 3) * 3), px)
+        x = cx + math.cos(ang) * rad
+        y = cy + math.sin(ang) * rad + math.sin(t * 2 * math.pi / BEAT + i) * 6
+        # From off frame along the same ray, into place.
+        far = 1500
+        x += math.cos(ang) * far * (1 - ease)
+        y += math.sin(ang) * far * (1 - ease)
+        if burst:
+            x += math.cos(ang) * burst * 5200
+            y += math.sin(ang) * burst * 5200
+        if -s.width < x < b.W + s.width and -s.height < y < b.H + s.height:
+            img.alpha_composite(s, (int(x) - s.width // 2, int(y) - s.height // 2))
+    return img
 
 
-def splash_frames(b, out_dir, logo):
-    """Ordering (a): the apple pops on beat 0 and bounces on every beat;
-    DANCE WITH lands on beat 2 and FRUITS, in lime, on beat 3."""
-    left = b.word("DANCE WITH ", 112)
-    right = b.word("FRUITS", 112, LIME)
-    line_w = left.width + right.width - 8
-    os.makedirs(out_dir, exist_ok=True)
-    for f in range(SPLASH_FRAMES):
-        t = f / FPS
-        img = Image.new("RGBA", (b.W, b.H), b.BLACK)
-        p = min(1.0, t / 0.25)
-        k = 1.70158
-        pop = 1 + (k + 1) * (p - 1) ** 3 + k * (p - 1) ** 2
-        bounce = 1 + 0.05 * math.exp(-(t % BEAT) * 8)
-        place(img, logo, pop * bounce, b.W * SPLASH_AT[0], b.H * SPLASH_AT[1])
-        y = int(b.H * 0.78) - left.height // 2
-        x = (b.W - line_w) // 2
-        for at, piece, px in ((2 * BEAT, left, x), (3 * BEAT, right, x + left.width - 8)):
-            if t >= at:
-                # Lands from 1.3x over a tenth of a second.
-                q = 1.3 - 0.3 * min(1.0, (t - at) / 0.1)
-                pw, ph = int(piece.width * q), int(piece.height * q)
-                img.alpha_composite(piece.resize((pw, ph), Image.NEAREST),
-                                    (px - (pw - piece.width) // 2, y - (ph - piece.height) // 2))
-        img.convert("RGB").save(f"{out_dir}/{f:02d}.png")
-
-
-def typed_frames(b, out_dir, logo, until=4.2):
+def typed_frames(b, out_dir, until=4.2):
     """DANCE WITH FRUITS typed on the grid: two characters every eighth note
-    (0.3 s), a lime block cursor after the last one, blinking on the eighth
-    once the line is done; gone at `until` seconds. Over the first frames the
-    splash's apple flies onto the mecha's right shoulder, bouncing on the
-    beat, and pops off once the clip's third hand is gone."""
+    (0.3 s), a pink block cursor after the last one, blinking on the eighth
+    once the line is done; gone at `until` seconds. The shoulder swarm rides
+    over the first frames."""
     size = 96
     full = b.word(TITLE, size)
     groups = [TITLE[i : i + 2] for i in range(0, len(TITLE), 2)]
-    cursor = Image.new("RGBA", (size * 5 // 8, size * 7 // 8), LIME)
+    cursor = Image.new("RGBA", (size * 5 // 8, size * 7 // 8), PINK)
     os.makedirs(out_dir, exist_ok=True)
     count = int(until * FPS)
     for f in range(count):
         t = f / FPS
-        img = Image.new("RGBA", (b.W, b.H), (0, 0, 0, 0))
-        fly = 1 - (1 - min(1.0, f / 6)) ** 3
-        cx = b.W * (SPLASH_AT[0] + (SHOULDER_AT[0] - SPLASH_AT[0]) * fly)
-        cy = b.H * (SPLASH_AT[1] + (SHOULDER_AT[1] - SPLASH_AT[1]) * fly)
-        bounce = 1 + 0.05 * math.exp(-(t % BEAT) * 8)
-        leave = 1 - min(1.0, max(0, f - COVER_UNTIL) / 6) ** 2
-        place(img, logo, bounce * leave, cx, cy)
+        img = cluster(b, f) if f < COVER_UNTIL + 8 else Image.new("RGBA", (b.W, b.H), (0, 0, 0, 0))
         shown = min(len(groups), int(t / (BEAT / 2)) + 1)
         text = "".join(groups[:shown]).rstrip()
         x0 = (b.W - full.width) // 2
@@ -139,9 +129,9 @@ def bake_opening(b):
     subprocess.run([b.FF, "-y", "-v", "error", "-i", clean, "-vf",
                     "select=eq(n\\,0),crop=1080:1080:420:0,scale=600:600", "-frames:v", "1", "-q:v", "3",
                     f"{b.OUT}/fruits-swap-end-card.jpg"], check=True)
-    logo = sized_logo(b)
-    count = typed_frames(b, f"{b.TMP}/typed", logo)
+    count = typed_frames(b, f"{b.TMP}/typed")
     b.burn(src, f"{b.TMP}/typed", 0, count, f"{b.OUT}/fruits-swap-mecha.mp4")
-    splash_frames(b, f"{b.TMP}/splash", logo)
-    subprocess.run([b.FF, "-y", "-v", "error", "-framerate", "24", "-i", f"{b.TMP}/splash/%02d.png",
-                    *b.ENCODE, f"{b.OUT}/fruits-swap-splash.mp4"], check=True)
+    # The splash: Signal black, for the live pixel-fruit shower to fly over.
+    subprocess.run([b.FF, "-y", "-v", "error", "-f", "lavfi", "-i",
+                    f"color=c=0x0c0e0c:s=1920x1080:r=24:d={SPLASH_SECONDS}", *b.ENCODE,
+                    f"{b.OUT}/fruits-swap-splash.mp4"], check=True)

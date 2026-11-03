@@ -1,11 +1,11 @@
 ---
 tags: [director, bundle, templates]
-summary: The three recipes Dance with Fruits added to the trusted registry - a comic speech bubble, a pixel-art fruit shower and a surveillance treatment confined to a box - with their parameters and checks.
+summary: The four recipes Dance with Fruits added to the trusted registry - a comic speech bubble, a pixel-art fruit shower, a surveillance treatment confined to a box and a scan with its own lock line - with their parameters and checks.
 ---
 
 # Dance with Fruits: its recipes
 
-[Dance with Fruits](fruits-swap.md) added three recipes. They are registered
+[Dance with Fruits](fruits-swap.md) added four recipes. They are registered
 in the studio example (`docs/director-bundle/example/studio.json`) beside the
 other mix recipes, because a mix takes its recipes from there, and in the
 browser by `src/director/mix-recipes.ts`. Every parameter is required and
@@ -69,6 +69,25 @@ to them, so they and every project pinned to their hashes stay as they are.
 | `sweep`            | 0.1 to 8 s for the scan line to cross the frame            |
 | `trail`            | 0.05 to 1 of the frame: how long the wireframe stays alive |
 
+## `scan-lock`
+
+`graphics/mix-scan-lock.mjs`, a Canvas 2D overlay under the `animejs` entry:
+the `scan` surveillance read (corner marks, a reticle that closes over one
+beat and locks on the next, a dotted leader, camera and time code readouts)
+with its own lock line. While it closes the readout says ACQUIRING over
+`text` on a dark plate; once locked the plate turns `accent` and reads
+`locked`. A copy of `mix-scan.mjs`, so the Dimensions mix and Bloom, pinned
+to that recipe's hash, stay as they are.
+
+| Parameter | Values                                                      |
+| --------- | ----------------------------------------------------------- |
+| `color`   | `#rrggbb`: words, marks and the reticle while it closes     |
+| `accent`  | `#rrggbb`: the locked reticle and the locked plate          |
+| `text`    | 1 to 32 characters: the subject while acquiring             |
+| `locked`  | 1 to 64 characters, " / " breaks a line: the locked readout |
+| `x`, `y`  | the target, 0 to 1 of the frame                             |
+| `bpm`     | 20 to 300: one beat to close, then locked                   |
+
 ## Checks
 
 - `tests/mix-speech-bubble.test.ts`: schema refusals, seek order, the pop
@@ -76,6 +95,7 @@ to them, so they and every project pinned to their hashes stay as they are.
 - `tests/mix-pixel-recipes.test.ts`: both recipes' schema refusals and seek
   order; the shower's pixels square, whole and on their grid, density, seed,
   direction and speed 0; the box scan's box and settings reaching the shader
-  and its mix by the box mask alone.
+  and its mix by the box mask alone; the scan lock's ACQUIRING step, its
+  locked lines and its accent plate.
 - `npm run check:director-validators` keeps the standalone validators in step
   with the schemas; `npm run build:mcp` carries the registry to the plugin.

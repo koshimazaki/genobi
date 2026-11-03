@@ -14,7 +14,7 @@
   "shots": [
     {
       "asset": "fruits-swap-splash",
-      "label": "Title splash · the apple, then DANCE WITH FRUITS",
+      "label": "Splash · Signal black under the pixel-fruit shower",
       "sourceSeconds": 0,
       "startBeat": 0,
       "beats": 4,
@@ -22,7 +22,7 @@
     },
     {
       "asset": "fruits-swap-mecha",
-      "label": "Mecha · loop 1, from the voice (title typed)",
+      "label": "Mecha · loop 1, from the voice (title typed, fruit swarm)",
       "sourceSeconds": 0,
       "startBeat": 4,
       "beats": 13,
@@ -72,8 +72,8 @@
         "credit1": "MUSIC · DANCE WITH FRUITS",
         "credit2": "KOSHIMAZAKI · VIDEO LTX-2.5",
         "font": "\"IBM Plex Mono\", monospace",
-        "color": "#d5ff70",
-        "accent": "#e6a1ff",
+        "color": "#f6f8f2",
+        "accent": "#ff2bd6",
         "steps": "Gathering the dancers / Cutting on the loop / Bringing it into focus",
         "done": "Swap ready",
         "duration": 2.4,
@@ -92,7 +92,7 @@
       "card": true,
       "parameters": {
         "still": "/media/director-templates/fruits-swap/fruits-swap-card-1.jpg",
-        "color": "#d5ff70",
+        "color": "#ff2bd6",
         "label": "SWAP // MECHA OUT",
         "credit": "NEXT · GORILLA",
         "targets": "0.5,0.24,0.2,0.3 / 0.2,0.3,0.16,0.26 / 0.8,0.3,0.16,0.26",
@@ -113,7 +113,7 @@
       "card": true,
       "parameters": {
         "still": "/media/director-templates/fruits-swap/fruits-swap-card-2.jpg",
-        "color": "#d5ff70",
+        "color": "#ff2bd6",
         "label": "SWAP // NINJA OUT",
         "credit": "NEXT · PINK CAT",
         "targets": "0.5,0.24,0.2,0.3 / 0.2,0.3,0.16,0.26 / 0.8,0.3,0.16,0.26",
@@ -156,7 +156,7 @@
         "posterize": 0.2,
         "levels": 8,
         "wire": 0,
-        "color": "#d5ff70",
+        "color": "#ff2bd6",
         "sweep": 1.2,
         "trail": 0.35
       }
@@ -179,7 +179,7 @@
         "posterize": 0.3,
         "levels": 7,
         "wire": 0,
-        "color": "#d5ff70",
+        "color": "#ff2bd6",
         "sweep": 1.2,
         "trail": 0.35
       }
@@ -202,7 +202,7 @@
         "posterize": 0.4,
         "levels": 6,
         "wire": 0,
-        "color": "#d5ff70",
+        "color": "#ff2bd6",
         "sweep": 1.2,
         "trail": 0.35
       }
@@ -225,7 +225,7 @@
         "posterize": 0.5,
         "levels": 6,
         "wire": 0.25,
-        "color": "#d5ff70",
+        "color": "#ff2bd6",
         "sweep": 1.2,
         "trail": 0.35
       }
@@ -248,7 +248,7 @@
         "posterize": 0.5,
         "levels": 6,
         "wire": 0.5,
-        "color": "#d5ff70",
+        "color": "#ff2bd6",
         "sweep": 1.2,
         "trail": 0.35
       }
@@ -267,8 +267,8 @@
         "y": 0.04,
         "w": 0.4,
         "h": 0.92,
-        "label": "SUBJECT 02 · GORILLA · TRACKING",
-        "color": "#d5ff70",
+        "label": "",
+        "color": "#ff2bd6",
         "dim": 0.25,
         "draw": 0.3,
         "fadeAt": 2.25,
@@ -277,8 +277,8 @@
     },
     {
       "id": "scan-gorilla",
-      "name": "Scan · gorilla head",
-      "module": "scan",
+      "name": "Scan · gorilla head, salsa unlocked",
+      "module": "scan-lock",
       "kind": "graphics",
       "lane": "scan",
       "startBeat": 23,
@@ -286,8 +286,9 @@
       "opacity": 0.95,
       "parameters": {
         "color": "#f6f8f2",
-        "accent": "#d5ff70",
-        "text": "GORILLA · LOCKED",
+        "accent": "#ff2bd6",
+        "text": "GORILLA",
+        "locked": "GORILLA SALSA / DANCE UNLOCKED",
         "x": 0.5,
         "y": 0.2,
         "bpm": 100
@@ -304,7 +305,7 @@
       "opacity": 1,
       "parameters": {
         "color": "#f6f8f2",
-        "accent": "#eaf2df",
+        "accent": "#ff2bd6",
         "bpm": 100,
         "text": "● REC  CAM 02 // SUBJECT GORILLA",
         "credit": "MUSIC / DANCE WITH FRUITS",
@@ -313,7 +314,7 @@
     },
     {
       "id": "splash-fruit",
-      "name": "Pixel fruit · across the splash",
+      "name": "Pixel fruit · the splash",
       "module": "sprite-shower",
       "kind": "graphics",
       "lane": "fruit",
@@ -321,16 +322,16 @@
       "beats": 2,
       "opacity": 1,
       "parameters": {
-        "density": 40,
+        "density": 50,
         "speed": 0.8,
         "direction": "left",
-        "size": 5,
+        "size": 6,
         "seed": 3
       }
     },
     {
       "id": "splash-fruit-2",
-      "name": "Pixel fruit · under the title",
+      "name": "Pixel fruit · the splash, thicker",
       "module": "sprite-shower",
       "kind": "graphics",
       "lane": "fruit",
@@ -338,10 +339,10 @@
       "beats": 2,
       "opacity": 1,
       "parameters": {
-        "density": 14,
-        "speed": 0.8,
+        "density": 90,
+        "speed": 1.1,
         "direction": "left",
-        "size": 5,
+        "size": 6,
         "seed": 5
       }
     },

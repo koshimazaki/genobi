@@ -1,6 +1,6 @@
 ---
 tags: [director, sound, templates]
-summary: Dance with Fruits, the content-swap mix template - 33 seconds of the owner's four LTX-2.5 Layout-to-Render (open weights) renders of one dance guide, opened by an apple-logo title splash, swapped hard on the loop and the drop, with Retro Gaming words baked into the media, pixel fruit flying, a surveillance scan confined to the gorilla and the house end card. Nothing to generate.
+summary: Dance with Fruits, the content-swap mix template - 33 seconds of the owner's four LTX-2.5 Layout-to-Render (open weights) renders of one dance guide, opened by a splash of flying pixel fruit and a typed title, swapped hard on the loop and the drop, with Retro Gaming words baked into the media, a neon-pink surveillance scan confined to the gorilla and the house end card. Nothing to generate.
 ---
 
 # Dance with Fruits: the swap edit
@@ -12,7 +12,7 @@ same audio window**, so a cut between two of them at the same frame keeps the
 pose, the fruits, the floor and the camera and changes only the dancer. It
 replaces the ffmpeg build (`audio-reactive/edit/fruits-swap-build.sh`), whose
 Nokia pixel-font cards the owner turned down as "too much"; this cut uses the
-house recipes and three it added ([its recipes](fruits-swap-recipes.md)). In
+house recipes and four it added ([its recipes](fruits-swap-recipes.md)). In
 the Gallery it is the fifth card, **Dance with Fruits · Content swap**.
 [Versions](#versions) lists what each review changed.
 
@@ -21,7 +21,7 @@ the Gallery it is the fifth card, **Dance with Fruits · Content swap**.
 | Template | `shared/templates/fruits-swap.ts`                                                                                                                                           |
 | Cut      | `shared/templates/fruits-swap.cut.json`                                                                                                                                     |
 | Media    | `public/media/director-templates/fruits-swap/`                                                                                                                              |
-| Recipes  | [speech bubble, sprite shower, box scan](fruits-swap-recipes.md)                                                                                                            |
+| Recipes  | [speech bubble, sprite shower, box scan, scan lock](fruits-swap-recipes.md)                                                                                                 |
 | Baking   | [`audio-reactive/edit/fruits-swap-bake-type.py`](https://github.com/koshimazaki/Genobi/blob/main/audio-reactive/edit/fruits-swap-bake-type.py) and `fruits_swap_opening.py` |
 | Tests    | `tests/fruits-swap.test.ts`, `tests/mix-pixel-recipes.test.ts`, `tests/mix-speech-bubble.test.ts`, `tests/gallery-badges-order.test.ts`                                     |
 | Render   | `TEASER_EXAMPLE=fruits-swap node scripts/render-genobi-teaser.mjs out/`                                                                                                     |
@@ -36,16 +36,16 @@ each from the owner's own look still: 193 frames, 2048 × 1152, 24 fps,
 8.04 s, with the loop muxed in. Only the picture is bundled, encoded once at
 1920 × 1080 (libx264, CRF 19, no sound, `+faststart`), 4 to 5 MiB each:
 
-| File                         | What it is                                                                                            |
-| ---------------------------- | ----------------------------------------------------------------------------------------------------- |
-| `fruits-swap-splash.mp4`     | the title splash, 2.5 s, baked: the voxel apple, then DANCE WITH FRUITS ([the opening](#the-opening)) |
-| `fruits-swap-mecha.mp4`      | the mecha on the fruit loop with cue swaps, 2 November (`mecha-fruit-song-vox`); title typed in       |
-| `fruits-swap-gorilla.mp4`    | the gorilla, banana and apple, 3 November                                                             |
-| `fruits-swap-gold-ninja.mp4` | the gold ninja, banana and watermelon, 3 November, with WATERMELON baked into frames 115 to 143       |
-| `fruits-swap-pink-cat.mp4`   | the pink cat girl, banana and apple, 3 November                                                       |
-| `fruits-swap-card-1.jpg`     | frame 187 of the mecha, darkened, with GORILLA baked in; held by swap card 1                          |
-| `fruits-swap-card-2.jpg`     | frame 187 of the ninja, darkened, with PINK CAT baked in; held by swap card 2                         |
-| `fruits-swap-end-card.jpg`   | the mecha's clean frame 0, a centred square, on the end card                                          |
+| File                         | What it is                                                                                             |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `fruits-swap-splash.mp4`     | the splash, 2.5 s of Signal black for the pixel-fruit shower to fly over ([the opening](#the-opening)) |
+| `fruits-swap-mecha.mp4`      | the mecha on the fruit loop with cue swaps, 2 November (`mecha-fruit-song-vox`); title and swarm baked |
+| `fruits-swap-gorilla.mp4`    | the gorilla, banana and apple, 3 November                                                              |
+| `fruits-swap-gold-ninja.mp4` | the gold ninja, banana and watermelon, 3 November, with WATERMELON baked into frames 115 to 143        |
+| `fruits-swap-pink-cat.mp4`   | the pink cat girl, banana and apple, 3 November                                                        |
+| `fruits-swap-card-1.jpg`     | frame 187 of the mecha, darkened, with GORILLA baked in; held by swap card 1                           |
+| `fruits-swap-card-2.jpg`     | frame 187 of the ninja, darkened, with PINK CAT baked in; held by swap card 2                          |
+| `fruits-swap-end-card.jpg`   | the mecha's clean frame 0, a centred square, on the end card                                           |
 
 The workflow (the LTX-2.5 22B IC-LoRA Layout-to-Render graph) has no registry
 entry of its own, so the gallery badge names the open LTX-2.5 entry
@@ -75,16 +75,16 @@ the song's beats; the drop-beat cut lands about 50 ms after the song's beat 8.
 Every dance shot starts its render at the position its loop has reached in
 the track (`tests/fruits-swap.test.ts` checks it to a frame).
 
-| Beats | Seconds     | What plays                                                                        |
-| ----- | ----------- | --------------------------------------------------------------------------------- |
-| 0–4   | 0.00–2.40   | Title splash: the apple pops on beat 0, DANCE WITH on 2, FRUITS on 3; pixel fruit |
-| 4–17  | 2.40–10.20  | Mecha on the loop restart; the apple lands on its shoulder, the title types       |
-| 17–19 | 10.20–11.40 | Swap card 1: Space.js tracks the held mecha frame, **GORILLA** on it              |
-| 19–27 | 11.40–16.20 | Gorilla on the loop restart, under the surveillance scan; its box degrades        |
-| 27–32 | 16.20–19.20 | Gold ninja on the drop (beat 8 of loop 2, render at 4.79 s), **WATERMELON**       |
-| 32–34 | 19.20–20.40 | Swap card 2: Space.js tracks the held ninja frame, **PINK CAT** on it             |
-| 34–47 | 20.40–28.20 | Pink cat on the loop restart; from beat 45 pixel fruit flood the frame            |
-| 47–55 | 28.20–33.00 | End card, already built: MADE WITH / GENOBI / DANCE WITH FRUITS                   |
+| Beats | Seconds     | What plays                                                                   |
+| ----- | ----------- | ---------------------------------------------------------------------------- |
+| 0–4   | 0.00–2.40   | Splash: pixel fruit fly across Signal black, thickening on beat 2            |
+| 4–17  | 2.40–10.20  | Mecha on the loop restart; the title types; a fruit swarm rides its shoulder |
+| 17–19 | 10.20–11.40 | Swap card 1: Space.js tracks the held mecha frame, **GORILLA** on it         |
+| 19–27 | 11.40–16.20 | Gorilla on the loop restart, under the surveillance scan; its box degrades   |
+| 27–32 | 16.20–19.20 | Gold ninja on the drop (beat 8 of loop 2, render at 4.79 s), **WATERMELON**  |
+| 32–34 | 19.20–20.40 | Swap card 2: Space.js tracks the held ninja frame, **PINK CAT** on it        |
+| 34–47 | 20.40–28.20 | Pink cat on the loop restart; from beat 45 pixel fruit flood the frame       |
+| 47–55 | 28.20–33.00 | End card, already built: MADE WITH / GENOBI / DANCE WITH FRUITS              |
 
 Each render covers 8.04 s of its 9 s loop (13.4 beats), so a loop is 13 beats
 of picture and a two-beat card; the card also hides the render's seam. The
@@ -92,43 +92,51 @@ swaps are hard cuts, never crossfades, each marked by a `slice-glitch`.
 
 ## The opening
 
-The owner asked for "almost like a logo of the apple with DANCE WITH FRUITS"
-before the mecha, then the title typed with the music. Of his two orderings
-the cut takes **(a), the apple first, then the words**: four beats give the
-apple the downbeat to itself and let each half of the line land on its own
-beat (DANCE WITH on 2, FRUITS in lime on 3), where (b), all at once, would
-leave beats 1 to 3 with nothing new to cut to.
+Since version 5 (the owner: "this is cool, love icons") the splash is the
+pixel fruit alone and the typed line on the mecha is the only title.
 
-- **The splash** is a baked shot: the voxel apple cut out of the opening
-  render's frame 0 (by saturation, specks removed, the mask filled so it is
-  solid) pops in with an overshoot and bounces on every beat over Signal
-  black. `sprite-shower` flies pixel fruit across it, thick for two beats and
-  thin once the words land, so they read.
-- **The apple flies onto the mecha's shoulder** at the cut and bounces there
-  on the beat, then pops off at clip frame 60. This covers a known defect of
-  the opening render, the mannequin-hand bug: in its first 2.3 s a third hand
-  shows near the right shoulder (frames 36 to 54, x 0.42 to 0.65, y 0 to 0.35
-  of the frame). The apple covers x 0.42 to 0.645 and y 0 to 0.40 over those
-  frames, checked frame by frame. This hides the defect; it does not fix it.
-  The fix is a re-render with exactly the same character as the still.
+- **The splash** is four beats of Signal black (a plain shot) with
+  `sprite-shower` flying pixel fruit across it: 50 sprites, then 90 from
+  beat 2.
 - **The title types on the grid**: DANCE WITH FRUITS, two characters every
-  eighth note (0.3 s), a lime block cursor after it that blinks on the eighth,
-  over the mecha's first 4.2 s.
+  eighth note (0.3 s), a neon-pink block cursor after it that blinks on the
+  eighth, over the mecha's first 4.2 s.
+- **A swarm of the same pixel fruit rides the mecha's right shoulder.** It
+  covers a known defect of the opening render, the mannequin-hand bug: in its
+  first 2.3 s a third hand shows near the right shoulder (frames 36 to 54,
+  x 0.42 to 0.65, y 0 to 0.35 of the frame). The fruit fly in along their own
+  rays from clip frame 20, settle by frame 32 into a swirling disc (radius
+  330 px, centred on x 0.535, y 0.21) that bobs on the beat, and burst
+  outward at frame 60, once the clip is clean. Frames 40 to 56 were checked at
+  full resolution. This hides the defect; it does not fix it. The fix is a
+  re-render with exactly the same character as the still.
+
+Versions 3 and 4 opened on an apple-logo splash, the voxel apple cut from the
+render and DANCE WITH FRUITS landing on beats 2 and 3 (ordering (a) of the
+owner's two), and the apple flew onto the mecha's shoulder to cover the hand.
 
 ## The look
 
 - **Swap cards** (`space-hud`, Space.js by Patrick Schroen): `card: true`
   layers that hold the outgoing character's last frame, with Space.js trackers
   on the dancer's head and both fruits, `SWAP // MECHA OUT` and
-  `NEXT · GORILLA`. The stills are darkened already, so `dim` is 0.
-- **Words, baked**: the splash, the typed title, GORILLA and PINK CAT on the
+  `NEXT · GORILLA`, in the cut's pink (Space.js draws its readout text in
+  the same colour as its lines). The stills are darkened already, so `dim`
+  is 0.
+- **One pink**: every line and plate is neon pink `#ff2bd6` and every word
+  white (version 5). No pink token exists in the studio's themes
+  (`src/motion/motion-theme.css` holds only Signal lime), so the value is the
+  cut's own.
+- **Words, baked**: the typed title, GORILLA and PINK CAT on the
   card stills, and WATERMELON slammed over the ninja's drop frames (the
   `kinetic` slam's motion, frame by frame), in Retro Gaming, see
   [the typeface](#the-typeface). Everything drawn live is in IBM Plex Mono.
 - **The gorilla as a surveillance camera**: `crt` scanlines over the frame,
   the `hud` (`● REC  CAM 02 // SUBJECT GORILLA`), a `ui-focus` target box on
   the dancer's middle third (x 0.30, y 0.04, 0.40 × 0.92, measured from the
-  gorilla's frames) for four beats, then a `scan` lock on the head, under
+  gorilla's frames, no tag: the HUD names the subject) for four beats, then
+  a lock on the head (`scan-lock`): ACQUIRING GORILLA, then the plate turns
+  pink and reads GORILLA SALSA / DANCE UNLOCKED, under
   light `crt` scanlines. Only that box takes a surveillance look, with
   `box-scan`, kept subtle so the gorilla still reads as the gorilla:
   posterize on brightness alone (no colour shift) at 0.2, 0.3, 0.4 and 0.5
@@ -142,8 +150,8 @@ leave beats 1 to 3 with nothing new to cut to.
   (`offsetSeconds`, the layer's `animationOffsetFrames`), so the card's
   dot-matrix construction is skipped.
 - **End card** (`end-card-still`): MADE WITH / GENOBI / DANCE WITH FRUITS,
-  credits MUSIC · DANCE WITH FRUITS and KOSHIMAZAKI · VIDEO LTX-2.5, lime and
-  lilac, the mecha beside them.
+  credits MUSIC · DANCE WITH FRUITS and KOSHIMAZAKI · VIDEO LTX-2.5, the
+  title white and the subtitle pink, the mecha beside them.
 
 ## The typeface
 
@@ -152,8 +160,8 @@ which the owner chose for this piece. dafont lists it as "100% Free", but the
 font names "All rights reserved" and its download carries no licence text, so
 there is no written grant to redistribute the font file. It is not bundled
 and no recipe asks for it. It is used on the owner's computer to bake the
-words into the media (the splash, the opening mecha, the two card stills, the
-ninja's drop frames). Those are the owner's artwork; the font file stays on
+words into the media (the opening mecha, the two card stills, the ninja's drop
+frames). Those are the owner's artwork; the font file stays on
 that computer. Changing a word means baking again with the font installed.
 
 ## The rule it follows
@@ -210,6 +218,11 @@ All 3 November 2026, from the owner's reviews.
 - **v4**: the gorilla "can be more subtle effects … looks overdone": the box
   treatment halved, posterized on brightness alone so nothing shifts colour,
   a softer box edge and lighter scanlines.
+- **v5**: "this is cool, love icons". The splash is the pixel fruit alone and
+  the typed title is the only title (apple logo and splash words removed); a
+  fruit swarm covers the opening's third hand; every lime line and plate is
+  now neon pink `#ff2bd6` with white words; the head lock reads GORILLA SALSA
+  DANCE UNLOCKED (`scan-lock`).
 
 ## Limits
 

@@ -1711,14 +1711,14 @@
       "title": "Dance with Fruits: its recipes",
       "path": "fruits-swap-recipes.md",
       "tags": ["director", "bundle", "templates"],
-      "summary": "The three recipes Dance with Fruits added to the trusted registry - a comic speech bubble, a pixel-art fruit shower and a surveillance treatment confined to a box - with their parameters and checks.",
+      "summary": "The four recipes Dance with Fruits added to the trusted registry - a comic speech bubble, a pixel-art fruit shower, a surveillance treatment confined to a box and a scan with its own lock line - with their parameters and checks.",
       "links": ["fruits-swap.md"]
     },
     {
       "title": "Dance with Fruits: the swap edit",
       "path": "fruits-swap.md",
       "tags": ["director", "sound", "templates"],
-      "summary": "Dance with Fruits, the content-swap mix template - 33 seconds of the owner's four LTX-2.5 Layout-to-Render (open weights) renders of one dance guide, opened by an apple-logo title splash, swapped hard on the loop and the drop, with Retro Gaming words baked into the media, pixel fruit flying, a surveillance scan confined to the gorilla and the house end card. Nothing to generate.",
+      "summary": "Dance with Fruits, the content-swap mix template - 33 seconds of the owner's four LTX-2.5 Layout-to-Render (open weights) renders of one dance guide, opened by a splash of flying pixel fruit and a typed title, swapped hard on the loop and the drop, with Retro Gaming words baked into the media, a neon-pink surveillance scan confined to the gorilla and the house end card. Nothing to generate.",
       "links": ["fruits-swap-recipes.md", "templates.md"]
     },
     {
