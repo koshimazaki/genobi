@@ -88,7 +88,21 @@ python3 workflows/experiments/look.py batch --capture GUIDE_DIR \
 ```
 
 FLUX 3 Image Klein Base edits frame 0 into the first look, then the closed and
-open frames with the first look as a reference so the three match. Output size
+open frames with the first look as a reference so the three match.
+
+An owner-supplied still goes in `LOOKS_DIR/<study>/look-first.png`, cropped to
+the guide's aspect (a 1360x768 Genobi study becomes 1360x765, which is exactly
+16:9 against a 1024x576 guide; 768 high fails `prepare.py` by eight output
+pixels). `look.py batch` refuses a study whose `look-first.png` already exists
+without a receipt, so give it a separate `--out` for the studies that still
+need looks, and make the closed look for a hand-made study with `look.py one
+--frame FRAMES/<study>/frame-closed-0144.png --reference LOOKS_DIR/<study>/look-first.png`
+so it matches the first. On 3 November the owner supplied pyramid-inside
+(a rusted hangar interior with a gold robot), fruit-apple and fruit-banana
+(real fruit on a dark studio sweep), and started a second, voxel set of the
+fruit (cube-built fruit, matte red blocks, a dark sweep) under `looks-vox/`.
+Two look sets for one study mean two bundle passes: run `make-bundles.sh` once
+per LOOKS_DIR with its own BUNDLES_DIR, and queue both. Output size
 is twice the guide (the aspect is checked the way `prepare.py` checks
 `--look`). See [LOOK.md](../workflows/experiments/LOOK.md) for the four Klein
 files, the aesthetics used and what is unverified until a box run.
