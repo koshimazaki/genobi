@@ -124,13 +124,13 @@ describe("ship-mecha", () => {
     }
   });
 
-  it("morphs on swells above the take's median bass, not on a loud floor", () => {
+  it("morphs on swells above the take's own bass floor, not on a loud floor", () => {
     expect(bassSwells([0, 0, 0]).low).toEqual([0, 0, 0]);
     expect(bassSwells([1, 1, 1]).low).toEqual([1, 1, 1]);
-    // A loud take that never drops below 0.55: the median is the spacecraft.
+    // A loud take that never drops below 0.55: its usual level is the spacecraft.
     const n = 97;
     const low = Array.from({ length: n }, (_, i) =>
-      i === 60 ? 0.85 : i % 2 ? 0.55 : 0.7,
+      i >= 60 && i <= 65 ? 0.85 : i % 2 ? 0.55 : 0.7,
     );
     const input = bands(n, 0);
     input.bandEnvelopes.low = low;
@@ -141,5 +141,9 @@ describe("ship-mecha", () => {
     expect(at(0).x).toBeCloseTo(ship.objects["voxel-000"].x, 6);
     expect(at(1).x).toBeCloseTo(ship.objects["voxel-000"].x, 6);
     expect(at(60).x).toBeCloseTo(mecha.objects["voxel-000"].x, 6);
+    // Held for a latent stride after the hit, then fading back, never early.
+    expect(at(73).x).toBeCloseTo(mecha.objects["voxel-000"].x, 6);
+    expect(at(59).x).toBeCloseTo(ship.objects["voxel-000"].x, 6);
+    expect(at(90).x).toBeCloseTo(ship.objects["voxel-000"].x, 6);
   });
 });

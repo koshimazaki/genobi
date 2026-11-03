@@ -22,27 +22,42 @@ const ELEVATION = 10,
 
 type Part = SceneTransform & { color?: string };
 
-/** Below this spread between the take's median and loudest bass, keep the band as is. */
+/** Below this spread between the swell floor and top, keep the band as is. */
 const MIN_SWELL = 0.05;
+/** Frames a swell holds at its height (one LTX latent stride), then fades over. */
+export const SWELL_HOLD = 8,
+  SWELL_RELEASE = 12;
 
 /**
- * The low band as swells above the take's own median: the median and
- * everything under it read 0 (the spacecraft), the loudest frame reads 1.
- * Measured 3 Nov 2026 on Dimensions at 40.125 s: after auto gain the low band
- * never fell below 0.54, so the raw band held the mecha for the whole take.
- * A band without that spread (silence, a constant) is returned unchanged, so
- * zero bass is still the spacecraft and full bass the mecha.
+ * The low band as swells above the take's own bass floor: its 75th
+ * percentile and everything under it read 0 (the spacecraft), its 95th
+ * percentile and above read 1 (as auto gain sets the band), each swell held
+ * for SWELL_HOLD frames and released over SWELL_RELEASE. Measured 3 Nov 2026
+ * on Dimensions at 40.125 s: after auto gain the low band never fell below
+ * 0.54, so the raw band held the mecha for the whole take. A band without
+ * that spread (silence, a constant) is returned unchanged, so zero bass is
+ * still the spacecraft and full bass the mecha.
  */
 export function bassSwells(low: number[]) {
   const sorted = [...low].sort((a, b) => a - b);
-  const median = sorted[Math.floor(sorted.length / 2)] ?? 0,
-    peak = sorted.at(-1) ?? 0;
-  if (peak - median < MIN_SWELL) return { low: [...low], median: null };
+  const floor = sorted[Math.floor((sorted.length - 1) * 0.75)] ?? 0,
+    peak = sorted[Math.floor((sorted.length - 1) * 0.95)] ?? 0;
+  if (peak - floor < MIN_SWELL) return { low: [...low], floor: null };
+  const swell = low.map((v) =>
+    Math.max(0, Math.min(1, (v - floor) / (peak - floor))),
+  );
+  // A swell holds SWELL_HOLD frames, then fades over SWELL_RELEASE: the
+  // raw swells last one to three frames, too short to read as a mecha or to
+  // survive the keyframe pick's snap to the 8-frame grid. Past frames only,
+  // so a swell never arrives early and frame 0 is its own value.
+  const held: number[] = [];
+  swell.forEach((_, i) => {
+    const hold = Math.max(...swell.slice(Math.max(0, i - SWELL_HOLD), i + 1));
+    held.push(Math.max(hold, (held[i - 1] ?? 0) - 1 / SWELL_RELEASE));
+  });
   return {
-    low: low.map((v) =>
-      Math.max(0, Math.min(1, (v - median) / (peak - median))),
-    ),
-    median,
+    low: held,
+    floor,
   };
 }
 
@@ -152,9 +167,9 @@ export function shipMecha(recipe: Recipe) {
     camera: `held front view, ${ELEVATION} degrees above, the mecha ${SHIP_FILL * 100}% of the frame height`,
     morph: `continuous: morphControl Spacecraft -> Mecha on low, progress = low x ${FRUIT_MORPH_AMOUNT}, clamped at 1`,
     low:
-      swells.median === null
-        ? "raw low band (no swell above its median)"
-        : `swells above the take's median low ${Math.round(swells.median * 1000) / 1000}, loudest frame 1`,
+      swells.floor === null
+        ? "raw low band (no swell above its floor)"
+        : `swells above the take's p75 low ${Math.round(swells.floor * 1000) / 1000} to its p95, held 8 frames, released over 12`,
     mappings: "twistY mid 0.2",
     voxels: Object.keys(ship.objects).length,
     hover: `mecha feet ${SHIP_HOVER} m above the floor, both forms on one centre`,
