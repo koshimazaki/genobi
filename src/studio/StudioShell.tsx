@@ -22,6 +22,7 @@ import { StudioNavigation } from "./StudioNavigation";
 import { usePanelMotion } from "./usePanelMotion";
 import { useStudio } from "./useStudio";
 import { studioStore } from "./store";
+import { cancelCameraRecipeHandoff } from "../camera-recipe-target";
 import {
   addToProjectAssets,
   addedMessage,
@@ -176,6 +177,10 @@ export default function StudioShell() {
   const drag = useNinjaDrag(preset === "ninja" && ninjaEditing, move);
   function select(next: Preset, updateUrl = true) {
     if (next === preset) return;
+    // A reference image may still be loading for Recreate in Camera.
+    // Leaving the Camera invalidates that handoff before it can overwrite
+    // prompts or references on a later visit.
+    if (next !== "camera") cancelCameraRecipeHandoff();
     const focusWasInPanel = root.current?.contains(document.activeElement);
     measure();
     setPreset(next);
