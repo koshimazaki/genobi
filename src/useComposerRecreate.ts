@@ -81,8 +81,7 @@ export function useComposerRecreate(
   useEffect(() => {
     if (
       uploadingVideo &&
-      (state.generator !== "upscale" ||
-        state.sourceId !== ASSET_UPLOAD_PENDING)
+      (state.generator !== "upscale" || state.sourceId !== ASSET_UPLOAD_PENDING)
     ) {
       uploads.current++;
       setUploadingVideo(false);
