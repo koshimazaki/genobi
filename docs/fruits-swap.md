@@ -123,8 +123,8 @@ owner's two), and the apple flew onto the mecha's shoulder to cover the hand.
   `NEXT · GORILLA`, in the cut's pink (Space.js draws its readout text in
   the same colour as its lines). The stills are darkened already, so `dim`
   is 0.
-- **One pink**: every line and plate is neon pink `#ff2bd6` and every word
-  white (version 5). No pink token exists in the studio's themes
+- **One pink**: every line and plate is neon pink `#ff4dff` and every word
+  white (version 5; brighter in version 6). No pink token exists in the studio's themes
   (`src/motion/motion-theme.css` holds only Signal lime), so the value is the
   cut's own.
 - **Words, baked**: the typed title, GORILLA and PINK CAT on the
@@ -223,6 +223,11 @@ All 3 November 2026, from the owner's reviews.
   fruit swarm covers the opening's third hand; every lime line and plate is
   now neon pink `#ff2bd6` with white words; the head lock reads GORILLA SALSA
   DANCE UNLOCKED (`scan-lock`).
+- **v6**: "I think we need brighter pink there." The pink goes from `#ff2bd6`
+  to `#ff4dff`, brighter and more luminous, everywhere it is used (the HUD,
+  focus box, lock reticle and plate, wireframe, swap-card lines, the baked
+  typed cursor, the end-card subtitle). The lighter candidate, `#ff5ce6`,
+  went pastel on the lock plate.
 
 ## Limits
 

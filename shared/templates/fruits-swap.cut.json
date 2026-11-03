@@ -73,7 +73,7 @@
         "credit2": "KOSHIMAZAKI · VIDEO LTX-2.5",
         "font": "\"IBM Plex Mono\", monospace",
         "color": "#f6f8f2",
-        "accent": "#ff2bd6",
+        "accent": "#ff4dff",
         "steps": "Gathering the dancers / Cutting on the loop / Bringing it into focus",
         "done": "Swap ready",
         "duration": 2.4,
@@ -92,7 +92,7 @@
       "card": true,
       "parameters": {
         "still": "/media/director-templates/fruits-swap/fruits-swap-card-1.jpg",
-        "color": "#ff2bd6",
+        "color": "#ff4dff",
         "label": "SWAP // MECHA OUT",
         "credit": "NEXT · GORILLA",
         "targets": "0.5,0.24,0.2,0.3 / 0.2,0.3,0.16,0.26 / 0.8,0.3,0.16,0.26",
@@ -113,7 +113,7 @@
       "card": true,
       "parameters": {
         "still": "/media/director-templates/fruits-swap/fruits-swap-card-2.jpg",
-        "color": "#ff2bd6",
+        "color": "#ff4dff",
         "label": "SWAP // NINJA OUT",
         "credit": "NEXT · PINK CAT",
         "targets": "0.5,0.24,0.2,0.3 / 0.2,0.3,0.16,0.26 / 0.8,0.3,0.16,0.26",
@@ -156,7 +156,7 @@
         "posterize": 0.2,
         "levels": 8,
         "wire": 0,
-        "color": "#ff2bd6",
+        "color": "#ff4dff",
         "sweep": 1.2,
         "trail": 0.35
       }
@@ -179,7 +179,7 @@
         "posterize": 0.3,
         "levels": 7,
         "wire": 0,
-        "color": "#ff2bd6",
+        "color": "#ff4dff",
         "sweep": 1.2,
         "trail": 0.35
       }
@@ -202,7 +202,7 @@
         "posterize": 0.4,
         "levels": 6,
         "wire": 0,
-        "color": "#ff2bd6",
+        "color": "#ff4dff",
         "sweep": 1.2,
         "trail": 0.35
       }
@@ -225,7 +225,7 @@
         "posterize": 0.5,
         "levels": 6,
         "wire": 0.25,
-        "color": "#ff2bd6",
+        "color": "#ff4dff",
         "sweep": 1.2,
         "trail": 0.35
       }
@@ -248,7 +248,7 @@
         "posterize": 0.5,
         "levels": 6,
         "wire": 0.5,
-        "color": "#ff2bd6",
+        "color": "#ff4dff",
         "sweep": 1.2,
         "trail": 0.35
       }
@@ -268,7 +268,7 @@
         "w": 0.4,
         "h": 0.92,
         "label": "",
-        "color": "#ff2bd6",
+        "color": "#ff4dff",
         "dim": 0.25,
         "draw": 0.3,
         "fadeAt": 2.25,
@@ -286,7 +286,7 @@
       "opacity": 0.95,
       "parameters": {
         "color": "#f6f8f2",
-        "accent": "#ff2bd6",
+        "accent": "#ff4dff",
         "text": "GORILLA",
         "locked": "GORILLA SALSA / DANCE UNLOCKED",
         "x": 0.5,
@@ -305,7 +305,7 @@
       "opacity": 1,
       "parameters": {
         "color": "#f6f8f2",
-        "accent": "#ff2bd6",
+        "accent": "#ff4dff",
         "bpm": 100,
         "text": "● REC  CAM 02 // SUBJECT GORILLA",
         "credit": "MUSIC / DANCE WITH FRUITS",
