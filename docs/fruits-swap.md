@@ -1,6 +1,6 @@
 ---
 tags: [director, sound, templates]
-summary: Dance with Fruits, the character-swap mix template - 31 seconds of the owner's four LTX-2.5 Layout-to-Render (open weights) renders of one dance guide, swapped hard on the loop and the drop, with Signal swap words, a surveillance scan and the house end card. Nothing to generate.
+summary: Dance with Fruits, the character-swap mix template - 31 seconds of the owner's four LTX-2.5 Layout-to-Render (open weights) renders of one dance guide, swapped hard on the loop and the drop, with a speech-bubble title, Retro Gaming swap words baked into the media, a degrading surveillance scan and the house end card. Nothing to generate.
 ---
 
 # Dance with Fruits: the swap edit
@@ -12,36 +12,37 @@ same audio window**, so a cut between two of them at the same frame keeps the
 pose, the fruits, the floor and the camera and changes only the dancer. It
 replaces the ffmpeg build (`audio-reactive/edit/fruits-swap-build.sh`), whose
 Nokia pixel-font cards the owner turned down as "too much": this cut uses the
-house recipes and the house typeface, like the other mix templates. In the
-Gallery it is the fifth card, **Dance with Fruits · Character swap**.
+house recipes, like the other mix templates. In the Gallery it is the fifth
+card, **Dance with Fruits · Character swap**. Version 2 (the owner's review of
+v1, 3 November 2026) is described [below](#version-2).
 
 | Piece    | Where                                                                                                         |
 | -------- | ------------------------------------------------------------------------------------------------------------- |
 | Template | `shared/templates/fruits-swap.ts`                                                                             |
 | Cut      | `shared/templates/fruits-swap.cut.json`                                                                       |
 | Media    | `public/media/director-templates/fruits-swap/`                                                                |
-| Tests    | `tests/fruits-swap.test.ts`, `tests/gallery-badges-order.test.ts`                                             |
+| Tests    | `tests/fruits-swap.test.ts`, `tests/mix-speech-bubble.test.ts`, `tests/gallery-badges-order.test.ts`          |
 | Render   | `TEASER_EXAMPLE=fruits-swap node scripts/render-genobi-teaser.mjs out/`                                       |
 | Workflow | [the swap template](https://github.com/koshimazaki/Genobi/blob/main/audio-reactive/videos/fruits-template.md) |
 
 ## The footage
 
-Four LTX-2.5 Layout-to-Render (open weights) renders the owner made on
-3 November 2026 from window 0 of the explode guide
+Four LTX-2.5 Layout-to-Render (open weights) renders the owner made from
+window 0 of the explode guide
 (`char-<name>-explode-w0`, [fruits.md](https://github.com/koshimazaki/Genobi/blob/main/audio-reactive/videos/fruits.md)),
 each from the owner's own look still: 193 frames, 2048 × 1152, 24 fps,
 8.04 s, with the loop muxed in. Only the picture is bundled, encoded once at
 1920 × 1080 (libx264, CRF 19, no sound, `+faststart`), 4 to 5 MiB each:
 
-| File                         | Character                                              |
-| ---------------------------- | ------------------------------------------------------ |
-| `fruits-swap-mecha.mp4`      | the grey and gold mecha, banana and apple              |
-| `fruits-swap-gorilla.mp4`    | the gorilla, banana and apple                          |
-| `fruits-swap-gold-ninja.mp4` | the gold ninja, banana and watermelon                  |
-| `fruits-swap-pink-cat.mp4`   | the pink cat girl, banana and apple                    |
-| `fruits-swap-card-1.jpg`     | frame 187 of the mecha, held by swap card 1            |
-| `fruits-swap-card-2.jpg`     | frame 187 of the ninja, held by swap card 2            |
-| `fruits-swap-end-card.jpg`   | the mecha's frame 0, a centred square, on the end card |
+| File                         | What it is                                                                                                  |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `fruits-swap-mecha.mp4`      | the grey and gold mecha, 2 November render (`mecha-explode-fruit-song-w0`): the fruits burst and reassemble |
+| `fruits-swap-gorilla.mp4`    | the gorilla, banana and apple, 3 November                                                                   |
+| `fruits-swap-gold-ninja.mp4` | the gold ninja, banana and watermelon, 3 November, with WATERMELON baked into frames 115 to 143             |
+| `fruits-swap-pink-cat.mp4`   | the pink cat girl, banana and apple, 3 November                                                             |
+| `fruits-swap-card-1.jpg`     | frame 187 of the mecha, darkened, with GORILLA baked in; held by swap card 1                                |
+| `fruits-swap-card-2.jpg`     | frame 187 of the ninja, darkened, with PINK CAT baked in; held by swap card 2                               |
+| `fruits-swap-end-card.jpg`   | the mecha's frame 0, a centred square, on the end card                                                      |
 
 The workflow (the LTX-2.5 22B IC-LoRA Layout-to-Render graph) has no registry
 entry of its own, so the gallery badge names the open LTX-2.5 entry
@@ -73,11 +74,11 @@ the music.
 
 | Beats | Seconds     | What plays                                                                       |
 | ----- | ----------- | -------------------------------------------------------------------------------- |
-| 0–13  | 0.00–7.79   | Mecha from the loop start (the voice); screen open over the first two beats      |
-| 13–15 | 7.79–9.00   | Swap card 1: Space.js tracks the held mecha frame, **GORILLA** slammed           |
-| 15–23 | 9.00–13.79  | Gorilla on the loop restart, under the CAM 02 surveillance scan                  |
+| 0–13  | 0.00–7.79   | Mecha from the loop start (the voice); screen open, then the title bubble 2–6    |
+| 13–15 | 7.79–9.00   | Swap card 1: Space.js tracks the held mecha frame, **GORILLA** on it             |
+| 15–23 | 9.00–13.79  | Gorilla on the loop restart, under a surveillance scan that degrades             |
 | 23–28 | 13.79–16.79 | Gold ninja on the drop (beat 8 of loop 2, render at 4.79 s), **WATERMELON**      |
-| 28–30 | 16.79–18.00 | Swap card 2: Space.js tracks the held ninja frame, **PINK CAT** slammed          |
+| 28–30 | 16.79–18.00 | Swap card 2: Space.js tracks the held ninja frame, **PINK CAT** on it            |
 | 30–43 | 18.00–25.79 | Pink cat on the loop restart                                                     |
 | 43–51 | 25.79–30.58 | End card: MADE WITH / GENOBI / DANCE WITH FRUITS, as the voice comes round again |
 
@@ -87,20 +88,29 @@ swaps themselves are hard cuts: never a crossfade, the pose carries across.
 
 ## The look
 
-Every overlay is an existing trusted recipe; nothing new was registered.
+Every layer is a trusted recipe. One was added for this piece:
+`speech-bubble` (below).
 
+- **Title** (`speech-bubble`): over beats 2 to 6 a comic speech bubble pops
+  out up and to the left of the mecha's head, its tail on the head, saying
+  DANCE WITH FRUITS in IBM Plex Mono, Signal black on white.
 - **Swap cards** (`space-hud`, Space.js by Patrick Schroen): `card: true`
   layers that hold the outgoing character's last frame, with Space.js trackers
   locking onto the dancer and both fruits, `SWAP // MECHA OUT` and
-  `NEXT · GORILLA`.
-- **Swap words** (`kinetic`): GORILLA and PINK CAT on the cards, WATERMELON
-  slammed over the picture on the drop, so the dance never stops twice in one
-  loop. White on Signal black, in IBM Plex Mono, the studio's own face.
+  `NEXT · GORILLA`. The card stills are darkened already, so `dim` is 0.
+- **Swap words, baked**: GORILLA and PINK CAT on the card stills, WATERMELON
+  slammed over the ninja's drop frames (the `kinetic` slam's motion, frame by
+  frame: in from 2.2×, a decaying shake, a dark flash), so the dance never
+  stops twice in one loop. They are set in Retro Gaming, see
+  [the typeface](#the-typeface). Everything drawn live stays in IBM Plex Mono.
 - **Surveillance scan on the gorilla loop**: `crt` scanlines, the `hud`
   reading `● REC  CAM 02 // SUBJECT GORILLA`, a `ui-focus` target box on the
   dancer's middle third (measured from the gorilla's frames 0 to 176:
   x 0.30, y 0.04, 0.40 × 0.92 of the frame) for four beats, then a `scan`
-  lock on the head for four.
+  lock on the head for four. Under them the picture degrades as the loop goes:
+  the `dither` filter every two beats, amount 0.4, 0.6, 0.8, 1.0 at 8, 5, 3
+  and 2 levels, then `wire-scan` (a lime wireframe sweep) at 0.45 on beat 21
+  and 0.9 on beat 22, just before the WATERMELON cut.
 - **Cuts**: a `slice-glitch` on every cut (beats 13, 15, 23, 28, 30) and a
   `signal-wipe` into the end card, centred on beat 43.
 - **End card** (`end-card-still`): the Dimensions mix's construction end
@@ -109,6 +119,41 @@ Every overlay is an existing trusted recipe; nothing new was registered.
   render here showed was wrong for this piece. MADE WITH / GENOBI / DANCE WITH
   FRUITS, credits MUSIC · DANCE WITH FRUITS and KOSHIMAZAKI · VIDEO LTX-2.5,
   lime and lilac, the mecha beside them.
+
+## The speech bubble recipe
+
+`speech-bubble` (`docs/director-bundle/example/graphics/mix-speech-bubble.mjs`,
+registered in the studio example `studio.json` with the other mix recipes,
+since a mix takes its recipes from there) is a Canvas 2D overlay under the
+`animejs` entry. A rounded bubble with a thick outline and a tail whose tip
+sits just off an anchor point; it grows from the tip with an overshoot over
+`duration`, then holds. Every parameter is required and schema-checked:
+
+| Parameter   | Values                                                       |
+| ----------- | ------------------------------------------------------------ |
+| `text`      | 1 to 60 characters, no control characters; " / " breaks      |
+| `font`      | `IBM Plex Mono` or `Instrument Sans` (bundled faces)         |
+| `color`     | `#rrggbb`: outline, tail and words                           |
+| `fill`      | `#rrggbb`: the bubble                                        |
+| `x`, `y`    | the anchor, 0 to 1 of the frame                              |
+| `size`      | 8 to 240 px, the type size at the layer's pixels             |
+| `direction` | `up-left`, `up-right`, `down-left`, `down-right` from anchor |
+| `duration`  | 0.05 to 4 s, the pop                                         |
+
+The bubble is kept inside the frame; the tail stretches to follow. Every
+frame is a function of the layer's time alone (`tests/mix-speech-bubble.test.ts`:
+seek order, the pop, line breaks, frame bounds, schema refusals).
+
+## The typeface
+
+The swap words are set in **Retro Gaming** by Daymarius (Vasily Draigo),
+which the owner chose for this piece. dafont lists it as "100% Free", but the
+font names "All rights reserved" and its download carries no licence text, so
+there is no written grant to redistribute the font file. It is not bundled
+and no recipe asks for it. It was used once, on the owner's computer, to bake
+the words into three media files ([`audio-reactive/edit/fruits-swap-bake-type.py`](https://github.com/koshimazaki/Genobi/blob/main/audio-reactive/edit/fruits-swap-bake-type.py)): the two card stills and the ninja's drop frames. Those are the owner's
+artwork; the font file stays on that computer. Changing a word means baking
+again with the font installed.
 
 ## The rule it follows
 
@@ -144,11 +189,32 @@ replaced by the house recipes: slice glitches and Signal type.
    a drop-beat swap starts at beat 8 of its loop with `sourceSeconds` at its
    position in its own loop. Cards hold a still of the outgoing frame (the
    frame after the slice's last). `checkMix` must pass.
-5. **Render** with the in-page renderer:
+5. **Bake the words** (with Retro Gaming installed): darken each card still to
+   55 % and set the next name at 160 px, white over a Signal-black offset,
+   without anti-aliasing; render the mid-loop word as the `kinetic` slam,
+   frame by frame, and overlay it on that clip's drop frames when encoding.
+6. **Render** with the in-page renderer:
    `TEASER_URL=http://127.0.0.1:4317 TEASER_EXAMPLE=fruits-swap TEASER_MBPS=16 node scripts/render-genobi-teaser.mjs out/`,
    then a gallery copy under 25 MiB, a preview and a poster from a strong
    frame.
-6. **Look at the contact sheet** before calling it done.
+7. **Look at the contact sheet** before calling it done.
+
+## Version 2
+
+From the owner's review of v1 (3 November 2026):
+
+- **Typeface**: "Retro Gaming … was a good font for this". Baked into media,
+  not bundled ([the typeface](#the-typeface)); the live `kinetic` slams are
+  gone.
+- **Speech bubble**: the title DANCE WITH FRUITS pops out of the mecha in a
+  comic bubble (the new `speech-bubble` recipe).
+- **Gorilla as a surveillance camera**: the REC HUD, focus box and head lock
+  stay; the picture posterizes in steps and turns to wireframe before the drop.
+- **Fruit motion**: the fruits barely moved in the 3 November mecha render,
+  so the mecha is the owner's 2 November render on the same guide pose and
+  loop, where the fruits burst into flying blocks and reassemble (about three
+  times the fruit motion, measured). The other three characters are still
+  the 3 November renders.
 
 ## Limits
 
@@ -157,5 +223,9 @@ replaced by the house recipes: slice glitches and Signal type.
 - The target box is placed from contact sheets, not tracked; the gorilla
   stays in it because the dance keeps to the centre third.
 - The swap cards' Space.js targets are placed by eye on the held frames.
+- The baked words cannot be edited in the Director; the bubble, HUD, labels
+  and end card can.
+- The gorilla, ninja and pink cat renders still have the 3 November fruit
+  motion; only the mecha was re-rendered.
 - No showcase record yet (`docs/director-bundle/showcase/`); the cut opens
   from its gallery card and `/director?example=fruits-swap`.

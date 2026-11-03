@@ -70,12 +70,29 @@ describe("Dance with Fruits, the swap edit", () => {
       [13, 2],
       [28, 2],
     ]);
-    const words = cut.layers.filter((l) => l.module === "kinetic");
-    expect(words.map((w) => [w.parameters.text, w.startBeat])).toEqual([
-      ["GORILLA", 13],
-      ["WATERMELON", 23],
-      ["PINK CAT", 28],
+    // The next name is baked into each card's still (Retro Gaming, never
+    // bundled), which is dimmed already, so the card does not dim it again.
+    expect(cards.map((c) => [c.parameters.still, c.parameters.dim])).toEqual([
+      ["/media/director-templates/fruits-swap/fruits-swap-card-1.jpg", 0],
+      ["/media/director-templates/fruits-swap/fruits-swap-card-2.jpg", 0],
     ]);
+    // WATERMELON is baked into the ninja's drop frames: no live slams.
+    expect(cut.layers.some((l) => l.module === "kinetic")).toBe(false);
+  });
+
+  it("opens with the title in a speech bubble beside the mecha", () => {
+    const bubble = cut.layers.find((l) => l.module === "speech-bubble")!;
+    expect([bubble.startBeat, bubble.beats]).toEqual([2, 4]);
+    expect(bubble.parameters).toMatchObject({
+      text: "DANCE WITH FRUITS",
+      font: "IBM Plex Mono",
+    });
+    const shot = cut.shots.find(
+      (s) =>
+        s.startBeat <= bubble.startBeat &&
+        s.startBeat + s.beats >= bubble.startBeat + bubble.beats,
+    )!;
+    expect(shot.asset).toBe("fruits-swap-mecha");
   });
 
   it("marks every cut with a slice glitch or a Signal wipe", () => {
@@ -99,11 +116,30 @@ describe("Dance with Fruits, the swap edit", () => {
     const gorilla = (l: (typeof cut.layers)[number]) =>
       l.startBeat >= 15 && l.startBeat + l.beats <= 23;
     const modules = cut.layers.filter(gorilla).map((l) => l.module);
-    for (const m of ["hud", "ui-focus", "scan", "crt"])
+    for (const m of ["hud", "ui-focus", "scan", "crt", "dither", "wire-scan"])
       expect(modules).toContain(m);
+    // The posterize builds: more of it and fewer levels every two beats.
+    const steps = cut.layers
+      .filter((l) => l.module === "dither")
+      .sort((x, y) => x.startBeat - y.startBeat);
+    expect(steps.map((l) => l.startBeat)).toEqual([15, 17, 19, 21]);
+    for (let i = 1; i < steps.length; i++) {
+      expect(steps[i].parameters.amount).toBeGreaterThan(
+        steps[i - 1].parameters.amount as number,
+      );
+      expect(steps[i].parameters.levels).toBeLessThan(
+        steps[i - 1].parameters.levels as number,
+      );
+    }
+    // The wireframe comes in over the last two beats before the drop.
+    const wire = cut.layers.filter((l) => l.module === "wire-scan");
+    expect(wire.map((l) => [l.startBeat, l.parameters.amount])).toEqual([
+      [21, 0.45],
+      [22, 0.9],
+    ]);
   });
 
-  it("ends on the house end card, in the house typeface", () => {
+  it("ends on the house end card; every live word is in IBM Plex Mono", () => {
     const end = cut.layers.find((l) => l.module === "end-card-still")!;
     expect(end.startBeat).toBe(43);
     expect(end.startBeat + end.beats).toBe(cut.beats);
@@ -115,7 +151,7 @@ describe("Dance with Fruits, the swap edit", () => {
     });
     for (const layer of cut.layers)
       if (typeof layer.parameters.font === "string")
-        expect(layer.parameters.font, layer.id).toMatch(/^"IBM Plex Mono"/);
+        expect(layer.parameters.font, layer.id).toMatch(/^"?IBM Plex Mono/);
   });
 
   it("uses only trusted recipes, each layer valid", () => {

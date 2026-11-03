@@ -14,7 +14,7 @@
   "shots": [
     {
       "asset": "fruits-swap-mecha",
-      "label": "Mecha · loop 1, from the voice",
+      "label": "Mecha · loop 1, from the voice (title bubble)",
       "sourceSeconds": 0,
       "startBeat": 0,
       "beats": 13,
@@ -30,7 +30,7 @@
     },
     {
       "asset": "fruits-swap-gold-ninja",
-      "label": "Gold ninja · the drop, watermelon",
+      "label": "Gold ninja · the drop (WATERMELON baked in)",
       "sourceSeconds": 4.79,
       "startBeat": 23,
       "beats": 5,
@@ -88,7 +88,7 @@
         "credit": "NEXT · GORILLA",
         "targets": "0.5,0.5,0.24,0.86 / 0.2,0.3,0.16,0.26 / 0.8,0.3,0.16,0.26",
         "interval": 0.3,
-        "dim": 0.45,
+        "dim": 0,
         "fadeAt": 0
       }
     },
@@ -109,7 +109,7 @@
         "credit": "NEXT · PINK CAT",
         "targets": "0.5,0.5,0.24,0.86 / 0.2,0.3,0.16,0.26 / 0.8,0.3,0.16,0.26",
         "interval": 0.3,
-        "dim": 0.45,
+        "dim": 0,
         "fadeAt": 0
       }
     },
@@ -127,6 +127,94 @@
         "curvature": 0.03,
         "rgb": 1.2,
         "vignette": 0.4
+      }
+    },
+    {
+      "id": "posterize-1",
+      "name": "Posterize · gorilla, step 1",
+      "module": "dither",
+      "kind": "filter",
+      "lane": "posterize",
+      "startBeat": 15,
+      "beats": 2,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.4,
+        "levels": 8
+      }
+    },
+    {
+      "id": "posterize-2",
+      "name": "Posterize · gorilla, step 2",
+      "module": "dither",
+      "kind": "filter",
+      "lane": "posterize",
+      "startBeat": 17,
+      "beats": 2,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.6,
+        "levels": 5
+      }
+    },
+    {
+      "id": "posterize-3",
+      "name": "Posterize · gorilla, step 3",
+      "module": "dither",
+      "kind": "filter",
+      "lane": "posterize",
+      "startBeat": 19,
+      "beats": 2,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.8,
+        "levels": 3
+      }
+    },
+    {
+      "id": "posterize-4",
+      "name": "Posterize · gorilla, step 4",
+      "module": "dither",
+      "kind": "filter",
+      "lane": "posterize",
+      "startBeat": 21,
+      "beats": 2,
+      "opacity": 1,
+      "parameters": {
+        "amount": 1.0,
+        "levels": 2
+      }
+    },
+    {
+      "id": "wire-1",
+      "name": "Wireframe · gorilla, in",
+      "module": "wire-scan",
+      "kind": "filter",
+      "lane": "wire",
+      "startBeat": 21,
+      "beats": 1,
+      "opacity": 1,
+      "parameters": {
+        "color": "#d5ff70",
+        "amount": 0.45,
+        "sweep": 1.2,
+        "trail": 0.35
+      }
+    },
+    {
+      "id": "wire-2",
+      "name": "Wireframe · gorilla, full",
+      "module": "wire-scan",
+      "kind": "filter",
+      "lane": "wire",
+      "startBeat": 22,
+      "beats": 1,
+      "opacity": 1,
+      "parameters": {
+        "color": "#d5ff70",
+        "amount": 0.9,
+        "sweep": 1.2,
+        "trail": 0.35
       }
     },
     {
@@ -188,63 +276,24 @@
       }
     },
     {
-      "id": "word-gorilla",
-      "name": "Swap word · GORILLA",
-      "module": "kinetic",
+      "id": "bubble-title",
+      "name": "Speech bubble · DANCE WITH FRUITS",
+      "module": "speech-bubble",
       "kind": "graphics",
-      "lane": "impact",
-      "startBeat": 13,
-      "beats": 2,
+      "lane": "bubble",
+      "startBeat": 2,
+      "beats": 4,
       "opacity": 1,
       "parameters": {
-        "text": "GORILLA",
-        "font": "\"IBM Plex Mono\", monospace",
-        "weight": 400,
-        "color": "#f6f8f2",
-        "accent": "#0c0e0c",
-        "bpm": 100,
-        "size": 200,
-        "beats": 2
-      }
-    },
-    {
-      "id": "word-watermelon",
-      "name": "Swap word · WATERMELON (the drop)",
-      "module": "kinetic",
-      "kind": "graphics",
-      "lane": "impact",
-      "startBeat": 23,
-      "beats": 2,
-      "opacity": 1,
-      "parameters": {
-        "text": "WATERMELON",
-        "font": "\"IBM Plex Mono\", monospace",
-        "weight": 400,
-        "color": "#f6f8f2",
-        "accent": "#0c0e0c",
-        "bpm": 100,
-        "size": 200,
-        "beats": 2
-      }
-    },
-    {
-      "id": "word-pink-cat",
-      "name": "Swap word · PINK CAT",
-      "module": "kinetic",
-      "kind": "graphics",
-      "lane": "impact",
-      "startBeat": 28,
-      "beats": 2,
-      "opacity": 1,
-      "parameters": {
-        "text": "PINK CAT",
-        "font": "\"IBM Plex Mono\", monospace",
-        "weight": 400,
-        "color": "#f6f8f2",
-        "accent": "#0c0e0c",
-        "bpm": 100,
-        "size": 200,
-        "beats": 2
+        "text": "DANCE WITH FRUITS",
+        "font": "IBM Plex Mono",
+        "color": "#0c0e0c",
+        "fill": "#f6f8f2",
+        "x": 0.46,
+        "y": 0.28,
+        "size": 84,
+        "direction": "up-left",
+        "duration": 0.35
       }
     },
     {

@@ -14,8 +14,11 @@ const clip = (name: (typeof CHARACTERS)[number]) => ({
 /**
  * The bundled media: the owner's four LTX-2.5 Layout-to-Render (open
  * weights) renders of one dance guide (window 0 of the explode capture, the
- * same pose and the same 8.04 s of the loop), one character each, encoded
- * once from 2048 × 1152 to 1920 × 1080 (CRF 19, no sound), and the owner's
+ * same pose and the same 8.04 s of the loop), one character each (the mecha
+ * from 2 November, the others 3 November), encoded once from 2048 × 1152 to
+ * 1920 × 1080 (CRF 19, no sound), with the swap words baked into the card
+ * stills and the gold ninja's drop frames in Retro Gaming (the font file is
+ * not bundled), and the owner's
  * "Dance with Fruits" loop (music by Koshimazaki, owner-made): the 9.0 s loop
  * that starts on the voice, played four times and cut at 30.6 s, faded over
  * the end card's last 2.4 s, raised 0.6 dB to -14 LUFS, MP3 320 kb/s. The
@@ -33,10 +36,11 @@ const media: TemplateMix["media"] = {
 };
 
 /**
- * Dance with Fruits (3 November 2026): a voxel dancer between two fruits,
- * swapped for another character on the loop. Mecha, then the gorilla on the
- * loop restart under a surveillance scan, the gold ninja on the drop beat
- * inside that loop (WATERMELON slammed over the picture), the pink cat on
+ * Dance with Fruits (3 November 2026, v2): a voxel dancer between two fruits,
+ * swapped for another character on the loop. The mecha, its title in a
+ * speech bubble, then the gorilla on the loop restart under a surveillance
+ * scan that posterizes and turns to wireframe, the gold ninja on the drop
+ * beat inside that loop (WATERMELON slammed over the picture), the pink cat on
  * the last loop, and the house end card. The swaps are hard cuts at the same
  * guide frame, so the pose carries across. Nothing is generated:
  * `run: "mix"`. See docs/fruits-swap.md.
@@ -46,13 +50,13 @@ export const fruitsSwap: HouseTemplate = {
   name: "Dance with Fruits",
   run: "mix",
   description:
-    "One dance, four characters: LTX-2.5 renders of the same guide swapped on the loop and the drop, with Signal swap words and an end card. Nothing to generate.",
+    "One dance, four characters: LTX-2.5 renders of the same guide swapped on the loop and the drop, with a speech-bubble title, swap words and an end card. Nothing to generate.",
   tier: "open",
   style: {
     name: "Signal swap",
-    look: "The owner's voxel dancers on a grey studio floor, cut hard on the loop, with Space.js swap cards, a CAM 02 surveillance scan and Signal slams.",
+    look: "The owner's voxel dancers on a grey studio floor, cut hard on the loop, with Space.js swap cards, a speech-bubble title, a CAM 02 surveillance scan that degrades and pixel swap words.",
     lighting:
-      "The renders' own soft studio light; the overlays add lime readouts and white slams.",
+      "The renders' own soft studio light; the overlays add lime readouts, a white bubble and white words.",
     palette:
       "Studio grey and Signal black, with the fruits' red, yellow and green and lime readouts.",
     swatches: [

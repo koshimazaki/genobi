@@ -1524,7 +1524,11 @@
       "path": "director-bundle/motion-effects.md",
       "tags": ["director", "bundle", "agents"],
       "summary": "The five registered motion-effect recipes (shake, transition, grade, speed lines, styled title), their parameters and how agents use them.",
-      "links": ["dimensions-mix.md", "director-bundle/README.md"]
+      "links": [
+        "dimensions-mix.md",
+        "director-bundle/README.md",
+        "fruits-swap.md"
+      ]
     },
     {
       "title": "project-copy",
@@ -1703,7 +1707,7 @@
       "title": "Dance with Fruits: the swap edit",
       "path": "fruits-swap.md",
       "tags": ["director", "sound", "templates"],
-      "summary": "Dance with Fruits, the character-swap mix template - 31 seconds of the owner's four LTX-2.5 Layout-to-Render (open weights) renders of one dance guide, swapped hard on the loop and the drop, with Signal swap words, a surveillance scan and the house end card. Nothing to generate.",
+      "summary": "Dance with Fruits, the character-swap mix template - 31 seconds of the owner's four LTX-2.5 Layout-to-Render (open weights) renders of one dance guide, swapped hard on the loop and the drop, with a speech-bubble title, Retro Gaming swap words baked into the media, a degrading surveillance scan and the house end card. Nothing to generate.",
       "links": ["templates.md"]
     },
     {
