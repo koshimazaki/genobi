@@ -108,6 +108,23 @@ request mode end at the priced Generate button without pressing it. Agent
 requests use the existing quote/approval path. Escape from Generate closes
 Voice and leaves focus there; it never runs generation.
 
+## Opening a workspace
+
+"Open the director", "show camera", "go to the editor", "go to the 3D" or
+"switch to the gallery" switch the studio before the note reaches the agent
+or the Camera reading, with the shell's own `select`, as the navigation's
+buttons do. Nothing is sent. `shared/voice-navigation.ts` reads it without a
+model, and only when the **whole** note is one opening verb (open, show, go
+to, go back to, switch to, take me to, bring up, jump to), an optional "the",
+one workspace name and at most "workspace", "page", "tab", "view" or "mode",
+with "hey Genobi", "please", "can you" and "now" around it, any case.
+The names are the navigation's labels (`src/studio/presets.ts`) plus "world",
+"world builder" for 3D, "swords" for Dual Swords and "tools" for Project
+Tools (`src/voice/voice-navigation-target.ts`). Anything more is not
+navigation: "open a door in the director scene", "show the camera move" and
+"go to the editor and trim the second clip" go to the agent as said. A chosen
+prompt field always takes the words as said.
+
 ## Spoken requests
 
 **Camera request** must be selected explicitly. `shared/voice-intent.ts` then
@@ -129,8 +146,9 @@ picture, photo, still, video, clip, film or movie; the model follows "with",
 "using", "in" or "on", or comes before the medium; the subject follows "of",
 "showing", "about", a colon or a comma, and is kept as said, case included,
 less closing punctuation and a trailing "please". Without a medium or a model
-it is not a request: "open the director", "make the video louder" and "what
-time is it" stay in the transcript until another destination is selected.
+it is not a request: "make the video louder" and "what time is it" stay in
+the transcript until another destination is selected ("open the director"
+opens it, above).
 
 **The vocabulary comes from the registry** (`shared/voice-vocabulary.ts`), not
 a list kept by hand. Every runnable image or video entry in

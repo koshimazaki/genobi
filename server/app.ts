@@ -419,7 +419,7 @@ export async function createApp(options: AppOptions) {
   app.use("/api/memory", memoryRouter(projects, tasteProfiles, limit));
   app.use("/api/projects", projectRouter(projects, limit));
   app.use("/api/projects", worldRecipeRouter(projects, limit));
-  mountPairings(app, limit);
+  mountPairings(app, limit, agents);
   const studio = arenaStudio(service, store, options.publicDirectory);
   app.use("/api/arena", arenaRoutes(arena, limit, studio));
   // Local only, like the media tools: the hosted Worker has no voice route.

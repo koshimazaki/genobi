@@ -17,6 +17,8 @@ function library<T>(method: T | undefined): T {
 export async function connectWorld(
   adapter: SceneAdapter,
   onDisconnect: (error?: string) => void,
+  /** The automatic link for a grant: never ends the owner's other tabs. */
+  keep = false,
 ) {
   async function request(path: string, init?: RequestInit) {
     const response = await fetch(`/api/world${path}`, init);
@@ -47,11 +49,17 @@ export async function connectWorld(
       });
     return files;
   }
-  const connected = await send("/connect", {});
+  const connected = await send("/connect", keep ? { keep: true } : {});
   if (typeof connected.id !== "string" || typeof connected.code !== "string")
     throw new Error("World agent connection needs the local studio server.");
   let stopped = false,
     timer: ReturnType<typeof setTimeout>;
+  /** Best effort; keepalive so it is still sent while the page unloads. */
+  const end = () =>
+    void request(`/${connected.id}`, {
+      method: "DELETE",
+      keepalive: true,
+    }).catch(() => {});
   async function poll() {
     try {
       const job = await request(`/${connected.id}/next`);
@@ -127,6 +135,9 @@ export async function connectWorld(
       if (!stopped) {
         stopped = true;
         adapter.live.stop();
+        // The server may still hold the session: end it before reporting,
+        // so a reconnect never leaves the old one (and its files) behind.
+        end();
         onDisconnect(e instanceof Error ? e.message : "World disconnected.");
       }
     }
@@ -134,11 +145,24 @@ export async function connectWorld(
   void poll();
   return {
     ...(connected as { id: string; code: string }),
+    /**
+     * Lets one of the person's running agent sessions reach this tab without
+     * the code (`POST /:id/grant`); the server checks the run is theirs.
+     */
+    async grant(run: string) {
+      await send(`/${connected.id}/grant`, { run });
+    },
+    /** Takes one run's grant back (`DELETE /:id/grant/:run`). */
+    async revoke(run: string) {
+      await request(`/${connected.id}/grant/${encodeURIComponent(run)}`, {
+        method: "DELETE",
+      });
+    },
     disconnect() {
       stopped = true;
       clearTimeout(timer);
       adapter.live.stop();
-      void request(`/${connected.id}`, { method: "DELETE" }).catch(() => {});
+      end();
       onDisconnect();
     },
   };

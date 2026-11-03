@@ -1,16 +1,26 @@
 import ThemedSelect from "../components/ThemedSelect";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import type { BuilderSession } from "./useBuilderSession";
 import type { WorldEditor } from "./useWorldEditor";
 import { connectWorld } from "./agent-bridge";
 import { inComfyNode } from "./host";
 import { motionLabel } from "../scene3d/creature-slots";
-export function LiveControls({ s, e }: { s: BuilderSession; e: WorldEditor }) {
-  const [recording, setRecording] = useState(false),
-    [code, setCode] = useState("");
-  const connection = useRef<Awaited<ReturnType<typeof connectWorld>> | null>(
-    null,
+import { useWorldLink } from "./world-link";
+export function LiveControls({
+  s,
+  e,
+  active = false,
+}: {
+  s: BuilderSession;
+  e: WorldEditor;
+  /** World Builder is on screen: the studio's running session is granted. */
+  active?: boolean;
+}) {
+  const [recording, setRecording] = useState(false);
+  const link = useWorldLink(s, active, (onDisconnect, keep) =>
+    connectWorld(s.api.current!, onDisconnect, keep),
   );
+  const { code, connected, granted } = link.state;
   useEffect(() => {
     const timer = setInterval(
       () => setRecording(!!s.api.current?.live.status().recording),
@@ -20,7 +30,6 @@ export function LiveControls({ s, e }: { s: BuilderSession; e: WorldEditor }) {
       clearInterval(timer);
     };
   }, [s.api]);
-  useEffect(() => () => connection.current?.disconnect(), []);
   return (
     <div
       className="wb-live-controls"
@@ -85,28 +94,13 @@ export function LiveControls({ s, e }: { s: BuilderSession; e: WorldEditor }) {
         <>
           <button
             disabled={!s.ready || s.busy}
-            onClick={() =>
-              s.run(async () => {
-                if (connection.current) {
-                  connection.current.disconnect();
-                  connection.current = null;
-                  setCode("");
-                } else {
-                  connection.current = await connectWorld(
-                    s.api.current!,
-                    (error) => {
-                      connection.current = null;
-                      setCode("");
-                      if (error) s.run(() => Promise.reject(new Error(error)));
-                    },
-                  );
-                  setCode(connection.current.code);
-                }
-              })
-            }
+            onClick={() => s.run(link.toggle)}
           >
-            {code ? "Disconnect agents" : "Connect agents"}
+            {connected ? "Disconnect agents" : "Connect agents"}
           </button>
+          {granted && !code && (
+            <span role="status">Linked to the running agent session</span>
+          )}
           {code && (
             <label>
               Pairing code{" "}

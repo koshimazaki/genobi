@@ -11,7 +11,11 @@ import {
 } from "../src/voice/destination-store";
 import { closeAgentSession } from "../src/agent/useAgentSession";
 
-const { send, intent } = vi.hoisted(() => ({ send: vi.fn(), intent: vi.fn() }));
+const { send, intent, shell } = vi.hoisted(() => ({
+  send: vi.fn(),
+  intent: vi.fn(),
+  shell: { current: undefined as { select: (id: string) => void } | undefined },
+}));
 vi.mock("../src/voice/agent-destination", () => ({
   sendVoiceToAgent: send,
   voiceProjectId: () => undefined,
@@ -19,7 +23,9 @@ vi.mock("../src/voice/agent-destination", () => ({
 vi.mock("../src/voice/voice-intent-target", () => ({
   applyVoiceIntent: intent,
 }));
-vi.mock("../src/studio/ShellContext", () => ({ useShell: () => undefined }));
+vi.mock("../src/studio/ShellContext", () => ({
+  useShell: () => shell.current,
+}));
 (
   globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }
 ).IS_REACT_ACT_ENVIRONMENT = true;
@@ -42,6 +48,7 @@ beforeEach(() => {
   selectVoiceAgent();
   send.mockReset().mockResolvedValue({ kind: "sent", session: SESSION });
   intent.mockReset();
+  shell.current = undefined;
   host = document.createElement("div");
   document.body.append(host);
   root = createRoot(host);
@@ -106,6 +113,25 @@ it("defaults to the agent once, even for a Camera request in StrictMode", async 
   expect(prompt.value).toBe("Existing prompt");
   expect(host.textContent).toContain("Sent to Hermes");
   expect(busy.mock.calls).toEqual([[true], [false]]);
+});
+
+it("opens a workspace said by name instead of sending it to the agent", async () => {
+  const select = vi.fn();
+  shell.current = { select };
+  words = "Open the director";
+  await render();
+  expect(select).toHaveBeenCalledExactlyOnceWith("director");
+  expect(send).not.toHaveBeenCalled();
+  expect(host.textContent).toContain("Opened Director.");
+});
+
+it("sends a sentence that only mentions a workspace to the agent", async () => {
+  const select = vi.fn();
+  shell.current = { select };
+  words = "open a door in the director scene";
+  await render();
+  expect(select).not.toHaveBeenCalled();
+  expect(send).toHaveBeenCalledExactlyOnceWith(words, undefined, undefined);
 });
 
 it("a refusal keeps the words without changing a prompt or retrying automatically", async () => {
