@@ -1,0 +1,427 @@
+{
+  "schemaVersion": 1,
+  "status": "draft-not-live",
+  "principle": "Use owner originals unchanged; replacement assets create new derived versions, not edits to source video",
+  "scopeDecision": {
+    "date": "2026-11-03",
+    "keep": ["mecha-fruits", "reactive-spaces"],
+    "fruitsFirstSwap": ["one fruit", "the character (humanoid only)"],
+    "spacesFirstSwap": ["one space"],
+    "initialSpacesVideo": "bundled adaptive-reverb cut"
+  },
+  "reviewerRoute": {
+    "ownerRender": "rented Vast box with scripts/vast/box/run-queue.sh",
+    "reviewerRender": {
+      "deployment": "genobi-ltx-world",
+      "selector": "layout-to-video",
+      "doc": "docs/comfy-deploy.md",
+      "width": 1024,
+      "height": 576,
+      "frames": 193,
+      "fps": 24,
+      "note": "exactly one template window"
+    },
+    "access": {
+      "mechanism": "docs/tester-access.md (separate PR, off by default)",
+      "unlock": "access code from the competition submission",
+      "paidBy": "owner's workspace",
+      "defaultRunCap": 10,
+      "codeInRepository": false
+    },
+    "regenerationTest": "mecha-fruits",
+    "spacesNote": "Reactive Spaces also needs LTX runs for a new version",
+    "quoteAndConfirmEveryRun": true
+  },
+  "galleryCards": [
+    {
+      "id": "mecha-fruits",
+      "title": "Mecha × Fruits",
+      "subtitle": "Character · Audio-reactive",
+      "templateFamily": "characters-and-objects",
+      "state": "videos-exist-on-owner-machine-not-bundled",
+      "existingGalleryTemplateId": null,
+      "soundtrack": "Dance with Fruits",
+      "videos": [
+        {
+          "id": "swap-edit",
+          "label": "Swap edit",
+          "url": null,
+          "source": "fruits-swap-v1.mp4, 3 November 2026: mecha, gorilla, gold gundam with watermelon, unicorn, one per loop, 25.08 s; reproducible from edit/fruits-swap-build.sh",
+          "preserveAudio": true,
+          "preserveOriginal": true
+        },
+        {
+          "id": "one-loop",
+          "label": "One character",
+          "url": null,
+          "source": "fruits-swap-gorilla-1loop.mp4, 7.08 s, the same build with one loop",
+          "preserveAudio": true,
+          "preserveOriginal": true
+        },
+        {
+          "id": "character-a",
+          "label": "Character A",
+          "url": null,
+          "source": "owner existing character video #1",
+          "preserveAudio": true,
+          "preserveOriginal": true
+        },
+        {
+          "id": "character-b",
+          "label": "Character B",
+          "url": null,
+          "source": "owner existing character video #2",
+          "preserveAudio": true,
+          "preserveOriginal": true
+        }
+      ],
+      "replaceableReferenceSlots": [
+        "character",
+        "fruit-left",
+        "fruit-right",
+        "audio",
+        "look"
+      ],
+      "sourceSteps": [
+        "Watch original",
+        "Make my version",
+        "Swap reference",
+        "Review edited project"
+      ],
+      "optionalDerivedSteps": [
+        "Recreate image in Camera (navigation only)",
+        "Review frame-0 region and alignment",
+        "Capture audio-reactive guide",
+        "Quote and approve paid LTX render",
+        "Save derived version"
+      ],
+      "videoAssembly": {
+        "isOptional": true,
+        "frameRate": 24,
+        "framesPerTake": 193,
+        "loopSeconds": 9.0,
+        "beatSeconds": 0.59211,
+        "framesPerLoop": 216,
+        "loops": {
+          "1": {
+            "frames": 170,
+            "seconds": 7.083
+          },
+          "2": {
+            "frames": 386,
+            "seconds": 16.083
+          },
+          "3": {
+            "frames": 602,
+            "seconds": 25.083
+          }
+        },
+        "script": "audio-reactive/edit/fruits-swap-build.sh",
+        "cardsScript": "audio-reactive/edit/fruits-swap-cards.py",
+        "rule": "audio-reactive/videos/fruits.md#the-general-rule-any-dance-edit-on-a-loop",
+        "contract": "audio-reactive/videos/fruits-template.md",
+        "log": "audio-reactive/edit/LOG.md",
+        "presetDocs": ["fruit-mecha"],
+        "alternativeMontage": {
+          "presetDocs": [
+            "fruit-mecha",
+            "fruit-mecha-morph",
+            "fruit-apple-banana"
+          ],
+          "takeCount": 3,
+          "estimatedSeconds": 24.125,
+          "note": "the older w0/w1/w2 recipe in videos/fruits.md, not the shipped structure"
+        },
+        "note": "New render only; never silently stitch the original examples"
+      },
+      "summary": "A mecha dances between two fruits to Dance with Fruits; the motion comes from a Three.js scene driven by the track's low band. To make your own version, change one fruit or the character (humanoid only). Genobi's agent edits only that region of the first still with FLUX 3 Klein, then re-renders the windows it appears in with LTX-2.5 Layout-to-Render. The rig and its moves stay the same. Nothing is rendered without a quote and your yes.",
+      "pipeline": [
+        {
+          "step": "Window 0 of the 9 s Dance with Fruits loop: the fruit-mecha explode study, 193 frames at 24 fps, band gain auto, release 12, motion gain 1; writes rgb.webm, depth.webm, control.wav, keyframes.json with regions.robot, regions.fruit-left, regions.fruit-right on the 1024x576 guide",
+          "tool": "Three.js World Builder study (capture.mjs)"
+        },
+        {
+          "step": "One first still per character, exactly 16:9 and aligned with frame 0: a region edit of regions.robot (suggested box = the rectangle scaled to the still, padded about 10 percent) or an owner still in the mecha's pose",
+          "tool": "FLUX 3 Klein or Genobi Image"
+        },
+        {
+          "step": "One render per character to 2048x1152, CFG 1, seed 42, the loop's first 8.04 s muxed",
+          "tool": "LTX-2.5 22B distilled + Layout-to-Render IC-LoRA"
+        },
+        {
+          "step": "The swap edit: one render per loop, cut on the measured grid (loop 9.0 s, beat 0.592 s), Nokia cards over beats 13 and 14, drop-beat swap at beat 8 with a typed overlay, 4-frame pixel ramps, the 9 s loop tiled as the audio (sample-aligned; the tripled wav is 60 ms off)",
+          "tool": "ffmpeg + Pillow (edit/fruits-swap-build.sh)"
+        }
+      ],
+      "minimalInput": [
+        "one fruit",
+        "the character (any that can take the mecha's pose)",
+        "or an audio track / a caption for MiniMax Music 3"
+      ],
+      "whatIf": {
+        "fruit": {
+          "agentDoes": [
+            "Edit only the fruit-left or fruit-right rectangle of the first still with FLUX 3 Klein after a quote and the person's yes",
+            "Change the fruit noun in the render prompt",
+            "If the new fruit's shape differs a lot from the voxel key, recolour or reshape that fruit's voxels in the study (catalogue fruits today: banana, papaya, apple, orange, watermelon; prompt-to-voxel is not built) and recapture",
+            "For a morph, make a peak still at the closed frame"
+          ],
+          "windowsRerendered": ["w0 of the loop the fruit appears in"],
+          "paid": true
+        },
+        "character": {
+          "agentDoes": [
+            "Take one reference image from the person",
+            "Show the suggested box: regions.robot scaled to the still, padded about 10 percent (no UI for this yet)",
+            "Edit only that rectangle of the first still with FLUX 3 Klein (swap the mecha for this character) after a quote and the person's yes",
+            "Keep the same rig: the swap changes who the dancer looks like, not how it moves; any character that can take the mecha's pose (gorilla, unicorn, pony, pink cat rendered 3 November from owner stills)",
+            "Change the noun in the render prompt",
+            "Note: a Klein region edit driven by a reference image has not been tested on this workflow; the tested path is a region edit driven by the person's words, and Klein's --aesthetic-image copies composition and is not the mechanism"
+          ],
+          "windowsRerendered": ["w0"],
+          "paid": true
+        },
+        "track": {
+          "agentDoes": [
+            "Take a track, or generate music with MiniMax Music 3 from a caption (quoted first)",
+            "Measure the new loop and beat periods from the audio, never assumed",
+            "Recapture window 0 on the new track; morphs start on a quiet low-band frame",
+            "Re-render every character",
+            "Recompute the cut frames from the measured grid and tile the new loop as the audio"
+          ],
+          "windowsRerendered": ["w0 per character"],
+          "paid": true
+        },
+        "assetInExistingEdit": {
+          "agentDoes": [
+            "Replace the source slot or reference image in the project; the rendered clip is unchanged"
+          ],
+          "windowsRerendered": [],
+          "paid": false
+        },
+        "moreCharacters": {
+          "agentDoes": [
+            "One more loop per character: one more window-0 render and one more card; the first submission is the main character and opens the piece",
+            "Stop at three loops"
+          ],
+          "windowsRerendered": ["w0 per added character"],
+          "paid": true
+        }
+      },
+      "inputs": [
+        "loop: mecha-fruits-9s-A2-starts-on-voice.mp3, 9.0 s (owner file, not in the repository; sample-aligned with the renders)",
+        "owner character stills (not in the repository)",
+        "reference image for the swap",
+        "character MP4s: the swap edit and the one-loop gorilla in the owner's edit folder, the two A/B originals on the owner's machine (none in the repository yet; URLs stay null)"
+      ],
+      "models": [
+        {
+          "name": "Three.js World Builder study",
+          "role": "audio-reactive guide capture (no model, CPU, about a minute per capture)"
+        },
+        {
+          "name": "FLUX 3 Klein",
+          "role": "first still or a region edit of it (paid, quoted first)"
+        },
+        {
+          "name": "MiniMax Music 3",
+          "role": "new music from a caption for the audio slot (registry id minimax-music-3, workflow route; paid, quoted first; not run for this piece)"
+        },
+        {
+          "name": "LTX-2.5 22B distilled + Layout-to-Render IC-LoRA",
+          "role": "video, one 193-frame window per clip on a rented GPU box (open weights; about 8 min and $0.25 per clip on an RTX PRO 6000, plus box rental)"
+        },
+        {
+          "name": "ffmpeg",
+          "role": "stitch windows and audio"
+        }
+      ],
+      "limits": [
+        "fruits sit at ±0.95 m",
+        "motion gain 1; gain 2 pushed the fruits out of frame",
+        "the morph take does not open on a clean rest pair",
+        "a new guided render, not character-consistent video-to-video editing and not a real-time swap",
+        "a new fruit from a name is catalogue-only; prompt-to-voxel is not built",
+        "the suggested-box step has no UI yet",
+        "at most three loops"
+      ]
+    },
+    {
+      "id": "reactive-spaces",
+      "title": "Reactive Spaces",
+      "subtitle": "3D · Acoustics",
+      "templateFamily": "spaces-and-acoustics",
+      "state": "reuse-existing-gallery-card",
+      "existingGalleryTemplateId": "adaptive-reverb",
+      "soundtrack": "Adaptive Reverb",
+      "videos": [
+        {
+          "id": "spaces",
+          "label": "Spaces",
+          "url": "/media/template-gallery/adaptive-reverb.mp4",
+          "source": "bundled existing Adaptive Reverb finished cut",
+          "preserveAudio": true,
+          "preserveOriginal": true,
+          "knownSeconds": 30.458
+        }
+      ],
+      "newerOwnerVideo": null,
+      "chapters": ["skyscrapers", "cathedral", "large-hall", "recording-booth"],
+      "replaceableReferenceSlots": [
+        "towers-image",
+        "cathedral-image",
+        "hall-image",
+        "booth-image"
+      ],
+      "geometryControls": ["small", "original", "large", "room-dimensions"],
+      "sourceSteps": [
+        "Watch original",
+        "Make my version",
+        "Swap reference",
+        "Review edited project"
+      ],
+      "optionalDerivedSteps": [
+        "Agent proposes editable Three.js reconstruction",
+        "Person reviews scale, camera and room layout",
+        "Recapture RGB/depth and room impulse response",
+        "Quote and approve paid LTX render",
+        "Save derived version"
+      ],
+      "videoAssembly": {
+        "isOptional": true,
+        "frameRate": 24,
+        "framesPerTake": 193,
+        "takeCount": 4,
+        "estimatedSeconds": 32.1667,
+        "studyIds": [
+          "towers-descent",
+          "cathedral-gallery",
+          "party-walls",
+          "studio-walls"
+        ],
+        "audioStartSeconds": [0, 8.0417, 15.6916, 23.6083],
+        "note": "Audio offsets are not final cut times; align shifted captures and reverb"
+      },
+      "summary": "The camera falls between skyscrapers into a cathedral, a crowded hall and a small recording booth, and the sound follows each room. The existing cut's pictures are LTX-2.5 Layout-to-Render shots; its sound is the original track processed on CPU with each scene's geometric impulse response. The AKUSPACE LoRA was tested separately and did not make this cut's audio; that learned room-audio route is experimental and would need more training. To make your own version, change one space: its look, its dimensions, or a room reference image. Genobi's agent rebuilds that room, recomputes its reverb when the geometry changes, and re-renders that one window. Nothing is rendered without a quote and your yes.",
+      "pipeline": [
+        {
+          "step": "Capture each room study: towers-descent, cathedral-gallery or cathedral-gallery-grow, party-walls (13 x 16 x 5.5 m hall), studio-walls (3.2 x 2.4 x 2.5 m booth); window starts 0, 8.0417, 15.6916, 23.6083 s; writes rgb.webm, depth.webm, control.wav, room-wet.wav",
+          "tool": "Three.js World Builder study (capture.mjs) with CPU Acoustics and Reverb"
+        },
+        {
+          "step": "First still aligned with frame 0",
+          "tool": "FLUX 3 Klein"
+        },
+        {
+          "step": "Render each window",
+          "tool": "LTX-2.5 22B distilled + Layout-to-Render IC-LoRA"
+        },
+        {
+          "step": "Mix room-wet.wav under the dry excerpt (dry 0.9, wet 0.7)",
+          "tool": "ffmpeg"
+        },
+        {
+          "step": "Stitch towers, cathedral, hall, booth; lay the full track over the cut with each window's wet reverb at its start time",
+          "tool": "ffmpeg"
+        }
+      ],
+      "minimalInput": ["one space"],
+      "whatIf": {
+        "lookOnly": {
+          "agentDoes": [
+            "Make a new first still from the preset's frame-0000.png with surfaces and light changed, same geometry, with FLUX 3 Klein after a quote and the person's yes",
+            "No recapture; the reverb stays the same"
+          ],
+          "windowsRerendered": ["the changed space's window"],
+          "paid": true
+        },
+        "roomDimensions": {
+          "agentDoes": [
+            "Edit the study's room numbers",
+            "Recapture, which gives a new room-wet.wav",
+            "Re-render and re-mix that window"
+          ],
+          "windowsRerendered": ["the changed space's window"],
+          "paid": true
+        },
+        "roomReferenceImage": {
+          "agentDoes": [
+            "Propose an editable primitive-room approximation of the reference as a design target, not a metric scan, for the person to review",
+            "Then as roomDimensions"
+          ],
+          "windowsRerendered": ["the changed space's window"],
+          "paid": true
+        },
+        "track": {
+          "agentDoes": [
+            "Recapture all four windows; wall studies start on quiet frames",
+            "Re-render all four",
+            "Re-mix the reverb"
+          ],
+          "windowsRerendered": ["towers", "cathedral", "hall", "booth"],
+          "paid": true
+        },
+        "assetInExistingEdit": {
+          "agentDoes": [
+            "Replace the source slot or reference image in the project; the rendered clip is unchanged"
+          ],
+          "windowsRerendered": [],
+          "paid": false
+        }
+      },
+      "inputs": [
+        "track: Adaptive Reverbv2 (owner file, not in the repository)",
+        "owner room stills (not in the repository)",
+        "a room reference image, for the reference swap"
+      ],
+      "models": [
+        {
+          "name": "Three.js World Builder study",
+          "role": "audio-reactive guide capture (no model, CPU, about a minute per capture)"
+        },
+        {
+          "name": "Acoustics and Reverb nodes",
+          "role": "CPU geometric impulse response of each room (room-wet.wav); made the existing cut's sound"
+        },
+        {
+          "name": "FLUX 3 Klein",
+          "role": "first still or a region edit of it (paid, quoted first)"
+        },
+        {
+          "name": "LTX-2.5 22B distilled + Layout-to-Render IC-LoRA",
+          "role": "video, one 193-frame window per clip on a rented GPU box (open weights; about 8 min and $0.25 per clip on an RTX PRO 6000, plus box rental)"
+        },
+        {
+          "name": "ffmpeg",
+          "role": "stitch windows and audio"
+        },
+        {
+          "name": "AKUSPACE LoRA",
+          "role": "tested separately; not used for the existing cut; experimental"
+        }
+      ],
+      "limits": [
+        "the reverb is an approximate geometric response, not a measurement",
+        "a reference image yields an editable approximation, not a reconstruction of the real room",
+        "the booth's quiet-frame start opens at only 0.60 of its width",
+        "the initial video stays the bundled Adaptive reverb cut unless the owner selects a newer one"
+      ]
+    }
+  ],
+  "integration": {
+    "doc": "audio-reactive/featured-demo-templates.md",
+    "mediaRoot": "public/media/template-gallery/",
+    "galleryCatalogue": "shared/gallery/catalogue.ts",
+    "preserveExistingAdaptiveReverbCard": true,
+    "noAutoGenerateInSwapPanel": true,
+    "noBrokenMediaLinks": true,
+    "noNewStockOrGeneratedVisuals": true,
+    "nextSteps": [
+      "Obtain the two existing character MP4 files",
+      "Identify whether pictured spaces video is the bundled file or newer export",
+      "Obtain optional room/character/fruit stills",
+      "Wire Gallery A/B and space asset slots",
+      "Review derived-clip workflow and verify approvals"
+    ]
+  }
+}
