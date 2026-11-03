@@ -111,13 +111,7 @@ export default function App() {
     useServerKey(setError);
   const { hiddenIds, hide, restoreAll } = useHiddenJobs();
   const visibleJobs = jobs.filter((job) => !hiddenIds.has(job.id));
-  /**
-   * The run the screen holds: the one the visitor chose, even when they have
-   * hidden it from the gallery, otherwise the newest visible run. Resolving the
-   * choice against every run rather than the visible ones is what keeps the
-   * hero and the composer on one run when the selected card is hidden — the
-   * composer keeps that run, so the main view has to keep showing it.
-   */
+  // Keep hero and composer on the same selected run, even when it is hidden.
   const selectedRun = activeRun(selectedId, jobs, visibleJobs);
   const samples = sources.filter((source) => source.origin === "sample");
   const source = upscaleSource(state.sourceId, jobs, sources);
@@ -211,7 +205,11 @@ export default function App() {
   }
 
   const images = useImageReferences(state, update);
-  const { recreate, pending: recreating, uploadingVideo } = useComposerRecreate(
+  const {
+    recreate,
+    pending: recreating,
+    uploadingVideo,
+  } = useComposerRecreate(
     state,
     dispatch,
     setError,
