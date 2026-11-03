@@ -45,7 +45,11 @@ afterEach(() => {
   document.body.replaceChildren();
 });
 
-const mount = (jobs: Job[], sources: Source[] = []) => {
+const mount = (
+  jobs: Job[],
+  sources: Source[] = [],
+  onRetry: (job: Job) => void = () => {},
+) => {
   const host = document.createElement("div");
   document.body.append(host);
   root = createRoot(host);
@@ -56,7 +60,7 @@ const mount = (jobs: Job[], sources: Source[] = []) => {
         sources={sources}
         generator="video"
         onUpscale={() => {}}
-        onRetry={() => {}}
+        onRetry={onRetry}
         onSelect={() => {}}
         onLibrarySetup={() => {}}
         onHide={() => {}}
@@ -147,5 +151,50 @@ describe("the gallery's kind filter", () => {
     expect(only.querySelector(".gallery-empty p")?.textContent).toBe(
       "Choose All to see everything the gallery holds.",
     );
+  });
+
+  it("keeps Recreate and the preview working on a filtered list", () => {
+    const retried: string[] = [];
+    const host = mount(
+      [
+        job("v", {}),
+        job("i", { generator: "image" }),
+        job("f", {
+          generator: "image",
+          status: "Error",
+          resultUrl: undefined,
+        }),
+      ],
+      [],
+      (j) => retried.push(j.id),
+    );
+    click(host, "Images");
+    expect(titles(host)).toEqual(["Study i", "Study f"]);
+    const recreate = host.querySelectorAll<HTMLButtonElement>(
+      ".clip-card .recreate-button",
+    );
+    expect([...recreate].map((b) => b.textContent)).toEqual([
+      "Recreate",
+      "Try again",
+    ]);
+    act(() => recreate.forEach((b) => b.click()));
+    expect(retried).toEqual(["i", "f"]);
+    click(host, "Videos");
+    // jsdom has no modal dialog or media playback.
+    HTMLDialogElement.prototype.showModal ??= function (
+      this: HTMLDialogElement,
+    ) {
+      this.open = true;
+    };
+    HTMLDialogElement.prototype.close ??= function (this: HTMLDialogElement) {
+      this.open = false;
+    };
+    HTMLMediaElement.prototype.pause = () => {};
+    HTMLMediaElement.prototype.play = () => Promise.resolve();
+    const play = host.querySelector<HTMLButtonElement>(".clip-play");
+    act(() => play!.click());
+    expect(
+      host.querySelector(".video-lightbox")?.getAttribute("aria-label"),
+    ).toBe("Study v");
   });
 });

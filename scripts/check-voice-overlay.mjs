@@ -265,7 +265,7 @@ try {
   ({ context, page, voice } = await open({ path: "/" }));
   // Director's first-entry dialog loads lazily and may appear between clicks.
   await page.addLocatorHandler(
-    page.getByRole("button", { name: "Close Generate my version" }),
+    page.getByRole("button", { name: "Close Make my version" }),
     (close) => close.click(),
   );
   const sections = page.locator("[data-preset-button]");

@@ -173,7 +173,9 @@ prompts.
    **Space** plays/pauses while the timeline has focus; **Loop** repeats preview
    using the audio clock and finishes the current pass when switched off. Text fields and menus keep
    their normal keys. Locks protect timing, placement, source and parameters. Undo keeps
-   the last 20 project states during this session.
+   the last 20 project states during this session; the timeline header's
+   **Undo** or **Cmd/Ctrl+Z** (outside a text field, where the prompt keeps its
+   own) steps back. There is no redo, so Shift+Cmd/Ctrl+Z is left alone.
    **Notes** in the timeline header opens the frame notes over the console's left
    edge: pause on a frame, select a layer if the note is about one, and add a note
    such as "move the HUD lower". Each note is a pin on the frame ruler; a pin seeks
@@ -197,7 +199,12 @@ prompts.
 4. **Add track** opens a name/type dialog with a drop area and file picker for
    audio, video or images; registered graphics/filter templates are available in
    the same type menu. Directly dropping media onto the composer creates tracks
-   automatically and closes the inspector. Rename a clip/track in the inspector;
+   automatically at the playhead and closes the inspector. A drop makes itself
+   obvious (`src/director/drop-reveal.ts`): the new clip is selected, the
+   timeline zooms to twice its current pixels per frame (within the manual
+   2–12 range, leaving Fit all), the clip scrolls into view and wears a brief
+   accent ring. The zoom stays; the Zoom control or Fit all shrinks it back.
+   Choosing files through Add track does not zoom. Rename a clip/track in the inspector;
    JSON retains its name. A rendered graphics MP4 imports as video. Images import consecutively with the selected
    **Image step** in frames: 6 frames at 30 fps places ten images in two seconds.
    Extend the composition before importing a sequence that will not fit. New

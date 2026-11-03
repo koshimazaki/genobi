@@ -152,10 +152,10 @@ it.each(["offline", "malformed"])(
   },
 );
 
-it("explains hosted voice in the Genobi bubble", async () => {
-  const { AgentBubble } = await import("../src/agent/AgentBubble");
-  await mount(<AgentBubble />);
-  await click("Open Genobi activity");
+it("explains hosted voice in the Genobi guide bubble", async () => {
+  const { GenobiGuide } = await import("../src/agent/GenobiGuide");
+  await mount(<GenobiGuide />);
+  await click("Open Genobi guide");
   await expectNotice();
 });
 

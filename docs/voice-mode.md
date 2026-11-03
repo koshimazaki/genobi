@@ -27,8 +27,8 @@ you to check the connection and reload.
 
 ## In the local studio
 
-Press **Voice** in any section, or **Speak to agent** in the Genobi bubble or
-activity deck. The pill opens and records immediately. Stop ends the note and
+Press **Voice** in any section, or **Speak to agent** in the Genobi guide
+bubble's session status or the activity deck. The pill opens and records immediately. Stop ends the note and
 transcribes it. Record and Stop share a position on the right of the waveform,
 beside the transcript chevron. The header microphone also stops the recording
 when pressed again. **To** remains visible while the transcript panel is folded.
@@ -55,7 +55,7 @@ needs one explicit selection through **Shown conversation** or its log's
 | --------------------------- | --------------------------------------------------------------------------------------- |
 | Agent                       | Send the entire transcript as a direction to the selected agent.                        |
 | Current agent / new session | Explicitly release the previous conversation and use the current session, or start one. |
-| Shown conversation          | Select the different conversation currently shown in the bubble.                        |
+| Shown conversation          | Select the different conversation currently shown in the deck.                          |
 | Current prompt              | Dictate into the last focused editable prompt, or the first visible prompt.             |
 | A named prompt              | Dictate only into that field, including an LTX gap or World Builder scene direction.    |
 | Camera request              | Interpret a medium/model/subject request with the existing Camera parser.               |
@@ -86,7 +86,7 @@ or renders nothing. Choose Agent to ask for scene manipulation instead.
 ### To a running session
 
 The selected conversation remains the destination across notes even if another
-session becomes the latest one in the bubble. A conversation's **Speak to agent**
+session becomes the latest one shown in the deck. A conversation's **Speak to agent**
 action explicitly selects that conversation. Each send checks the selected
 session again. If it finished, is unavailable, or the open project changed, the
 transcript stays visible and the person chooses a destination again. It is not
@@ -107,6 +107,23 @@ note is held while the current delivery or initial agent setup is pending.
 request mode end at the priced Generate button without pressing it. Agent
 requests use the existing quote/approval path. Escape from Generate closes
 Voice and leaves focus there; it never runs generation.
+
+## Opening a workspace
+
+"Open the director", "show camera", "go to the editor", "go to the 3D" or
+"switch to the gallery" switch the studio before the note reaches the agent
+or the Camera reading, with the shell's own `select`, as the navigation's
+buttons do. Nothing is sent. `shared/voice-navigation.ts` reads it without a
+model, and only when the **whole** note is one opening verb (open, show, go
+to, go back to, switch to, take me to, bring up, jump to), an optional "the",
+one workspace name and at most "workspace", "page", "tab", "view" or "mode",
+with "hey Genobi", "please", "can you" and "now" around it, any case.
+The names are the navigation's labels (`src/studio/presets.ts`) plus "world",
+"world builder" for 3D, "swords" for Dual Swords and "tools" for Project
+Tools (`src/voice/voice-navigation-target.ts`). Anything more is not
+navigation: "open a door in the director scene", "show the camera move" and
+"go to the editor and trim the second clip" go to the agent as said. A chosen
+prompt field always takes the words as said.
 
 ## Spoken requests
 
@@ -129,8 +146,9 @@ picture, photo, still, video, clip, film or movie; the model follows "with",
 "using", "in" or "on", or comes before the medium; the subject follows "of",
 "showing", "about", a colon or a comma, and is kept as said, case included,
 less closing punctuation and a trailing "please". Without a medium or a model
-it is not a request: "open the director", "make the video louder" and "what
-time is it" stay in the transcript until another destination is selected.
+it is not a request: "make the video louder" and "what time is it" stay in
+the transcript until another destination is selected ("open the director"
+opens it, above).
 
 **The vocabulary comes from the registry** (`shared/voice-vocabulary.ts`), not
 a list kept by hand. Every runnable image or video entry in
@@ -300,7 +318,7 @@ grant, so only the studio itself can start a session. The session runs only
 on the local server. Hosted runner pairing supports text prompts; microphone transcription still requires the local studio.
 
 Nothing a spoken request starts can spend on its own: a paid step the agent
-quotes waits in the session bubble with its plan and price for **Approve** or
+quotes waits in the footer deck (which opens by itself) with its plan and price for **Approve** or
 **Decline** ([Confirm before spending](agent-approvals.md)).
 
 ### Picks and context

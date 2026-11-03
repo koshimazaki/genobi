@@ -45,29 +45,6 @@
   color: var(--text);
   background: var(--raised);
 }
-/* The kind filter sits left of the session pill, which keeps the right edge.
-   Plain names, no pill: the active one simply reads brighter. */
-.gallery-tools {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: flex-end;
-  gap: var(--space-6) var(--space-11);
-  min-width: 0;
-}
-.gallery-kinds {
-  display: flex;
-  gap: var(--space-3);
-}
-.gallery-kinds button {
-  font-size: var(--space-10);
-  color: var(--muted);
-  padding: var(--space-6) var(--space-6);
-}
-.gallery-kinds button:hover,
-.gallery-kinds button.active {
-  color: var(--text);
-}
 .gallery-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -235,6 +212,15 @@
   min-width: 24px;
   min-height: 24px;
   flex-shrink: 0;
+}
+/* The one Recreate control (RecreateButton): the card's look everywhere,
+   Camera, the Assets rail's gallery and the Director's template slots. */
+.recreate-button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-4);
+  min-height: 24px;
 }
 /* The card, not the viewport, decides when its action labels fit. */
 @container clip-card (max-width: 22rem) {

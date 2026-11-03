@@ -244,7 +244,7 @@ picker offers only Dimensions mix, Genobi teaser, Bloom and Adaptive reverb.
 Character intro, Outfit reveal and Poster in motion are retired placeholders;
 only their slot metadata and fixtures remain for saved-project replacements.
 None of them pays: the agent quotes each paid step and the
-person approves it in the bubble, which stays usable behind the drawer once
+person approves it in the footer deck, which stays usable behind the drawer once
 the session starts: Tab moves from the drawer's last control to the header
 and back (`focus-ring.ts`), where it otherwise cycles inside the drawer. Closing the spawn dialog says "Nothing started; the
 template is open in Director (undo to go back)." Save an editable bundle

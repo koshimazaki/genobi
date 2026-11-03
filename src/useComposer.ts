@@ -329,6 +329,10 @@ function reduce(state: ComposerState, action: Action): ComposerState {
     openOnly: state.openOnly,
     imageRegions: [],
     imageReferences: [],
+    // The swap's settings and a deployment's inputs, when the run recorded
+    // them; otherwise `recreate-gaps.ts` names them as not stored.
+    ...(job.swap ? { swap: job.swap } : {}),
+    ...(job.deploy ? { deploy: job.deploy } : {}),
   };
 }
 export function composerInput(composer: ComposerState): GenerateInput {

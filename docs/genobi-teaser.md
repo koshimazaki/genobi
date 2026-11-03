@@ -464,7 +464,8 @@ gallery card was not re-rendered.
   analysed grid, checked against frames.
 - The footage is a recording of a local studio with no account: the balance
   is a stub, the gallery and library show what this repository bundles, and
-  the agent bubble is typed into, never started.
+  the agent bubble is typed into, never started (since #57 the `ui-agent`
+  shot opens the guide bubble instead; a re-record shows tips, not a brief).
 - Scrolls is a light paper page in a dark film: each Scrolls shot is four
   beats, zoomed onto its dark cells or camera dialog.
 - The HUD says what the studio did ("CUT IN GENOBI"), not where the clips

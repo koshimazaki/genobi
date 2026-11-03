@@ -68,41 +68,53 @@ function GuideDialog({
         Build the scene. Shape the sound. Make the cut.
       </h2>
       <p>
-        Genobi is an open-source video studio where you and your agent work on
-        the same creative project. Let the agent make a first pass, then move
-        clips, adjust timing, add notes or give directions by voice. Your edits
-        and instructions guide the next version.
+        Genobi is voice-first and harness-first. Talk to it, or let your own
+        agent drive it; the screen is mainly for inspecting what comes back and
+        viewing your assets. Scenes, sound, generation and the edit share one
+        open-source project that you and your agent both work on.
       </p>
       <div className="startup-guide__columns">
         <section aria-labelledby="startup-capabilities">
-          <h3 id="startup-capabilities">What you can make</h3>
+          <h3 id="startup-capabilities">Two ways in</h3>
           <ul>
             <li>
-              <strong>Scenes and guided motion.</strong> Build a Three.js world,
-              direct its camera and capture visual guidance for LTX workflows in
-              ComfyUI. Camera also offers model-specific controls for
-              generation, image layouts and look development.
+              <strong>Talk to it.</strong> Press the mic and say what you want.
+              Qwen3-ASR transcribes on your own machine and your agent gets the
+              text. The first press offers a one-time download: the 1.9 GB model
+              plus the voice runtime, with Python 3.11 and ffmpeg already
+              installed. A verified copy already on your machine is used
+              instead. Voice runs in the local studio only; the hosted site has
+              none.{" "}
+              <a
+                href="https://github.com/koshimazaki/genobi/blob/main/docs/voice-setup.md"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Voice setup ↗
+              </a>
             </li>
             <li>
-              <strong>Sound that belongs to the space.</strong> The acoustic
-              nodes estimate a room’s response from its geometry and materials,
-              then shape the track’s reverb. AKUSPACE is a separate experimental
-              LTX LoRA for room-conditioned generated sound.
+              <strong>Bring your agent.</strong> Hermes (open source), Claude
+              Code or Codex works the same tools you do through the Genobi
+              plugin: its MCP server, CLI and skills. Start Genobi sets Hermes
+              up for you; for Claude Code, run{" "}
+              <code>claude --plugin-dir plugins/genobi</code> in your checkout.
+              Anything that costs money waits for your approval in the studio.
             </li>
             <li>
-              <strong>A cut you can keep editing.</strong> Director and Editor
-              share one project and timeline. Use Dual Swords to compare footage
-              and extract exact frames; bring real clips, images and audio into
-              Assets. Scrolls holds your planning sheets.
+              <strong>The screen is for looking.</strong> Camera shows what came
+              back, Assets holds what you dropped in, and the deck along the
+              bottom shows what the agent is doing. In World Builder, voice
+              edits the scene direction only; ask the agent for anything more.
             </li>
             <li>
-              <strong>Creative direction that carries forward.</strong>{" "}
+              <strong>Start with your files.</strong> Drop your images, video
+              and audio into Assets, then tell the agent what they are and what
+              you want. No manual needed.{" "}
               <a href="/taste" target="_blank" rel="noopener noreferrer">
                 Taste references, recipes and creator credits ↗
               </a>{" "}
-              support your direction. Project notes and reusable decisions help
-              your agent build on the work. Connect Hermes, Claude Code or Codex
-              through the Genobi MCP, CLI and skills.
+              carry your direction into the next version.
             </li>
           </ul>
         </section>
@@ -161,8 +173,7 @@ npm run dev`}</code>
             and use Start Genobi to set up your agent. On the hosted site,
             connect it through Settings → Pair hosted and local Genobi first.
             Hermes runs on your computer; the hosted page cannot launch it
-            directly. The mic opens voice input once your local connection is
-            ready.
+            directly. Voice input needs the local studio.
           </p>
         </section>
       </div>

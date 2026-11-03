@@ -87,6 +87,16 @@
   gap: 4px;
   flex-wrap: wrap;
 }
+/* In the rail the session pill keeps its left edge; kind names follow it. */
+.studio-asset-rail .gallery-tools {
+  justify-content: flex-start;
+  margin: 0 0 10px;
+  gap: 4px 10px;
+}
+.studio-asset-rail .gallery-tools .gallery-filters {
+  order: -1;
+  margin: 0;
+}
 .studio-asset-rail .gallery-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 7px;

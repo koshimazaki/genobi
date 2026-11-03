@@ -28,7 +28,7 @@ export interface AgentWorld {
 
 /** The tools that reach the open World Builder, in one line. */
 export const WORLD_TOOLS =
-  "genobi_world_recipe (action send with a full recipe or a named take, on the linked project's copyId) replaces the set in the open World Builder within a few seconds; genobi_world (paired with the World tab's one-use code) moves the character and camera and loads presets. Neither spends or captures: capture stays the person's step.";
+  "genobi_world_recipe (action send with a full recipe or a named take, on the linked project's copyId) replaces the set in the open World Builder within a few seconds; genobi_world (action link with no code reaches the open tab from this session) moves the character and camera, loads presets, reads the recipe and its revision, and captures a take when the person asks. Neither spends: no paid generation, and captured files stay on this machine.";
 
 /** How an agent reads `world`, for the context block. */
 export const WORLD_GUIDE = `- \`world\`, when present, means World Builder is open in the studio: \`preset\` is the preset or named take it last loaded (edits may have followed) and \`summary\` the current set. To change the scene: ${WORLD_TOOLS}`;
