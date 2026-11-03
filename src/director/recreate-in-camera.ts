@@ -3,7 +3,12 @@ import { BLOOM_PROMPT, BLOOM_SHEET } from "../../shared/templates/bloom-teaser";
 import type { VersionSlot } from "../../shared/templates/version";
 import { versionTemplate } from "../../shared/templates/version";
 import { readyEntry, type ReadyEntry } from "../../shared/registry";
-import { applyCameraRecipe } from "../camera-recipe-target";
+import {
+  applyCameraRecipe,
+  beginCameraRecipeHandoff,
+  currentCameraRecipeHandoff,
+} from "../camera-recipe-target";
+import { studioStore } from "../studio/store";
 
 /**
  * Recreate in Camera (#57, swap only): a template slot's way to new media.
@@ -212,10 +217,19 @@ export async function openInCamera(
   project: Project,
   files: ReadonlyMap<string, Uint8Array>,
 ) {
+  // Reserve intent *before* the async reference load. A newer Recreate,
+  // project switch or navigation away from Camera invalidates this request.
+  const generation = beginCameraRecipeHandoff();
+  const projectBefore = studioStore.getState().director.bundle?.project.id;
   select("camera");
   const images = await recipeImages(recipe, project, files).catch(
     () => [] as string[],
   );
+  if (
+    !currentCameraRecipeHandoff(generation) ||
+    studioStore.getState().director.bundle?.project.id !== projectBefore
+  )
+    return;
   const note = recipeNote(recipe, images.length);
   if (recipe.label === "Create in Camera") {
     applyCameraRecipe({ patch: {}, note });
