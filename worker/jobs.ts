@@ -62,7 +62,10 @@ const statuses = new Set<JobStatus>([
   "Content Moderated",
   "Error",
 ]);
-const publicJob = (row: JobRow) => JSON.parse(row.data) as Job;
+// Older hosted rows may still contain expired deployment asset tickets.
+// Sanitize at the read boundary as well as when a new job is saved.
+const publicJob = (row: JobRow): Job =>
+  withoutDeployTickets(JSON.parse(row.data) as Job);
 function duplicate(row: JobRow, input: GenerateInput) {
   // Both backends answer a replay with shared/idempotency.ts, never raw JSON.
   if (canonicalInput(JSON.parse(row.input)) !== canonicalInput(input))
