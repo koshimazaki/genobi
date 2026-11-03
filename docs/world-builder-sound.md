@@ -60,13 +60,13 @@ routes, ported from Holodeck's mod matrix (`src/world-builder/mod-routes.ts`).
 Each route reads one source (`low`, `mid`, `high` or `level`) and drives one
 property of one target:
 
-| Target                       | Properties                        |
-| ---------------------------- | --------------------------------- |
-| `primitives`, `prop:<id>`    | `scale`, `height`, `spin`, `glow` |
-| `world`, `world:<set piece>` | `scale`, `height`, `spin`         |
-| `avatar` (the character)     | `height`, `scale`, `yaw`          |
-| `neuro` (the shader)         | `scale`, `light`                  |
-| `light:key`, `light:fill`    | `light`                           |
+| Target                       | Properties                                   |
+| ---------------------------- | -------------------------------------------- |
+| `primitives`, `prop:<id>`    | `scale`, `height`, `spin`, `glow`, `explode` |
+| `world`, `world:<set piece>` | `scale`, `height`, `spin`                    |
+| `avatar` (the character)     | `height`, `scale`, `yaw`                     |
+| `neuro` (the shader)         | `scale`, `light`                             |
+| `light:key`, `light:fill`    | `light`                                      |
 
 Set pieces are the Playground's editable ids (`car-a`, `drone`, `stairs` and
 the rest in `playground.ts`); routes to them act only in the Playground scene.
@@ -76,6 +76,14 @@ A route's value is `amount` (0 to 8) times the band level, silenced below its
 height adds metres, spin is a rate in rad/s, yaw adds radians, glow is the
 prop's emissive intensity and light adds intensity (×3 on the key light, as
 before). Routes on the same target and property add up.
+
+Explode moves props apart from their common centre, the outermost first, so
+nothing passes through anything (`shared/scene/explode.ts`, after
+[teardown](credits/libraries/teardown/README.md)). At 0 the props stand where
+Build put them; from 1 every prop is twice as far from the centre. On
+`primitives` the whole set opens on the beat and closes on the tail, staggered;
+on `prop:<id>` one prop leaves along its own line. Explode is not offered for
+set pieces, the character or lights.
 
 Holodeck smooths live, frame by frame. Here the same one-pole smoothing runs
 over the recipe's precomputed envelope from frame zero, so a route's value at a

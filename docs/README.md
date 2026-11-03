@@ -187,6 +187,10 @@ user action through every layer.
   controls, CAD follow-ups and verification.
 - [World Builder verification](world-builder-verification.md) — working paths,
   automated checks and what is still to verify.
+- [teardown](credits/libraries/teardown/README.md) — an external Claude Code
+  skill (MIT, not installed) that builds a real machine as an offline three.js
+  simulator you can take apart and records its tour to a 60 fps MP4; useful
+  rules for 3D explainers, cutaways and exploded views.
 
 ## Sound
 
@@ -326,6 +330,7 @@ from GitHub:
 - [play.core](credits/libraries/play-core/README.md)
 - [textmode.js](credits/libraries/textmode-js/README.md)
 - [Matrix digital rain](credits/libraries/matrix-rain/README.md)
+- [teardown](credits/libraries/teardown/README.md)
 - [Alien.js](credits/libraries/alien-js/README.md)
 - [Anime.js](credits/libraries/animejs/README.md)
 - [Claude Animation Base](credits/libraries/claude-animation-base/README.md)

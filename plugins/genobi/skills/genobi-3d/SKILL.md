@@ -5,7 +5,7 @@ license: MIT
 metadata:
   version: "0.3.0"
   tags: "3d, agents, sound, mcp"
-  docs: "docs/scene-examples.md, docs/scene-builder.md, docs/3d-tab.md, docs/world-live.md, docs/world-builder.md, docs/falling-room.md"
+  docs: "docs/scene-examples.md, docs/scene-builder.md, docs/3d-tab.md, docs/world-live.md, docs/world-builder.md, docs/falling-room.md, docs/credits/libraries/teardown/README.md"
 ---
 
 # Genobi 3D: examples first
@@ -55,6 +55,22 @@ The companion environment's object ids start with `extra-`. An enclosed room
 still has walls: inspect the view from inside, or use the exploded house for
 an outside architectural overview. Exploded walls are props, not an enclosed
 acoustic room.
+
+For an exploded view or cutaway of a real machine or product, beyond these
+primitives, the external Claude Code skill
+[teardown](https://github.com/elvarofficial/teardown) (MIT) builds it as an
+offline three.js simulator and records a 60 fps MP4. It is not part of this
+plugin and is not installed: suggest it, and install it only when the person
+asks. Its rules carry over to any scene here: one input poses every part, a
+pure `render(t)`, and review from contact sheets. Its film enters the Director
+as an ordinary project asset. See the
+[taste-layer page](https://github.com/koshimazaki/Genobi/blob/main/docs/credits/libraries/teardown/README.md).
+
+To open a World Builder set on the music, add an audio route with property
+`explode` on `primitives` (or one `prop:<id>`): props move away from their
+centre, outermost first, and close again as the band falls. At 0 they stand
+where they were placed. To present a product's interface the same way, load
+`ui-teardown`.
 
 ## Edit what the shot needs
 

@@ -25,6 +25,7 @@ import {
   loopPeriod,
 } from "./loop";
 import { CHARACTER_MODELS } from "../../shared/scene/character-catalog";
+import { explodeOffset, explodePlan } from "../../shared/scene/explode";
 
 export function createWorld(
   canvas: HTMLCanvasElement,
@@ -270,16 +271,30 @@ export function createWorld(
     // The key light keeps the single route's ×3 so migrated recipes match.
     key.intensity = recipe.light + modOf(mods, ["light:key"], "light") * 3;
     fill.intensity = 1 + modOf(mods, ["light:fill"], "light");
+    // Explode moves each prop away from the props' centre, outermost first.
+    const exploding = recipe.objects.some(
+      (p) => modOf(mods, ["primitives", `prop:${p.id}`], "explode") > 0,
+    );
+    const plan = exploding
+      ? explodePlan(recipe.objects.map((p) => [p.x, p.y, p.z]))
+      : null;
     props.children.forEach((mesh, i) => {
       const p = recipe.objects[i];
       const targets = ["primitives", `prop:${p.id}`];
+      const [ex, ey, ez] = plan
+        ? explodeOffset(plan, i, modOf(mods, targets, "explode"))
+        : [0, 0, 0];
       const glow = modOf(mods, targets, "glow");
       // Build edits the prop where it stands; Shot and Walk move it on its orbit.
       const [x, z] =
         editor?.mode === "edit"
           ? [p.x, p.z]
           : orbitPosition(p, seconds, recipe.loop ? period : undefined);
-      mesh.position.set(x, p.y + modOf(mods, targets, "height"), z);
+      mesh.position.set(
+        x + ex,
+        p.y + ey + modOf(mods, targets, "height"),
+        z + ez,
+      );
       const pulse = 1 + modOf(mods, targets, "scale");
       mesh.scale.set(
         ...(scaledAxes(p).map((v) => v * pulse) as [number, number, number]),

@@ -110,6 +110,18 @@ describe("World Builder audio mod matrix", () => {
       "audioGain must be between 0 and 8",
     );
     expect(propertiesForTarget("avatar")).toEqual(["height", "scale", "yaw"]);
+    // Explode moves props apart; set pieces, the character and lights refuse it.
+    expect(propertiesForTarget("primitives")).toContain("explode");
+    expect(propertiesForTarget("prop:kick")).toContain("explode");
+    expect(bad({ target: "world", property: "explode" })).toThrow(
+      "world takes scale, height, spin",
+    );
+    expect(
+      validateRecipe({
+        objects: two,
+        audioRoutes: [{ id: "x", target: "primitives", property: "explode" }],
+      }).audioRoutes[0].property,
+    ).toBe("explode");
     expect(targetForSelection("prop:kick")).toBe("prop:kick");
     expect(targetForSelection("car-a")).toBe("world:car-a");
     expect(targetForSelection("floor")).toBe("");

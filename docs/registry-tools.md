@@ -286,7 +286,7 @@ Genobi audio upload · writes. Bring a local WAV, FLAC or MP3 into this agent's 
 Genobi audio analysis · read-only. Analyse audio on the local studio: tempo and a fitted straight beat grid, a downbeat estimate the person should confirm, onsets per band (kick, snare, hat), an intensity curve and key moments (build-ups, crescendos, drops). beatFound is false, and grid and composition null, when no beat lands on an onset. `composition` holds bpm, beatOffsetSeconds and beatsPerBar to copy onto a Director composition. Name an audio source this session owns (sourceId, from genobi_audio_upload) or an audio asset of a linked project (copyId and assetId). librosa: true adds the optional librosa worker's view when the studio has it set up; otherwise the report says it was unavailable. Reads only; never paid.
 
 - Tags: `agents`, `mcp`, `sound`
-- Taught by: [`anime-teaser`](registry-skills.md#anime-teaser), [`genobi-director`](registry-skills.md#genobi-director), [`genobi-scrolls`](registry-skills.md#genobi-scrolls), [`genobi-swords`](registry-skills.md#genobi-swords)
+- Taught by: [`anime-teaser`](registry-skills.md#anime-teaser), [`genobi-director`](registry-skills.md#genobi-director), [`genobi-scrolls`](registry-skills.md#genobi-scrolls), [`genobi-swords`](registry-skills.md#genobi-swords), [`ui-teardown`](registry-skills.md#ui-teardown)
 - Docs: [docs/audio-analysis.md](audio-analysis.md)
 
 ## `genobi_media_tools`
