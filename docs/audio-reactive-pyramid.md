@@ -136,6 +136,14 @@ still (pyramid-inside pans 45 degrees) and move the space on the `low` band.
   it about 10 degrees up) turning one full 360 degrees. The turn is the
   camera path's `orbit`, not keys, so the heading advances by the same angle
   every frame at 97, 193 or 241 frames.
+- **towers-descent** (`recipes-clap.ts`) is framed on the owner's top-down
+  Manhattan still (`looks/falling/look-first.png`): ten 60 m glass towers in
+  two rows at x ±18.4 and a 36-piece gothic cathedral in the street. Frame 0
+  is the camera at (0, 88, 24) looking at (0, 0, -23) with a 42 degree lens;
+  it descends to (0, 42, -2) looking at (0, 0, -28). On the bass the whole
+  street is squeezed in x to 0.25 (`CLAP_FRACTION`, "walls closing like
+  clapping"), sizes included, so the rows nearly meet and nothing collides;
+  the camera keeps 2 m from every piece at full close.
 - **diamond** is the simplest object test: one faceted `diamond(128)` at 0.65
   scale, centred 8 m over the floor, in three identical states. It uses
   pulse's mappings (scale on `low` 0.9, lift on `sub` 1.5) plus twistY on

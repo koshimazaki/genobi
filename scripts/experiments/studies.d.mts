@@ -9,6 +9,7 @@ export declare const STUDIES: readonly [
   "cathedral",
   "cathedral-walls",
   "canyon",
+  "towers-descent",
   "falling",
   "room",
   "room-walls",

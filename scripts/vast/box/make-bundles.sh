@@ -14,6 +14,7 @@ declare -A PROMPT=(
   [pulse]="A lone pyramid on open ground swells and settles with the music while the camera circles it once. Clean sky, long shadows, still air."
   [cathedral-walls]="Inside a tall nave with pointed arches and a ribbed vault, the rows of clustered columns slide inward on every bass hit and ease back apart, the vault narrowing with them toward a tall arched window at the far end, seen from a high gallery that does not move. Soft daylight, stone and dust."
   [canyon]="Two rows of tall towers seen from above close in across the street on every bass hit and drift apart again, the camera fixed high over the avenue. Evening light, long shadows."
+  [towers-descent]="Seen from high above, two rows of Manhattan glass office towers at golden hour close in toward the street and open again on the beat while the camera descends between them toward a gothic cathedral facade below. Warm reflections in the glass, hard afternoon light, no people."
   [room-walls]="A small empty room whose bare walls press inward on the beat and open again around a figure dancing in the middle, seen from eye height. Warm lamp light, soft shadows."
   [pyramid-inside]="Inside a vast hollow stepped pyramid the towering terraced walls contract on every bass hit and expand back, a small figure standing on the floor for scale, the camera low and wide, looking up toward the open top. Dim warm light from above."
   [pyramid-inside-spin]="Inside a vast hollow stepped pyramid the camera stands near the middle of the floor and turns slowly all the way round, looking a little up, while the towering terraced walls tighten on every bass hit and ease back, a small figure standing on the floor for scale. Dim warm light from above."
@@ -39,5 +40,5 @@ mk() { # study mode [extra prepare args]
     --mode "$mode" --frames "$FRAMES" --seed 42 --output "$out" --label "$study-$mode" --prompt "${PROMPT[$study]}" "$@"
   echo "bundle $out"
 }
-for s in diamond pulse cathedral-walls canyon room-walls pyramid-inside pyramid-inside-spin falling fruit-dance fruit-mecha fruit-apple-banana fruit-banana-apple fruit-apple fruit-banana fruit-papaya; do mk "$s" layout-audio; done
+for s in diamond pulse cathedral-walls canyon towers-descent room-walls pyramid-inside pyramid-inside-spin falling fruit-dance fruit-mecha fruit-apple-banana fruit-banana-apple fruit-apple fruit-banana fruit-papaya; do mk "$s" layout-audio; done
 for s in cathedral-walls canyon; do mk "$s" union-depth; done

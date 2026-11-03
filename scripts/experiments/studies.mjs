@@ -10,6 +10,7 @@ export const STUDIES = Object.freeze([
   "cathedral",
   "cathedral-walls",
   "canyon",
+  "towers-descent",
   "falling",
   "room",
   "room-walls",
