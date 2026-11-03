@@ -46,7 +46,8 @@ it("keeps the newest Recreate after an older image finishes", async () => {
   const received: CameraRecipePatch[] = [];
   stop = onCameraRecipe((patch) => received.push(patch));
 
-  const first = openInCamera(() => {}, recipe("old", "/slow.png"), project, files);
+  const old = recipe("old", "/slow.png");
+  const first = openInCamera(() => {}, old, project, files);
   expect(fetchImage).toHaveBeenCalledWith("/slow.png");
   await openInCamera(() => {}, recipe("new"), project, files);
   expect(received).toHaveLength(1);
@@ -64,7 +65,8 @@ it("ignores a pending Recreate after leaving Camera", async () => {
   const received: CameraRecipePatch[] = [];
   stop = onCameraRecipe((patch) => received.push(patch));
 
-  const pending = openInCamera(() => {}, recipe("old", "/slow.png"), project, files);
+  const old = recipe("old", "/slow.png");
+  const pending = openInCamera(() => {}, old, project, files);
   cancelCameraRecipeHandoff();
   image.release(new Response(new Blob(["image"], { type: "image/png" })));
   await pending;
