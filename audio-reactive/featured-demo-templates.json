@@ -38,10 +38,26 @@
       "title": "Mecha × Fruits",
       "subtitle": "Character · Audio-reactive",
       "templateFamily": "characters-and-objects",
-      "state": "awaiting-original-video-files",
+      "state": "videos-exist-on-owner-machine-not-bundled",
       "existingGalleryTemplateId": null,
       "soundtrack": "Dance with Fruits",
       "videos": [
+        {
+          "id": "swap-edit",
+          "label": "Swap edit",
+          "url": null,
+          "source": "fruits-swap-v1.mp4, 3 November 2026: mecha, gorilla, gold gundam with watermelon, unicorn, one per loop, 25.08 s; reproducible from edit/fruits-swap-build.sh",
+          "preserveAudio": true,
+          "preserveOriginal": true
+        },
+        {
+          "id": "one-loop",
+          "label": "One character",
+          "url": null,
+          "source": "fruits-swap-gorilla-1loop.mp4, 7.08 s, the same build with one loop",
+          "preserveAudio": true,
+          "preserveOriginal": true
+        },
         {
           "id": "character-a",
           "label": "Character A",
@@ -63,6 +79,7 @@
         "character",
         "fruit-left",
         "fruit-right",
+        "audio",
         "look"
       ],
       "sourceSteps": [
@@ -82,69 +99,97 @@
         "isOptional": true,
         "frameRate": 24,
         "framesPerTake": 193,
-        "takeCount": 3,
-        "estimatedSeconds": 24.125,
-        "presetDocs": [
-          "fruit-mecha",
-          "fruit-mecha-morph",
-          "fruit-apple-banana"
-        ],
-        "note": "New render only; never silently stitch the two original examples"
+        "loopSeconds": 9.0,
+        "beatSeconds": 0.59211,
+        "framesPerLoop": 216,
+        "loops": {
+          "1": {
+            "frames": 170,
+            "seconds": 7.083
+          },
+          "2": {
+            "frames": 386,
+            "seconds": 16.083
+          },
+          "3": {
+            "frames": 602,
+            "seconds": 25.083
+          }
+        },
+        "script": "audio-reactive/edit/fruits-swap-build.sh",
+        "cardsScript": "audio-reactive/edit/fruits-swap-cards.py",
+        "rule": "audio-reactive/videos/fruits.md#the-general-rule-any-dance-edit-on-a-loop",
+        "contract": "audio-reactive/videos/fruits-template.md",
+        "log": "audio-reactive/edit/LOG.md",
+        "presetDocs": ["fruit-mecha"],
+        "alternativeMontage": {
+          "presetDocs": [
+            "fruit-mecha",
+            "fruit-mecha-morph",
+            "fruit-apple-banana"
+          ],
+          "takeCount": 3,
+          "estimatedSeconds": 24.125,
+          "note": "the older w0/w1/w2 recipe in videos/fruits.md, not the shipped structure"
+        },
+        "note": "New render only; never silently stitch the original examples"
       },
       "summary": "A mecha dances between two fruits to Dance with Fruits; the motion comes from a Three.js scene driven by the track's low band. To make your own version, change one fruit or the character (humanoid only). Genobi's agent edits only that region of the first still with FLUX 3 Klein, then re-renders the windows it appears in with LTX-2.5 Layout-to-Render. The rig and its moves stay the same. Nothing is rendered without a quote and your yes.",
       "pipeline": [
         {
-          "step": "Triple the 9 s Dance with Fruits loop (27 s); windows w0 0 s, w1 8.0417 s, w2 16.0833 s, 193 frames each at 24 fps",
-          "tool": "ffmpeg"
-        },
-        {
-          "step": "Capture each window: w0 fruit-mecha or fruit-mecha-morph, w1 fruit-apple-banana or fruit-banana-apple, w2 fruit-mecha; writes rgb.webm, depth.webm, control.wav, keyframes.json with regions.robot, regions.fruit-left, regions.fruit-right (regions.fruit for the single fruit) on the 1024x576 guide",
+          "step": "Window 0 of the 9 s Dance with Fruits loop: the fruit-mecha explode study, 193 frames at 24 fps, band gain auto, release 12, motion gain 1; writes rgb.webm, depth.webm, control.wav, keyframes.json with regions.robot, regions.fruit-left, regions.fruit-right on the 1024x576 guide",
           "tool": "Three.js World Builder study (capture.mjs)"
         },
         {
-          "step": "First still exactly 16:9 and aligned with frame 0, or a region edit of it",
-          "tool": "FLUX 3 Klein"
+          "step": "One first still per character, exactly 16:9 and aligned with frame 0: a region edit of regions.robot (suggested box = the rectangle scaled to the still, padded about 10 percent) or an owner still in the mecha's pose",
+          "tool": "FLUX 3 Klein or Genobi Image"
         },
         {
-          "step": "Render each window to 2048x1152, CFG 1, seed 42",
+          "step": "One render per character to 2048x1152, CFG 1, seed 42, the loop's first 8.04 s muxed",
           "tool": "LTX-2.5 22B distilled + Layout-to-Render IC-LoRA"
         },
         {
-          "step": "Stitch w0, w1, w2; replace the per-window excerpts with the loop file at the end",
-          "tool": "ffmpeg"
+          "step": "The swap edit: one render per loop, cut on the measured grid (loop 9.0 s, beat 0.592 s), Nokia cards over beats 13 and 14, drop-beat swap at beat 8 with a typed overlay, 4-frame pixel ramps, the 9 s loop tiled as the audio (sample-aligned; the tripled wav is 60 ms off)",
+          "tool": "ffmpeg + Pillow (edit/fruits-swap-build.sh)"
         }
       ],
-      "minimalInput": ["one fruit", "the character (humanoid only)"],
+      "minimalInput": [
+        "one fruit",
+        "the character (any that can take the mecha's pose)",
+        "or an audio track / a caption for MiniMax Music 3"
+      ],
       "whatIf": {
         "fruit": {
           "agentDoes": [
-            "Edit only the fruit-left or fruit-right rectangle (fruit in w1) of the first still with FLUX 3 Klein after a quote and the person's yes",
+            "Edit only the fruit-left or fruit-right rectangle of the first still with FLUX 3 Klein after a quote and the person's yes",
             "Change the fruit noun in the render prompt",
-            "If the new fruit's shape differs a lot from the voxel key, recolour or reshape that fruit's voxels in the study and recapture",
+            "If the new fruit's shape differs a lot from the voxel key, recolour or reshape that fruit's voxels in the study (catalogue fruits today: banana, papaya, apple, orange, watermelon; prompt-to-voxel is not built) and recapture",
             "For a morph, make a peak still at the closed frame"
           ],
-          "windowsRerendered": ["w0", "w1", "w2"],
+          "windowsRerendered": ["w0 of the loop the fruit appears in"],
           "paid": true
         },
         "character": {
           "agentDoes": [
             "Take one reference image from the person",
-            "Edit only the regions.robot rectangle of the first still with FLUX 3 Klein (swap the mecha for this character) after a quote and the person's yes",
-            "Keep the same rig: the swap changes who the dancer looks like, not how it moves",
+            "Show the suggested box: regions.robot scaled to the still, padded about 10 percent (no UI for this yet)",
+            "Edit only that rectangle of the first still with FLUX 3 Klein (swap the mecha for this character) after a quote and the person's yes",
+            "Keep the same rig: the swap changes who the dancer looks like, not how it moves; any character that can take the mecha's pose (gorilla, unicorn, pony, pink cat rendered 3 November from owner stills)",
             "Change the noun in the render prompt",
-            "Refuse a non-humanoid (vehicle, animal); ship-mecha is a separate Objects study",
             "Note: a Klein region edit driven by a reference image has not been tested on this workflow; the tested path is a region edit driven by the person's words, and Klein's --aesthetic-image copies composition and is not the mechanism"
           ],
-          "windowsRerendered": ["w0", "w2"],
+          "windowsRerendered": ["w0"],
           "paid": true
         },
         "track": {
           "agentDoes": [
-            "Recapture all three windows from the new track's low band; morphs start on a quiet low-band frame",
-            "Re-render all three clips",
-            "Re-mux the new track at the end"
+            "Take a track, or generate music with MiniMax Music 3 from a caption (quoted first)",
+            "Measure the new loop and beat periods from the audio, never assumed",
+            "Recapture window 0 on the new track; morphs start on a quiet low-band frame",
+            "Re-render every character",
+            "Recompute the cut frames from the measured grid and tile the new loop as the audio"
           ],
-          "windowsRerendered": ["w0", "w1", "w2"],
+          "windowsRerendered": ["w0 per character"],
           "paid": true
         },
         "assetInExistingEdit": {
@@ -153,13 +198,21 @@
           ],
           "windowsRerendered": [],
           "paid": false
+        },
+        "moreCharacters": {
+          "agentDoes": [
+            "One more loop per character: one more window-0 render and one more card; the first submission is the main character and opens the piece",
+            "Stop at three loops"
+          ],
+          "windowsRerendered": ["w0 per added character"],
+          "paid": true
         }
       },
       "inputs": [
-        "track: mecha-fruits-A2-x3.wav (owner file, not in the repository)",
-        "owner look stills (not in the repository)",
+        "loop: mecha-fruits-9s-A2-starts-on-voice.mp3, 9.0 s (owner file, not in the repository; sample-aligned with the renders)",
+        "owner character stills (not in the repository)",
         "reference image for the swap",
-        "the two existing character MP4s for the A/B originals (not yet in the repository; URLs stay null)"
+        "character MP4s: the swap edit and the one-loop gorilla in the owner's edit folder, the two A/B originals on the owner's machine (none in the repository yet; URLs stay null)"
       ],
       "models": [
         {
@@ -169,6 +222,10 @@
         {
           "name": "FLUX 3 Klein",
           "role": "first still or a region edit of it (paid, quoted first)"
+        },
+        {
+          "name": "MiniMax Music 3",
+          "role": "new music from a caption for the audio slot (registry id minimax-music-3, workflow route; paid, quoted first; not run for this piece)"
         },
         {
           "name": "LTX-2.5 22B distilled + Layout-to-Render IC-LoRA",
@@ -184,7 +241,9 @@
         "motion gain 1; gain 2 pushed the fruits out of frame",
         "the morph take does not open on a clean rest pair",
         "a new guided render, not character-consistent video-to-video editing and not a real-time swap",
-        "humanoid characters only"
+        "a new fruit from a name is catalogue-only; prompt-to-voxel is not built",
+        "the suggested-box step has no UI yet",
+        "at most three loops"
       ]
     },
     {
