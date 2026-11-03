@@ -186,8 +186,8 @@ Send runs in this order:
    with the project's copy linked, looked up after the save.
 
 Regenerate itself never quotes, submits or retries. The agent quotes each paid
-step through its usual tools and the person approves it in the bubble, which
-shows the session's progress as for any other start.
+step through its usual tools and the person approves it in the footer deck,
+which shows the session's progress as for any other start.
 
 **Why a Send once said "did not reach the project copy in time" (29 October
 2026).** The owner's local server had been started before the global prompt

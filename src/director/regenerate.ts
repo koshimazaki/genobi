@@ -111,7 +111,7 @@ export const NO_COPY =
 export const STARTING =
   "Genobi is still starting from elsewhere. Nothing was sent; your words are kept here, so send again once it has started.";
 export const BUSY =
-  "Genobi is still working in the session shown in the bubble. Send again once it finishes, or Stop it there; your instruction stays here.";
+  "Genobi is still working in the session shown in the Genobi log. Send again once it finishes, or Stop it there; your instruction stays here.";
 
 /** A mix project's optional upscale step, for the agent to offer, not run. */
 function mixStepOf(projectId: string) {

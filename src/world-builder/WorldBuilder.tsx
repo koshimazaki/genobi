@@ -220,7 +220,7 @@ export default function WorldBuilder({
                             : "DRAG TO FRAME · SCROLL TO ZOOM"}
                   </span>
                 </div>
-                <LiveControls s={s} e={e} />
+                <LiveControls s={s} e={e} active={active} />
                 <div className="wb-take-strip">
                   <button
                     aria-label={s.playing ? "Stop preview" : "Play take"}

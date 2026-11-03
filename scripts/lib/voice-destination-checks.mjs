@@ -42,12 +42,15 @@ export async function destinationChecks({ open, checks, output }) {
       agent: AGENT,
       text: REQUEST,
     });
+    // Since #57 the bubble is a guide: opened by its launcher, it shows the
+    // running session's compact status with Speak to agent.
+    await page.getByRole("button", { name: "Open Genobi guide" }).click();
     if (width <= 700) {
       const header = await page.locator(".topbar").boundingBox();
       const bubble = await page.locator(".agent-bubble").boundingBox();
       assert(
         bubble.y >= header.y + header.height,
-        `the open conversation leaves every header control reachable at ${width}`,
+        `the open guide leaves every header control reachable at ${width}`,
       );
     }
     const entry =

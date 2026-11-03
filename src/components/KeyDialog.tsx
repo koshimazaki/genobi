@@ -183,7 +183,7 @@ export default function KeyDialog({
         </SettingsSection>
         <SettingsSection
           title="Activity & display"
-          subtitle="History, Genobi bubble and setup guide"
+          subtitle="History and setup guide"
         >
           <ActivitySettings />
         </SettingsSection>

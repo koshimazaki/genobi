@@ -5,6 +5,11 @@ summary: Confirm before spending - an agent session's quote appears in the perso
 
 # Confirm before spending
 
+**Since 2 November 2026 (#57)** the approval cards below show in the footer
+[deck](genobi-deck.md) (`src/deck/DeckSession.tsx`), which opens by itself when
+a step waits; the [bubble](agent-bubble.md) is a static guide. Where this page
+says "the bubble", read "the deck".
+
 Issue #23, "Confirm before spending": the agent shows its plan and the quote
 before any paid step, and nothing paid runs without the person's click.
 

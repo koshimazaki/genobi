@@ -41,7 +41,7 @@ export class SpawnCancelled extends Error {}
 let step: SpawnStep = { kind: "closed" };
 let answer:
   { resolve: (value: unknown) => void; reject: (e: Error) => void } | undefined;
-/** Terminal is the preferred experience; "Run in the bubble instead" flips it. */
+/** Terminal is the preferred experience; "Run in the studio instead" flips it. */
 let preferTerminal = true;
 const listeners = new Set<() => void>();
 const emit = () => listeners.forEach((listener) => listener());

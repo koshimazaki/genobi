@@ -34,7 +34,7 @@ Keep internal preset IDs independent of display names and branding.
 
 The first visit shows Genobi’s optional setup welcome. Its dismissal stays in
 this browser; blocked storage falls back to showing the welcome next visit.
-Reopen setup from the Genobi activity bubble. Closing it preserves the requested
+Reopen setup from the Genobi guide bubble. Closing it preserves the requested
 workspace, including direct links. The header’s question mark opens a separate
 quick guide on demand, without stored dismissal state. Its Open Camera action
 is explicit and never generates.
@@ -42,8 +42,10 @@ The book immediately left of the mic opens the standalone `/taste` reference
 wiki in a separate tab, preserving the studio. It replaces the floating Taste
 link and stays outside the tool dock. Camera's generation library remains in
 its main column even when Assets is closed; the rail has Project and
-Inspirations. Other workspaces retain their Library tab and Ninja's independent
-Gallery panel. Stable gallery hosts move between these destinations without
+Inspirations. Other workspaces add the Camera results as a third tab, named
+**Generated** since 2 November 2026 (#57; Dual Swords keeps its own **Library**),
+and Ninja keeps its independent Gallery panel. A Generated card is dragged onto
+a template slot or clip, or added with +; nothing is swapped in by itself. Stable gallery hosts move between these destinations without
 recreating the gallery's state.
 
 Ninja means the custom workspace in this shell. Earlier “3D Ninja” planning refers
@@ -100,9 +102,15 @@ Dual embeds its existing media library there. The rail owns its scrolling;
 embedded lists do not nest another scrollbar. With the rail open on desktop,
 the main workspace scrolls separately and there is no document scrollbar beside
 Assets. Smaller widths use a nonmodal right drawer with Hide and Escape.
-The rail starts open only where it docks (wider than 1100 px). Until the
-person opens or hides it, it follows the window, so narrowing a window
-closes it instead of leaving a drawer over the work. Ninja has no rail;
+The rail starts open only where it docks (wider than 1100 px), and never in
+Gallery or the Editor: the Editor is for editing, not adding, so its rail waits
+to be asked for (`railOpen` in `src/studio/ninja-layout.ts`). Until the
+person opens or hides a rail, it follows the window, so narrowing a window
+closes it instead of leaving a drawer over the work. Their choice is kept
+per workspace as soon as they make it (`genobi.ninja-rails.v1`), so neither a
+reload nor crossing the docking width reopens a rail they hid. Switching
+workspace also closes a Project media dialog left open for the last one; a
+button that switches and then opens it still opens it. Ninja has no rail;
 the Assets button keeps its place there, unseen and disabled, so the mic
 and theme controls stay put between sections.
 
@@ -377,8 +385,9 @@ heights, fit and Fill gaps, the same version 3 shape as the layout JSON) and the
 Assets rail choices the person made in the other workspaces. Opening one
 restores the arrangement and reopens or closes each workspace's rail as it
 was, and keeps both as the browser's working layout (`genobi.ninja-layout.v1`
-and `genobi.ninja-rails.v1`), so a reload keeps them. Someone who never opened
-a saved layout keeps each workspace's default rail. Editor's
+and `genobi.ninja-rails.v1`), so a reload keeps them. Opening or hiding a rail
+writes the same key, so the next save captures it. Someone who never chose
+keeps each workspace's default rail. Editor's
 vertical resize heights are not kept; they last for the visit. No project data,
 prompts, media or keys are saved.
 

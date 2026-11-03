@@ -102,7 +102,7 @@ export default function RegenerateAction({ disabled }: { disabled: boolean }) {
           copy === false
             ? NO_COPY
             : working
-              ? "The agent is still working on this project; its progress is in the bubble"
+              ? "The agent is still working on this project; its progress is in the Genobi log"
               : "Hand your edits and an instruction to the agent so it works again"
         }
         onClick={() => setOpen(!open)}

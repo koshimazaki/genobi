@@ -6,41 +6,25 @@ import GenerateVersionAction from "../src/director/GenerateVersionAction";
 import { studioStore } from "../src/studio/store";
 import { versionCharacter, versionMix } from "./director-version-fixtures";
 import { readBrief, writeBrief } from "../src/director/prompt-brief";
-import { cleanInstruction } from "../shared/director/regenerate";
 import type { Bundle } from "../src/director/bundle";
 
 const state = vi.hoisted(() => ({
-  copy: true as boolean | undefined,
-  send: vi.fn(),
   preset: "director",
-}));
-vi.mock("../src/director/useAgentSend", () => ({
-  useAgentSend: () => ({
-    ...state,
-    sending: false,
-    working: false,
-    setNote: vi.fn(),
-  }),
+  select: vi.fn(),
 }));
 vi.mock("../src/studio/ShellContext", () => ({
-  useShell: () => ({ preset: state.preset }),
+  useShell: () => ({ preset: state.preset, select: state.select }),
 }));
 vi.mock("../src/director/MediaTile", () => ({
   default: () => <span>Media preview</span>,
-}));
-vi.mock("../src/director/feedback-file", () => ({ feedbackOf: () => ({}) }));
-vi.mock("../shared/director/prompt-send", async (original) => ({
-  ...(await original<object>()),
-  promptsInstruction: () => ({ text: "My current direction and edits" }),
 }));
 (
   globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }
 ).IS_REACT_ACT_ENVIRONMENT = true;
 const unmount: (() => void)[] = [];
 beforeEach(() => {
-  state.copy = true;
   state.preset = "director";
-  state.send.mockReset();
+  state.select.mockReset();
   vi.stubGlobal(
     "fetch",
     vi.fn(() => {
@@ -83,39 +67,30 @@ const button = (label: string) =>
     b.textContent?.includes(label),
   )!;
 
-it("opens inputs when a template is selected and hands a finished mix to the agent without quoting or submitting", async () => {
+it("opens a swap-only panel: no generation choices, plan, agent or HTTP", async () => {
   await mount(await versionMix());
-  expect(document.querySelector("dialog")?.open).toBe(true);
-  const choices = document.querySelectorAll<HTMLInputElement>(
-    'input[type="checkbox"]',
-  );
-  expect(choices.length).toBeGreaterThan(0);
-  await act(async () => {
-    if (!choices[0].checked) choices[0].click();
-    button("Review generation plan").click();
-  });
-  expect(document.body.textContent).toContain("Generate replacement");
-  await act(async () => {
-    button("Prepare with Genobi").click();
-    await vi.waitFor(() => expect(state.send).toHaveBeenCalledOnce());
-  });
-  expect(state.send).toHaveBeenCalledOnce();
-  const message = state.send.mock.calls[0][0];
-  expect(message).toContain("Replace slot IDs: mix-01.");
-  expect(message).toContain("Reuse other media");
-  expect(cleanInstruction(message)).toBe(message);
-  expect(message).toContain("brief/prompt.json");
-  expect(message).toContain("wait for explicit approval");
-  expect(message).toContain("never retry uncertain submissions");
+  const dialog = document.querySelector("dialog");
+  expect(dialog?.open).toBe(true);
+  expect(dialog?.getAttribute("aria-label")).toBe("Make my version");
+  expect(document.querySelectorAll('input[type="checkbox"]')).toHaveLength(0);
+  const text = document.body.textContent ?? "";
+  for (const gone of [
+    "Generate replacement",
+    "Review generation plan",
+    "Prepare with Genobi",
+    "Generation plan",
+    "Replace slot IDs",
+  ])
+    expect(text).not.toContain(gone);
+  expect(button("Generate my version")).toBeUndefined();
   expect(fetch).not.toHaveBeenCalled();
-  expect(document.querySelector("dialog")).toBeNull();
 });
 
-it("allows an undoable asset swap without starting an agent", async () => {
+it("allows an undoable asset swap without starting anything", async () => {
   const bundle = await versionMix();
   await mount(bundle);
   await act(async () => {
-    button("Apply swaps only").click();
+    button("Apply swaps").click();
     // Failed polls must not format the bundle's megabytes of media bytes:
     // that synchronous work can delay the validation/commit we are awaiting.
     await vi.waitFor(() =>
@@ -124,31 +99,10 @@ it("allows an undoable asset swap without starting an agent", async () => {
   });
   expect(document.body.textContent).toContain("Nothing was generated");
   expect(studioStore.getState().director.bundle).not.toBe(bundle);
-  expect(state.send).not.toHaveBeenCalled();
   expect(fetch).not.toHaveBeenCalled();
 });
 
-it("offers a project ZIP handoff on hosted and never sends unavailable media", async () => {
-  state.copy = false;
-  await mount(await versionCharacter());
-  act(() => button("Review generation plan").click());
-  expect(button("Prepare with Genobi").disabled).toBe(true);
-  expect(button("Save project ZIP")).toBeDefined();
-  const link = document.querySelector<HTMLAnchorElement>(
-    'a[href^="http://127.0.0.1:4317/director?"]',
-  )!;
-  expect(new URL(link.href).searchParams.get("example")).toBe(
-    "character-piece",
-  );
-  expect(new URL(link.href).searchParams.get("workspace")).toBe("director");
-  expect(document.body.textContent).toContain(
-    "pairing alone does not transfer project media",
-  );
-  expect(state.send).not.toHaveBeenCalled();
-});
-
-it("lets a hosted finished mix keep existing media and continue editing from review without an agent", async () => {
-  state.copy = false;
+it("applies Words, closes on continue editing and undoes cleanly", async () => {
   const bundle = await versionMix();
   await mount(bundle);
   const title = document.querySelectorAll<HTMLInputElement>(
@@ -160,17 +114,7 @@ it("lets a hosted finished mix keep existing media and continue editing from rev
       "value",
     )!.set!.call(title, "MY REMIX");
     title.dispatchEvent(new Event("input", { bubbles: true }));
-    for (const choice of document.querySelectorAll<HTMLInputElement>(
-      'input[type="checkbox"]',
-    ))
-      if (choice.checked) choice.click();
   });
-  act(() => button("Review generation plan").click());
-  expect(document.body.textContent).toContain(
-    "No agent or paid generation is needed",
-  );
-  expect(button("Prepare with Genobi")).toBeUndefined();
-  expect(button("Apply swaps and continue editing").disabled).toBe(false);
   await act(async () => {
     button("Apply swaps and continue editing").click();
     await vi.waitFor(
@@ -183,7 +127,6 @@ it("lets a hosted finished mix keep existing media and continue editing from rev
   expect(
     studioStore.getState().director.bundle?.project.template?.inputs.title,
   ).toBe("MY REMIX");
-  expect(state.send).not.toHaveBeenCalled();
   expect(fetch).not.toHaveBeenCalled();
   act(() => studioStore.getState().actions.undo());
   expect(
@@ -191,12 +134,25 @@ it("lets a hosted finished mix keep existing media and continue editing from rev
   ).toBe(bundle.project.template?.inputs.title);
 });
 
-it("keeps the advanced brief collapsed by default and preserves it when toggled", async () => {
+it("offers Create in Camera per video slot: it only navigates and closes the panel", async () => {
+  const bundle = await versionMix();
+  await mount(bundle);
+  const create = button("Create in Camera");
+  expect(create).toBeDefined();
+  act(() => create.click());
+  expect(state.select).toHaveBeenCalledWith("camera");
+  expect(document.querySelector("dialog")).toBeNull();
+  expect(studioStore.getState().director.bundle).toBe(bundle);
+  expect(fetch).not.toHaveBeenCalled();
+});
+
+it("keeps the advanced brief collapsed by default and preserves it when applied", async () => {
   const original = await versionCharacter();
   const brief = readBrief(original);
   const text =
     "Keep the original camera; make the room breathe to the bass. [Image 1]";
-  await mount(writeBrief(original, { ...brief, text }));
+  const bundle = writeBrief(original, { ...brief, text });
+  await mount(bundle);
   const advanced = document.querySelector<HTMLDetailsElement>(
     ".dir-version-advanced",
   )!;
@@ -210,13 +166,13 @@ it("keeps the advanced brief collapsed by default and preserves it when toggled"
   act(() => advanced.querySelector("summary")!.click());
   expect(advanced.open).toBe(false);
   expect(field.value).toBe(text);
-  act(() => button("Review generation plan").click());
   await act(async () => {
-    button("Prepare with Genobi").click();
-    await vi.waitFor(() => expect(state.send).toHaveBeenCalledOnce());
+    button("Apply swaps").click();
+    await vi.waitFor(() =>
+      expect(studioStore.getState().director.bundle).not.toBe(bundle),
+    );
   });
   expect(readBrief(studioStore.getState().director.bundle!).text).toBe(text);
-  expect(state.send.mock.calls[0][0]).toContain(text);
   expect(fetch).not.toHaveBeenCalled();
 });
 
@@ -247,7 +203,19 @@ it("keeps Gallery free of the template modal and does not reopen a dismissed pan
   expect(document.querySelector("dialog")).not.toBeNull();
 });
 
-it("keeps Make it yours description and character/style bindings in the prepared project", async () => {
+it("opens Make my version only on request in Editor", async () => {
+  state.preset = "editor";
+  const mounted = await mount(await versionCharacter());
+  expect(document.querySelector("dialog")).toBeNull();
+  act(() => button("Make my version").click());
+  expect(document.querySelector("dialog")).not.toBeNull();
+  act(() => button("Close").click());
+  state.preset = "director";
+  mounted.render();
+  expect(document.querySelector("dialog")).not.toBeNull();
+});
+
+it("keeps Make it yours description and character/style bindings when applied", async () => {
   const original = await versionCharacter();
   const brief = readBrief(original);
   const text = `Character: [${brief.references[0].label}]\nStyle: quiet watercolor, keep the red coat`;
@@ -258,14 +226,14 @@ it("keeps Make it yours description and character/style bindings in the prepared
       'textarea[aria-label="Make it yours description"]',
     )?.value,
   ).toBe(text);
-  act(() => button("Review generation plan").click());
   await act(async () => {
-    button("Prepare with Genobi").click();
-    await vi.waitFor(() => expect(state.send).toHaveBeenCalledOnce());
+    button("Apply swaps").click();
+    await vi.waitFor(() =>
+      expect(studioStore.getState().director.bundle).not.toBe(bundle),
+    );
   });
   const saved = readBrief(studioStore.getState().director.bundle!);
   expect(saved.text).toBe(text);
   expect(saved.references).toEqual(brief.references);
-  expect(state.send.mock.calls[0][0]).toContain("quiet watercolor");
   expect(fetch).not.toHaveBeenCalled();
 });

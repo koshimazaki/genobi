@@ -46,7 +46,7 @@ const CODEX =
 
 /** No sign-in route: the hosted studio, where setup starts nothing. */
 export const SETUP_LOCAL_ONLY =
-  "Setup starts your agent from the local studio only. Open the local studio to finish setup; here you can still send typed prompts to a paired runner from the bubble.";
+  "Setup starts your agent from the local studio only. Open the local studio to finish setup; here you can still send typed prompts to a paired runner from Settings and follow it in the Genobi log.";
 
 /**
  * Ready when this is the local studio (its sign-in route answered), the

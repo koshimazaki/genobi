@@ -7,7 +7,8 @@
  *
  * A request names a medium ("image", "video"…) and/or a model, and a subject
  * after "of", "showing", a colon or a comma. Anything else ("open the
- * director", "make the video louder") is not a request and returns null.
+ * director", "make the video louder") is not a request and returns null;
+ * "open the director" is read first by `voice-navigation.ts`.
  */
 import {
   entryFor,

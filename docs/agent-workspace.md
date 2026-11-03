@@ -37,17 +37,17 @@ or somewhere else. This page is the product statement for that idea (22 October 
 
 ## What exists, what is specced, what is open
 
-| Part                                       | State                                                                                                                                                                             | Where                                                              |
-| ------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
-| Common interface for any harness           | Built: the Genobi MCP server and plugin, link codes, project addressing by `copyId`                                                                                               | [Director agent tools](director-agent-tools.md), `plugins/genobi/` |
-| Shared project and assets                  | Built: the project copy on disk with revisions and an event stream; agent takes handed into the project as assets                                                                 | [Director bundle](director-bundle/README.md)                       |
-| Skills an agent follows                    | Built: one per template plus the open route                                                                                                                                       | [Hermes runs](hermes-runs.md)                                      |
-| Spending stays with the person             | Built: quotes, chain approvals, the budget check                                                                                                                                  | [Architecture](architecture.md)                                    |
-| Voice and global prompt                    | Built: voice overlay and transcript                                                                                                                                               | [Voice mode](voice-mode.md)                                        |
-| Built-in agent runs the studio             | Specced on #23: studio commands over a session stream, and the local agent runner                                                                                                 | issue #23                                                          |
-| Genobi speech bubbles and activity history | Built (#67): the session's lines and summary in a bubble below the header mark, with expandable activity and Stop; structured plan and tool counts are open on #23                | [Genobi bubble](agent-bubble.md)                                   |
-| Portable project memory                    | Open, box on #14: `memory.json` in the project (intent, decisions, preferences, asset relationships, actions), and session logs as `sessions/*.jsonl`, both carried in the bundle | issue #14                                                          |
-| Bring your own memory                      | Open: the memory file is plain JSON, so an external system (Open-Brain, a wiki) can read and write it through the same tools                                                      | issue #14                                                          |
+| Part                                       | State                                                                                                                                                                                  | Where                                                              |
+| ------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| Common interface for any harness           | Built: the Genobi MCP server and plugin, link codes, project addressing by `copyId`                                                                                                    | [Director agent tools](director-agent-tools.md), `plugins/genobi/` |
+| Shared project and assets                  | Built: the project copy on disk with revisions and an event stream; agent takes handed into the project as assets                                                                      | [Director bundle](director-bundle/README.md)                       |
+| Skills an agent follows                    | Built: one per template plus the open route                                                                                                                                            | [Hermes runs](hermes-runs.md)                                      |
+| Spending stays with the person             | Built: quotes, chain approvals, the budget check                                                                                                                                       | [Architecture](architecture.md)                                    |
+| Voice and global prompt                    | Built: voice overlay and transcript                                                                                                                                                    | [Voice mode](voice-mode.md)                                        |
+| Built-in agent runs the studio             | Specced on #23: studio commands over a session stream, and the local agent runner                                                                                                      | issue #23                                                          |
+| Genobi speech bubbles and activity history | Built (#67); since #57 the session's lines, approvals and Stop are in the footer deck and the bubble is a guide with a compact status; structured plan and tool counts are open on #23 | [Genobi bubble](agent-bubble.md)                                   |
+| Portable project memory                    | Open, box on #14: `memory.json` in the project (intent, decisions, preferences, asset relationships, actions), and session logs as `sessions/*.jsonl`, both carried in the bundle      | issue #14                                                          |
+| Bring your own memory                      | Open: the memory file is plain JSON, so an external system (Open-Brain, a wiki) can read and write it through the same tools                                                           | issue #14                                                          |
 
 ## Rules worth keeping
 
@@ -66,8 +66,10 @@ memory box (#14).
 
 **Bubbles and activity history (#23)**
 
-- The bubble and its activity history are built (#67, [Genobi bubble](agent-bubble.md));
-  they show the session's received lines and summary as the agent's text.
+- The bubble and its activity history were built (#67); since #57 the
+  session's received lines, summary, approvals and Stop are in the footer
+  [deck](genobi-deck.md), and the [Genobi bubble](agent-bubble.md) is a guide
+  with a compact session status.
 - Counts and states in a bubble ("3 tools planned, 8 assets selected", "Preview
   ready") come from structured plan and tool events on the agent session
   stream, not from text the agent writes. New event kinds are additive in

@@ -290,7 +290,7 @@ ffmpeg is not an authority on media: each output is measured by the same shared 
 
 `StartupConfigurator` opens once per browser on the studio (not an iframe or
 the separate public share pages). A local seen flag only suppresses the welcome;
-it does not indicate installation or readiness. The Genobi activity bubble can
+it does not indicate installation or readiness. The Genobi guide bubble can
 reopen it. Choices stay in a draft until Save; skipping does not change defaults.
 While setup is open the draft and its step are kept in this tab's
 `sessionStorage` (`genobi-setup-draft-v1`, `src/setup/session-draft.ts`): a

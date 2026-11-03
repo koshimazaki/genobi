@@ -5,6 +5,9 @@
  * (after band gain, smoothing and release). Indices are exact 0-based frames
  * of rgb.webm snapped to LTX's 8-frame latent grid, so a Klein edit of a still can be pinned at the same index as
  * a second image guide.
+ * `regions` (frame-0 pixel rectangles of the robot and each morph group, from
+ * regions.ts at capture) are copied in when the study has any; the CLI reads
+ * them back from study.json.
  */
 import { execFileSync } from "node:child_process";
 import { readFile, writeFile } from "node:fs/promises";
@@ -14,7 +17,7 @@ import { keyframeFile, pickKeyframes } from "./keyframe-pick.mjs";
 
 const BAND = "low";
 
-export async function writeKeyframes(directory) {
+export async function writeKeyframes(directory, regions) {
   const recipe = JSON.parse(
     await readFile(join(directory, "recipe.json"), "utf8"),
   );
@@ -55,11 +58,31 @@ export async function writeKeyframes(directory) {
     latentStride: 8,
     frames,
   };
+  const swap = regions ?? (await studyRegions(directory));
+  if (swap && Object.keys(swap).length) {
+    // Guide pixels at frame 0; scale x and w by still width / guide width, y and h likewise.
+    receipt.regionFrame = {
+      frame: 0,
+      width: recipe.width,
+      height: recipe.height,
+      pad: "8% of the box per side",
+    };
+    receipt.regions = swap;
+  }
   await writeFile(
     join(directory, "keyframes.json"),
     JSON.stringify(receipt, null, 2),
   );
   return receipt;
+}
+
+async function studyRegions(directory) {
+  try {
+    return JSON.parse(await readFile(join(directory, "study.json"), "utf8"))
+      .regions;
+  } catch {
+    return undefined;
+  }
 }
 
 if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {

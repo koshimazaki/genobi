@@ -2,10 +2,11 @@ import { recordBrowserActivity } from "../activity/store";
 import { useEffect, useState } from "react";
 import type { AgentSession } from "../../shared/agent-session";
 import { isAgentActive } from "../../shared/agent-session-events";
-import { readAgentSession, stopAgentSession } from "./api";
+import { readAgentSession } from "./api";
 import { retryPendingHandoffs } from "./approved-jobs";
 import {
   publishAgentSession,
+  setAgentSessionError,
   useShownAgentSession,
   showAgentSession,
   shownAgentSession,
@@ -14,16 +15,17 @@ import {
   AGENT_REQUEST_HEADER,
   AGENT_SESSION_ID,
 } from "../../shared/agent-session-events";
-import { AgentBubble } from "./AgentBubble";
-import { AgentApprovals } from "./AgentApprovals";
-import { approvable } from "../../shared/agent-approval";
-import { useShell } from "../studio/ShellContext";
 import { studioStore } from "../studio/store";
 import { followDirectorPicks } from "./studio-context";
 
 const POLL_MS = 1500;
 
-/** The session stays mounted and polling when its bubble is tucked away. */
+/**
+ * Follows the shown agent session: restores it after a reload, polls it while
+ * active and publishes each read for the footer deck, which shows its log,
+ * approvals and Stop (`src/deck/DeckSession.tsx`). Renders nothing: the
+ * Genobi bubble is a static guide (#57), not a session view.
+ */
 export default function AgentSessionPanel() {
   const shown = useShownAgentSession();
   useEffect(() => {
@@ -68,19 +70,16 @@ export default function AgentSessionPanel() {
       }),
     [],
   );
-  if (!shown) return <AgentBubble />;
-  return <Panel key={shown.id} initial={shown} />;
+  if (!shown) return null;
+  return <Follow key={shown.id} initial={shown} />;
 }
 
-function Panel({ initial }: { initial: AgentSession }) {
-  const shell = useShell();
+function Follow({ initial }: { initial: AgentSession }) {
   const [session, setSession] = useState(initial);
-  const [error, setError] = useState<string>();
-  const [stopping, setStopping] = useState(false);
   const [failures, setFailures] = useState(0);
   const active = isAgentActive(session.status);
-  // A message sent from elsewhere (voice, Box 1.8) answers with the session
-  // as it now stands; the next poll builds on that.
+  // A message, approval or Stop from elsewhere (voice, the deck) answers with
+  // the session as it now stands; the next poll builds on that.
   useEffect(() => setSession(initial), [initial]);
   useEffect(() => publishAgentSession(session), [session]);
 
@@ -91,13 +90,13 @@ function Panel({ initial }: { initial: AgentSession }) {
       readAgentSession(session.id, controller.signal).then(
         (next) => {
           setSession(next);
-          setError(undefined);
+          setAgentSessionError(undefined);
           // The studio answers again: hand over any approved run waiting.
           retryPendingHandoffs();
         },
         (failure: Error) => {
           if (failure.name === "AbortError") return;
-          setError(failure.message);
+          setAgentSessionError(failure.message);
           setFailures((n) => n + 1);
         },
       );
@@ -107,35 +106,5 @@ function Panel({ initial }: { initial: AgentSession }) {
       controller.abort();
     };
   }, [active, session, failures]);
-
-  const stop = async () => {
-    setStopping(true);
-    try {
-      setSession(await stopAgentSession(session.id));
-      setError(undefined);
-    } catch (failure) {
-      setError((failure as Error).message);
-    } finally {
-      setStopping(false);
-    }
-  };
-
-  return (
-    <AgentBubble
-      session={session}
-      error={error}
-      stopping={stopping}
-      onStop={() => void stop()}
-      attention={!!session.approvals?.some((a) => approvable(a))}
-      approvals={<AgentApprovals session={session} onChange={setSession} />}
-      onAssets={
-        shell
-          ? () => {
-              shell.select("director");
-              studioStore.getState().actions.workspace({ drawerOpen: true });
-            }
-          : undefined
-      }
-    />
-  );
+  return null;
 }

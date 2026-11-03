@@ -110,8 +110,11 @@ describe("the Send to Genobi message", () => {
     );
     expect(text).toContain("World Builder is open");
     expect(text).toContain("genobi_world_recipe");
-    expect(text).toContain("genobi_world (paired");
-    expect(text).toContain("Neither spends or captures");
+    expect(text).toContain("genobi_world (action link with no code");
+    // The tool can capture (free, local files); it never spends.
+    expect(text).toContain("captures a take when the person asks");
+    expect(text).toContain("Neither spends: no paid generation");
+    expect(text).not.toContain("capture stays");
     expect(text).not.toMatch(/[\x00-\x08\x0b-\x1f\x7f]/);
     expect(text.split("Build this scene")[1].length).toBeGreaterThan(
       MESSAGE_PROMPT_MAX,

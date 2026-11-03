@@ -22,6 +22,7 @@ import { StudioNavigation } from "./StudioNavigation";
 import { usePanelMotion } from "./usePanelMotion";
 import { useStudio } from "./useStudio";
 import { studioStore } from "./store";
+import { cancelCameraRecipeHandoff } from "../camera-recipe-target";
 import {
   addToProjectAssets,
   addedMessage,
@@ -32,6 +33,8 @@ import {
   movePanel,
   openWorkingLayout,
   readWorkingRails,
+  railOpen,
+  storeWorkingRails,
   panelColumns,
   type NinjaPanel,
   type NinjaLayout,
@@ -55,7 +58,6 @@ import { queueLayoutTake } from "../layout-take";
 const Scrolls = lazyReload(() => import("../scrolls/Scrolls"));
 const Director = lazyReload(() => import("../director/Director"));
 const WorldBuilder = lazyReload(() => import("../world-builder/WorldBuilder"));
-// 3D camera plates (#18).
 const Scene3D = lazyReload(() => import("../scene3d/Scene3D"));
 const DualEditor = lazyReload(() =>
   import("../dual-editor/DualEditor").then((m) => ({ default: m.DualEditor })),
@@ -72,12 +74,12 @@ export default function StudioShell() {
   const [assetViews, setAssetViews] =
     useState<Record<string, boolean>>(readWorkingRails);
   const docked = useDockedRail();
-  // Open by default only where the rail docks; the person's choice wins.
-  const assetsOpen =
-    preset !== "ninja" &&
-    (assetViews[preset] ?? (preset !== "gallery" && docked));
+  // Editor starts without a rail; user rail choices persist immediately.
+  const assetsOpen = railOpen(preset, assetViews, docked);
   const setAssetsOpen = (open: boolean) => {
-    setAssetViews((v) => ({ ...v, [preset]: open }));
+    const next = { ...assetViews, [preset]: open };
+    setAssetViews(next);
+    storeWorkingRails(pickRails(next));
     if (open && preset === "world")
       requestAnimationFrame(() =>
         document
@@ -96,8 +98,6 @@ export default function StudioShell() {
   const ninja = ninjaLayout.panels
     .map((p) => p.id)
     .filter((id) => id !== "inputs");
-  // Heavy tools latch their first visit so later layout changes only hide
-  // them. "plates" is the 3D camera panel (#18), latched by itself.
   const [visited, setVisited] = useState<Set<Preset | "plates" | "plateView">>(
     () =>
       new Set([
@@ -117,15 +117,12 @@ export default function StudioShell() {
         ),
       ) as Record<HostId, HTMLDivElement>,
   );
-  // New panel types need a stable destination during an active local preview.
   for (const id of Object.keys(panels) as PanelId[]) {
     hosts[id] ??= document.createElement("div");
   }
   const assetRole = useStudio((s) => s.workspace.assetRole);
   const bundle = useStudio((s) => s.director.bundle);
-  // The 3D Sound tab lists the project's audio; its bytes stay in this tab.
   const projectAudioChoices = useMemo(() => projectAudio(bundle), [bundle]);
-  // `at` restarts the expiry even when two adds read the same.
   const [notice, setNotice] = useState({ text: "", at: 0 });
   const root = useRef<HTMLDivElement>(null);
   const visible = useMemo(
@@ -183,6 +180,10 @@ export default function StudioShell() {
   const drag = useNinjaDrag(preset === "ninja" && ninjaEditing, move);
   function select(next: Preset, updateUrl = true) {
     if (next === preset) return;
+    // A reference image may still be loading for Recreate in Camera.
+    // Leaving the Camera invalidates that handoff before it can overwrite
+    // prompts or references on a later visit.
+    if (next !== "camera") cancelCameraRecipeHandoff();
     const focusWasInPanel = root.current?.contains(document.activeElement);
     measure();
     setPreset(next);
@@ -193,8 +194,13 @@ export default function StudioShell() {
           ?.focus({ preventScroll: true });
       });
     setVisited((previous) => new Set([...previous, next]));
-    if (next === "director" || next === "editor")
-      studioStore.getState().actions.workspace({ advanced: next === "editor" });
+    // A media dialog is scoped to its workspace, not the next one.
+    studioStore.getState().actions.workspace({
+      drawerOpen: false,
+      ...(next === "director" || next === "editor"
+        ? { advanced: next === "editor" }
+        : {}),
+    });
     if (updateUrl) {
       const url = new URL(location.href);
       url.searchParams.set("workspace", next);
@@ -225,9 +231,6 @@ export default function StudioShell() {
           .forEach((media) => media.pause());
     });
   }, [hosts, visible]);
-  // Every tool's output reaches the project's assets through this one path.
-  // A new asset is announced briefly; a repeat add of the same bytes is not,
-  // because the tool that asked already says so and nothing changed.
   async function addAsset(media: OutputMedia) {
     const added = await addToProjectAssets(media);
     if (added.added) setNotice({ text: addedMessage(added), at: Date.now() });

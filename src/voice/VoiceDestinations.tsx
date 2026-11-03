@@ -26,6 +26,7 @@ import {
   WORLD_PROMPT_LABEL,
 } from "./world-prompt-target";
 import { applyVoiceIntent } from "./voice-intent-target";
+import { applyVoiceNavigation } from "./voice-navigation-target";
 import { liveSession, type Routed } from "./session-message";
 import type { PromptDestination } from "./prompt-destination";
 
@@ -131,7 +132,16 @@ export function VoiceDestinations({
         throw new Error(
           "The open project changed. Choose a destination and send the transcript again.",
         );
-      if (destination.destination === "agent") {
+      // "Open the director" switches the studio rather than reaching the
+      // agent or Camera; a chosen prompt field still takes the words as said.
+      const opened =
+        destination.destination === "agent" ||
+        destination.destination === "camera"
+          ? applyVoiceNavigation(words, shell)
+          : null;
+      if (opened) {
+        result = { kind: "intent", words, text: `Opened ${opened}.` };
+      } else if (destination.destination === "agent") {
         const sent = await sendVoiceToAgent(words, project, destination.agent);
         if (sent.kind === "closed") {
           result = {

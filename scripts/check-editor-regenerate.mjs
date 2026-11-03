@@ -185,8 +185,8 @@ try {
     assert.match(starts[0].prompt, /The timeline now, bottom track first/);
     assert.match(starts[0].copyId ?? "", /^signal-studies\.[a-z2-9]{10}$/);
     await page
-      .getByRole("region", { name: "Agent session" })
-      .or(page.getByRole("button", { name: "Open Genobi activity" }))
+      .getByRole("log")
+      .or(page.getByRole("button", { name: "Open Genobi guide" }))
       .first()
       .waitFor();
     await page.screenshot({ path: `${output}/regenerate-sent.png` });

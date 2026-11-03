@@ -140,13 +140,14 @@ export function SpawnAgentView({
               <strong>In Terminal</strong>
               <span>
                 Genobi opens in a Terminal window, so you can watch it work and
-                type to it. The bubble follows its paid steps for your approval.
+                type to it. The Genobi log holds its paid steps for your
+                approval.
               </span>
             </li>
             <li>
-              <strong>In the bubble</strong>
+              <strong>In the studio</strong>
               <span>
-                Genobi runs inside the studio and answers in the Genobi bubble.
+                Genobi runs inside the studio and answers in the Genobi log.
                 Paid steps still wait for your approval.
               </span>
             </li>
@@ -161,7 +162,7 @@ export function SpawnAgentView({
               Open in Terminal
             </button>
             <button type="button" onClick={() => onMode("headless")}>
-              Run in the bubble instead
+              Run in the studio instead
             </button>
           </div>
         </>

@@ -7,6 +7,7 @@ import { renderDynamicRoomAudio } from "../../src/world-builder/dynamic-room-aud
 import { roomSoundReceipt } from "../../src/world-builder/room-sound-receipt";
 import { evaluateScene } from "../../src/world-builder/evaluate-scene";
 import { createStudy, type Cue, type Study } from "./recipes";
+import { studyRegions } from "./regions";
 import { SCENE_MAPPING_RANGES } from "../../src/world-builder/scene-state";
 
 export interface Reactivity {
@@ -279,6 +280,8 @@ export async function captureStudy(
       sampleFrameHashes: hashes,
       measuredFrames,
       sound,
+      // Frame-0 swap rectangles; keyframes.mjs copies them into keyframes.json.
+      regions: studyRegions(study, recipe),
     };
     await json("study.json", report);
     return report;
