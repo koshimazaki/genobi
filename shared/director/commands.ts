@@ -18,6 +18,7 @@ import {
 } from "../licensing/project-preferences";
 import { placeAsset } from "./assets";
 import { checkGenerationInput } from "./reference-role";
+import { bindRecipeInspirations } from "./recipe-inspiration";
 import { addLayer, fits, lane } from "./add-commands";
 import {
   applyClipCommand,
@@ -113,6 +114,8 @@ export type DirectorCommand =
       name?: string;
       /** Over a layer using the recipe; all it requires if none does. */
       parameters?: Parameters;
+      /** Lets a recipe image name an Inspiration (see recipe-inspiration). */
+      allowInspirationAsInput?: boolean;
     }
   | { op: "move-clip"; layerId: string; startFrame: number; track?: Track }
   | {
@@ -132,7 +135,12 @@ export type DirectorCommand =
       allowInspirationAsInput?: boolean;
     }
   | ({ op: "set-placement"; layerId: string } & Placement)
-  | { op: "set-parameters"; layerId: string; parameters: Parameters }
+  | {
+      op: "set-parameters";
+      layerId: string;
+      parameters: Parameters;
+      allowInspirationAsInput?: boolean;
+    }
   | ({ op: "set-beat-grid" } & BeatGridPatch)
   | ({ op: "set-resolution" } & Resolution)
   | ApplyEffectCommand
@@ -149,7 +157,7 @@ const FIELDS: Record<DirectorOp, [string[], string[]]> = {
   ],
   "add-graphic": [
     ["layerId", "moduleId", "track", "startFrame", "durationFrames"],
-    ["name", "parameters"],
+    ["name", "parameters", "allowInspirationAsInput"],
   ],
   "move-clip": [["layerId", "startFrame"], ["track"]],
   "trim-clip": [["layerId", "startFrame", "durationFrames"], []],
@@ -159,7 +167,7 @@ const FIELDS: Record<DirectorOp, [string[], string[]]> = {
   "set-template-inputs": [["inputs"], []],
   "replace-plate": [["layerId", "assetId"], ["allowInspirationAsInput"]],
   "set-placement": [["layerId"], [...PLACEMENT_FIELDS]],
-  "set-parameters": [["layerId", "parameters"], []],
+  "set-parameters": [["layerId", "parameters"], ["allowInspirationAsInput"]],
   "set-beat-grid": [[], [...BEAT_GRID_FIELDS]],
   "set-resolution": [["width", "height"], []],
   "apply-effect-preset": [EFFECT_APPLY_REQUIRED, EFFECT_APPLY_OPTIONAL],
@@ -238,7 +246,7 @@ export function parseCommand(value: unknown): DirectorCommand {
       refuse(`text must be at most ${PROMPT_LIMIT} characters`);
     c.text = cleanPrompt(value.text as string);
   }
-  if (op === "replace-plate" && value.allowInspirationAsInput !== undefined) {
+  if (value.allowInspirationAsInput !== undefined) {
     if (typeof value.allowInspirationAsInput !== "boolean")
       refuse("allowInspirationAsInput must be a boolean");
     c.allowInspirationAsInput = value.allowInspirationAsInput;
@@ -336,8 +344,21 @@ function apply(copy: DirectorCopy, c: DirectorCommand): DirectorCopy {
     case "set-prompt":
       return { project: { ...project }, prompt: c.text };
     case "add-clip":
-    case "add-graphic":
       return same(addLayer(project, c));
+    case "add-graphic": {
+      // A new layer binds every image it carries, copied ones included.
+      const added = addLayer(project, c);
+      const layer = added.layers.find((l) => l.id === c.layerId);
+      const names = layer && "parameters" in layer ? layer.parameters : {};
+      return same(
+        bindRecipeInspirations(
+          added,
+          c.layerId,
+          Object.keys(names),
+          c.allowInspirationAsInput,
+        ),
+      );
+    }
     case "move-clip": {
       const layer = unlocked(project, c.layerId);
       fits(project, c.startFrame, layer.durationFrames);
@@ -398,7 +419,15 @@ function apply(copy: DirectorCopy, c: DirectorCommand): DirectorCopy {
       return same(setPlacement(project, layerId, placement));
     }
     case "set-parameters":
-      return same(setParameters(project, c.layerId, c.parameters));
+      // Only the names written are checked: an older binding still edits.
+      return same(
+        bindRecipeInspirations(
+          setParameters(project, c.layerId, c.parameters),
+          c.layerId,
+          Object.keys(c.parameters),
+          c.allowInspirationAsInput,
+        ),
+      );
     case "set-resolution":
       return same(setResolution(project, c));
     case "set-beat-grid": {

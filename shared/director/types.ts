@@ -285,11 +285,12 @@ export function checkReferences(p: Project) {
       fail(`Unexpected generation ${id}`);
   }
   const plans = new Set<string>();
+  // An Inspiration bound here is refused when the binding is written
+  // (recipe-inspiration), not on load, so a project saved before that rule
+  // still opens.
   for (const layer of p.layers)
     for (const id of recipeAssetIds(p, layer))
       if (p.assets[id]?.kind !== "image") fail("Missing recipe image asset");
-      else if (p.assets[id].use !== "production")
-        fail("Recipe image asset must be production");
   for (const g of p.generationPlans) {
     if (plans.has(g.id)) fail("Duplicate generation plan");
     plans.add(g.id);

@@ -83,7 +83,10 @@ not generate from it. Read `briefNotes` and, for each `[Inspiration N]`, write
 what to take from it into the prompt. Pass only production images as
 `projectImageReferences`. Only when the person asks, in the current request, for
 an Inspiration to be an image input, add `allowInspirationAsInput: true`; the
-adapter refuses one otherwise, naming the asset.
+adapter refuses one otherwise, naming the asset. A recipe image is the same:
+`set-parameters` or `add-graphic` with `asset:<id>` naming an Inspiration is
+refused without that opt-in, and with it binds a production copy. Older
+projects that already bind one still open; only the write is checked.
 
 Use the `genobi-camera` card for the model. The loop is the paying rule from
 `genobi-studio`: `genobi_quote`, show the price and wait for the person's yes,
@@ -162,7 +165,7 @@ one `command`.
 | Command               | Fields beyond `op`                                                                                                              |
 | --------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
 | `add-clip`            | `layerId` (new), `assetId`, `track`, `startFrame`, `durationFrames`, `name?`, `sourceStartFrame?`                               |
-| `add-graphic`         | `layerId` (new), `moduleId`, `track`, `startFrame`, `durationFrames`, `name?`, `parameters?`                                    |
+| `add-graphic`         | `layerId` (new), `moduleId`, `track`, `startFrame`, `durationFrames`, `name?`, `parameters?`, `allowInspirationAsInput?`        |
 | `apply-effect-preset` | `presetId`, `instanceId` (new), `expectedRevision`, `startFrame`, `durationFrames`, `parameters?`, `variant?`, `sourceLayerId?` |
 | `move-clip`           | `layerId`, `startFrame`, `track?`                                                                                               |
 | `trim-clip`           | `layerId`, `startFrame`, `durationFrames`                                                                                       |
@@ -172,7 +175,7 @@ one `command`.
 | `set-muted`           | `layerId`, `muted` (boolean; audio mute or visual hide)                                                                         |
 | `set-gain`            | `layerId`, `gain` (audio only, 0–2)                                                                                             |
 | `set-placement`       | `layerId`, `position?`, `scale?`, `opacity?`, `rotationDegrees?`, `motion?`                                                     |
-| `set-parameters`      | `layerId`, `parameters`                                                                                                         |
+| `set-parameters`      | `layerId`, `parameters`, `allowInspirationAsInput?`                                                                             |
 | `set-resolution`      | `width`, `height` (whole pixels; at most 1920 × 1080 pixels in total)                                                           |
 | `set-beat-grid`       | `bpm?`, `beatOffsetSeconds?`, `beatsPerBar?` (at least one)                                                                     |
 | `set-prompt`          | `text` (the earlier prompt brief)                                                                                               |

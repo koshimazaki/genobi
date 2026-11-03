@@ -85,7 +85,10 @@ to take from them (style, palette, layout, mood, structure, wording); never pass
 one as `projectImageReferences`, a source frame, a swap source or a deployment
 input unless the person asked for that in the current request, and then set
 `allowInspirationAsInput: true`. The adapter refuses an Inspiration otherwise.
-Each asset carries a `role` (`production` or `style`), and `briefNotes` has one
+The same opt-in applies to a recipe image: `set-parameters` and `add-graphic`
+refuse an `asset:<id>` naming an Inspiration without it, and with it bind a
+production copy. The check is at the write; an older project that already
+binds one still opens. Each asset carries a `role` (`production` or `style`), and `briefNotes` has one
 sentence for each Inspiration the brief names. See
 [what Inspirations are for](project-assets.md#what-inspirations-are-for).
 

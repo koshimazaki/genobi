@@ -100,6 +100,12 @@ and a run is made from that.
   `genobi_submit`, and a `projectAsset` staged with `genobi_deployment_stage`,
   are refused when they name an Inspiration without the opt-in, naming the
   asset and the rule. Production images pass unchanged.
+- **A recipe image is checked where it is written.** `set-parameters` and
+  `add-graphic` refuse an `asset:<id>` recipe image that names an Inspiration
+  unless the command sets `allowInspirationAsInput: true`; with it, the recipe
+  binds a production copy (the `-plate` alias `replace-plate` makes). Opening a
+  project never refuses one, so a project saved before this rule with a recipe
+  bound to an Inspiration still opens and edits.
 
 The rule and its wording live in one portable module,
 `shared/director/reference-role.ts`, so the MCP adapter, the CLI and the studio
