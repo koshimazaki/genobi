@@ -14,26 +14,25 @@ export const DROP_END_CARD = `${DIR}/drop-end-card.jpg` as const;
  * acoustic width range in metres and the Sabine RT60 range in seconds. The
  * RT60s are the model's, not measurements of the render. `seconds` is where
  * the room plays in the cut (frames 0 / 174 / 342 / 511 / 679 / 776). The
- * towers' street proxy and the nave proxy now follow the measured gap of
- * their side rows (scripts/experiments/recipes-clap.ts); their RT60 is null
- * until those re-captures are measured (the bundled track still carries the
- * earlier fixed proxies, docs/audio-reactive-drop.md). The pyramid outside is
- * open air: no room is modelled for it.
+ * towers' street proxy and the nave proxy follow the measured gap of their
+ * side rows (scripts/experiments/recipes-clap.ts), and the bundled track
+ * carries those re-captures (docs/audio-reactive-drop.md). The pyramid
+ * outside is open air: no room is modelled for it.
  */
 export const DROP_ROOMS = [
   {
     room: "towers",
     asset: "drop-towers",
     seconds: [0, 7.25],
-    width: [22.8, 5.7],
-    rt60: null,
+    width: [5.7, 22.4],
+    rt60: [2.1, 5.46],
   },
   {
     room: "cathedral",
     asset: "drop-cathedral",
     seconds: [7.25, 14.25],
-    width: [28, 7],
-    rt60: null,
+    width: [7, 20.4],
+    rt60: [2.01, 3.48],
   },
   {
     room: "pyramid inside",
