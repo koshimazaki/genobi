@@ -67,6 +67,12 @@ user action through every layer.
   3D + LTX template v2: five World Builder rooms in LTX-2.5 (open weights) on
   one track, each room's own CPU room sound, every room, the track and every
   overlay a swappable layer.
+- [Dance with Fruits](fruits-swap.md) — the sixth mix template, the
+  content swap: the owner's four LTX-2.5 (open weights) renders of one dance
+  guide, opened by an apple-logo title splash, swapped on the loop and the
+  drop, with pixel words and fruit and the house end card;
+  [its recipes](fruits-swap-recipes.md): a speech bubble, a pixel fruit shower
+  and a boxed surveillance filter.
 - [Adaptive reverb proof](adaptive-reverb-proof.md) — the 30 October runs: one
   Three.js scene guiding LTX Layout-to-Render picture and scene-derived reverb.
 - [Audio-reactive pyramid](audio-reactive-pyramid.md) — the 2 November runs:

@@ -21,6 +21,7 @@ describe("offered Director/Editor templates", () => {
       "Bloom",
       "Adaptive reverb",
       "Audio Reactive Drop",
+      "Dance with Fruits",
     ]);
   });
 

@@ -77,6 +77,11 @@ const MIX_FOOTAGE: Readonly<Record<string, string[]>> = {
   // Audio Reactive Drop (3 November 2026): five LTX-2.5 (open weights)
   // Layout-to-Render rooms through the open workflow, nothing else.
   "audio-reactive-drop": ["ltx-2-5-open"],
+  // Dance with Fruits (3 November 2026): the owner's four LTX-2.5
+  // Layout-to-Render (open weights) renders. That IC-LoRA workflow has no
+  // registry entry of its own, so the badge names the open LTX-2.5 entry
+  // (docs/fruits-swap.md#the-footage).
+  "fruits-swap": ["ltx-2-5-open"],
 };
 
 /**
@@ -100,6 +105,7 @@ export const GALLERY_ORDER: readonly string[] = [
   "bloom-teaser",
   "adaptive-reverb",
   "audio-reactive-drop",
+  "fruits-swap",
   "character-piece-generation",
   "product-video-generation",
   "sheet-to-shot",
@@ -112,6 +118,7 @@ export const GALLERY_SUBTITLE: Readonly<Record<string, string>> = {
   "bloom-teaser": "Sheet to shot",
   "adaptive-reverb": "3D · LTX template",
   "audio-reactive-drop": "3D · LTX template · v2",
+  "fruits-swap": "Content swap",
 };
 
 /**
@@ -221,6 +228,7 @@ export const GALLERY_AUDIO: ReadonlySet<string> = new Set([
   "bloom-teaser",
   "adaptive-reverb",
   "audio-reactive-drop",
+  "fruits-swap",
   "character-piece-generation",
 ]);
 
