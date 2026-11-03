@@ -454,6 +454,8 @@ The same model on BFL's hosted endpoint, a second way to run `flux-3-klein`.
 Up to ten `imageReferences` (PNG, JPEG or WebP data URLs, 11 MB together); the
 first is the image edited. A data URL is long: ask before reading a large
 image into a tool call. Klein makes images only; edits run on FLUX 3 Edit.
+A project Inspiration is never one of them unless the person asks this request
+(`allowInspirationAsInput`); describe its style, layout or mood in the prompt.
 
 ### FLUX 3 · Image (`flux-3-image`)
 

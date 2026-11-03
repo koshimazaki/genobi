@@ -9,6 +9,11 @@ import {
 import { lanes, laneLabels } from "../shared/director/tracks";
 import { assetLabel } from "../shared/director/asset-media";
 import {
+  briefRoleNotes,
+  INSPIRATION_RULE,
+  referenceRole,
+} from "../shared/director/reference-role";
+import {
   directionWords,
   LENSES,
   SHOT_TYPES,
@@ -103,6 +108,15 @@ export function projectSummary(read: ProjectRead) {
     prompt: read.brief?.text ?? "",
     // Preserve token → asset bindings so model references use the owner's actual files.
     brief: read.brief ?? null,
+    // One sentence per Inspiration the brief's text names: style only.
+    briefNotes: read.brief
+      ? briefRoleNotes(
+          read.brief.references.filter((r) =>
+            read.brief!.text.includes(`[${r.label}]`),
+          ),
+          p.assets,
+        )
+      : [],
     template: p.template ?? null,
     preferences: p.preferences ?? null,
     // The revision your last command left, which genobi_project_feedback
@@ -128,6 +142,8 @@ export function projectSummary(read: ProjectRead) {
       label: assetLabel(a.file.path),
       kind: a.kind,
       use: a.use,
+      // "style" for an Inspiration: describe it, never pass it as input.
+      role: referenceRole(a.use),
       file: a.file,
       durationSeconds: a.durationSeconds ?? null,
     })),
@@ -210,8 +226,7 @@ export const directorTools: ToolDefinition[] = [
   {
     name: "genobi_project",
     title: "Genobi Director project",
-    description:
-      "Read one Director project: revision, globalPrompt, tracks/clips with timing, placement, parameters, prompts and directions; assets with assetId, label, kind, use, file path/hash and duration; recipes and registryRecipes; shots; complete brief (text plus reference bindings); and frame notes. Resolve brief.references to assets and pass image references to genobi_quote as projectImageReferences [{copyId,assetId}], in the intended order. The adapter reads the authorized file bytes; never invent references from filenames. Send commands against the revision you read. agentRevision is the revision your last command left; genobi_project_feedback returns the person's changes since then.",
+    description: `Read one Director project: revision, globalPrompt, tracks/clips with timing, placement, parameters, prompts and directions; assets with assetId, label, kind, use, role, file path/hash and duration; recipes and registryRecipes; shots; complete brief (text plus reference bindings); and frame notes. Resolve brief.references to assets and pass production image references (role "production") to genobi_quote as projectImageReferences [{copyId,assetId}], in the intended order. ${INSPIRATION_RULE} briefNotes says this for each Inspiration the brief names; the adapter refuses one unless allowInspirationAsInput is true. The adapter reads the authorized file bytes; never invent references from filenames. Send commands against the revision you read. agentRevision is the revision your last command left; genobi_project_feedback returns the person's changes since then.`,
     inputSchema: { copyId },
     tags: ["agents", "mcp", "director", "bundle"],
     docs: [

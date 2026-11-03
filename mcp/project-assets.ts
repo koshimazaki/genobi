@@ -1,6 +1,8 @@
 import { createHash } from "node:crypto";
 import { z } from "zod";
 import { COPY_ID, DIRECTOR_ID } from "../shared/director/commands";
+import { assetLabel } from "../shared/director/asset-media";
+import { checkGenerationInput } from "../shared/director/reference-role";
 import type { Asset, Project } from "../shared/director/types";
 import {
   inspectImage,
@@ -23,6 +25,9 @@ export async function readProjectAsset(
   reference: ProjectAssetReference,
   limit: number,
   kind?: Asset["kind"],
+  // Set when the bytes become a generation input: an Inspiration is then
+  // refused unless the person asked for it in this request.
+  generation?: { allowInspirationAsInput?: boolean },
 ) {
   const { copyId, assetId } = projectAssetSchema.parse(reference);
   const route = `/api/projects/${encodeURIComponent(copyId)}` as const;
@@ -33,6 +38,11 @@ export async function readProjectAsset(
   if (!asset || (kind && asset.kind !== kind))
     throw new Error(
       `Choose ${kind ? `an asset of kind ${kind}` : "an asset"} from this linked project.`,
+    );
+  if (generation)
+    checkGenerationInput(
+      { assetId, use: asset.use, label: assetLabel(asset.file.path) },
+      generation.allowInspirationAsInput,
     );
   if (!/^[a-f0-9]{64}$/.test(asset.file.sha256))
     throw new Error("The project asset has an invalid file hash.");
@@ -45,7 +55,11 @@ export async function readProjectAsset(
 }
 
 /** Resolve references inside the adapter; never make an LLM copy base64 media. */
-export async function projectImageReferences(api: GenobiApi, value: unknown) {
+export async function projectImageReferences(
+  api: GenobiApi,
+  value: unknown,
+  allowInspirationAsInput?: boolean,
+) {
   const references = z
     .array(projectAssetSchema)
     .min(1)
@@ -59,6 +73,7 @@ export async function projectImageReferences(api: GenobiApi, value: unknown) {
       reference,
       MAX_IMAGE_BYTES,
       "image",
+      { allowInspirationAsInput },
     );
     total += bytes.length;
     if (total > MAX_IMAGE_REQUEST_BYTES * 0.7)

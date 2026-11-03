@@ -1492,7 +1492,8 @@
         "director-prompts.md",
         "director-resolution.md",
         "hermes-runs.md",
-        "licence-strategy.md"
+        "licence-strategy.md",
+        "project-assets.md"
       ]
     },
     {
@@ -1716,6 +1717,7 @@
       "links": [
         "capabilities.md",
         "hermes-open-route.md",
+        "project-assets.md",
         "run-location.md",
         "taste-memory.md",
         "voice-mode.md",

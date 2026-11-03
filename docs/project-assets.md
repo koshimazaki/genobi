@@ -72,6 +72,40 @@ an MCP client made on this machine appears in the gallery once Ready, marked
 Director** copies it like any other card, audio included; an agent linked to
 the project can hand its take in directly with `genobi_take_to_project`.
 
+## What Inspirations are for
+
+The owner's rule, 3 November 2026, in his words: "inspirations are not gonna be
+used, but be inspired from. You don't use them as an asset to generate, but as
+an inspiration for structure or style." A Pinterest moodboard or a photo of a
+cat goes under **Inspirations**; the person's own media goes under **Project**,
+and a run is made from that.
+
+- **An Inspiration is a style reference** (`use: "reference"`, role `style`).
+  It may inform the style, palette, layout, mood, structure and wording of a
+  prompt. Its pixels are not sent to a model as an image reference, a source
+  frame, a swap source or any other generation input, so a run does not
+  reproduce what is in it.
+- **The exception is explicit and per request.** The person's own drag of an
+  Inspiration into Camera's reference tray is that act: it is allowed, and the
+  tray says "Inspiration used as an image reference for this run". An agent
+  sets `allowInspirationAsInput: true` only when the person asked for it in
+  the request it is working on; a brief or an earlier request is not consent.
+- **Agents are told per reference.** `genobi_project` gives each asset a
+  `role` (`production` or `style`) and `briefNotes`, one sentence for each
+  Inspiration the brief names: "[Inspiration 2] is a style reference: describe
+  what to take from it in the prompt; do not pass it as an image reference."
+  The compiled brief (`resolveBrief`, the **Download brief + files** ZIP and the
+  `brief` command) carries the same `role` and `notes`.
+- **The adapter enforces it.** `projectImageReferences` in `genobi_quote` and
+  `genobi_submit`, and a `projectAsset` staged with `genobi_deployment_stage`,
+  are refused when they name an Inspiration without the opt-in, naming the
+  asset and the rule. Production images pass unchanged.
+
+The rule and its wording live in one portable module,
+`shared/director/reference-role.ts`, so the MCP adapter, the CLI and the studio
+cannot disagree. A World Builder first frame and a kept Dual Swords frame still
+land under Inspirations; drag one into Camera's tray to make a run from it.
+
 ## Send to Director and Add to assets
 
 **Send to Director** adds an item to the Director's project assets from where
@@ -153,6 +187,9 @@ Assets rail (Project or Inspirations) or the Library, not only files from
 disk (`studioDropFiles`, `src/studio/media-drop.ts`). The drag carries the
 asset's identity; its bytes come from the open project. The provider's own
 limits still apply, for example references need both sides at least 256 px.
+An Inspiration dropped there is the person's explicit choice to use it as an
+image, so it is kept, and the workspace says "Inspiration used as an image
+reference for this run" ([what Inspirations are for](#what-inspirations-are-for)).
 
 ## Saved videos
 
@@ -216,6 +253,10 @@ assets in the same project.
 
 ## Checking it
 
+- `tests/reference-role.test.ts`: the Inspiration rule, its brief notes, the
+  compiled brief's roles and the tray's drop recognition;
+  `tests/mcp-inspiration-input.test.ts`: the refusal through quote and submit,
+  the explicit opt-in, and a production image passing unchanged.
 - `tests/asset-media.test.ts`: types and aliases, control characters,
   folders, extension, length, size and use.
 - `tests/project-assets.test.ts`: the tab a use names, the cleaned name and

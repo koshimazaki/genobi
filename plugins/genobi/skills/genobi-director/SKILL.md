@@ -76,6 +76,15 @@ Do not combine this field with inline `imageReferences`. If an asset changes,
 quote again and obtain approval for the new inputs. Source-conditioned open
 Klein must use `imageAspectRatio: "auto"` because it derives shape from the source.
 
+**Inspirations are inspiration, not input.** An asset with `use: "reference"`
+(`role: "style"`, shown as an Inspiration: a moodboard, a found photo) informs
+the style, palette, layout, mood, structure and wording of your prompt; you do
+not generate from it. Read `briefNotes` and, for each `[Inspiration N]`, write
+what to take from it into the prompt. Pass only production images as
+`projectImageReferences`. Only when the person asks, in the current request, for
+an Inspiration to be an image input, add `allowInspirationAsInput: true`; the
+adapter refuses one otherwise, naming the asset.
+
 Use the `genobi-camera` card for the model. The loop is the paying rule from
 `genobi-studio`: `genobi_quote`, show the price and wait for the person's yes,
 `genobi_submit` with that `quoteId`, the same arguments and a new

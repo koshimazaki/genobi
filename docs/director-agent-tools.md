@@ -80,6 +80,15 @@ asset, non-image or SVG is refused. Do not also pass inline `imageReferences`.
 If the owner changes an asset between quote and submit, the old quote no longer
 matches. For a source-conditioned open Klein run, use `imageAspectRatio: "auto"`.
 
+Inspirations are style references. Name them in the prompt and describe what
+to take from them (style, palette, layout, mood, structure, wording); never pass
+one as `projectImageReferences`, a source frame, a swap source or a deployment
+input unless the person asked for that in the current request, and then set
+`allowInspirationAsInput: true`. The adapter refuses an Inspiration otherwise.
+Each asset carries a `role` (`production` or `style`), and `briefNotes` has one
+sentence for each Inspiration the brief names. See
+[what Inspirations are for](project-assets.md#what-inspirations-are-for).
+
 Four MCP tools sit beside the Director commands; none spends, and all but the handoff only read.
 
 | Tool                     | Arguments                                                                                                                                                | Returns                                                                                                                                                                                                           |
