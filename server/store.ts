@@ -1,6 +1,7 @@
 import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
 import type { ChainRecord } from "../shared/chain";
+import { publicDeployInput } from "../shared/comfy/deploy-input";
 import type { QuoteRecord } from "../shared/quote";
 import type { TakeStart } from "../shared/take";
 import type { GenerateInput, Job, Source } from "../shared/types";
@@ -166,21 +167,9 @@ export function publicJob(job: StoredJob): Job {
     deploy,
     ...visible
   } = job;
-  // A deployment's own inputs come back for Recreate: the seed, the negative
-  // prompt and the capture recipe. Its file tickets are short-lived and
-  // session-bound (`deployment-assets.ts`), so they are never returned; the
-  // person reattaches the files (`recreate-gaps.ts` names them).
-  return deploy
-    ? {
-        ...visible,
-        deploy: {
-          seed: deploy.seed,
-          negativePrompt: deploy.negativePrompt,
-          ...(deploy.recipe === undefined ? {} : { recipe: deploy.recipe }),
-          assets: {},
-        },
-      }
-    : visible;
+  // A deployment's seed, negative prompt and capture recipe come back for
+  // Recreate; its session-bound file tickets never do (`deploy-input.ts`).
+  return deploy ? { ...visible, deploy: publicDeployInput(deploy) } : visible;
 }
 export function publicSource(source: StoredSource): Source {
   const {

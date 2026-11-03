@@ -1,7 +1,7 @@
 import { readImageResponse } from "./image-response";
 import { isKleinEdit, kleinFiles } from "../shared/comfy/klein-edit";
 import type { Expectation } from "../shared/comfy/expectation";
-import { deploymentClient } from "./deployments";
+import { deploymentClient, withoutDeployTickets } from "./deployments";
 import {
   copyDeploymentAudio,
   forgetDeploymentAudio,
@@ -142,7 +142,7 @@ export async function submit(
   }
   const now = new Date().toISOString();
   const job: Job = {
-    ...input,
+    ...withoutDeployTickets(input),
     imageReferences: undefined,
     ...(takesVideoReferences(model)
       ? { imageReferenceCount: input.imageReferences?.length ?? 0 }

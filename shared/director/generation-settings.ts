@@ -84,9 +84,15 @@ export function publicGenerationSettings(
   if (!plain(value)) return undefined;
   const out: Record<string, unknown> = {};
   for (const key of STRINGS)
-    if (typeof value[key] === "string" && (value[key] as string).length <= 12_000)
+    if (
+      typeof value[key] === "string" &&
+      (value[key] as string).length <= 12_000
+    )
       // Control characters never reach the composer from a file.
-      out[key] = (value[key] as string).replace(/[\x00-\x08\x0b-\x1f\x7f]/g, "");
+      out[key] = (value[key] as string).replace(
+        /[\x00-\x08\x0b-\x1f\x7f]/g,
+        "",
+      );
   for (const key of NUMBERS)
     if (typeof value[key] === "number" && Number.isFinite(value[key]))
       out[key] = value[key];
@@ -117,10 +123,7 @@ export function publicGenerationSettings(
  * gap names (`recreate-gaps.ts`). It carries no id the studio could read a
  * take or run inputs by: what the project holds is all that is restored.
  */
-export function settingsJob(
-  settings: GenerationSettings,
-  prompt: string,
-): Job {
+export function settingsJob(settings: GenerationSettings, prompt: string): Job {
   const { deploy, ...rest } = settings;
   return {
     generator: "video",

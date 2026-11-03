@@ -294,6 +294,11 @@ describe("hosted caller-owned Comfy deployments", () => {
       "Room impulse response",
       "Room wet mix",
     ]);
+    // Recreate gets the seed, negative prompt and recipe back, as from the
+    // local server; the session-bound file tickets are never kept on the job.
+    for (const kept of [job, ready.job])
+      expect(kept.deploy).toEqual({ ...input.deploy, assets: {} });
+    expect(JSON.stringify(ready)).not.toContain(body.deploy.assets.TAKE_WEBM);
     expect(
       deploymentRequests
         .filter((r) => r.path.includes("jobs/deployed-1"))

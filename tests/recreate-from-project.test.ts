@@ -188,7 +188,9 @@ describe("a Camera run sent to the Director", () => {
     const [{ job: restored, patch, note, location }] = received;
     expect(location).toBe("cloud");
     expect(patch.imageReferences).toEqual([reference]);
-    expect(note).toContain("Restored this asset's prompt, model, settings, run location and references.");
+    expect(note).toContain(
+      "Restored this asset's prompt, model, settings, run location and references.",
+    );
     expect(note).not.toContain("Not stored");
     const state = composerReducer(
       { ...initialComposer, duration: 5, aspectRatio: "16:9" },
