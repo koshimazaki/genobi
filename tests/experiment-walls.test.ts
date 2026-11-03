@@ -90,7 +90,7 @@ describe.each(WALLS)("%s", (study) => {
       room(captured(study, 0))[2],
     );
     expect(voxels(captured(study, 1), 80)).toEqual(loud);
-    // As authored (no capture gain) full bass is WALLS_BLEND of the way.
+    // As authored (no capture gain) full bass reaches the closed layout.
     const authored = createStudy(
       study,
       bands(97, () => 1),
@@ -98,7 +98,7 @@ describe.each(WALLS)("%s", (study) => {
     ).recipe;
     const side = voxels(authored, 30).find((p) => p.id === quiet[1].id)!;
     expect(side.x).toBeCloseTo(
-      quiet[1].x * (1 - WALLS_BLEND * (1 - CLOSED[study])),
+      quiet[1].x * (1 - Math.min(1, WALLS_BLEND) * (1 - CLOSED[study])),
       2,
     );
   });

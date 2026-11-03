@@ -23,12 +23,11 @@ export const WALLS_CLOSED = 0.25;
  */
 export const BOOTH_CLOSED = 0.35;
 /**
- * Morph progress per unit of `low`: half the other wall studies' 1.2. At
- * motion gain 2 (doubled to 1.2) the walls shut from low 0.83; at motion gain
- * 1, as captured from the open starts, full bass goes 0.6 of the way, so the
- * walls never fully shut and frame 0 on a quiet bar stays near open.
+ * Morph progress per unit of `low`, as in the other wall studies: captured at
+ * motion gain 1, the walls shut from low 0.83 (the auto-gained p95 is 0.8), a
+ * full clap on the loud bars. At 0.6 they never got past 0.6 of the way.
  */
-export const WALLS_BLEND = 0.6;
+export const WALLS_BLEND = 1.2;
 
 /**
  * The closed layout is the open one squeezed in x about the centre line,

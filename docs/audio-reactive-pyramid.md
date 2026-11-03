@@ -135,7 +135,7 @@ still (pyramid-inside pans 45 degrees) and move the space on the `low` band.
   the idle mannequin at the bottom centre with its back to the camera, which
   is held at (0, 6.4, 1.5) looking at (0, 0, -0.7) with a 38 degree lens.
   The hall claps x only to 0.25 of its open width and the booth to 0.35,
-  which keeps its walls clear of the singer; blend amount 0.6. Each take
+  which keeps its walls clear of the singer; blend amount 1.2. Each take
   starts at the quietest low-band frame within 0.6 s of the cut point, so
   frame 0 is open.
 - **pyramid-inside** is a hollow stepped pyramid three times larger, 36 m tall

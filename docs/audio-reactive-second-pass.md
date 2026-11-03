@@ -84,7 +84,8 @@ x only, and spring back, everything inside squeezed with them: the hall to a
 quarter of its open width (`WALLS_CLOSED`), the booth to 0.35
 (`BOOTH_CLOSED`), so its walls stop clear of the singer and the drum kit and
 desk stay behind her (both tested). The hidden reverb box narrows on the same
-bars. The blend amount is 0.6 (`WALLS_BLEND`), and the camera is held above
+bars. The blend amount is 1.2 (`WALLS_BLEND`), so full bass reaches the closed
+layout at motion gain 1, and the camera is held above
 every wall top in both (tested).
 
 Frame 0 must be open to overlay the open still, so each take starts where the
@@ -94,12 +95,13 @@ band from a 97-frame capture at `--band-gain 1 --band-release 0` starting
 0.6 s early, and take the frame with the lowest value. That gave 15.6916 for
 the hall and 23.6083 for the booth (its quietest frame, 24.4833, leaves
 less than 193 frames of the 32.4 s track). At motion gain 1 the hall
-opens at 0.92 of its width and narrows to 0.56 at the loudest bar, the
-booth 0.80 and 0.63.
+opens at 0.84 of its width and shuts fully (0.25) on the loudest bars; the
+booth opens at only 0.60, because the auto gain lifts its quiet excerpt,
+and shuts to 0.35. The `w-open` takes used a blend of 0.6 and barely moved.
 
 ```sh
 node scripts/experiments/capture.mjs --studies party-walls --track 'Adaptive Reverbv2.mp3' --start 15.6916 \
-  --output ~/genobi-runs/DATE/guides-rooms/party-walls/w-open --frames 193 --width 1024 --height 576 \
+  --output ~/genobi-runs/DATE/guides-rooms/party-walls/w-open2 --frames 193 --width 1024 --height 576 \
   --band-gain auto --band-release 12 --motion-gain 1 --stage studio   # studio-walls: --start 23.6083
 ```
 
