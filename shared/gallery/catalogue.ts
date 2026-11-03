@@ -113,7 +113,7 @@ export const GALLERY_SUBTITLE: Readonly<Record<string, string>> = {
   "dimensions-mix": "Anime teaser",
   "bloom-teaser": "Sheet to shot",
   "adaptive-reverb": "3D · LTX template",
-  "fruits-swap": "Character swap",
+  "fruits-swap": "Content swap",
 };
 
 /**
