@@ -40,7 +40,11 @@ checkout, plus the Genobi CLI or MCP for any paid image edit (see
    `START` and `OUT` filled in. Mac, no GPU, about a minute.
 4. **Bundle**: `scripts/vast/box/make-bundles.sh GUIDES LOOKS BUNDLES`. The
    PROMPT map in that script is the render prompt; change a noun there only
-   for a subject or space swap, and say so.
+   for a subject or space swap, and say so. **Transfer the resulting bundle
+   directory to the rented box at `$RUN/bundles/<bundle-name>`** (default
+   `$RUN=/workspace/run`) and verify it exists there. Local `GUIDES`, `LOOKS`
+   and `BUNDLES` are not automatically available to the box; otherwise
+   `run-queue.sh` silently skips that bundle.
 5. **Render on the box**: `scripts/vast/box/run-queue.sh <bundle>…` inside
    tmux. About 8 minutes and $0.25 per clip. Renting the box and every render
    are paid: get the person's yes for the list first.
