@@ -110,6 +110,7 @@
         "credits/libraries/play-core/README.md",
         "credits/libraries/space-js/README.md",
         "credits/libraries/svgbob-wasm/README.md",
+        "credits/libraries/teardown/README.md",
         "credits/libraries/textmode-js/README.md",
         "credits/libraries/three-plotter-renderer/README.md",
         "credits/libraries/three/README.md",
@@ -243,6 +244,7 @@
         "capabilities.md",
         "comfy-readiness.md",
         "credits/README.md",
+        "credits/libraries/teardown/README.md",
         "director-agent-tools.md",
         "director-bundle/README.md",
         "director-bundle/motion-effects.md",
@@ -589,6 +591,7 @@
         "credits/libraries/play-core/README.md",
         "credits/libraries/space-js/README.md",
         "credits/libraries/svgbob-wasm/README.md",
+        "credits/libraries/teardown/README.md",
         "credits/libraries/textmode-js/README.md",
         "credits/libraries/three-plotter-renderer/README.md",
         "credits/libraries/three/README.md",
@@ -708,6 +711,7 @@
         "credits/libraries/play-core/README.md",
         "credits/libraries/space-js/README.md",
         "credits/libraries/svgbob-wasm/README.md",
+        "credits/libraries/teardown/README.md",
         "credits/libraries/textmode-js/README.md",
         "credits/libraries/three-plotter-renderer/README.md",
         "credits/libraries/three/README.md",
@@ -1141,6 +1145,7 @@
         "comfy-cloud-inventory.md",
         "comfy-deploy.md",
         "comfy-deployment.md",
+        "credits/libraries/teardown/README.md",
         "dimensions-mix.md",
         "director-agent-tools.md",
         "director-bundle/README.md",
@@ -1187,6 +1192,7 @@
         "voice-mode.md",
         "voice-setup.md",
         "world-builder-capture.md",
+        "world-builder-sound.md",
         "world-builder-verification.md",
         "world-builder.md",
         "world-live.md"
@@ -1273,6 +1279,7 @@
         "credits/libraries/play-core/README.md",
         "credits/libraries/space-js/README.md",
         "credits/libraries/svgbob-wasm/README.md",
+        "credits/libraries/teardown/README.md",
         "credits/libraries/textmode-js/README.md",
         "credits/libraries/three-plotter-renderer/README.md",
         "credits/libraries/three/README.md",
@@ -1415,6 +1422,13 @@
       "tags": ["licences", "director"],
       "summary": "svgbob (WASM) — optional creative use, pinned source and licence boundaries.",
       "links": []
+    },
+    {
+      "title": "teardown",
+      "path": "credits/libraries/teardown/README.md",
+      "tags": ["licences", "agents", "director"],
+      "summary": "teardown — a Claude Code skill for interactive 3D machine simulators and 60 fps explainer films; usage, provenance and licence boundaries.",
+      "links": ["scene-examples.md", "world-builder-sound.md"]
     },
     {
       "title": "textmode.js",
@@ -1945,6 +1959,7 @@
         "camera-wording.md",
         "comfy-deployment.md",
         "credits/README.md",
+        "credits/libraries/teardown/README.md",
         "director-agent-tools.md",
         "director-bundle/README.md",
         "dual-editor.md",
@@ -1974,6 +1989,7 @@
         "templates.md",
         "upscaling.md",
         "vast-runner.md",
+        "world-builder-sound.md",
         "world-builder.md",
         "world-live.md"
       ]
@@ -2043,6 +2059,7 @@
         "comfy-deploy.md",
         "comfy-deployment.md",
         "credits/README.md",
+        "credits/libraries/teardown/README.md",
         "director-agent-tools.md",
         "director-bundle/README.md",
         "director-working-version.md",
@@ -2075,6 +2092,7 @@
         "upscaling.md",
         "vast-runner.md",
         "voice-mode.md",
+        "world-builder-sound.md",
         "world-builder.md",
         "world-live.md",
         "world-recipe-handoff.md"
@@ -2533,7 +2551,11 @@
       "path": "world-builder-sound.md",
       "tags": ["3d", "world-builder", "sound"],
       "summary": "World Builder's Sound panel, the example track, the audio mod matrix, the reactive room presets and what the Comfy node shows of them.",
-      "links": ["world-builder-dynamic-sound.md", "world-builder.md"]
+      "links": [
+        "credits/libraries/teardown/README.md",
+        "world-builder-dynamic-sound.md",
+        "world-builder.md"
+      ]
     },
     {
       "title": "Stories at human scale",

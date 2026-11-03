@@ -286,16 +286,15 @@ export function evaluateScene(
   // Use the exact authored-prop plan as the WebGL runtime; the evaluator is
   // also used for deterministic capture receipts and scene measurements.
   const hasExplode = recipe.objects.some(
-    (part) =>
-      modOf(mods, ["primitives", `prop:${part.id}`], "explode") > 0,
+    (part) => modOf(mods, ["primitives", `prop:${part.id}`], "explode") > 0,
   );
   const explode = hasExplode
     ? explodePlan(recipe.objects.map((p) => [p.x, p.y, p.z]))
     : null;
-  const offsets = new Map<string, ReturnType<typeof explodeOffset>>();
+  const explodeOffsets = new Map<string, ReturnType<typeof explodeOffset>>();
   if (explode)
     recipe.objects.forEach((part, index) => {
-      offsets.set(
+      explodeOffsets.set(
         part.id,
         explodeOffset(
           explode,
@@ -319,7 +318,7 @@ export function evaluateScene(
     if (motion && !editing && instances.has(p.id))
       p = applyInstanceControls(p, instances.get(p.id)!, motion, controls);
     p = applyPropMotion(p, recipe, frame, mods, editing);
-    const displacement = offsets.get(p.id);
+    const displacement = explodeOffsets.get(p.id);
     if (displacement)
       p = {
         ...p,
