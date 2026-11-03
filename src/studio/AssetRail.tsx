@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useShell } from "./ShellContext";
 import { onAssetAdded } from "./project-assets";
 import { stopPlayback } from "../director/media-playback";
 import Icon from "../components/Icon";
+import { ExpandedAssets } from "./ExpandedAssets";
 export const ASSET_PANELS = ["project", "inspirations", "gallery"] as const;
 export const assetPanels = (preset: string) =>
   ASSET_PANELS.filter((id) => preset !== "camera" || id !== "gallery");
@@ -44,6 +45,18 @@ export function AssetRail() {
       ),
     [preset],
   );
+  // The expanded gallery (ExpandedAssets) shares the rail's tab; changing
+  // workspace or hiding the rail leaves it.
+  const [expanded, setExpanded] = useState(false);
+  useEffect(() => setExpanded(false), [preset, shell.assetsOpen]);
+  const collapse = useCallback(() => {
+    setExpanded(false);
+    requestAnimationFrame(() =>
+      document
+        .querySelector<HTMLButtonElement>(".studio-assets-expand")
+        ?.focus(),
+    );
+  }, []);
   function close() {
     shell.setAssetsOpen(false);
     requestAnimationFrame(() =>
@@ -67,6 +80,14 @@ export function AssetRail() {
     >
       <header>
         <h2>Assets</h2>
+        <button
+          className="studio-assets-expand"
+          aria-label="Expand assets"
+          title="Expand assets"
+          onClick={() => setExpanded(true)}
+        >
+          <Icon name="expand" size={14} />
+        </button>
         <button aria-label="Hide assets" onClick={close}>
           <Icon name="close" size={15} />
         </button>
@@ -124,20 +145,31 @@ export function AssetRail() {
           aria-labelledby={`assets-tab-${id}`}
           hidden={id !== tab}
         >
+          {/* Expanded, the gallery host lives in the expanded view. */}
           {id === "gallery" ? (
-            <>
-              <div hidden={shell.preset === "dual"}>
-                <Host node={shell.hosts.gallery} />
-              </div>
-              <div hidden={shell.preset !== "dual"}>
-                <Host node={shell.hosts.toolAssets} />
-              </div>
-            </>
+            !expanded && (
+              <>
+                <div hidden={shell.preset === "dual"}>
+                  <Host node={shell.hosts.gallery} />
+                </div>
+                <div hidden={shell.preset !== "dual"}>
+                  <Host node={shell.hosts.toolAssets} />
+                </div>
+              </>
+            )
           ) : (
             <Host node={shell.hosts[id]} />
           )}
         </div>
       ))}
+      {expanded && (
+        <ExpandedAssets
+          collections={collections}
+          tab={tab}
+          onTab={(id) => setTabs((current) => ({ ...current, [preset]: id }))}
+          onClose={collapse}
+        />
+      )}
     </aside>
   );
 }

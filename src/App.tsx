@@ -55,6 +55,7 @@ import { useAgentSettings } from "./agent/studio-context";
 import { useJobActivity } from "./busy";
 import { runsKeyless } from "./local-menu";
 import { runPayer } from "./run-mode";
+import { uploadVideoSource } from "./upload-video-source";
 export default function App() {
   const shell = useShell();
   const { state, set, update, dispatch, edited } = useComposer();
@@ -215,6 +216,7 @@ export default function App() {
     dispatch,
     setError,
     update,
+    async (file) => (await uploadVideoSource(file, key, refresh)).id,
   );
   const [layoutRevision, setLayoutRevision] = useState(0);
 

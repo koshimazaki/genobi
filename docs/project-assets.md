@@ -205,6 +205,56 @@ ellipsis, with the full name in the tooltip.
 No new waveform analysis is added: the Director's waveforms belong to placed
 audio clips and their ranges, not to assets.
 
+## Expanded assets view
+
+The owner asked, 3 November 2026, for "a nice expander, so you can actually
+better see assets, click on them, see them in the light view... similar to
+what we have in Camera". **Expand assets** (the icon beside **Hide assets** in
+the rail's header) opens the rail as a full-screen gallery over the studio
+(`src/studio/ExpandedAssets.tsx`). **Close expanded assets** or Escape returns
+to the rail, with focus on the Expand control; the rail itself stays open.
+Changing workspace or hiding the rail also closes it.
+
+- **The same tabs as the rail**, and the same selected tab: Project,
+  Inspirations and, outside Camera, Library. Arrow keys, Home and End move
+  between tabs. Library is the rail's own gallery (Camera's cards, or Dual
+  Swords' library), moved into the view while it is open and back after.
+- **Project and Inspirations** show every file, not the rail's first 12, as
+  Camera gallery cards (`src/studio/ExpandedShelf.tsx`): the poster, a kind
+  badge, the name, and the same fact line the shelf shows ("Used · <track>",
+  "Not placed", a source span; `src/studio/asset-facts.ts` is shared by both).
+  Inspirations cards, in the view and in the rail, carry a **Reference ·
+  style** mark. It is a label only: inspirations behave exactly as before.
+- **The light view** (`src/studio/AssetLightbox.tsx`) is Camera's lightbox
+  (`VideoLightbox`) for images and video, and a plain audio player for sound,
+  with the kind, duration, measured size and the card's facts. **Previous** /
+  **Next**, or the left and right arrow keys, step through the tab and wrap;
+  a focused player keeps its own arrow keys. Escape closes the light view only.
+- **Dragging** a card carries the rail tile's payload exactly
+  (`writeAssetDrag`: project, asset id and hash, no bytes). Once a drag starts
+  the view fades and lets pointer events through, so the drop lands on the
+  prompt, slot or timeline beneath, as it would from the rail; it returns when
+  the drag ends. A busy project refuses the drag, as the rail does.
+- **Drop zones** in Project and Inspirations import files exactly as the
+  rail's do (`importProjectMedia`, production or reference).
+- **Phones** (700 px and under): the view starts under the tool dock, so the
+  dock stays reachable, and is the only thing that scrolls.
+
+- **Recreate or Use in Camera** (`src/studio/camera-handoff.ts`), the shared
+  Recreate button as a card's action. It leaves the view, opens Camera and
+  never generates:
+  - **Recreate**, when the asset's own run recorded a prompt: the same restore
+    a template slot's Recreate in Camera does (`generatedRecipe` in
+    `src/director/recreate-in-camera.ts`): prompt, model and the images it read.
+  - **Use in Camera**, when it recorded none: a PNG, JPEG or WebP becomes
+    Edit's only reference (earlier references are cleared, so a Generate never
+    sends one this asset did not choose); an MP4 is uploaded as Upscale's
+    source, exactly as the Upscale drop zone uploads one
+    (`src/upload-video-source.ts`), and selected. An upload is not a
+    generation. Audio, SVG and other files get no control.
+  - Camera's notice line says what happened. A newer handoff, a project
+    switch or leaving Upscale while the upload runs wins over a late result.
+
 ## Agents
 
 An agent hands its own take, or a video or audio media-tool result, into a

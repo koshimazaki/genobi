@@ -84,6 +84,50 @@ const CREATE: CameraRecipe = {
   missing: ["prompt, references and settings"],
 };
 
+/**
+ * What a generated asset's own run records: its prompt, the registry entry
+ * that made it and the project images it read. Undefined when the asset has
+ * no generation or its generation recorded no prompt. Shared by a template
+ * slot and the expanded Assets gallery (`src/studio/camera-handoff.ts`).
+ */
+export function generatedRecipe(
+  project: Project,
+  id: string | undefined,
+): CameraRecipe | undefined {
+  const asset =
+    id && Object.hasOwn(project.assets, id) ? project.assets[id] : undefined;
+  const generation = asset?.generationId
+    ? project.generations.find((g) => g.id === asset.generationId)
+    : undefined;
+  const prompt = generation?.prompt.trim();
+  if (!generation || !prompt) return undefined;
+  const entry = generation.recipe && readyEntry(generation.recipe.id);
+  const read = [...generation.referenceAssetIds, ...generation.inputAssetIds];
+  const imageIds = [...new Set(read)].filter(
+    (a) => project.assets[a]?.kind === "image",
+  );
+  const missing: string[] = [];
+  if (!entry) missing.push("model and settings");
+  const provider = entry
+    ? recordedProvider(entry, generation.recipe?.route)
+    : {};
+  if (provider.missing) missing.push(provider.missing);
+  // A project video the run read is never a Camera library clip, whatever
+  // recorded (or did not record) the model.
+  if (read.some((a) => project.assets[a]?.kind === "video"))
+    missing.push("source video (choose it in Camera)");
+  return {
+    label: "Recreate in Camera",
+    prompt,
+    ...(entry ? { entry } : {}),
+    ...(provider.imageProvider
+      ? { imageProvider: provider.imageProvider }
+      : {}),
+    imageIds,
+    missing,
+  };
+}
+
 /** What Recreate can restore for the slot's current media, if anything. */
 export function cameraRecipe(
   project: Project,
@@ -91,39 +135,10 @@ export function cameraRecipe(
   ids: readonly string[],
 ): CameraRecipe {
   const id = ids[0];
+  const generated = generatedRecipe(project, id);
+  if (generated) return generated;
   const asset =
     id && Object.hasOwn(project.assets, id) ? project.assets[id] : undefined;
-  const generation = asset?.generationId
-    ? project.generations.find((g) => g.id === asset.generationId)
-    : undefined;
-  const prompt = generation?.prompt.trim();
-  if (generation && prompt) {
-    const entry = generation.recipe && readyEntry(generation.recipe.id);
-    const read = [...generation.referenceAssetIds, ...generation.inputAssetIds];
-    const imageIds = [...new Set(read)].filter(
-      (a) => project.assets[a]?.kind === "image",
-    );
-    const missing: string[] = [];
-    if (!entry) missing.push("model and settings");
-    const provider = entry
-      ? recordedProvider(entry, generation.recipe?.route)
-      : {};
-    if (provider.missing) missing.push(provider.missing);
-    // A project video the run read is never a Camera library clip, whatever
-    // recorded (or did not record) the model.
-    if (read.some((a) => project.assets[a]?.kind === "video"))
-      missing.push("source video (choose it in Camera)");
-    return {
-      label: "Recreate in Camera",
-      prompt,
-      ...(entry ? { entry } : {}),
-      ...(provider.imageProvider
-        ? { imageProvider: provider.imageProvider }
-        : {}),
-      imageIds,
-      missing,
-    };
-  }
   const template = versionTemplate(project);
   const recorded = template && RECORDED[template.id]?.[slot.id];
   // The bundled take itself: the slot's own asset at the template's path (a
