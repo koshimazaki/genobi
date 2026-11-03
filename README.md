@@ -2,11 +2,11 @@
 
 **Build the scene. Shape the sound. Make the cut.**
 
-Genobi brings several tools I’ve built into one open-source video studio,
-with new tools connecting scene building, sound, generation and editing.
-You and your agent work on the same creative project: the agent makes a first
-pass, you adjust timing, move or trim clips, add notes or give directions by
-voice, and those changes guide the next version.
+Genobi is a voice-first, harness-first video studio. Talk to it, or give
+instructions to your own agent; the screen is mainly for inspecting what comes
+back and viewing your assets. It brings several tools I’ve built into one
+open-source studio, with new tools connecting scene building, sound, generation
+and editing, all in one project you and your agent work on together.
 
 **Open-source first.** Run your own studio, choose an open-weight local workflow
 or connect cloud models, and bring the agent harness that fits your project.
@@ -18,6 +18,23 @@ or connect cloud models, and bring the agent harness that fits your project.
 [Documentation](docs/README.md)
 
 https://github.com/user-attachments/assets/b2665e97-2836-4e02-8b38-4694a5c6b6c7
+
+## Start here
+
+Run the [local studio](#run-locally), then pick a way in:
+
+**Talk to it.** Press the mic and say what you want; your agent gets the text.
+Qwen3-ASR transcribes on your machine after a one-time 1.9 GB model download
+(Python 3.11 and ffmpeg needed). Local studio only. [Voice setup](docs/voice-setup.md).
+
+**Bring your agent.** Hermes (open source), Claude Code or Codex drive the
+studio through the [Genobi plugin](plugins/genobi/README.md): MCP, CLI and
+skills. Start Genobi sets up Hermes; for Claude Code, `claude --plugin-dir plugins/genobi`.
+
+No manual needed: drop your images, video and audio into **Assets** and tell the
+agent what they are and what you want. Camera shows what came back, Assets holds
+what you dropped in, and the deck shows what the agent is doing. Anything paid
+waits for your approval in the studio.
 
 ## Try it in a few minutes
 
