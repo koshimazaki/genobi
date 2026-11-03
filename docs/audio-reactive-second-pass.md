@@ -80,23 +80,31 @@ near the gallery camera; `CLOSED_FRACTION` in `recipes-rooms.ts` sets it.
 `party-walls` and `studio-walls` (`recipes-walls.ts`) rebuild the last two
 shots of the owner's 30 October cut, framed so frame 0 overlays the owner's
 still in `looks/<study>/look-first.png`. On the bass the long walls clap in,
-x only, to a quarter of the open width (`WALLS_CLOSED`) and spring back,
-everything inside squeezed with them; the hidden reverb box narrows on the
-same bars. Their blend amount is 0.6 (`WALLS_BLEND`), half the other wall
-studies', because they are captured at motion gain 2: the walls shut from
-low 0.83 and stand mostly open in the quiet. The camera is held above every
-wall top in both (tested).
+x only, and spring back, everything inside squeezed with them: the hall to a
+quarter of its open width (`WALLS_CLOSED`), the booth to 0.35
+(`BOOTH_CLOSED`), so its walls stop clear of the singer and the drum kit and
+desk stay behind her (both tested). The hidden reverb box narrows on the same
+bars. The blend amount is 0.6 (`WALLS_BLEND`), and the camera is held above
+every wall top in both (tested).
+
+Frame 0 must be open to overlay the open still, so each take starts where the
+low band is quietest within 0.6 s of the cut point: the first planned starts
+(16.0833 and 24.125) sat on a bass hit and opened nearly closed. Read the raw
+band from a 97-frame capture at `--band-gain 1 --band-release 0` starting
+0.6 s early, and take the frame with the lowest value. That gave 15.6916 for
+the hall and 23.6083 for the booth (its quietest frame, 24.4833, leaves
+less than 193 frames of the 32.4 s track). At motion gain 1 the hall
+opens at 0.92 of its width and narrows to 0.56 at the loudest bar, the
+booth 0.80 and 0.63.
 
 ```sh
-node scripts/experiments/capture.mjs --studies party-walls --track 'Adaptive Reverbv2.mp3' --start 16.0833 \
-  --output ~/genobi-runs/DATE/guides-rooms/party-walls/w --frames 193 --width 1024 --height 576 \
-  --band-gain auto --band-release 12 --motion-gain 2 --stage studio   # studio-walls: --start 24.125
+node scripts/experiments/capture.mjs --studies party-walls --track 'Adaptive Reverbv2.mp3' --start 15.6916 \
+  --output ~/genobi-runs/DATE/guides-rooms/party-walls/w-open --frames 193 --width 1024 --height 576 \
+  --band-gain auto --band-release 12 --motion-gain 1 --stage studio   # studio-walls: --start 23.6083
 ```
 
-A second take of each at `--band-release 6` lands in `w-r6`. Both starts sit
-on a bass hit (low about 0.7 at frame 0), so frame 0 is already partly
-closed against the open still; check the overlay at the guide's first open
-frame before bundling.
+The earlier takes at the planned starts and motion gain 2 (`w`, and `w-r6`
+at `--band-release 6`) open almost closed and are kept for comparison only.
 
 ### 2. Looks
 

@@ -5,6 +5,7 @@ import { createStudy, type Study } from "../scripts/experiments/recipes";
 import { serializeRecipe } from "../scripts/experiments/contracts";
 import {
   BOOTH,
+  BOOTH_CLOSED,
   HALL,
   WALLS_BLEND,
   WALLS_CLOSED,
@@ -12,6 +13,7 @@ import {
 
 const WALLS = ["party-walls", "studio-walls"] as const;
 const ROOMS = { "party-walls": HALL, "studio-walls": BOOTH } as const;
+const CLOSED = { "party-walls": WALLS_CLOSED, "studio-walls": BOOTH_CLOSED };
 const dims = (frames: number) => ({ width: 1024, height: 576, frames });
 const bands = (frames: number, low: (i: number) => number) => {
   const flat = Array.from({ length: frames }, () => 0.3);
@@ -70,14 +72,14 @@ describe.each(WALLS)("%s", (study) => {
         expect(l[axis]).toBeCloseTo(c[axis], 6);
       }
       // Closed is the open piece pulled in sideways: same height and depth.
-      expect(l.x).toBeCloseTo(q.x * WALLS_CLOSED, 2);
+      expect(l.x).toBeCloseTo(q.x * CLOSED[study], 2);
       expect(l.y).toBeCloseTo(q.y, 6);
       expect(l.z).toBeCloseTo(q.z, 6);
     });
     // The side walls close to a quarter of the open width.
     const span = (parts: typeof quiet) =>
       Math.max(...parts.map((p) => p.x)) - Math.min(...parts.map((p) => p.x));
-    expect(span(loud) / span(quiet)).toBeCloseTo(WALLS_CLOSED, 2);
+    expect(span(loud) / span(quiet)).toBeCloseTo(CLOSED[study], 2);
     // The reverb box narrows on the same bars, and the clock never moves it.
     const room = (r: ReturnType<typeof captured>) =>
       evaluateScene(r, 30).room!.dimensions;
@@ -96,7 +98,7 @@ describe.each(WALLS)("%s", (study) => {
     ).recipe;
     const side = voxels(authored, 30).find((p) => p.id === quiet[1].id)!;
     expect(side.x).toBeCloseTo(
-      quiet[1].x * (1 - WALLS_BLEND * (1 - WALLS_CLOSED)),
+      quiet[1].x * (1 - WALLS_BLEND * (1 - CLOSED[study])),
       2,
     );
   });
@@ -125,11 +127,31 @@ describe.each(WALLS)("%s", (study) => {
         expect(cam[1]).toBeGreaterThan(top + 0.4);
       }
       // The figure stands inside the closed walls.
-      const half = (ROOMS[study].width * WALLS_CLOSED) / 2;
+      const half = (ROOMS[study].width * CLOSED[study]) / 2;
       expect(Math.abs(recipe.avatarPose.x)).toBeLessThan(half);
       expect(Math.abs(recipe.avatarPose.z)).toBeLessThan(
         ROOMS[study].length / 2,
       );
+    }
+  });
+
+  it("never brings a piece into the figure, even fully closed", () => {
+    // A standing figure with its arms down: 0.3 m either side of its centre,
+    // 0.2 m front to back, 1.8 m tall; the floor slab is under its feet.
+    for (const low of [0, 1]) {
+      const recipe = captured(study, low, 193);
+      const pose = recipe.avatarPose;
+      for (const o of voxels(recipe, 100)) {
+        const h = [o.scaleX ?? 1, o.scaleY ?? 1, o.scaleZ ?? 1].map(
+          (v) => (v * o.scale) / 2,
+        );
+        if (o.y + h[1] < 0.15) continue;
+        const apart =
+          Math.abs(o.x - pose.x) > h[0] + 0.3 ||
+          Math.abs(o.z - pose.z) > h[2] + 0.2 ||
+          o.y - h[1] > 1.8;
+        expect(apart, o.id).toBe(true);
+      }
     }
   });
 });

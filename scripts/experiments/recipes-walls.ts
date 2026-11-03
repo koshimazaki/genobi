@@ -18,10 +18,15 @@ import { bandBlend, interiorRoom, type RoomDesign } from "./recipes-rooms";
 /** "Closing like clapping": the walls close to a quarter of the open width. */
 export const WALLS_CLOSED = 0.25;
 /**
- * Morph progress per unit of `low`: half the other wall studies' 1.2, because
- * these are captured at motion gain 2, which doubles it. At 1.2 the walls shut
- * from low 0.83 (the auto-gained p95 is 0.8) and stand mostly open in the quiet
- * bars; at 2.4 (capped to 2) they would be shut for half the take.
+ * The booth closes to 0.35, not 0.25: its walls then stop 0.53 m from the
+ * singer's centre line, clear of the figure's shoulders and arms (tested).
+ */
+export const BOOTH_CLOSED = 0.35;
+/**
+ * Morph progress per unit of `low`: half the other wall studies' 1.2. At
+ * motion gain 2 (doubled to 1.2) the walls shut from low 0.83; at motion gain
+ * 1, as captured from the open starts, full bass goes 0.6 of the way, so the
+ * walls never fully shut and frame 0 on a quiet bar stays near open.
  */
 export const WALLS_BLEND = 0.6;
 
@@ -156,15 +161,17 @@ export function booth(): SceneTransform[] {
     box(0, H / 2, s * (L / 2 + t / 2), W, H, t, PANEL);
   }
   // Drum kit, left: bass drum, two toms, a snare and two cymbals.
-  box(-0.85, 0.28, 0.1, 0.55, 0.56, 0.45, DRUM);
-  box(-0.95, 0.65, -0.45, 0.32, 0.24, 0.32, DRUM);
-  box(-0.55, 0.65, -0.35, 0.3, 0.22, 0.3, DRUM);
-  box(-1.15, 0.6, 0.35, 0.36, 0.14, 0.36, "#8a8a86");
-  box(-1.25, 1.05, 0.65, 0.5, 0.03, 0.5, BRASS);
-  box(-0.55, 1.2, -0.75, 0.45, 0.03, 0.45, BRASS);
+  // Everything stays behind the singer (z under 0.3), so nothing squeezed
+  // in from the sides can reach the figure.
+  box(-0.85, 0.28, -0.1, 0.55, 0.56, 0.45, DRUM);
+  box(-0.95, 0.65, -0.6, 0.32, 0.24, 0.32, DRUM);
+  box(-0.55, 0.65, -0.5, 0.3, 0.22, 0.3, DRUM);
+  box(-1.15, 0.6, 0.05, 0.36, 0.14, 0.36, "#8a8a86");
+  box(-1.25, 1.05, 0.0, 0.5, 0.03, 0.5, BRASS);
+  box(-0.55, 1.2, -0.85, 0.45, 0.03, 0.45, BRASS);
   // Mixing desk along the right wall, its long side along z.
-  box(1.05, 0.42, 0.15, 0.7, 0.84, 1.7, "#3a3a3d");
-  box(1.05, 0.88, 0.15, 0.62, 0.06, 1.6, "#6d6f73");
+  box(1.05, 0.42, -0.4, 0.7, 0.84, 1.3, "#3a3a3d");
+  box(1.05, 0.88, -0.4, 0.62, 0.06, 1.2, "#6d6f73");
   // The microphone stand in front of the singer, and its pop shield.
   box(0, 0.8, -0.1, 0.05, 1.6, 0.05, "#26262a");
   box(0, 1.5, 0.05, 0.25, 0.25, 0.03, "#1e1e22");
@@ -184,6 +191,7 @@ function clap(
   open: SceneTransform[],
   room: { width: number; length: number; height: number },
   listener: SceneVector,
+  fraction = WALLS_CLOSED,
 ) {
   const motion = recipe.motion!;
   motion.instances!.count = open.length;
@@ -193,9 +201,9 @@ function clap(
     recipe,
     label,
     open,
-    squeezeX(open),
+    squeezeX(open, fraction),
     { dimensions: [W, H, L], listener },
-    { dimensions: [Math.max(1, W * WALLS_CLOSED), H, L], listener },
+    { dimensions: [Math.max(1, W * fraction), H, L], listener },
   );
   motion.morphControl!.progress.amount = WALLS_BLEND;
   motion.room = interiorRoom(
@@ -242,7 +250,14 @@ export function partyWalls(recipe: Recipe): RoomDesign {
 /** The recording booth from the 30 October cut, seen from above. */
 export function studioWalls(recipe: Recipe): RoomDesign {
   const open = booth();
-  const { motion, W, L, H } = clap(recipe, "Booth", open, BOOTH, [0, 1.6, 0.6]);
+  const { motion, W, L, H } = clap(
+    recipe,
+    "Booth",
+    open,
+    BOOTH,
+    [0, 1.6, 0.6],
+    BOOTH_CLOSED,
+  );
   // The default source (1 m left, 2 m back) would sit outside the booth.
   motion.room = { ...motion.room!, source: [0, 1.2, -0.8] };
   motion.mappings = [
@@ -266,7 +281,7 @@ export function studioWalls(recipe: Recipe): RoomDesign {
     design: {
       camera: "held above the walls, looking almost straight down",
       booth: `${W} x ${L} x ${H} m, ${open.length} pieces: four panelled walls, floor, drum kit, desk, microphone`,
-      close: `blend: morphControl open -> closed on low, x only, to ${WALLS_CLOSED} of the open width`,
+      close: `blend: morphControl open -> closed on low, x only, to ${BOOTH_CLOSED} of the open width`,
       roomSign:
         "the closed state's reverb box narrows to 1 m (the engine's minimum); width and depth mappings on the same bars",
       avatar: "mannequin, idle, bottom centre facing the far wall",
