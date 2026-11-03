@@ -2,9 +2,10 @@
 
 Genobi's main repeatable workflow. A Three.js scene moves to the music, one
 still sets its look, and one LTX-2.5 graph paints the video with the track in
-it. Every preset here has been captured, and most have been rendered. An
-agent (Claude Code, Hermes or Codex) can regenerate any of the three videos,
-or change one thing, from these pages without rediscovering anything.
+it. The presets have captured guides, and selected excerpts have been rendered;
+the three multi-window videos are assembly recipes, not yet completed exports.
+With the owner's track and look stills supplied, an agent (Claude Code, Hermes
+or Codex) can reconstruct them or change one thing using these pages.
 
 ```
 track window ─► World Builder study (capture.mjs) ─► rgb.webm, depth.webm, control.wav, keyframes.json
@@ -109,7 +110,10 @@ unusable. Then change the render prompt's nouns to the new space.
 2. Make or request the still (owner stills aligned every time).
 3. Capture the window (Mac, no GPU, about a minute per study).
 4. Bundle: `scripts/vast/box/make-bundles.sh GUIDES LOOKS BUNDLES` (the
-   PROMPT map there is the per-study render prompt).
+   PROMPT map there is the per-study render prompt). **Copy the resulting
+   bundle directories to the GPU box under `$RUN/bundles/<bundle-name>`**
+   (`RUN` defaults to `/workspace/run`). The local folders are not shared
+   with the box; `run-queue.sh` otherwise logs `SKIP` for a missing bundle.
 5. Render on the box: `scripts/vast/box/run-queue.sh <bundle>…` in tmux,
    about 8 minutes and $0.25 per clip on an RTX PRO 6000.
 6. Measure follow (clip motion against guide motion) and bass correlation.
