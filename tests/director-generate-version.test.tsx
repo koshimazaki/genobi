@@ -203,6 +203,18 @@ it("keeps Gallery free of the template modal and does not reopen a dismissed pan
   expect(document.querySelector("dialog")).not.toBeNull();
 });
 
+it("opens Make my version only on request in Editor", async () => {
+  state.preset = "editor";
+  const mounted = await mount(await versionCharacter());
+  expect(document.querySelector("dialog")).toBeNull();
+  act(() => button("Make my version").click());
+  expect(document.querySelector("dialog")).not.toBeNull();
+  act(() => button("Close").click());
+  state.preset = "director";
+  mounted.render();
+  expect(document.querySelector("dialog")).not.toBeNull();
+});
+
 it("keeps Make it yours description and character/style bindings when applied", async () => {
   const original = await versionCharacter();
   const brief = readBrief(original);

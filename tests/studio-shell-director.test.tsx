@@ -119,12 +119,18 @@ async function select(preset: string) {
       .click(),
   );
 }
-async function key(target: Element, value: string, code = value) {
+async function key(
+  target: Element,
+  value: string,
+  code = value,
+  extra: KeyboardEventInit = {},
+) {
   const event = new KeyboardEvent("keydown", {
     key: value,
     code,
     bubbles: true,
     cancelable: true,
+    ...extra,
   });
   await act(async () => target.dispatchEvent(event));
   return event;
@@ -180,4 +186,71 @@ it("pauses a playing Editor when switching to Tools, retaining the open project"
   expect(studioStore.getState().operations.playing).toBe(false);
   expect(studioStore.getState().director.bundle).toBe(before);
   expect(loadMixTemplate).toHaveBeenCalledOnce();
+});
+
+it("opens the Editor with its Assets rail closed and keeps a hidden rail across a reload", async () => {
+  vi.stubGlobal("matchMedia", () => ({
+    matches: true,
+    addEventListener() {},
+    removeEventListener() {},
+  }));
+  history.replaceState(null, "", "/?workspace=editor");
+  await mount();
+  const workspace = () => document.querySelector(".studio-workspace")!;
+  // Docked width, yet the Editor waits to be asked for its rail.
+  expect(workspace().hasAttribute("data-assets-open")).toBe(false);
+  await select("camera");
+  expect(workspace().hasAttribute("data-assets-open")).toBe(true);
+  await act(async () =>
+    document
+      .querySelector<HTMLButtonElement>('[aria-label="Hide assets"]')!
+      .click(),
+  );
+  expect(workspace().hasAttribute("data-assets-open")).toBe(false);
+  expect(JSON.parse(localStorage.getItem("genobi.ninja-rails.v1")!)).toEqual({
+    camera: false,
+  });
+  // A reload keeps the choice instead of reopening the rail.
+  act(() => root!.unmount());
+  history.replaceState(null, "", "/?workspace=camera");
+  await mount();
+  expect(workspace().hasAttribute("data-assets-open")).toBe(false);
+});
+
+it("drops a project media request left open when the workspace changes", async () => {
+  history.replaceState(null, "", "/?workspace=director");
+  await mount();
+  act(() => studioStore.getState().actions.workspace({ drawerOpen: true }));
+  await select("editor");
+  expect(studioStore.getState().workspace.drawerOpen).toBe(false);
+  // A caller that switches and then asks for it still gets it.
+  act(() => studioStore.getState().actions.workspace({ drawerOpen: true }));
+  expect(studioStore.getState().workspace.drawerOpen).toBe(true);
+});
+
+it("undoes the last Editor edit with Cmd/Ctrl+Z outside text, with no redo", async () => {
+  history.replaceState(null, "", "/?workspace=editor");
+  await mount();
+  const timeline = document.querySelector('[data-panel="timeline"] button')!;
+  const hasTitle = () =>
+    studioStore
+      .getState()
+      .director.bundle!.project.layers.some((l) => l.id === "title");
+  expect((await key(timeline, "Delete")).defaultPrevented).toBe(true);
+  expect(hasTitle()).toBe(false);
+  // Shift+Cmd+Z would be redo, which does not exist: left alone.
+  const redo = await key(timeline, "z", "KeyZ", {
+    metaKey: true,
+    shiftKey: true,
+  });
+  expect(redo.defaultPrevented).toBe(false);
+  expect(hasTitle()).toBe(false);
+  expect(
+    (await key(timeline, "z", "KeyZ", { ctrlKey: true })).defaultPrevented,
+  ).toBe(true);
+  expect(hasTitle()).toBe(true);
+  // Nothing left to undo: the key goes back to the browser.
+  expect(
+    (await key(timeline, "z", "KeyZ", { metaKey: true })).defaultPrevented,
+  ).toBe(false);
 });

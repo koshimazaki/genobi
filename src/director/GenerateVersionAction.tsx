@@ -27,12 +27,15 @@ export default function GenerateVersionAction({
   const projectId = bundle?.project.id;
   const visible =
     !shell || shell.preset === "director" || shell.preset === "editor";
+  // It opens by itself only in Director. The Editor is for editing, not
+  // adding, so there it waits for its header button.
+  const greets = !shell || shell.preset === "director";
   useEffect(() => {
-    if (visible && template && projectId && opened.current !== projectId) {
+    if (greets && template && projectId && opened.current !== projectId) {
       opened.current = projectId;
       setOpen(true);
     }
-  }, [visible, template, projectId]);
+  }, [greets, template, projectId]);
   useEffect(() => {
     if (request) setOpen(true);
   }, [request]);

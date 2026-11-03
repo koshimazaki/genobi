@@ -1,0 +1,17 @@
+/* A clip just dropped on the timeline: a brief accent ring (drop-reveal.ts). */
+.dir-clip[data-revealed] {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 6px var(--accent-ghost);
+  animation: dir-clip-reveal 1.6s ease-out;
+}
+@keyframes dir-clip-reveal {
+  from {
+    box-shadow: 0 0 0 10px var(--accent-ghost);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dir-clip[data-revealed] {
+    animation: none;
+  }
+}
