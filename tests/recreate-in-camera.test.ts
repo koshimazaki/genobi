@@ -12,9 +12,11 @@ import {
   cameraRecipe,
   openInCamera,
   recipeNote,
+  type CameraRecipe,
 } from "../src/director/recreate-in-camera";
 import {
   onCameraRecipe,
+  cancelCameraRecipeHandoff,
   type CameraRecipePatch,
 } from "../src/camera-recipe-target";
 
@@ -84,7 +86,10 @@ let received: CameraRecipePatch[] = [];
 let stop: (() => void) | undefined;
 afterEach(() => {
   stop?.();
+  stop = undefined;
   received = [];
+  cancelCameraRecipeHandoff();
+  vi.unstubAllGlobals();
 });
 const listen = () => {
   stop = onCameraRecipe((recipe) => received.push(recipe));
@@ -246,4 +251,61 @@ describe("the recorded provider", () => {
     expect(recipe.missing.join(" ")).toContain("it ran on BFL direct");
     expect(recipe.imageProvider).toBeUndefined();
   });
+});
+
+/** The older asset's image may finish loading after another Recreate is chosen. */
+it("keeps the newest Recreate when an earlier reference fetch finishes last", async () => {
+  const p = madeWith(undefined);
+  const slow: CameraRecipe = {
+    label: "Recreate in Camera",
+    prompt: "old asset",
+    imageIds: [],
+    reference: "/slow-reference.png",
+    missing: [],
+  };
+  const latest: CameraRecipe = {
+    label: "Recreate in Camera",
+    prompt: "new asset",
+    imageIds: [],
+    missing: [],
+  };
+  let finish!: (response: Response) => void;
+  const pendingImage = new Promise<Response>((resolve) => {
+    finish = resolve;
+  });
+  const fetchImage = vi.fn(() => pendingImage);
+  vi.stubGlobal("fetch", fetchImage);
+  listen();
+  const first = openInCamera(() => {}, slow, p, new Map());
+  expect(fetchImage).toHaveBeenCalledWith("/slow-reference.png");
+  await openInCamera(() => {}, latest, p, new Map());
+  expect(received).toHaveLength(1);
+  expect(received[0].patch.description).toBe("new asset");
+  finish(new Response(new Blob([PNG], { type: "image/png" })));
+  await first;
+  // The late first request cannot overwrite the newer model/prompt/references.
+  expect(received).toHaveLength(1);
+  expect(received[0].patch.description).toBe("new asset");
+});
+
+it("cancels an in-flight Recreate when Camera is left", async () => {
+  const p = madeWith(undefined);
+  const slow: CameraRecipe = {
+    label: "Recreate in Camera",
+    prompt: "do not restore after navigation",
+    imageIds: [],
+    reference: "/slow-reference.png",
+    missing: [],
+  };
+  let finish!: (response: Response) => void;
+  const pendingImage = new Promise<Response>((resolve) => {
+    finish = resolve;
+  });
+  vi.stubGlobal("fetch", vi.fn(() => pendingImage));
+  listen();
+  const pending = openInCamera(() => {}, slow, p, new Map());
+  cancelCameraRecipeHandoff(); // StudioShell navigation away from Camera
+  finish(new Response(new Blob([PNG], { type: "image/png" })));
+  await pending;
+  expect(received).toEqual([]);
 });
