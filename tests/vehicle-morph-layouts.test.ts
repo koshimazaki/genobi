@@ -6,6 +6,7 @@ import {
 } from "../src/world-builder/motion-bike-layout";
 import { brawlerLayout } from "../src/world-builder/motion-brawler-layout";
 import { createMotionPreset } from "../src/world-builder/motion-presets";
+import { evaluateScene } from "../src/world-builder/evaluate-scene";
 import {
   createMorphComposition,
   MORPH_ASSETS,
@@ -90,4 +91,41 @@ describe("bike-mecha", () => {
     for (const key of two.motion!.stateKeys)
       expect(Object.keys(key.objects)).toHaveLength(128);
   });
+});
+
+describe("vehicle morph intermediate guide frames", () => {
+  it.each(["car-mecha", "bike-mecha"] as const)(
+    "%s keeps all 128 blocks finite and visible across intermediate poses",
+    (id) => {
+      const recipe = createMotionPreset(id);
+      const frames = [0, 18, 36, 54, 72, 90, 108, 126, recipe.frames - 1];
+      const start = evaluateScene(recipe, 0, { audio: false }).objects;
+      const ids = start.map((object) => object.id);
+      expect(ids).toHaveLength(128);
+      for (const frame of frames) {
+        const objects = evaluateScene(recipe, frame, {
+          audio: false,
+        }).objects;
+        expect(objects.map((object) => object.id)).toEqual(ids);
+        for (const object of objects) {
+          const measures = [
+            object.x,
+            object.y,
+            object.z,
+            object.scale,
+            object.scaleX ?? 1,
+            object.scaleY ?? 1,
+            object.scaleZ ?? 1,
+            object.rotation ?? 0,
+            object.rotationX ?? 0,
+            object.rotationZ ?? 0,
+          ];
+          expect(measures.every(Number.isFinite), `${id}/${frame}/${object.id}`).toBe(
+            true,
+          );
+          expect(object.scale, `${id}/${frame}/${object.id}`).toBeGreaterThan(0);
+        }
+      }
+    },
+  );
 });
