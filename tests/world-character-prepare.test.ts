@@ -2,6 +2,7 @@ import * as T from "three";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createBuilderCharacter } from "../src/world-builder/character";
 import { defaultRecipe, type Recipe } from "../src/world-builder/recipe";
+import { defaultCharacterAudio } from "../src/world-builder/character-audio";
 
 const { preload, makeActor, makeBlob } = vi.hoisted(() => ({
   preload: vi.fn(),
@@ -107,5 +108,24 @@ describe("guarded character preparation", () => {
     expect(commit).toThrow("Scene was closed");
     expect(makeActor).not.toHaveBeenCalled();
     expect(character.root.children).toEqual([]);
+  });
+
+  it("uses the same routed clip clock in the character adapter and returns to the authored clip", async () => {
+    const character = subject(),
+      r = recipe("pug");
+    r.characterAudio = defaultCharacterAudio("pug");
+    r.characterAudio.enabled = true;
+    r.characterAudio.routes[0].durationFrames = 6;
+    r.characterAudio.routes[0].speed = 2;
+    r.bandEnvelopes = { low: [0, 0, 1], mid: [], high: [], sub: [] };
+    (await character.prepare(r))();
+    const actor = makeActor.mock.results[0].value;
+    character.sample(r, 4);
+    expect(actor.setPose).toHaveBeenLastCalledWith("jump");
+    expect(actor.sample).toHaveBeenLastCalledWith(4 / 24);
+    character.sample(r, 8);
+    expect(actor.setPose).toHaveBeenLastCalledWith("idle");
+    expect(actor.sample).toHaveBeenLastCalledWith(8 / 24);
+    character.dispose();
   });
 });

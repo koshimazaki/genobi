@@ -22,6 +22,7 @@ import { StudioNavigation } from "./StudioNavigation";
 import { usePanelMotion } from "./usePanelMotion";
 import { useStudio } from "./useStudio";
 import { studioStore } from "./store";
+import { cancelCameraRecipeHandoff } from "../camera-recipe-target";
 import {
   addToProjectAssets,
   addedMessage,
@@ -76,8 +77,15 @@ export default function StudioShell() {
   const assetsOpen =
     preset !== "ninja" &&
     (assetViews[preset] ?? (preset !== "gallery" && docked));
-  const setAssetsOpen = (open: boolean) =>
+  const setAssetsOpen = (open: boolean) => {
     setAssetViews((v) => ({ ...v, [preset]: open }));
+    if (open && preset === "world")
+      requestAnimationFrame(() =>
+        document
+          .getElementById("studio-assets")
+          ?.scrollIntoView({ block: "nearest" }),
+      );
+  };
   const [restored] = useState(readLayout);
   const [ninjaLayout, setNinjaLayout] = useState(restored.layout);
   const [savedLayout, setSavedLayout] = useState(restored.layout);
@@ -176,6 +184,10 @@ export default function StudioShell() {
   const drag = useNinjaDrag(preset === "ninja" && ninjaEditing, move);
   function select(next: Preset, updateUrl = true) {
     if (next === preset) return;
+    // A reference image may still be loading for Recreate in Camera.
+    // Leaving the Camera invalidates that handoff before it can overwrite
+    // prompts or references on a later visit.
+    if (next !== "camera") cancelCameraRecipeHandoff();
     const focusWasInPanel = root.current?.contains(document.activeElement);
     measure();
     setPreset(next);

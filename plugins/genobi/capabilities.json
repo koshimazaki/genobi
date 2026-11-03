@@ -227,6 +227,14 @@
       "runs": [{ "route": "local-free" }]
     },
     {
+      "id": "effects-catalogue", "name": "Configurable animation and effect presets", "status": "implemented",
+      "where": "3D · preset gallery; Editor · Add effects",
+      "description": "Inspect and configure poster, scan/HUD, kinetic title and liquid-mirror presets; insert editable layers atomically and save portable variants with pinned module identities.",
+      "mcp": ["genobi_effects", "genobi_effect_variant", "genobi_director_command"], "cli": ["effects", "effect-variant", "director-command"],
+      "skills": ["genobi-director"], "docs": ["docs/effects-catalogue.md"],
+      "runs": [{ "route": "local-free" }]
+    },
+    {
       "id": "audio-analysis", "name": "Audio analysis and the beat grid", "status": "verified", "evidence": "2026-10-21 docs/audio-analysis.md#verification",
       "where": "Director · track lane and Timing; agents",
       "description": "Tempo, a fitted beat grid, downbeat, onsets per band, intensity and key moments of a track, on the local server.",
@@ -241,6 +249,14 @@
       "mcp": [], "cli": [],
       "skills": ["genobi-3d", "world-builder"], "docs": ["docs/world-builder.md", "docs/world-builder-capture.md", "docs/world-builder-verification.md"],
       "runs": [{ "route": "local-free" }]
+    },
+    {
+      "id": "audio-reactive", "name": "Audio-reactive Layout-to-Render", "status": "implemented",
+      "where": "3D · World Builder studies captured from the terminal, rendered on a ComfyUI box",
+      "description": "The featured workflow: a World Builder study moves to a track window, one aligned still sets the look and one LTX-2.5 Layout-to-Render graph paints it; presets with track, subject and space swaps.",
+      "mcp": [], "cli": [],
+      "skills": ["genobi-audio-reactive"], "docs": ["audio-reactive/README.md", "docs/audio-reactive-pyramid.md", "docs/audio-reactive-second-pass.md"],
+      "runs": [{ "route": "local-free" }, { "route": "local-model", "models": ["ltx-2-5", "flux-3-klein"] }]
     },
     {
       "id": "world-handoff", "name": "World Builder recipes from agents", "status": "verified", "evidence": "2026-10-29 docs/falling-room.md#what-was-run-29-october-2026",

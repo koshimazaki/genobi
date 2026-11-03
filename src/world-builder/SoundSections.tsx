@@ -6,6 +6,8 @@ import { TrackList, type TrackActions } from "./AudioRecentMenu";
 import { SignalScopes } from "./SignalScopes";
 import { inComfyNode } from "./host";
 import type { SignalScope } from "./useSignalScopes";
+import { CharacterAudioControls } from "./CharacterAudioControls";
+import { SceneLiveInputControls } from "./SceneLiveInputControls";
 
 /**
  * The Sound panel below its transport: audio response, optional signal scopes,
@@ -51,6 +53,17 @@ export function SoundSections({
           selected={selected}
           change={s.tune}
         />
+      </Fold>
+      {r.avatar && (
+        <Fold
+          title="Character moves from audio"
+          open={!!r.characterAudio?.enabled}
+        >
+          <CharacterAudioControls s={s} />
+        </Fold>
+      )}
+      <Fold title="Synth / line input">
+        <SceneLiveInputControls s={s} openSound={() => {}} />
       </Fold>
       <Fold title="Signal scopes">
         <SignalScopes scope={scope} live={s.playing && !!s.audioURL} />

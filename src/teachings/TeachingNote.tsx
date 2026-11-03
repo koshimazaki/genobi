@@ -7,7 +7,13 @@ import "./teachings.css";
  * states documented behaviour (`shared/teachings.ts`); no transition, so
  * reduced motion needs nothing extra. Not a live region: it is hint text.
  */
-export function TeachingNote({ className = "" }: { className?: string }) {
+export function TeachingNote({
+  className = "",
+  label = "Teachings",
+}: {
+  className?: string;
+  label?: string;
+}) {
   const teaching = useTeaching();
   return (
     <div
@@ -15,7 +21,7 @@ export function TeachingNote({ className = "" }: { className?: string }) {
       data-teaching={teaching.id}
     >
       <div className="genobi-teaching-head">
-        <span className="genobi-teaching-label">Teachings</span>
+        <span className="genobi-teaching-label">{label}</span>
         <button
           type="button"
           className="genobi-teaching-next"

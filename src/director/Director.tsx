@@ -2,7 +2,6 @@ import ProjectMemoryPanel from "../memory/ProjectMemoryPanel";
 import { ProjectShelf } from "../studio/ProjectShelf";
 import { StudioPanel, useShell } from "../studio/ShellContext";
 import RemixPanel from "./RemixPanel";
-import SavedVideos from "./SavedVideos";
 import RenderResult from "./RenderResult";
 import { usePageKey } from "../usePageKey";
 import { useEffect, useRef, useState } from "react";
@@ -365,6 +364,9 @@ export default function Director({
                   url={renderUrl}
                   report={renderSummary}
                   edit={() => setAdvanced(true)}
+                  name={bundle?.project.name ?? "render"}
+                  connection={connection}
+                  disabled={busy}
                 />
               ) : undefined
             }
@@ -423,16 +425,6 @@ export default function Director({
               media.current?.click();
             }}
             report={report}
-          />
-        )}
-      </StudioPanel>
-      <StudioPanel id="file">
-        {advanced && bundle && (
-          <SavedVideos
-            bundle={bundle}
-            renderUrl={renderUrl}
-            disabled={busy}
-            connection={connection}
           />
         )}
       </StudioPanel>

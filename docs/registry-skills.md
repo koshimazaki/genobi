@@ -63,6 +63,15 @@ Give an LTX-2.5 shot an Acoustic Space (AKUSPACE) treatment - where the sound is
 - Uses: [`genobi_job`](registry-tools.md#genobi_job), [`genobi_budget`](registry-tools.md#genobi_budget), [`genobi_quote`](registry-tools.md#genobi_quote), [`genobi_submit`](registry-tools.md#genobi_submit), [`genobi_take`](registry-tools.md#genobi_take), [`genobi_media_space`](registry-tools.md#genobi_media_space), [`genobi_run_location`](registry-tools.md#genobi_run_location), [`genobi_workflows`](registry-tools.md#genobi_workflows), [`genobi_workflow_select`](registry-tools.md#genobi_workflow_select)
 - Docs: [docs/camera-wording.md](camera-wording.md), [docs/run-location.md](run-location.md), [workflows/ltx-2-5-akuspace-t2v.README.md](https://github.com/koshimazaki/Genobi/blob/main/workflows/ltx-2-5-akuspace-t2v.README.md)
 
+## `genobi-audio-reactive`
+
+Regenerate or vary Genobi's featured audio-reactive workflow - a World Builder study that moves to a track window, one aligned still, and one LTX-2.5 Layout-to-Render graph - from its presets (pyramid, towers, cathedral, hall, booth, robot with fruits, fruit morphs, ship to mecha, diamond). Covers the track, subject and space swaps, the knobs that worked, the box render and the review. Every paid step waits for the person's yes.
+
+- Tags: `agents`, `ltx`, `world-builder`, `sound`, `workflows`
+- Instructions: [plugins/genobi/skills/genobi-audio-reactive/SKILL.md](https://github.com/koshimazaki/Genobi/blob/main/plugins/genobi/skills/genobi-audio-reactive/SKILL.md)
+- Uses: [`genobi_quote`](registry-tools.md#genobi_quote), [`genobi_submit`](registry-tools.md#genobi_submit)
+- Docs: [audio-reactive/README.md](https://github.com/koshimazaki/Genobi/blob/main/audio-reactive/README.md), [audio-reactive/presets/README.md](https://github.com/koshimazaki/Genobi/blob/main/audio-reactive/presets/README.md), [docs/audio-reactive-second-pass.md](audio-reactive-second-pass.md), [docs/audio-reactive-pyramid.md](audio-reactive-pyramid.md), [docs/vast-runner.md](vast-runner.md), [docs/genobi-cli.md](genobi-cli.md)
+
 ## `genobi-camera`
 
 Generate a Genobi shot with the right model - one workflow card per model the studio can run (LTX-2.5 Fast, LTX-2.5 Acoustic Space, LTX-2.5 Pro, FLUX 3 video, FLUX Video Upscale, FLUX 3 Image Klein, FLUX 3 Image and Edit, H3 and MiniMax Music 3), each with its route, lengths, sizes, cost, prompt guidance and the camera wording it accepts, always behind a quote the person accepts.
@@ -101,12 +110,12 @@ When the person asks for a change to the Genobi studio itself (its UI, a tool, a
 
 ## `genobi-director`
 
-Finish a cut in the Genobi Director, the studio's main surface - link or read the person's project, plan the job, then use any studio tool or all of them (camera generation behind a quote, takes handed into the project, audio analysis for the beat grid, Director commands, provenance) and hand the result back to the person.
+Finish a cut in the Genobi Director, the studio's main surface - link or read the person's project, plan the job, then use any studio tool or all of them (camera generation behind a quote, takes handed into the project, configurable effect presets and variants, audio analysis for the beat grid, Director commands, provenance) and hand the result back to the person.
 
 - Tags: `agents`, `director`, `bundle`, `mcp`
 - Instructions: [plugins/genobi/skills/genobi-director/SKILL.md](https://github.com/koshimazaki/Genobi/blob/main/plugins/genobi/skills/genobi-director/SKILL.md)
-- Uses: [`genobi_status`](registry-tools.md#genobi_status), [`genobi_job`](registry-tools.md#genobi_job), [`genobi_scrolls`](registry-tools.md#genobi_scrolls), [`genobi_budget`](registry-tools.md#genobi_budget), [`genobi_quote`](registry-tools.md#genobi_quote), [`genobi_submit`](registry-tools.md#genobi_submit), [`genobi_take`](registry-tools.md#genobi_take), [`genobi_projects`](registry-tools.md#genobi_projects), [`genobi_link_project`](registry-tools.md#genobi_link_project), [`genobi_project`](registry-tools.md#genobi_project), [`genobi_project_feedback`](registry-tools.md#genobi_project_feedback), [`genobi_director_command`](registry-tools.md#genobi_director_command), [`genobi_take_to_project`](registry-tools.md#genobi_take_to_project), [`genobi_provenance`](registry-tools.md#genobi_provenance), [`genobi_audio_upload`](registry-tools.md#genobi_audio_upload), [`genobi_audio_analysis`](registry-tools.md#genobi_audio_analysis), [`genobi_skill`](registry-tools.md#genobi_skill)
-- Docs: [docs/director-agent-tools.md](director-agent-tools.md), [docs/director-bundle/README.md](director-bundle/README.md)
+- Uses: [`genobi_status`](registry-tools.md#genobi_status), [`genobi_job`](registry-tools.md#genobi_job), [`genobi_scrolls`](registry-tools.md#genobi_scrolls), [`genobi_budget`](registry-tools.md#genobi_budget), [`genobi_quote`](registry-tools.md#genobi_quote), [`genobi_submit`](registry-tools.md#genobi_submit), [`genobi_take`](registry-tools.md#genobi_take), [`genobi_projects`](registry-tools.md#genobi_projects), [`genobi_link_project`](registry-tools.md#genobi_link_project), [`genobi_project`](registry-tools.md#genobi_project), [`genobi_project_feedback`](registry-tools.md#genobi_project_feedback), [`genobi_director_command`](registry-tools.md#genobi_director_command), [`genobi_effects`](registry-tools.md#genobi_effects), [`genobi_effect_variant`](registry-tools.md#genobi_effect_variant), [`genobi_take_to_project`](registry-tools.md#genobi_take_to_project), [`genobi_provenance`](registry-tools.md#genobi_provenance), [`genobi_audio_upload`](registry-tools.md#genobi_audio_upload), [`genobi_audio_analysis`](registry-tools.md#genobi_audio_analysis), [`genobi_skill`](registry-tools.md#genobi_skill)
+- Docs: [docs/director-agent-tools.md](director-agent-tools.md), [docs/director-bundle/README.md](director-bundle/README.md), [docs/effects-catalogue.md](effects-catalogue.md)
 
 ## `genobi-hermes`
 

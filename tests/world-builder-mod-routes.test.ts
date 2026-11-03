@@ -85,7 +85,7 @@ describe("World Builder audio mod matrix", () => {
     expect(bad({ amount: 9 })).toThrow("Route amount must be between 0 and 8");
     expect(bad({ threshold: -0.1 })).toThrow("Route threshold");
     expect(bad({ lerp: 0 })).toThrow("Route lerp");
-    expect(bad({ source: "sub" })).toThrow("Invalid audio route");
+    expect(bad({ source: "ultra" })).toThrow("Invalid audio route");
     expect(bad({ target: "prop:gone" })).toThrow("Unknown audio route target");
     expect(bad({ target: "world:castle" })).toThrow("Unknown audio route");
     expect(bad({ target: "light:key", property: "scale" })).toThrow(

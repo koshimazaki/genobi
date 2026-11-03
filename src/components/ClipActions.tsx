@@ -1,5 +1,6 @@
 import Icon from "./Icon";
 import AddToProject from "./AddToProject";
+import RecreateButton from "./RecreateButton";
 
 export default function ClipActions({
   url,
@@ -17,16 +18,7 @@ export default function ClipActions({
   return (
     <div className="clip-actions">
       <AddToProject url={url} filename={filename} />
-      {onRecreate && (
-        <button
-          onClick={onRecreate}
-          aria-label="Recreate"
-          title="Recreate: load this run’s prompt, settings and saved input files"
-        >
-          <span className="clip-action-label">Recreate</span>
-          <Icon name="refresh" size={12} />
-        </button>
-      )}
+      {onRecreate && <RecreateButton onClick={onRecreate} />}
       <a
         className="download-clip"
         href={url}

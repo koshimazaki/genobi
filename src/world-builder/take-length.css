@@ -1,0 +1,26 @@
+.wb-app .wb-take-length {
+  display: inline-grid;
+  grid-template-columns: 26px minmax(58px, 1fr) 26px;
+  max-width: 100%;
+}
+.wb-app .wb-take-length-slider {
+  grid-column: 1 / -1;
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  height: 24px;
+  accent-color: var(--accent);
+}
+@media (max-width: 900px) {
+  .wb-app .wb-take-length {
+    grid-template-columns: 44px minmax(58px, 1fr) 44px;
+  }
+  .wb-app .wb-take-length button,
+  .wb-app .wb-take-length-slider,
+  .wb-app .wb-take-length-value input {
+    min-height: 44px;
+  }
+  .wb-app .wb-take-length button {
+    min-width: 44px;
+  }
+}

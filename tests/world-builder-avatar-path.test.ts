@@ -69,13 +69,13 @@ describe("World Builder avatar path", () => {
     for (const avatarPath of [
       [],
       [{ frame: 0, pose: end }],
-      [{ frame: 241, pose: end }],
+      [{ frame: 721, pose: end }],
       [{ frame: 1.5, pose: end }],
       [
         { frame: 20, pose: end },
         { frame: 20, pose: end },
       ],
-      [{ frame: 10, pose: { ...end, y: 41 } }],
+      [{ frame: 10, pose: { ...end, y: 201 } }],
       [{ frame: 10, pose: end, ease: "bounce" }],
       [{ frame: 10, pose: end, speed: 2 }],
       Array.from({ length: 17 }, (_, i) => ({ frame: i + 1, pose: end })),

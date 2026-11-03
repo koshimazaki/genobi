@@ -245,7 +245,7 @@ describe("Every existing capture action is still there", () => {
   it("shows the take length as a typeable seconds field beside its frames", () => {
     const html = renderToStaticMarkup(<TakeLength s={session()} />);
     expect(html).toMatch(
-      /<input type="text" inputMode="decimal" aria-label="Take length in seconds, 0.375 to 10.04"[^>]*value="4.04"/,
+      /<input type="text" inputMode="decimal" aria-label="Take length in seconds, 0.375 to 30.04"[^>]*value="4.04"/,
     );
     expect(html).toContain(">97 f</output>");
   });

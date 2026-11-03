@@ -36,6 +36,12 @@ export function runtimeCapabilities(runtime: "local" | "hosted") {
       note: "The bundled MCP and CLI connect to the local server. Hosted agent sessions use a paired local runner.",
     },
     features: {
+      effectsCatalogue: {
+        supported: true,
+        routes: ["GET /api/effects", "POST /api/effects/variants"],
+        persistence: "Returned configuration only; save it explicitly.",
+        application: "Browser Editor, or local project commands.",
+      },
       generation: {
         supported: true,
         routes: [

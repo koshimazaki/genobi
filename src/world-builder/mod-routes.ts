@@ -9,7 +9,9 @@
  * recipe and every capture is frame-exact.
  */
 
-export const MOD_SOURCES = ["low", "mid", "high", "level"] as const;
+import type { BandEnvelopes } from "./audio-bands";
+
+export const MOD_SOURCES = ["sub", "low", "mid", "high", "level"] as const;
 export type ModSource = (typeof MOD_SOURCES)[number];
 export type ModProperty =
   "scale" | "height" | "spin" | "glow" | "light" | "yaw";
@@ -294,7 +296,7 @@ export interface RouteSignals {
   frames: number;
   fps: number;
   envelope: number[];
-  bandEnvelopes: { low: number[]; mid: number[]; high: number[] };
+  bandEnvelopes: BandEnvelopes;
   audioRoutes: ModRoute[];
 }
 interface Series {
@@ -304,10 +306,13 @@ interface Series {
   angle: Float64Array;
 }
 const cache = new WeakMap<ModRoute, Series>();
+const SILENT_BAND: number[] = [];
 
 function series(r: RouteSignals, route: ModRoute, frame: number): Series {
   const data =
-    route.source === "level" ? r.envelope : r.bandEnvelopes[route.source];
+    route.source === "level"
+      ? r.envelope
+      : (r.bandEnvelopes[route.source] ?? SILENT_BAND);
   const hit = cache.get(route);
   if (hit && hit.data === data && hit.value.length > frame) return hit;
   const length = Math.max(r.frames, data.length, frame + 1);
@@ -333,6 +338,8 @@ function series(r: RouteSignals, route: ModRoute, frame: number): Series {
 /** One route's driven value at a frame (spin: its accumulated angle). */
 export function routeValue(r: RouteSignals, route: ModRoute, frame: number) {
   if (!route.enabled) return 0;
+  // An old recipe has no measured sub signal, even for an inverted route.
+  if (route.source === "sub" && !r.bandEnvelopes.sub?.length) return 0;
   const f = Math.max(0, Math.floor(frame));
   const s = series(r, route, f);
   return route.property === "spin" ? s.angle[f] : s.value[f];

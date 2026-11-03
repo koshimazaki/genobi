@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { BuilderSession } from "./useBuilderSession";
 import { NumberControl } from "./Controls";
 import {
@@ -7,6 +7,7 @@ import {
   framesForTypedSeconds,
   takeSeconds,
 } from "./take-duration";
+import "./take-length.css";
 
 /**
  * Apply typed seconds: the draft to show afterwards, or `undefined` when the
@@ -50,18 +51,31 @@ export function TakeLength({
   const { frames } = s.recipe;
   const shown = takeSeconds(frames).toFixed(2);
   const [draft, setDraft] = useState(shown);
+  const [committing, setCommitting] = useState(false);
+  const pending = useRef(false);
   useEffect(() => setDraft(shown), [shown]);
   const typed = framesForTypedSeconds(draft);
-  const commit = () =>
-    void commitTypedLength(draft, frames, s).then((next) => {
-      if (next !== undefined) setDraft(next);
-    });
+  const draftFrames = typed instanceof Error ? frames : typed;
+  const locked = disabled || committing;
+  const commit = (text = draft) => {
+    if (pending.current || text === shown) return;
+    pending.current = true;
+    setCommitting(true);
+    void commitTypedLength(text, frames, s)
+      .then((next) => {
+        if (next !== undefined) setDraft(next);
+      })
+      .finally(() => {
+        pending.current = false;
+        setCommitting(false);
+      });
+  };
   return (
     <div className="wb-take-length" role="group" aria-label={`${label} length`}>
       <button
         type="button"
         aria-label="Shorter take"
-        disabled={disabled || frames <= TAKE_FRAMES.min}
+        disabled={locked || frames <= TAKE_FRAMES.min}
         onClick={() =>
           s.change({
             frames: Math.max(TAKE_FRAMES.min, frames - TAKE_FRAMES.step),
@@ -77,10 +91,10 @@ export function TakeLength({
             inputMode="decimal"
             aria-label={`${label} length in seconds, ${MOVE_SECONDS.min} to ${MOVE_SECONDS.max.toFixed(2)}`}
             value={draft}
-            disabled={disabled}
+            disabled={locked}
             size={5}
             onChange={(e) => setDraft(e.target.value)}
-            onBlur={commit}
+            onBlur={() => commit()}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 e.preventDefault();
@@ -90,14 +104,12 @@ export function TakeLength({
           />
           <span aria-hidden="true"> s</span>
         </label>
-        <output aria-live="polite">
-          {typed instanceof Error ? frames : typed} f
-        </output>
+        <output aria-live="polite">{draftFrames} f</output>
       </span>
       <button
         type="button"
         aria-label="Longer take"
-        disabled={disabled || frames >= TAKE_FRAMES.max}
+        disabled={locked || frames >= TAKE_FRAMES.max}
         onClick={() =>
           s.change({
             frames: Math.min(TAKE_FRAMES.max, frames + TAKE_FRAMES.step),
@@ -106,6 +118,42 @@ export function TakeLength({
       >
         +
       </button>
+      <input
+        className="wb-take-length-slider"
+        type="range"
+        aria-label={`${label} length slider`}
+        aria-valuetext={`${takeSeconds(draftFrames).toFixed(4)} seconds, ${draftFrames} frames`}
+        min={TAKE_FRAMES.min}
+        max={TAKE_FRAMES.max}
+        step={TAKE_FRAMES.step}
+        value={draftFrames}
+        disabled={locked}
+        onChange={(event) =>
+          setDraft(takeSeconds(Number(event.target.value)).toFixed(4))
+        }
+        onPointerUp={(event) =>
+          commit(takeSeconds(Number(event.currentTarget.value)).toFixed(4))
+        }
+        onKeyUp={(event) => {
+          if (
+            [
+              "ArrowLeft",
+              "ArrowRight",
+              "ArrowUp",
+              "ArrowDown",
+              "Home",
+              "End",
+              "PageUp",
+              "PageDown",
+            ].includes(event.key)
+          )
+            commit(takeSeconds(Number(event.currentTarget.value)).toFixed(4));
+        }}
+        onBlur={(event) =>
+          commit(takeSeconds(Number(event.currentTarget.value)).toFixed(4))
+        }
+        onPointerCancel={() => setDraft(shown)}
+      />
     </div>
   );
 }

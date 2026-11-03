@@ -26,8 +26,8 @@ locally before starting.
    Confirm that the named hosted studio may start the configured runner. Agent
    inference may use your subscription or incur model costs.
 4. Back in hosted Settings, wait for the runner to appear online. Enter a prompt
-   and press **Start paired runner**, or use **Start Genobi** in the bubble.
-5. Open the Genobi bubble for session progress and Stop. **Open local session**
+   and press **Start paired runner**.
+5. Open the footer deck for session progress, approvals and Stop. **Open local session**
    opens that session on the original machine, where assets and paid approvals
    remain available. The same local browser profile must still own its cookie.
 

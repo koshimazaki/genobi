@@ -1,4 +1,5 @@
 import type * as T from "three";
+import { WORLD_POSITION_LIMIT } from "./scene-bounds";
 
 /**
  * Where the character stands and which way it is turned. Angles are radians.
@@ -18,14 +19,16 @@ const KEYS = ["x", "y", "z", "yaw", "pitch", "roll"];
 const finite = (v: unknown, min: number, max: number) =>
   typeof v === "number" && Number.isFinite(v) && v >= min && v <= max;
 
-/** Throws on an unknown key, a position outside ±40 m or an angle outside ±π. */
+/** Throws on an unknown key, an out-of-bounds position or an angle outside ±π. */
 export function validateAvatarPose(pose: unknown): AvatarPose {
   if (typeof pose !== "object" || pose === null || Array.isArray(pose))
     throw new Error("Invalid avatar pose.");
   const p = pose as Record<string, unknown>;
   if (
     Object.keys(p).some((k) => !KEYS.includes(k)) ||
-    ![p.x, p.y, p.z].every((v) => finite(v, -40, 40)) ||
+    ![p.x, p.y, p.z].every((v) =>
+      finite(v, -WORLD_POSITION_LIMIT, WORLD_POSITION_LIMIT),
+    ) ||
     !finite(p.yaw, -Math.PI, Math.PI) ||
     (p.pitch !== undefined && !finite(p.pitch, -Math.PI, Math.PI)) ||
     (p.roll !== undefined && !finite(p.roll, -Math.PI, Math.PI))

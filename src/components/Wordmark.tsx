@@ -1,6 +1,7 @@
 import { useShell } from "../studio/ShellContext";
 import { presets } from "../studio/presets";
 import AgentSessionPanel from "../agent/AgentSessionPanel";
+import { GenobiGuide } from "../agent/GenobiGuide";
 import SpawnAgentDialog from "../agent/SpawnAgentDialog";
 import GenobiDeck from "../deck/GenobiDeck";
 import { goHome } from "../director/leave-guard";
@@ -32,10 +33,10 @@ export function HomeLink({ navigate }: { navigate?: (url: string) => void }) {
  * `tests/wordmark.test.tsx` reads
  * both, and a rename that only reaches one of them fails there. The mode tag
  * beside it names the part of the studio in view, not a second brand. While
- * anything is working, a sand spinner runs beside the name. The spawn dialog
- * lives here, beside the Genobi bubble, and so does the footer deck: it reads
- * the session this bubble's panel publishes, so the two are mounted together
- * (fixed to the bottom of the window, it never moves the header).
+ * anything is working, a sand spinner runs beside the name. The Genobi guide
+ * bubble lives here, with the headless session follower, the spawn dialog and
+ * the footer deck, which reads the session the follower publishes (fixed to
+ * the bottom of the window, it never moves the header).
  */
 export default function Wordmark() {
   const shell = useShell();
@@ -48,6 +49,7 @@ export default function Wordmark() {
     : "";
   return (
     <div className="wordmark">
+      <GenobiGuide />
       <AgentSessionPanel />
       <SpawnAgentDialog />
       <GenobiDeck />

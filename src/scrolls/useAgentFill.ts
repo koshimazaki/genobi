@@ -92,7 +92,7 @@ export function useAgentFill(s: ReturnType<typeof useScrolls>) {
           since: Date.now(),
         });
         setStatus(
-          `Sent to Genobi. Its panels appear on the storyboard when it is done; follow it in the bubble.${
+          `Sent to Genobi. Its panels appear on the storyboard when it is done; follow it in the Genobi log.${
             fromScript && descriptionCut(description) ? ` ${SCRIPT_CUT}` : ""
           }`,
         );

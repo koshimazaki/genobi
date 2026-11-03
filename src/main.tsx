@@ -1,3 +1,4 @@
+import "./preview-crypto";
 import TastePanel from "./licensing/TastePanel";
 import React, { Suspense } from "react";
 import { createRoot } from "react-dom/client";

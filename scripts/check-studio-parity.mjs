@@ -130,7 +130,7 @@ try {
           .waitFor();
       if (workspace === "director" || workspace === "editor") {
         const intake = page.getByRole("dialog", {
-          name: "Generate my version",
+          name: "Make my version",
         });
         await intake.waitFor();
         assert(
@@ -143,7 +143,7 @@ try {
           path: `${output}/${width}-${workspace}-intake.png`,
         });
         await intake
-          .getByRole("button", { name: "Close Generate my version" })
+          .getByRole("button", { name: "Close Make my version" })
           .click();
         await intake.waitFor({ state: "detached" });
       }
