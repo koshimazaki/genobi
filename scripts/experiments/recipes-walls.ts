@@ -42,6 +42,34 @@ export function squeezeX(open: SceneTransform[], fraction = WALLS_CLOSED) {
   }));
 }
 
+/**
+ * The grow close, the pyramid's mechanic for a room: a side-wall piece keeps
+ * its outer face and thickens inwards until its inner face is at `fraction` of
+ * the half width, so the walls read as stone mass moving, not sheets sliding.
+ * Glass panes (outside the wall) and everything off the side walls stay put.
+ */
+export function growX(
+  open: SceneTransform[],
+  halfWidth: number,
+  fraction = WALLS_CLOSED,
+) {
+  return open.map((part) => {
+    if (Math.abs(part.x) < halfWidth - 0.01 || part.color === GLASS)
+      return { ...part };
+    const width = part.scale * (part.scaleX ?? 1),
+      centre = Math.abs(part.x),
+      sign = Math.sign(part.x);
+    const outer = centre + width / 2,
+      inner = halfWidth * fraction,
+      grown = outer - inner;
+    return {
+      ...part,
+      x: r3(sign * (outer - grown / 2)),
+      scaleX: r3(grown / part.scale),
+    };
+  });
+}
+
 const r3 = (n: number) => Math.round(n * 1000) / 1000;
 
 function builder() {
@@ -191,6 +219,7 @@ function clap(
   room: { width: number; length: number; height: number },
   listener: SceneVector,
   fraction = WALLS_CLOSED,
+  closed: SceneTransform[] = squeezeX(open, fraction),
 ) {
   const motion = recipe.motion!;
   motion.instances!.count = open.length;
@@ -200,7 +229,7 @@ function clap(
     recipe,
     label,
     open,
-    squeezeX(open, fraction),
+    closed,
     { dimensions: [W, H, L], listener },
     { dimensions: [Math.max(1, W * fraction), H, L], listener },
   );
@@ -239,6 +268,53 @@ export function partyWalls(recipe: Recipe): RoomDesign {
       camera: "held above the open near end, over the wall tops, no audio push",
       hall: `${W} x ${L} x ${H} m, ${open.length} pieces: window walls on three sides, floor, DJ table`,
       close: `blend: morphControl open -> closed on low, x only, to ${WALLS_CLOSED} of the open width`,
+      roomSign:
+        "the closed state's reverb box is a quarter as wide; width and depth mappings shrink it on the same bars",
+      avatar: "mannequin, dance, centre of the floor",
+    },
+  };
+}
+
+/**
+ * The hall with the pyramid's close: the long window walls keep their outer
+ * face and thicken inwards to the same quarter width, the crowd, DJ and far
+ * wall hold still. The 0.4 m sheets of `party-walls` rendered as smears
+ * sliding over the dancers; thick walls give LTX a mass to move.
+ */
+export function partyWallsGrow(recipe: Recipe): RoomDesign {
+  const open = hall();
+  const halfWidth = HALL.width / 2;
+  const { motion, W, L, H } = clap(
+    recipe,
+    "Hall",
+    open,
+    HALL,
+    [0, 1.7, 2],
+    WALLS_CLOSED,
+    growX(open, halfWidth),
+  );
+  motion.mappings = [
+    mapping("width", "low", "roomWidth", -4),
+    mapping("depth", "low", "roomDepth", -2),
+  ];
+  Object.assign(recipe, MANNEQUIN, {
+    avatarMotion: "dance",
+    avatarPose: { x: 0, y: 0, z: 0, yaw: 0 },
+  });
+  recipe.cameraMotion = heldCamera(
+    HALL_CAMERA.position,
+    HALL_CAMERA.target,
+    HALL_CAMERA.fov,
+  );
+  recipe.depthFar = 60;
+  recipe.prompt =
+    "A high corner view of a big bare hall with tall windows, a crowd dancing on the wooden floor and a DJ at the far end; on the beat the long plaster walls swell inward, thickening toward the dancers like heavy stone, and shrink back as the bass fades. Warm daylight, still camera.";
+  return {
+    indoorFromFrame: 0,
+    design: {
+      camera: "held above the open near end, over the wall tops, no audio push",
+      hall: `${W} x ${L} x ${H} m, ${open.length} pieces: window walls on three sides, floor, DJ table`,
+      close: `blend: morphControl open -> closed on the capture band (low unless --band); the long walls keep their outer face and thicken inwards to ${WALLS_CLOSED} of the half width; panes, far wall, floor and DJ hold`,
       roomSign:
         "the closed state's reverb box is a quarter as wide; width and depth mappings shrink it on the same bars",
       avatar: "mannequin, dance, centre of the floor",

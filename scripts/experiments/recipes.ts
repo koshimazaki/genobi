@@ -21,10 +21,16 @@ import {
   type RoomDesign,
 } from "./recipes-rooms";
 import { fruitDance, fruitMorph, singleFruit } from "./recipes-fruit";
-import { cathedralGallery, towersDescent } from "./recipes-clap";
+import {
+  cathedralDescent,
+  cathedralDescentSimple,
+  cathedralGallery,
+  towersDescent,
+} from "./recipes-clap";
 import { diamondStudy } from "./recipes-diamond";
+import { pyramidInsideParty } from "./recipes-pyramid-party";
 import { fruitMecha, fruitMechaMorph } from "./recipes-fruit-mecha";
-import { partyWalls, studioWalls } from "./recipes-walls";
+import { partyWalls, partyWallsGrow, studioWalls } from "./recipes-walls";
 import { shipMecha } from "./recipes-ship-mecha";
 import { STUDIES } from "./studies.mjs";
 
@@ -48,6 +54,7 @@ const PRESETS: Record<Study, string> = {
   rubik: "voxel-architecture-128",
   "pyramid-inside": "voxel-architecture-128",
   "pyramid-inside-spin": "voxel-architecture-128",
+  "pyramid-inside-party": "voxel-architecture-128",
   diamond: "voxel-architecture-128",
   "fruit-apple": "fruit-morph",
   "fruit-banana": "fruit-morph",
@@ -63,10 +70,13 @@ const PRESETS: Record<Study, string> = {
   "towers-descent": "city-to-loft",
   "cathedral-gallery": "city-to-loft",
   "cathedral-gallery-grow": "city-to-loft",
+  "cathedral-descent": "city-to-loft",
+  "cathedral-descent-simple": "city-to-loft",
   room: "apartment-morph",
   "room-walls": "apartment-morph",
   // Their own hall and booth pieces replace the preset layouts.
   "party-walls": "city-to-loft",
+  "party-walls-grow": "city-to-loft",
   "studio-walls": "city-to-loft",
 };
 
@@ -330,10 +340,15 @@ export function createStudy(
   else if (study === "cathedral-gallery") room(cathedralGallery(recipe));
   else if (study === "cathedral-gallery-grow")
     room(cathedralGallery(recipe, true));
+  else if (study === "cathedral-descent") room(cathedralDescent(recipe));
+  else if (study === "cathedral-descent-simple")
+    room(cathedralDescentSimple(recipe));
   else if (study === "room-walls") room(roomWalls(recipe));
   else if (study === "pyramid-inside") room(pyramidInside(recipe));
   else if (study === "pyramid-inside-spin") room(pyramidInsideSpin(recipe));
+  else if (study === "pyramid-inside-party") room(pyramidInsideParty(recipe));
   else if (study === "party-walls") room(partyWalls(recipe));
+  else if (study === "party-walls-grow") room(partyWallsGrow(recipe));
   else if (study === "studio-walls") room(studioWalls(recipe));
   else
     motion.stateKeys.forEach((key, i) => {
@@ -366,9 +381,13 @@ export function createStudy(
                 study === "towers-descent" ||
                 study === "cathedral-gallery" ||
                 study === "cathedral-gallery-grow" ||
+                study === "cathedral-descent" ||
+                study === "cathedral-descent-simple" ||
                 study === "pyramid-inside" ||
                 study === "pyramid-inside-spin" ||
+                study === "pyramid-inside-party" ||
                 study === "party-walls" ||
+                study === "party-walls-grow" ||
                 study === "studio-walls"
               ? "Stylized single-room box proxy whose size follows the low band with the visible walls; not the real geometry's acoustics."
               : "No acoustic enclosure.",
