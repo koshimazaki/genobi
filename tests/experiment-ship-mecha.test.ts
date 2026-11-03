@@ -7,6 +7,7 @@ import { serializeRecipe } from "../scripts/experiments/contracts";
 import {
   SHIP_COLOURS,
   SHIP_HOVER,
+  bassSwells,
   shipBounds,
 } from "../scripts/experiments/recipes-ship-mecha";
 
@@ -121,5 +122,24 @@ describe("ship-mecha", () => {
       expect((box.max[1] + box.min[1]) / 2).toBeCloseTo(cam.target[1], 1);
       if (key === "Mecha") expect(height / frame).toBeCloseTo(0.6, 1);
     }
+  });
+
+  it("morphs on swells above the take's median bass, not on a loud floor", () => {
+    expect(bassSwells([0, 0, 0]).low).toEqual([0, 0, 0]);
+    expect(bassSwells([1, 1, 1]).low).toEqual([1, 1, 1]);
+    // A loud take that never drops below 0.55: the median is the spacecraft.
+    const n = 97;
+    const low = Array.from({ length: n }, (_, i) =>
+      i === 60 ? 0.85 : i % 2 ? 0.55 : 0.7,
+    );
+    const input = bands(n, 0);
+    input.bandEnvelopes.low = low;
+    const { recipe } = createStudy("ship-mecha", input, dims(n));
+    recipe.motion!.mappings = [];
+    const [ship, mecha] = recipe.motion!.stateKeys;
+    const at = (frame: number) => voxels(recipe, frame)["voxel-000"];
+    expect(at(0).x).toBeCloseTo(ship.objects["voxel-000"].x, 6);
+    expect(at(1).x).toBeCloseTo(ship.objects["voxel-000"].x, 6);
+    expect(at(60).x).toBeCloseTo(mecha.objects["voxel-000"].x, 6);
   });
 });

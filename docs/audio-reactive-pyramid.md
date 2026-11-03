@@ -178,6 +178,10 @@ still (pyramid-inside pans 45 degrees) and move the space on the `low` band.
   floor, so the spacecraft hovers higher. It is held from the front at 10
   degrees and framed so the mecha fills 60% of the frame height, turning on
   `mid` (twistY 0.2) with no scale pulse, so the mecha never leaves the frame.
+  The morph reads the low band as swells above the take's own median
+  (`bassSwells`): the median and below are the spacecraft, the loudest frame
+  the mecha. On Dimensions at 40.125 s the auto-gained band never fell under
+  0.54, so the raw band held the mecha all take long.
 - **Fruit colours.** Every voxel of a fruit state carries its fruit's colour
   (`FRUIT_COLOURS`: banana `#f2d14b`, papaya `#f0a040`, apple `#c8322b`), so
   the RGB guide shows the fruit, and the morph blends the colour with the

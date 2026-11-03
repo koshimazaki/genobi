@@ -22,6 +22,30 @@ const ELEVATION = 10,
 
 type Part = SceneTransform & { color?: string };
 
+/** Below this spread between the take's median and loudest bass, keep the band as is. */
+const MIN_SWELL = 0.05;
+
+/**
+ * The low band as swells above the take's own median: the median and
+ * everything under it read 0 (the spacecraft), the loudest frame reads 1.
+ * Measured 3 Nov 2026 on Dimensions at 40.125 s: after auto gain the low band
+ * never fell below 0.54, so the raw band held the mecha for the whole take.
+ * A band without that spread (silence, a constant) is returned unchanged, so
+ * zero bass is still the spacecraft and full bass the mecha.
+ */
+export function bassSwells(low: number[]) {
+  const sorted = [...low].sort((a, b) => a - b);
+  const median = sorted[Math.floor(sorted.length / 2)] ?? 0,
+    peak = sorted.at(-1) ?? 0;
+  if (peak - median < MIN_SWELL) return { low: [...low], median: null };
+  return {
+    low: low.map((v) =>
+      Math.max(0, Math.min(1, (v - median) / (peak - median))),
+    ),
+    median,
+  };
+}
+
 /** A state's world-space box: every voxel's rotated, scaled box. */
 export function shipBounds(objects: Record<string, Part>, size: number) {
   const boxes = Object.values(objects).map((p) =>
@@ -72,6 +96,10 @@ export function shipMecha(recipe: Recipe) {
     mecha = form(recipe, "Mecha");
   const mechaBox = shipBounds(mecha.objects, size);
   const height = mechaBox.max[1] - mechaBox.min[1];
+  // Only the morph reads low here (the twist is on mid), so the swell
+  // envelope replaces the band in the recipe and in the keyframe pick alike.
+  const swells = bassSwells(recipe.bandEnvelopes.low);
+  recipe.bandEnvelopes = { ...recipe.bandEnvelopes, low: swells.low };
   const centreY = SHIP_HOVER + height / 2;
   motion.stateKeys = [
     {
@@ -123,6 +151,10 @@ export function shipMecha(recipe: Recipe) {
   return {
     camera: `held front view, ${ELEVATION} degrees above, the mecha ${SHIP_FILL * 100}% of the frame height`,
     morph: `continuous: morphControl Spacecraft -> Mecha on low, progress = low x ${FRUIT_MORPH_AMOUNT}, clamped at 1`,
+    low:
+      swells.median === null
+        ? "raw low band (no swell above its median)"
+        : `swells above the take's median low ${Math.round(swells.median * 1000) / 1000}, loudest frame 1`,
     mappings: "twistY mid 0.2",
     voxels: Object.keys(ship.objects).length,
     hover: `mecha feet ${SHIP_HOVER} m above the floor, both forms on one centre`,
