@@ -453,3 +453,32 @@ export function pyramidInside(recipe: Recipe): RoomDesign {
     },
   };
 }
+
+/** The spin camera's distance from the pyramid's vertical axis, in metres. */
+export const SPIN_RADIUS = 0.5;
+
+/**
+ * The pyramid-inside interior with the camera turning once on the spot: the
+ * same walls, close, room box and figure, seen from 1.2 m above the floor
+ * centre, looking about 10 degrees up. The camera sits SPIN_RADIUS from the
+ * axis looking through it, and the path's orbit turns it one full turn about
+ * that axis, so the heading advances by the same angle every frame at any
+ * frame count (keys would interpolate their targets along chords).
+ */
+export function pyramidInsideSpin(recipe: Recipe): RoomDesign {
+  const built = pyramidInside(recipe);
+  const lift = Math.round(SPIN_RADIUS * Math.tan((10 * Math.PI) / 180) * 100);
+  recipe.cameraMotion = {
+    ...heldCamera([0, 1.2, SPIN_RADIUS], [0, 1.2 + lift / 100, 0], 85),
+    orbit: { axis: "y", turns: 1 },
+  };
+  recipe.prompt =
+    "From the floor of a vast stepped stone pyramid, the view turns slowly all the way round, sweeping the towering terraces and a lone figure standing small on the floor. The terraced walls close in on the loud beats and open in the quiet. Warm sandstone, a shaft of daylight from the oculus, dust in the air.";
+  return {
+    ...built,
+    design: {
+      ...built.design,
+      camera: `1.2 m above the floor centre, 85 degree lens, about 10 degrees up, one uniform 360 degree turn about the vertical axis (${SPIN_RADIUS} m off it)`,
+    },
+  };
+}

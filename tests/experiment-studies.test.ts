@@ -24,6 +24,7 @@ const NEW: Study[] = [
   "fruit-mecha",
   "room-walls",
   "pyramid-inside",
+  "pyramid-inside-spin",
   "fruit-apple",
   "fruit-banana",
   "fruit-papaya",

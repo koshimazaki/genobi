@@ -127,6 +127,11 @@ still (pyramid-inside pans 45 degrees) and move the space on the `low` band.
 - **pyramid-inside** is a hollow stepped pyramid three times larger, 36 m tall
   with 128 wall pieces and an oculus. It is shot from 1 m above the floor with
   an 85 degree lens, panning 45 degrees, the figure 7 m ahead for scale.
+- **pyramid-inside-spin** is the same interior, close and figure, with the
+  camera 1.2 m above the floor centre (0.5 m off the axis, looking through
+  it about 10 degrees up) turning one full 360 degrees. The turn is the
+  camera path's `orbit`, not keys, so the heading advances by the same angle
+  every frame at 97, 193 or 241 frames.
 - **diamond** is the simplest object test: one faceted `diamond(128)` at 0.65
   scale, centred 8 m over the floor, in three identical states. It uses
   pulse's mappings (scale on `low` 0.9, lift on `sub` 1.5) plus twistY on

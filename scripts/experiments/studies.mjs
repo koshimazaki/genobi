@@ -14,6 +14,7 @@ export const STUDIES = Object.freeze([
   "room",
   "room-walls",
   "pyramid-inside",
+  "pyramid-inside-spin",
   "diamond",
   "fruit-apple",
   "fruit-banana",

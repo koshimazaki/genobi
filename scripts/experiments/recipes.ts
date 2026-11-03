@@ -16,6 +16,7 @@ import {
   cathedralWalls,
   falling,
   pyramidInside,
+  pyramidInsideSpin,
   roomWalls,
   type RoomDesign,
 } from "./recipes-rooms";
@@ -41,6 +42,7 @@ const PRESETS: Record<Study, string> = {
   pulse: "voxel-architecture-128",
   rubik: "voxel-architecture-128",
   "pyramid-inside": "voxel-architecture-128",
+  "pyramid-inside-spin": "voxel-architecture-128",
   diamond: "voxel-architecture-128",
   "fruit-apple": "fruit-morph",
   "fruit-banana": "fruit-morph",
@@ -307,6 +309,7 @@ export function createStudy(
   else if (study === "canyon") room(canyon(recipe));
   else if (study === "room-walls") room(roomWalls(recipe));
   else if (study === "pyramid-inside") room(pyramidInside(recipe));
+  else if (study === "pyramid-inside-spin") room(pyramidInsideSpin(recipe));
   else
     motion.stateKeys.forEach((key, i) => {
       key.frame = Math.round((last * i) / 2);
@@ -333,7 +336,8 @@ export function createStudy(
             ? "Explicit changing single-room enclosure."
             : study === "cathedral-walls" ||
                 study === "canyon" ||
-                study === "pyramid-inside"
+                study === "pyramid-inside" ||
+                study === "pyramid-inside-spin"
               ? "Stylized single-room box proxy whose size follows the low band with the visible walls; not the real geometry's acoustics."
               : "No acoustic enclosure.",
       requiredNext:
