@@ -146,7 +146,7 @@ export function burst(
       const d = [
         outward * Math.abs(part.x - centre[0]) + outward * 0.5 + jitter(1),
         part.y - centre[1] + jitter(2),
-        -Math.abs(part.z - centre[2]) - 0.4 + jitter(4),
+        -Math.abs(part.z - centre[2]) - 1.6 + jitter(4),
       ];
       const length = Math.hypot(...d) || 1;
       const u = d.map((v) => v / length);
@@ -160,8 +160,16 @@ export function burst(
         [part.x + u[0] * t, part.y + u[1] * t, part.z + u[2] * t].map(
           r2,
         ) as SceneVector;
-      // Shorten the flight until it lands inside the view.
-      while (reach > 0.05 && !inMechaView(...at(reach))) reach *= 0.9;
+      // Shorten the flight until it lands inside the view, also as the full
+      // bass pulse scales it out about the pivot.
+      const fits = (p: SceneVector) =>
+        inMechaView(...p) &&
+        inMechaView(
+          ...(p.map(
+            (v, k) => MECHA_PIVOT[k] + (v - MECHA_PIVOT[k]) * (1 + MECHA_PULSE),
+          ) as SceneVector),
+        );
+      while (reach > 0.05 && !fits(at(reach))) reach *= 0.9;
       const [x, y, z] = at(reach);
       return [
         id,

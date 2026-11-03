@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { PerspectiveCamera, Vector3 } from "three";
 import { evaluateScene } from "../src/world-builder/evaluate-scene";
 import { sceneCameraAt } from "../src/world-builder/scene-camera";
 import { createStudy } from "../scripts/experiments/recipes";
@@ -261,6 +262,43 @@ describe("fruit-mecha", () => {
       expect(
         evaluateScene(recipe, 30).mods.get("primitives")?.glow,
       ).toBeCloseTo(glow, 3);
+    },
+  );
+});
+
+describe("mecha framing", () => {
+  it.each(STUDIES)(
+    "%s keeps every fruit voxel inside the camera frustum at full bass",
+    (study) => {
+      const { recipe } = createStudy(study, peaky(193), dims(193));
+      // Full bass throughout, the cue keys kept: every frame is the loudest.
+      const loud = {
+        ...recipe,
+        bandEnvelopes: {
+          ...recipe.bandEnvelopes,
+          low: recipe.bandEnvelopes.low.map(() => 1),
+        },
+      };
+      const pose = sceneCameraAt(loud, 0)!;
+      const camera = new PerspectiveCamera(pose.fov, 1024 / 576, 0.1, 100);
+      camera.position.set(...pose.position);
+      camera.lookAt(new Vector3(...pose.target));
+      camera.updateMatrixWorld();
+      const size = recipe.motion!.instances!.size;
+      for (let frame = 0; frame < 193; frame += 4)
+        for (const o of evaluateScene(loud, frame).objects) {
+          if (!o.id.startsWith("voxel-")) continue;
+          const half = (o.scale * size) / 2;
+          for (const corner of [-1, 1]) {
+            const p = new Vector3(
+              o.x + corner * half,
+              o.y + corner * half,
+              o.z,
+            ).project(camera);
+            expect(Math.abs(p.x)).toBeLessThan(1);
+            expect(Math.abs(p.y)).toBeLessThan(1);
+          }
+        }
     },
   );
 });

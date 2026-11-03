@@ -174,7 +174,12 @@ still (pyramid-inside pans 45 degrees) and move the space on the `low` band.
   flown 3 to 4 fruit radii across the picture (fixed per voxel, outward and
   back from the lens with a wide seeded spread, a little spin, the outgoing
   colour; "having them explode more would be good"), shortened where it
-  would leave the frame or come within 0.6 m of the dancer's centre line;
+  would leave the frame (also once the full-bass pulse scales it out about
+  the pivot) or come within 0.6 m of the dancer's centre line. The flights
+  lean back from the lens, where the view is wider. At gain 2 the doubled
+  pulse pushed the fruits out of the picture, so the mecha studies are
+  captured at gain 1, and a test keeps every fruit voxel inside the camera
+  frustum at full bass;
   and the next fruit is whole 8 frames after. Seven keys must fit the 64 KB recipe bound, so the fruits use the
   96-voxel preset, 48 coarser voxels each (about 47 KB at 193 frames).
 - **fruit-mecha-morph** is the same scene with no cues: two keys, banana |
