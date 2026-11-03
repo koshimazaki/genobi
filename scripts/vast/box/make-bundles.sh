@@ -22,7 +22,8 @@ declare -A PROMPT=(
   [pyramid-inside-spin]="Inside a vast hollow stepped pyramid the camera stands near the middle of the floor and turns slowly all the way round, looking a little up, while the towering terraced walls tighten on every bass hit and ease back, a small figure standing on the floor for scale. Dim warm light from above."
   [falling]="Seen straight down from high above, two rows of Manhattan glass office towers at golden hour, the camera descending between them toward a gothic cathedral facade below. Warm reflections in the glass, hard afternoon light."
   [fruit-dance]="A figure dances in an open studio, seen from the front, while a large fruit beside them changes from apple to banana to papaya and back on the beat. Clean floor, soft studio light, still camera."
-  [fruit-mecha]="A blocky mecha figure dances on a dark studio sweep between a banana and an apple floating at shoulder height; on the heavy beats each fruit changes into another fruit, and both swell and glow with the bass. Hard studio light, still camera, seen from the front."
+  [fruit-mecha]="A blocky mecha figure dances on a dark studio sweep between a banana and an apple floating at shoulder height; on the heavy beats each fruit bursts apart into flying blocks that reassemble as another fruit, and both swell and glow with the bass. Hard studio light, still camera, front view."
+  [fruit-mecha-morph]="A blocky grey and gold mecha dances on a dark studio floor between two fruits at shoulder height; on every bass swell the fruits swell and glow and change into other fruits, a banana becoming a papaya and an apple becoming a banana, and relax back as the bass fades. Hard studio light, still camera, energetic dancing."
   [fruit-apple-banana]="A single red apple hovers over a dark studio floor, seen from the front; on every bass swell it stretches and bends into a ripe yellow banana and relaxes back into the apple as the bass fades. Hard studio light, still camera."
   [fruit-banana-apple]="A single ripe yellow banana hovers over a dark studio floor, seen from the front; on every bass swell it curls and rounds into a red apple and relaxes back into the banana as the bass fades. Hard studio light, still camera."
   [fruit-apple]="A single large apple rests on a clean studio floor, seen from the front, swelling gently on every bass hit. Soft studio light, still camera."
@@ -42,5 +43,5 @@ mk() { # study mode [extra prepare args]
     --mode "$mode" --frames "$FRAMES" --seed 42 --output "$out" --label "$study-$mode" --prompt "${PROMPT[$study]}" "$@"
   echo "bundle $out"
 }
-for s in diamond pulse cathedral-walls cathedral-gallery cathedral-gallery-grow canyon towers-descent room-walls pyramid-inside pyramid-inside-spin falling fruit-dance fruit-mecha fruit-apple-banana fruit-banana-apple fruit-apple fruit-banana fruit-papaya; do mk "$s" layout-audio; done
+for s in diamond pulse cathedral-walls cathedral-gallery cathedral-gallery-grow canyon towers-descent room-walls pyramid-inside pyramid-inside-spin falling fruit-dance fruit-mecha fruit-mecha-morph fruit-apple-banana fruit-banana-apple fruit-apple fruit-banana fruit-papaya; do mk "$s" layout-audio; done
 for s in cathedral-walls canyon; do mk "$s" union-depth; done

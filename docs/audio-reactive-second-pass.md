@@ -186,7 +186,9 @@ dry track and the CPU room reverb are muxed underneath.
       `fruit-banana-apple` the reverse
    8. `fruit-dance`: front view, the fruit swapping shapes beside the dancer
    9. `fruit-mecha`: the dancer filling the frame between two fruits that both
-      change on the beats, from the owner's `looks-vox/fruit-mecha` still
+      burst apart and reassemble as the next fruit on the two strongest beats,
+      from the owner's `looks-vox/fruit-mecha` still; `fruit-mecha-morph` the
+      same scene with the fruits morphing continuously on the bass
    10. `falling`: straight down between the tower rows to the cathedral
    11. `cathedral-walls` and `canyon` again in `union-depth`
    12. sweep: `cathedral-walls` at motion gain 0.5 and 2

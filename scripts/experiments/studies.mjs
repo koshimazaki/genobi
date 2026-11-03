@@ -3,6 +3,7 @@ export const STUDIES = Object.freeze([
   "fruit",
   "fruit-dance",
   "fruit-mecha",
+  "fruit-mecha-morph",
   "architecture",
   "clockwork",
   "pulse",

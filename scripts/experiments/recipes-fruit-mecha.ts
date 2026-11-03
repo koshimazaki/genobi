@@ -1,8 +1,12 @@
 /**
  * fruit-mecha: the dancer held front-on between two fruits that each step
- * Banana -> Papaya -> Apple on the bass cues, always two different fruits.
- * Built from the 192-voxel fine preset: voxels 0-95 carry the left fruit and
- * 96-191 the right, each a 96-voxel fruit layout placed and scaled on its side.
+ * Banana -> Papaya -> Apple on the two strongest bass peaks, always two
+ * different fruits, each change an explosion that reassembles as the next
+ * fruit. Seven keys must fit the 64 KB recipe, so it is built from the
+ * 96-voxel preset: 48 voxels per fruit, voxels 0-47 left and 48-95 right.
+ *
+ * fruit-mecha-morph: the same scene with no cues, two keys only, the fine
+ * preset's 96 voxels per fruit blended continuously by the low band.
  */
 import { fruitLayouts } from "../../src/world-builder/motion-fruit-layouts";
 import type { Recipe } from "../../src/world-builder/recipe";
@@ -12,8 +16,8 @@ import type {
   SceneVector,
 } from "../../src/world-builder/scene-state";
 import { heldCamera, mapping } from "./recipe-parts";
-import { bakeSequence, peakCues, type Cue } from "./recipe-cues";
-import { MIN_CUE_GAP } from "./recipes-fruit";
+import { peakCues, type Cue } from "./recipe-cues";
+import { MIN_CUE_GAP, tinted } from "./recipes-fruit";
 
 /**
  * fruit-dance's three cues would need seven keys of 192 voxels (73 KB); the
@@ -27,8 +31,8 @@ export const MECHA_FRUITS = ["Banana", "Papaya", "Apple"] as const;
 const ACROSS = { Banana: 0.7, Papaya: 0.6, Apple: 0.6 } as const;
 /** Left opens on the banana (state 0), right on the apple (state 2). */
 export const MECHA_SIDES = [
-  { side: "left", x: -1.1, y: 1.3, start: 0, first: 0 },
-  { side: "right", x: 1.1, y: 1.4, start: 2, first: 96 },
+  { side: "left", x: -1.1, y: 1.3, start: 0 },
+  { side: "right", x: 1.1, y: 1.4, start: 2 },
 ] as const;
 /** Pulse about a point between the fruits: louder pushes them outward. */
 export const MECHA_PIVOT: SceneVector = [0, 1.35, 0];
@@ -59,19 +63,22 @@ function place(
   layout: SceneTransform[],
   label: (typeof MECHA_FRUITS)[number],
   spot: (typeof MECHA_SIDES)[number],
+  first: number,
+  /** Voxel size factor (a coarser layout needs bigger blocks). */
+  grow = 1,
 ) {
   const [x, y, z] = (["x", "y", "z"] as const).map((f) => extent(layout, f));
   const k = ACROSS[label] / Math.max(x.size, y.size);
   // Centimetre rounding keeps seven keys of 192 voxels under 64 KB.
   return Object.fromEntries(
     layout.map((part, n) => [
-      `voxel-${String(spot.first + n).padStart(3, "0")}`,
+      `voxel-${String(first + n).padStart(3, "0")}`,
       {
         ...part,
         x: r2(spot.x + (part.x - x.mid) * k),
         y: r2(spot.y + (part.y - y.mid) * k),
         z: r2((part.z - z.mid) * k),
-        scale: r2(Math.max(MIN_SCALE, part.scale * k)),
+        scale: r2(Math.max(MIN_SCALE, part.scale * k) * grow),
       },
     ]),
   );
@@ -85,38 +92,76 @@ export function mechaFraming(fov = MECHA_FOV) {
   return { frame, distance, centre: frame / 2 - FOOT_MARGIN };
 }
 
-export function fruitMecha(recipe: Recipe, inputCues?: Cue[]) {
+/** Frames from the hold to the burst, and from the burst to the next fruit. */
+export const BURST_FRAMES = 8;
+/** How far each voxel flies out, in fruit radii, at the burst. */
+export const BURST_REACH = [1.5, 2.5] as const;
+
+/** A repeatable 0-1 value per voxel and channel. */
+function seeded(n: number, channel: number) {
+  const v = Math.sin(n * 12.9898 + channel * 78.233) * 43758.5453;
+  return v - Math.floor(v);
+}
+
+/**
+ * The fruit blown apart: every voxel pushed out from its fruit's centre by
+ * 1.5 to 2.5 fruit radii (fixed per voxel), with a little spin. The burst
+ * keeps the outgoing fruit's colour.
+ */
+export function burst(
+  objects: Record<string, SceneTransform>,
+  centre: SceneVector,
+  radius: number,
+) {
+  return Object.fromEntries(
+    Object.entries(objects).map(([id, part]) => {
+      const n = Number(id.slice(6));
+      const d = [part.x - centre[0], part.y - centre[1], part.z - centre[2]];
+      let length = Math.hypot(...d);
+      if (length < 1e-3) {
+        // A voxel at the centre takes a seeded direction.
+        d.splice(0, 3, seeded(n, 1) - 0.5, seeded(n, 2) - 0.5, 0.3);
+        length = Math.hypot(...d);
+      }
+      const reach =
+        radius *
+        (BURST_REACH[0] + (BURST_REACH[1] - BURST_REACH[0]) * seeded(n, 0));
+      return [
+        id,
+        {
+          ...part,
+          x: r2(part.x + (d[0] / length) * reach),
+          y: r2(part.y + (d[1] / length) * reach),
+          z: r2(part.z + (d[2] / length) * reach),
+          rotation: r2((seeded(n, 3) - 0.5) * 2),
+        },
+      ];
+    }),
+  );
+}
+
+/** Every other voxel of a 96-voxel layout; `place` enlarges the blocks by cbrt 2. */
+const coarse = (layout: SceneTransform[]) =>
+  layout.filter((_, n) => n % 2 === 0);
+
+/** One side's three fruits, placed and coloured, voxel ids from `first`. */
+function sideFruits(
+  spot: (typeof MECHA_SIDES)[number],
+  layouts: SceneTransform[][],
+  first: number,
+  grow: number,
+) {
+  return MECHA_FRUITS.map((label, i) =>
+    tinted(place(layouts[i], label, spot, first, grow), label),
+  );
+}
+
+/** The dancer, camera, pivot and bass glow both mecha studies share. */
+function mechaStage(recipe: Recipe, pulse: number, glow: number) {
   const motion = recipe.motion!;
-  if (motion.instances?.count !== 192)
-    throw new Error("fruit-mecha needs the 192-voxel fine fruit preset.");
-  const layouts = fruitLayouts(96);
-  const template = motion.stateKeys[0];
-  const sideStates = MECHA_SIDES.map((spot) =>
-    MECHA_FRUITS.map((label, i): SceneStateKey => ({
-      ...structuredClone(template),
-      id: `${spot.side}-${label.toLowerCase()}`,
-      label,
-      objects: place(layouts[i], label, spot),
-    })),
-  );
-  const cues =
-    inputCues ??
-    // fruit-dance's rule (top bass peaks 2 s apart, a quick snap), two cues.
-    peakCues(recipe.bandEnvelopes.low, MECHA_CUES, MIN_CUE_GAP, 5);
-  const sequences = MECHA_SIDES.map((spot) =>
-    Array.from({ length: cues.length + 1 }, (_, i) => (spot.start + i) % 3),
-  );
-  const [left, right] = sideStates.map((states, s) =>
-    bakeSequence(states, sequences[s], cues, recipe.frames),
-  );
-  motion.stateKeys = left.map((key, i) => ({
-    ...key,
-    label: `${key.label} | ${right[i].label}`,
-    objects: { ...key.objects, ...right[i].objects },
-  }));
   motion.pivot = [...MECHA_PIVOT];
   // No twist: about the shared pivot it would swing the fruits round the dancer.
-  motion.mappings = [mapping("pulse", "low", "scale", MECHA_PULSE)];
+  motion.mappings = [mapping("pulse", "low", "scale", pulse)];
   recipe.audioRoutes = [
     {
       id: "glow-low",
@@ -124,7 +169,7 @@ export function fruitMecha(recipe: Recipe, inputCues?: Cue[]) {
       source: "low",
       target: "primitives",
       property: "glow",
-      amount: MECHA_GLOW,
+      amount: glow,
       threshold: 0,
       invert: false,
       lerp: 1,
@@ -140,20 +185,158 @@ export function fruitMecha(recipe: Recipe, inputCues?: Cue[]) {
     [0, r2(centre), 0],
     MECHA_FOV,
   );
+}
+
+const joined = (a: Record<string, SceneTransform>, b: typeof a) => ({
+  ...a,
+  ...b,
+});
+
+export function fruitMecha(recipe: Recipe, inputCues?: Cue[]) {
+  const motion = recipe.motion!;
+  if (motion.instances?.count !== 96)
+    throw new Error("fruit-mecha needs the 96-voxel fruit preset.");
+  const layouts = fruitLayouts(96).map(coarse);
+  const template = motion.stateKeys[0];
+  const sides = MECHA_SIDES.map((spot, s) =>
+    sideFruits(spot, layouts, s * 48, Math.cbrt(2)),
+  );
+  const last = recipe.frames - 1;
+  // The top two bass peaks 2 s apart, each with room for its burst window.
+  const cues =
+    inputCues ??
+    peakCues(recipe.bandEnvelopes.low, MECHA_CUES, MIN_CUE_GAP, BURST_FRAMES)
+      .filter((cue) => cue.frame > BURST_FRAMES)
+      .map((cue) => ({
+        ...cue,
+        frame: cue.frame - BURST_FRAMES,
+        transitionFrames: 2 * BURST_FRAMES,
+      }));
+  const shown = (s: number, i: number) => (MECHA_SIDES[s].start + i) % 3;
+  const label = (i: number) =>
+    `${MECHA_FRUITS[shown(0, i)]} | ${MECHA_FRUITS[shown(1, i)]}`;
+  const state = (i: number) =>
+    joined(sides[0][shown(0, i)], sides[1][shown(1, i)]);
+  const exploded = (i: number) =>
+    joined(
+      ...(MECHA_SIDES.map((spot, s) =>
+        burst(
+          sides[s][shown(s, i)],
+          [spot.x, spot.y, 0],
+          ACROSS[MECHA_FRUITS[shown(s, i)]] / 2,
+        ),
+      ) as [Record<string, SceneTransform>, Record<string, SceneTransform>]),
+    );
+  const key = (
+    id: string,
+    frame: number,
+    name: string,
+    objects: Record<string, SceneTransform>,
+  ): SceneStateKey => ({
+    ...structuredClone(template),
+    id,
+    label: name,
+    frame: Math.min(last, frame),
+    easing: "easeInOut",
+    objects,
+  });
+  motion.stateKeys = [
+    key("start", 0, label(0), state(0)),
+    ...cues.flatMap((cue, i) => {
+      const peak = cue.frame + BURST_FRAMES;
+      return [
+        key(`hold-${i + 1}`, cue.frame, label(i), state(i)),
+        key(`burst-${i + 1}`, peak, `${label(i)} (burst)`, exploded(i)),
+        key(`arrive-${i + 1}`, peak + BURST_FRAMES, label(i + 1), state(i + 1)),
+      ];
+    }),
+  ];
+  motion.transitionStyle = "direct";
+  mechaStage(recipe, MECHA_PULSE, MECHA_GLOW);
   recipe.prompt =
-    "A blocky mecha figure dances on a dark studio sweep between a banana and an apple floating at shoulder height; on the heavy beats each fruit changes into another fruit, and both swell and glow with the bass. Hard studio light, still camera, front view.";
+    "A blocky mecha figure dances on a dark studio sweep between a banana and an apple floating at shoulder height; on the heavy beats each fruit bursts apart into flying blocks that reassemble as another fruit, and both swell and glow with the bass. Hard studio light, still camera, front view.";
   const names = (s: number) =>
-    sequences[s].map((i) => MECHA_FRUITS[i]).join(" > ");
+    Array.from(
+      { length: cues.length + 1 },
+      (_, i) => MECHA_FRUITS[shown(s, i)],
+    ).join(" > ");
   return {
     cues,
     design: {
       camera: `held front view at ${CAMERA_HEIGHT} m, ${MECHA_FOV} degree lens, dancer ${MECHA_FILL * 100}% of the frame`,
-      fruit: "left at x -1.1 y 1.3, right at x 1.1 y 1.4, 0.6-0.7 m across",
+      fruit:
+        "48 voxels each; left at x -1.1 y 1.3, right at x 1.1 y 1.4, 0.6-0.7 m across",
       cueRule: `top ${MECHA_CUES} low-band peaks at least ${MIN_CUE_GAP} frames (2 s) apart`,
+      burst: `hold ${BURST_FRAMES} frames before the peak, burst ${BURST_REACH.join("-")} radii out at the peak, the next fruit ${BURST_FRAMES} frames after`,
       left: names(0),
       right: names(1),
       mappings: `scale low ${MECHA_PULSE} about ${MECHA_PIVOT.join(", ")}; glow low ${MECHA_GLOW} (audio route)`,
       avatar: "mannequin, dance, scene centre",
     },
+  };
+}
+
+/** fruit-mecha-morph's glow at full bass. */
+export const MECHA_MORPH_GLOW = 0.6;
+/**
+ * The morph's low pulse. One pivot between the fruits pushes them outward as
+ * they swell, so it stays 0.3 rather than 0.5.
+ */
+export const MECHA_MORPH_PULSE = MECHA_PULSE;
+/** Morph progress per unit of `low`, as the single-fruit morphs. */
+export const MECHA_MORPH_AMOUNT = 1.2;
+
+export function fruitMechaMorph(recipe: Recipe) {
+  const motion = recipe.motion!;
+  if (motion.instances?.count !== 192)
+    throw new Error("fruit-mecha-morph needs the 192-voxel fine fruit preset.");
+  const layouts = fruitLayouts(96);
+  const template = motion.stateKeys[0];
+  const sides = MECHA_SIDES.map((spot, s) =>
+    sideFruits(spot, layouts, s * 96, 1),
+  );
+  // Rest: banana | apple. Peak: each side's next fruit, papaya | banana.
+  const at = (i: number) =>
+    joined(
+      sides[0][(MECHA_SIDES[0].start + i) % 3],
+      sides[1][(MECHA_SIDES[1].start + i) % 3],
+    );
+  const name = (i: number) =>
+    MECHA_SIDES.map((spot) => MECHA_FRUITS[(spot.start + i) % 3]).join(" | ");
+  motion.stateKeys = [0, 1].map((i) => ({
+    ...structuredClone(template),
+    id: i ? "peak" : "rest",
+    label: name(i),
+    frame: i ? recipe.frames - 1 : 0,
+    easing: "linear" as const,
+    objects: at(i),
+  }));
+  motion.transitionStyle = "direct";
+  motion.morphControl = {
+    version: 1,
+    enabled: true,
+    originStateId: "rest",
+    progress: {
+      mode: "manual",
+      position: 0,
+      source: "low",
+      // Cancel the preset's intensity so the blend reads the band directly.
+      amount: Math.min(2, MECHA_MORPH_AMOUNT / motion.intensity),
+    },
+    target: {
+      position: 0,
+      amount: 0,
+      mode: "blend",
+      routes: [{ stateId: "peak", source: "low", amount: 1, enabled: false }],
+    },
+  };
+  mechaStage(recipe, MECHA_MORPH_PULSE, MECHA_MORPH_GLOW);
+  recipe.prompt =
+    "A blocky grey and gold mecha dances on a dark studio floor between two fruits at shoulder height; on every bass swell the fruits swell and glow and change into other fruits, a banana becoming a papaya and an apple becoming a banana, and relax back as the bass fades. Hard studio light, still camera, energetic dancing.";
+  return {
+    camera: `held front view at ${CAMERA_HEIGHT} m, ${MECHA_FOV} degree lens, dancer ${MECHA_FILL * 100}% of the frame`,
+    morph: `continuous: morphControl ${name(0)} -> ${name(1)} on low, progress = low x ${MECHA_MORPH_AMOUNT}, clamped at 1`,
+    mappings: `scale low ${MECHA_MORPH_PULSE} about ${MECHA_PIVOT.join(", ")} (one shared pivot, so not raised); glow low ${MECHA_MORPH_GLOW}`,
+    avatar: "mannequin, dance, scene centre",
   };
 }

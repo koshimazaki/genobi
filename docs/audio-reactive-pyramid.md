@@ -166,11 +166,20 @@ still (pyramid-inside pans 45 degrees) and move the space on the `low` band.
 - **fruit-mecha** matches the owner's `looks-vox/fruit-mecha` still: the
   dancer, held front-on from 1 m with a 40 degree lens, fills 85 percent of
   the frame (the distance comes from the lens and that share), between two
-  fruits at shoulder height, x -1.1 and +1.1. The 192-voxel fine preset is
-  split in half, one 96-voxel fruit per side, 0.6 to 0.7 m across. Left opens
-  on the banana and right on the apple; on each of the top two `low` peaks
-  (2 s apart) both step Banana, Papaya, Apple, so they always differ. Three
-  cues would need seven 192-voxel keys, 73 KB against the 64 KB recipe bound.
+  fruits at shoulder height, x -1.1 and +1.1. Left opens on the banana and
+  right on the apple; on each of the top two `low` peaks (2 s apart) both
+  step Banana, Papaya, Apple, so they always differ. Each change is a burst
+  (the owner: "they should explode and then move into the new thing"): the
+  fruit holds until 8 frames before the peak, every voxel is 1.5 to 2.5
+  fruit radii out from its centre with a little spin at the peak (fixed per
+  voxel, in the outgoing colour), and the next fruit is whole 8 frames
+  after. Seven keys must fit the 64 KB recipe bound, so the fruits use the
+  96-voxel preset, 48 coarser voxels each (about 47 KB at 193 frames).
+- **fruit-mecha-morph** is the same scene with no cues: two keys, banana |
+  apple at rest and papaya | banana at the peak, 96 voxels per fruit from
+  the fine preset, blended by `morphControl` on `low` (x 1.2) like the
+  single-fruit morphs, with the glow at 0.6. The pulse stays 0.3: the one
+  pivot between the fruits already pushes them outward as they swell.
   Both pulse on `low` (scale 0.3) about a point between them, which pushes
   them outward, and glow on `low` (0.5) through a `primitives` glow route.
   No twist: about the shared pivot it would swing them round the dancer.
@@ -193,9 +202,8 @@ still (pyramid-inside pans 45 degrees) and move the space on the `low` band.
   (`FRUIT_COLOURS`: banana `#f2d14b`, papaya `#f0a040`, apple `#c8322b`), so
   the RGB guide shows the fruit, and the morph blends the colour with the
   shape. The renderer gives each voxel its own material, so the per-object
-  colour reaches the capture. fruit-dance, the single fruits and both morph
-  studies are coloured. fruit-mecha is not: it is already 59 KB, and a colour
-  on its 192 voxels in five keys adds about 17 KB, past the 64 KB recipe bound.
+  colour reaches the capture. fruit-dance, the single fruits, both morph
+  studies and both mecha studies are coloured.
 
 Every capture now writes `keyframes.json` with `frame-0000.png`,
 `frame-closed-NNNN.png` (loudest smoothed `low`) and `frame-open-NNNN.png`

@@ -23,7 +23,7 @@ import {
 import { fruitDance, fruitMorph, singleFruit } from "./recipes-fruit";
 import { cathedralGallery, towersDescent } from "./recipes-clap";
 import { diamondStudy } from "./recipes-diamond";
-import { fruitMecha } from "./recipes-fruit-mecha";
+import { fruitMecha, fruitMechaMorph } from "./recipes-fruit-mecha";
 import { STUDIES } from "./studies.mjs";
 
 export { bakeCues, bakeSequence, peakCues, selectCues } from "./recipe-cues";
@@ -36,8 +36,10 @@ const PRESETS: Record<Study, string> = {
   fruit: "fruit-morph-fine",
   // 96 blocks, not 192: up to seven keys (three cues) must fit the 64 KB recipe.
   "fruit-dance": "fruit-morph",
+  // Two 48-voxel fruits side by side: seven burst keys must fit 64 KB.
+  "fruit-mecha": "fruit-morph",
   // Two 96-voxel fruits side by side: the fine preset's 192 ids split in half.
-  "fruit-mecha": "fruit-morph-fine",
+  "fruit-mecha-morph": "fruit-morph-fine",
   architecture: "voxel-architecture-128",
   clockwork: "voxel-architecture-128",
   pulse: "voxel-architecture-128",
@@ -302,7 +304,8 @@ export function createStudy(
     const built = fruitMecha(recipe, inputCues);
     cues = built.cues;
     design = built.design;
-  } else if (study === "diamond") design = diamondStudy(recipe);
+  } else if (study === "fruit-mecha-morph") design = fruitMechaMorph(recipe);
+  else if (study === "diamond") design = diamondStudy(recipe);
   else if (
     study === "fruit-apple" ||
     study === "fruit-banana" ||
@@ -333,10 +336,12 @@ export function createStudy(
       study,
       sourcePreset: preset,
       status: "authored-guide-not-LTX-qualified",
-      cues: cues.map((cue, i) => ({
+      cues: cues.map((cue) => ({
         ...cue,
         arrivalFrame: cue.frame + cue.transitionFrames,
-        target: validated.motion!.stateKeys[(i + 1) * 2].label,
+        target: validated.motion!.stateKeys.find(
+          (key) => key.frame === cue.frame + cue.transitionFrames,
+        )!.label,
         ...(cue.peak === undefined ? {} : { peak: cue.peak }),
       })),
       indoorFromFrame,

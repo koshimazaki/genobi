@@ -2,6 +2,7 @@ export declare const STUDIES: readonly [
   "fruit",
   "fruit-dance",
   "fruit-mecha",
+  "fruit-mecha-morph",
   "architecture",
   "clockwork",
   "pulse",
