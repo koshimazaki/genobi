@@ -64,7 +64,7 @@ user action through every layer.
   LTX template: one LTX-2.5 (open weights) + AKUSPACE LoRA take through three
   rooms, its reverb changing with each, and Acoustic Space end to end.
 - [Dance with Fruits](fruits-swap.md) — the fifth mix template, the
-  character swap: the owner's four LTX-2.5 (open weights) renders of one dance
+  content swap: the owner's four LTX-2.5 (open weights) renders of one dance
   guide, opened by an apple-logo title splash, swapped on the loop and the
   drop, with pixel words and fruit and the house end card;
   [its recipes](fruits-swap-recipes.md): a speech bubble, a pixel fruit shower
