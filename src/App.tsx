@@ -253,7 +253,6 @@ export default function App() {
     composerRef.current?.scrollIntoView(smoothScroll("center"));
   }
   function submit() {
-    // The pending asset handoff must not launch with an older source video.
     if (uploading || uploadingVideo) return;
     if (
       ((!key && !hasServerKey) || (isImage(generator) && !payer)) &&
@@ -434,9 +433,9 @@ export default function App() {
                     hasKey={Boolean(key)}
                     recreating={recreating}
                     disabled={
-                       uploading ||
-                       uploadingVideo ||
-                       images.loading ||
+                      uploading ||
+                      uploadingVideo ||
+                      images.loading ||
                       composerBlocked(state, sourceId, composed)
                     }
                     onSubmit={submit}
