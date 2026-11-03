@@ -23,6 +23,8 @@ export default function GenerateAction({
   onResume,
   onUpdate,
   onConfigure,
+  queued,
+  onClearQueue,
 }: {
   state: ComposerState;
   jobs: Job[];
@@ -34,6 +36,9 @@ export default function GenerateAction({
   onResume: () => void;
   onUpdate: (changes: Partial<ComposerState>) => void;
   onConfigure?: () => void;
+  /** Runs waiting in the generation queue; with `onClearQueue`, Generate queues while busy. */
+  queued?: number;
+  onClearQueue?: () => void;
 }) {
   const { generator, model } = state;
   const providerChoices = !isImage(generator)
@@ -76,6 +81,9 @@ export default function GenerateAction({
             })
       }
       onSubmit={onSubmit}
+      onQueue={onClearQueue ? onSubmit : undefined}
+      queued={queued}
+      onClearQueue={onClearQueue}
       onResume={onResume}
       onConfigure={onConfigure}
     />
