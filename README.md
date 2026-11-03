@@ -71,6 +71,7 @@ The apartment and cathedral studies also render [changing room sound](docs/world
 
 ## Create, edit and revise
 
+- **Make audio-reactive video, repeatably.** A World Builder scene moves to a track window, one still sets the look and LTX-2.5 Layout-to-Render paints it: three videos and thirteen presets with track, subject and space swaps an agent can rerun. [The featured workflow](audio-reactive/README.md).
 - **Edit an existing Klein image.** Drop your source straight onto Image layout, add bounding boxes and describe changes. Resize the preview from its corner for detailed work.
 - **Direct across models.** Camera controls adapt to FLUX video, LTX and
   MiniMax H3 using their documented prompting language. Klein has image framing,

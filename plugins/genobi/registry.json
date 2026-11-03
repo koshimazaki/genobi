@@ -10,6 +10,7 @@
         "genobi_workflow_select",
         "genobi_deployment_stage",
         "genobi-akuspace",
+        "genobi-audio-reactive",
         "genobi-camera",
         "genobi-comfy",
         "genobi-upscale"
@@ -74,6 +75,7 @@
         "falling-room",
         "genobi-3d",
         "genobi-akuspace",
+        "genobi-audio-reactive",
         "genobi-swords",
         "genobi-teaser",
         "genobi-teaser-run"
@@ -143,6 +145,7 @@
         "falling-room",
         "genobi-3d",
         "genobi-akuspace",
+        "genobi-audio-reactive",
         "genobi-camera",
         "genobi-cli",
         "genobi-comfy",
@@ -197,6 +200,7 @@
         "anime-teaser",
         "audio-visual",
         "genobi-akuspace",
+        "genobi-audio-reactive",
         "genobi-camera"
       ]
     },
@@ -287,6 +291,10 @@
         "genobi_media_space",
         "genobi-swords"
       ]
+    },
+    "world-builder": {
+      "meaning": "World Builder and Scene Adapter",
+      "entries": ["genobi-audio-reactive"]
     },
     "bundle": {
       "meaning": "The `director.bundle.v1` project format",
@@ -538,6 +546,7 @@
         "character-piece",
         "falling-room",
         "genobi-akuspace",
+        "genobi-audio-reactive",
         "genobi-camera",
         "genobi-cli",
         "genobi-comfy",
@@ -569,6 +578,7 @@
         "character-piece",
         "falling-room",
         "genobi-akuspace",
+        "genobi-audio-reactive",
         "genobi-camera",
         "genobi-cli",
         "genobi-comfy",
@@ -1308,6 +1318,22 @@
         "genobi_workflows",
         "genobi_workflow_select"
       ]
+    },
+    {
+      "kind": "skill",
+      "name": "genobi-audio-reactive",
+      "description": "Regenerate or vary Genobi's featured audio-reactive workflow - a World Builder study that moves to a track window, one aligned still, and one LTX-2.5 Layout-to-Render graph - from its presets (pyramid, towers, cathedral, hall, booth, robot with fruits, fruit morphs, ship to mecha, diamond). Covers the track, subject and space swaps, the knobs that worked, the box render and the review. Every paid step waits for the person's yes.",
+      "tags": ["agents", "ltx", "world-builder", "sound", "workflows"],
+      "docs": [
+        "audio-reactive/README.md",
+        "audio-reactive/presets/README.md",
+        "docs/audio-reactive-second-pass.md",
+        "docs/audio-reactive-pyramid.md",
+        "docs/vast-runner.md",
+        "docs/genobi-cli.md"
+      ],
+      "path": "plugins/genobi/skills/genobi-audio-reactive/SKILL.md",
+      "tools": ["genobi_quote", "genobi_submit"]
     },
     {
       "kind": "skill",
