@@ -11,7 +11,9 @@ added on 3 November 2026, and version two of
 by LTX-2.5 Layout-to-Render (open weights) on the owner's track "Adaptive
 Reverb v2", play one after another with each room's own CPU room sound under
 its section: a drop between towers, a cathedral, inside a pyramid, outside it
-in the desert, and a small studio. Nothing is generated, quoted or paid when
+in the desert, and a small studio, where the singer of the original Adaptive
+reverb take turns to the camera and smiles while the credit is traced in
+beside her. Nothing is generated, quoted or paid when
 you open it. In the Gallery it is the card right after Adaptive reverb,
 **Audio Reactive Drop · 3D · LTX template · v2**.
 
@@ -21,7 +23,7 @@ you open it. In the Gallery it is the card right after Adaptive reverb,
 | Cut      | `shared/templates/audio-reactive-drop.cut.json`, written by `drop-make-cut.py`                                       |
 | Media    | `public/media/director-templates/audio-reactive-drop/`                                                               |
 | Pipeline | [`audio-reactive/edit/`](https://github.com/koshimazaki/Genobi/blob/main/audio-reactive/edit/audio-reactive-drop.md) |
-| Showcase | [v1 and its memory](director-bundle/showcase/audio-reactive-drop/README.md)                                          |
+| Showcase | [v1, v2 and their memory](director-bundle/showcase/audio-reactive-drop/README.md)                                    |
 | Tests    | `tests/audio-reactive-drop.test.ts`, `tests/gallery-badges-order.test.ts`                                            |
 
 ## Every layer swaps
@@ -37,13 +39,23 @@ in four slices, each room is its own file and its own shot:
 | 02   | Cathedral       | `drop-cathedral.mp4`       | 174–342 | 7.25–14.25  |
 | 03   | Pyramid inside  | `drop-pyramid-inside.mp4`  | 342–511 | 14.25–21.29 |
 | 04   | Pyramid outside | `drop-pyramid-outside.mp4` | 511–679 | 21.29–28.29 |
-| 05   | Studio          | `drop-studio.mp4`          | 679–776 | 28.29–32.33 |
+| 05   | Studio (singer) | `drop-studio.mp4`          | 679–776 | 28.29–32.33 |
 
 Each file holds exactly its shot (`sourceSeconds` 0), so a new room drops in
 with no re-timing: replace the file under the same name, or point the shot at
 another asset in the Editor. The track is `drop-track.mp3`, one file and its
-`durationSeconds`. The end card's still is `drop-end-card.jpg`, a frame of the
-studio at 31 s, and every word on it is a parameter.
+`durationSeconds`.
+
+The studio's picture is not a World Builder room render: it is the last 97
+frames (26.417–30.458 s) of the original Adaptive reverb take
+(`adaptive-reverb/reverb-ltx.mp4`, 1280 × 720), upscaled once to 1920 × 1080,
+the singer turning to the camera and smiling. Its sound is still the booth
+capture's: the track carries the booth's room sound under it (RT60 0.20 to
+0.34 s), and the singer clip itself was not measured. To swap the ending,
+replace `drop-studio.mp4` with any 97-frame, 1920 × 1080 clip, or point the
+studio shot at `drop-studio-booth.mp4`, the booth's LTX render that the
+template also lists. The credit's words are the `end-title` layer's `text`
+and `line` parameters; its `x` is the text's centre.
 
 The hologram over both pyramid rooms and the depth heatmap in the dancer's box
 are baked into the picture. To drop them, use the plain pair the template also
@@ -63,9 +75,13 @@ PYRAMID EXTERIOR`, `CAM 03 // STUDIO`).
 - **Pyramid inside**: a `gen-status` pill, then the dancer tracked by a
   `ui-focus` box with the depth heatmap inside it.
 - **Pyramid outside**: a wireframe reveal, then PYRAMID · DESERT traced in.
-- **Studio**: one `build-panel` readout.
-- **End card** (`end-card-still`): GENOBI // 3D + LTX, REACTIVE SPACES,
-  ADAPTIVE REVERB · V2.
+- **Studio**: one `build-panel` readout, four track beats.
+- **The ending** (`end-title`, `gen-title` traced text): REACTIVE SPACES and
+  ADAPTIVE REVERB · V2 / WORLD BUILDER ROOMS · LTX-2.5 / KOSHIMAZAKI traced in
+  beside the singer for the last 5.2 track beats, at x 0.31 (the text centre;
+  at 0.2 it clipped at the left edge), y 0.3, size 46. No still covers the
+  picture. The owner approved this ending on 3 November 2026: _"great, use it
+  as official template with all the layers"_.
 
 ## The grid is double time
 
@@ -95,7 +111,7 @@ room's dynamic room sound at wet 0.45 under the dry track, crossfaded over
 | Cathedral       | 7.25–14.25  | 7.0 to 20.4 m: the nave                                              | 2.01 to 3.48 s |
 | Pyramid inside  | 14.25–21.29 | 9.6 to 29.4 m                                                        | 1.54 to 3.13 s |
 | Pyramid outside | 21.29–28.29 | none: open air, no enclosure, the dry track                          | none           |
-| Studio          | 28.29–32.33 | 1.0 to 3.0 m: the booth                                              | 0.20 to 0.34 s |
+| Studio          | 28.29–32.33 | 1.0 to 3.0 m: the booth capture, under the singer's picture          | 0.20 to 0.34 s |
 
 The towers' street and the cathedral's nave are proxies whose width now
 follows the picture (`rowGap` in `scripts/experiments/recipes-clap.ts`): the
@@ -119,13 +135,22 @@ npx tsx audio-reactive/edit/drop-build-bundle.mts out/drop.zip
 DIRECTOR_URL=http://127.0.0.1:4317 node audio-reactive/edit/drop-render.mjs out/drop.zip out/drop.mp4
 ```
 
-Then a gallery copy under 25 MiB, a poster from the cathedral, and the light
+Then a gallery copy under 25 MiB (libx264 4 Mb/s, AAC 192 kb/s,
+`+faststart`), a poster from the cathedral readout at frame 240, and the light
 card previews (`.preview.mp4`, `.preview.jpg`, [media preparation](media-previews.md)).
+
+The template's media is about 64 MiB in all (each file under 25 MiB, the
+project under the 150 MiB the tests allow); v1's studio file, kept so v1
+opens as it was, is another 1.2 MiB under `public/media/showcase/`.
 
 ## Limits
 
-- Nobody listened to the cut in the build. The room changes and their timing
-  were checked by eye from frames; the sound was measured, not heard.
+- Nobody listened to the cut in the build, v2 included. The room changes and
+  their timing were checked by eye from frames; the sound was measured, not
+  heard.
+- The studio's picture (the original take's singer) and its sound (the booth
+  capture's decay) come from different sources. The singer clip was not
+  measured, and the original take's own reverb is not in the track.
 - The RT60s are the shoebox model's, computed from the evaluated geometry, not
   measurements of the render. The impulse responses are capped at 4 s (the
   shoebox default), so the towers' longest decays are truncated.

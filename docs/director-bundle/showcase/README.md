@@ -22,7 +22,7 @@ the current cut without scrolling past v1.
 | [Genobi teaser](genobi-teaser/README.md)             | v1 to v3 | Genobi teaser       |
 | [Bloom](bloom-teaser/README.md)                      | v1       | Bloom               |
 | [Adaptive reverb](adaptive-reverb/README.md)         | v1 to v3 | Adaptive reverb     |
-| [Audio Reactive Drop](audio-reactive-drop/README.md) | v1       | Audio Reactive Drop |
+| [Audio Reactive Drop](audio-reactive-drop/README.md) | v1, v2   | Audio Reactive Drop |
 
 ## What a folder holds
 

@@ -3,7 +3,6 @@ import { describe, expect, it } from "vitest";
 import { TRUSTED_RECIPES } from "../shared/director/graphic-commands";
 import {
   audioReactiveDrop,
-  DROP_END_CARD,
   DROP_ROOMS,
 } from "../shared/templates/audio-reactive-drop";
 import { findMixTemplate } from "../shared/templates/catalogue";
@@ -103,10 +102,37 @@ describe("Audio Reactive Drop, the 3D + LTX template v2", () => {
     const title = cut.layers.find((l) => l.id === "title-0")!;
     expect(title).toMatchObject({ startBeat: 5, beats: 28 });
     expect(title.parameters.duration).toBe(4);
-    const end = cut.layers.find((l) => l.module === "end-card-still")!;
+    // The studio readout runs four track beats (eight on the grid).
+    expect(cut.layers.find((l) => l.id === "caption-5")).toMatchObject({
+      module: "build-panel",
+      beats: 8,
+    });
+    // The ending is the singer with the credit traced in beside her, no still.
+    expect(cut.layers.some((l) => l.module === "end-card-still")).toBe(false);
+    const end = cut.layers.find((l) => l.id === "end-title")!;
+    expect(end).toMatchObject({ module: "gen-title", lane: "cards" });
+    expect(end.beats).toBeCloseTo(10.4, 6);
     expect(end.startBeat + end.beats).toBeCloseTo(cut.beats, 6);
-    expect(end.parameters.still).toBe(DROP_END_CARD);
-    expect(statSync(`public${DROP_END_CARD}`).isFile()).toBe(true);
+    expect(end.parameters).toMatchObject({
+      text: "REACTIVE SPACES",
+      mode: "trace-texts",
+      // gen-title's x is the text's centre: at 0.2 the title clipped.
+      x: 0.31,
+      y: 0.3,
+      size: 46,
+      plate: 0.3,
+    });
+    expect(ids).toHaveLength(24);
+  });
+
+  it("ends on the original take's singer, with the booth kept as a swap", () => {
+    const studio = cut.shots.at(-1)!;
+    expect(studio.asset).toBe("drop-studio");
+    expect(frames(mix.media["drop-studio"].durationSeconds)).toBe(97);
+    expect(mix.media["drop-studio-booth"].durationSeconds).toBe(
+      mix.media["drop-studio"].durationSeconds,
+    );
+    expect(cut.shots.some((s) => s.asset === "drop-studio-booth")).toBe(false);
   });
 
   it("keeps the bundled media within the Pages limits", () => {

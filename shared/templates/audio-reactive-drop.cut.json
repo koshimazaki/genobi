@@ -50,7 +50,7 @@
     },
     {
       "asset": "drop-studio",
-      "label": "Studio · the small booth",
+      "label": "Studio · the singer turns to the camera",
       "sourceSeconds": 0,
       "startBeat": 129,
       "beats": 18.44,
@@ -469,7 +469,7 @@
       "kind": "graphics",
       "lane": "captions",
       "startBeat": 131.184,
-      "beats": 12,
+      "beats": 8,
       "opacity": 1,
       "parameters": {
         "side": "left",
@@ -483,27 +483,30 @@
       }
     },
     {
-      "id": "end-card",
-      "name": "End card · Reactive spaces",
-      "module": "end-card-still",
+      "id": "end-title",
+      "name": "Reveal · Reactive spaces",
+      "module": "gen-title",
       "kind": "graphics",
-      "lane": "end",
+      "lane": "cards",
       "startBeat": 137.04,
       "beats": 10.4,
       "opacity": 1,
       "parameters": {
-        "eyebrow": "GENOBI // 3D + LTX",
-        "title": "REACTIVE SPACES",
-        "subtitle": "ADAPTIVE REVERB · V2",
-        "credit1": "WORLD BUILDER ROOMS · LTX-2.5 OPEN WEIGHTS",
-        "credit2": "DYNAMIC ROOM SOUND · KOSHIMAZAKI",
+        "text": "REACTIVE SPACES",
+        "line": "ADAPTIVE REVERB · V2  /  WORLD BUILDER ROOMS · LTX-2.5  /  KOSHIMAZAKI",
         "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
-        "color": "#62f2e4",
-        "accent": "#f2b84b",
-        "steps": "Building the rooms / Capturing the beat / Rendering in LTX-2.5",
-        "done": "Open weights",
-        "duration": 2.0,
-        "still": "/media/director-templates/audio-reactive-drop/drop-end-card.jpg"
+        "size": 46,
+        "color": "#f6f8f2",
+        "muted": "#cfd6d2",
+        "accent": "#62f2e4",
+        "x": 0.31,
+        "y": 0.3,
+        "duration": 1.6,
+        "mode": "trace-texts",
+        "steps": "Scanning / Tracing / Inking",
+        "done": "Locked",
+        "fadeAt": 60,
+        "plate": 0.3
       }
     }
   ]

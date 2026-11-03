@@ -4,9 +4,6 @@ import type { HouseTemplate, TemplateMix } from "./types";
 
 const DIR = "/media/director-templates/audio-reactive-drop" as const;
 
-/** The end card's still: a frame of the studio at 31 s, one file to swap. */
-export const DROP_END_CARD = `${DIR}/drop-end-card.jpg` as const;
-
 /**
  * The five rooms in cut order, each its own shot over its own file, with the
  * room sound measured from its capture's room-sound.json receipt (the
@@ -17,7 +14,10 @@ export const DROP_END_CARD = `${DIR}/drop-end-card.jpg` as const;
  * towers' street proxy and the nave proxy follow the measured gap of their
  * side rows (scripts/experiments/recipes-clap.ts), and the bundled track
  * carries those re-captures (docs/audio-reactive-drop.md). The pyramid
- * outside is open air: no room is modelled for it.
+ * outside is open air: no room is modelled for it. The studio's picture is
+ * the singer from the original Adaptive reverb take, turning to the camera;
+ * its width and RT60 are the booth capture's, whose room sound the track
+ * carries under it. The singer clip itself was not measured.
  */
 export const DROP_ROOMS = [
   {
@@ -65,13 +65,16 @@ const video = (id: string, durationSeconds: number) => ({
 });
 
 /**
- * The bundled media: the five rooms, each cut from the assembled picture
- * (hologram, dancer heatmap and the cathedral's floor pulse baked in) at its
- * own first frame for exactly its shot, 1920 × 1080, CRF 18, no sound; the
- * two pyramid rooms again without the hologram passes, so the hologram is a
- * swap; and the track, "Adaptive Reverb v2" with each room's dynamic
- * per-frame room sound at wet 0.45 under the dry track, MP3 320 kb/s
- * (32.341 s of audio). Replacing the track is one file and its `durationSeconds`.
+ * The bundled media: four rooms cut from the assembled picture (hologram,
+ * dancer heatmap and the cathedral's floor pulse baked in) at their own first
+ * frame for exactly their shot, 1920 × 1080, CRF 18, no sound; the studio,
+ * the last 97 frames of the original Adaptive reverb take (the singer turning
+ * to the camera) upscaled once to 1920 × 1080; the booth's LTX render, the
+ * studio's earlier picture, listed so it swaps back; the two pyramid rooms
+ * again without the hologram passes, so the hologram is a swap; and the
+ * track, "Adaptive Reverb v2" with each room's dynamic per-frame room sound
+ * at wet 0.45 under the dry track, MP3 320 kb/s (32.341 s of audio).
+ * Replacing the track is one file and its `durationSeconds`.
  */
 const media: TemplateMix["media"] = {
   "drop-towers": video("drop-towers", 7.25),
@@ -79,6 +82,7 @@ const media: TemplateMix["media"] = {
   "drop-pyramid-inside": video("drop-pyramid-inside", 7.041667),
   "drop-pyramid-outside": video("drop-pyramid-outside", 7),
   "drop-studio": video("drop-studio", 4.041667),
+  "drop-studio-booth": video("drop-studio-booth", 4.041667),
   "drop-pyramid-inside-plain": video("drop-pyramid-inside-plain", 7.041667),
   "drop-pyramid-outside-plain": video("drop-pyramid-outside-plain", 7),
   "drop-track": {
@@ -94,10 +98,11 @@ const media: TemplateMix["media"] = {
  * of Adaptive reverb. Five World Builder rooms rendered by LTX-2.5
  * Layout-to-Render on the owner's track "Adaptive Reverb v2", each with its
  * own CPU room sound under its section, cut on the phrases: towers, a
- * cathedral, inside and outside a pyramid, a small studio. Every room is its
- * own shot and file and every overlay its own layer, so any of them swaps in
- * the Editor. Nothing is generated: `run: "mix"`. See
- * docs/audio-reactive-drop.md.
+ * cathedral, inside and outside a pyramid, then a small studio where the
+ * original take's singer turns to the camera and the credit is traced in
+ * beside her. Every room is its own shot and file and every overlay its own
+ * layer, so any of them swaps in the Editor. Nothing is generated:
+ * `run: "mix"`. See docs/audio-reactive-drop.md.
  */
 export const audioReactiveDrop: HouseTemplate = {
   id: "audio-reactive-drop",
@@ -129,7 +134,7 @@ export const audioReactiveDrop: HouseTemplate = {
     },
     title: {
       label: "Title",
-      hint: "The end card's title.",
+      hint: "The credit traced in beside the singer.",
       default: "REACTIVE SPACES",
     },
     aspects: ["16:9"],

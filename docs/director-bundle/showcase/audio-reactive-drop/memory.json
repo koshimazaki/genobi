@@ -29,6 +29,25 @@
       "projectId": "audio-reactive-drop-v1",
       "layers": 30,
       "durationFrames": 776
+    },
+    {
+      "version": 2,
+      "date": "2026-11-03T21:30:00Z",
+      "by": ["owner", "agent"],
+      "title": "The singer's ending, the credit as a layer",
+      "summary": "The owner's approved cut made the template: the studio shot is the original Adaptive reverb take's singer turning to the camera and smiling, the end-card still is replaced by a REACTIVE SPACES credit traced in beside her with gen-title, and the studio readout runs four track beats. Every other room, the track and every other overlay are unchanged; the booth render stays listed as a swap.",
+      "changes": [
+        "Studio picture: the last 97 frames (26.417 to 30.458 s) of the original Adaptive reverb take, upscaled once from 1280 x 720 to 1920 x 1080, lanczos, CRF 18, no sound",
+        "The booth render kept as drop-studio-booth.mp4, unused by the cut, so the studio swaps back",
+        "End card still removed; end-title (gen-title, trace-texts) on lane cards for the last 5.2 track beats, x 0.31 (the text centre), y 0.3, size 46, plate 0.3",
+        "Studio readout (build-panel, ROOM · STUDIO) 4 track beats instead of 6",
+        "The track and its room sound unchanged: the studio's decay is still the booth capture's (RT60 0.20 to 0.34 s)"
+      ],
+      "eventIds": ["drop-v2-approval", "drop-v2-ending", "drop-v2-title-x"],
+      "file": "project-v2.json",
+      "projectId": "audio-reactive-drop-v2",
+      "layers": 30,
+      "durationFrames": 776
     }
   ],
   "media": {
@@ -52,9 +71,17 @@
       "path": "media/drop-pyramid-outside.mp4",
       "url": "/media/director-templates/audio-reactive-drop/drop-pyramid-outside.mp4"
     },
-    "de8fb687fcfb5765c9bb574e3442a9b120436b5f62789e706420c23a3ff9d5d0": {
+    "65c535224d5623e37b8f2441b1da99d13d6b2072979bb1fd2fe13ee743351c3d": {
+      "path": "media/drop-studio-booth.mp4",
+      "url": "/media/director-templates/audio-reactive-drop/drop-studio-booth.mp4"
+    },
+    "4fc10b8d6daaeaebc8930af62e1cc6ea8974ffab3e1048a04068db55d22f0e31": {
       "path": "media/drop-studio.mp4",
       "url": "/media/director-templates/audio-reactive-drop/drop-studio.mp4"
+    },
+    "de8fb687fcfb5765c9bb574e3442a9b120436b5f62789e706420c23a3ff9d5d0": {
+      "path": "media/drop-studio.mp4",
+      "url": "/media/showcase/audio-reactive-drop/v1/drop-studio.mp4"
     },
     "fcdbae1e6d1dd0b58cd6a318fc0a513825ed7640d6afab8fc052f61b76382c0e": {
       "path": "media/drop-towers.mp4",
@@ -132,6 +159,44 @@
         "actor": "agent",
         "at": "2026-11-03T19:00:00Z",
         "version": 1
+      },
+      {
+        "id": "drop-v2-approval",
+        "kind": "note",
+        "objectIds": [],
+        "reason": "Owner, 3 Nov 2026 about 20:45, on the cut ending on the singer: \"great, use it as official template with all the layers\". Interpreted as: that cut (spaces-v2f-interface-b) becomes the template, with every overlay still its own visible, swappable layer and nothing merged.",
+        "source": "interpretation",
+        "actor": "agent",
+        "at": "2026-11-03T20:45:00Z",
+        "version": 2,
+        "guidance": {
+          "topic": "Audio Reactive Drop · v2",
+          "value": "Match the approved v2f render layer for layer; keep every layer separate."
+        }
+      },
+      {
+        "id": "drop-v2-ending",
+        "kind": "note",
+        "objectIds": [],
+        "reason": "Owner's corrections in this round, as the run log records them in its own words (not verbatim): the previous interface version was good and stays; use the measured room-sound audio; end on the singer who turns and smiles, from the original Adaptive reverb take, rather than a booth render, with the credit traced in beside her instead of an end-card still.",
+        "source": "interpretation",
+        "actor": "agent",
+        "at": "2026-11-03T20:45:00Z",
+        "version": 2,
+        "guidance": {
+          "topic": "Audio Reactive Drop · ending",
+          "value": "The studio shot is the original take's last 97 frames; the credit is a gen-title layer over it."
+        }
+      },
+      {
+        "id": "drop-v2-title-x",
+        "kind": "note",
+        "objectIds": [],
+        "reason": "Found on the first v2f render: gen-title's x is the text's centre, so the credit at x 0.2 clipped at the left edge; it sits at x 0.31, size 46.",
+        "source": "interpretation",
+        "actor": "agent",
+        "at": "2026-11-03T20:45:00Z",
+        "version": 2
       }
     ],
     "checkpoints": [
@@ -145,7 +210,19 @@
         "status": "done",
         "at": "2026-11-03T19:00:00Z",
         "version": 1
+      },
+      {
+        "id": "drop-v2",
+        "sessionId": "showcase-v2",
+        "summary": "Version 2 built on feat/audio-reactive-drop-template: the singer's ending and the traced credit as layers, 776 frames at 24 fps and 1920 x 1080, rendered by Render MP4 through the owner's local studio for the gallery card.",
+        "eventIds": ["drop-v2-approval", "drop-v2-ending", "drop-v2-title-x"],
+        "unresolved": [],
+        "nextSteps": [],
+        "status": "done",
+        "at": "2026-11-03T21:30:00Z",
+        "version": 2
       }
     ]
-  }
+  },
+  "archive": true
 }

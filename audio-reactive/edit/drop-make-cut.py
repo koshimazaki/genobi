@@ -13,7 +13,7 @@ the Editor; every overlay is its own layer. Variant b of the interface pass (own
 2026): a gentle CRT visor, a REC HUD per room, a wireframe sweep and a slice glitch into every
 room, one RT60 scan readout and the nave measure in the cathedral, a gen-status pill and the
 dancer focus box inside the pyramid, a wireframe reveal and a gen-title outside it, the build
-panel in the studio, then the end card.
+panel in the studio, then the singer's ending with the credit traced in beside her.
 
 Usage: drop-make-cut.py [--out shared/templates/audio-reactive-drop.cut.json]
 Then: npx prettier --write <out>
@@ -28,13 +28,12 @@ FRAMES = 776                                 # the cut's length: 32.333 s
 B = lambda t: t * BPM / 60                   # track seconds -> track beats
 white, muted, cyan, amber, night = "#f6f8f2", "#cfd6d2", "#62f2e4", "#f2b84b", "#0b0d0c"
 FONT = "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace"
-DIR = "/media/director-templates/audio-reactive-drop"
 ROOMS = [  # (asset, shot label, HUD text, HUD credit)
     ("drop-towers", "Towers · the drop between the skyscrapers", "DRONE 01 // DESCENT", "GENOBI / BETWEEN TOWERS"),
     ("drop-cathedral", "Cathedral · floor colours pulsing to the voice", "CAM 01 // ROOM SCAN", "GENOBI / CATHEDRAL"),
     ("drop-pyramid-inside", "Pyramid inside · hologram and dancer heatmap", "CAM 02 // PYRAMID INTERIOR", "GENOBI / PYRAMID · INSIDE"),
     ("drop-pyramid-outside", "Pyramid outside · desert hologram", "DRONE 02 // PYRAMID EXTERIOR", "GENOBI / DESERT · HOLOGRAM"),
-    ("drop-studio", "Studio · the small booth", "CAM 03 // STUDIO", "GENOBI / BOOTH"),
+    ("drop-studio", "Studio · the singer turns to the camera", "CAM 03 // STUDIO", "GENOBI / BOOTH"),
 ]
 
 
@@ -95,12 +94,16 @@ def main():
     layer("title-3", "Reveal · pyramid, desert", "gen-title", "graphics", "cards", cuts[3] + 7.5, 8,
           title("PYRAMID · DESERT", "OPEN AIR / LAYOUT HOLOGRAM · LOW BAND", 0.78, 0.3, 52, 8, 0.3))
     # Studio: one readout panel, left.
-    layer("caption-5", "Readout · studio", "build-panel", "graphics", "captions", cuts[4] + 1, 6, cap("left", "ROOM · STUDIO", "RT60 ~0.33 S / SMALL ROOM / DRY"))
-    layer("end-card", "End card · Reactive spaces", "end-card-still", "graphics", "end", end - 5.2, 5.2,
-          {"eyebrow": "GENOBI // 3D + LTX", "title": "REACTIVE SPACES", "subtitle": "ADAPTIVE REVERB · V2",
-           "credit1": "WORLD BUILDER ROOMS · LTX-2.5 OPEN WEIGHTS", "credit2": "DYNAMIC ROOM SOUND · KOSHIMAZAKI",
-           "font": FONT, "color": cyan, "accent": amber, "steps": "Building the rooms / Capturing the beat / Rendering in LTX-2.5",
-           "done": "Open weights", "duration": 2.0, "still": f"{DIR}/drop-end-card.jpg"})
+    # Studio: one readout panel, left, for four beats (owner's approved cut, 3 Nov 2026 ~20:45).
+    layer("caption-5", "Readout · studio", "build-panel", "graphics", "captions", cuts[4] + 1, 4, cap("left", "ROOM · STUDIO", "RT60 ~0.33 S / SMALL ROOM / DRY"))
+    # Ending (owner, 3 Nov 2026: "use it as official template with all the layers"): the singer of the
+    # original Adaptive reverb take turning to the camera and smiling is the ending, and the credit is
+    # traced in beside her, no still over the picture. gen-title's x is the text centre: at 0.2 it clipped
+    # at the left edge, so 0.31.
+    t9 = title("REACTIVE SPACES", "ADAPTIVE REVERB · V2  /  WORLD BUILDER ROOMS · LTX-2.5  /  KOSHIMAZAKI", 0.31, 0.3, 46, 5.2, 0.3)
+    t9["duration"] = 1.6
+    t9["fadeAt"] = 60
+    layer("end-title", "Reveal · Reactive spaces", "gen-title", "graphics", "cards", end - 5.2, 5.2, t9)
     beats = round(end * GRID, 3)
     shots = [{"asset": asset, "label": label, "sourceSeconds": 0, "startBeat": SHOTS[i],
               "beats": (SHOTS[i + 1] if i + 1 < len(SHOTS) else beats) - SHOTS[i], "cropY": None}

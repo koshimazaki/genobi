@@ -15,6 +15,7 @@ history. The record is [`memory.json`](memory.json).
 | Version | Date (UTC)   | What changed                    | Shaped by    |
 | ------- | ------------ | ------------------------------- | ------------ |
 | v1      | 3 Nov, 19:00 | Five rooms, every layer its own | owner, agent |
+| v2      | 3 Nov, 21:30 | The singer's ending, the credit | owner, agent |
 
 ## v1: five rooms, every layer its own
 
@@ -35,9 +36,25 @@ because the owner said the opening _"almost looks like a title drop, maybe it
 could be longer"_. The grid is double time (273.6 BPM) so the picture cuts on
 the phrases while the overlays still snap.
 
+## v2: the singer's ending, the credit as a layer
+
+On the cut that ends on the singer, the owner said (3 November 2026, about
+20:45): _"great, use it as official template with all the layers"_. Read as:
+that cut becomes the template, and every overlay stays its own visible,
+swappable layer. The studio shot is now the last 97 frames of the original
+Adaptive reverb take, the singer turning to the camera and smiling, upscaled
+once to 1920 × 1080. The end-card still is gone: a `gen-title` layer traces
+REACTIVE SPACES and its credit in beside her for the last 5.2 track beats, at
+x 0.31, because gen-title's x is the text's centre and at 0.2 the title
+clipped at the left edge. The studio readout runs four track beats instead of
+six. The track is unchanged, so the studio's decay is still the booth
+capture's. The booth render stays in the template as
+`drop-studio-booth.mp4`, and v1's own studio file is kept under
+`public/media/showcase/audio-reactive-drop/v1/` so v1 still opens as it was.
+
 ## How to repeat it
 
-Open v1 from the Audio Reactive Drop card's "How it was made" list ("Open v1
-in the editor"); it opens as `audio-reactive-drop-v1`, an editable project of
-its own. To make the next piece like it, follow
+Open a version from the Audio Reactive Drop card's "How it was made" list
+("Open v2 in the editor"); it opens as `audio-reactive-drop-v2`, an editable
+project of its own. To make the next piece like it, follow
 [How to repeat it](../../../audio-reactive-drop.md#how-to-repeat-it).
