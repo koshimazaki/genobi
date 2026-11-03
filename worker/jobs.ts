@@ -65,7 +65,6 @@ const statuses = new Set<JobStatus>([
 const publicJob = (row: JobRow): Job =>
   withoutDeployTickets(JSON.parse(row.data) as Job);
 function duplicate(row: JobRow, input: GenerateInput) {
-  // Both backends answer a replay with shared/idempotency.ts, never raw JSON.
   if (canonicalInput(JSON.parse(row.input)) !== canonicalInput(input))
     throw new AppError(
       409,
