@@ -79,6 +79,12 @@ def widgets(preset, level):
 
 def estimate(recipe):
     """Return a dict with preset, level, rt60, size, volume, area and summary."""
+    if "motion" in recipe:
+        raise ValueError(
+            "Scene motion requires an evaluated acoustic schedule. "
+            "Use World Builder's dynamic CPU room sound; the static "
+            "Acoustics and Reverb nodes cannot evaluate animated rooms."
+        )
     objects = [p for p in recipe.get("objects", []) if isinstance(p, dict)]
     room = [p for p in objects if str(p.get("id", "")).startswith("room-")]
     if not room:

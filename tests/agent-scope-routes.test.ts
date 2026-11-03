@@ -1,10 +1,7 @@
-// Picks and context (issue #23): one read scope, every route. An agent's
-// session may read, as the person's, exactly its picked takes and the upscale
-// source in "these settings", through every route that reads a job, take or
-// source by id (`SCOPED_READS`), and nothing else. The test acts as the session's
-// Genobi MCP server: the agent mark and the grant the fake runner
-// reports. It also checks that every route the server registers is either
-// scoped or named below with a reason, so none can be missed. Fake provider only.
+// Agent scopes (#23): only picked takes and the upscale source in settings
+// are readable through SCOPED_READS, using the fake runner's agent grant.
+// Every registered route must be scoped or listed below with a reason.
+// Fake provider only; local exports never broaden source ownership.
 import { createHash } from "node:crypto";
 import { readdirSync, readFileSync } from "node:fs";
 import { readFile } from "node:fs/promises";
@@ -17,9 +14,13 @@ import type { Project } from "../shared/director/types";
 import { agentStudio } from "./agent-harness";
 import { base } from "./house-template-fixtures";
 import { input } from "./server-harness";
+import { PAIRING_ROUTES } from "./agent-scope-pairings";
 
 /** Every other route, and why the read scope does not apply to it. */
 const NOT_SCOPED: Record<string, string> = {
+  "GET /api/effects": "static public effect metadata; names no private media",
+  "POST /api/effects/variants":
+    "pure configuration validation; no storage or private reads",
   "GET /api/capabilities": "runtime feature metadata; names no private media",
   "GET /api/agent/sessions":
     "answers no session locally; reads nothing of the person's",
@@ -59,34 +60,7 @@ const NOT_SCOPED: Record<string, string> = {
   "GET /api/arena/:id/files/:hash":
     "Arena has owner checks and explicit one-use pairing; no source/job grant.",
 
-  "POST /api/scrolls/fill":
-    "Scrolls fill: the person's tab asks for its own one-use code; marked agents refused.",
-  "POST /api/scrolls/fill/panels":
-    "Scrolls fill: text panels by a one-use code from the person's Send; reads nothing of theirs.",
-  "GET /api/scrolls/fill/:id":
-    "Scrolls fill: only the tab that asked collects its panels; marked agents refused.",
-  "POST /api/world/connect":
-    "World has explicit, ephemeral pairing and owner-only browser dispatch.",
-  "POST /api/world/link":
-    "World has explicit, ephemeral pairing and owner-only browser dispatch.",
-  "DELETE /api/world/:id":
-    "World has explicit, ephemeral pairing and owner-only browser dispatch.",
-  "GET /api/world/:id/next":
-    "World has explicit, ephemeral pairing and owner-only browser dispatch.",
-  "POST /api/world/:id/commands":
-    "World has explicit, ephemeral pairing and owner-only browser dispatch.",
-  "GET /api/world/:id/commands/:command":
-    "World has explicit, ephemeral pairing and owner-only browser dispatch.",
-  "POST /api/world/:id/commands/:command":
-    "World has explicit, ephemeral pairing and owner-only browser dispatch.",
-  "POST /api/world/:id/files/:file":
-    "World has explicit, ephemeral pairing and owner-only browser dispatch.",
-  "GET /api/world/:id/files/:file":
-    "World has explicit, ephemeral pairing and owner-only browser dispatch.",
-  "GET /api/world/:id/files":
-    "World has explicit, ephemeral pairing and owner-only browser dispatch.",
-  "DELETE /api/world/:id/files":
-    "World has explicit, ephemeral pairing and owner-only browser dispatch.",
+  ...PAIRING_ROUTES,
   "GET /api/memory/taste": "owner profile only; marked agents refused",
   "POST /api/memory/taste": "explicit owner action; marked agents refused",
   "POST /api/memory/taste/shelf":

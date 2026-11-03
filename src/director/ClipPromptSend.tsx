@@ -50,7 +50,7 @@ export function ClipSendButton({
     if (copy === false) setClipNote(projectId, layerId, { text: NO_COPY });
   }, [copy, projectId, layerId]);
   const title = working
-    ? "Genobi is still working on this project; its progress is in the bubble"
+    ? "Genobi is still working on this project; its progress is in the Genobi log"
     : copy === false
       ? NO_COPY
       : (label.hint ??

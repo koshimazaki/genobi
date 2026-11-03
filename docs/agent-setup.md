@@ -123,24 +123,22 @@ reason and never reaches "started".
 On the hosted studio, **Start Genobi** reads the paired runner status first.
 Without an online runner, its dialog offers local setup and **Pair hosted and
 local Genobi** directly. It does not probe local harness settings or sign-in
-routes. An online paired runner starts in the bubble, without a local project
-lookup or Terminal request; project files and paid approvals remain local.
+routes. An online paired runner starts headless (its log, approvals and Stop
+in the footer deck), without a local project lookup or Terminal request;
+project files and paid approvals remain local.
 Agent status, runner settings and sign-in reads have ten-second deadlines, so
 an unavailable server cannot leave the initial check waiting indefinitely.
 
 One client action, `spawnAgent` (`src/agent/spawn.ts`), starts Genobi
 wherever the studio has no session to hand work to: setup's summary, the voice
-panel's **Do it in a session**, the Genobi bubble's **Start Genobi** when no
-session is shown, the Director's **Start an agent here** (JSON editor &
-agent tools) and the Editor's **Regenerate**
+panel's **Do it in a session**, the Director's **Start an agent here** (JSON
+editor & agent tools, whose first turn is the fixed opening
+`OPEN_PROJECT_PROMPT`) and the Editor's **Regenerate**
 ([agent tools](director-agent-tools.md#regenerate-from-the-editor)). The studio's callers share one dialog (`spawn-store.ts`,
-`SpawnAgentDialog.tsx`, mounted beside the bubble); no trip back through
-setup. The bubble's start takes an optional typed **Brief** above it
-(`startPrompt`, at most 3,000 characters, source `typed`): the first turn is
-then the brief after "Link my open Director project if there is one", and
-with nothing typed it is the fixed opening (`OPEN_PROJECT_PROMPT`), so a
-session can start from words without a microphone. In order, against the
-local server:
+`SpawnAgentDialog.tsx`, mounted in the wordmark beside the guide bubble); no
+trip back through setup. Since #57 the Genobi bubble is a static guide and
+has no **Start Genobi** or typed brief of its own; voice is the way to talk
+to the agent. In order, against the local server:
 
 1. Read `GET /api/agent/status` and `GET /api/settings/agent-runner`.
 2. No runner saved (or Codex, which cannot run sessions): a small chooser
@@ -169,7 +167,7 @@ words go to that session as its next message
 person watches and can type into; absent (`headless`), the session runs in the
 bubble as before. `GET /api/agent/status` answers `terminal: true` when the
 server can open one (macOS, with the development launcher mounted); the dialog
-then asks **Open in Terminal** (the default) or **Run in the bubble instead**,
+then asks **Open in Terminal** (the default) or **Run in the studio instead**,
 explaining each choice on its own line, and setup's summary offers the same
 switch. The dialog sits inside the header's wordmark, which does not wrap, so
 it wraps its own text; `scripts/check-spawn-dialog.mjs` checks it has no
@@ -229,9 +227,9 @@ while it was down); folders without a receipt are windows still open and stay.
 There is no time limit.
 
 A Terminal session outlives the page. After a reload (the wordmark's included)
-`GET /api/agent/sessions` answers the owner's running session, so the bubble
+`GET /api/agent/sessions` answers the owner's running session, so the deck
 follows it and its approvals again. A start refused with `agent_busy` names
-that session (`sessionId`); the spawn action shows it in the bubble and says
+that session (`sessionId`); the spawn action shows it in the deck and says
 so. A start whose runner could not begin (the route answers 201 with
 `failed`) is reported with its reason, never as started.
 

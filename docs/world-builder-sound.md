@@ -36,6 +36,12 @@ editable response first, optional diagnostics after it.
   keeps the instruments mounted when closed; it does not restart the scope
   loop or reset route values.
 - **Audio assets** and **Clear audio** remain below the response and scopes.
+- **Room sound · CPU** renders an independent dry source inside a motion scene's
+  explicit acoustic room. Choose a file, test impulses, or an explicit copy of
+  the control track; compare a changing room with its first-frame treatment,
+  adjust wet/dry gains and the tail policy, then preview with the scene or
+  download the WAV and frozen receipt. Room materials and source/listener
+  positions are editable here. See [changing room sound](world-builder-dynamic-sound.md).
 
 A track a person loads plays at once: a picked file, a drop on the scene, a
 Recent or Audio assets pick, project audio, or a recent row dragged onto the
@@ -84,6 +90,8 @@ Build put them; from 1 every prop is twice as far from the centre. On
 `primitives` the whole set opens on the beat and closes on the tail, staggered;
 on `prop:<id>` one prop leaves along its own line. Explode is not offered for
 set pieces, the character or lights.
+These offsets move visible primitives, not the explicit CPU acoustic-room
+boundaries or the saved acoustic zones.
 
 Holodeck smooths live, frame by frame. Here the same one-pole smoothing runs
 over the recipe's precomputed envelope from frame zero, so a route's value at a

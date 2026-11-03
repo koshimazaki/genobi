@@ -39,6 +39,8 @@ export function useWorldShortcuts(
         event.metaKey ||
         event.altKey ||
         isTypingTarget(event.target) ||
+        (event.target instanceof Element &&
+          event.target.closest('button, a, summary, [role="button"]')) ||
         (root && !withinSurface(event.target, root.current)) ||
         !s.ready ||
         s.busy

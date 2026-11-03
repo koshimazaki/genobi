@@ -121,6 +121,7 @@ describe("Sound panel layout", () => {
       frame: 0,
       audioURL: "blob:track",
       audioName: "Voice take",
+      inputState: { phase: "idle", frame: 0 },
       example: { blob: null, label: "", credit: "" },
       history: { recent: [], persisted: true },
       audioElement: { current: null },

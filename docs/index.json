@@ -9,18 +9,20 @@
       "meaning": "Plans, sequencing, scope decisions and requirement capture",
       "pages": [
         "agent-workspace.md",
+        "animations-effects-plan.md",
         "audiovisual-gaps.md",
         "audiovisual-implementation.md",
         "director-studio-shell.md",
         "dual-editor-editing.md",
         "genmod.md",
         "genobi-deck.md",
+        "poster-grid-direction.md",
         "supervised-workflow-checks.md"
       ]
     },
     "design": {
       "meaning": "Design mocks and port handoffs for a studio surface",
-      "pages": ["editor-timeline.md"]
+      "pages": ["editor-timeline.md", "poster-grid-direction.md"]
     },
     "architecture": {
       "meaning": "The cloud boundary, adapters, deployment and review",
@@ -41,6 +43,9 @@
       "pages": [
         "akuspace-docker.md",
         "arena.md",
+        "audio-reactive-ltx-pilot.md",
+        "audio-reactive-pyramid.md",
+        "audio-reactive-second-pass.md",
         "audiovisual-gaps.md",
         "audiovisual-gpu-evaluation.md",
         "audiovisual-implementation.md",
@@ -57,6 +62,7 @@
         "seedvr2-upscale.md",
         "supervised-workflow-checks.md",
         "upscaling.md",
+        "vast-runner.md",
         "vfx-recipes/README.md",
         "vfx-recipes/anime-opening.md",
         "vfx-recipes/hologram-turntable.md",
@@ -80,6 +86,7 @@
       "pages": [
         "adaptive-reverb.md",
         "agent-workspace.md",
+        "animations-effects-plan.md",
         "anime-teaser-template.md",
         "bloom-teaser.md",
         "construction-motion.md",
@@ -103,7 +110,6 @@
         "credits/libraries/play-core/README.md",
         "credits/libraries/space-js/README.md",
         "credits/libraries/svgbob-wasm/README.md",
-        "credits/libraries/teardown/README.md",
         "credits/libraries/textmode-js/README.md",
         "credits/libraries/three-plotter-renderer/README.md",
         "credits/libraries/three/README.md",
@@ -111,6 +117,7 @@
         "dimensions-mix.md",
         "director-agent-tools.md",
         "director-bundle/README.md",
+        "director-bundle/effects-catalogue/README.md",
         "director-bundle/motion-effects.md",
         "director-bundle/project-copy.md",
         "director-bundle/showcase/README.md",
@@ -130,6 +137,7 @@
         "dual-editor-editing.md",
         "dual-editor.md",
         "editor-timeline.md",
+        "effects-catalogue.md",
         "genmod.md",
         "genobi-teaser-run/README.md",
         "genobi-teaser-run/claims.md",
@@ -137,6 +145,7 @@
         "genobi-teaser.md",
         "licence-strategy.md",
         "motion-fonts.md",
+        "poster-grid-direction.md",
         "project-assets.md",
         "runs/anime-teaser.md",
         "scrolls.md",
@@ -144,6 +153,7 @@
         "taste-memory.md",
         "template-gallery.md",
         "templates.md",
+        "tutorial-video.md",
         "vfx-recipes/README.md",
         "vfx-recipes/anime-opening.md",
         "vfx-recipes/hologram-turntable.md",
@@ -162,11 +172,16 @@
         "scene-examples.md",
         "vfx-recipes/hologram-turntable.md",
         "vision.md",
+        "world-builder-acoustic-zones.md",
         "world-builder-acoustics.md",
         "world-builder-capture.md",
         "world-builder-controls.md",
+        "world-builder-dynamic-sound.md",
         "world-builder-interface.md",
+        "world-builder-loops.md",
+        "world-builder-motion.md",
         "world-builder-sound.md",
+        "world-builder-stories.md",
         "world-builder-verification.md",
         "world-builder.md",
         "world-live.md",
@@ -181,6 +196,7 @@
         "akuspace-docker.md",
         "anime-teaser-template.md",
         "audio-analysis.md",
+        "audio-reactive-ltx-pilot.md",
         "audiovisual-gaps.md",
         "audiovisual-gpu-evaluation.md",
         "audiovisual-implementation.md",
@@ -201,8 +217,13 @@
         "scrolls.md",
         "templates.md",
         "vision.md",
+        "world-builder-acoustic-zones.md",
         "world-builder-acoustics.md",
-        "world-builder-sound.md"
+        "world-builder-dynamic-sound.md",
+        "world-builder-loops.md",
+        "world-builder-motion.md",
+        "world-builder-sound.md",
+        "world-builder-stories.md"
       ]
     },
     "agents": {
@@ -215,22 +236,22 @@
         "agent-sessions.md",
         "agent-setup.md",
         "agent-workspace.md",
+        "animations-effects-plan.md",
         "anime-teaser-template.md",
         "arena.md",
         "audio-analysis.md",
         "capabilities.md",
         "comfy-readiness.md",
         "credits/README.md",
-        "credits/libraries/teardown/README.md",
         "director-agent-tools.md",
         "director-bundle/README.md",
         "director-bundle/motion-effects.md",
         "director-bundle/project-copy.md",
         "director-bundle/showcase/README.md",
-        "director-generate.md",
         "director-prompts.md",
         "director-references.md",
         "dual-editor.md",
+        "effects-catalogue.md",
         "falling-room.md",
         "genobi-cli.md",
         "genobi-deck.md",
@@ -264,6 +285,7 @@
         "vision.md",
         "voice-mode.md",
         "workflow-reference-library.md",
+        "world-builder-motion.md",
         "world-builder.md",
         "world-live.md",
         "world-recipe-handoff.md"
@@ -281,17 +303,20 @@
     },
     "voice": {
       "meaning": "Voice mode: installer, transcription, mic and dictionary",
-      "pages": []
+      "pages": ["tutorial-video.md"]
     },
     "templates": {
       "meaning": "House templates, their inputs, intake and skills",
       "pages": [
         "adaptive-reverb.md",
+        "animations-effects-plan.md",
         "anime-teaser-template.md",
         "bloom-teaser.md",
         "director-generate.md",
         "falling-room.md",
-        "media-previews.md"
+        "media-previews.md",
+        "poster-grid-direction.md",
+        "tutorial-video.md"
       ]
     },
     "backend": {
@@ -333,6 +358,8 @@
       "meaning": "Comfy Cloud, Comfy Router, workflows and nodes",
       "pages": [
         "akuspace-docker.md",
+        "audio-reactive-pyramid.md",
+        "audio-reactive-second-pass.md",
         "audiovisual-gpu-evaluation.md",
         "camera-wording.md",
         "comfy-cloud-inventory.md",
@@ -348,6 +375,7 @@
         "seedvr2-upscale.md",
         "troubleshooting.md",
         "upscaling.md",
+        "vast-runner.md",
         "workflow-reference-library.md",
         "world-builder-acoustics.md",
         "world-builder.md"
@@ -383,6 +411,7 @@
         "audio-analysis.md",
         "capabilities.md",
         "dual-editor.md",
+        "effects-catalogue.md",
         "genobi-cli.md",
         "hermes-open-route.md",
         "hermes-profiles.md",
@@ -432,10 +461,13 @@
         "supervisor.md",
         "teachings.md",
         "template-gallery.md",
+        "tutorial-video.md",
         "voice-mode.md",
         "voice-setup.md",
         "world-builder-controls.md",
-        "world-builder-interface.md"
+        "world-builder-interface.md",
+        "world-builder-loops.md",
+        "world-builder-stories.md"
       ]
     },
     "dual-editor": {
@@ -446,17 +478,26 @@
       "meaning": "World Builder and Scene Adapter",
       "pages": [
         "adaptive-reverb.md",
+        "audio-reactive-ltx-pilot.md",
+        "audio-reactive-pyramid.md",
+        "audio-reactive-second-pass.md",
         "audiovisual-gaps.md",
         "audiovisual-gpu-evaluation.md",
         "audiovisual-implementation.md",
         "comfy-deploy.md",
         "director-bundle/showcase/adaptive-reverb/README.md",
+        "effects-catalogue.md",
         "project-assets.md",
+        "world-builder-acoustic-zones.md",
         "world-builder-acoustics.md",
         "world-builder-capture.md",
         "world-builder-controls.md",
+        "world-builder-dynamic-sound.md",
         "world-builder-interface.md",
+        "world-builder-loops.md",
+        "world-builder-motion.md",
         "world-builder-sound.md",
+        "world-builder-stories.md",
         "world-builder-verification.md",
         "world-builder.md",
         "world-recipe-handoff.md"
@@ -467,20 +508,24 @@
       "pages": [
         "director-agent-tools.md",
         "director-bundle/README.md",
+        "director-bundle/effects-catalogue/README.md",
         "director-bundle/motion-effects.md",
         "director-bundle/project-copy.md",
         "director-bundle/showcase/README.md",
-        "director-prompts.md"
+        "director-prompts.md",
+        "effects-catalogue.md"
       ]
     },
     "research": {
       "meaning": "External evidence and reference reviews",
       "pages": [
+        "animations-effects-plan.md",
         "comfy-deployment.md",
         "director-references.md",
         "director-remix-research.md",
         "genmod.md",
         "minimax-h3-camera.md",
+        "poster-grid-direction.md",
         "vfx-recipes/README.md",
         "vfx-recipes/anime-opening.md",
         "vfx-recipes/hologram-turntable.md",
@@ -544,7 +589,6 @@
         "credits/libraries/play-core/README.md",
         "credits/libraries/space-js/README.md",
         "credits/libraries/svgbob-wasm/README.md",
-        "credits/libraries/teardown/README.md",
         "credits/libraries/textmode-js/README.md",
         "credits/libraries/three-plotter-renderer/README.md",
         "credits/libraries/three/README.md",
@@ -560,6 +604,8 @@
       "meaning": "Which models run where",
       "pages": [
         "akuspace-docker.md",
+        "audio-reactive-pyramid.md",
+        "audio-reactive-second-pass.md",
         "capabilities.md",
         "comfy-cloud-inventory.md",
         "comfy-deploy.md",
@@ -570,6 +616,7 @@
         "seedvr2-upscale.md",
         "templates.md",
         "upscaling.md",
+        "vast-runner.md",
         "voice-mode.md",
         "voice-setup.md",
         "workflow-reference-library.md"
@@ -619,10 +666,14 @@
         "agent-setup.md",
         "agent-workspace.md",
         "akuspace-docker.md",
+        "animations-effects-plan.md",
         "anime-teaser-template.md",
         "architecture.md",
         "arena.md",
         "audio-analysis.md",
+        "audio-reactive-ltx-pilot.md",
+        "audio-reactive-pyramid.md",
+        "audio-reactive-second-pass.md",
         "audiovisual-gaps.md",
         "audiovisual-gpu-evaluation.md",
         "audiovisual-implementation.md",
@@ -657,7 +708,6 @@
         "credits/libraries/play-core/README.md",
         "credits/libraries/space-js/README.md",
         "credits/libraries/svgbob-wasm/README.md",
-        "credits/libraries/teardown/README.md",
         "credits/libraries/textmode-js/README.md",
         "credits/libraries/three-plotter-renderer/README.md",
         "credits/libraries/three/README.md",
@@ -665,6 +715,7 @@
         "dimensions-mix.md",
         "director-agent-tools.md",
         "director-bundle/README.md",
+        "director-bundle/effects-catalogue/README.md",
         "director-bundle/motion-effects.md",
         "director-bundle/project-copy.md",
         "director-bundle/showcase/README.md",
@@ -684,6 +735,7 @@
         "dual-editor-editing.md",
         "dual-editor.md",
         "editor-timeline.md",
+        "effects-catalogue.md",
         "falling-room.md",
         "genmod.md",
         "genobi-cli.md",
@@ -709,6 +761,7 @@
         "minimax-h3-camera.md",
         "motion-fonts.md",
         "openjutsu-swap.md",
+        "poster-grid-direction.md",
         "project-assets.md",
         "read-through.md",
         "registry-skills.md",
@@ -733,7 +786,9 @@
         "template-gallery.md",
         "templates.md",
         "troubleshooting.md",
+        "tutorial-video.md",
         "upscaling.md",
+        "vast-runner.md",
         "verification.md",
         "vfx-recipes/README.md",
         "vfx-recipes/anime-opening.md",
@@ -744,11 +799,16 @@
         "voice-mode.md",
         "voice-setup.md",
         "workflow-reference-library.md",
+        "world-builder-acoustic-zones.md",
         "world-builder-acoustics.md",
         "world-builder-capture.md",
         "world-builder-controls.md",
+        "world-builder-dynamic-sound.md",
         "world-builder-interface.md",
+        "world-builder-loops.md",
+        "world-builder-motion.md",
         "world-builder-sound.md",
+        "world-builder-stories.md",
         "world-builder-verification.md",
         "world-builder.md",
         "world-live.md",
@@ -760,7 +820,7 @@
       "path": "activity-settings.md",
       "tags": ["agents", "studio", "architecture"],
       "summary": "Optional operational tool history, its evidence boundaries, and independent bubble controls.",
-      "links": ["agent-setup.md", "runner-pairing.md"]
+      "links": ["agent-setup.md", "genobi-deck.md", "runner-pairing.md"]
     },
     {
       "title": "Adaptive reverb: one scene guides picture and sound",
@@ -786,14 +846,20 @@
       "path": "agent-approvals.md",
       "tags": ["agents", "studio", "backend"],
       "summary": "Confirm before spending - an agent session's quote appears in the person's studio with its plan, price and payer; Approve runs it once through the quoted submission in the person's session, Decline voids it, and an expired or changed quote cannot be approved.",
-      "links": ["agent-context.md", "agent-sessions.md", "upscaling.md"]
+      "links": [
+        "agent-bubble.md",
+        "agent-context.md",
+        "agent-sessions.md",
+        "genobi-deck.md",
+        "upscaling.md"
+      ]
     },
     {
       "title": "Genobi bubble",
       "path": "agent-bubble.md",
       "tags": ["agents", "studio"],
-      "summary": "Genobi's contextual bubble, the session as one growing conversation, the new-reply mark on its avatar, its evidence boundary, activity history and responsive behavior.",
-      "links": ["agent-sessions.md", "genobi-deck.md"]
+      "summary": "The Genobi bubble is a static guide — contextual pointers, Did you know tips and setup help. Agent sessions show in the footer deck; the agent API, MCP server and CLI drive Genobi from a terminal.",
+      "links": ["genobi-cli.md", "genobi-deck.md", "teachings.md"]
     },
     {
       "title": "Picks and context",
@@ -819,6 +885,7 @@
         "agent-setup.md",
         "dual-editor.md",
         "genobi-cli.md",
+        "genobi-deck.md",
         "hermes-open-route.md",
         "hermes-runs.md",
         "registry.md",
@@ -854,6 +921,7 @@
         "architecture.md",
         "director-agent-tools.md",
         "director-bundle/README.md",
+        "genobi-deck.md",
         "hermes-runs.md",
         "voice-mode.md"
       ]
@@ -864,6 +932,21 @@
       "tags": ["workflows", "comfy", "ltx", "sound", "models"],
       "summary": "A Docker image of ComfyUI with the Koshi AKUSPACE nodes and ComfyUI-LTXVideo, running AKUSPACE text to video, audio to audio and image to video on LTX-2.5.",
       "links": ["comfy-deployment.md", "run-location.md"]
+    },
+    {
+      "title": "Animations & Effects",
+      "path": "animations-effects-plan.md",
+      "tags": ["director", "plan", "templates", "research", "agents"],
+      "summary": "Implemented 3D preset gallery and editable effects catalogue, plus remaining temporal-media, source-authoring and reference work.",
+      "links": [
+        "director-bundle/README.md",
+        "effects-catalogue.md",
+        "poster-grid-direction.md",
+        "taste-memory.md",
+        "vfx-recipes/README.md",
+        "world-builder-loops.md",
+        "world-builder-motion.md"
+      ]
     },
     {
       "title": "Anime teaser template",
@@ -899,6 +982,7 @@
         "director-working-version.md",
         "dual-editor-editing.md",
         "dual-editor.md",
+        "effects-catalogue.md",
         "genobi-cli.md",
         "hermes-profiles.md",
         "licence-strategy.md",
@@ -911,7 +995,10 @@
         "taste-memory.md",
         "template-gallery.md",
         "voice-mode.md",
-        "voice-setup.md"
+        "voice-setup.md",
+        "world-builder-acoustic-zones.md",
+        "world-builder-motion.md",
+        "world-builder-stories.md"
       ]
     },
     {
@@ -927,6 +1014,31 @@
       "tags": ["sound", "backend", "agents", "mcp"],
       "summary": "Audio analysis on the local server — tempo and a fitted beat grid, a downbeat estimate, onsets per band, intensity and key moments, with no Python; the optional librosa worker; the agent flow through genobi_audio_upload and genobi_audio_analysis.",
       "links": []
+    },
+    {
+      "title": "Audio-reactive LTX pilot",
+      "path": "audio-reactive-ltx-pilot.md",
+      "tags": ["workflows", "world-builder", "sound"],
+      "summary": "Capture editable music-driven fruit, architecture and descending-camera studies, then compare two local LTX candidates with the original soundtrack.",
+      "links": [
+        "vast-runner.md",
+        "world-builder-dynamic-sound.md",
+        "world-builder-loops.md"
+      ]
+    },
+    {
+      "title": "Audio-reactive pyramid: how to repeat it",
+      "path": "audio-reactive-pyramid.md",
+      "tags": ["workflows", "comfy", "models", "world-builder"],
+      "summary": "How to repeat the audio-reactive pyramid — World Builder guide capture with measured band gain, a look still, LTX-2.5 Layout-to-Render on a rented GPU, and the checks that prove the motion follows the music.",
+      "links": ["vast-runner.md"]
+    },
+    {
+      "title": "Audio-reactive architecture: the second pass",
+      "path": "audio-reactive-second-pass.md",
+      "tags": ["workflows", "comfy", "models", "world-builder"],
+      "summary": "The next Vast session, planned so the box time is renders only — walls that move to the music, a second image guide at the closed-walls frame, Union Control from the depth track, the LTX refine pass, Klein looks made on the box, and the stitch.",
+      "links": ["audio-reactive-pyramid.md"]
     },
     {
       "title": "Audiovisual scene gap audit",
@@ -1022,12 +1134,13 @@
         "architecture.md",
         "arena.md",
         "audio-analysis.md",
+        "audio-reactive-pyramid.md",
+        "audio-reactive-second-pass.md",
         "camera-wording.md",
         "cloudflare.md",
         "comfy-cloud-inventory.md",
         "comfy-deploy.md",
         "comfy-deployment.md",
-        "credits/libraries/teardown/README.md",
         "dimensions-mix.md",
         "director-agent-tools.md",
         "director-bundle/README.md",
@@ -1036,6 +1149,7 @@
         "dual-editor-editing.md",
         "dual-editor.md",
         "editor-timeline.md",
+        "effects-catalogue.md",
         "falling-room.md",
         "genmod.md",
         "genobi-cli.md",
@@ -1073,7 +1187,6 @@
         "voice-mode.md",
         "voice-setup.md",
         "world-builder-capture.md",
-        "world-builder-sound.md",
         "world-builder-verification.md",
         "world-builder.md",
         "world-live.md"
@@ -1160,7 +1273,6 @@
         "credits/libraries/play-core/README.md",
         "credits/libraries/space-js/README.md",
         "credits/libraries/svgbob-wasm/README.md",
-        "credits/libraries/teardown/README.md",
         "credits/libraries/textmode-js/README.md",
         "credits/libraries/three-plotter-renderer/README.md",
         "credits/libraries/three/README.md",
@@ -1305,13 +1417,6 @@
       "links": []
     },
     {
-      "title": "teardown",
-      "path": "credits/libraries/teardown/README.md",
-      "tags": ["licences", "agents", "director"],
-      "summary": "teardown — a Claude Code skill for interactive 3D machine simulators and 60 fps explainer films; usage, provenance and licence boundaries.",
-      "links": ["scene-examples.md", "world-builder-sound.md"]
-    },
-    {
       "title": "textmode.js",
       "path": "credits/libraries/textmode-js/README.md",
       "tags": ["licences", "director"],
@@ -1381,6 +1486,13 @@
       ]
     },
     {
+      "title": "Editable effect renderers",
+      "path": "director-bundle/effects-catalogue/README.md",
+      "tags": ["director", "bundle"],
+      "summary": "Trusted editable poster, scan, HUD, kinetic and reflection renderers with explicit frame time and reproducible checks.",
+      "links": ["poster-grid-direction.md"]
+    },
+    {
       "title": "Motion effects",
       "path": "director-bundle/motion-effects.md",
       "tags": ["director", "bundle", "agents"],
@@ -1442,11 +1554,11 @@
       "links": ["director-remix-verification.md"]
     },
     {
-      "title": "Generate your version",
+      "title": "Make your version",
       "path": "director-generate.md",
-      "tags": ["director", "templates", "agents"],
-      "summary": "Reuse or replace declared template media, apply undoable swaps, and ask a linked agent to prepare generation with paid approval.",
-      "links": []
+      "tags": ["director", "templates"],
+      "summary": "Make my version — swap media into a finished template's slots with Undo; new media is made in Camera and comes back through Assets → Generated. Nothing here generates.",
+      "links": ["genobi-cli.md", "taste-memory.md"]
     },
     {
       "title": "Prompts and directions",
@@ -1538,6 +1650,13 @@
       "tags": ["studio", "director", "design"],
       "summary": "The production Editor timeline after the timeline design port, what changed, where it lives and what still differs from the mock.",
       "links": []
+    },
+    {
+      "title": "Configurable effects catalogue",
+      "path": "effects-catalogue.md",
+      "tags": ["director", "world-builder", "agents", "mcp", "bundle"],
+      "summary": "Configurable effect presets in the 3D gallery and Editor, portable variants, trusted modules and the shared agent contract.",
+      "links": ["animations-effects-plan.md", "director-agent-tools.md"]
     },
     {
       "title": "Falling room",
@@ -1781,6 +1900,13 @@
       "links": ["comfy-deployment.md"]
     },
     {
+      "title": "Poster grid and water grid",
+      "path": "poster-grid-direction.md",
+      "tags": ["director", "design", "plan", "templates", "research"],
+      "summary": "Restrained poster-window and temporal water-grid direction from the supplied stills and Kodoi prompt transcript, with implementation acceptance.",
+      "links": ["animations-effects-plan.md"]
+    },
+    {
       "title": "Outputs into project assets",
       "path": "project-assets.md",
       "tags": ["studio", "director", "world-builder", "dual-editor"],
@@ -1814,13 +1940,15 @@
         "agent-sessions.md",
         "anime-teaser-template.md",
         "architecture.md",
+        "audio-reactive-pyramid.md",
+        "audio-reactive-second-pass.md",
         "camera-wording.md",
         "comfy-deployment.md",
         "credits/README.md",
-        "credits/libraries/teardown/README.md",
         "director-agent-tools.md",
         "director-bundle/README.md",
         "dual-editor.md",
+        "effects-catalogue.md",
         "falling-room.md",
         "genobi-cli.md",
         "genobi-teaser-run/README.md",
@@ -1845,7 +1973,7 @@
         "taste-memory.md",
         "templates.md",
         "upscaling.md",
-        "world-builder-sound.md",
+        "vast-runner.md",
         "world-builder.md",
         "world-live.md"
       ]
@@ -1869,6 +1997,7 @@
         "director-bundle/README.md",
         "director-working-version.md",
         "dual-editor.md",
+        "effects-catalogue.md",
         "falling-room.md",
         "genobi-cli.md",
         "hermes-runs.md",
@@ -1907,16 +2036,18 @@
         "architecture.md",
         "arena.md",
         "audio-analysis.md",
+        "audio-reactive-pyramid.md",
+        "audio-reactive-second-pass.md",
         "camera-wording.md",
         "capabilities.md",
         "comfy-deploy.md",
         "comfy-deployment.md",
         "credits/README.md",
-        "credits/libraries/teardown/README.md",
         "director-agent-tools.md",
         "director-bundle/README.md",
         "director-working-version.md",
         "dual-editor.md",
+        "effects-catalogue.md",
         "falling-room.md",
         "genobi-cli.md",
         "genobi-teaser-run/README.md",
@@ -1942,8 +2073,8 @@
         "taste-memory.md",
         "templates.md",
         "upscaling.md",
+        "vast-runner.md",
         "voice-mode.md",
-        "world-builder-sound.md",
         "world-builder.md",
         "world-live.md",
         "world-recipe-handoff.md"
@@ -2033,6 +2164,7 @@
         "director-working-version.md",
         "dual-editor.md",
         "genobi-cli.md",
+        "genobi-deck.md",
         "getting-started.md",
         "licence-strategy.md",
         "scene-examples.md",
@@ -2182,11 +2314,31 @@
       ]
     },
     {
+      "title": "Tutorial video",
+      "path": "tutorial-video.md",
+      "tags": ["director", "templates", "studio", "voice"],
+      "summary": "The screenplay and recipe for a 45-second tutorial video of the studio (with a 30-second cut), made in Genobi itself - eight beats from voice to the end card, what each says and shows, and how to capture, cut and render it.",
+      "links": [
+        "agent-approvals.md",
+        "agent-sessions.md",
+        "capabilities.md",
+        "genobi-teaser.md",
+        "voice-mode.md"
+      ]
+    },
+    {
       "title": "Upscaling",
       "path": "upscaling.md",
       "tags": ["workflows", "models", "agents", "mcp", "bfl", "comfy"],
       "summary": "Upscaling video in Genobi - SeedVR2 (open) and FLUX Video Upscale (API), their real limits, run locations and payers, single and split runs (19 s parts plus the remainder, a local GPU's part length), the one-approval agent flow, failures, and the CLI and MCP commands.",
       "links": ["run-location.md", "seedvr2-upscale.md"]
+    },
+    {
+      "title": "Vast runner for the LTX experiments",
+      "path": "vast-runner.md",
+      "tags": ["workflows", "comfy", "models"],
+      "summary": "Prepare a pinned local ComfyUI worker on Vast, connect by SSH and check it before running LTX experiments.",
+      "links": []
     },
     {
       "title": "Verification",
@@ -2256,7 +2408,8 @@
         "licence-strategy.md",
         "minimax-h3-camera.md",
         "supervisor.md",
-        "taste-memory.md"
+        "taste-memory.md",
+        "tutorial-video.md"
       ]
     },
     {
@@ -2295,11 +2448,23 @@
       "links": ["comfy-cloud-inventory.md", "run-location.md"]
     },
     {
+      "title": "World Builder: story zones and local CPU room sound",
+      "path": "world-builder-acoustic-zones.md",
+      "tags": ["3d", "sound", "world-builder"],
+      "summary": "Explicit metre-scale room and outdoor zones, local CPU reverb estimates, scene-size coupling and audio rendering evidence.",
+      "links": []
+    },
+    {
       "title": "World Builder acoustics",
       "path": "world-builder-acoustics.md",
       "tags": ["3d", "world-builder", "comfy", "sound"],
       "summary": "World Builder's room acoustics estimate (Sabine RT60 to AKUSPACE presets) and the Reverb node's DSP route.",
-      "links": ["media-space.md", "world-builder.md"]
+      "links": [
+        "media-space.md",
+        "world-builder-acoustic-zones.md",
+        "world-builder-dynamic-sound.md",
+        "world-builder.md"
+      ]
     },
     {
       "title": "World Builder · Capture panel",
@@ -2313,7 +2478,14 @@
       "path": "world-builder-controls.md",
       "tags": ["3d", "world-builder", "studio"],
       "summary": "World Builder controls - capture and edits during Play, character orientation, preview and character shortcuts, and the panel dock.",
-      "links": ["world-builder.md"]
+      "links": ["world-builder-loops.md", "world-builder.md"]
+    },
+    {
+      "title": "Room sound along the scene timeline",
+      "path": "world-builder-dynamic-sound.md",
+      "tags": ["3d", "world-builder", "sound"],
+      "summary": "Browser CPU room sound follows the evaluated scene timeline, with retained convolution history and an explicit decay-tail policy.",
+      "links": []
     },
     {
       "title": "World Builder interface pass",
@@ -2328,11 +2500,51 @@
       ]
     },
     {
+      "title": "Build a loop from saved views",
+      "path": "world-builder-loops.md",
+      "tags": ["3d", "world-builder", "studio", "sound"],
+      "summary": "One global Loop panel for saved A–D scenes and cameras, direct Shot framing, whole-loop movement, audio links and exact LTX capture timing.",
+      "links": [
+        "animations-effects-plan.md",
+        "world-builder-capture.md",
+        "world-builder-motion.md",
+        "world-builder-stories.md"
+      ]
+    },
+    {
+      "title": "Scene motion: editable shapes on one timeline",
+      "path": "world-builder-motion.md",
+      "tags": ["3d", "world-builder", "sound", "agents"],
+      "summary": "Authored form sequences, paired A–D shape/camera saves, audio state pulls, rotation, and 30-second local RGB/depth guides on the 8k+1 frame grid.",
+      "links": [
+        "audiovisual-gpu-evaluation.md",
+        "effects-catalogue.md",
+        "world-builder-acoustic-zones.md",
+        "world-builder-capture.md",
+        "world-builder-dynamic-sound.md",
+        "world-builder-loops.md",
+        "world-builder-sound.md",
+        "world-builder-stories.md",
+        "world-builder.md"
+      ]
+    },
+    {
       "title": "World Builder sound",
       "path": "world-builder-sound.md",
       "tags": ["3d", "world-builder", "sound"],
       "summary": "World Builder's Sound panel, the example track, the audio mod matrix, the reactive room presets and what the Comfy node shows of them.",
-      "links": ["credits/libraries/teardown/README.md", "world-builder.md"]
+      "links": ["world-builder-dynamic-sound.md", "world-builder.md"]
+    },
+    {
+      "title": "Stories at human scale",
+      "path": "world-builder-stories.md",
+      "tags": ["3d", "world-builder", "studio", "sound"],
+      "summary": "Human-scale connected sets, continuous descent and street templates, scene sizing and explicit room-sound previews.",
+      "links": [
+        "world-builder-acoustic-zones.md",
+        "world-builder-loops.md",
+        "world-builder-motion.md"
+      ]
     },
     {
       "title": "World Builder verification — 16 October 2026",
@@ -2349,6 +2561,7 @@
       "links": [
         "agent-context.md",
         "camera-wording.md",
+        "effects-catalogue.md",
         "falling-room.md",
         "media-space.md",
         "project-assets.md",
@@ -2358,7 +2571,10 @@
         "world-builder-capture.md",
         "world-builder-controls.md",
         "world-builder-interface.md",
+        "world-builder-loops.md",
+        "world-builder-motion.md",
         "world-builder-sound.md",
+        "world-builder-stories.md",
         "world-builder-verification.md",
         "world-live.md",
         "world-recipe-handoff.md"

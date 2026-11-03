@@ -71,7 +71,9 @@ export function CaptureControls({
           data-recording={s.capturing || undefined}
           // An add still running keeps a second take from colliding. From
           // Walk or Build the viewport becomes the shot camera first.
-          disabled={!s.ready || (!s.capturing && (!idle || !!a.saving))}
+          disabled={
+            s.previewOnly || !s.ready || (!s.capturing && (!idle || !!a.saving))
+          }
           onClick={() =>
             s.capturing
               ? s.api.current?.cancel()
@@ -81,7 +83,7 @@ export function CaptureControls({
           {s.capturing ? "Cancel capture" : "Capture take"}
         </button>
         <button
-          disabled={!idle || !shot}
+          disabled={s.previewOnly || !idle || !shot}
           onClick={() =>
             s.run(
               s.stopping(async () =>
@@ -110,6 +112,12 @@ export function CaptureControls({
           </small>
         </div>
       </div>
+      {s.previewOnly && (
+        <p className="wb-hint">
+          Capture and PNG export need WebGL. The geometry preview supports scene
+          configuration, camera travel and audio playback.
+        </p>
+      )}
       {(a.saving || a.result || s.error) && (
         <p className="wb-capture-result" data-error={s.error ? "" : undefined}>
           {a.saving === "take"

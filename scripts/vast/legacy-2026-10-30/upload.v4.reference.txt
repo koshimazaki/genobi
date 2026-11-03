@@ -1,0 +1,8 @@
+#!/bin/sh
+# Stream the pack into /workspace on the box: sh upload.sh [host], default vast-wb.
+set -eu
+H=${1:-vast-wb}
+cd "$(dirname "$0")"
+tar -czf - camera-director.tar.gz setup.sh REPO_COMMIT models-extra.txt NOTES.md RUNBOOK.md \
+  post.py wait.py status.py make_l2r.py make_klein.py make_talk.py input jobs \
+  | ssh root@"$H" 'cd /workspace && tar -xzf - && ls -la /workspace'

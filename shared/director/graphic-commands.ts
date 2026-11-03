@@ -5,6 +5,8 @@
 // importer's recipe check (`src/director/validate.ts`) still holds.
 import registry from "../../docs/director-bundle/example/studio.json";
 import versionMedia from "../../docs/director-bundle/version-media/modules.json";
+import effects from "../../docs/director-bundle/effects/project.json";
+import catalogueEffects from "../../docs/director-bundle/effects-catalogue/modules.json";
 import { checkParameters, refuse } from "./layer-commands";
 import type { GraphicsModule, Parameters, Project } from "./types";
 
@@ -15,7 +17,30 @@ import type { GraphicsModule, Parameters, Project } from "./types";
 export const TRUSTED_RECIPES = {
   ...registry.modules,
   ...versionMedia,
+  ...effects.modules,
+  ...catalogueEffects,
 } as Record<string, GraphicsModule>;
+
+/** Repository-relative source locations, never provided by imported bundles. */
+export const TRUSTED_RECIPE_SOURCES: Record<string, string> =
+  Object.fromEntries([
+    ...Object.entries(registry.modules).map(([id, m]) => [
+      id,
+      `docs/director-bundle/example/${m.file.path}`,
+    ]),
+    ...Object.entries(versionMedia).map(([id, m]) => [
+      id,
+      `docs/director-bundle/version-media/${m.file.path.split("/").at(-1)}`,
+    ]),
+    ...Object.entries(effects.modules).map(([id, m]) => [
+      id,
+      `docs/director-bundle/effects/${m.file.path}`,
+    ]),
+    ...Object.entries(catalogueEffects).map(([id, m]) => [
+      id,
+      `docs/director-bundle/effects-catalogue/${m.file.path}`,
+    ]),
+  ]);
 
 /** The names a recipe's parameter schema requires. */
 export const requiredParameters = (module: GraphicsModule): string[] => {

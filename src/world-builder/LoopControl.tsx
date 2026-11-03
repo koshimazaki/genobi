@@ -22,12 +22,16 @@ export function LoopControl({
           disabled={disabled}
           onChange={(ev) => s.change({ loop: ev.target.checked })}
         />{" "}
-        Seamless loop
+        {r.motion ? "Repeat motion sequence" : "Seamless loop"}
       </label>
       <button
         type="button"
         disabled={disabled}
-        title="Orbit one full turn over 2 s (49 frames, 2.04 s) as a seamless loop"
+        title={
+          r.motion
+            ? "Orbit one turn over 2 s; scene states still restart at the seam"
+            : "Orbit one full turn over 2 s (49 frames, 2.04 s) as a seamless loop"
+        }
         onClick={() =>
           s.change({
             orbit: 360,

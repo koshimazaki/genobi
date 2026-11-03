@@ -14,7 +14,8 @@ import "./anchored-popover.css";
  * container clips it, kept inside the viewport. Escape and a pointer outside
  * close it; closing returns focus to the anchor. `columns` turns the arrow
  * keys into grid navigation over `[data-choice]` buttons; without it Up and
- * Down move through them as a list.
+ * Down move through them as a list. `align="end"` lines its right edge up
+ * with the anchor's, for a control at the right of a toolbar.
  */
 export default function AnchoredPopover({
   anchor,
@@ -25,6 +26,7 @@ export default function AnchoredPopover({
   width = 332,
   columns,
   role = "dialog",
+  align = "start",
 }: {
   anchor: HTMLElement;
   label: string;
@@ -34,6 +36,7 @@ export default function AnchoredPopover({
   width?: number;
   columns?: number;
   role?: "dialog" | "menu";
+  align?: "start" | "end";
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [position, setPosition] = useState({ left: -9999, top: 0 });
@@ -45,7 +48,10 @@ export default function AnchoredPopover({
         h = ref.current?.offsetHeight ?? 240;
       const below = r.bottom + 6 + h <= window.innerHeight - 12;
       setPosition({
-        left: Math.max(12, Math.min(r.left, viewport - w - 12)),
+        left: Math.max(
+          12,
+          Math.min(align === "end" ? r.right - w : r.left, viewport - w - 12),
+        ),
         top: Math.max(
           12,
           below
@@ -61,7 +67,7 @@ export default function AnchoredPopover({
       window.removeEventListener("resize", place);
       window.removeEventListener("scroll", place, true);
     };
-  }, [anchor, width]);
+  }, [anchor, width, align]);
   // Callers often pass `close` inline; reading it through a ref keeps a
   // parent's re-render (every frame during playback) from refocusing the
   // first choice and losing the keyboard position.

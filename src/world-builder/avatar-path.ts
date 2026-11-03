@@ -1,5 +1,7 @@
 import { validateAvatarPose, type AvatarPose } from "./avatar-pose";
 import { CAMERA_MOVE_BY_KEY, type CameraMoveKey } from "./camera-moves";
+import { TAKE_FRAMES } from "./take-duration";
+import { sampleAvatarPath } from "./avatar-path-sampling";
 
 /**
  * One timed key of the character's path. `avatarPose` is the path at frame
@@ -14,7 +16,7 @@ export interface AvatarKey {
 }
 
 export const AVATAR_PATH_KEYS = 16;
-const MAX_FRAME = 240;
+const MAX_FRAME = TAKE_FRAMES.max - 1;
 
 const plain = (v: unknown): v is Record<string, unknown> =>
   !!v && typeof v === "object" && !Array.isArray(v);
@@ -35,7 +37,7 @@ export function validateAvatarPath(path: unknown): AvatarKey[] {
         !["linear", "fall"].includes(key.ease as string))
     )
       throw new Error(
-        "Invalid avatarPath key: frames rise from 1 to 240, ease is linear or fall.",
+        `Invalid avatarPath key: frames rise from 1 to ${MAX_FRAME}, ease is linear or fall.`,
       );
     validateAvatarPose(key.pose);
     last = key.frame as number;
@@ -49,38 +51,13 @@ interface PathRecipe {
   cameraShot: string;
 }
 
-const mix = (a: number, b: number, t: number) => a + (b - a) * t;
-
 /**
  * The character's pose at `frame`, a pure function of the recipe and the
  * frame index, so Capture, the depth pass and playback agree. Without a
  * path it is `avatarPose`, exactly as before.
  */
 export function avatarPoseAt(r: PathRecipe, frame: number): AvatarPose {
-  const path = r.avatarPath;
-  if (!path?.length) return r.avatarPose;
-  let from: AvatarKey = { frame: 0, pose: r.avatarPose };
-  for (const key of path) {
-    if (frame < key.frame) {
-      const t = (frame - from.frame) / (key.frame - from.frame);
-      const ty = key.ease === "fall" ? t * t : t;
-      const a = from.pose,
-        b = key.pose;
-      const pose: AvatarPose = {
-        x: mix(a.x, b.x, t),
-        y: mix(a.y, b.y, ty),
-        z: mix(a.z, b.z, t),
-        yaw: mix(a.yaw, b.yaw, t),
-      };
-      const pitch = mix(a.pitch ?? 0, b.pitch ?? 0, t),
-        roll = mix(a.roll ?? 0, b.roll ?? 0, t);
-      if (pitch) pose.pitch = pitch;
-      if (roll) pose.roll = roll;
-      return pose;
-    }
-    from = key;
-  }
-  return from.pose;
+  return sampleAvatarPath(r, frame);
 }
 
 /**

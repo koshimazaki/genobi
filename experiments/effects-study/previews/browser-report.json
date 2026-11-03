@@ -1,0 +1,44 @@
+[
+  {
+    "viewport": "desktop",
+    "result": "PASS",
+    "repeatFrames": {
+      "helmet": 1681122,
+      "mirror": 1858522,
+      "terrain": 909450
+    },
+    "configurationRoundTrip": true,
+    "singlePlaybackChainAfterRapidResume": true,
+    "source": {
+      "template": "adaptive-reverb",
+      "asset": "reverb-ltx",
+      "url": "/media/director-templates/adaptive-reverb/reverb-ltx.mp4",
+      "start": 8,
+      "sha256": "d8c7e053a1a3123f9f5e1b1541903275f8bfd88306f234b120020c9025ccb183"
+    },
+    "invalidImportsLeaveStateUnchanged": true,
+    "errors": [],
+    "external": []
+  },
+  {
+    "viewport": "phone",
+    "result": "PASS",
+    "repeatFrames": {
+      "helmet": 1681122,
+      "mirror": 1858522,
+      "terrain": 909450
+    },
+    "configurationRoundTrip": true,
+    "singlePlaybackChainAfterRapidResume": true,
+    "source": {
+      "template": "adaptive-reverb",
+      "asset": "reverb-ltx",
+      "url": "/media/director-templates/adaptive-reverb/reverb-ltx.mp4",
+      "start": 8,
+      "sha256": "d8c7e053a1a3123f9f5e1b1541903275f8bfd88306f234b120020c9025ccb183"
+    },
+    "invalidImportsLeaveStateUnchanged": true,
+    "errors": [],
+    "external": []
+  }
+]

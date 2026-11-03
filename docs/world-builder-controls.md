@@ -7,12 +7,17 @@ summary: World Builder controls - capture and edits during Play, character orien
 
 Part of [World Builder and Scene Adapter](world-builder.md).
 
+The main [Loop panel](world-builder-loops.md) keeps global Save A/B, Play loop,
+Save loop, total time and algorithm controls beside the view. Camera opens next
+to Expand; music and advanced settings stay in the sidebar. Assets and presets
+remain underneath the scene.
+
 ## Capture and edits during Play
 
 Play is a preview of the take's frame grid; no panel control is disabled while
 it runs.
 
-- **Capture take**, **Save PNG**, **Send first frame** and **Send take to
+- **Save loop**, **Capture take**, **Save PNG**, **Send first frame** and **Send take to
   Comfy** stop the preview, wait for the frame it is drawing, then run. Capture
   renders its own deterministic grid from frame zero, so pressing it mid-preview
   captures the whole take, not the remainder. The same holds from Walk or Build.
@@ -23,8 +28,8 @@ it runs.
   applies live: the preview keeps playing and skips frames while the set
   reloads.
 - Two locks remain. Everything waits while a capture or load is running
-  (`busy`), since both draw the scene. Build's drag handles stay locked while
-  Play runs and unlock on Stop, so an unfinished drag is cancelled rather than
+  (`busy`), since both draw the scene. Build's drag handles and direct Shot
+  camera gestures stay locked while Play runs and unlock on Stop, so an unfinished drag is cancelled rather than
   committed mid-preview. `scripts/check-world-audio-editing.mjs` checks both
   rules and capture during Play against a local dev server (`DIRECTOR_URL`).
 - The agent contract is unchanged except `configure()`, which now applies
@@ -58,7 +63,7 @@ the inspector, radians in the recipe) plus quick **Upright**, **Lie face down**,
 
 `avatarPose` is where the character is at frame 0. The optional `avatarPath`
 moves it over the take: up to 16 keys `{ frame, pose, ease? }`, frames rising
-from 1 to 240, each `pose` validated like `avatarPose` (±40 m, ±π). Between
+from 1 to 720, each `pose` validated like `avatarPose` (±40 m, ±π). Between
 keys every field is interpolated linearly; `ease: "fall"` eases the height in
 like gravity (slow leaving the previous key, fastest arriving), and the pose
 holds after the last key. `src/world-builder/avatar-path.ts` computes the pose
@@ -75,9 +80,17 @@ feet, aimed 57° down past the head at what is coming up.
 
 ## Preview and character shortcuts
 
-In Shot camera, Space plays/stops the scene take. Loop repeats its 24 fps frame
-grid and restarts attached preview audio at each scene boundary. Loop affects
-preview only, not the exported take. In Walk, focus the scene: Space jumps when
+Shot camera supports drag-to-orbit, right/Shift-drag-to-pan and scroll-to-zoom
+without entering Build. The exact view is committed when the gesture ends, so
+saved views, scrubbing and exports agree. Playback, loading and captures own
+independent locks, including a pending colour/depth capture. The labelled geometry
+preview supports camera gestures too, while Build/Walk and capture still need WebGL.
+
+In Shot camera, Space plays/stops the scene take. The transport's **↻ Loop**
+toggle repeats its 24 fps frame grid and restarts attached preview audio at each
+scene boundary. That toggle affects preview only. The global **Loop** panel
+authors the return to the first saved view into the exported take. In Walk,
+focus the scene: Space jumps when
 grounded, holding Shift doubles movement speed, and releasing it returns to
 walking. Inputs clear on focus loss. In Build, Backspace/Delete removes the
 selected added primitive. Text fields keep their normal keys. These shortcuts
@@ -87,8 +100,9 @@ overlay, keeps Space and Delete for itself.
 
 ## Panels: two docked, one popped out
 
-The Camera, Sound, Scene and Capture buttons are toggles (`aria-pressed`), not
-tabs. Up to two panels dock in the inspector column at once, stacked, each with
+Camera beside Expand and Music controls in the Loop panel open the existing
+settings. **More settings** exposes Scene and Export. Up to two settings panels
+dock below the global Loop controls at once, stacked, each with
 its own header: collapse, pop out and close. Opening a third replaces the
 oldest; selecting an object opens Object, which counts as one of the two. Escape
 closes the focused panel and returns focus to its button. The column keeps the
@@ -97,9 +111,10 @@ popping out never moves the viewport or its toolbars. Which launcher panels are
 docked, and which are collapsed, is remembered per surface (the studio's 3D
 tab, `/world-builder` and `/scene-adapter`) in `localStorage`; Object follows
 a selection and is not restored. Build's primitives chooser is not a docked
-panel: it opens beside Add on the tool rail. The docked column runs from the
-viewport's top to the workspace's foot and scrolls inside itself; the console
-(launchers, take length, Capture take) stays in the left column beside it.
+panel: it opens beside Add on the tool rail. The desktop sidebar scrolls within
+the viewport's height. On a phone it follows the scene, before the full-width
+catalogue. Opening Camera from the lightbox closes its native modal first, so
+the settings panel can receive input.
 
 **Pop out** moves a panel into a Document Picture-in-Picture window, so Sound
 can sit on another screen while Camera and Scene stay docked. The panel is the

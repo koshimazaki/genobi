@@ -12,7 +12,7 @@ opens an interactive macOS Terminal window per role, Developer first. Give
 each its task and reply in that harness; there is no embedded terminal or
 task form in Genobi, and the two windows do not start or message each other:
 the person relays briefs and failure packets between them.
-The existing Genobi activity bubble remains available for studio-agent activity,
+The existing Genobi guide bubble remains available for studio-agent activity,
 and the footer [deck](genobi-deck.md) names linked supervisor agents with a
 link back to Development.
 

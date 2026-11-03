@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <title>Quiet grids — Genobi study</title>
+    <link rel="stylesheet" href="./study.css" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <a class="brand" href="/">◉ Genobi</a><span>Animations & Effects</span
+        ><span class="badge">LOCAL STUDY / 02</span>
+      </header>
+      <section class="intro">
+        <div>
+          <p class="eyebrow">A frame, held together</p>
+          <h1>One image.<br />A quieter signal.</h1>
+        </div>
+        <p>
+          Keep the subject recognizable. Change a small window, or let time move
+          gently around clear central action.
+        </p>
+      </section>
+      <nav aria-label="Grid treatments" class="modes">
+        <button data-mode="poster" aria-pressed="true">
+          <span>01 / PRINT</span><strong>Quiet window</strong
+          ><small>3 × 3 · monochrome · halftone</small>
+        </button>
+        <button data-mode="water" aria-pressed="false">
+          <span>02 / TIME</span><strong>Water grid</strong
+          ><small>Locked center · small temporal offsets</small>
+        </button>
+      </nav>
+      <section class="workspace" aria-label="Treatment preview and controls">
+        <div class="preview-bar">
+          <span id="mode-title">QUIET WINDOW</span
+          ><span id="frame-status">PREPARING SOURCE</span>
+        </div>
+        <div class="stage">
+          <canvas
+            id="output"
+            width="960"
+            height="540"
+            aria-label="Rendered grid treatment"
+          ></canvas>
+          <p id="loading" role="status">Preparing the source frames…</p>
+        </div>
+        <div class="transport">
+          <button id="play" aria-label="Play study" disabled>▶ Play</button>
+          <label class="scrub"
+            >Frame<input
+              id="frame"
+              aria-label="Frame"
+              type="range"
+              min="0"
+              max="95"
+              value="0"
+              step="1"
+              disabled
+            /><output id="time">0.00 / 4.00 s</output></label
+          >
+          <label class="amount"
+            >Intensity<input
+              id="intensity"
+              aria-label="Intensity"
+              type="range"
+              min="0"
+              max="1"
+              step="0.01"
+              value="0.64"
+              disabled
+            /><output id="amount">64%</output></label
+          >
+        </div>
+        <div class="caption">
+          <p id="description">
+            One aligned crop, a fine print texture and a few muted color
+            accents. The surrounding frame remains intact.
+          </p>
+          <label id="grid-label"
+            ><input type="checkbox" id="grid" checked disabled />Show water
+            grid</label
+          >
+        </div>
+      </section>
+      <section class="notes">
+        <div>
+          <span class="eyebrow">Source stays whole</span>
+          <p>
+            Each cell sees its own position in the same image. The grid never
+            repeats the full picture.
+          </p>
+        </div>
+        <div>
+          <span class="eyebrow">Authored demo timing</span>
+          <p>
+            Four seconds on an explicit frame clock. Silent; no soundtrack
+            analysis or music synchronization.
+          </p>
+        </div>
+        <div>
+          <span class="eyebrow">An isolated experiment</span>
+          <p>
+            Preview and scrub locally. This is not yet a Director effect or an
+            editable preset group.
+          </p>
+        </div>
+      </section>
+      <footer>
+        <p>
+          Source: <strong>Bloom / take B</strong> · existing MiniMax H3
+          footage.<br />Small accents and quiet motion; intensity zero restores
+          the source.
+        </p>
+        <a href="./README.md">Method, limits & credits ↗</a>
+      </footer>
+    </main>
+    <script type="module" src="./study.js"></script>
+  </body>
+</html>

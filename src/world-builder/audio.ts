@@ -1,3 +1,7 @@
+import { analyseSubBand, type BandEnvelopes } from "./audio-bands";
+import { compactAudioEnvelope } from "./audio-envelope";
+import { TAKE_FPS, TAKE_FRAMES } from "./take-duration";
+
 /** Fixed-grid analysis reuses Holodeck's frame-indexed, imperative modulation approach. */
 export function rmsEnvelope(
   channels: Float32Array[],
@@ -5,23 +9,25 @@ export function rmsEnvelope(
   fps = 24,
 ) {
   const length = Math.min(
-    241,
+    TAKE_FRAMES.max,
     Math.ceil((channels[0].length / sampleRate) * fps),
   );
-  return Array.from({ length }, (_, frame) => {
-    const start = Math.floor((frame * sampleRate) / fps),
-      end = Math.min(
-        channels[0].length,
-        Math.floor(((frame + 1) * sampleRate) / fps),
+  return compactAudioEnvelope(
+    Array.from({ length }, (_, frame) => {
+      const start = Math.floor((frame * sampleRate) / fps),
+        end = Math.min(
+          channels[0].length,
+          Math.floor(((frame + 1) * sampleRate) / fps),
+        );
+      let sum = 0;
+      for (const channel of channels)
+        for (let i = start; i < end; i++) sum += channel[i] * channel[i];
+      return Math.min(
+        1,
+        Math.sqrt(sum / Math.max(1, (end - start) * channels.length)),
       );
-    let sum = 0;
-    for (const channel of channels)
-      for (let i = start; i < end; i++) sum += channel[i] * channel[i];
-    return Math.min(
-      1,
-      Math.sqrt(sum / Math.max(1, (end - start) * channels.length)),
-    );
-  });
+    }),
+  );
 }
 export async function decodeAudio(file: Blob) {
   if (file.size > 32 * 1024 * 1024) throw new Error("Audio limit: 32 MB.");
@@ -48,7 +54,7 @@ export interface AudioTrack {
   channels: Float32Array[];
   sampleRate: number;
   envelope: number[];
-  bands?: { low: number[]; mid: number[]; high: number[] };
+  bands?: BandEnvelopes;
 }
 /** Frame-aligned PCM companion for Comfy audio/video combine. Silence pads short inputs. */
 export function audioWav(track: AudioTrack, duration: number) {
@@ -85,7 +91,10 @@ export function audioWav(track: AudioTrack, duration: number) {
 
 /** Bounded offline crossover analysis, sampled on the same capture frame grid. */
 export function analyseBands(channels: Float32Array[], sampleRate: number) {
-  const n = Math.min(channels[0].length, Math.ceil((241 / 24) * sampleRate));
+  const n = Math.min(
+    channels[0].length,
+    Math.ceil((TAKE_FRAMES.max / TAKE_FPS) * sampleRate),
+  );
   const lows: Float32Array[] = [],
     mids: Float32Array[] = [],
     highs: Float32Array[] = [];
@@ -110,6 +119,7 @@ export function analyseBands(channels: Float32Array[], sampleRate: number) {
     highs.push(highBand);
   }
   return {
+    sub: analyseSubBand(channels, sampleRate),
     low: rmsEnvelope(lows, sampleRate),
     mid: rmsEnvelope(mids, sampleRate),
     high: rmsEnvelope(highs, sampleRate),

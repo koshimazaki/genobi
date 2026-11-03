@@ -431,19 +431,21 @@ export const shots = [
     },
     async run(a) {
       const { page } = a;
+      // Since #57 the bubble is a guide: tips and setup help, no agent start.
       await a.click(
-        page.getByRole("button", { name: "Open Genobi activity" }),
+        page.getByRole("button", { name: "Open Genobi guide" }),
         "genobi",
       );
-      await a.wait(900);
-      await a.type(
-        page.getByPlaceholder(/Type what to make/),
-        "Cut my gallery clips into a 20 s teaser on the beat",
-        "brief",
-        42,
+      await a.wait(2100);
+      await a.move(
+        page.getByRole("button", { name: "Next teaching" }),
+        "next tip",
       );
       await a.wait(1200);
-      await a.move(page.getByRole("button", { name: "Start Genobi" }), "start");
+      await a.move(
+        page.getByRole("button", { name: "Set up Genobi" }).last(),
+        "setup",
+      );
       await a.wait(1800);
     },
   },

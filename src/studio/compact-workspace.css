@@ -438,10 +438,6 @@
   > .genobi-panel-heading {
   display: none;
 }
-.genobi-shell .dir-saved-videos:not([open]) {
-  padding: 6px 12px;
-  font-size: 11px;
-}
 @media (max-width: 700px) {
   .genobi-shell .genobi-presets button,
   .genobi-shell .dir-remix button {

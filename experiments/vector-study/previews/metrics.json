@@ -1,0 +1,689 @@
+{
+  "source": "public/media/director-templates/dimensions-mix/mix-02.mp4",
+  "source_sha256": "b749a9b1ede414a9be563d0d9bcd188296a2e97ec688a105b48c1312a2fda4f4",
+  "source_note": "Existing owner-supplied MiniMax H3 output; no new generation.",
+  "start_seconds": 1,
+  "duration_seconds": 2.0,
+  "sample_fps": 12,
+  "raster_size": [256, 256],
+  "trace_options": {
+    "compact": {
+      "colormode": "color",
+      "hierarchical": "stacked",
+      "mode": "spline",
+      "filter_speckle": 16,
+      "color_precision": 4,
+      "layer_difference": 48,
+      "corner_threshold": 60,
+      "length_threshold": 4,
+      "max_iterations": 10,
+      "splice_threshold": 45,
+      "path_precision": 2
+    },
+    "detail": {
+      "colormode": "color",
+      "hierarchical": "stacked",
+      "mode": "spline",
+      "filter_speckle": 4,
+      "color_precision": 6,
+      "layer_difference": 16,
+      "corner_threshold": 60,
+      "length_threshold": 4,
+      "max_iterations": 10,
+      "splice_threshold": 45,
+      "path_precision": 2
+    }
+  },
+  "versions": {
+    "vtracer": "0.6.12",
+    "cairosvg": "2.8.2",
+    "pillow": "13.0.0",
+    "numpy": "2.3.5"
+  },
+  "ffmpeg": "ffmpeg version 6.1.1-3ubuntu5 Copyright (c) 2000-2023 the FFmpeg developers",
+  "authored_control": {
+    "paths": 27,
+    "commands": 153,
+    "svg_bytes": 3809,
+    "identity_changes": 0,
+    "method": "Known geometry animated by rigid transforms; not inferred from footage."
+  },
+  "h3_trace": {
+    "frames": 24,
+    "path_min": 29,
+    "path_max": 47,
+    "path_mean": 36.583,
+    "path_count_cv": 0.1325,
+    "mean_absolute_path_count_change": 5.0,
+    "command_layout_changed_transitions": 23,
+    "transitions": 23,
+    "total_independent_svg_bytes": 1400772,
+    "mean_rgb_absolute_error_0_255": 26.956,
+    "mean_adjacent_residual_change_0_255": 15.272,
+    "per_frame": [
+      {
+        "frame": 0,
+        "paths": 30,
+        "commands": 1806,
+        "svg_bytes": 57188
+      },
+      {
+        "frame": 1,
+        "paths": 34,
+        "commands": 1746,
+        "svg_bytes": 55120
+      },
+      {
+        "frame": 2,
+        "paths": 29,
+        "commands": 1609,
+        "svg_bytes": 50980
+      },
+      {
+        "frame": 3,
+        "paths": 35,
+        "commands": 1529,
+        "svg_bytes": 47074
+      },
+      {
+        "frame": 4,
+        "paths": 34,
+        "commands": 1666,
+        "svg_bytes": 52982
+      },
+      {
+        "frame": 5,
+        "paths": 37,
+        "commands": 1880,
+        "svg_bytes": 60939
+      },
+      {
+        "frame": 6,
+        "paths": 35,
+        "commands": 1739,
+        "svg_bytes": 55002
+      },
+      {
+        "frame": 7,
+        "paths": 37,
+        "commands": 1688,
+        "svg_bytes": 53869
+      },
+      {
+        "frame": 8,
+        "paths": 30,
+        "commands": 1523,
+        "svg_bytes": 47898
+      },
+      {
+        "frame": 9,
+        "paths": 32,
+        "commands": 1552,
+        "svg_bytes": 49323
+      },
+      {
+        "frame": 10,
+        "paths": 37,
+        "commands": 1617,
+        "svg_bytes": 51222
+      },
+      {
+        "frame": 11,
+        "paths": 29,
+        "commands": 1404,
+        "svg_bytes": 44920
+      },
+      {
+        "frame": 12,
+        "paths": 41,
+        "commands": 2069,
+        "svg_bytes": 64891
+      },
+      {
+        "frame": 13,
+        "paths": 34,
+        "commands": 1946,
+        "svg_bytes": 61557
+      },
+      {
+        "frame": 14,
+        "paths": 44,
+        "commands": 2284,
+        "svg_bytes": 72744
+      },
+      {
+        "frame": 15,
+        "paths": 42,
+        "commands": 2005,
+        "svg_bytes": 63290
+      },
+      {
+        "frame": 16,
+        "paths": 40,
+        "commands": 2137,
+        "svg_bytes": 67647
+      },
+      {
+        "frame": 17,
+        "paths": 35,
+        "commands": 1996,
+        "svg_bytes": 63596
+      },
+      {
+        "frame": 18,
+        "paths": 40,
+        "commands": 1823,
+        "svg_bytes": 56765
+      },
+      {
+        "frame": 19,
+        "paths": 40,
+        "commands": 1960,
+        "svg_bytes": 61332
+      },
+      {
+        "frame": 20,
+        "paths": 47,
+        "commands": 2459,
+        "svg_bytes": 78306
+      },
+      {
+        "frame": 21,
+        "paths": 40,
+        "commands": 1850,
+        "svg_bytes": 57879
+      },
+      {
+        "frame": 22,
+        "paths": 43,
+        "commands": 2379,
+        "svg_bytes": 77205
+      },
+      {
+        "frame": 23,
+        "paths": 33,
+        "commands": 1565,
+        "svg_bytes": 49043
+      }
+    ],
+    "flipbook_svg_bytes": 1440422
+  },
+  "h3_detail": {
+    "frames": 24,
+    "path_min": 796,
+    "path_max": 852,
+    "path_mean": 822.833,
+    "path_count_cv": 0.0189,
+    "mean_absolute_path_count_change": 14.0,
+    "command_layout_changed_transitions": 23,
+    "transitions": 23,
+    "total_independent_svg_bytes": 8125635,
+    "mean_rgb_absolute_error_0_255": 13.516,
+    "mean_adjacent_residual_change_0_255": 10.539,
+    "per_frame": [
+      {
+        "frame": 0,
+        "paths": 799,
+        "commands": 11470,
+        "svg_bytes": 330139
+      },
+      {
+        "frame": 1,
+        "paths": 810,
+        "commands": 11495,
+        "svg_bytes": 330526
+      },
+      {
+        "frame": 2,
+        "paths": 796,
+        "commands": 11764,
+        "svg_bytes": 339887
+      },
+      {
+        "frame": 3,
+        "paths": 821,
+        "commands": 11835,
+        "svg_bytes": 341476
+      },
+      {
+        "frame": 4,
+        "paths": 852,
+        "commands": 12394,
+        "svg_bytes": 357447
+      },
+      {
+        "frame": 5,
+        "paths": 851,
+        "commands": 12293,
+        "svg_bytes": 353685
+      },
+      {
+        "frame": 6,
+        "paths": 845,
+        "commands": 12273,
+        "svg_bytes": 349042
+      },
+      {
+        "frame": 7,
+        "paths": 819,
+        "commands": 11549,
+        "svg_bytes": 329229
+      },
+      {
+        "frame": 8,
+        "paths": 817,
+        "commands": 12021,
+        "svg_bytes": 349217
+      },
+      {
+        "frame": 9,
+        "paths": 843,
+        "commands": 11804,
+        "svg_bytes": 340828
+      },
+      {
+        "frame": 10,
+        "paths": 828,
+        "commands": 11928,
+        "svg_bytes": 346501
+      },
+      {
+        "frame": 11,
+        "paths": 841,
+        "commands": 11422,
+        "svg_bytes": 327137
+      },
+      {
+        "frame": 12,
+        "paths": 813,
+        "commands": 11507,
+        "svg_bytes": 331456
+      },
+      {
+        "frame": 13,
+        "paths": 812,
+        "commands": 11694,
+        "svg_bytes": 340481
+      },
+      {
+        "frame": 14,
+        "paths": 813,
+        "commands": 12076,
+        "svg_bytes": 350236
+      },
+      {
+        "frame": 15,
+        "paths": 803,
+        "commands": 11217,
+        "svg_bytes": 321580
+      },
+      {
+        "frame": 16,
+        "paths": 812,
+        "commands": 11935,
+        "svg_bytes": 345176
+      },
+      {
+        "frame": 17,
+        "paths": 829,
+        "commands": 11791,
+        "svg_bytes": 339309
+      },
+      {
+        "frame": 18,
+        "paths": 812,
+        "commands": 11429,
+        "svg_bytes": 326353
+      },
+      {
+        "frame": 19,
+        "paths": 827,
+        "commands": 11870,
+        "svg_bytes": 342153
+      },
+      {
+        "frame": 20,
+        "paths": 828,
+        "commands": 11660,
+        "svg_bytes": 333736
+      },
+      {
+        "frame": 21,
+        "paths": 837,
+        "commands": 11728,
+        "svg_bytes": 338316
+      },
+      {
+        "frame": 22,
+        "paths": 811,
+        "commands": 11169,
+        "svg_bytes": 322068
+      },
+      {
+        "frame": 23,
+        "paths": 829,
+        "commands": 11863,
+        "svg_bytes": 339657
+      }
+    ]
+  },
+  "control_trace": {
+    "frames": 24,
+    "path_min": 22,
+    "path_max": 22,
+    "path_mean": 22.0,
+    "path_count_cv": 0.0,
+    "mean_absolute_path_count_change": 0.0,
+    "command_layout_changed_transitions": 23,
+    "transitions": 23,
+    "total_independent_svg_bytes": 240864,
+    "mean_rgb_absolute_error_0_255": 3.905,
+    "mean_adjacent_residual_change_0_255": 5.698,
+    "per_frame": [
+      {
+        "frame": 0,
+        "paths": 22,
+        "commands": 325,
+        "svg_bytes": 10843
+      },
+      {
+        "frame": 1,
+        "paths": 22,
+        "commands": 287,
+        "svg_bytes": 9730
+      },
+      {
+        "frame": 2,
+        "paths": 22,
+        "commands": 309,
+        "svg_bytes": 10260
+      },
+      {
+        "frame": 3,
+        "paths": 22,
+        "commands": 290,
+        "svg_bytes": 9838
+      },
+      {
+        "frame": 4,
+        "paths": 22,
+        "commands": 309,
+        "svg_bytes": 10290
+      },
+      {
+        "frame": 5,
+        "paths": 22,
+        "commands": 274,
+        "svg_bytes": 9255
+      },
+      {
+        "frame": 6,
+        "paths": 22,
+        "commands": 325,
+        "svg_bytes": 10843
+      },
+      {
+        "frame": 7,
+        "paths": 22,
+        "commands": 287,
+        "svg_bytes": 9730
+      },
+      {
+        "frame": 8,
+        "paths": 22,
+        "commands": 309,
+        "svg_bytes": 10260
+      },
+      {
+        "frame": 9,
+        "paths": 22,
+        "commands": 290,
+        "svg_bytes": 9838
+      },
+      {
+        "frame": 10,
+        "paths": 22,
+        "commands": 309,
+        "svg_bytes": 10290
+      },
+      {
+        "frame": 11,
+        "paths": 22,
+        "commands": 274,
+        "svg_bytes": 9255
+      },
+      {
+        "frame": 12,
+        "paths": 22,
+        "commands": 325,
+        "svg_bytes": 10843
+      },
+      {
+        "frame": 13,
+        "paths": 22,
+        "commands": 287,
+        "svg_bytes": 9730
+      },
+      {
+        "frame": 14,
+        "paths": 22,
+        "commands": 309,
+        "svg_bytes": 10260
+      },
+      {
+        "frame": 15,
+        "paths": 22,
+        "commands": 290,
+        "svg_bytes": 9838
+      },
+      {
+        "frame": 16,
+        "paths": 22,
+        "commands": 309,
+        "svg_bytes": 10290
+      },
+      {
+        "frame": 17,
+        "paths": 22,
+        "commands": 274,
+        "svg_bytes": 9255
+      },
+      {
+        "frame": 18,
+        "paths": 22,
+        "commands": 325,
+        "svg_bytes": 10843
+      },
+      {
+        "frame": 19,
+        "paths": 22,
+        "commands": 287,
+        "svg_bytes": 9730
+      },
+      {
+        "frame": 20,
+        "paths": 22,
+        "commands": 309,
+        "svg_bytes": 10260
+      },
+      {
+        "frame": 21,
+        "paths": 22,
+        "commands": 290,
+        "svg_bytes": 9838
+      },
+      {
+        "frame": 22,
+        "paths": 22,
+        "commands": 309,
+        "svg_bytes": 10290
+      },
+      {
+        "frame": 23,
+        "paths": 22,
+        "commands": 274,
+        "svg_bytes": 9255
+      }
+    ]
+  },
+  "control_detail": {
+    "frames": 24,
+    "path_min": 27,
+    "path_max": 27,
+    "path_mean": 27.0,
+    "path_count_cv": 0.0,
+    "mean_absolute_path_count_change": 0.0,
+    "command_layout_changed_transitions": 23,
+    "transitions": 23,
+    "total_independent_svg_bytes": 285844,
+    "mean_rgb_absolute_error_0_255": 3.427,
+    "mean_adjacent_residual_change_0_255": 4.929,
+    "per_frame": [
+      {
+        "frame": 0,
+        "paths": 27,
+        "commands": 390,
+        "svg_bytes": 12793
+      },
+      {
+        "frame": 1,
+        "paths": 27,
+        "commands": 350,
+        "svg_bytes": 11691
+      },
+      {
+        "frame": 2,
+        "paths": 27,
+        "commands": 367,
+        "svg_bytes": 12006
+      },
+      {
+        "frame": 3,
+        "paths": 27,
+        "commands": 355,
+        "svg_bytes": 11867
+      },
+      {
+        "frame": 4,
+        "paths": 27,
+        "commands": 368,
+        "svg_bytes": 12054
+      },
+      {
+        "frame": 5,
+        "paths": 27,
+        "commands": 335,
+        "svg_bytes": 11050
+      },
+      {
+        "frame": 6,
+        "paths": 27,
+        "commands": 390,
+        "svg_bytes": 12793
+      },
+      {
+        "frame": 7,
+        "paths": 27,
+        "commands": 350,
+        "svg_bytes": 11691
+      },
+      {
+        "frame": 8,
+        "paths": 27,
+        "commands": 367,
+        "svg_bytes": 12006
+      },
+      {
+        "frame": 9,
+        "paths": 27,
+        "commands": 355,
+        "svg_bytes": 11867
+      },
+      {
+        "frame": 10,
+        "paths": 27,
+        "commands": 368,
+        "svg_bytes": 12054
+      },
+      {
+        "frame": 11,
+        "paths": 27,
+        "commands": 335,
+        "svg_bytes": 11050
+      },
+      {
+        "frame": 12,
+        "paths": 27,
+        "commands": 390,
+        "svg_bytes": 12793
+      },
+      {
+        "frame": 13,
+        "paths": 27,
+        "commands": 350,
+        "svg_bytes": 11691
+      },
+      {
+        "frame": 14,
+        "paths": 27,
+        "commands": 367,
+        "svg_bytes": 12006
+      },
+      {
+        "frame": 15,
+        "paths": 27,
+        "commands": 355,
+        "svg_bytes": 11867
+      },
+      {
+        "frame": 16,
+        "paths": 27,
+        "commands": 368,
+        "svg_bytes": 12054
+      },
+      {
+        "frame": 17,
+        "paths": 27,
+        "commands": 335,
+        "svg_bytes": 11050
+      },
+      {
+        "frame": 18,
+        "paths": 27,
+        "commands": 390,
+        "svg_bytes": 12793
+      },
+      {
+        "frame": 19,
+        "paths": 27,
+        "commands": 350,
+        "svg_bytes": 11691
+      },
+      {
+        "frame": 20,
+        "paths": 27,
+        "commands": 367,
+        "svg_bytes": 12006
+      },
+      {
+        "frame": 21,
+        "paths": 27,
+        "commands": 355,
+        "svg_bytes": 11867
+      },
+      {
+        "frame": 22,
+        "paths": 27,
+        "commands": 368,
+        "svg_bytes": 12054
+      },
+      {
+        "frame": 23,
+        "paths": 27,
+        "commands": 335,
+        "svg_bytes": 11050
+      }
+    ]
+  },
+  "comparison_mp4_bytes": 403540
+}

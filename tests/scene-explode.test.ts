@@ -5,6 +5,8 @@ import {
   explodePlan,
 } from "../shared/scene/explode";
 import type { Vec3 } from "../shared/scene/types";
+import { defaultRecipe, validateRecipe } from "../src/world-builder/recipe";
+import { evaluateScene } from "../src/world-builder/evaluate-scene";
 
 // A small stack: a core at the centre, a near part and a far part.
 const parts: Vec3[] = [
@@ -53,4 +55,44 @@ describe("generic explode", () => {
     expect(() => explodePlan(parts, { window: 0 })).toThrow(/window/);
     expect(explodePlan([]).parts).toEqual([]);
   });
+});
+
+it("keeps evaluated shot objects aligned with the WebGL explode offsets", () => {
+  const objects = defaultRecipe.objects.map((p, i) => ({
+    ...p,
+    x: i === 0 ? -2 : 2,
+    y: 1,
+    z: 0,
+    spin: 0,
+  }));
+  const recipe = validateRecipe({
+    objects,
+    frames: 97,
+    envelope: [0, 1, 0],
+    bandEnvelopes: { low: [0, 1, 0], mid: [], high: [], sub: [] },
+    audioRoutes: [
+      {
+        id: "explode-test",
+        target: "primitives",
+        property: "explode",
+        source: "low",
+        amount: 1,
+        threshold: 0,
+        lerp: 1,
+      },
+    ],
+  });
+  const plan = explodePlan(objects.map((p) => [p.x, p.y, p.z]));
+  const initial = evaluateScene(recipe, 0).objects;
+  const opened = evaluateScene(recipe, 1).objects;
+  const closed = evaluateScene(recipe, 2).objects;
+  objects.forEach((part, i) => {
+    const shift = explodeOffset(plan, i, 1);
+    expect(initial[i].x).toBeCloseTo(part.x);
+    expect(opened[i].x).toBeCloseTo(part.x + shift[0]);
+    expect(opened[i].y).toBeCloseTo(part.y + shift[1]);
+    expect(opened[i].z).toBeCloseTo(part.z + shift[2]);
+    expect(closed[i].x).toBeCloseTo(part.x);
+  });
+  expect(evaluateScene(recipe, 1).objects).toEqual(opened);
 });

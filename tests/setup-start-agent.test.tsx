@@ -368,7 +368,7 @@ describe("setup's last step starts the agent", () => {
       "POST /api/agent/sessions",
     ]);
     expect(body()).toMatchObject({ setup: true, mode: "terminal" });
-    // "Run in the bubble instead" on the summary: the next start is headless.
+    // "Run in the studio instead" on the summary: the next start is headless.
     const store = await import("../src/agent/spawn-store");
     store.setPrefersTerminal(false);
     m.resetSetupStart();

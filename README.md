@@ -2,11 +2,11 @@
 
 **Build the scene. Shape the sound. Make the cut.**
 
-Genobi brings several tools I’ve built into one open-source video studio,
-with new tools connecting scene building, sound, generation and editing.
-You and your agent work on the same creative project: the agent makes a first
-pass, you adjust timing, move or trim clips, add notes or give directions by
-voice, and those changes guide the next version.
+Genobi is a voice-first, harness-first video studio. Talk to it, or give
+instructions to your own agent; the screen is mainly for inspecting what comes
+back and viewing your assets. It brings several tools I’ve built into one
+open-source studio, with new tools connecting scene building, sound, generation
+and editing, all in one project you and your agent work on together.
 
 **Open-source first.** Run your own studio, choose an open-weight local workflow
 or connect cloud models, and bring the agent harness that fits your project.
@@ -18,6 +18,23 @@ or connect cloud models, and bring the agent harness that fits your project.
 [Documentation](docs/README.md)
 
 https://github.com/user-attachments/assets/b2665e97-2836-4e02-8b38-4694a5c6b6c7
+
+## Start here
+
+Run the [local studio](#run-locally), then pick a way in:
+
+**Talk to it.** Press the mic and say what you want; your agent gets the text.
+Qwen3-ASR transcribes on your machine after a one-time 1.9 GB model download
+(Python 3.11 and ffmpeg needed). Local studio only. [Voice setup](docs/voice-setup.md).
+
+**Bring your agent.** Hermes (open source), Claude Code or Codex drive the
+studio through the [Genobi plugin](plugins/genobi/README.md): MCP, CLI and
+skills. Start Genobi sets up Hermes; for Claude Code, `claude --plugin-dir plugins/genobi`.
+
+No manual needed: drop your images, video and audio into **Assets** and tell the
+agent what they are and what you want. Camera shows what came back, Assets holds
+what you dropped in, and the deck shows what the agent is doing. Anything paid
+waits for your approval in the studio.
 
 ## Try it in a few minutes
 
@@ -59,8 +76,19 @@ experimental route for room-conditioned generated audio/video.
 [Acoustics and reverb](docs/world-builder-acoustics.md) ·
 [ComfyUI nodes and examples](custom_nodes/director_world_builder/README.md)
 
+### Editable scene motion
+
+World Builder's **Library → Presets** gallery includes fifteen motion and story presets: city-to-loft camera journeys, spacecraft/mecha, masks, palms, finer fruits and enclosed architecture at 64/128/256 blocks. The global **Loop** panel saves complete shape/camera views as A–D: load an asset, frame it directly in Shot, save A, load another and save B. Play returns to A; Save loop captures the result. Camera sits beside Expand, music stays in the sidebar, and assets sit below the dark-grid view. Choose direct/scatter/twist/assembly paths, independent camera/object rotation, measured audio links and a frame-grid duration through 30 seconds. The optional **Build a morph** composer also tick-selects two to four individual authored forms. See [the loop workflow](docs/world-builder-loops.md) and [scene motion](docs/world-builder-motion.md).
+
+**Story · Endless descent** connects a street, full-scale cathedral, club and DJ studio in one continuous fall. **Story · Bass avenue** makes towers and taxis respond to separate frequency bands. The global **Scene size** fader resizes the surroundings while the mannequin stays 1.8 m tall; explicit room dimensions drive the browser CPU sound preview. See [human-scale stories](docs/world-builder-stories.md) and [dynamic acoustic zones](docs/world-builder-acoustic-zones.md).
+
+The same gallery and **Editor → Add track → Animations & Effects** expose Poster window, Cinematic scan/HUD, Kinetic title and Liquid mirror. Preview and save variants, then insert ordinary editable layers in one Undo action. The [effects catalogue](docs/effects-catalogue.md) documents controls, trusted-source validation and UI/API/CLI/MCP access.
+
+The apartment and cathedral studies also render [changing room sound](docs/world-builder-dynamic-sound.md) on the browser CPU. Choose an independent dry source, follow the evaluated room timeline, preview in sync with the scene, and export a WAV with its frozen recipe and sound receipt.
+
 ## Create, edit and revise
 
+- **Make audio-reactive video, repeatably.** A World Builder scene moves to a track window, one still sets the look and LTX-2.5 Layout-to-Render paints it: three videos and thirteen presets with track, subject and space swaps an agent can rerun. [The featured workflow](audio-reactive/README.md).
 - **Edit an existing Klein image.** Drop your source straight onto Image layout, add bounding boxes and describe changes. Resize the preview from its corner for detailed work.
 - **Direct across models.** Camera controls adapt to FLUX video, LTX and
   MiniMax H3 using their documented prompting language. Klein has image framing,
@@ -116,10 +144,10 @@ custom ComfyUI graphs and the studio's one-click integrations have different
 setup and verification requirements. See [getting started](docs/getting-started.md)
 and [current limitations](docs/troubleshooting.md).
 
-Editable templates open **Generate my version** in Director or Editor: reuse
-assets, upload replacements, apply undoable swaps, or ask your linked agent to
-prepare new media. Paid generation waits for approval in the bubble. See
-[the version guide](docs/director-generate.md). Camera on the hosted or local studio can register
+Editable templates open **Make my version** in Director or Editor: keep the
+cut, effects and soundtrack, and swap your own media into its slots with Undo.
+Nothing there generates; new media is made in Camera and appears in Assets →
+Generated. See [the version guide](docs/director-generate.md). Camera on the hosted or local studio can register
 [a Comfy deployment](docs/comfy-deploy.md#use-it-from-camera) for Layout-to-video
 and AKUSPACE. These require a deployment in your own Comfy workspace and an authorised key; that workspace pays for GPU usage. Other cloud generations only need their supported provider key.
 

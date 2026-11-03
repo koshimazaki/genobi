@@ -1,6 +1,8 @@
 import * as T from "three";
 import { Capsule } from "three/addons/math/Capsule.js";
 import { Octree } from "three/addons/math/Octree.js";
+import { BUILDER_CHARACTER_MODELS } from "./character-catalog";
+import { WORLD_POSITION_LIMIT } from "./scene-bounds";
 
 /** Small capsule controller; static geometry only. No dynamic-physics simulation. */
 export function createWalker(collider: Octree, start: T.Vector3) {
@@ -10,8 +12,9 @@ export function createWalker(collider: Octree, start: T.Vector3) {
     position = new T.Vector3();
   let grounded = false;
   const reset = () => {
-    capsule.start.copy(start).y += 0.22;
-    capsule.end.copy(start).y += 1.38;
+    capsule.start.copy(start).y += capsule.radius;
+    capsule.end.copy(start).y +=
+      BUILDER_CHARACTER_MODELS.mannequin.height - capsule.radius;
     velocity.set(0, 0, 0);
     grounded = false;
   };
@@ -47,9 +50,9 @@ export function createWalker(collider: Octree, start: T.Vector3) {
       position.copy(capsule.start);
       position.y -= capsule.radius;
       if (
-        position.y < -20 ||
-        Math.abs(position.x) > 40 ||
-        Math.abs(position.z) > 40
+        Math.abs(position.y) > WORLD_POSITION_LIMIT ||
+        Math.abs(position.x) > WORLD_POSITION_LIMIT ||
+        Math.abs(position.z) > WORLD_POSITION_LIMIT
       ) {
         reset();
         position.copy(start);

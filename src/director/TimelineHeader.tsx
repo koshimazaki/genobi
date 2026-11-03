@@ -96,7 +96,12 @@ export default function TimelineHeader({
       >
         Feedback
       </button>
-      <button disabled={busy || !undoCount} onClick={undo}>
+      <button
+        disabled={busy || !undoCount}
+        onClick={undo}
+        aria-keyshortcuts="Meta+Z Control+Z"
+        title="Undo the last edit (Cmd/Ctrl+Z outside a text field)"
+      >
         Undo
       </button>
       <button
