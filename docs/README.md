@@ -125,6 +125,9 @@ user action through every layer.
   audio-to-audio and image-to-video workflows.
 - [Key LTX / World Builder deployment](comfy-deploy.md) — the exact two GPU
   workflows, local CPU reverb, remote model sources and comfy-cli 1.24 commands.
+- [Tester access for reviewers](tester-access.md) — an operator-set access
+  code from the submission unlocks a capped number of Comfy Deploy runs on the
+  operator's deployment; off until its secrets are set.
 - [Comfy Developer Platform deployment](comfy-deployment.md) — the pins in
   `comfy-build/` as a `comfy build` recipe, how push treats weights, and one build versus several.
 

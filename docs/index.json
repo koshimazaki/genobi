@@ -340,6 +340,7 @@
         "openjutsu-swap.md",
         "read-through.md",
         "run-location.md",
+        "tester-access.md",
         "voice-mode.md",
         "voice-setup.md"
       ]
@@ -351,7 +352,8 @@
         "cloudflare.md",
         "media-previews.md",
         "runner-pairing.md",
-        "template-gallery.md"
+        "template-gallery.md",
+        "tester-access.md"
       ]
     },
     "comfy": {
@@ -373,6 +375,7 @@
         "openjutsu-swap.md",
         "run-location.md",
         "seedvr2-upscale.md",
+        "tester-access.md",
         "troubleshooting.md",
         "upscaling.md",
         "vast-runner.md",
@@ -785,6 +788,7 @@
         "teachings.md",
         "template-gallery.md",
         "templates.md",
+        "tester-access.md",
         "troubleshooting.md",
         "tutorial-video.md",
         "upscaling.md",
@@ -1197,7 +1201,12 @@
       "path": "cloudflare.md",
       "tags": ["architecture", "cloudflare", "backend"],
       "summary": "Hosted deployment on Cloudflare Pages, with the runtime, D1 and R2 limits, lifecycle, reproduction and deployment.",
-      "links": ["media-previews.md", "runner-pairing.md", "template-gallery.md"]
+      "links": [
+        "media-previews.md",
+        "runner-pairing.md",
+        "template-gallery.md",
+        "tester-access.md"
+      ]
     },
     {
       "title": "Comfy Cloud inventory",
@@ -1218,7 +1227,7 @@
         "world-builder"
       ],
       "summary": "The three key adaptive-reverb workflows, one remote-model LTX build with two GPU endpoints, local CPU reverb, comfy-cli 1.24 commands and scale-to-zero costs.",
-      "links": ["adaptive-reverb.md"]
+      "links": ["adaptive-reverb.md", "tester-access.md"]
     },
     {
       "title": "Comfy Developer Platform deployment",
@@ -2085,7 +2094,7 @@
       "path": "review-checklist.md",
       "tags": ["architecture", "review"],
       "summary": "Questions to answer from source and tests when reviewing a change, including agent and independent review passes.",
-      "links": ["architecture.md", "cloudflare.md"]
+      "links": ["architecture.md", "cloudflare.md", "tester-access.md"]
     },
     {
       "title": "Run location and workflow swapping",
@@ -2295,6 +2304,13 @@
         "template-gallery.md",
         "vision.md"
       ]
+    },
+    {
+      "title": "Tester access for reviewers",
+      "path": "tester-access.md",
+      "tags": ["cloudflare", "comfy", "backend"],
+      "summary": "Operator-enabled reviewer access on the hosted studio, an access code from the submission unlocking a capped number of Comfy Deploy runs paid by the operator's workspace.",
+      "links": ["comfy-deploy.md"]
     },
     {
       "title": "Troubleshooting and workflow limits",
