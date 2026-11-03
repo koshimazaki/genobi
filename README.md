@@ -144,10 +144,10 @@ custom ComfyUI graphs and the studio's one-click integrations have different
 setup and verification requirements. See [getting started](docs/getting-started.md)
 and [current limitations](docs/troubleshooting.md).
 
-Editable templates open **Generate my version** in Director or Editor: reuse
-assets, upload replacements, apply undoable swaps, or ask your linked agent to
-prepare new media. Paid generation waits for approval in the bubble. See
-[the version guide](docs/director-generate.md). Camera on the hosted or local studio can register
+Editable templates open **Make my version** in Director or Editor: keep the
+cut, effects and soundtrack, and swap your own media into its slots with Undo.
+Nothing there generates; new media is made in Camera and appears in Assets →
+Generated. See [the version guide](docs/director-generate.md). Camera on the hosted or local studio can register
 [a Comfy deployment](docs/comfy-deploy.md#use-it-from-camera) for Layout-to-video
 and AKUSPACE. These require a deployment in your own Comfy workspace and an authorised key; that workspace pays for GPU usage. Other cloud generations only need their supported provider key.
 

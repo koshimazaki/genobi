@@ -46,7 +46,7 @@ export default function GlobalPromptSend({ disabled }: { disabled: boolean }) {
         disabled={disabled || sending || copy === false}
         title={
           working
-            ? "Genobi is still working on this project; its progress is in the bubble"
+            ? "Genobi is still working on this project; its progress is in the Genobi log"
             : `Send the global prompt, the clip prompts and your edits to Genobi${label.runner ? ` (${label.runner})` : ""}`
         }
         onClick={async () => {

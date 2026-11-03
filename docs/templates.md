@@ -347,7 +347,7 @@ prompt, editable, with its ratio and length
 
 The drawer leaves the header usable while the spawn dialog asks and once a
 session works on the template, since its status line sends the person to the
-bubble to approve each paid step. The anime teaser and Sheet to shot have no
+deck to approve each paid step. The anime teaser and Sheet to shot have no
 preview footage yet, so their cards and drawers say "Preview coming soon" and
 they have no watch or embed page.
 
@@ -382,8 +382,9 @@ they have no watch or embed page.
   anything is spent. In a session the studio started, those CLI quotes reach
   the person's approvals only when the CLI carries the session's grant.
 - The single question about a missing reference is the agent's own message,
-  shown in the bubble as its latest update. The bubble has no yes and no
-  buttons for it, and a Terminal session asks in its window.
+  shown in the deck log (and the guide bubble's status) as its latest
+  update. There are no yes and no buttons for it, and a Terminal session asks
+  in its window.
 
 ## Checks
 
@@ -448,7 +449,7 @@ actions, the mechanical run). See also the
 
 ## Make a version in Director
 
-Every editable template opens [Generate my version](director-generate.md), with
-its declared media inputs and current assets. Apply swaps locally or ask the
-linked agent to prepare replacements; every paid step retains approval in the
-bubble. The Gallery's mechanical Generate stays independent of this agent flow.
+Every editable template opens [Make my version](director-generate.md), with
+its declared media inputs and current assets. Swaps are local and undoable;
+nothing in the template editor generates. New media is made in Camera and
+comes back through Assets → Generated.

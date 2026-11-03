@@ -182,13 +182,6 @@ export function voiceFixture(browser, base, errors) {
         localStorage.setItem("genobi-setup-seen-v1", "1");
         if (destination)
           localStorage.setItem("genobi.voice.destination", destination);
-        // The agent bubble is opt-in since the activity settings landed; a
-        // person who wants the session panel shown has this preference set.
-        // Logging itself stays off, so no activity write is mistaken for a run.
-        localStorage.setItem(
-          "genobi-activity-v1",
-          JSON.stringify({ enabled: false, showBubble: true, events: [] }),
-        );
         window.voiceMicRequests = 0;
         const granted = navigator.mediaDevices.getUserMedia.bind(
           navigator.mediaDevices,

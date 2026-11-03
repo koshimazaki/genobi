@@ -118,7 +118,7 @@ try {
       const [a, b] = await Promise.all([
         terminal.boundingBox(),
         dialog
-          .getByRole("button", { name: "Run in the bubble instead" })
+          .getByRole("button", { name: "Run in the studio instead" })
           .boundingBox(),
       ]);
       if (width === 390)

@@ -10,7 +10,7 @@ import {
 import { messageHold } from "../shared/install-messages";
 import { presets } from "../src/studio/presets";
 import { DECK_READY, deckNow } from "../src/deck/deck-now";
-import { AgentBubble } from "../src/agent/AgentBubble";
+import { GenobiGuide } from "../src/agent/GenobiGuide";
 import {
   resetTeaching,
   stepTeaching,
@@ -179,28 +179,11 @@ describe("the seen list in this browser", () => {
   });
 });
 
-describe("the idle bubble", () => {
-  it("shows one teaching, labelled Teachings, with Next", () => {
-    const html = renderToStaticMarkup(<AgentBubble defaultOpen />);
-    expect(html).toContain("Ready when you are");
-    expect(html).toContain(">Teachings<");
+describe("the Genobi guide bubble", () => {
+  it("shows one teaching as Did you know, with Next", () => {
+    const html = renderToStaticMarkup(<GenobiGuide defaultOpen />);
+    expect(html).toContain(">Did you know<");
     expect(html).toContain(teachingNow().text);
     expect(html).toContain('aria-label="Next teaching"');
-  });
-  it("gives a running session's space to the session, not a teaching", () => {
-    const html = renderToStaticMarkup(
-      <AgentBubble
-        defaultOpen
-        session={{
-          id: "s",
-          runner: "claude",
-          status: "running",
-          startedAt: "2026-10-28T10:00:00Z",
-          prompt: "Go",
-          lines: ["Working on it"],
-        }}
-      />,
-    );
-    expect(html).not.toContain(">Teachings<");
   });
 });

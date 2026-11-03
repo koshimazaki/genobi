@@ -17,6 +17,7 @@ const emit = () => listeners.forEach((listener) => listener());
 
 /** Opens the panel on a session, as the start route answered it. */
 export function showAgentSession(session: AgentSession) {
+  if (shown?.id !== session.id) readError = undefined;
   shown = session;
   emit();
 }
@@ -42,12 +43,28 @@ export function useLatestAgentSession() {
   return useSyncExternalStore(subscribe, latestAgentSession, () => undefined);
 }
 
-/** Asks the bubble to open, as the deck's "Open bubble" does. */
-export const OPEN_BUBBLE = "genobi:open-bubble";
+/** Asks the footer deck to open on the session, as a sent message does. */
+export const OPEN_DECK = "genobi:open-deck";
+
+/** The follower's last failed read of the shown session, for the deck. */
+let readError: string | undefined;
+export function setAgentSessionError(error: string | undefined) {
+  if (readError === error) return;
+  readError = error;
+  emit();
+}
+export function useAgentSessionError() {
+  return useSyncExternalStore(
+    subscribe,
+    () => readError,
+    () => undefined,
+  );
+}
 
 export function closeAgentSession() {
   shown = undefined;
   latest = undefined;
+  readError = undefined;
   emit();
 }
 

@@ -213,6 +213,15 @@
   min-height: 24px;
   flex-shrink: 0;
 }
+/* The one Recreate control (RecreateButton): the card's look everywhere,
+   Camera, the Assets rail's gallery and the Director's template slots. */
+.recreate-button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-4);
+  min-height: 24px;
+}
 /* The card, not the viewport, decides when its action labels fit. */
 @container clip-card (max-width: 22rem) {
   .clip-actions .clip-action-label {

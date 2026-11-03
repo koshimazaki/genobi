@@ -3,16 +3,25 @@ import {
   type RenderReport,
 } from "../../shared/licensing/render-report";
 import { download } from "./bundle";
+import type { PageKey } from "../usePageKey";
+import RenderToAssets from "./RenderToAssets";
 import "./render-result.css";
 
 export default function RenderResult({
   url,
   report,
   edit,
+  name,
+  connection,
+  disabled = false,
 }: {
   url: string;
   report: RenderReport;
   edit: () => void;
+  /** With a page key, the render can be added to the project's assets. */
+  name?: string;
+  connection?: PageKey;
+  disabled?: boolean;
 }) {
   return (
     <section
@@ -44,6 +53,14 @@ export default function RenderResult({
         >
           Download README ↓
         </button>
+        {connection && (
+          <RenderToAssets
+            url={url}
+            name={name ?? "render"}
+            connection={connection}
+            disabled={disabled}
+          />
+        )}
         <button onClick={edit}>Edit in Editor</button>
       </div>
       <details>

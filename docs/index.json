@@ -248,7 +248,6 @@
         "director-bundle/motion-effects.md",
         "director-bundle/project-copy.md",
         "director-bundle/showcase/README.md",
-        "director-generate.md",
         "director-prompts.md",
         "director-references.md",
         "dual-editor.md",
@@ -821,7 +820,7 @@
       "path": "activity-settings.md",
       "tags": ["agents", "studio", "architecture"],
       "summary": "Optional operational tool history, its evidence boundaries, and independent bubble controls.",
-      "links": ["agent-setup.md", "runner-pairing.md"]
+      "links": ["agent-setup.md", "genobi-deck.md", "runner-pairing.md"]
     },
     {
       "title": "Adaptive reverb: one scene guides picture and sound",
@@ -847,14 +846,20 @@
       "path": "agent-approvals.md",
       "tags": ["agents", "studio", "backend"],
       "summary": "Confirm before spending - an agent session's quote appears in the person's studio with its plan, price and payer; Approve runs it once through the quoted submission in the person's session, Decline voids it, and an expired or changed quote cannot be approved.",
-      "links": ["agent-context.md", "agent-sessions.md", "upscaling.md"]
+      "links": [
+        "agent-bubble.md",
+        "agent-context.md",
+        "agent-sessions.md",
+        "genobi-deck.md",
+        "upscaling.md"
+      ]
     },
     {
       "title": "Genobi bubble",
       "path": "agent-bubble.md",
       "tags": ["agents", "studio"],
-      "summary": "Genobi's contextual bubble, the session as one growing conversation, the new-reply mark on its avatar, its evidence boundary, activity history and responsive behavior.",
-      "links": ["agent-sessions.md", "genobi-deck.md"]
+      "summary": "The Genobi bubble is a static guide — contextual pointers, Did you know tips and setup help. Agent sessions show in the footer deck; the agent API, MCP server and CLI drive Genobi from a terminal.",
+      "links": ["genobi-cli.md", "genobi-deck.md", "teachings.md"]
     },
     {
       "title": "Picks and context",
@@ -880,6 +885,7 @@
         "agent-setup.md",
         "dual-editor.md",
         "genobi-cli.md",
+        "genobi-deck.md",
         "hermes-open-route.md",
         "hermes-runs.md",
         "registry.md",
@@ -915,6 +921,7 @@
         "architecture.md",
         "director-agent-tools.md",
         "director-bundle/README.md",
+        "genobi-deck.md",
         "hermes-runs.md",
         "voice-mode.md"
       ]
@@ -1547,11 +1554,11 @@
       "links": ["director-remix-verification.md"]
     },
     {
-      "title": "Generate your version",
+      "title": "Make your version",
       "path": "director-generate.md",
-      "tags": ["director", "templates", "agents"],
-      "summary": "Reuse or replace declared template media, apply undoable swaps, and ask a linked agent to prepare generation with paid approval.",
-      "links": []
+      "tags": ["director", "templates"],
+      "summary": "Make my version — swap media into a finished template's slots with Undo; new media is made in Camera and comes back through Assets → Generated. Nothing here generates.",
+      "links": ["genobi-cli.md", "taste-memory.md"]
     },
     {
       "title": "Prompts and directions",
@@ -2157,6 +2164,7 @@
         "director-working-version.md",
         "dual-editor.md",
         "genobi-cli.md",
+        "genobi-deck.md",
         "getting-started.md",
         "licence-strategy.md",
         "scene-examples.md",

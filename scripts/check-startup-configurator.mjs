@@ -99,7 +99,7 @@ try {
     }
     await page.reload();
     await page
-      .getByRole("button", { name: "Open Genobi activity", exact: true })
+      .getByRole("button", { name: "Open Genobi guide", exact: true })
       .click();
     await page
       .getByRole("button", { name: "Set up Genobi", exact: true })

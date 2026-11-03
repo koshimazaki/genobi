@@ -15,7 +15,6 @@ import {
   AGENT_MESSAGES_WAITING,
   messagesForAgent,
 } from "../shared/agent-messages";
-import { pendingNote } from "../src/agent/AgentConversation";
 import { agentStudio, fakeHermesConfig } from "./agent-harness";
 
 /** The grant the server gave this session's runner (its MCP config holds it). */
@@ -93,7 +92,6 @@ describe("a message for a session without live input", () => {
       "1 message was not read before the session ended.",
     );
     expect(ended.exchange?.at(-1)?.pending).toBe(true);
-    expect(pendingNote(ended)).toBe("Not read before the session ended.");
   });
 
   it("refuses past five unread, and a stopped session takes none", async () => {

@@ -80,7 +80,7 @@ export async function sweepTerminalFolders(terminal: AgentTerminal) {
 export const terminalRefused = () =>
   new AppError(
     400,
-    "This server cannot open a Terminal window. Run the session in the bubble instead.",
+    "This server cannot open a Terminal window. Run the session in the studio instead.",
     "agent_terminal",
   );
 

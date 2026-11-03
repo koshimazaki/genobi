@@ -130,9 +130,8 @@ gear beside its preset controls only the layout.
 ## Settings and activity
 
 Open **Settings** from the header for provider connections, workflow location,
-agent setup guidance, optional tool history and bubble behavior. Both optional
-logging/display checkboxes start off. Closing the Genobi bubble never stops a
-run. Activity records identify tool outcomes and actual backends where known;
+agent setup guidance and optional tool history, which starts off. Closing the
+Genobi bubble or the deck never stops a run. Activity records identify tool outcomes and actual backends where known;
 job receipts and replay protection remain independent. See
 [settings and activity](activity-settings.md) for coverage and privacy.
 
@@ -140,7 +139,7 @@ Setup ends by starting the configured local agent as one Genobi session, after
 voice connects when it was ticked; its brief does not install software or
 authorize generation. Hermes authenticates outside Genobi. Hosted Settings can
 [pair an existing local runner](runner-pairing.md), start a typed session and
-show its progress in the bubble. The [Openjutsu character swap](openjutsu-swap.md)
+show its progress in the footer deck. The [Openjutsu character swap](openjutsu-swap.md)
 runs on its own Comfy deployment with the Comfy key, its first frame made by a
 FLUX 3 Image Klein box edit.
 
@@ -165,10 +164,10 @@ profile itself (**Set up Hermes**), with no script and no restart. Continuing sa
 `GENOBI_AGENT_RUNNER` still wins. The summary's **Save & set up** (or **Save &
 start Genobi**) saves, installs voice when ticked (using a verified
 Qwen3-ASR already on the machine instead of downloading it), then starts that
-agent in the Genobi bubble; when it cannot start, the summary says why and offers **Sign
+agent, whose progress shows in the footer deck; when it cannot start, the summary says why and offers **Sign
 in** instead ([voice setup](voice-setup.md#setup-ends-by-starting-the-agent)).
 Choose **Explore first** to skip setup. Reopen
-**Set up Genobi** from the Genobi activity bubble. Other choices save only at the
+**Set up Genobi** from the Genobi guide bubble. Other choices save only at the
 final step; revisiting
 setup keeps existing family and licence preferences. The animated Genobi mark
 and transitions respect reduced motion. Share pages and scene embeds do not

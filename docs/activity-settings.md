@@ -9,14 +9,16 @@ The header's **Settings** button opens the former key dialogue. Comfy/BFL
 connections and workflow location remain there, alongside agent guidance and
 **Activity & display**. No new provider credential is stored by this change.
 
-Both optional checkboxes default to off:
+The optional checkbox defaults to off:
 
 - **Save tool activity history** retains at most 200 operational events. Turning
   it off clears this optional history and drops late tool completions while off.
-- **Open the Genobi bubble for session updates** controls automatic opening.
-  The Genobi mark can still open it manually. Closing it does not stop work or
-  disable logging. An approval waiting for the person remains indicated on the
-  launcher, even when automatic opening is disabled.
+
+The former **Open the Genobi bubble for session updates** checkbox was removed
+on 2 November 2026 (#57): the bubble is now a static guide, and an agent
+session shows in the footer [deck](genobi-deck.md), which opens by itself when
+a paid step waits for approval. The stored `showBubble` preference is kept for
+compatibility and no longer read by the studio.
 
 Generation jobs, quote receipts, costs, replay protection, and explicitly saved
 project memory remain independent. This switch does not erase those records or
