@@ -88,6 +88,7 @@
         "agent-workspace.md",
         "animations-effects-plan.md",
         "anime-teaser-template.md",
+        "audio-reactive-drop.md",
         "bloom-teaser.md",
         "construction-motion.md",
         "credits/README.md",
@@ -123,6 +124,7 @@
         "director-bundle/project-copy.md",
         "director-bundle/showcase/README.md",
         "director-bundle/showcase/adaptive-reverb/README.md",
+        "director-bundle/showcase/audio-reactive-drop/README.md",
         "director-bundle/showcase/bloom-teaser/README.md",
         "director-bundle/showcase/dimensions-mix/README.md",
         "director-bundle/showcase/genobi-teaser/README.md",
@@ -199,6 +201,7 @@
         "akuspace-docker.md",
         "anime-teaser-template.md",
         "audio-analysis.md",
+        "audio-reactive-drop.md",
         "audio-reactive-ltx-pilot.md",
         "audiovisual-gaps.md",
         "audiovisual-gpu-evaluation.md",
@@ -208,6 +211,7 @@
         "comfy-deploy.md",
         "dimensions-mix.md",
         "director-bundle/showcase/adaptive-reverb/README.md",
+        "director-bundle/showcase/audio-reactive-drop/README.md",
         "director-bundle/showcase/bloom-teaser/README.md",
         "director-bundle/showcase/dimensions-mix/README.md",
         "director-bundle/showcase/genobi-teaser/README.md",
@@ -316,6 +320,7 @@
         "adaptive-reverb.md",
         "animations-effects-plan.md",
         "anime-teaser-template.md",
+        "audio-reactive-drop.md",
         "bloom-teaser.md",
         "director-generate.md",
         "falling-room.md",
@@ -488,6 +493,7 @@
       "meaning": "World Builder and Scene Adapter",
       "pages": [
         "adaptive-reverb.md",
+        "audio-reactive-drop.md",
         "audio-reactive-ltx-pilot.md",
         "audio-reactive-pyramid.md",
         "audio-reactive-second-pass.md",
@@ -496,6 +502,7 @@
         "audiovisual-implementation.md",
         "comfy-deploy.md",
         "director-bundle/showcase/adaptive-reverb/README.md",
+        "director-bundle/showcase/audio-reactive-drop/README.md",
         "effects-catalogue.md",
         "project-assets.md",
         "world-builder-acoustic-zones.md",
@@ -647,6 +654,7 @@
       "pages": [
         "director-bundle/showcase/README.md",
         "director-bundle/showcase/adaptive-reverb/README.md",
+        "director-bundle/showcase/audio-reactive-drop/README.md",
         "director-bundle/showcase/bloom-teaser/README.md",
         "director-bundle/showcase/dimensions-mix/README.md",
         "director-bundle/showcase/genobi-teaser/README.md"
@@ -683,6 +691,7 @@
         "architecture.md",
         "arena.md",
         "audio-analysis.md",
+        "audio-reactive-drop.md",
         "audio-reactive-ltx-pilot.md",
         "audio-reactive-pyramid.md",
         "audio-reactive-second-pass.md",
@@ -733,6 +742,7 @@
         "director-bundle/project-copy.md",
         "director-bundle/showcase/README.md",
         "director-bundle/showcase/adaptive-reverb/README.md",
+        "director-bundle/showcase/audio-reactive-drop/README.md",
         "director-bundle/showcase/bloom-teaser/README.md",
         "director-bundle/showcase/dimensions-mix/README.md",
         "director-bundle/showcase/genobi-teaser/README.md",
@@ -1030,6 +1040,19 @@
       "tags": ["sound", "backend", "agents", "mcp"],
       "summary": "Audio analysis on the local server — tempo and a fitted beat grid, a downbeat estimate, onsets per band, intensity and key moments, with no Python; the optional librosa worker; the agent flow through genobi_audio_upload and genobi_audio_analysis.",
       "links": []
+    },
+    {
+      "title": "Acoustic Spaces v2: the 3D + LTX template",
+      "path": "audio-reactive-drop.md",
+      "tags": ["director", "sound", "templates", "world-builder"],
+      "summary": "Acoustic Spaces v2, the 3D + LTX template - five World Builder rooms rendered by LTX-2.5 Layout-to-Render on one track, each room's own CPU room sound under it, cut on the phrases with every room, the track and every overlay a swappable layer.",
+      "links": [
+        "adaptive-reverb.md",
+        "director-bundle/showcase/audio-reactive-drop/README.md",
+        "media-previews.md",
+        "templates.md",
+        "world-builder-dynamic-sound.md"
+      ]
     },
     {
       "title": "Audio-reactive LTX pilot",
@@ -1548,6 +1571,7 @@
       "summary": "Showcase projects - finished cuts kept version by version as Director project files, with the memory that explains each change, so any version opens in the Editor, can be recreated, and an agent can continue from it.",
       "links": [
         "director-bundle/showcase/adaptive-reverb/README.md",
+        "director-bundle/showcase/audio-reactive-drop/README.md",
         "director-bundle/showcase/bloom-teaser/README.md",
         "director-bundle/showcase/dimensions-mix/README.md",
         "director-bundle/showcase/genobi-teaser/README.md"
@@ -1559,6 +1583,13 @@
       "tags": ["director", "sound", "memory", "world-builder"],
       "summary": "Adaptive reverb's version history, including the scene-derived CPU reverb credit correction in v3, and how to recreate it or regenerate a room.",
       "links": ["adaptive-reverb.md"]
+    },
+    {
+      "title": "Acoustic Spaces v2: how it was made",
+      "path": "director-bundle/showcase/audio-reactive-drop/README.md",
+      "tags": ["director", "sound", "memory", "world-builder"],
+      "summary": "How Acoustic Spaces v2, the 3D + LTX template, was made - v1, five World Builder rooms in LTX-2.5 on one track, every room, the track and every overlay a swappable layer - and how to recreate it.",
+      "links": ["audio-reactive-drop.md"]
     },
     {
       "title": "Bloom: how it was made",
@@ -2323,6 +2354,7 @@
       "summary": "The Gallery-first studio view, its card order, its model badges (named from the registry) and Open only toggle, its \"Make your own\" drawer (mechanical templates generated in place, agent templates started in a session), its FLUX 3 generation cards, its preview clips, and the public watch and embed pages with their link-preview metadata and security headers.",
       "links": [
         "adaptive-reverb.md",
+        "audio-reactive-drop.md",
         "bloom-teaser.md",
         "dimensions-mix.md",
         "falling-room.md",

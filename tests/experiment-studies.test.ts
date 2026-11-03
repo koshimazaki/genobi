@@ -25,6 +25,7 @@ const NEW: Study[] = [
   "room-walls",
   "pyramid-inside",
   "pyramid-inside-spin",
+  "pyramid-inside-party",
   "fruit-apple",
   "fruit-banana",
   "fruit-papaya",
@@ -86,6 +87,7 @@ describe("new pilot studies", () => {
     ["canyon", ["z"], 0.55],
     ["pyramid-inside", ["x", "z"], 0.3],
     ["pyramid-inside-spin", ["x", "z"], 0.3],
+    ["pyramid-inside-party", ["x", "z"], 0.3],
   ] as [Study, ("x" | "z")[], number][])(
     "%s closes sideways only on the bass, whatever the frame",
     (study, axes, fraction) => {

@@ -20,6 +20,7 @@ describe("offered Director/Editor templates", () => {
       "Genobi teaser",
       "Bloom",
       "Adaptive reverb",
+      "Acoustic Spaces v2",
       "Dance with Fruits",
     ]);
   });
