@@ -257,37 +257,37 @@ describe("the recorded provider", () => {
 it(
   "keeps the newest Recreate when an earlier reference fetch finishes last",
   async () => {
-  const p = madeWith(undefined);
-  const slow: CameraRecipe = {
-    label: "Recreate in Camera",
-    prompt: "old asset",
-    imageIds: [],
-    reference: "/slow-reference.png",
-    missing: [],
-  };
-  const latest: CameraRecipe = {
-    label: "Recreate in Camera",
-    prompt: "new asset",
-    imageIds: [],
-    missing: [],
-  };
-  let finish!: (response: Response) => void;
-  const pendingImage = new Promise<Response>((resolve) => {
-    finish = resolve;
-  });
-  const fetchImage = vi.fn(() => pendingImage);
-  vi.stubGlobal("fetch", fetchImage);
-  listen();
-  const first = openInCamera(() => {}, slow, p, new Map());
-  expect(fetchImage).toHaveBeenCalledWith("/slow-reference.png");
-  await openInCamera(() => {}, latest, p, new Map());
-  expect(received).toHaveLength(1);
-  expect(received[0].patch.description).toBe("new asset");
-  finish(new Response(new Blob([PNG], { type: "image/png" })));
-  await first;
-  // The late first request cannot overwrite the newer model/prompt/references.
-  expect(received).toHaveLength(1);
-  expect(received[0].patch.description).toBe("new asset");
+    const p = madeWith(undefined);
+    const slow: CameraRecipe = {
+      label: "Recreate in Camera",
+      prompt: "old asset",
+      imageIds: [],
+      reference: "/slow-reference.png",
+      missing: [],
+    };
+    const latest: CameraRecipe = {
+      label: "Recreate in Camera",
+      prompt: "new asset",
+      imageIds: [],
+      missing: [],
+    };
+    let finish!: (response: Response) => void;
+    const pendingImage = new Promise<Response>((resolve) => {
+      finish = resolve;
+    });
+    const fetchImage = vi.fn(() => pendingImage);
+    vi.stubGlobal("fetch", fetchImage);
+    listen();
+    const first = openInCamera(() => {}, slow, p, new Map());
+    expect(fetchImage).toHaveBeenCalledWith("/slow-reference.png");
+    await openInCamera(() => {}, latest, p, new Map());
+    expect(received).toHaveLength(1);
+    expect(received[0].patch.description).toBe("new asset");
+    finish(new Response(new Blob([PNG], { type: "image/png" })));
+    await first;
+    // The late first request cannot overwrite the newer model/prompt/references.
+    expect(received).toHaveLength(1);
+    expect(received[0].patch.description).toBe("new asset");
   },
 );
 
