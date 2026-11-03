@@ -34,6 +34,9 @@ user action through every layer.
 
 - [Vision](vision.md) — what Genobi is for: an open-source video studio for AI
   ninjas, its mission, philosophy and the story video.
+- [Tutorial video](tutorial-video.md) — the screenplay and recipe for a
+  45-second tutorial of the studio (with a 30-second cut), made in Genobi: voice
+  first, any agent harness, the interface for inspection and assets.
 
 ## Featured: audio-reactive Layout-to-Render
 

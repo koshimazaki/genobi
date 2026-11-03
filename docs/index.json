@@ -153,6 +153,7 @@
         "taste-memory.md",
         "template-gallery.md",
         "templates.md",
+        "tutorial-video.md",
         "vfx-recipes/README.md",
         "vfx-recipes/anime-opening.md",
         "vfx-recipes/hologram-turntable.md",
@@ -303,7 +304,7 @@
     },
     "voice": {
       "meaning": "Voice mode: installer, transcription, mic and dictionary",
-      "pages": []
+      "pages": ["tutorial-video.md"]
     },
     "templates": {
       "meaning": "House templates, their inputs, intake and skills",
@@ -315,7 +316,8 @@
         "director-generate.md",
         "falling-room.md",
         "media-previews.md",
-        "poster-grid-direction.md"
+        "poster-grid-direction.md",
+        "tutorial-video.md"
       ]
     },
     "backend": {
@@ -460,6 +462,7 @@
         "supervisor.md",
         "teachings.md",
         "template-gallery.md",
+        "tutorial-video.md",
         "voice-mode.md",
         "voice-setup.md",
         "world-builder-controls.md",
@@ -784,6 +787,7 @@
         "template-gallery.md",
         "templates.md",
         "troubleshooting.md",
+        "tutorial-video.md",
         "upscaling.md",
         "vast-runner.md",
         "verification.md",
@@ -2302,6 +2306,19 @@
       ]
     },
     {
+      "title": "Tutorial video",
+      "path": "tutorial-video.md",
+      "tags": ["director", "templates", "studio", "voice"],
+      "summary": "The screenplay and recipe for a 45-second tutorial video of the studio (with a 30-second cut), made in Genobi itself - eight beats from voice to the end card, what each says and shows, and how to capture, cut and render it.",
+      "links": [
+        "agent-approvals.md",
+        "agent-sessions.md",
+        "capabilities.md",
+        "genobi-teaser.md",
+        "voice-mode.md"
+      ]
+    },
+    {
       "title": "Upscaling",
       "path": "upscaling.md",
       "tags": ["workflows", "models", "agents", "mcp", "bfl", "comfy"],
@@ -2383,7 +2400,8 @@
         "licence-strategy.md",
         "minimax-h3-camera.md",
         "supervisor.md",
-        "taste-memory.md"
+        "taste-memory.md",
+        "tutorial-video.md"
       ]
     },
     {

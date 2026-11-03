@@ -195,3 +195,6 @@ builder, the Dual Swords editor and the agent toolkit.
 4. The agent: ask Hermes (or Claude) to do it; approve the paid step.
 5. Premium when you want it; open source always.
 6. "Genobi: the studio for AI ninjas."
+
+The short tutorial that walks through the studio section by section, voice
+first, has its own screenplay and recipe: [tutorial video](tutorial-video.md).
