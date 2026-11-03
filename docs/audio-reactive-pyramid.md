@@ -166,6 +166,13 @@ still (pyramid-inside pans 45 degrees) and move the space on the `low` band.
   is the peak fruit, whatever the frame. The capture's `--motion-gain` scales the
   blend amount too (bounded at 2), so at gain 2 the banana arrives at about
   half the band. `frame-closed` (the loudest bar) is the peak fruit's still.
+- **Fruit colours.** Every voxel of a fruit state carries its fruit's colour
+  (`FRUIT_COLOURS`: banana `#f2d14b`, papaya `#f0a040`, apple `#c8322b`), so
+  the RGB guide shows the fruit, and the morph blends the colour with the
+  shape. The renderer gives each voxel its own material, so the per-object
+  colour reaches the capture. fruit-dance, the single fruits and both morph
+  studies are coloured. fruit-mecha is not: it is already 59 KB, and a colour
+  on its 192 voxels in five keys adds about 17 KB, past the 64 KB recipe bound.
 
 Every capture now writes `keyframes.json` with `frame-0000.png`,
 `frame-closed-NNNN.png` (loudest smoothed `low`) and `frame-open-NNNN.png`

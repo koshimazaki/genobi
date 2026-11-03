@@ -3,6 +3,7 @@ import { evaluateScene } from "../src/world-builder/evaluate-scene";
 import { sceneCameraAt } from "../src/world-builder/scene-camera";
 import { createStudy } from "../scripts/experiments/recipes";
 import {
+  FRUIT_COLOURS,
   FRUIT_MORPHS,
   type FruitMorph,
 } from "../scripts/experiments/recipes-fruit";
@@ -128,5 +129,44 @@ describe.each(STUDIES)("%s", (name) => {
       Math.min(...loud.map((o) => o[f] - half(o)));
     expect(span("y")).toBeLessThan(frame);
     expect(span("x")).toBeLessThan(frame * (1024 / 576));
+  });
+});
+
+describe("fruit colours in the guide", () => {
+  it.each([
+    "fruit-dance",
+    "fruit-apple",
+    "fruit-banana",
+    "fruit-papaya",
+    ...STUDIES,
+  ] as const)(
+    "%s colours every voxel of each baked key by its fruit",
+    (name) => {
+      const { recipe } = createStudy(name, bands(193, 0.5), dims(193));
+      for (const key of recipe.motion!.stateKeys) {
+        const colour = FRUIT_COLOURS[key.label];
+        expect(colour).toBeTruthy();
+        for (const part of Object.values(key.objects))
+          expect(part.color).toBe(colour);
+      }
+    },
+  );
+
+  it("blends the colour with the shape through the morph", () => {
+    const voxel = (low: number) => {
+      const { recipe } = createStudy(
+        "fruit-apple-banana",
+        bands(97, low),
+        dims(97),
+      );
+      return evaluateScene(recipe, 40).objects.find(
+        (o) => o.id === "voxel-000",
+      )!.color;
+    };
+    expect(voxel(0)).toBe(FRUIT_COLOURS.Apple);
+    expect(voxel(1)).toBe(FRUIT_COLOURS.Banana);
+    const mid = voxel(0.4);
+    expect(mid).not.toBe(FRUIT_COLOURS.Apple);
+    expect(mid).not.toBe(FRUIT_COLOURS.Banana);
   });
 });

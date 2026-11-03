@@ -13,6 +13,28 @@ export const MAX_DANCE_CUES = 3;
 const FRUIT_SCALE = 0.7,
   FRUIT_OFFSET = 2;
 
+/**
+ * Each fruit's colour, written on every voxel of its state so the guide's
+ * RGB shows the fruit (and the morph blends the colour with the shape).
+ */
+export const FRUIT_COLOURS: Record<string, string> = {
+  Banana: "#f2d14b",
+  Papaya: "#f0a040",
+  Apple: "#c8322b",
+};
+
+/** A state's voxels in its fruit's colour; an unknown label keeps its own. */
+export function tinted<T extends { color?: string }>(
+  objects: Record<string, T>,
+  label: string,
+): Record<string, T> {
+  const color = FRUIT_COLOURS[label];
+  if (!color) return objects;
+  return Object.fromEntries(
+    Object.entries(objects).map(([id, part]) => [id, { ...part, color }]),
+  );
+}
+
 export function fruitDance(recipe: Recipe, inputCues?: Cue[]) {
   const motion = recipe.motion!;
   // Preset order is Banana, Papaya, Apple. Open on the apple, then alternate.
@@ -20,17 +42,20 @@ export function fruitDance(recipe: Recipe, inputCues?: Cue[]) {
     ...key,
     // Shrink the fruit to 0.7 about its own centre (0, 2.2, 0), then set it
     // 2 m to the dancer's side at chest height, close but never touching.
-    objects: Object.fromEntries(
-      Object.entries(key.objects).map(([id, part]) => [
-        id,
-        {
-          ...part,
-          x: part.x * FRUIT_SCALE + FRUIT_OFFSET,
-          y: 1.2 + (part.y - 2.2) * FRUIT_SCALE,
-          z: part.z * FRUIT_SCALE,
-          scale: part.scale * FRUIT_SCALE,
-        },
-      ]),
+    objects: tinted(
+      Object.fromEntries(
+        Object.entries(key.objects).map(([id, part]) => [
+          id,
+          {
+            ...part,
+            x: part.x * FRUIT_SCALE + FRUIT_OFFSET,
+            y: 1.2 + (part.y - 2.2) * FRUIT_SCALE,
+            z: part.z * FRUIT_SCALE,
+            scale: part.scale * FRUIT_SCALE,
+          },
+        ]),
+      ),
+      key.label,
     ),
   }));
   const cues =
@@ -183,7 +208,7 @@ export function singleFruit(recipe: Recipe, study: SingleFruit) {
     ...compact({
       ...state,
       id: `${label.toLowerCase()}-${i}`,
-      objects: fit.objects,
+      objects: tinted(fit.objects, label),
     }),
     frame,
     easing: "easeInOut" as const,
@@ -238,12 +263,17 @@ export function fruitMorph(recipe: Recipe, study: FruitMorph) {
   const base = fruitState(recipe, restLabel);
   const [restId, peakId] = [restLabel, peakLabel].map((l) => l.toLowerCase());
   motion.stateKeys = [
-    { id: restId, label: restLabel, frame: 0, objects: rest.objects },
+    {
+      id: restId,
+      label: restLabel,
+      frame: 0,
+      objects: tinted(rest.objects, restLabel),
+    },
     {
       id: peakId,
       label: peakLabel,
       frame: recipe.frames - 1,
-      objects: peak.objects,
+      objects: tinted(peak.objects, peakLabel),
     },
   ].map((key) => ({
     ...compact({ ...base, ...key }),
