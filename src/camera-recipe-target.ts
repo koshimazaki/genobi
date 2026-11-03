@@ -79,6 +79,9 @@ export function applyCameraRecipe(recipe: CameraRecipePatch) {
  */
 let notice = "";
 const listeners = new Set<() => void>();
+export function cameraNotice() {
+  return notice;
+}
 export function setCameraNotice(next: string) {
   if (notice === next) return;
   notice = next;

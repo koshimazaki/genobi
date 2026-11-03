@@ -2,7 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import type { Job } from "../shared/types";
 import { runInputStore } from "./run-inputs";
 import { recreateGapMessage, recreateGaps } from "./recreate-gaps";
-import { onCameraRecipe, setCameraNotice } from "./camera-recipe-target";
+import {
+  cameraNotice,
+  onCameraRecipe,
+  setCameraNotice,
+} from "./camera-recipe-target";
 import { setupChoices, supersedeRestores } from "./settings-store";
 import { restoreRun } from "./useRecreate";
 import type { ComposerState, useComposer } from "./useComposer";
@@ -10,6 +14,12 @@ import { studioStore } from "./studio/store";
 
 /** A non-existent source id suppresses the default source fallback during upload. */
 export const ASSET_UPLOAD_PENDING = "__asset-upload-pending__";
+
+/** Clears a dropped upload's "Uploading …" note, never a newer one. */
+function dropNotice(owner: { upload: number; note: string }, upload: number) {
+  if (owner.upload === upload && cameraNotice() === owner.note)
+    setCameraNotice("");
+}
 
 /** Read saved files before changing the composer; newer edits always win. */
 export function useComposerRecreate(
@@ -27,11 +37,16 @@ export function useComposerRecreate(
   edit.current = { update, onError, uploadVideo };
   const uploads = useRef(0);
   const [uploadingVideo, setUploadingVideo] = useState(false);
+  // The handoff whose note Camera shows; a dropped upload takes it along.
+  const noticeOwner = useRef({ upload: 0, note: "" });
   useEffect(
     () =>
       onCameraRecipe(({ patch, note, video }) => {
         const upload = ++uploads.current;
-        const originalBundle = studioStore.getState().director.bundle;
+        // A commit replaces the bundle object; only another project drops it.
+        const project = () =>
+          studioStore.getState().director.bundle?.project.id;
+        const originalProject = project();
         // Never let the composer silently fall back to a previous source while
         // another MP4 is being uploaded. Generate stays disabled until it ends.
         setUploadingVideo(Boolean(video));
@@ -39,6 +54,7 @@ export function useComposerRecreate(
           video ? { ...patch, sourceId: ASSET_UPLOAD_PENDING } : patch,
         );
         edit.current.onError("");
+        noticeOwner.current = { upload, note };
         setCameraNotice(note);
         if (!video) return;
         const send = edit.current.uploadVideo;
@@ -47,23 +63,31 @@ export function useComposerRecreate(
           edit.current.onError("Video upload is unavailable.");
           return;
         }
-        const current = () =>
+        const waiting = () =>
           upload === uploads.current &&
-          studioStore.getState().director.bundle === originalBundle &&
           latest.current.generator === "upscale" &&
           latest.current.sourceId === ASSET_UPLOAD_PENDING;
+        const current = () => waiting() && project() === originalProject;
+        const drop = () => {
+          dropNotice(noticeOwner.current, upload);
+          // Still waiting on this upload: say why, so Upscale is not stuck.
+          if (waiting())
+            edit.current.onError(
+              `The Director project changed while ${video.name} was uploading. Choose Upscale's source again.`,
+            );
+        };
         send(video)
           .then(
             (sourceId) => {
               // Newer source, new project, workspace change or Recreate wins.
-              if (!current()) return;
+              if (!current()) return drop();
               edit.current.update?.({ sourceId });
               setCameraNotice(
                 `${video.name} is Upscale's source. Nothing was generated.`,
               );
             },
             (error: unknown) => {
-              if (!current()) return;
+              if (!current()) return drop();
               setCameraNotice("");
               edit.current.onError(
                 error instanceof Error ? error.message : "The upload failed.",
@@ -83,7 +107,7 @@ export function useComposerRecreate(
       uploadingVideo &&
       (state.generator !== "upscale" || state.sourceId !== ASSET_UPLOAD_PENDING)
     ) {
-      uploads.current++;
+      dropNotice(noticeOwner.current, uploads.current++);
       setUploadingVideo(false);
     }
   }, [state.generator, state.sourceId, uploadingVideo]);

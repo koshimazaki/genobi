@@ -4,8 +4,12 @@ import { createRoot, type Root } from "react-dom/client";
 import { afterEach, expect, it, vi } from "vitest";
 import {
   applyCameraRecipe,
+  cameraNotice,
   cancelCameraRecipeHandoff,
+  setCameraNotice,
 } from "../src/camera-recipe-target";
+import type { Bundle } from "../src/director/bundle";
+import { studioStore } from "../src/studio/store";
 import {
   ASSET_UPLOAD_PENDING,
   useComposerRecreate,
@@ -29,8 +33,20 @@ afterEach(() => {
   host?.remove();
   host = undefined;
   cancelCameraRecipeHandoff();
+  setCameraNotice("");
+  setBundle(undefined);
   onError.mockClear();
 });
+
+/** A Director commit: a new bundle object, for `id`'s project. */
+function setBundle(id: string | undefined) {
+  const bundle = id
+    ? ({ project: { id, assets: {} }, files: {} } as unknown as Bundle)
+    : undefined;
+  studioStore.setState({
+    director: { ...studioStore.getState().director, bundle },
+  });
+}
 
 function mount(uploadVideo: (file: File) => Promise<string>) {
   host = document.createElement("div");
@@ -98,8 +114,10 @@ it("does not overwrite a source the person chose during the upload", async () =>
       }),
   );
   handoff();
+  expect(cameraNotice()).toBe("Uploading asset.");
   act(() => edit({ sourceId: "manual-source" }));
   expect(uploading).toBe(false);
+  expect(cameraNotice()).toBe("");
   await act(async () => resolve("late-source"));
   expect(observed.sourceId).toBe("manual-source");
 });
@@ -132,4 +150,45 @@ it("drops the late upload after leaving Upscale", async () => {
   expect(uploading).toBe(false);
   await act(async () => resolve("late-source"));
   expect(observed.sourceId).toBe(ASSET_UPLOAD_PENDING);
+});
+
+it("keeps the upload across a Director commit on the same project", async () => {
+  let resolve!: (id: string) => void;
+  setBundle("p1");
+  mount(
+    () =>
+      new Promise<string>((done) => {
+        resolve = done;
+      }),
+  );
+  handoff();
+  // An agent edit or autosave replaces the bundle object mid-upload.
+  act(() => setBundle("p1"));
+  await act(async () => resolve("new-source"));
+  expect(observed.sourceId).toBe("new-source");
+  expect(uploading).toBe(false);
+  expect(cameraNotice()).toBe(
+    "clip.mp4 is Upscale's source. Nothing was generated.",
+  );
+});
+
+it("drops the upload and its notice when the project changes", async () => {
+  let resolve!: (id: string) => void;
+  setBundle("p1");
+  mount(
+    () =>
+      new Promise<string>((done) => {
+        resolve = done;
+      }),
+  );
+  handoff();
+  expect(cameraNotice()).toBe("Uploading asset.");
+  act(() => setBundle("p2"));
+  await act(async () => resolve("late-source"));
+  expect(observed.sourceId).toBe(ASSET_UPLOAD_PENDING);
+  expect(uploading).toBe(false);
+  expect(cameraNotice()).toBe("");
+  expect(onError).toHaveBeenLastCalledWith(
+    expect.stringContaining("Choose Upscale's source again."),
+  );
 });
