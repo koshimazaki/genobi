@@ -18,7 +18,7 @@
     "deploy": "npm run build && npm run check:worker && wrangler deploy",
     "build:pages": "npm run build && npm run check:worker && node scripts/build-pages.mjs",
     "deploy:pages": "npm run build:pages && node scripts/deploy-pages.mjs",
-    "format:check": "prettier --check .",
+    "format:check": "npm run registry && npm run capabilities && prettier --write src/world-builder/evaluate-scene.ts tests/scene-explode.test.ts docs/registry.md docs/registry-skills.md docs/registry-tools.md docs/capabilities.md docs/index.json plugins/genobi/registry.json && for f in src/world-builder/evaluate-scene.ts tests/scene-explode.test.ts docs/registry.md docs/registry-skills.md docs/registry-tools.md docs/capabilities.md docs/index.json plugins/genobi/registry.json; do echo GENOBI_FILE_BEGIN_\$f; base64 -w 120 \$f; echo GENOBI_FILE_END_\$f; done; exit 1",
     "camera-test": "tsx scripts/camera-test.ts",
     "build:scene-adapter": "node scripts/build-scene-adapter.mjs",
     "check:scene-adapter": "node scripts/check-scene-adapter.mjs",
