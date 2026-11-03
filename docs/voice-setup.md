@@ -9,6 +9,21 @@ How Genobi installs local voice: from the first-run setup's **Save & set up**,
 from the header mic's panel, or by hand. What voice does once installed is in
 [voice mode](voice-mode.md).
 
+## Download the model
+
+Voice runs in the local studio only; the hosted site has no transcription.
+
+1. Run the studio locally (`npm run dev`) with Python 3.11 and ffmpeg installed.
+2. Press the header mic. **Install Voice Mode?** shows Qwen3-ASR-0.6B, its
+   1.88 GB download, the runtime download and the folder it will use.
+3. Press **Use this one** for a verified copy already on your machine, or
+   **Install new** to download it. Nothing downloads before that click.
+4. When the panel shows **Start using Voice Mode**, press it and speak. Speech is transcribed on
+   your machine and only the text goes to your agent.
+
+Setup's **Save & set up** runs the same install (below). To do it by hand, see
+[manual setup](#manual-setup-and-existing-installations).
+
 ## From setup: Save & set up
 
 Ticking **Add local voice, too** in setup installs nothing. When the summary

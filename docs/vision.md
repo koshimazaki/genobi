@@ -94,10 +94,12 @@ machine check decides which.
   change to the studio and it starts a Developer itself, in a worktree from
   main, that leaves a diff or opens a pull request
   ([Genobi starts a Developer](agent-sessions.md#genobi-starts-a-developer)).
-- **Say what you want today.** One spoken prompt in voice mode ("Signal"),
-  transcribed by a local model: make the video of this, swap this, use these
-  settings, use my last two picks. The agent picks the tools; you approve what
-  costs money. It works from a phone too.
+- **Say what you want today.** Genobi is voice-first and harness-first: the
+  screen is for inspecting results and assets, not for operating by hand. One
+  spoken prompt in voice mode ("Signal"), transcribed by a local model in the
+  local studio, or the same words typed to your own harness: make the video of
+  this, swap this, use these settings, use my last two picks. The agent picks
+  the tools; you approve what costs money. It works from a phone too.
 - **Ask your agent.** Hermes, Claude or Codex works the same tools you do,
   through the Genobi plugin, and you approve anything that costs money.
 

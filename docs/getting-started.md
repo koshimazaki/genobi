@@ -11,6 +11,27 @@ and credits; local generation needs a compatible ComfyUI installation and
 the selected models. Running the studio locally does not require a local GPU
 when generation uses a cloud provider.
 
+## Two ways in
+
+Genobi is voice-first and harness-first. The screen is mainly for inspection:
+Camera shows what came back, Assets holds what you dropped in, and the deck
+shows what the agent is doing.
+
+- **Talk to it.** In the local studio, press the mic and say what you want.
+  The first press offers to download Qwen3-ASR-0.6B (1.9 GB) and its runtime;
+  it then transcribes on your machine and your agent gets the text. Hosted has
+  no voice. See [voice setup](voice-setup.md#download-the-model).
+- **Bring your agent.** Hermes (open source), Claude Code or Codex use the
+  [Genobi plugin](https://github.com/koshimazaki/genobi/blob/main/plugins/genobi/README.md):
+  MCP server, CLI and skills. **Start Genobi** sets up Hermes' `genobi`
+  profile; for Claude Code run `claude --plugin-dir plugins/genobi` in the
+  checkout. See [agent setup](agent-setup.md).
+
+You do not need a manual. Drop your images, video and audio into **Assets**,
+then tell the agent what they are and what you want. Paid runs wait for your
+approval in the studio. In World Builder, voice edits only the scene direction;
+ask the agent for scene changes.
+
 ## Choose how to run
 
 | Setup                                     | What you need                                                                    | What it provides                                                                 |
