@@ -20,7 +20,7 @@ order since 30 October 2026:
 2. [Dimensions mix](dimensions-mix.md) · Anime teaser
 3. [Bloom](bloom-teaser.md) · Sheet to shot (an anime teaser from a character sheet)
 4. [Adaptive reverb](adaptive-reverb.md) · 3D · LTX template
-5. [Dance with Fruits](fruits-swap.md) · Character swap
+5. [Dance with Fruits](fruits-swap.md) · Content swap
 6. Forest guardian
 7. Toy creatures
 8. Sheet to shot · Preview coming soon
