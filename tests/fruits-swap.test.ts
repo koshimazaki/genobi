@@ -161,6 +161,13 @@ describe("Dance with Fruits, the swap edit", () => {
     // More posterize, fewer levels as the loop goes; the wireframe comes in
     // over the last two beats before the drop.
     const p = steps.map((l) => l.parameters);
+    // Subtle (the owner, v4): the gorilla still reads as the gorilla.
+    expect(
+      Math.max(...p.map((x) => x.posterize as number)),
+    ).toBeLessThanOrEqual(0.5);
+    expect(
+      Math.min(...p.map((x) => x.levels as number)),
+    ).toBeGreaterThanOrEqual(6);
     for (let i = 1; i < p.length; i++) {
       expect(p[i].posterize).toBeGreaterThanOrEqual(
         p[i - 1].posterize as number,
@@ -171,8 +178,8 @@ describe("Dance with Fruits, the swap edit", () => {
       [S + 15, 0],
       [S + 17, 0],
       [S + 19, 0],
-      [S + 21, 0.45],
-      [S + 22, 0.9],
+      [S + 21, 0.25],
+      [S + 22, 0.5],
     ]);
   });
 

@@ -1,8 +1,8 @@
 // A surveillance treatment confined to a box: inside the rectangle (x, y,
 // w, h as fractions of the frame from its top left, edges softened over
-// `feather`) the composite below is posterized with an ordered dither
-// (`posterize` mixes it in, `levels` per channel, as the `dither` filter
-// does) and swept by a wireframe scan (`wire` mixes it in: a Sobel pass on
+// `feather`) the composite below is posterized with an ordered dither on
+// its brightness alone (`posterize` mixes it in, `levels` steps of
+// luminance; each pixel keeps its own hue, so nothing shifts colour) and swept by a wireframe scan (`wire` mixes it in: a Sobel pass on
 // luminance in a `color` glow behind a line that sweeps down every `sweep`
 // seconds and fades over `trail`, as `wire-scan` does). Outside the box the
 // picture passes through untouched. A copy of those two filters with a box,
@@ -49,10 +49,13 @@ export function createLayer({
     float f=max(feather,1e-4);
     float mask=smoothstep(lo.x-f,lo.x+f,q.x)*(1.-smoothstep(hi.x-f,hi.x+f,q.x))
               *smoothstep(lo.y-f,lo.y+f,q.y)*(1.-smoothstep(hi.y-f,hi.y+f,q.y));
-    // Ordered dither, as the dither filter draws it.
+    // Ordered dither on luminance, as the dither filter steps it; the pixel
+    // is scaled to the stepped brightness, so its hue stays its own.
     vec2 cell=mod(floor(gl_FragCoord.xy)+floor(time*4.),2.);
     float threshold=cell.y<1.?(cell.x<1.?0.:2.):(cell.x<1.?3.:1.);
-    vec3 quantized=floor(clamp(original.rgb+(threshold/4.-.375)/levels,0.,1.)*levels+.5)/levels;
+    float l=max(dot(original.rgb,vec3(.299,.587,.114)),1e-3);
+    float stepped=floor(clamp(l+(threshold/4.-.375)/levels,0.,1.)*levels+.5)/levels;
+    vec3 quantized=min(original.rgb*(stepped/l),vec3(1.));
     vec3 color=mix(original.rgb,quantized,posterize);
     // The wireframe scan, as wire-scan draws it.
     float gx=-lum(vec2(-1,1))-2.*lum(vec2(-1,0))-lum(vec2(-1,-1))+lum(vec2(1,1))+2.*lum(vec2(1,0))+lum(vec2(1,-1));

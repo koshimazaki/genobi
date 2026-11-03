@@ -51,9 +51,10 @@ their own grid, so their edges stay crisp at any size.
 
 ## `box-scan`
 
-`graphics/mix-box-scan.mjs`, a Three.js filter. The `dither` filter's ordered
-posterize and `wire-scan`'s Sobel wireframe sweep in one shader, applied only
-inside a rectangle with softened edges; outside it the composite below passes
+`graphics/mix-box-scan.mjs`, a Three.js filter. An ordered-dither posterize
+on brightness alone (each pixel is scaled to its stepped luminance, so its hue
+stays its own) and `wire-scan`'s Sobel wireframe sweep in one shader, applied
+only inside a rectangle with softened edges; outside it the composite below passes
 through untouched. It is a copy of those two filters with a box, not a change
 to them, so they and every project pinned to their hashes stay as they are.
 
@@ -62,7 +63,7 @@ to them, so they and every project pinned to their hashes stay as they are.
 | `x`, `y`, `w`, `h` | the box, 0 to 1 of the frame from its top left             |
 | `feather`          | 0 to 0.2 of the frame: the soft edge                       |
 | `posterize`        | 0 to 1: how much of the dithered picture shows             |
-| `levels`           | 2 to 32 per channel                                        |
+| `levels`           | 2 to 32 steps of brightness                                |
 | `wire`             | 0 to 1: how much of the wireframe sweep shows              |
 | `color`            | `#rrggbb`: the wireframe's glow                            |
 | `sweep`            | 0.1 to 8 s for the scan line to cross the frame            |

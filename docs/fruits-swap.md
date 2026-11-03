@@ -128,11 +128,14 @@ leave beats 1 to 3 with nothing new to cut to.
 - **The gorilla as a surveillance camera**: `crt` scanlines over the frame,
   the `hud` (`● REC  CAM 02 // SUBJECT GORILLA`), a `ui-focus` target box on
   the dancer's middle third (x 0.30, y 0.04, 0.40 × 0.92, measured from the
-  gorilla's frames) for four beats, then a `scan` lock on the head. Only that
-  box degrades, with `box-scan`: posterize 0.4, 0.6, 0.8, 1.0 at 8, 5, 3 and
-  2 levels every two beats, then the wireframe at 0.45 and 0.9 over the last
-  two beats before the WATERMELON cut. The fruits and the studio outside the
-  box stay clean.
+  gorilla's frames) for four beats, then a `scan` lock on the head, under
+  light `crt` scanlines. Only that box takes a surveillance look, with
+  `box-scan`, kept subtle so the gorilla still reads as the gorilla:
+  posterize on brightness alone (no colour shift) at 0.2, 0.3, 0.4 and 0.5
+  with 8, 7, 6 and 6 steps every two beats, then the wireframe at 0.25 and
+  0.5 over the last two beats before the WATERMELON cut, the box's edge
+  softened over 0.06 of the frame. The fruits and the studio outside it stay
+  clean.
 - **Into the end card**: pixel fruit thicken from beat 45 (`sprite-shower`,
   120 then 380 sprites, flying up) until they flood the frame, and the end
   card comes up under them already built: its layer starts its recipe 4 s in
@@ -204,6 +207,9 @@ All 3 November 2026, from the owner's reviews.
   apple; pixel fruit (`sprite-shower`) across the splash and flooding into the
   end card instead of its dot-matrix build; the gorilla's treatment confined
   to its box (`box-scan`), because over the whole frame it "gets weird".
+- **v4**: the gorilla "can be more subtle effects … looks overdone": the box
+  treatment halved, posterized on brightness alone so nothing shifts colour,
+  a softer box edge and lighter scanlines.
 
 ## Limits
 

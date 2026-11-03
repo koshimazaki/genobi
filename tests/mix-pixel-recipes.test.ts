@@ -155,5 +155,7 @@ describe("box scan", () => {
     );
     expect(source).toContain("gl_FragColor=vec4(mix(original.rgb,color,mask)");
     expect(source).toMatch(/float mask=smoothstep\(lo\.x-f/);
+    // Posterized on brightness alone: the pixel is scaled, its hue kept.
+    expect(source).toContain("vec3 quantized=min(original.rgb*(stepped/l)");
   });
 });

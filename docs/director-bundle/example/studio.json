@@ -870,7 +870,7 @@
       "mode": "filter",
       "file": {
         "path": "graphics/mix-box-scan.mjs",
-        "sha256": "8a47817f008f669cf95f96501f9cbcac4d171434b3046c0b0e81be008b93a37d"
+        "sha256": "2e17bb203d14eaeecbe6ebefdeeddc0495df4a0b3bdf325215c623496d784636"
       },
       "parameterSchema": {
         "type": "object",
