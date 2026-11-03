@@ -61,7 +61,10 @@ it("keeps the newest Recreate after an older image finishes", async () => {
 
 it("ignores a pending Recreate after leaving Camera", async () => {
   const image = deferredImage();
-  vi.stubGlobal("fetch", vi.fn(() => image.promise));
+  vi.stubGlobal(
+    "fetch",
+    vi.fn(() => image.promise),
+  );
   const received: CameraRecipePatch[] = [];
   stop = onCameraRecipe((patch) => received.push(patch));
 
