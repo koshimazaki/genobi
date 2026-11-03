@@ -1,0 +1,154 @@
+{
+  "schemaVersion": 1,
+  "status": "draft-not-live",
+  "principle": "Use owner originals unchanged; replacement assets create new derived versions, not edits to source video",
+  "galleryCards": [
+    {
+      "id": "mecha-fruits",
+      "title": "Mecha × Fruits",
+      "subtitle": "Character · Audio-reactive",
+      "templateFamily": "characters-and-objects",
+      "state": "awaiting-original-video-files",
+      "existingGalleryTemplateId": null,
+      "soundtrack": "Dance with Fruits",
+      "videos": [
+        {
+          "id": "character-a",
+          "label": "Character A",
+          "url": null,
+          "source": "owner existing character video #1",
+          "preserveAudio": true,
+          "preserveOriginal": true
+        },
+        {
+          "id": "character-b",
+          "label": "Character B",
+          "url": null,
+          "source": "owner existing character video #2",
+          "preserveAudio": true,
+          "preserveOriginal": true
+        }
+      ],
+      "replaceableReferenceSlots": [
+        "character",
+        "fruit-left",
+        "fruit-right",
+        "look"
+      ],
+      "sourceSteps": [
+        "Watch original",
+        "Make my version",
+        "Swap reference",
+        "Review edited project"
+      ],
+      "optionalDerivedSteps": [
+        "Recreate image in Camera (navigation only)",
+        "Review frame-0 region and alignment",
+        "Capture audio-reactive guide",
+        "Quote and approve paid LTX render",
+        "Save derived version"
+      ],
+      "videoAssembly": {
+        "isOptional": true,
+        "frameRate": 24,
+        "framesPerTake": 193,
+        "takeCount": 3,
+        "estimatedSeconds": 24.125,
+        "presetDocs": [
+          "fruit-mecha",
+          "fruit-mecha-morph",
+          "fruit-apple-banana"
+        ],
+        "note": "New render only; never silently stitch the two original examples"
+      }
+    },
+    {
+      "id": "reactive-spaces",
+      "title": "Reactive Spaces",
+      "subtitle": "3D · Acoustics",
+      "templateFamily": "spaces-and-acoustics",
+      "state": "reuse-existing-gallery-card",
+      "existingGalleryTemplateId": "adaptive-reverb",
+      "soundtrack": "Adaptive Reverb",
+      "videos": [
+        {
+          "id": "spaces",
+          "label": "Spaces",
+          "url": "/media/template-gallery/adaptive-reverb.mp4",
+          "source": "bundled existing Adaptive Reverb finished cut",
+          "preserveAudio": true,
+          "preserveOriginal": true,
+          "knownSeconds": 30.458
+        }
+      ],
+      "newerOwnerVideo": null,
+      "chapters": [
+        "skyscrapers",
+        "cathedral",
+        "large-hall",
+        "recording-booth"
+      ],
+      "replaceableReferenceSlots": [
+        "towers-image",
+        "cathedral-image",
+        "hall-image",
+        "booth-image"
+      ],
+      "geometryControls": [
+        "small",
+        "original",
+        "large",
+        "room-dimensions"
+      ],
+      "sourceSteps": [
+        "Watch original",
+        "Make my version",
+        "Swap reference",
+        "Review edited project"
+      ],
+      "optionalDerivedSteps": [
+        "Agent proposes editable Three.js reconstruction",
+        "Person reviews scale, camera and room layout",
+        "Recapture RGB/depth and room impulse response",
+        "Quote and approve paid LTX render",
+        "Save derived version"
+      ],
+      "videoAssembly": {
+        "isOptional": true,
+        "frameRate": 24,
+        "framesPerTake": 193,
+        "takeCount": 4,
+        "estimatedSeconds": 32.1667,
+        "studyIds": [
+          "towers-descent",
+          "cathedral-gallery",
+          "party-walls",
+          "studio-walls"
+        ],
+        "audioStartSeconds": [
+          0,
+          8.0417,
+          15.6916,
+          23.6083
+        ],
+        "note": "Audio offsets are not final cut times; align shifted captures and reverb"
+      }
+    }
+  ],
+  "integration": {
+    "doc": "audio-reactive/featured-demo-templates.md",
+    "mediaRoot": "public/media/template-gallery/",
+    "galleryCatalogue": "shared/gallery/catalogue.ts",
+    "preserveExistingAdaptiveReverbCard": true,
+    "noAutoGenerateInSwapPanel": true,
+    "noBrokenMediaLinks": true,
+    "noNewStockOrGeneratedVisuals": true,
+    "nextSteps": [
+      "Obtain the two existing character MP4 files",
+      "Identify whether pictured spaces video is the bundled file or newer export",
+      "Obtain optional room/character/fruit stills",
+      "Wire Gallery A/B and space asset slots",
+      "Review derived-clip workflow and verify approvals"
+    ]
+  }
+}
