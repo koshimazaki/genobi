@@ -25,6 +25,25 @@ let target: Target | undefined;
 const HOLD_MS = 15_000;
 let held: { recipe: CameraRecipePatch; at: number } | undefined;
 
+/**
+ * A Director-to-Camera handoff can wait for a saved still to load. The newer
+ * handoff (or leaving Camera) invalidates any earlier in-flight request; a
+ * late image fetch must never replace the user's newly selected prompt,
+ * model or references before a paid Generate.
+ */
+let handoffGeneration = 0;
+export function beginCameraRecipeHandoff() {
+  held = undefined;
+  return ++handoffGeneration;
+}
+export function currentCameraRecipeHandoff(generation: number) {
+  return generation === handoffGeneration;
+}
+export function cancelCameraRecipeHandoff() {
+  ++handoffGeneration;
+  held = undefined;
+}
+
 /** Registers the composer; returns the cleanup. The newest wins. */
 export function onCameraRecipe(next: Target) {
   target = next;
