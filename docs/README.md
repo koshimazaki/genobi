@@ -63,6 +63,12 @@ user action through every layer.
 - [Adaptive reverb](adaptive-reverb.md) — the fourth mix template, the 3D +
   LTX template: one LTX-2.5 (open weights) + AKUSPACE LoRA take through three
   rooms, its reverb changing with each, and Acoustic Space end to end.
+- [Dance with Fruits](fruits-swap.md) — the fifth mix template, the
+  content swap: the owner's four LTX-2.5 (open weights) renders of one dance
+  guide, opened by an apple-logo title splash, swapped on the loop and the
+  drop, with pixel words and fruit and the house end card;
+  [its recipes](fruits-swap-recipes.md): a speech bubble, a pixel fruit shower
+  and a boxed surveillance filter.
 - [Adaptive reverb proof](adaptive-reverb-proof.md) — the 30 October runs: one
   Three.js scene guiding LTX Layout-to-Render picture and scene-derived reverb.
 - [Audio-reactive pyramid](audio-reactive-pyramid.md) — the 2 November runs:

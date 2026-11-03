@@ -139,6 +139,8 @@
         "dual-editor.md",
         "editor-timeline.md",
         "effects-catalogue.md",
+        "fruits-swap-recipes.md",
+        "fruits-swap.md",
         "genmod.md",
         "genobi-teaser-run/README.md",
         "genobi-teaser-run/claims.md",
@@ -210,6 +212,7 @@
         "director-bundle/showcase/dimensions-mix/README.md",
         "director-bundle/showcase/genobi-teaser/README.md",
         "falling-room.md",
+        "fruits-swap.md",
         "genobi-teaser-run/decision-table.md",
         "genobi-teaser.md",
         "media-space.md",
@@ -316,6 +319,8 @@
         "bloom-teaser.md",
         "director-generate.md",
         "falling-room.md",
+        "fruits-swap-recipes.md",
+        "fruits-swap.md",
         "media-previews.md",
         "poster-grid-direction.md",
         "tutorial-video.md"
@@ -518,7 +523,8 @@
         "director-bundle/project-copy.md",
         "director-bundle/showcase/README.md",
         "director-prompts.md",
-        "effects-catalogue.md"
+        "effects-catalogue.md",
+        "fruits-swap-recipes.md"
       ]
     },
     "research": {
@@ -744,6 +750,8 @@
         "editor-timeline.md",
         "effects-catalogue.md",
         "falling-room.md",
+        "fruits-swap-recipes.md",
+        "fruits-swap.md",
         "genmod.md",
         "genobi-cli.md",
         "genobi-deck.md",
@@ -1520,7 +1528,11 @@
       "path": "director-bundle/motion-effects.md",
       "tags": ["director", "bundle", "agents"],
       "summary": "The five registered motion-effect recipes (shake, transition, grade, speed lines, styled title), their parameters and how agents use them.",
-      "links": ["dimensions-mix.md", "director-bundle/README.md"]
+      "links": [
+        "dimensions-mix.md",
+        "director-bundle/README.md",
+        "fruits-swap-recipes.md"
+      ]
     },
     {
       "title": "project-copy",
@@ -1694,6 +1706,20 @@
         "voice-setup.md",
         "world-builder.md"
       ]
+    },
+    {
+      "title": "Dance with Fruits: its recipes",
+      "path": "fruits-swap-recipes.md",
+      "tags": ["director", "bundle", "templates"],
+      "summary": "The four recipes Dance with Fruits added to the trusted registry - a comic speech bubble, a pixel-art fruit shower, a surveillance treatment confined to a box and a scan with its own lock line - with their parameters and checks.",
+      "links": ["fruits-swap.md"]
+    },
+    {
+      "title": "Dance with Fruits: the swap edit",
+      "path": "fruits-swap.md",
+      "tags": ["director", "sound", "templates"],
+      "summary": "Dance with Fruits, the content-swap mix template - 33 seconds of the owner's four LTX-2.5 Layout-to-Render (open weights) renders of one dance guide, opened by a splash of flying pixel fruit and a typed title, swapped hard on the loop and the drop, with Retro Gaming words baked into the media, a neon-pink surveillance scan confined to the gorilla and the house end card. Nothing to generate.",
+      "links": ["fruits-swap-recipes.md", "templates.md"]
     },
     {
       "title": "Gen-Mod: one take, modified",
@@ -2300,6 +2326,7 @@
         "bloom-teaser.md",
         "dimensions-mix.md",
         "falling-room.md",
+        "fruits-swap.md",
         "genobi-teaser.md",
         "media-previews.md",
         "project-assets.md",
