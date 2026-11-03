@@ -86,10 +86,24 @@ export const MORPH_ASSETS = [
     state: 0,
   },
   {
+    id: "bike",
+    name: "Sports bike",
+    family: "Machines",
+    preset: "bike-mecha",
+    state: 0,
+  },
+  {
     id: "mecha",
     name: "Mecha",
     family: "Machines",
     preset: "spacecraft-mecha",
+    state: 1,
+  },
+  {
+    id: "brawler",
+    name: "Brawler mecha",
+    family: "Machines",
+    preset: "bike-mecha",
     state: 1,
   },
   {

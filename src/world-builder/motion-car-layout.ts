@@ -19,7 +19,13 @@ export function carDeckHeight(z: number) {
   return z >= -0.75 ? 0.48 : 0.5;
 }
 
-/** A part sized in metres: width (x), height (y) and length (z). */
+/**
+ * The car is drawn at 2.2 x 1.0 x 0.7 m below, then scaled by this so it
+ * reads beside the 4.5 m mecha: about 4.0 x 1.8 x 1.26 m.
+ */
+export const CAR_SCALE = 1.8;
+
+/** A part sized in drawing metres: width (x), height (y) and length (z). */
 function block(
   x: number,
   y: number,
@@ -27,10 +33,12 @@ function block(
   [w, h, l]: [number, number, number],
   extra: Partial<SceneTransform> = {},
 ) {
-  return pose(x, y, z, BASE, {
-    scaleX: Math.round((w / UNIT) * 10000) / 10000,
-    scaleY: Math.round((h / UNIT) * 10000) / 10000,
-    scaleZ: Math.round((l / UNIT) * 10000) / 10000,
+  const axis = (v: number) =>
+    Math.round(((v * CAR_SCALE) / UNIT) * 10000) / 10000;
+  return pose(x * CAR_SCALE, y * CAR_SCALE, z * CAR_SCALE, BASE, {
+    scaleX: axis(w),
+    scaleY: axis(h),
+    scaleZ: axis(l),
     ...extra,
   });
 }
@@ -40,8 +48,8 @@ function block(
  * takes the mecha part the spacecraft part it replaces becomes: the body deck
  * the torso, the cabin the head, the side panels the arms, the wheels and
  * bumpers the legs (front wheel the feet), the spoiler and flares the wings,
- * the lights the neck and hips. About 2.2 m long, 1.0 m wide and 0.7 m tall,
- * the wheels on the floor at y = 0 and the nose at +z.
+ * the lights the neck and hips. Drawn 2.2 m long, 1.0 m wide and 0.7 m tall
+ * and built at CAR_SCALE, the wheels on the floor at y = 0, the nose at +z.
  */
 export function carLayout(): SceneTransform[] {
   const parts: SceneTransform[] = [];

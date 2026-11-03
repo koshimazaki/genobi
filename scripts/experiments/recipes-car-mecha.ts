@@ -10,7 +10,7 @@ import { bassSwells, shipBounds } from "./recipes-ship-mecha";
 
 /** Each form's colour, written on every voxel so the guide's RGB shows it. */
 export const CAR_COLOURS: Record<string, string> = {
-  Car: "#1b2a3a",
+  Car: "#2f4458",
   Mecha: "#d9a441",
 };
 /** The mecha fills this share of the frame height. */
