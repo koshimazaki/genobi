@@ -1,7 +1,7 @@
 # Director mix media
 
-The offered templates are Dimensions mix, Genobi teaser, Bloom and Adaptive
-reverb. Their folders contain the media the editable cuts use; gallery renders
+The offered templates are Dimensions mix, Genobi teaser, Bloom, Adaptive
+reverb and Dance with Fruits. Their folders contain the media the editable cuts use; gallery renders
 and posters live beside them under `public/media/template-gallery/`.
 
 The earlier Character intro, Outfit reveal and Poster in motion placeholders
