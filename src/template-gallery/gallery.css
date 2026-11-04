@@ -253,8 +253,9 @@
   width: 15px;
   height: 15px;
 }
-/* The card's brief: what a viewer can hand in and what happens to it. */
-.template-brief {
+/* The card's brief: what a viewer can hand in and what happens to it. Not
+   `.template-brief`, which is the recipe drawer's 32 px brief input. */
+.template-card-brief {
   color: var(--readout);
   border-left: 2px solid var(--accent);
   padding-left: 10px;
