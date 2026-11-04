@@ -74,7 +74,7 @@ connection/model preferences, never provider keys, and do not install agents.
 | `falling-room`        | Falling room: a free World Builder take, its room sound, one Klein still    |
 | `fruits-swap`         | Dance with Fruits: swap a fruit, a character or the track into the loop     |
 | `audio-reactive-drop` | Acoustic Spaces v2: a room swapped in, its room sound measured              |
-| `adaptive-reverb`     | Adaptive reverb: a room swapped in under a fixed AKUSPACE preset label      |
+| `adaptive-reverb`     | Adaptive reverb (v1): a room swapped in, its reverb a fixed AKUSPACE preset |
 | `bloom-teaser`        | Bloom: the sheet and prompt shown, a new H3 take, takes and track swapped   |
 | `dimensions-mix`      | Dimensions mix: swap only, a creature or the track, the cut keeps its beats |
 | `genobi-hermes`       | The open route on Hermes, the Klein box edit and the two-pass run           |

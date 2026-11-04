@@ -11,7 +11,7 @@ Each skill of the Genobi plugin: what it is for, the tools its instructions use 
 
 ## `adaptive-reverb`
 
-Make a version of Adaptive reverb, the first 3D + LTX mix template - the person says or types the room they want and which one it replaces ("a stone cellar instead of the hall"), an image being an optional reference, and the agent writes the first still's prompt, builds the room in World Builder, renders it with LTX-2.5 Layout-to-Render on the hosted deployment, processes the track with the room's CPU reverb and labels it with a fixed AKUSPACE preset RT60. Every paid step is quoted and waits for the person's yes.
+Make a version of Adaptive reverb, the first 3D + LTX mix template - the person says or types the room they want and which one it replaces ("a stone cellar instead of the hall"), an image being an optional reference, and the agent writes the first still's prompt, builds the room in World Builder, renders it with LTX-2.5 Layout-to-Render on the hosted deployment, processes the track with the room's CPU reverb and, in this v1, uses a fixed AKUSPACE preset for each room's reverb (Acoustic Spaces v2 instead works out each room's reverb from its measured size). Every paid step is quoted and waits for the person's yes.
 
 - Tags: `agents`, `director`, `templates`, `world-builder`, `sound`, `ltx`
 - Instructions: [plugins/genobi/skills/adaptive-reverb/SKILL.md](https://github.com/koshimazaki/Genobi/blob/main/plugins/genobi/skills/adaptive-reverb/SKILL.md)
