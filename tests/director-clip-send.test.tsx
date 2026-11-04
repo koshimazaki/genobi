@@ -115,6 +115,7 @@ function show(id: string) {
       edit={() => {}}
       duplicate={() => {}}
       remove={() => {}}
+      rename={() => ""}
       reorder={() => {}}
       replace={() => {}}
       command={command}

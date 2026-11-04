@@ -3,7 +3,7 @@ import { useCallback, useState, type CSSProperties } from "react";
 import ResizeHandle from "../components/ResizeHandle";
 import type { Layer, Project } from "../../shared/director/types";
 import { applyCommand } from "../../shared/director/commands";
-import { retimeProject, rescaleFrame } from "../../shared/director/retime";
+import { rescaleFrame } from "../../shared/director/retime";
 import { magnetic, snapGrid, timelinePixels } from "./snap";
 import { CHANNEL_WIDTH } from "./channel-layout";
 import { editNoteText, type NoteCommand } from "../../shared/director/notes";
@@ -99,30 +99,33 @@ export default function DirectorConsole({
     frames: durationFrames,
   });
   useDropReveal(studioStore, pixels);
-  const updateComposition = (patch: Partial<Project["composition"]>) =>
-    commit({
-      ...bundle,
-      project: {
-        ...p,
-        revision: p.revision + 1,
-        composition: { ...p.composition, ...patch },
-      },
-    });
+  // Length and the beat grid go through the commands an agent sends:
+  // set-duration, and set-beat-grid for tempo, downbeat and bar.
+  const updateComposition = (patch: Partial<Project["composition"]>) => {
+    const { durationFrames, ...grid } = patch;
+    const error = runCommand(
+      durationFrames !== undefined
+        ? { op: "set-duration", durationFrames }
+        : { op: "set-beat-grid", ...grid },
+    );
+    if (error) report(new Error(error));
+  };
   /** An explicit rate change: one Undo step; the playhead keeps its moment. */
   function setFps(next: number) {
     if (next === fps || busy) return;
-    try {
-      const project = retimeProject(p, next);
-      commit({ ...bundle, project });
-      void seek(
-        Math.min(
-          project.composition.durationFrames - 1,
-          rescaleFrame(frame, fps, next),
-        ),
-      );
-    } catch (e) {
-      report(e);
-    }
+    const result = applyCommand(
+      { project: p, prompt: "" },
+      { op: "set-fps", fps: next },
+    );
+    if (!result.ok) return report(new Error(result.error));
+    const { project } = result.copy;
+    commit({ ...bundle, project });
+    void seek(
+      Math.min(
+        project.composition.durationFrames - 1,
+        rescaleFrame(frame, fps, next),
+      ),
+    );
   }
   // The studio's notes go through the same command an agent sends.
   // A reworded note pressed straight into Resolve or Delete applies both
@@ -318,7 +321,6 @@ export default function DirectorConsole({
             disabled={busy}
             close={() => setInspectorOpen(false)}
             edit={(patch) => l && edit(l.id, patch)}
-            changeList={changeList}
             select={select}
             replace={replace}
             command={runCommand}

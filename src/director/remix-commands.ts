@@ -18,6 +18,10 @@ import {
   isClipOp,
   type ClipCommand,
 } from "../../shared/director/clip-commands";
+import {
+  isEditorOp,
+  type EditorCommand,
+} from "../../shared/director/editor-commands";
 import { validateFiles, type Bundle } from "./bundle";
 import { validateProject } from "./validate";
 import { importAssets } from "./import-media";
@@ -36,7 +40,7 @@ import { applyEffectToBundle } from "./effect-bundle";
 
 export type DirectorCommand =
   | ApplyEffectCommand
-  | (ClipCommand & { revision: number })
+  | SharedCommand
   | { op: "inspect" }
   | { op: "brief" }
   | { op: "assets" }
@@ -62,18 +66,23 @@ export type DirectorCommand =
   | { op: "project"; revision: number; project: unknown }
   | { op: "frame"; revision: number; assetId: string; frame: number }
   | { op: "cut"; revision: number; assetId: string; in: number; out: number };
+type SharedCommand = (ClipCommand | EditorCommand) & { revision: number };
+/** A command the shared Director parser and `applyCommand` carry out. */
+const isShared = (c: DirectorCommand): c is SharedCommand =>
+  isClipOp(c.op) || isEditorOp(c.op);
+
 export function parseCommand(value: unknown): DirectorCommand {
   if (!value || typeof value !== "object" || Array.isArray(value))
     throw new Error("Command must be an object");
   const c = value as Record<string, unknown>;
   if (c.op === "apply-effect-preset")
     return parseDirectorCommand(c) as ApplyEffectCommand;
-  if (typeof c.op === "string" && isClipOp(c.op)) {
+  if (typeof c.op === "string" && (isClipOp(c.op) || isEditorOp(c.op))) {
     if (!Number.isSafeInteger(c.revision) || Number(c.revision) < 0)
       throw new Error("revision must be an integer");
     const { revision, ...command } = c;
     return {
-      ...(parseDirectorCommand(command) as ClipCommand),
+      ...(parseDirectorCommand(command) as ClipCommand | EditorCommand),
       revision: revision as number,
     };
   }
@@ -182,13 +191,7 @@ export async function runDirectorCommand(
     );
   let next: Bundle;
   let assetIds: string[] | undefined;
-  if (
-    c.op === "split-clip" ||
-    c.op === "duplicate-clip" ||
-    c.op === "remove-clip" ||
-    c.op === "set-muted" ||
-    c.op === "set-gain"
-  ) {
+  if (isShared(c)) {
     const { revision: _revision, ...command } = c;
     const result = applyDirectorCommand({ project: p, prompt: "" }, command);
     if (!result.ok) throw new Error(result.error);
