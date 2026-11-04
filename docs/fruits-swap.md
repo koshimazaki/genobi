@@ -52,6 +52,50 @@ entry of its own, so the gallery badge names the open LTX-2.5 entry
 (`ltx-2-5-open`): _LTX-2.5 · open weights_. Its licence is the LTX-2.x
 Community License ([licences](https://github.com/koshimazaki/Genobi/blob/main/LICENCES.md#lightricks-ltx)).
 
+## What made each shot
+
+Each dancer slot records what made it (`mix.recipes` in
+`shared/templates/fruits-swap.ts`), so **Make my version** shows the still
+beside the slot and **Recreate in Camera** restores it
+([Recreate in Camera](director-generate.md#recreate-in-camera)). The stills
+are the owner's look stills, the first frame each LTX-2.5 Layout-to-Render
+take started from, 1360 × 765, encoded once as JPEG quality 90 into
+`public/media/director-templates/fruits-swap/stills/`:
+
+| Slot                     | Still                               | Size    | Preset                               | Still prompt                  | Render prompt           |
+| ------------------------ | ----------------------------------- | ------- | ------------------------------------ | ----------------------------- | ----------------------- |
+| `fruits-swap-mecha`      | `stills/fruits-swap-mecha.jpg`      | 181 KiB | `fruit-mecha`                        | not recorded                  | not tied with certainty |
+| `fruits-swap-gorilla`    | `stills/fruits-swap-gorilla.jpg`    | 187 KiB | `char-gorilla-explode`               | the owner's, given 4 November | executed, 3 November    |
+| `fruits-swap-gold-ninja` | `stills/fruits-swap-gold-ninja.jpg` | 226 KiB | `char-gold-ninja-watermelon-explode` | not recorded                  | executed, 3 November    |
+| `fruits-swap-pink-cat`   | `stills/fruits-swap-pink-cat.jpg`   | 199 KiB | `char-pink-cat-explode`              | not recorded                  | executed, 3 November    |
+
+A record's `prompt` is the still's own prompt, which Camera restores; a
+prompt not written down is listed in `missing` and Camera says it is not
+stored. The three character stills were made in Genobi Image (a FLUX 3 Klein
+edit) with the mecha's still as a **shape guide only**, so their records
+carry that still as `guide`, and Camera receives both images, the guide
+first, then the character's still. The gorilla's still prompt, as the owner
+wrote it:
+
+> voxel gorilla standing on the floor dancing human size making dance moves
+> with vox banana floating on one side and vox apple on the other vox fruits
+> advert studio shot, cinematic view, wide angle lens use image 1 for shape
+> guide only, its floating in the air
+
+`renderPrompt` is the video prompt each take's render bundle executed,
+quoted exactly from the run's workflow (`char-gorilla-explode-w0`,
+`char-gold-ninja-watermelon2-explode-w0`, `char-pink-cat-explode-w0`); Camera
+does not restore it. The mecha's clip is the 2 November render; the
+fruit-mecha preset page's render prompt is not what the 2 November bundles
+executed (they read "each fruit changes into another fruit"), and which of
+them made this clip is not recorded, so the mecha has no render prompt.
+
+Each still was compared with the bundled clip's first frame and chosen by the
+take's own name in the run (for the gold ninja, the watermelon look, near
+identical to the plain gold ninja's). The mecha's still is the same file as
+the fruit-mecha preset's owner still. No take records which Camera model or
+settings would make it again.
+
 ## The track
 
 The owner's "Dance with Fruits" (music by Koshimazaki, owner-made): the 9.0 s

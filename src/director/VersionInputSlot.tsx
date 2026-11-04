@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import type { Source } from "../../shared/types";
 import {
   versionSourceSeconds,
+  versionTemplate,
   type VersionSlot,
 } from "../../shared/templates/version";
 import { request } from "../useJobs";
@@ -15,6 +16,7 @@ import { versionMediaFile } from "./version-results";
 import { useShell } from "../studio/ShellContext";
 import { cameraRecipe, openInCamera } from "./recreate-in-camera";
 import RecreateButton from "../components/RecreateButton";
+import SlotFirstStill from "./SlotFirstStill";
 
 function AudioWave({ bytes }: { bytes?: Uint8Array<ArrayBuffer> }) {
   const [peaks, setPeaks] = useState<number[]>([]);
@@ -184,6 +186,7 @@ export default function VersionInputSlot({
   }
   const chosen = ids[0] ? bundle.project.assets[ids[0]] : undefined;
   const recipe = cameraRecipe(bundle.project, slot, ids);
+  const recorded = versionTemplate(bundle.project)?.mix?.recipes?.[slot.id];
   const audioUrl = useObjectUrl(
     chosen?.kind === "audio" ? bundle.files.get(chosen.file.path) : undefined,
     true,
@@ -215,6 +218,7 @@ export default function VersionInputSlot({
           fallback={slot.picture?.url}
         />
       </VersionMediaDrop>
+      {recorded && <SlotFirstStill recipe={recorded} label={slot.label} />}
       {audioUrl && (
         <audio
           aria-label={`${slot.label} preview`}

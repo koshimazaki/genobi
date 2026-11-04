@@ -279,6 +279,8 @@ describe("Dance with Fruits, the swap edit", () => {
   it("keeps the bundled media within the Pages and project limits", () => {
     let total = 0;
     for (const name of readdirSync(DIR)) {
+      // The slot stills sit in stills/ (tests/template-slot-stills.test.ts).
+      if (name === "stills") continue;
       expect(name).toMatch(/^fruits-swap-[a-z0-9-]+\.(mp4|mp3|jpg)$/);
       const size = statSync(`${DIR}/${name}`).size;
       expect(size, name).toBeLessThan(25 * 1024 * 1024);

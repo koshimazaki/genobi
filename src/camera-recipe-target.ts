@@ -12,6 +12,12 @@ export interface CameraRecipePatch {
   patch: Partial<ComposerState>;
   /** Said in Camera's notice line; "" when everything was restored. */
   note: string;
+  /**
+   * An MP4 the person chose to use in Camera (an expanded Assets card's Use
+   * in Camera): the composer uploads it as Upscale's source, exactly as the
+   * Upscale drop zone does, and selects it. An upload, never a generation.
+   */
+  video?: File;
 }
 type Target = (recipe: CameraRecipePatch) => void;
 let target: Target | undefined;
@@ -73,6 +79,9 @@ export function applyCameraRecipe(recipe: CameraRecipePatch) {
  */
 let notice = "";
 const listeners = new Set<() => void>();
+export function cameraNotice() {
+  return notice;
+}
 export function setCameraNotice(next: string) {
   if (notice === next) return;
   notice = next;

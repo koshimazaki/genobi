@@ -2,13 +2,7 @@
 No model calls, arbitrary URLs, scripts or headless browser execution.
 """
 import hashlib
-from fractions import Fraction
-import json
-import os
 from pathlib import Path
-import shutil
-import subprocess
-import tempfile
 import uuid
 import wave
 
@@ -23,6 +17,7 @@ from .edges import canny, depth_batch
 from .reverb import DirectorSceneReverb
 from .storyboard import DirectorStoryboardGrid
 from .take_audio import fit_audio
+from .video_io import decode_webm, encode_webm
 
 WEB_DIRECTORY = "./web"
 
@@ -39,31 +34,6 @@ def input_path(name, extensions):
     return path
 
 
-# ComfyUI Desktop launches the server with a minimal PATH on macOS, so a
-# Homebrew or MacPorts FFmpeg is looked up in its usual directories as well.
-TOOL_DIRS = ("/opt/homebrew/bin", "/usr/local/bin", "/opt/local/bin")
-
-
-def find_tool(name):
-    """Absolute path of `name` on PATH or in the usual package-manager directories."""
-    found = shutil.which(name)
-    if found:
-        return found
-    for directory in TOOL_DIRS:
-        candidate = Path(directory) / name
-        if candidate.is_file() and os.access(candidate, os.X_OK):
-            return str(candidate)
-    return None
-
-
-def ffmpeg(args):
-    binary = find_tool("ffmpeg")
-    if not binary:
-        raise RuntimeError("Install FFmpeg for World Builder video inputs")
-    subprocess.run([binary, "-v", "error", "-nostdin", "-y", *args], check=True,
-                   timeout=60, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
-
-
 def read_frames(path, recipe):
     w, h, count = recipe["width"], recipe["height"], recipe["frames"]
     if path.suffix.lower() == ".png":
@@ -72,25 +42,7 @@ def read_frames(path, recipe):
                 raise ValueError("PNG dimensions do not match the recipe")
             data = np.array(image.convert("RGB"), dtype=np.float32)[None] / 255
         return torch.from_numpy(data)
-    probe = find_tool("ffprobe")
-    if not probe:
-        raise RuntimeError("Install FFprobe with FFmpeg for World Builder video inputs")
-    metadata = subprocess.run([probe, "-v", "error", "-protocol_whitelist", "file,pipe", "-select_streams", "v:0",
-        "-count_frames", "-show_entries", "stream=width,height,r_frame_rate,nb_read_frames", "-of", "json", str(path)],
-        check=True, timeout=60, capture_output=True)
-    streams = json.loads(metadata.stdout).get("streams", [])
-    if len(streams) != 1:
-        raise ValueError("Expected one video stream")
-    stream = streams[0]
-    if stream.get("width") != w or stream.get("height") != h or Fraction(stream.get("r_frame_rate", "0")) != 24 or int(stream.get("nb_read_frames", 0)) != count:
-        raise ValueError("Video dimensions, fps or frame count do not match the recipe")
-    with tempfile.TemporaryDirectory(prefix="director-frames-") as temp:
-        out = Path(temp) / "frames.rgb"
-        ffmpeg(["-protocol_whitelist", "file,pipe", "-i", str(path), "-an", "-frames:v", str(count), "-pix_fmt", "rgb24", "-f", "rawvideo", str(out)])
-        raw = np.fromfile(out, dtype=np.uint8)
-        if raw.size != w * h * count * 3:
-            raise ValueError("Video frame count does not match the recipe")
-        return torch.from_numpy(raw.reshape(count, h, w, 3).astype(np.float32) / 255)
+    return torch.from_numpy(decode_webm(path, w, h, count).astype(np.float32) / 255)
 
 
 def read_audio(name, seconds):
@@ -202,10 +154,7 @@ class DirectorSceneInputs:
                 still(images[0]).save(root / name)
             else:
                 name = uid + ".webm"
-                with tempfile.TemporaryDirectory(prefix="director-input-") as temp:
-                    for i, frame in enumerate(images):
-                        still(frame).save(Path(temp) / f"{i:04d}.png")
-                    ffmpeg(["-framerate", str(fps), "-i", str(Path(temp) / "%04d.png"), "-c:v", "libvpx", "-b:v", "4M", "-an", str(root / name)])
+                encode_webm(root / name, (still(frame) for frame in images), fps)
             ui["screen"] = [{"filename": name, "subfolder": "", "type": "temp"}]
         if audio is not None:
             waveform = audio["waveform"].detach().cpu()

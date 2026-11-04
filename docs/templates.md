@@ -151,7 +151,15 @@ shot's order. It is the Camera's own `GenerateInput`: the tests send it and
 the Camera's composer request for the same choices through the shared
 validator and get the same run, body and price. Agent templates keep a skill
 each (`plugins/genobi/skills/<id>/`); a mechanical template needs none, and
-`genobi_template_plan` reports each template's `run`.
+`genobi_template_plan` reports each template's `run`. Since 4 November 2026
+every mix template in the gallery keeps one too (the owner's decision: every
+gallery card is a skill): `genobi-teaser`, `dimensions-mix`, `bloom-teaser`,
+`adaptive-reverb`, `audio-reactive-drop` and `fruits-swap`. Each says what
+the piece is, what the person hands in and with what sentence ("swap the apple
+with this"), what the agent does with each slot, the paid gates, where the
+deep procedure lives and what is not built yet. The card's brief
+([gallery](template-gallery.md#the-cards-brief)) says the same in one to three
+sentences for a viewer.
 
 The gallery's generation cards (`shared/gallery/generations.ts`) are
 mechanical one-shot templates too, built from the owner's start image and

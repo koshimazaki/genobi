@@ -29,6 +29,8 @@ export interface Reactivity {
   bandRelease?: number;
   /** Stage look override ("studio" draws a lit floor so the ground turns with the camera). */
   stage?: string | null;
+  /** Band that drives the open/closed blend and every "low" mapping; null keeps the study's own ("low"). */
+  band?: "sub" | "low" | "mid" | "high" | "level" | null;
 }
 
 function percentile(values: number[], q: number) {
@@ -131,6 +133,18 @@ export async function captureStudy(
         blend.progress.amount * reactivity.motionGain,
       );
   }
+  // Retarget the walls' driver: the blend's progress source and the "low"
+  // room/size mappings follow the chosen band; mid/high mappings keep theirs.
+  if (reactivity.band && recipe.motion) {
+    const blend = recipe.motion.morphControl;
+    if (blend?.enabled) blend.progress.source = reactivity.band;
+    for (const mapping of recipe.motion.mappings)
+      if (mapping.source === "low") mapping.source = reactivity.band;
+  }
+  // A camera pushed by the low band (falling, cathedral) follows the same band.
+  const push = recipe.cameraMotion?.audio;
+  if (reactivity.band && push?.enabled && push.source === "low")
+    push.source = reactivity.band;
   if (reactivity.radius != null) recipe.radius = reactivity.radius;
   if (reactivity.orbit != null) recipe.orbit = reactivity.orbit;
   if (reactivity.elevation != null) recipe.elevation = reactivity.elevation;
@@ -155,6 +169,7 @@ export async function captureStudy(
       bandRelease: reactivity.bandRelease ?? 0,
       stage: recipe.stageLook ?? null,
       bandGain: reactivity.bandGain,
+      band: recipe.motion?.morphControl?.progress.source ?? null,
       bandGainsApplied: scaled.gains,
       motionGain: reactivity.motionGain,
       intensity: recipe.motion?.intensity ?? null,

@@ -14,16 +14,23 @@ length. Tool labels describe recipe steps, not how demo footage was made.
 ## Card order
 
 The cards follow `GALLERY_ORDER` (`shared/gallery/catalogue.ts`), the owner's
-order since 30 October 2026:
+order of 4 November 2026:
 
 1. [Genobi teaser](genobi-teaser.md) · Product teaser
 2. [Dimensions mix](dimensions-mix.md) · Anime teaser
 3. [Bloom](bloom-teaser.md) · Sheet to shot (an anime teaser from a character sheet)
 4. [Adaptive reverb](adaptive-reverb.md) · 3D · LTX template
-5. [Dance with Fruits](fruits-swap.md) · Content swap
-6. Forest guardian
-7. Toy creatures
-8. Sheet to shot · Preview coming soon
+5. Forest guardian
+6. [Audio Reactive Acoustic Spaces v2](audio-reactive-drop.md) · 3D · LTX template
+7. [Dance with Fruits](fruits-swap.md) · Content swap
+8. Toy creatures
+9. Sheet to shot · Preview coming soon
+
+The gallery is a two-column grid (1.7fr / 1fr,
+`src/template-gallery/gallery.css`) whose first card spans two rows, so this
+order puts Forest guardian up beside Adaptive reverb, Audio Reactive Acoustic
+Spaces v2 in the wide column, and Dance with Fruits in the side column beside
+it.
 
 Character piece is in `NOT_IN_GALLERY`: its preview is FLUX 3 video,
 represented by Forest guardian, rather than footage from its LTX recipe.
@@ -31,10 +38,11 @@ Its template, Director links and public preview pages stay. Neon bloom and
 Audio-visual also stay hidden, replaced by Bloom and Adaptive reverb.
 `shared/templates/catalogue.ts` keeps its own order for agents and MCP.
 
-The four mixes carry a second line saying what each piece is for
+The six mixes carry a second line saying what each piece is for
 (`GALLERY_SUBTITLE`): "Genobi teaser · Product teaser", "Dimensions mix ·
-Anime teaser", "Bloom · Sheet to shot" and "Adaptive reverb · 3D · LTX
-template", on the card and in the drawer's title. The Dimensions mix
+Anime teaser", "Bloom · Sheet to shot", "Adaptive reverb · 3D · LTX
+template", "Audio Reactive Acoustic Spaces v2 · 3D · LTX template" and "Dance with
+Fruits · Content swap", on the card and in the drawer's title. The Dimensions mix
 keeps its name and id, so its links, watch page and showcases are unchanged.
 The Genobi teaser's poster is its GENOBI title frame (4.7 s into the v3
 render, the wordmark fully drawn), 1920 × 1080 like the cut. Adaptive
@@ -46,11 +54,24 @@ Regenerate from the bundled render with:
 ffmpeg -ss 10 -i public/media/template-gallery/adaptive-reverb.mp4 -frames:v 1 -q:v 2 -update 1 public/media/template-gallery/adaptive-reverb.jpg
 ```
 
-The four mix templates open as they are: the drawer plays the finished cut,
+Audio Reactive Acoustic Spaces v2's poster is its cathedral room scan at 10 seconds,
+1920 × 1080 like the cut.
+
+The six mix templates open as they are: the drawer plays the finished cut,
 describes it, and offers Take it to Director and Take it to the editor, never
 Generate, since a mix generates nothing. A mix's preview is a render of the
 template, so it is not labelled preview footage, and it has watch and embed
 pages at the render's own size.
+
+Four of those mixes (Dance with Fruits, Acoustic Spaces v2, Adaptive reverb
+and Bloom) also offer **Make it with the agent** once they are open in
+Director's [Make my version](director-generate.md#make-it-with-the-agent): the
+person says or types what they want, with an optional reference, and that
+starts an agent session with the template's skill, the way the drawer's Generate now
+does for an agent template. The drawer itself still never generates. The
+Camera reaches the same place from its LTX models: the **Audio Reactive ·
+Layout to Motion** card is not a registry entry and submits nothing; its one
+button opens the Director on Acoustic Spaces v2 with Make my version open.
 
 ## Model badges and Open only
 
@@ -64,14 +85,16 @@ where the registry gives one name to entries that make different things
 steps are in the tooltip. The route counts every entry: "open weights", "API",
 or "open + API" when both appear.
 
-| Card                                               | Badge                                  | Why                                                                                                         |
-| -------------------------------------------------- | -------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| Genobi teaser                                      | MiniMax H3 + FLUX 3 video · open + API | Studio screen recordings; its generated footage is the owner's MiniMax H3 creatures and one FLUX 3 run (v3) |
-| Character piece, Audio-visual (hidden)             | LTX-2.5 · open weights                 | Their recipes' video model; Klein is the image step                                                         |
-| Dimensions mix                                     | MiniMax H3 · open weights              | Its three clips are the owner's MiniMax H3 outputs                                                          |
-| Adaptive reverb                                    | LTX-2.5 · open weights                 | Its one take is the owner's LTX-2.5 + AKUSPACE LoRA run (`ltx-2-5-akuspace`)                                |
-| Sheet to shot                                      | MiniMax H3 · open weights              | One H3 shot through Router                                                                                  |
-| Forest guardian, Toy creatures (Neon bloom hidden) | FLUX 3 video · API                     | FLUX 3 image to video                                                                                       |
+| Card                                               | Badge                                  | Why                                                                                                             |
+| -------------------------------------------------- | -------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| Genobi teaser                                      | MiniMax H3 + FLUX 3 video · open + API | Studio screen recordings; its generated footage is the owner's MiniMax H3 creatures and one FLUX 3 run (v3)     |
+| Character piece, Audio-visual (hidden)             | LTX-2.5 · open weights                 | Their recipes' video model; Klein is the image step                                                             |
+| Dimensions mix                                     | MiniMax H3 · open weights              | Its three clips are the owner's MiniMax H3 outputs                                                              |
+| Adaptive reverb                                    | LTX-2.5 · open weights                 | Its one take is the owner's LTX-2.5 + AKUSPACE LoRA run (`ltx-2-5-akuspace`)                                    |
+| Audio Reactive Acoustic Spaces v2                  | LTX-2.5 · open weights                 | Its five rooms are the owner's LTX-2.5 Layout-to-Render runs through the open workflow (`ltx-2-5-open`)         |
+| Dance with Fruits                                  | LTX-2.5 · open weights                 | Its four renders are the owner's LTX-2.5 Layout-to-Render runs; the badge names the open entry (`ltx-2-5-open`) |
+| Sheet to shot                                      | MiniMax H3 · open weights              | One H3 shot through Router                                                                                      |
+| Forest guardian, Toy creatures (Neon bloom hidden) | FLUX 3 video · API                     | FLUX 3 image to video                                                                                           |
 
 A mix names the model its footage came from (`MIX_FOOTAGE`), or reads
 "Finished cut" when its media is mixed. The badge's tooltip and the drawer's
@@ -109,7 +132,7 @@ Semi-open, API model).
 
 **Open only**, the toggle above the cards (off by default), keeps cards whose
 tier is Open and which show no borrowed preview footage (`openOnly`): today
-the four finished mixes and Sheet to shot. Borrowed preview footage does not
+the six finished mixes and Sheet to shot. Borrowed preview footage does not
 qualify. The Filters
 panel's **Tier** field still filters by tier alone.
 
@@ -148,8 +171,9 @@ a model the owner assigns.
 A card previews on hover or keyboard focus. Only one card previews at a time;
 hovering another pauses and mutes the previous card, even if it still has
 keyboard focus. A focused offscreen card starts when it scrolls into view.
-The four music pieces (Genobi
-teaser, Dimensions mix, Bloom, Adaptive reverb) play with sound only after a
+The six music pieces (Genobi
+teaser, Dimensions mix, Bloom, Adaptive reverb, Audio Reactive Acoustic Spaces v2, Dance with
+Fruits) play with sound only after a
 page gesture; before that, their small **Sound** button enables it explicitly.
 **Mute** switches it off. If a browser still refuses audio, playback falls back
 to muted and offers Sound again. Forest guardian also has an audio stream and
@@ -184,6 +208,26 @@ size so a pick, a quote, a run or a refusal moves nothing below it:
    the brief is editable and each shot's prompt is shown read-only, as the
    planner writes it from that brief, with the recipe's models.
 4. **Generate**, then **Take it to Director** and **Take it to the editor**.
+
+### The card's brief
+
+The owner's decision of 4 November 2026: every gallery card carries a
+**brief** (`brief` on `HouseTemplate`, `shared/templates/types.ts`), one to
+three plain sentences that tell a viewer what they can hand in and what the
+agent, or Generate, does with it. The drawer shows it under the description,
+so it is read before Make my version or Generate. Genobi is voice-first, so
+a brief says what to say or type, and an image is an optional reference. For
+Dance with Fruits: "Say or type what you want and what it replaces, for
+example 'a mango instead of the apple' or 'a gorilla instead of the mecha';
+dropping an image as a reference is optional." That sentence, spoken alone or
+with a reference ("swap the apple with this", "this room instead of the
+cathedral"), is what invokes the card's skill (`plugins/genobi/skills/<id>/`, [templates](templates.md#run-kind-mechanical-or-agent)).
+`checkBrief` (`shared/templates/run-kind.ts`) refuses an empty brief, one over
+480 characters or three sentences, or one with control characters; it is not
+the editable brief an agent template's drawer offers, which is the person's.
+`tests/template-briefs.test.tsx` fails when a gallery card has no brief, when
+a card that is not mechanical has no skill folder, or when the drawer stops
+showing the brief between the description and the actions.
 
 What Generate does depends on the template's declared run kind
 ([templates](templates.md#run-kind-mechanical-or-agent)): mechanical when
@@ -241,7 +285,7 @@ reads subsequent `popstate` URLs too, including showcase links
 (`?showcase=<project>&version=<n>&workspace=editor`), so a mounted Editor
 opens the requested template/version and restores kept drafts. Both Director
 and Editor default to Dimensions mix through the same loader. The template
-picker offers only Dimensions mix, Genobi teaser, Bloom and Adaptive reverb.
+picker offers the mix templates: Dimensions mix, Genobi teaser, Bloom, Adaptive reverb, Dance with Fruits and Audio Reactive Acoustic Spaces v2.
 Character intro, Outfit reveal and Poster in motion are retired placeholders;
 only their slot metadata and fixtures remain for saved-project replacements.
 None of them pays: the agent quotes each paid step and the

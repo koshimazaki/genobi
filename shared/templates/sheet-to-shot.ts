@@ -16,6 +16,8 @@ export const sheetToShot: HouseTemplate = {
   run: "mechanical",
   description:
     "A character sheet and a storyboard become one H3 shot, run in place.",
+  brief:
+    "Drop a character sheet and a storyboard panel, then say or type what the character does. Generate swaps them into the recipe and runs one MiniMax H3 shot here once you accept its price.",
   tier: "open",
   style: {
     name: "Sheet line",

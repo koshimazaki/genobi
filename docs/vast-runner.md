@@ -5,6 +5,8 @@ summary: Prepare a pinned local ComfyUI worker on Vast, connect by SSH and check
 
 # Vast runner for the LTX experiments
 
+The hosted [deployment v2](comfy-deploy.md#deployment-v2-reported-4-november-2026) is now the first render route and the rented box the alternative.
+
 This route runs ComfyUI directly on a rented GPU. It uses the existing source
 pins and six BF16 Layout-to-Render model files from `comfy-build/`. The helper
 commands below prepare and inspect a worker; **none queues a generation**.

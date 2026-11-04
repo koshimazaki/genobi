@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "status": "draft-not-live",
+  "status": "shipped: both cards have bundled Gallery templates (fruits-swap, audio-reactive-drop); this manifest is their design record",
   "principle": "Use owner originals unchanged; replacement assets create new derived versions, not edits to source video",
   "scopeDecision": {
     "date": "2026-11-03",
     "keep": ["mecha-fruits", "reactive-spaces"],
     "fruitsFirstSwap": ["one fruit", "the character (humanoid only)"],
     "spacesFirstSwap": ["one space"],
-    "initialSpacesVideo": "bundled adaptive-reverb cut"
+    "initialSpacesVideo": "audio-reactive-drop, selected by the owner on 3 November 2026 (evening) as the official Reactive Spaces template; adaptive-reverb stays as v1"
   },
   "reviewerRoute": {
     "ownerRender": "rented Vast box with scripts/vast/box/run-queue.sh",
@@ -38,8 +38,8 @@
       "title": "Mecha × Fruits",
       "subtitle": "Character · Audio-reactive",
       "templateFamily": "characters-and-objects",
-      "state": "videos-exist-on-owner-machine-not-bundled",
-      "existingGalleryTemplateId": null,
+      "state": "shipped-gallery-card",
+      "existingGalleryTemplateId": "fruits-swap",
       "soundtrack": "Dance with Fruits",
       "videos": [
         {
@@ -251,27 +251,43 @@
       "title": "Reactive Spaces",
       "subtitle": "3D · Acoustics",
       "templateFamily": "spaces-and-acoustics",
-      "state": "reuse-existing-gallery-card",
-      "existingGalleryTemplateId": "adaptive-reverb",
-      "soundtrack": "Adaptive Reverb",
+      "state": "shipped-gallery-card",
+      "existingGalleryTemplateId": "audio-reactive-drop",
+      "soundtrack": "Adaptive Reverb v2",
       "videos": [
         {
           "id": "spaces",
           "label": "Spaces",
+          "url": "/media/template-gallery/audio-reactive-drop.mp4",
+          "source": "Audio Reactive Acoustic Spaces v2, the owner's selected spaces cut (3 November 2026): five LTX-2.5 Layout-to-Render rooms on Adaptive Reverb v2, each room's measured CPU room sound under it; docs/audio-reactive-drop.md",
+          "preserveAudio": true,
+          "preserveOriginal": true,
+          "knownSeconds": 32.33
+        },
+        {
+          "id": "spaces-v1",
+          "label": "Spaces v1",
           "url": "/media/template-gallery/adaptive-reverb.mp4",
-          "source": "bundled existing Adaptive Reverb finished cut",
+          "source": "the earlier Adaptive Reverb finished cut, kept as its own Gallery card",
           "preserveAudio": true,
           "preserveOriginal": true,
           "knownSeconds": 30.458
         }
       ],
-      "newerOwnerVideo": null,
-      "chapters": ["skyscrapers", "cathedral", "large-hall", "recording-booth"],
+      "newerOwnerVideo": "audio-reactive-drop (shipped as its own template; the previous spaces video stays as adaptive-reverb)",
+      "chapters": [
+        "towers",
+        "cathedral",
+        "pyramid-inside",
+        "pyramid-outside",
+        "studio"
+      ],
       "replaceableReferenceSlots": [
         "towers-image",
         "cathedral-image",
-        "hall-image",
-        "booth-image"
+        "pyramid-inside-image",
+        "pyramid-outside-image",
+        "studio-image"
       ],
       "geometryControls": ["small", "original", "large", "room-dimensions"],
       "sourceSteps": [
@@ -404,8 +420,9 @@
         "the reverb is an approximate geometric response, not a measurement",
         "a reference image yields an editable approximation, not a reconstruction of the real room",
         "the booth's quiet-frame start opens at only 0.60 of its width",
-        "the initial video stays the bundled Adaptive reverb cut unless the owner selects a newer one"
-      ]
+        "the official spaces video is Audio Reactive Acoustic Spaces v2; each of its five rooms is its own file and shot, so one room swaps without re-timing (docs/audio-reactive-drop.md)"
+      ],
+      "previousVersionTemplateId": "adaptive-reverb"
     }
   ],
   "integration": {

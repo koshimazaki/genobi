@@ -4,12 +4,13 @@ import { versionTemplate } from "../../shared/templates/version";
 import { useStudio } from "../studio/useStudio";
 import { useShell } from "../studio/ShellContext";
 import VersionPanel from "./VersionPanel";
+import { onVersionOpen, takeVersionOpen } from "./version-open-request";
 import "./version.css";
 
 /**
  * Make my version, one header action for Director and Editor; opening
- * overlays the stable studio. Swap only (#57): it never starts an agent or a
- * generation.
+ * overlays the stable studio. It never starts a generation; its Make it with
+ * the agent section starts an agent session, which quotes each paid step.
  */
 export default function GenerateVersionAction({
   disabled,
@@ -39,6 +40,18 @@ export default function GenerateVersionAction({
   useEffect(() => {
     if (request) setOpen(true);
   }, [request]);
+  // A request from elsewhere (the Camera's Layout to Motion card) opens it
+  // once its project is the open one, even after this project greeted.
+  useEffect(() => {
+    const take = () => {
+      if (template && takeVersionOpen(template.id)) {
+        opened.current = projectId;
+        setOpen(true);
+      }
+    };
+    take();
+    return onVersionOpen(take);
+  }, [template, projectId]);
   if (!bundle || !template) return null;
   const close = () => {
     setOpen(false);
