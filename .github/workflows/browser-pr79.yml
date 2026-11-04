@@ -1,4 +1,4 @@
-name: PR #79 browser smoke
+name: 'PR #79 browser smoke'
 
 on:
   pull_request:
@@ -26,6 +26,10 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Browser-test formatting diagnostics
+        run: |
+          npx prettier --write scripts/browser-pr79-smoke.mjs .github/workflows/browser-pr79.yml
+          git diff -- scripts/browser-pr79-smoke.mjs .github/workflows/browser-pr79.yml
       - name: Install headless Chromium
         run: npx playwright install --with-deps chromium
       - name: Exercise the actual PR branch in Chromium
