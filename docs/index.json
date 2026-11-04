@@ -1049,6 +1049,7 @@
       "links": [
         "adaptive-reverb.md",
         "director-bundle/showcase/audio-reactive-drop/README.md",
+        "director-generate.md",
         "media-previews.md",
         "templates.md",
         "world-builder-dynamic-sound.md"
@@ -1624,7 +1625,12 @@
       "path": "director-generate.md",
       "tags": ["director", "templates"],
       "summary": "Make my version — swap media into a finished template's slots with Undo; new media is made in Camera and comes back through Assets → Generated. Nothing here generates.",
-      "links": ["genobi-cli.md", "taste-memory.md"]
+      "links": [
+        "audio-reactive-drop.md",
+        "fruits-swap.md",
+        "genobi-cli.md",
+        "taste-memory.md"
+      ]
     },
     {
       "title": "Prompts and directions",
@@ -1750,7 +1756,11 @@
       "path": "fruits-swap.md",
       "tags": ["director", "sound", "templates"],
       "summary": "Dance with Fruits, the content-swap mix template - 33 seconds of the owner's four LTX-2.5 Layout-to-Render (open weights) renders of one dance guide, opened by a splash of flying pixel fruit and a typed title, swapped hard on the loop and the drop, with Retro Gaming words baked into the media, a neon-pink surveillance scan confined to the gorilla and the house end card. Nothing to generate.",
-      "links": ["fruits-swap-recipes.md", "templates.md"]
+      "links": [
+        "director-generate.md",
+        "fruits-swap-recipes.md",
+        "templates.md"
+      ]
     },
     {
       "title": "Gen-Mod: one take, modified",
