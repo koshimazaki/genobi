@@ -141,6 +141,8 @@ export async function importVersionFiles(
   bundle: Bundle,
   slot: VersionSlot,
   files: File[],
+  /** Overrides the slot's own use (Make it with the agent's reference). */
+  use?: "reference" | "production",
 ) {
   if (files.length < 1 || files.length > slot.max)
     throw new Error(`${slot.label}: choose 1 to ${slot.max} files.`);
@@ -164,7 +166,8 @@ export async function importVersionFiles(
   const imported = await importAssets(
     bundle,
     files,
-    slot.reference && slot.kind === "image" ? "reference" : "production",
+    use ??
+      (slot.reference && slot.kind === "image" ? "reference" : "production"),
   );
   for (const id of imported.assetIds)
     await validateVersionAsset(imported.bundle, slot, id);

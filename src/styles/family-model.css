@@ -225,3 +225,20 @@
 .composer-toolbar--balanced .cost .cost__payer {
   color: var(--readout);
 }
+/* Audio Reactive · Layout to Motion: a route card under the LTX models. */
+.family-model__route {
+  display: grid;
+  gap: 4px;
+  margin: 6px 8px 8px;
+  padding: 8px;
+  border: 1px dashed var(--border);
+  border-radius: 6px;
+  font-size: 11px;
+}
+.family-model__route p {
+  margin: 0;
+  color: var(--muted);
+}
+.family-model__route button {
+  justify-self: start;
+}

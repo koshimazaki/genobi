@@ -289,6 +289,12 @@ export interface HouseTemplate {
   mix?: TemplateMix;
   /** One line for a gallery card. */
   description: string;
+  /**
+   * For a viewer, in one to three plain sentences: what they can hand in and
+   * what the agent (or Generate) does with it. The gallery drawer shows it
+   * under the description, before Make my version (`checkBrief`).
+   */
+  brief?: string;
   tier: Tier;
   style: HouseStyle;
   inputs: InputSpec;

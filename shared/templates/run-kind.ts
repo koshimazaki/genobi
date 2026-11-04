@@ -40,6 +40,7 @@ export function checkMixTemplate(template: HouseTemplate) {
   const fail = (why: string) => {
     throw new Error(`${template.id} is not a mix: ${why}`);
   };
+  checkBrief(template);
   if (!isMix(template)) fail("its run is not mix");
   if (!template.mix) fail("it has no cut");
   if (template.shots.length || template.references.length)
@@ -55,6 +56,30 @@ export function checkMixTemplate(template: HouseTemplate) {
       ]),
     ),
   );
+}
+
+/** The longest brief a card shows (`HouseTemplate.brief`). */
+export const BRIEF_LIMIT = 480;
+
+/**
+ * Refuses a brief a viewer cannot read at a glance: empty, longer than
+ * `BRIEF_LIMIT`, more than three sentences, or carrying control characters.
+ * A template without one passes.
+ */
+export function checkBrief(template: Pick<HouseTemplate, "id" | "brief">) {
+  const { brief } = template;
+  if (brief === undefined) return;
+  const sentences = brief.split(/[.!?](?:\s|$)/).filter((s) => s.trim());
+  if (
+    !brief.trim() ||
+    brief !== brief.trim() ||
+    brief.length > BRIEF_LIMIT ||
+    /[\x00-\x1f\x7f]/.test(brief) ||
+    sentences.length > 3
+  )
+    throw new Error(
+      `${template.id}: a brief is one to three plain sentences of at most ${BRIEF_LIMIT} characters`,
+    );
 }
 
 /**
@@ -75,6 +100,7 @@ export function checkMixTemplate(template: HouseTemplate) {
  * agent template.
  */
 export function checkRunKind(template: HouseTemplate) {
+  checkBrief(template);
   const kind: unknown = template.run;
   if (kind !== undefined && !RUN_KINDS.some((k) => k === kind))
     throw new Error(`${template.id}: run must be mechanical, agent or mix`);
