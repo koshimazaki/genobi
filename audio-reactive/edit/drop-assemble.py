@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Acoustic Spaces v2, step 3: the picture and room-sound assembly (from assemble-v2e.py).
+"""Audio Reactive Acoustic Spaces v2, step 3: the picture and room-sound assembly (from assemble-v2e.py).
 
 Five LTX-2.5 Layout-to-Render rooms, each rendered on the owner's track "Adaptive Reverb v2", in
 order: towers (the drop) | cathedral, its floor colours pulsing to the voice band | inside the

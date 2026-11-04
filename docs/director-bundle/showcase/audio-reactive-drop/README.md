@@ -1,15 +1,15 @@
 ---
 tags: [director, sound, memory, world-builder]
-summary: How Acoustic Spaces v2, the 3D + LTX template, was made - v1, five World Builder rooms in LTX-2.5 on one track, every room, the track and every overlay a swappable layer - and how to recreate it.
+summary: How Audio Reactive Acoustic Spaces v2, the 3D + LTX template, was made - v1, five World Builder rooms in LTX-2.5 on one track, every room, the track and every overlay a swappable layer - and how to recreate it.
 ---
 
-# Acoustic Spaces v2: how it was made
+# Audio Reactive Acoustic Spaces v2: how it was made
 
 A 32-second piece and version two of the gallery's 3D + LTX template: five
 World Builder rooms rendered by LTX-2.5 Layout-to-Render (open weights) on the
 owner's track "Adaptive Reverb v2", each with its own CPU room sound. The
 template and its room sound are described in
-[Acoustic Spaces v2](../../../audio-reactive-drop.md); this page is its
+[Audio Reactive Acoustic Spaces v2](../../../audio-reactive-drop.md); this page is its
 history. The record is [`memory.json`](memory.json).
 
 | Version | Date (UTC)   | What changed                    | Shaped by    |
@@ -54,7 +54,7 @@ capture's. The booth render stays in the template as
 
 ## How to repeat it
 
-Open a version from the Acoustic Spaces v2 card's "How it was made" list
+Open a version from the Audio Reactive Acoustic Spaces v2 card's "How it was made" list
 ("Open v2 in the editor"); it opens as `audio-reactive-drop-v2`, an editable
 project of its own. To make the next piece like it, follow
 [How to repeat it](../../../audio-reactive-drop.md#how-to-repeat-it).

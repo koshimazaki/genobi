@@ -63,7 +63,7 @@ user action through every layer.
 - [Adaptive reverb](adaptive-reverb.md) — the fourth mix template, the 3D +
   LTX template: one LTX-2.5 (open weights) + AKUSPACE LoRA take through three
   rooms, its reverb changing with each, and Acoustic Space end to end.
-- [Acoustic Spaces v2](audio-reactive-drop.md) — the fifth mix template, the
+- [Audio Reactive Acoustic Spaces v2](audio-reactive-drop.md) — the fifth mix template, the
   3D + LTX template v2: five World Builder rooms in LTX-2.5 (open weights) on
   one track, each room's own CPU room sound, every room, the track and every
   overlay a swappable layer.
@@ -88,7 +88,7 @@ user action through every layer.
   [Genobi teaser](director-bundle/showcase/genobi-teaser/README.md) v1 and v2,
   [Bloom](director-bundle/showcase/bloom-teaser/README.md) v1 and
   [Adaptive reverb](director-bundle/showcase/adaptive-reverb/README.md) v1 to v3 and
-  [Acoustic Spaces v2](director-bundle/showcase/audio-reactive-drop/README.md) v1 and v2;
+  [Audio Reactive Acoustic Spaces v2](director-bundle/showcase/audio-reactive-drop/README.md) v1 and v2;
   each version opens in the Editor from its gallery card.
 - [Anime teaser template](anime-teaser-template.md) — intake, generated sheet,
   storyboard and track, two H3 shots, the cut to the beat.

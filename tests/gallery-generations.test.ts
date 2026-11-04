@@ -78,8 +78,13 @@ describe("generation cards", () => {
     expect(generationTemplates.map((t) => t.generation!.clip)).toEqual(
       Object.keys(generationRecords),
     );
-    // The generation cards precede the pending Sheet to shot preview.
-    expect(galleryTemplates.slice(-3, -1)).toEqual(shownGenerations);
+    // Every shown generation card is in the gallery, in catalogue order. Since
+    // the owner's order of 4 November 2026 Forest guardian sits beside
+    // Adaptive reverb, and Toy creatures precedes the pending Sheet to shot.
+    expect(galleryTemplates.filter((t) => t.generation)).toEqual(
+      shownGenerations,
+    );
+    expect(galleryTemplates.at(-2)).toBe(shownGenerations.at(-1));
     for (const t of generationTemplates) {
       expect(() => checkTemplate(t)).not.toThrow();
       expect(isMechanical(t)).toBe(true);

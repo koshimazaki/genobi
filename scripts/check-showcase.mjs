@@ -27,10 +27,10 @@ const template = {
   "genobi-teaser": "Genobi teaser",
   "bloom-teaser": "Bloom",
   "adaptive-reverb": "Adaptive reverb",
-  "audio-reactive-drop": "Acoustic Spaces v2",
+  "audio-reactive-drop": "Audio Reactive Acoustic Spaces v2",
 };
 // A frame worth looking at in each: the end card, the teaser's first drop
-// Bloom's title, Adaptive reverb's cathedral scan and Acoustic Spaces v2's
+// Bloom's title, Adaptive reverb's cathedral scan and Audio Reactive Acoustic Spaces v2's
 // cathedral readout.
 const FRAME = {
   "dimensions-mix": 554,

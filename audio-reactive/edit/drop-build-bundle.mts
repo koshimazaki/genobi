@@ -1,4 +1,4 @@
-// Acoustic Spaces v2, step 7: builds the template as an editable Director bundle (a project zip)
+// Audio Reactive Acoustic Spaces v2, step 7: builds the template as an editable Director bundle (a project zip)
 // from shared/templates/audio-reactive-drop.ts and its media under public/, with the repo's mix
 // compiler and trusted recipe registry. Nothing in the repo changes.
 //   npx tsx audio-reactive/edit/drop-build-bundle.mts <out.zip>
