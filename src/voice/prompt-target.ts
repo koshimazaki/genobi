@@ -1,6 +1,10 @@
 import { ltxSlots } from "../../shared/ltx-prompt";
 import { gapFieldId } from "../ltx-composer";
 import { WORLD_PROMPT_ID, WORLD_PROMPT_LABEL } from "./world-prompt-target";
+import {
+  VERSION_PROMPT_ID,
+  VERSION_PROMPT_LABEL,
+} from "./version-prompt-target";
 
 export type PromptField = HTMLTextAreaElement | HTMLDivElement;
 /**
@@ -21,6 +25,7 @@ const PROMPTS: readonly (readonly [id: string, label: string])[] = [
   ["upscale-prompt", "Upscale prompt"],
   ["project-prompt-text", "Project prompt field"],
   [WORLD_PROMPT_ID, WORLD_PROMPT_LABEL],
+  [VERSION_PROMPT_ID, VERSION_PROMPT_LABEL],
 ];
 const PROMPT_IDS = PROMPTS.map(([id]) => id);
 
@@ -45,6 +50,7 @@ export const promptLabel = (field: PromptField | undefined) =>
 export const isComposerPrompt = (field: PromptField) =>
   field.id !== "project-prompt-text" &&
   field.id !== WORLD_PROMPT_ID &&
+  field.id !== VERSION_PROMPT_ID &&
   !field.id.startsWith("scroll-");
 
 /**
@@ -57,7 +63,9 @@ export const readsAsCameraRequest = (
   worldOpen: boolean,
 ) =>
   field
-    ? !field.id.startsWith("scroll-") && field.id !== WORLD_PROMPT_ID
+    ? !field.id.startsWith("scroll-") &&
+      field.id !== WORLD_PROMPT_ID &&
+      field.id !== VERSION_PROMPT_ID
     : !worldOpen;
 
 /**
@@ -140,6 +148,8 @@ export function fillPrompt(
     "value",
   )?.set;
   setter?.call(field, text.slice(0, limit));
+  // Read by a field that cares how its words came (`takeDictated`).
+  if (field.dataset) field.dataset.dictated = "true";
   field.dispatchEvent(new Event("input", { bubbles: true }));
   return field;
 }
