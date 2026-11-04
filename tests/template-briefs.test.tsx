@@ -68,7 +68,7 @@ describe("gallery briefs", () => {
     const escape = (s: string) => s.replace(/'/g, "&#x27;");
     const description = html.indexOf(`<p>${fruitsSwap.description}</p>`);
     const brief = html.indexOf(
-      `<p class="template-brief">${escape(fruitsSwap.brief!)}</p>`,
+      `<p class="template-card-brief">${escape(fruitsSwap.brief!)}</p>`,
     );
     expect(description).toBeGreaterThan(0);
     expect(brief).toBeGreaterThan(description);
