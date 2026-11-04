@@ -1,9 +1,9 @@
 ---
 tags: [director, sound, templates, world-builder]
-summary: Acoustic Spaces v2, the 3D + LTX template - five World Builder rooms rendered by LTX-2.5 Layout-to-Render on one track, each room's own CPU room sound under it, cut on the phrases with every room, the track and every overlay a swappable layer.
+summary: Audio Reactive Acoustic Spaces v2, the 3D + LTX template - five World Builder rooms rendered by LTX-2.5 Layout-to-Render on one track, each room's own CPU room sound under it, cut on the phrases with every room, the track and every overlay a swappable layer.
 ---
 
-# Acoustic Spaces v2: the 3D + LTX template
+# Audio Reactive Acoustic Spaces v2: the 3D + LTX template
 
 The fifth **mix** template (`run: "mix"`, [run kinds](templates.md#run-kind-mechanical-or-agent)),
 added on 3 November 2026, and version two of
@@ -14,8 +14,9 @@ its section: a drop between towers, a cathedral, inside a pyramid, outside it
 in the desert, and a small studio, where the singer of the original Adaptive
 reverb take turns to the camera and smiles while the credit is traced in
 beside her. Nothing is generated, quoted or paid when
-you open it. In the Gallery it is the card right after Adaptive reverb,
-**Acoustic Spaces v2 · 3D · LTX template**.
+you open it. In the Gallery it sits in the wide column right after Forest guardian (the
+owner's order of 4 November 2026), named
+**Audio Reactive Acoustic Spaces v2 · 3D · LTX template**.
 
 | Piece    | Where                                                                                                                |
 | -------- | -------------------------------------------------------------------------------------------------------------------- |

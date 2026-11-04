@@ -259,7 +259,7 @@
           "id": "spaces",
           "label": "Spaces",
           "url": "/media/template-gallery/audio-reactive-drop.mp4",
-          "source": "Acoustic Spaces v2, the owner's selected spaces cut (3 November 2026): five LTX-2.5 Layout-to-Render rooms on Adaptive Reverb v2, each room's measured CPU room sound under it; docs/audio-reactive-drop.md",
+          "source": "Audio Reactive Acoustic Spaces v2, the owner's selected spaces cut (3 November 2026): five LTX-2.5 Layout-to-Render rooms on Adaptive Reverb v2, each room's measured CPU room sound under it; docs/audio-reactive-drop.md",
           "preserveAudio": true,
           "preserveOriginal": true,
           "knownSeconds": 32.33
@@ -420,7 +420,7 @@
         "the reverb is an approximate geometric response, not a measurement",
         "a reference image yields an editable approximation, not a reconstruction of the real room",
         "the booth's quiet-frame start opens at only 0.60 of its width",
-        "the official spaces video is Acoustic Spaces v2; each of its five rooms is its own file and shot, so one room swaps without re-timing (docs/audio-reactive-drop.md)"
+        "the official spaces video is Audio Reactive Acoustic Spaces v2; each of its five rooms is its own file and shot, so one room swaps without re-timing (docs/audio-reactive-drop.md)"
       ],
       "previousVersionTemplateId": "adaptive-reverb"
     }
