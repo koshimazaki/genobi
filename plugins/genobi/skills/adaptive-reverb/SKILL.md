@@ -25,7 +25,7 @@ measurements of the take, and the room-to-preset mapping is the owner's
 tested separately; never attribute this cut's sound to the LoRA. It is a
 **mix** template (`run: "mix"`): opening it generates nothing. Read
 [the template page](../../../../docs/adaptive-reverb.md) first. For measured
-rooms, use [Acoustic Spaces v2](../../../../docs/audio-reactive-drop.md) and its
+rooms, use [Audio Reactive Acoustic Spaces v2](../../../../docs/audio-reactive-drop.md) and its
 `audio-reactive-drop` skill.
 
 ## What the person hands in
@@ -59,7 +59,7 @@ reverb is measured to space".**
   RT60s, not measurements; the sound itself is the track processed with the
   scene's CPU impulse response (the room sound and wet mix the hosted
   deployment returns alongside the clip, or the local CPU reverb template).
-  Measured RT60s for each room are Acoustic Spaces v2.
+  Measured RT60s for each room are Audio Reactive Acoustic Spaces v2.
 - A swapped track means re-measuring it and re-capturing; a swapped room means
   re-running its reverb and choosing its preset label again.
 
@@ -164,7 +164,7 @@ Record each brief and correction with `genobi_decision`, quoting the person.
 ## Not built yet
 
 - Measured rooms: v1 shows fixed preset RT60s. Measured rooms are
-  Acoustic Spaces v2.
+  Audio Reactive Acoustic Spaces v2.
 - Nobody listened to the cut: the room changes were found by eye. Say "give
   it a listen" and leave the verdict to the person.
 - A moving recording in the workflow card's slot: it takes a still only.

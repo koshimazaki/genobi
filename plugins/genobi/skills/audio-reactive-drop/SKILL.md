@@ -1,6 +1,6 @@
 ---
 name: audio-reactive-drop
-description: Make a version of Acoustic Spaces v2, the 3D + LTX mix template - the person says or types the room they want and which one it replaces ("a jazz club instead of the cathedral"), an image being an optional reference, or asks for another track, and the agent writes the first still's prompt, builds the room in World Builder, measures its CPU room sound, renders it with LTX-2.5 Layout-to-Render on the hosted deployment and lays the measured reverb under it. Every paid step is quoted and waits for the person's yes.
+description: Make a version of Audio Reactive Acoustic Spaces v2, the 3D + LTX mix template - the person says or types the room they want and which one it replaces ("a jazz club instead of the cathedral"), an image being an optional reference, or asks for another track, and the agent writes the first still's prompt, builds the room in World Builder, measures its CPU room sound, renders it with LTX-2.5 Layout-to-Render on the hosted deployment and lays the measured reverb under it. Every paid step is quoted and waits for the person's yes.
 license: MIT
 compatibility: Needs this checkout with npm ci, Node 22 or later, Chrome (Playwright) and FFmpeg for captures; the Genobi studio, site or CLI for a paid first still and the render on the hosted Comfy deployment; a rented GPU box (scripts/vast) is the alternative render route.
 metadata:
@@ -11,7 +11,7 @@ metadata:
   docs: "docs/audio-reactive-drop.md, docs/adaptive-reverb.md, audio-reactive/videos/spaces.md, docs/world-builder-dynamic-sound.md, docs/comfy-deploy.md"
 ---
 
-# Acoustic Spaces v2 (room swap)
+# Audio Reactive Acoustic Spaces v2 (room swap)
 
 Five World Builder rooms, each rendered by LTX-2.5 Layout-to-Render (open
 weights) on the owner's track "Adaptive Reverb v2", one after another, with

@@ -29,7 +29,7 @@ Make Genobi's Anime teaser template (docs/anime-teaser-template.md) - take or ge
 
 ## `audio-reactive-drop`
 
-Make a version of Acoustic Spaces v2, the 3D + LTX mix template - the person says or types the room they want and which one it replaces ("a jazz club instead of the cathedral"), an image being an optional reference, or asks for another track, and the agent writes the first still's prompt, builds the room in World Builder, measures its CPU room sound, renders it with LTX-2.5 Layout-to-Render on the hosted deployment and lays the measured reverb under it. Every paid step is quoted and waits for the person's yes.
+Make a version of Audio Reactive Acoustic Spaces v2, the 3D + LTX mix template - the person says or types the room they want and which one it replaces ("a jazz club instead of the cathedral"), an image being an optional reference, or asks for another track, and the agent writes the first still's prompt, builds the room in World Builder, measures its CPU room sound, renders it with LTX-2.5 Layout-to-Render on the hosted deployment and lays the measured reverb under it. Every paid step is quoted and waits for the person's yes.
 
 - Tags: `agents`, `director`, `templates`, `world-builder`, `sound`, `ltx`
 - Instructions: [plugins/genobi/skills/audio-reactive-drop/SKILL.md](https://github.com/koshimazaki/Genobi/blob/main/plugins/genobi/skills/audio-reactive-drop/SKILL.md)
