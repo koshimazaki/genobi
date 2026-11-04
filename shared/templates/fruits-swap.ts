@@ -17,10 +17,8 @@ const clip = (name: (typeof CHARACTERS)[number]) => ({
  * same pose and the same 8.04 s of the loop), one character each (the
  * opening mecha `mecha-fruit-song-vox` from 2 November, the others
  * 3 November), encoded once from 2048 × 1152 to 1920 × 1080 (CRF 19, no
- * sound). The Retro Gaming typography is baked into the media (the font file
- * is not bundled): the title typed over the mecha's first 4.2 s (with a
- * swarm of the shower's pixel fruit over its shoulder), the swap words on the card stills and WATERMELON over the gold
- * ninja's drop frames. The owner's "Dance with Fruits" loop (music by
+ * sound), plain: since version 7 every word and icon is a live layer in the
+ * cut, the card stills are darkened frames with no words. The owner's "Dance with Fruits" loop (music by
  * Koshimazaki, owner-made): its last 2.4 s under the 2.5 s Signal-black
  * splash, then the 9.0 s
  * loop from the voice four times, cut at 33.0 s, faded over the end card's

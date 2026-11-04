@@ -915,6 +915,171 @@
         }
       }
     },
+    "sprite-swarm": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/mix-sprite-swarm.mjs",
+        "sha256": "1c9424a8fa93ab2de083651525d640d4ee4474241b3166a4c29ce80e6394b7af"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "x",
+          "y",
+          "radius",
+          "count",
+          "size",
+          "bpm",
+          "bob",
+          "swirl",
+          "gather",
+          "burst",
+          "seed"
+        ],
+        "properties": {
+          "x": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "y": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "radius": {
+            "type": "number",
+            "minimum": 0.01,
+            "maximum": 0.5
+          },
+          "count": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 300
+          },
+          "size": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 32
+          },
+          "bpm": {
+            "type": "number",
+            "minimum": 20,
+            "maximum": 300
+          },
+          "bob": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 40
+          },
+          "swirl": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 4
+          },
+          "gather": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 4
+          },
+          "burst": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 60
+          },
+          "seed": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9999
+          }
+        }
+      }
+    },
+    "typewriter": {
+      "engine": "animejs",
+      "engineVersion": "4.5.0",
+      "mode": "overlay",
+      "file": {
+        "path": "graphics/mix-typewriter.mjs",
+        "sha256": "b5988dcf64e80e7a359b0bf07da0530d3fec7026ec05d001e6cafb487fbb840a"
+      },
+      "parameterSchema": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "text",
+          "font",
+          "color",
+          "shadow",
+          "cursorColor",
+          "size",
+          "x",
+          "y",
+          "bpm",
+          "chars",
+          "division"
+        ],
+        "properties": {
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60,
+            "pattern": "^[^\\u0000-\\u001f\\u007f]*$"
+          },
+          "font": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120,
+            "pattern": "^[A-Za-z0-9 ,\"'-]+$"
+          },
+          "color": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "shadow": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "cursorColor": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          },
+          "size": {
+            "type": "number",
+            "minimum": 8,
+            "maximum": 240
+          },
+          "x": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "y": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "bpm": {
+            "type": "number",
+            "minimum": 20,
+            "maximum": 300
+          },
+          "chars": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 8
+          },
+          "division": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 4
+          }
+        }
+      }
+    },
     "box-scan": {
       "engine": "threejs",
       "engineVersion": "0.180.0",

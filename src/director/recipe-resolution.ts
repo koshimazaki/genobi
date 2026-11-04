@@ -8,6 +8,8 @@ const pixelType = new Set([
   knownProject.modules.caption.file.sha256,
   knownProject.modules.title.file.sha256,
   knownProject.modules.kinetic.file.sha256,
+  knownProject.modules.typewriter.file.sha256,
+  knownProject.modules["speech-bubble"].file.sha256,
 ]);
 
 /** Keep editable type values in their original coordinate space while drawing

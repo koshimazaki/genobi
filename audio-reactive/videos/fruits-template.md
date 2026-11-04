@@ -16,9 +16,10 @@ recipes (a splash of flying pixel fruit, the title typed on the beat,
 Space.js swap cards, slice glitches, a neon-pink surveillance scan whose box
 alone posterizes and turns to wireframe, pixel fruit flooding into the end
 card) instead of the
-Nokia pixel cards below, which the owner turned down. The words are set in
-Retro Gaming, baked into the media rather than bundled as a font, and the
-opening mecha is the 2 November `mecha-fruit-song-vox` render. The cut is data
+Nokia pixel cards below, which the owner turned down. Since version 7 every
+word and icon is a live layer in the Director, set in Press Start 2P (OFL,
+bundled), and the opening mecha is the 2 November `mecha-fruit-song-vox`
+render. The cut is data
 (`shared/templates/fruits-swap.cut.json`) and opens in the Director at
 `/director?example=fruits-swap`; see [the template page](../../docs/fruits-swap.md)
 for the beat table, the media and how to repeat it. The ffmpeg build below
