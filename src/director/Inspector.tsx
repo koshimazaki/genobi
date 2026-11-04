@@ -18,6 +18,8 @@ interface Props {
   edit: (patch: Partial<Layer>) => void;
   duplicate: () => void;
   remove: () => void;
+  /** Renames through `rename-layer`; returns the refusal, or "". */
+  rename: (name: string) => string;
   reorder: (delta: number) => void;
   replace: () => void;
   /** Runs a Director command; returns the refusal, or "". */
@@ -31,6 +33,7 @@ export default function Inspector({
   edit,
   duplicate,
   remove,
+  rename,
   reorder,
   replace,
   command,
@@ -115,7 +118,11 @@ export default function Inspector({
             key={l.id + l.name}
             defaultValue={l.name}
             maxLength={120}
-            onBlur={(e) => edit({ name: e.target.value })}
+            onBlur={(e) => {
+              const input = e.currentTarget;
+              if (input.value !== l.name && rename(input.value))
+                input.value = l.name;
+            }}
           />
         </label>
         <PromptField

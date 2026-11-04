@@ -1,7 +1,8 @@
 import { useRef, useState } from "react";
 import type { Project } from "../../shared/director/types";
+import { COMPOSITION_MAX_SECONDS } from "../../shared/director/editor-commands";
 
-const MAX_SECONDS = 120;
+const MAX_SECONDS = COMPOSITION_MAX_SECONDS;
 
 /**
  * The composition's END edge: drag it, or focus it and use the arrow keys
