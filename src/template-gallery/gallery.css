@@ -399,8 +399,19 @@
 .template-share-tabs button[aria-pressed="true"] {
   color: var(--readout);
 }
-.template-share-tabs button:last-child {
+.template-share-tabs button:last-of-type {
   margin-left: auto;
+}
+/* Opens the public watch page beside Copy, drawn like the tab buttons. */
+.template-share-tabs .template-share-open {
+  padding: 4px 0;
+  display: flex;
+  align-items: center;
+  color: var(--soft);
+}
+.template-share-tabs .template-share-open:hover,
+.template-share-tabs .template-share-open:focus-visible {
+  color: var(--readout);
 }
 .template-share textarea {
   display: block;

@@ -6,6 +6,7 @@ import {
   validateFiles,
   type Bundle,
 } from "./bundle";
+import { fetchMediaFiles } from "./media-progress";
 
 /**
  * A mix template as a Director project (`shared/templates/mix.ts`): its
@@ -62,16 +63,14 @@ export function loadMixTemplate(template: HouseTemplate) {
 async function fetchMixTemplate(template: HouseTemplate) {
   const mix = template.mix;
   if (!mix) throw new Error(`${template.name} is not a mix`);
-  const entries = await Promise.all(
-    Object.entries(mix.media).map(async ([id, m]) => {
-      const response = await fetch(m.url);
-      if (!response.ok) throw new Error("Template media unavailable");
-      return [id, new Uint8Array(await response.arrayBuffer())] as const;
-    }),
+  const media = Object.entries(mix.media);
+  const bytes = await fetchMediaFiles(
+    template.name,
+    media.map(([, m]) => m.url),
   );
   return buildMixBundle(
     template,
     loadExampleModules(),
-    Object.fromEntries(entries),
+    Object.fromEntries(media.map(([id], i) => [id, bytes[i]])),
   );
 }
