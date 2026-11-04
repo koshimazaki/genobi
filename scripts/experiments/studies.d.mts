@@ -31,5 +31,6 @@ export declare const STUDIES: readonly [
   "fruit-apple-banana",
   "fruit-banana-apple",
   "ship-mecha",
+  "car-mecha",
 ];
 export declare const OUTPUT_NAME: RegExp;

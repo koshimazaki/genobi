@@ -39,8 +39,9 @@ describe("authored form composer", () => {
     }
   });
 
+  // It composes every form in the catalogue, so its time grows with the library.
   it("keeps all authored forms selectable and fresh, with stable geometry at endpoints", () => {
-    expect(MORPH_ASSETS).toHaveLength(14);
+    expect(MORPH_ASSETS).toHaveLength(17);
     for (const asset of MORPH_ASSETS) {
       const other = asset.id === "pyramid" ? "banana" : "pyramid";
       const options = {
@@ -66,7 +67,7 @@ describe("authored form composer", () => {
         createMorphComposition(options).motion!.stateKeys[0].objects[ids[0]].x,
       ).not.toBe(39);
     }
-  });
+  }, 20_000);
 
   it.each([
     [128, ["banana", "papaya", "apple"]],
