@@ -248,6 +248,7 @@ export default function TemplateDrawer({
           : `Models: ${cardModels(template).join(", ")}`}
       </p>
       <p>{template.description}</p>
+      {template.brief && <p className="template-brief">{template.brief}</p>}
       {generation && (
         <GenerationNote
           generation={generation}

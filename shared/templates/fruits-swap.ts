@@ -62,6 +62,8 @@ export const fruitsSwap: HouseTemplate = {
   run: "mix",
   description:
     "One dance, four characters: LTX-2.5 renders of the same guide swapped on the loop and the drop, with a pixel-fruit splash, typed title, swap words and an end card. Nothing to generate.",
+  brief:
+    "Drop an image of a fruit or a character and say what it replaces, for example 'the apple'. Your image is the reference: the agent writes the prompt for the first still from it, builds the moving fruit in 3D and renders the loop with LTX-2.5. Each paid step is quoted and waits for your yes.",
   tier: "open",
   style: {
     name: "Signal swap",

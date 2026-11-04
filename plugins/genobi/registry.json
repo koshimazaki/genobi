@@ -42,10 +42,15 @@
         "genobi_effects",
         "genobi_effect_variant",
         "genobi_take_to_project",
+        "adaptive-reverb",
         "anime-teaser",
+        "audio-reactive-drop",
         "audio-visual",
+        "bloom-teaser",
         "character-piece",
+        "dimensions-mix",
         "falling-room",
+        "fruits-swap",
         "genobi-director",
         "genobi-licensing",
         "genobi-scrolls",
@@ -75,8 +80,11 @@
         "genobi_media_space",
         "genobi_voice_status",
         "genobi_voice_transcribe",
+        "adaptive-reverb",
         "anime-teaser",
+        "audio-reactive-drop",
         "audio-visual",
+        "dimensions-mix",
         "falling-room",
         "genobi-3d",
         "genobi-akuspace",
@@ -144,10 +152,15 @@
         "genobi_skill",
         "genobi_registry",
         "genobi_docs",
+        "adaptive-reverb",
         "anime-teaser",
+        "audio-reactive-drop",
         "audio-visual",
+        "bloom-teaser",
         "character-piece",
+        "dimensions-mix",
         "falling-room",
+        "fruits-swap",
         "genobi-3d",
         "genobi-akuspace",
         "genobi-audio-reactive",
@@ -168,6 +181,16 @@
         "genobi-upscale",
         "product-video",
         "ui-teardown"
+      ]
+    },
+    "templates": {
+      "meaning": "House templates, their inputs, intake and skills",
+      "entries": [
+        "adaptive-reverb",
+        "audio-reactive-drop",
+        "bloom-teaser",
+        "dimensions-mix",
+        "fruits-swap"
       ]
     },
     "backend": {
@@ -203,8 +226,11 @@
     "ltx": {
       "meaning": "LTX models and prompting",
       "entries": [
+        "adaptive-reverb",
         "anime-teaser",
+        "audio-reactive-drop",
         "audio-visual",
+        "fruits-swap",
         "genobi-akuspace",
         "genobi-audio-reactive",
         "genobi-camera"
@@ -300,7 +326,12 @@
     },
     "world-builder": {
       "meaning": "World Builder and Scene Adapter",
-      "entries": ["genobi-audio-reactive"]
+      "entries": [
+        "adaptive-reverb",
+        "audio-reactive-drop",
+        "fruits-swap",
+        "genobi-audio-reactive"
+      ]
     },
     "bundle": {
       "meaning": "The `director.bundle.v1` project format",
@@ -336,7 +367,7 @@
     },
     "storyboard": {
       "meaning": "Storyboards, character sheets and Scrolls",
-      "entries": ["genobi_scrolls_panels", "genobi-scrolls"]
+      "entries": ["genobi_scrolls_panels", "bloom-teaser", "genobi-scrolls"]
     }
   },
   "entries": [
@@ -547,10 +578,15 @@
       "readOnly": false,
       "paid": false,
       "skills": [
+        "adaptive-reverb",
         "anime-teaser",
+        "audio-reactive-drop",
         "audio-visual",
+        "bloom-teaser",
         "character-piece",
+        "dimensions-mix",
         "falling-room",
+        "fruits-swap",
         "genobi-akuspace",
         "genobi-audio-reactive",
         "genobi-camera",
@@ -579,10 +615,15 @@
       "readOnly": false,
       "paid": true,
       "skills": [
+        "adaptive-reverb",
         "anime-teaser",
+        "audio-reactive-drop",
         "audio-visual",
+        "bloom-teaser",
         "character-piece",
+        "dimensions-mix",
         "falling-room",
+        "fruits-swap",
         "genobi-akuspace",
         "genobi-audio-reactive",
         "genobi-camera",
@@ -793,7 +834,15 @@
       "docs": ["docs/taste-memory.md"],
       "readOnly": false,
       "paid": false,
-      "skills": ["genobi-cli", "genobi-taste"]
+      "skills": [
+        "adaptive-reverb",
+        "audio-reactive-drop",
+        "bloom-teaser",
+        "dimensions-mix",
+        "fruits-swap",
+        "genobi-cli",
+        "genobi-taste"
+      ]
     },
     {
       "kind": "tool",
@@ -1131,10 +1180,14 @@
       "readOnly": true,
       "paid": false,
       "skills": [
+        "adaptive-reverb",
         "anime-teaser",
+        "audio-reactive-drop",
         "audio-visual",
+        "bloom-teaser",
         "character-piece",
         "falling-room",
+        "fruits-swap",
         "genobi-director",
         "genobi-hermes",
         "genobi-scrolls",
@@ -1171,6 +1224,33 @@
     },
     {
       "kind": "skill",
+      "name": "adaptive-reverb",
+      "description": "Make a version of Adaptive reverb, the first 3D + LTX mix template - the person drops an image of a space as a reference and says which room it replaces (\"this room instead of the hall\"), and the agent writes the first still's prompt from it, builds the room in World Builder, renders it with LTX-2.5 Layout-to-Render on the hosted deployment, processes the track with the room's CPU reverb and labels it with a fixed AKUSPACE preset RT60. Every paid step is quoted and waits for the person's yes.",
+      "tags": [
+        "agents",
+        "director",
+        "templates",
+        "world-builder",
+        "sound",
+        "ltx"
+      ],
+      "docs": [
+        "docs/adaptive-reverb.md",
+        "docs/audio-reactive-drop.md",
+        "audio-reactive/videos/spaces.md",
+        "docs/comfy-deploy.md",
+        "docs/tester-access.md"
+      ],
+      "path": "plugins/genobi/skills/adaptive-reverb/SKILL.md",
+      "tools": [
+        "genobi_quote",
+        "genobi_submit",
+        "genobi_decision",
+        "genobi_skill"
+      ]
+    },
+    {
+      "kind": "skill",
       "name": "anime-teaser",
       "description": "Make Genobi's Anime teaser template (docs/anime-teaser-template.md) - take or generate a track, a character sheet and a storyboard, then two 10-second MiniMax H3 shots from the sheet and the storyboard, cut to the track's beat in the Director with two titles. Every paid step is quoted and waits for the person's approval.",
       "tags": ["agents", "director", "ltx", "sound"],
@@ -1197,6 +1277,33 @@
         "genobi_take_to_project",
         "genobi_provenance",
         "genobi_audio_analysis",
+        "genobi_skill"
+      ]
+    },
+    {
+      "kind": "skill",
+      "name": "audio-reactive-drop",
+      "description": "Make a version of Acoustic Spaces v2, the 3D + LTX mix template - the person drops an image of a space as a reference and says which room it replaces (\"this room instead of the cathedral\"), or swaps the track, and the agent writes the first still's prompt from it, builds the room in World Builder, measures its CPU room sound, renders it with LTX-2.5 Layout-to-Render on the hosted deployment and lays the measured reverb under it. Every paid step is quoted and waits for the person's yes.",
+      "tags": [
+        "agents",
+        "director",
+        "templates",
+        "world-builder",
+        "sound",
+        "ltx"
+      ],
+      "docs": [
+        "docs/audio-reactive-drop.md",
+        "docs/adaptive-reverb.md",
+        "audio-reactive/videos/spaces.md",
+        "docs/world-builder-dynamic-sound.md",
+        "docs/comfy-deploy.md"
+      ],
+      "path": "plugins/genobi/skills/audio-reactive-drop/SKILL.md",
+      "tools": [
+        "genobi_quote",
+        "genobi_submit",
+        "genobi_decision",
         "genobi_skill"
       ]
     },
@@ -1229,6 +1336,24 @@
     },
     {
       "kind": "skill",
+      "name": "bloom-teaser",
+      "description": "Make a version of Bloom, the anime-teaser mix template - answer \"character sheet\" by showing the sheet and the prompt both MiniMax H3 takes were made from, make a new take of the person's own character in Camera with that prompt (quoted first), and swap a take or the track into the cut on the beat. Every paid step waits for the person's yes.",
+      "tags": ["agents", "director", "templates", "storyboard"],
+      "docs": [
+        "docs/bloom-teaser.md",
+        "docs/templates.md",
+        "docs/director-generate.md"
+      ],
+      "path": "plugins/genobi/skills/bloom-teaser/SKILL.md",
+      "tools": [
+        "genobi_quote",
+        "genobi_submit",
+        "genobi_decision",
+        "genobi_skill"
+      ]
+    },
+    {
+      "kind": "skill",
       "name": "character-piece",
       "description": "Make Genobi's Character piece house template (North light) end to end through the Genobi MCP tools - a character still on open FLUX 3 Image Klein, then three quoted LTX shots (arrive, turn, hold), generated only on the person's yes, with a provenance card.",
       "tags": ["agents", "director", "mcp"],
@@ -1249,6 +1374,20 @@
         "genobi_provenance",
         "genobi_skill"
       ]
+    },
+    {
+      "kind": "skill",
+      "name": "dimensions-mix",
+      "description": "Make a version of the Dimensions mix, the first mix template - a swap-only edit where the person drops a clip and says which creature it replaces (\"this instead of the forest one\"), and the agent swaps it into that creature's slices while the cut keeps its beats. Nothing is generated; the optional SeedVR2 upscale of the render is quoted and waits for a yes. For a generated teaser it points at the anime-teaser skill.",
+      "tags": ["agents", "director", "templates", "sound"],
+      "docs": [
+        "docs/dimensions-mix.md",
+        "docs/director-generate.md",
+        "docs/anime-teaser-template.md",
+        "docs/seedvr2-upscale.md"
+      ],
+      "path": "plugins/genobi/skills/dimensions-mix/SKILL.md",
+      "tools": ["genobi_quote", "genobi_submit", "genobi_decision"]
     },
     {
       "kind": "skill",
@@ -1278,6 +1417,26 @@
         "genobi_template_plan",
         "genobi_take_to_project",
         "genobi_provenance",
+        "genobi_skill"
+      ]
+    },
+    {
+      "kind": "skill",
+      "name": "fruits-swap",
+      "description": "Make a version of Dance with Fruits, the content-swap mix template - the person drops an image of a fruit or a character as a reference and says what it replaces (\"swap the apple with this\"), and the agent writes the prompt for the first still from it, builds the moving fruit in Three.js, renders the loop's window with LTX-2.5 Layout-to-Render on the hosted deployment and cuts it in on the beat. Every paid step is quoted and waits for the person's yes.",
+      "tags": ["agents", "director", "templates", "world-builder", "ltx"],
+      "docs": [
+        "docs/fruits-swap.md",
+        "audio-reactive/videos/fruits-template.md",
+        "audio-reactive/videos/fruits.md",
+        "docs/comfy-deploy.md",
+        "docs/tester-access.md"
+      ],
+      "path": "plugins/genobi/skills/fruits-swap/SKILL.md",
+      "tools": [
+        "genobi_quote",
+        "genobi_submit",
+        "genobi_decision",
         "genobi_skill"
       ]
     },

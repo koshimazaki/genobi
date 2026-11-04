@@ -60,22 +60,27 @@ connection/model preferences, never provider keys, and do not install agents.
 
 ## Skills
 
-| Skill             | For                                                                      |
-| ----------------- | ------------------------------------------------------------------------ |
-| `genobi-cli`      | Terminal commands, schemas, profiles and the shared Taste workflow       |
-| `genobi-studio`   | The entry skill: status, every tool, the paying rules, which skill next  |
-| `genobi-director` | The main surface: a whole job in the Director, with any tool, commands   |
-| `genobi-camera`   | One workflow card per runnable model: route, cost, prompt, camera words  |
-| `genobi-akuspace` | Acoustic Space on LTX-2.5: presets, levels, caption, where it runs       |
-| `genobi-scrolls`  | A character sheet or storyboard before the video, timed to a song        |
-| `product-video`   | The Product video house template, step by step, with its provenance card |
-| `character-piece` | The Character piece: a Klein still and three LTX shots                   |
-| `audio-visual`    | The Audio-visual piece on LTX-2.5 · Acoustic Space, cut to the bar       |
-| `falling-room`    | Falling room: a free World Builder take, its room sound, one Klein still |
-| `genobi-hermes`   | The open route on Hermes, the Klein box edit and the two-pass run        |
-| `genobi-machine`  | The machine check: which models run locally and which on Comfy Cloud     |
-| `genobi-swords`   | Dual Swords: probe, frames, trim, join and crossfade on local ffmpeg     |
-| `ui-teardown`     | An exploded view of a product UI: layers, numbered parts, a sheet each   |
+| Skill                 | For                                                                         |
+| --------------------- | --------------------------------------------------------------------------- |
+| `genobi-cli`          | Terminal commands, schemas, profiles and the shared Taste workflow          |
+| `genobi-studio`       | The entry skill: status, every tool, the paying rules, which skill next     |
+| `genobi-director`     | The main surface: a whole job in the Director, with any tool, commands      |
+| `genobi-camera`       | One workflow card per runnable model: route, cost, prompt, camera words     |
+| `genobi-akuspace`     | Acoustic Space on LTX-2.5: presets, levels, caption, where it runs          |
+| `genobi-scrolls`      | A character sheet or storyboard before the video, timed to a song           |
+| `product-video`       | The Product video house template, step by step, with its provenance card    |
+| `character-piece`     | The Character piece: a Klein still and three LTX shots                      |
+| `audio-visual`        | The Audio-visual piece on LTX-2.5 · Acoustic Space, cut to the bar          |
+| `falling-room`        | Falling room: a free World Builder take, its room sound, one Klein still    |
+| `fruits-swap`         | Dance with Fruits: swap a fruit, a character or the track into the loop     |
+| `audio-reactive-drop` | Acoustic Spaces v2: a room swapped in, its room sound measured              |
+| `adaptive-reverb`     | Adaptive reverb: a room swapped in under a fixed AKUSPACE preset label      |
+| `bloom-teaser`        | Bloom: the sheet and prompt shown, a new H3 take, takes and track swapped   |
+| `dimensions-mix`      | Dimensions mix: swap only, a creature or the track, the cut keeps its beats |
+| `genobi-hermes`       | The open route on Hermes, the Klein box edit and the two-pass run           |
+| `genobi-machine`      | The machine check: which models run locally and which on Comfy Cloud        |
+| `genobi-swords`       | Dual Swords: probe, frames, trim, join and crossfade on local ffmpeg        |
+| `ui-teardown`         | An exploded view of a product UI: layers, numbered parts, a sheet each      |
 
 `genobi-camera` follows the model registry (`shared/registry.ts`) and the
 camera wording (`shared/camera.ts`, [camera wording](../../docs/camera-wording.md));

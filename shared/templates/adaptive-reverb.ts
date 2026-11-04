@@ -88,6 +88,8 @@ export const adaptiveReverb: HouseTemplate = {
   run: "mix",
   description:
     "The 3D + LTX template: World Builder 3D rooms rendered by LTX-2.5 (open weights), with scene-derived CPU reverb on the original track. AKUSPACE is a separate experiment. Open the finished cut or make your version.",
+  brief:
+    "Drop an image of a space and say which room it replaces, for example 'the hall'. Your image is the reference: the agent writes the prompt for the first still from it, builds the room in 3D, renders the video with LTX-2.5 and puts the room's reverb under it, labelled with a fixed AKUSPACE preset (Acoustic Spaces v2 measures its rooms instead). Each paid step is quoted first.",
   tier: "open",
   style: {
     name: "Room scan",
