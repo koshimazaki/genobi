@@ -9,7 +9,7 @@ One repeatable piece: **music → World Builder animation → look still →
 LTX-2.5 Layout-to-Render → the dry track muxed back**. First proven on
 2 November 2026 on a rented RTX PRO 6000 (96 GB). This page is the recipe;
 [the Vast runner](vast-runner.md) and [the experiments README](https://github.com/koshimazaki/genobi/blob/main/workflows/experiments/README.md)
-hold the tool contracts.
+hold the tool contracts. The hosted [deployment v2](comfy-deploy.md#deployment-v2-reported-4-november-2026) is now the first render route and the rented box the alternative.
 
 ## Why the earlier pilots did not move
 

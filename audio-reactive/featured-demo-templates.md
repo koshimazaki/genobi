@@ -140,7 +140,7 @@ Do **not** restore automatic generation to the swap-only **Make my version** dia
 
 ## How reviewers regenerate
 
-The owner renders on a rented Vast box with `scripts/vast/box/run-queue.sh`. Reviewers use the `layout-to-video` selector of the `genobi-ltx-world` Comfy deployment instead, described in [Comfy deploy](../docs/comfy-deploy.md): fixed 1024 × 576, 193 frames, 24 fps, which is exactly one template window.
+The owner renders on a rented Vast box with `scripts/vast/box/run-queue.sh`. Reviewers use the `layout-to-video` selector of the `genobi-ltx-world` Comfy deployment instead, described in [Comfy deploy](../docs/comfy-deploy.md): fixed 1024 × 576, 193 frames, 24 fps, which is exactly one template window. The hosted [deployment v2](../docs/comfy-deploy.md#deployment-v2-reported-4-november-2026) is now the first render route and the rented box the alternative.
 
 - **Access:** an access code from the competition submission unlocks a capped number of runs paid by the owner's workspace (default cap 10). The mechanism is `docs/tester-access.md`, arriving in a separate PR and off by default. The code itself never appears in the repository.
 - **Which card:** Mecha × Fruits is the reusable regeneration test: one window-0 render per character, then `edit/fruits-swap-build.sh` cuts the loops. Reactive Spaces also needs LTX runs for a new version.

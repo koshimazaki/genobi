@@ -23,9 +23,10 @@ secrets set the hosted studio behaves exactly as before: `/api/health` answers
   repository, a doc, an issue, a commit or any public asset. The examples
   below use placeholders.
 - **The operator's Comfy key and endpoint are Pages secrets.** They live in the
-  Worker's environment and never reach the browser. The key is forwarded only
+  Worker's environment. The key never reaches the browser; it is forwarded only
   to the configured `*.run.comfy.app` endpoint, and only on the four
-  deployment routes (staging inputs, quote, submit, poll).
+  deployment routes (staging inputs, quote, submit, poll). The endpoint does
+  reach the browser: see [known caveats](#known-caveats).
 - **D1 never holds the code.** The run counter is keyed by a SHA-256 of the
   code and holds a count and two timestamps. Neither the code nor the unlock
   token is written to any row, and neither is logged.
@@ -150,3 +151,15 @@ Counts only, following the [observability policy](https://github.com/koshimazaki
 
 Nothing logs the code, the token or the operator's key. The Worker writes no
 request headers or bodies to its logs.
+
+## Known caveats
+
+- **The deployment URL reaches the browser.** Unlocking saves
+  `TESTER_DEPLOYMENT_URL` as the session's deployment, and
+  `GET /api/settings/run-location` returns it (`deployment.url` and its name)
+  with the rest of the session's run location. That is harmless: the endpoint refuses
+  a call without a Comfy key from the owning workspace, and that key stays in
+  the Worker.
+- **The quote shows $0 to the tester.** The reviewer pays nothing, but the
+  operator's workspace is billed for the GPU time. The figure is cosmetic;
+  a reviewer may wonder why a paid run reads as free.
