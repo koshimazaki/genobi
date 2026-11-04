@@ -46,6 +46,21 @@ const media: TemplateMix["media"] = {
 };
 
 /**
+ * What made both takes: the owner's prompt with the character sheet as its
+ * reference. Which MiniMax H3 entry ran them is not recorded.
+ */
+const recipe = {
+  prompt: BLOOM_PROMPT,
+  reference: BLOOM_SHEET,
+  referenceLabel: "Character sheet",
+  model: "MiniMax H3 (open weights)",
+};
+const recipes: TemplateMix["recipes"] = {
+  "bloom-h3-a": recipe,
+  "bloom-h3-b": recipe,
+};
+
+/**
  * Bloom (30 October 2026): a 19-second anime teaser of the owner's Bloom
  * character, cut from two MiniMax H3 (open weights) takes to the owner's track at 140
  * BPM,
@@ -107,5 +122,5 @@ export const bloomTeaser: HouseTemplate = {
       },
     },
   ],
-  mix: { cut: cut as unknown as MixSpec, media },
+  mix: { cut: cut as unknown as MixSpec, media, recipes },
 };

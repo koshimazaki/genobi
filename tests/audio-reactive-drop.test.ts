@@ -138,6 +138,8 @@ describe("Audio Reactive Acoustic Spaces v2, the 3D + LTX template", () => {
   it("keeps the bundled media within the Pages limits", () => {
     let total = 0;
     for (const name of readdirSync(DIR)) {
+      // The slot stills sit in stills/ (tests/template-slot-stills.test.ts).
+      if (name === "stills") continue;
       const size = statSync(`${DIR}/${name}`).size;
       expect(size, name).toBeLessThan(25 * 1024 * 1024);
       expect(name).toMatch(/^drop-[a-z0-9-]+\.(mp4|mp3|jpg)$/);

@@ -45,6 +45,53 @@ const media: TemplateMix["media"] = {
 };
 
 /**
+ * What made each dancer: the owner's look still (1360 × 765, JPEG under
+ * `stills/`) that its LTX-2.5 Layout-to-Render take on window 0 of the
+ * fruit-mecha explode guide started from. `prompt` is the still's own prompt,
+ * recorded only for the gorilla (the owner's, given on 4 November 2026); the
+ * three character stills were made in Genobi Image (FLUX 3 Klein edit) with
+ * the mecha's still as a shape guide (`guide`). `renderPrompt` is what each
+ * take's render bundle executed on 3 November, quoted exactly; the mecha's
+ * 2 November render is not tied to a bundle with certainty, so it has none.
+ * See docs/fruits-swap.md#what-made-each-shot.
+ */
+const GENOBI_IMAGE = "Genobi Image (FLUX 3 Klein edit with the reference)";
+const still = (name: (typeof CHARACTERS)[number]) =>
+  `${DIR}/stills/fruits-swap-${name}.jpg` as const;
+const character = (name: (typeof CHARACTERS)[number], preset: string) => ({
+  reference: still(name),
+  guide: still("mecha"),
+  preset,
+  model: GENOBI_IMAGE,
+});
+const recipes: TemplateMix["recipes"] = {
+  "fruits-swap-mecha": {
+    reference: still("mecha"),
+    preset: "fruit-mecha",
+    missing: ["prompt"],
+  },
+  "fruits-swap-gorilla": {
+    ...character("gorilla", "char-gorilla-explode"),
+    prompt:
+      "voxel gorilla standing on the floor dancing human size making dance moves with vox banana floating on one side and vox apple on the other vox fruits advert studio shot, cinematic view, wide angle lens use image 1 for shape guide only, its floating in the air",
+    renderPrompt:
+      "A blocky black gorilla dances on a dark studio floor between a banana and an apple floating at shoulder height; on the heavy beats each fruit bursts into blocks and reassembles as another fruit, and both swell and glow with the bass. Hard studio light, still camera, energetic dancing.",
+  },
+  "fruits-swap-gold-ninja": {
+    ...character("gold-ninja", "char-gold-ninja-watermelon-explode"),
+    missing: ["prompt"],
+    renderPrompt:
+      "A blocky gold ninja in a gold hooded mask and belted gold gi dances energetically on a dark studio floor between a banana and a tilted watermelon slice with red flesh, a green rind and small black seeds, floating at shoulder height; on the heavy beats each fruit bursts into blocks and reassembles as another fruit, and both swell and glow with the bass. Hard studio light, still camera, front view.",
+  },
+  "fruits-swap-pink-cat": {
+    ...character("pink-cat", "char-pink-cat-explode"),
+    missing: ["prompt"],
+    renderPrompt:
+      "A blocky pink cat girl dances on a dark studio floor between a banana and an apple floating at shoulder height; on the heavy beats each fruit bursts into blocks and reassembles as another fruit, and both swell and glow with the bass. Hard studio light, still camera, energetic dancing.",
+  },
+};
+
+/**
  * Dance with Fruits (3 November 2026, v5): a voxel dancer between two fruits,
  * swapped for another character on the loop. A splash of flying pixel fruit,
  * the mecha with the title typed on the beat, the gorilla on the loop restart
@@ -107,5 +154,5 @@ export const fruitsSwap: HouseTemplate = {
       },
     },
   ],
-  mix: { cut: cut as unknown as MixSpec, media },
+  mix: { cut: cut as unknown as MixSpec, media, recipes },
 };
