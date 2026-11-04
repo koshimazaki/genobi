@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Acoustic Spaces v2, step 5: the depth heatmap inside the TRACK · DANCER focus box (from
+"""Audio Reactive Acoustic Spaces v2, step 5: the depth heatmap inside the TRACK · DANCER focus box (from
 depthbox.py; owner, 3 Nov 2026: "posterise or use it as depth or heatmap").
 
 The World Builder depth guide of the pyramid interior, false-coloured, inside the box's rectangle

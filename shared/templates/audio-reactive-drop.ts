@@ -94,7 +94,7 @@ const media: TemplateMix["media"] = {
 };
 
 /**
- * Acoustic Spaces v2 (3 November 2026): the 3D + LTX template, version two
+ * Audio Reactive Acoustic Spaces v2 (3 November 2026): the 3D + LTX template, version two
  * of Adaptive reverb. Five World Builder rooms rendered by LTX-2.5
  * Layout-to-Render on the owner's track "Adaptive Reverb v2", each with its
  * own CPU room sound under its section, cut on the phrases: towers, a
@@ -106,7 +106,7 @@ const media: TemplateMix["media"] = {
  */
 export const audioReactiveDrop: HouseTemplate = {
   id: "audio-reactive-drop",
-  name: "Acoustic Spaces v2",
+  name: "Audio Reactive Acoustic Spaces v2",
   run: "mix",
   description:
     "The 3D + LTX template, version two: five World Builder 3D rooms rendered by LTX-2.5 (open weights) on one track, each room's own CPU room sound under it. Every room, the track and every overlay is a layer to swap.",
