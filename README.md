@@ -29,7 +29,7 @@ Qwen3-ASR transcribes on your machine after a one-time 1.9 GB model download
 
 **Bring your agent.** Hermes (open source), Claude Code or Codex drive the
 studio through the [Genobi plugin](plugins/genobi/README.md): MCP, CLI and
-skills. Start Genobi sets up Hermes; for Claude Code, `claude --plugin-dir plugins/genobi`.
+skills, with every gallery card shipped as a skill with a plain-words brief. Start Genobi sets up Hermes; for Claude Code, `claude --plugin-dir plugins/genobi`.
 
 No manual needed: drop your images, video and audio into **Assets** and tell the
 agent what they are and what you want. Camera shows what came back, Assets holds
@@ -115,7 +115,9 @@ The apartment and cathedral studies also render [changing room sound](docs/world
 The submission teaser was assembled in Genobi using a range of models and is
 itself an editable example. Those production choices do not lock your next
 project to the same models. The Gallery includes music-led creature edits, Bloom and the
-adaptive-reverb demonstration. Public watch/embed pages share the result;
+adaptive-reverb demonstration, with
+[Audio Reactive Acoustic Spaces v2](docs/audio-reactive-drop.md) and
+[Dance with Fruits](docs/fruits-swap.md) as editable mix templates. Public watch/embed pages share the result;
 editable templates and exported project bundles let someone else remix it.
 Private projects are not automatically public.
 
@@ -147,7 +149,10 @@ and [current limitations](docs/troubleshooting.md).
 Editable templates open **Make my version** in Director or Editor: keep the
 cut, effects and soundtrack, and swap your own media into its slots with Undo.
 Nothing there generates; new media is made in Camera and appears in Assets →
-Generated. See [the version guide](docs/director-generate.md). Camera on the hosted or local studio can register
+Generated. [**Make it with the agent**](docs/director-generate.md#make-it-with-the-agent)
+takes an optional reference drop and one sentence, typed or spoken, saying what
+it replaces, then starts your agent on the template's skill with every paid
+step quoted first; every slot shows the still and prompt that made it. See [the version guide](docs/director-generate.md). Camera on the hosted or local studio can register
 [a Comfy deployment](docs/comfy-deploy.md#use-it-from-camera) for Layout-to-video
 and AKUSPACE. These require a deployment in your own Comfy workspace and an authorised key; that workspace pays for GPU usage. Other cloud generations only need their supported provider key.
 
@@ -187,8 +192,10 @@ next generation step; consult its provenance notes.
 The worked LTX / World Builder graphs now have a shared
 [deployment recipe](docs/comfy-deploy.md) and
 [three key workflow paths](workflows/README.md#demo-workflows). The recipe
-passes offline validation; a live Comfy Developer Platform deployment and
-paid endpoint runs still need separate verification.
+passes offline validation. The hosted deployment `genobi-ltx-world-v2` is now
+the first render route for the audio-reactive templates and scales to zero
+between jobs; its evidence is in
+[Deployment v2, reported 4 November 2026](docs/comfy-deploy.md#deployment-v2-reported-4-november-2026).
 
 [Workflow files and requirements](workflows/README.md) ·
 [World Builder ComfyUI nodes](custom_nodes/director_world_builder/README.md) ·

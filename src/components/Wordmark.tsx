@@ -6,6 +6,7 @@ import SpawnAgentDialog from "../agent/SpawnAgentDialog";
 import GenobiDeck from "../deck/GenobiDeck";
 import { goHome } from "../director/leave-guard";
 import Spinner from "./Spinner";
+import LoadProgress from "./LoadProgress";
 import { useBusy } from "../busy";
 
 /**
@@ -33,7 +34,8 @@ export function HomeLink({ navigate }: { navigate?: (url: string) => void }) {
  * `tests/wordmark.test.tsx` reads
  * both, and a rename that only reaches one of them fails there. The mode tag
  * beside it names the part of the studio in view, not a second brand. While
- * anything is working, a sand spinner runs beside the name. The Genobi guide
+ * anything is working, a sand spinner runs beside the name, and a slim bar
+ * when the work reports a percent (`LoadProgress.tsx`). The Genobi guide
  * bubble lives here, with the headless session follower, the spawn dialog and
  * the footer deck, which reads the session the follower publishes (fixed to
  * the bottom of the window, it never moves the header).
@@ -55,6 +57,7 @@ export default function Wordmark() {
       <GenobiDeck />
       <HomeLink />
       {busy && <Spinner name="sand" className="brand-busy" />}
+      <LoadProgress />
       <span className="brand-beta">
         {shell ? `/ ${number}` : "Open-source video studio"}
       </span>

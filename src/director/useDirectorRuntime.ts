@@ -5,6 +5,7 @@ import { DirectorRenderer } from "./renderer";
 import type { Playback } from "./playback";
 import { studioStore } from "../studio/store";
 import { useProjectCopy } from "./useProjectCopy";
+import { mediaLoadStatus, useMediaLoad } from "./media-progress";
 import type { RenderReport } from "../../shared/licensing/render-report";
 
 /** GPU, decoded media and object URLs remain outside the document store. */
@@ -16,6 +17,9 @@ export function useDirectorRuntime(
   const [status, setStatus] = useState("Loading example…"),
     [error, setError] = useState("");
   const [ready, setReady] = useState(false);
+  // While template media downloads, the stage says how far it has got
+  // (`Loading 9 files · 24 of 66 MB`) instead of a bare "Loading example…".
+  const mediaLoad = useMediaLoad();
   /** The renderer is preparing and has not drawn its first frame yet. */
   const [firstFrame, setFirstFrame] = useState(false);
   const [waveforms, setWaveforms] = useState<Record<string, number[]>>({});
@@ -175,7 +179,7 @@ export function useDirectorRuntime(
     runtime,
     playback,
     abort,
-    status,
+    status: mediaLoad ? mediaLoadStatus(mediaLoad) : status,
     setStatus,
     error,
     setError,

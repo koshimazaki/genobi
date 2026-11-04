@@ -6,6 +6,7 @@ import {
   upgradeEndCard,
 } from "../../shared/templates/mix-end-card-upgrade";
 import { loadExample, validateFiles, type Bundle } from "./bundle";
+import { fetchMediaFiles } from "./media-progress";
 
 // The showcase projects (docs/director-bundle/showcase/): each record is
 // small and read eagerly, so the gallery can list versions; a version's
@@ -113,12 +114,12 @@ export async function loadShowcase(
     if (!bytes) throw new Error(`The ${m.file.path} recipe is missing`);
     files.set(m.file.path, bytes);
   }
-  await Promise.all(
-    Object.values(project.assets).map(async (a) => {
-      const response = await fetch(record.media[a.file.sha256].url!);
-      if (!response.ok) throw new Error("Showcase media unavailable");
-      files.set(a.file.path, new Uint8Array(await response.arrayBuffer()));
-    }),
+  const assets = Object.values(project.assets);
+  const bytes = await fetchMediaFiles(
+    project.name || name,
+    assets.map((a) => record.media[a.file.sha256].url!),
+    "Showcase media unavailable",
   );
+  assets.forEach((a, i) => files.set(a.file.path, bytes[i]));
   return { bundle: await validateFiles({ project, files }), note };
 }
