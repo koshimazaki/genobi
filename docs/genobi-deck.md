@@ -110,6 +110,52 @@ only and faint behind the installer's progress (`src/deck/AsciiBackdrop.tsx`,
 12 frames a second, still under reduced motion;
 [voice setup](voice-setup.md#while-it-installs)).
 
+## The walkers game (Konami code)
+
+Typing ↑ ↑ ↓ ↓ ← → ← → B A anywhere in the studio, except in a text field,
+a contenteditable or a dialog, opens a small walkers puzzle in the deck
+(#97): little Genobi creatures (`o>`) leave a door (`∩`), walk, fall and turn
+at walls, and the person gives them jobs (**dig** down through soil, **build**
+a five-brick stair, **block** to turn others back), each a limited count, to
+get enough of them home (`⌂`). It is our own design in that genre: the
+creature, five fields, their names and art and the music are written for
+Genobi. A fall of more than five cells splats; water (`≈`) and steel (`█`,
+which will not dig) are the hazards.
+
+| Field        | Teaches                                           |
+| ------------ | ------------------------------------------------- |
+| Turn Around  | Block one walker so the rest turn from the pond   |
+| Soft Floor   | Dig through the floor to the corridor below       |
+| Mind the Gap | Build a stair over water; hold the line meanwhile |
+| Steel Pocket | Find the soil among steel before the pond         |
+| Up and Over  | Stair over a hill, then a timed stair over a pond |
+
+- **Where:** a pure, fixed-step simulation in `shared/walkers/` (`levels.ts`,
+  `sim.ts`, `render.ts`, drawn as the same `Frame` the visualisers use);
+  the deck side in `src/deck/walkers/`. `GenobiDeck.tsx` has one mount point,
+  `WalkersSlot`: while the game is open the visualiser stays mounted but
+  hidden, and Esc (or the bar, or EXIT) hands the deck back exactly: its open
+  state, mode, pause and metaball game, and focus where it was.
+- **Grid:** 40 × 9 while the game is open (the visualisers use 36 × 7), in the
+  visualiser's column beside the log; phones draw it larger, above the log.
+- **Controls:** tap or click a creature to give it the selected job; job
+  buttons (1/2/3, or D/B/K) choose it; ←/→ pick a creature and Enter gives the
+  job; P pauses, R restarts, N moves on, M mutes, `.` steps, Esc leaves. A
+  hidden tab pauses the game and stops all sound. Under reduced motion nothing
+  animates: STEP (or `.`) moves one tick.
+- **Sound:** handheld-style chip audio synthesised with Web Audio
+  (`chip-audio.ts`, `chip-tune.ts`): 12.5/25/50% pulse waves, a triangle
+  bass and LFSR noise; an original eight-bar loop and effects for spawn,
+  job, dig, build, splat, home, win and fail. No sample files. It starts on
+  the Konami key press, plays quietly, mutes with M or SOUND (remembered in
+  this browser) and stops on exit.
+- **Metaballs stays.** The walkers game is hidden behind the code and borrows
+  the deck only while open, so the visible metaball game keeps its place.
+- **Checks:** `tests/walkers-sim.test.ts` (walk, fall, turn, dig, build,
+  block, splat, level complete, determinism, a recorded solution for every
+  field) and `tests/walkers-audio.test.ts` (scheduling and stop with a fake
+  `AudioContext`, the code and where it is ignored).
+
 The programs follow Andreas Gysin's
 [play.core](https://github.com/ertdfgcvb/play.core) (Apache-2.0) idea of a
 program as a per-cell function; they are written for Genobi, not copied.
