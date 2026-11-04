@@ -16,7 +16,22 @@ export interface StreamUpdate {
   finished?: "done" | "failed";
   /** A paid route refused this agent; the person has to approve. */
   refusedSpend?: true;
+  /**
+   * A tool call the runner's events reported: `started` by its `tool_use`,
+   * then `done` or `failed` by its `tool_result`. `id` pairs the two when
+   * the runner gives one (Claude Code); otherwise the name does (Hermes).
+   */
+  tool?: ToolUpdate;
 }
+
+export interface ToolUpdate {
+  phase: "started" | "done" | "failed";
+  name?: string;
+  id?: string;
+  detail?: string;
+}
+
+const WORD = /^[a-z0-9][a-z0-9._-]{0,47}$/i;
 
 /** One line of text: control characters and runs of space collapsed. */
 export function clean(text: string, max = AGENT_LINE_CHARS) {
@@ -38,6 +53,29 @@ export function cleanSummary(text: string) {
 
 const isObject = (value: unknown): value is Record<string, unknown> =>
   !!value && typeof value === "object" && !Array.isArray(value);
+
+/**
+ * The one word a tool call's input may add to its step in the deck: a
+ * Director command's `op` (and an added graphic's `moduleId`), each checked
+ * against a plain word. Nothing else in an input is read.
+ */
+export function toolDetail(name: string, input: unknown): string | undefined {
+  if (name !== "genobi_director_command" || !isObject(input)) return;
+  const command = input.command;
+  if (!isObject(command) || typeof command.op !== "string") return;
+  if (!WORD.test(command.op)) return;
+  const module =
+    command.op === "add-graphic" &&
+    typeof command.moduleId === "string" &&
+    WORD.test(command.moduleId)
+      ? ` ${command.moduleId}`
+      : "";
+  return `${command.op}${module}`;
+}
+
+/** A runner's call id, only as a plain bounded word. */
+const toolId = (id: unknown) =>
+  typeof id === "string" && /^[a-z0-9_-]{1,80}$/i.test(id) ? id : undefined;
 
 /** `mcp__genobi__genobi_quote` reads as `genobi_quote` (Claude Code and Hermes). */
 export const toolName = (name: unknown) =>
@@ -78,8 +116,21 @@ function assistantLines(message: unknown): StreamUpdate[] {
       return line ? [{ line }] : [];
     }
     if (part.type === "tool_use") {
-      const name = toolName(part.name);
-      return name ? [{ line: `Using ${clean(name, 60)}` }] : [];
+      const name = clean(toolName(part.name), 60);
+      if (!name) return [];
+      const id = toolId(part.id);
+      const detail = toolDetail(name, part.input);
+      return [
+        {
+          line: `Using ${name}`,
+          tool: {
+            phase: "started",
+            name,
+            ...(id ? { id } : {}),
+            ...(detail ? { detail } : {}),
+          },
+        },
+      ];
     }
     return [];
   });
@@ -90,15 +141,23 @@ function toolResults(message: unknown): StreamUpdate[] {
   if (!Array.isArray(content)) return [];
   return content
     .filter(isObject)
-    .filter((part) => part.type === "tool_result" && part.is_error === true)
-    .map((part) => {
+    .filter((part) => part.type === "tool_result")
+    .map((part): StreamUpdate => {
+      const id = toolId(part.tool_use_id);
+      const failed = part.is_error === true;
+      const tool: ToolUpdate = {
+        phase: failed ? "failed" : "done",
+        ...(id ? { id } : {}),
+      };
+      if (!failed) return { tool };
       const text = resultText(part.content);
       return text.includes(AGENT_SPEND_CODE)
         ? {
             refusedSpend: true as const,
             line: "A paid step needs your approval in the studio.",
+            tool,
           }
-        : { line: `A tool refused: ${clean(text, 160)}` };
+        : { line: `A tool refused: ${clean(text, 160)}`, tool };
     });
 }
 

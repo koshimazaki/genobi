@@ -21,7 +21,7 @@ import { runnerStatus } from "./agent-config";
 import { OpenRouteError } from "./agent-hermes-pins";
 import { Reaper } from "./agent-reap";
 import { launch, type SessionPlanInput } from "./agent-runner";
-import { pushLine, settleEnded, viewOf } from "./agent-session-end";
+import { noteTool, pushLine, settleEnded, viewOf } from "./agent-session-end";
 import {
   closeInput,
   deliver,
@@ -191,7 +191,7 @@ export class AgentSessions {
         lines: [`Starting ${runner.label}…`],
       },
     };
-    record(session, "person", request.prompt);
+    record(session, "person", request.prompt, false, request.source);
     this.keep(id, session);
     try {
       const projectMemory = await this.memory.begin(session, request.copyId);
@@ -340,6 +340,7 @@ export class AgentSessions {
         record(session, "agent", update.summary);
       }
       if (update.refusedSpend) session.refusedSpend = true;
+      if (update.tool) noteTool(session, update.tool);
       if (update.finished) {
         session.finished = update.finished;
         turnEnded(session);

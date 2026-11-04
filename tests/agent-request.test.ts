@@ -277,7 +277,10 @@ describe("readStreamLine", () => {
       ),
     ).toEqual([
       { line: "Linking the project ." },
-      { line: "Using genobi_link_project" },
+      {
+        line: "Using genobi_link_project",
+        tool: { phase: "started", name: "genobi_link_project" },
+      },
     ]);
     expect(
       readStreamLine(
