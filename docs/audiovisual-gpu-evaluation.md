@@ -124,8 +124,8 @@ The generated root spec is local operator state. Do not overwrite its
 push-written build/revision identity after release work begins. An authorized
 workspace operator then follows the push/release/deploy sequence in
 [the deployment guide](comfy-deploy.md#owner-commands-push-release-deploy),
-choosing a real GPU ID/region and checking model fetches. Verify FFmpeg and
-FFprobe on the worker before accepting captured WebM input. Record the actual
+choosing a real GPU ID/region and checking model fetches. Verify that a captured
+WebM take decodes on the worker (PyAV, no FFmpeg binary) before accepting it. Record the actual
 ComfyUI/custom-node revisions, Python/PyTorch/CUDA/driver versions, model and
 adapter hashes, GPU/VRAM, peak memory, wall time and billing evidence.
 
