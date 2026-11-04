@@ -359,6 +359,24 @@
   border-radius: 8px;
   background: var(--sunken);
 }
+.dir-version-first-still {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0 0;
+}
+.dir-version-first-still img {
+  width: 112px;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+}
+.dir-version-first-still figcaption {
+  font-size: 12px;
+  color: var(--muted);
+}
 
 /* Make it with the agent: one drop zone and one sentence, side by side. */
 .dir-version-agent {

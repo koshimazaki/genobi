@@ -6,6 +6,9 @@ import {
 } from "../shared/templates/bloom-teaser";
 import { versionSlots } from "../shared/templates/version";
 import { dimensionsMix } from "../shared/templates/catalogue";
+import { fruitsSwap } from "../shared/templates/fruits-swap";
+import { audioReactiveDrop } from "../shared/templates/audio-reactive-drop";
+import type { HouseTemplate } from "../shared/templates/types";
 import { registry, type ReadyEntry } from "../shared/registry";
 import type { Project } from "../shared/director/types";
 import {
@@ -108,6 +111,131 @@ it("restores Bloom's recorded owner prompt and sheet, and says the model is not 
     missing: ["model and settings"],
   });
   expect(recipe.entry).toBeUndefined();
+});
+
+/** A project holding a mix template's untouched bundled take for `id`. */
+function bundled(template: HouseTemplate, id: string) {
+  return project(template.id, {
+    [id]: {
+      kind: "video",
+      use: "production",
+      file: { ...video, path: template.mix!.media[id].path },
+      origin: "uploaded",
+    },
+  });
+}
+
+it("Bloom's record lives on the template, not in the Director", () => {
+  expect(bloomTeaser.mix?.recipes?.["bloom-h3-b"]).toMatchObject({
+    prompt: BLOOM_PROMPT,
+    reference: BLOOM_SHEET,
+  });
+  const b = cameraRecipe(
+    bundled(bloomTeaser, "bloom-h3-b"),
+    slot(bloomTeaser, "bloom-h3-b"),
+    ["bloom-h3-b"],
+  );
+  expect(b).toMatchObject({ prompt: BLOOM_PROMPT, reference: BLOOM_SHEET });
+});
+
+it("a Dance with Fruits take restores its still prompt, shape guide and still", async () => {
+  const id = "fruits-swap-gorilla";
+  const p = bundled(fruitsSwap, id);
+  const recipe = cameraRecipe(p, slot(fruitsSwap, id), [id]);
+  const dir = "/media/director-templates/fruits-swap/stills";
+  expect(recipe).toMatchObject({
+    label: "Recreate in Camera",
+    reference: `${dir}/fruits-swap-gorilla.jpg`,
+    guide: `${dir}/fruits-swap-mecha.jpg`,
+    preset: "char-gorilla-explode",
+    missing: ["model and settings"],
+  });
+  expect(recipe.prompt).toBe(
+    "voxel gorilla standing on the floor dancing human size making dance moves with vox banana floating on one side and vox apple on the other vox fruits advert studio shot, cinematic view, wide angle lens use image 1 for shape guide only, its floating in the air",
+  );
+  listen();
+  const load = vi.fn(
+    async (url: string) =>
+      new Response(new Blob([url], { type: "image/jpeg" })),
+  );
+  vi.stubGlobal("fetch", load);
+  try {
+    await openInCamera(() => {}, recipe, p, new Map());
+  } finally {
+    vi.unstubAllGlobals();
+  }
+  // The guide first, then the still.
+  expect(load.mock.calls.map(([url]) => url)).toEqual([
+    recipe.guide,
+    recipe.reference,
+  ]);
+  const { patch, note } = received[0];
+  expect(patch.description).toBe(recipe.prompt);
+  expect(patch.imageReferences).toEqual(
+    [recipe.guide!, recipe.reference!].map(
+      (url) => `data:image/jpeg;base64,${Buffer.from(url).toString("base64")}`,
+    ),
+  );
+  expect(note).toBe(
+    "Restored this asset's prompt and references. Made from preset char-gorilla-explode; model and settings not stored. Nothing was generated.",
+  );
+});
+
+it("a take whose prompt was not written down restores the still only and says so", () => {
+  const id = "fruits-swap-gold-ninja";
+  const recipe = cameraRecipe(bundled(fruitsSwap, id), slot(fruitsSwap, id), [
+    id,
+  ]);
+  expect(recipe.label).toBe("Recreate in Camera");
+  expect(recipe.prompt).toBeUndefined();
+  expect(recipe.missing).toEqual(["prompt", "model and settings"]);
+  expect(recipeNote(recipe, 2)).toBe(
+    "Restored this asset's references. Made from preset char-gold-ninja-watermelon-explode; prompt, model and settings not stored. Nothing was generated.",
+  );
+});
+
+it("an Acoustic Spaces room restores its first still and the still's own prompt", () => {
+  const id = "drop-pyramid-outside";
+  const recipe = cameraRecipe(
+    bundled(audioReactiveDrop, id),
+    slot(audioReactiveDrop, id),
+    [id],
+  );
+  expect(recipe).toMatchObject({
+    label: "Recreate in Camera",
+    reference:
+      "/media/director-templates/audio-reactive-drop/stills/drop-pyramid-outside.jpg",
+    preset: "pyramid-outside",
+    prompt:
+      "cybernetic pyramid, isometric view, architectural concept, realistic cyberpunk, movie capture, on the desert, pyramid its on its own, fuji camera shot",
+    missing: ["model and settings"],
+  });
+  // The towers' still is a frame of an LTX video, and the notice says so.
+  const towers = cameraRecipe(
+    bundled(audioReactiveDrop, "drop-towers"),
+    slot(audioReactiveDrop, "drop-towers"),
+    ["drop-towers"],
+  );
+  expect(towers.prompt).toBeUndefined();
+  expect(recipeNote(towers, 1)).toBe(
+    "Restored this asset's references. First still taken from an LTX video. Made from preset towers-descent; prompt, model and settings not stored. Nothing was generated.",
+  );
+  // The interior's still is another picture: still only, prompt named missing.
+  const inside = cameraRecipe(
+    bundled(audioReactiveDrop, "drop-pyramid-inside"),
+    slot(audioReactiveDrop, "drop-pyramid-inside"),
+    ["drop-pyramid-inside"],
+  );
+  expect(inside.prompt).toBeUndefined();
+  expect(inside.missing).toEqual(["prompt", "model and settings"]);
+  // Rooms nothing records stay honest: the studio is a slice of another take.
+  expect(
+    cameraRecipe(
+      bundled(audioReactiveDrop, "drop-studio"),
+      slot(audioReactiveDrop, "drop-studio"),
+      ["drop-studio"],
+    ).label,
+  ).toBe("Create in Camera");
 });
 
 it("never invents a prompt: Dimensions and swapped-in uploads open Camera as it is", async () => {

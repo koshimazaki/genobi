@@ -197,6 +197,50 @@ export interface TemplateMix {
    * any run. Counted by `tierOf` as a step.
    */
   upscale?: MixUpscale;
+  /**
+   * What made each bundled clip, by slot (media) id: the still it started
+   * from and, where it was written down, its prompt. Only what was recorded;
+   * a slot with nothing recorded has no entry, and a missing part is named
+   * in `missing`. Recreate in Camera restores it (`src/director/recreate-in-camera.ts`)
+   * and the version panel shows the still beside the slot.
+   */
+  recipes?: Record<string, SlotRecipe>;
+}
+
+/** The recorded inputs of one bundled clip (`TemplateMix.recipes`). */
+export interface SlotRecipe {
+  /**
+   * The prompt that made the still, quoted exactly; Camera restores it.
+   * Absent (and named in `missing`) when not written down.
+   */
+  prompt?: string;
+  /** The image it started from, as an app-relative public path. */
+  reference: `/${string}`;
+  /**
+   * A second image the still was made from, used as a shape guide only (the
+   * mecha's still for the character swaps). Camera receives it before
+   * `reference`.
+   */
+  guide?: `/${string}`;
+  /**
+   * The video render prompt the take executed, quoted exactly. Recorded for
+   * the person to read; Camera restores `prompt` only.
+   */
+  renderPrompt?: string;
+  /**
+   * Where the still came from, when it was not made as a still: e.g.
+   * `"ltx-video frame"`, a frame taken from an LTX video. Named in Camera's
+   * notice.
+   */
+  source?: string;
+  /** What the reference is, shown under it; defaults to "First still". */
+  referenceLabel?: string;
+  /** The preset (study) it was made from, named in Camera's notice. */
+  preset?: string;
+  /** The model that made the still, in words, when known; not a Camera entry. */
+  model?: string;
+  /** Parts of the recipe that were not recorded, e.g. `prompt`. */
+  missing?: string[];
 }
 
 export interface MixUpscale {

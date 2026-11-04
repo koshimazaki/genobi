@@ -84,6 +84,49 @@ PYRAMID EXTERIOR`, `CAM 03 // STUDIO`).
   picture. The owner approved this ending on 3 November 2026: _"great, use it
   as official template with all the layers"_.
 
+## What made each room
+
+The rooms record what made them (`mix.recipes` in
+`shared/templates/audio-reactive-drop.ts`), so **Make my version** shows the
+still beside the slot and **Recreate in Camera** restores it
+([Recreate in Camera](director-generate.md#recreate-in-camera)). Each still is
+the look still the LTX-2.5 Layout-to-Render take named in `drop-assemble.py`
+started from, checked against that take's first frame, encoded once as JPEG
+quality 90 into `public/media/director-templates/audio-reactive-drop/stills/`:
+
+| Slot                   | Still                             | Size    | Preset                   | Still prompt                  | Render prompt (take)                |
+| ---------------------- | --------------------------------- | ------- | ------------------------ | ----------------------------- | ----------------------------------- |
+| `drop-towers`          | `stills/drop-towers.jpg`          | 649 KiB | `towers-descent`         | not recorded                  | executed (`towers-descent-w0`)      |
+| `drop-cathedral`       | `stills/drop-cathedral.jpg`       | 548 KiB | `cathedral-gallery-grow` | not recorded                  | executed (`cathgrow-mid-p2`)        |
+| `drop-pyramid-inside`  | `stills/drop-pyramid-inside.jpg`  | 369 KiB | `pyramid-inside`         | not recorded                  | executed (`pyrparty-p3`)            |
+| `drop-pyramid-outside` | `stills/drop-pyramid-outside.jpg` | 388 KiB | `pyramid-outside`        | the owner's, given 4 November | executed (`pyrout-p4b`)             |
+| `drop-studio`          | none                              |         |                          | no record                     | a slice of the Adaptive reverb take |
+| `drop-studio-booth`    | `stills/drop-studio-booth.jpg`    | 595 KiB | `studio-walls`           | not recorded                  | executed (`booth-p5`)               |
+
+A record's `prompt` is the still's own prompt, which Camera restores; one not
+written down is listed in `missing`. The pyramid's, as the owner wrote it (the
+World Builder scene was then built to match the still and captured for the
+render):
+
+> cybernetic pyramid, isometric view, architectural concept, realistic
+> cyberpunk, movie capture, on the desert, pyramid its on its own, fuji camera
+> shot
+
+It describes the outside still. The towers' still is not a Klein still: by
+the owner's note it is a frame taken from a video made with the LTX
+text-to-video workflow, recorded as `source: "ltx-video frame"`, and Camera's
+notice says "First still taken from an LTX video". That video's prompt is not
+recorded, so the towers' prompt is named as not stored. The interior's still is another picture, a
+hangar interior with a gold robot ([pyramid-inside](https://github.com/koshimazaki/Genobi/blob/main/audio-reactive/presets/pyramid-inside.md)),
+so the interior keeps its still with the prompt named as not stored.
+`renderPrompt` is what each take's render bundle executed, quoted exactly;
+Camera does not restore it. The cathedral's executed prompt follows the voice
+("with the voice the stone piers and arches swell inward"), not the preset
+page's beat wording. The plain pyramid pair shares each room's record. The
+booth's still is 1920 × 1080 as supplied, the others 1360 × 765. Adaptive
+reverb (v1) is one continuous take with no per-room still, so it records
+nothing.
+
 ## The grid is double time
 
 The track is 136.8 BPM, but the cut's grid is 273.6 BPM, eighth notes. A
