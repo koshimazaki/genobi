@@ -45,6 +45,8 @@ export const dimensionsMix: HouseTemplate = {
   run: "mix",
   description:
     "Three creatures cut to the beat with Signal overlays: a finished teaser, nothing to generate.",
+  brief:
+    "Say or type which creature to replace and with what, for example 'a fox spirit instead of the forest one', or drop a clip of your own. The cut keeps its beats: the new clip plays in that creature's slices, cropped to the frame. A creature made from your words goes through the anime teaser, and each paid step is quoted first.",
   tier: "open",
   style: {
     name: "Signal",

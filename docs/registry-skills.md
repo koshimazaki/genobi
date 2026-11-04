@@ -9,6 +9,15 @@ summary: Every Genobi plugin skill with its description, the tools it uses and i
 
 Each skill of the Genobi plugin: what it is for, the tools its instructions use and its docs. Agents load one with `genobi_skill`. Grouped by tag on [the registry](registry.md).
 
+## `adaptive-reverb`
+
+Make a version of Adaptive reverb, the first 3D + LTX mix template - the person says or types the room they want and which one it replaces ("a stone cellar instead of the hall"), an image being an optional reference, and the agent writes the first still's prompt, builds the room in World Builder, renders it with LTX-2.5 Layout-to-Render on the hosted deployment, processes the track with the room's CPU reverb and labels it with a fixed AKUSPACE preset RT60. Every paid step is quoted and waits for the person's yes.
+
+- Tags: `agents`, `director`, `templates`, `world-builder`, `sound`, `ltx`
+- Instructions: [plugins/genobi/skills/adaptive-reverb/SKILL.md](https://github.com/koshimazaki/Genobi/blob/main/plugins/genobi/skills/adaptive-reverb/SKILL.md)
+- Uses: [`genobi_quote`](registry-tools.md#genobi_quote), [`genobi_submit`](registry-tools.md#genobi_submit), [`genobi_decision`](registry-tools.md#genobi_decision), [`genobi_skill`](registry-tools.md#genobi_skill)
+- Docs: [docs/adaptive-reverb.md](adaptive-reverb.md), [docs/audio-reactive-drop.md](audio-reactive-drop.md), [audio-reactive/videos/spaces.md](https://github.com/koshimazaki/Genobi/blob/main/audio-reactive/videos/spaces.md), [docs/comfy-deploy.md](comfy-deploy.md), [docs/tester-access.md](tester-access.md)
+
 ## `anime-teaser`
 
 Make Genobi's Anime teaser template (docs/anime-teaser-template.md) - take or generate a track, a character sheet and a storyboard, then two 10-second MiniMax H3 shots from the sheet and the storyboard, cut to the track's beat in the Director with two titles. Every paid step is quoted and waits for the person's approval.
@@ -17,6 +26,15 @@ Make Genobi's Anime teaser template (docs/anime-teaser-template.md) - take or ge
 - Instructions: [plugins/genobi/skills/anime-teaser/SKILL.md](https://github.com/koshimazaki/Genobi/blob/main/plugins/genobi/skills/anime-teaser/SKILL.md)
 - Uses: [`genobi_status`](registry-tools.md#genobi_status), [`genobi_job`](registry-tools.md#genobi_job), [`genobi_scrolls`](registry-tools.md#genobi_scrolls), [`genobi_budget`](registry-tools.md#genobi_budget), [`genobi_quote`](registry-tools.md#genobi_quote), [`genobi_submit`](registry-tools.md#genobi_submit), [`genobi_take`](registry-tools.md#genobi_take), [`genobi_link_project`](registry-tools.md#genobi_link_project), [`genobi_project`](registry-tools.md#genobi_project), [`genobi_project_feedback`](registry-tools.md#genobi_project_feedback), [`genobi_director_command`](registry-tools.md#genobi_director_command), [`genobi_template_plan`](registry-tools.md#genobi_template_plan), [`genobi_take_to_project`](registry-tools.md#genobi_take_to_project), [`genobi_provenance`](registry-tools.md#genobi_provenance), [`genobi_audio_analysis`](registry-tools.md#genobi_audio_analysis), [`genobi_skill`](registry-tools.md#genobi_skill)
 - Docs: [docs/anime-teaser-template.md](anime-teaser-template.md), [docs/templates.md](templates.md), [docs/runs/anime-teaser.md](runs/anime-teaser.md), [docs/genobi-cli.md](genobi-cli.md)
+
+## `audio-reactive-drop`
+
+Make a version of Audio Reactive Acoustic Spaces v2, the 3D + LTX mix template - the person says or types the room they want and which one it replaces ("a jazz club instead of the cathedral"), an image being an optional reference, or asks for another track, and the agent writes the first still's prompt, builds the room in World Builder, measures its CPU room sound, renders it with LTX-2.5 Layout-to-Render on the hosted deployment and lays the measured reverb under it. Every paid step is quoted and waits for the person's yes.
+
+- Tags: `agents`, `director`, `templates`, `world-builder`, `sound`, `ltx`
+- Instructions: [plugins/genobi/skills/audio-reactive-drop/SKILL.md](https://github.com/koshimazaki/Genobi/blob/main/plugins/genobi/skills/audio-reactive-drop/SKILL.md)
+- Uses: [`genobi_quote`](registry-tools.md#genobi_quote), [`genobi_submit`](registry-tools.md#genobi_submit), [`genobi_decision`](registry-tools.md#genobi_decision), [`genobi_skill`](registry-tools.md#genobi_skill)
+- Docs: [docs/audio-reactive-drop.md](audio-reactive-drop.md), [docs/adaptive-reverb.md](adaptive-reverb.md), [audio-reactive/videos/spaces.md](https://github.com/koshimazaki/Genobi/blob/main/audio-reactive/videos/spaces.md), [docs/world-builder-dynamic-sound.md](world-builder-dynamic-sound.md), [docs/comfy-deploy.md](comfy-deploy.md)
 
 ## `audio-visual`
 
@@ -27,6 +45,15 @@ Make Genobi's Audio-visual house template (Slab light) end to end through the Ge
 - Uses: [`genobi_status`](registry-tools.md#genobi_status), [`genobi_job`](registry-tools.md#genobi_job), [`genobi_budget`](registry-tools.md#genobi_budget), [`genobi_quote`](registry-tools.md#genobi_quote), [`genobi_submit`](registry-tools.md#genobi_submit), [`genobi_take`](registry-tools.md#genobi_take), [`genobi_link_project`](registry-tools.md#genobi_link_project), [`genobi_project`](registry-tools.md#genobi_project), [`genobi_director_command`](registry-tools.md#genobi_director_command), [`genobi_template_plan`](registry-tools.md#genobi_template_plan), [`genobi_take_to_project`](registry-tools.md#genobi_take_to_project), [`genobi_provenance`](registry-tools.md#genobi_provenance), [`genobi_skill`](registry-tools.md#genobi_skill)
 - Docs: [docs/templates.md](templates.md), [docs/hermes-runs.md](hermes-runs.md), [docs/camera-wording.md](camera-wording.md)
 
+## `bloom-teaser`
+
+Make a version of Bloom, the anime-teaser mix template - answer "character sheet" by showing the sheet and the prompt both MiniMax H3 takes were made from, make a new take of the person's own character in Camera with that prompt (quoted first), and swap a take or the track into the cut on the beat. Every paid step waits for the person's yes.
+
+- Tags: `agents`, `director`, `templates`, `storyboard`
+- Instructions: [plugins/genobi/skills/bloom-teaser/SKILL.md](https://github.com/koshimazaki/Genobi/blob/main/plugins/genobi/skills/bloom-teaser/SKILL.md)
+- Uses: [`genobi_quote`](registry-tools.md#genobi_quote), [`genobi_submit`](registry-tools.md#genobi_submit), [`genobi_decision`](registry-tools.md#genobi_decision), [`genobi_skill`](registry-tools.md#genobi_skill)
+- Docs: [docs/bloom-teaser.md](bloom-teaser.md), [docs/templates.md](templates.md), [docs/director-generate.md](director-generate.md)
+
 ## `character-piece`
 
 Make Genobi's Character piece house template (North light) end to end through the Genobi MCP tools - a character still on open FLUX 3 Image Klein, then three quoted LTX shots (arrive, turn, hold), generated only on the person's yes, with a provenance card.
@@ -36,6 +63,15 @@ Make Genobi's Character piece house template (North light) end to end through th
 - Uses: [`genobi_status`](registry-tools.md#genobi_status), [`genobi_job`](registry-tools.md#genobi_job), [`genobi_budget`](registry-tools.md#genobi_budget), [`genobi_quote`](registry-tools.md#genobi_quote), [`genobi_submit`](registry-tools.md#genobi_submit), [`genobi_take`](registry-tools.md#genobi_take), [`genobi_link_project`](registry-tools.md#genobi_link_project), [`genobi_project`](registry-tools.md#genobi_project), [`genobi_director_command`](registry-tools.md#genobi_director_command), [`genobi_template_plan`](registry-tools.md#genobi_template_plan), [`genobi_take_to_project`](registry-tools.md#genobi_take_to_project), [`genobi_provenance`](registry-tools.md#genobi_provenance), [`genobi_skill`](registry-tools.md#genobi_skill)
 - Docs: [docs/templates.md](templates.md), [docs/hermes-runs.md](hermes-runs.md)
 
+## `dimensions-mix`
+
+Make a version of the Dimensions mix, the first mix template - a swap-only edit where the person says or types which creature to replace and with what ("a fox spirit instead of the forest one"), a clip being optional, and the agent swaps the clip into that creature's slices while the cut keeps its beats. Nothing is generated; the optional SeedVR2 upscale of the render is quoted and waits for a yes. For a generated teaser it points at the anime-teaser skill.
+
+- Tags: `agents`, `director`, `templates`, `sound`
+- Instructions: [plugins/genobi/skills/dimensions-mix/SKILL.md](https://github.com/koshimazaki/Genobi/blob/main/plugins/genobi/skills/dimensions-mix/SKILL.md)
+- Uses: [`genobi_quote`](registry-tools.md#genobi_quote), [`genobi_submit`](registry-tools.md#genobi_submit), [`genobi_decision`](registry-tools.md#genobi_decision)
+- Docs: [docs/dimensions-mix.md](dimensions-mix.md), [docs/director-generate.md](director-generate.md), [docs/anime-teaser-template.md](anime-teaser-template.md), [docs/seedvr2-upscale.md](seedvr2-upscale.md)
+
 ## `falling-room`
 
 Make Genobi's Falling room template end to end through the Genobi MCP tools - link the Director project, hand the Falling room take to the person's World Builder, have them capture it and put its sound in the room, quote the one Klein still, generate it only when the person accepts, keep the person's edits and record a provenance card.
@@ -44,6 +80,15 @@ Make Genobi's Falling room template end to end through the Genobi MCP tools - li
 - Instructions: [plugins/genobi/skills/falling-room/SKILL.md](https://github.com/koshimazaki/Genobi/blob/main/plugins/genobi/skills/falling-room/SKILL.md)
 - Uses: [`genobi_status`](registry-tools.md#genobi_status), [`genobi_jobs`](registry-tools.md#genobi_jobs), [`genobi_job`](registry-tools.md#genobi_job), [`genobi_world_recipe`](registry-tools.md#genobi_world_recipe), [`genobi_budget`](registry-tools.md#genobi_budget), [`genobi_quote`](registry-tools.md#genobi_quote), [`genobi_submit`](registry-tools.md#genobi_submit), [`genobi_take`](registry-tools.md#genobi_take), [`genobi_link_project`](registry-tools.md#genobi_link_project), [`genobi_project`](registry-tools.md#genobi_project), [`genobi_project_feedback`](registry-tools.md#genobi_project_feedback), [`genobi_director_command`](registry-tools.md#genobi_director_command), [`genobi_template_plan`](registry-tools.md#genobi_template_plan), [`genobi_take_to_project`](registry-tools.md#genobi_take_to_project), [`genobi_provenance`](registry-tools.md#genobi_provenance), [`genobi_skill`](registry-tools.md#genobi_skill)
 - Docs: [docs/falling-room.md](falling-room.md), [docs/templates.md](templates.md), [docs/world-builder.md](world-builder.md), [docs/media-space.md](media-space.md)
+
+## `fruits-swap`
+
+Make a version of Dance with Fruits, the content-swap mix template - the person says or types what they want and what it replaces ("a mango instead of the apple"), an image being an optional reference, and the agent writes the prompt for the first still, builds the moving fruit in Three.js, renders the loop's window with LTX-2.5 Layout-to-Render on the hosted deployment and cuts it in on the beat. Every paid step is quoted and waits for the person's yes.
+
+- Tags: `agents`, `director`, `templates`, `world-builder`, `ltx`
+- Instructions: [plugins/genobi/skills/fruits-swap/SKILL.md](https://github.com/koshimazaki/Genobi/blob/main/plugins/genobi/skills/fruits-swap/SKILL.md)
+- Uses: [`genobi_quote`](registry-tools.md#genobi_quote), [`genobi_submit`](registry-tools.md#genobi_submit), [`genobi_decision`](registry-tools.md#genobi_decision), [`genobi_skill`](registry-tools.md#genobi_skill)
+- Docs: [docs/fruits-swap.md](fruits-swap.md), [audio-reactive/videos/fruits-template.md](https://github.com/koshimazaki/Genobi/blob/main/audio-reactive/videos/fruits-template.md), [audio-reactive/videos/fruits.md](https://github.com/koshimazaki/Genobi/blob/main/audio-reactive/videos/fruits.md), [docs/comfy-deploy.md](comfy-deploy.md), [docs/tester-access.md](tester-access.md)
 
 ## `genobi-3d`
 

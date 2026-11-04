@@ -209,6 +209,26 @@ size so a pick, a quote, a run or a refusal moves nothing below it:
    planner writes it from that brief, with the recipe's models.
 4. **Generate**, then **Take it to Director** and **Take it to the editor**.
 
+### The card's brief
+
+The owner's decision of 4 November 2026: every gallery card carries a
+**brief** (`brief` on `HouseTemplate`, `shared/templates/types.ts`), one to
+three plain sentences that tell a viewer what they can hand in and what the
+agent, or Generate, does with it. The drawer shows it under the description,
+so it is read before Make my version or Generate. Genobi is voice-first, so
+a brief says what to say or type, and an image is an optional reference. For
+Dance with Fruits: "Say or type what you want and what it replaces, for
+example 'a mango instead of the apple' or 'a gorilla instead of the mecha';
+dropping an image as a reference is optional." That sentence, spoken alone or
+with a reference ("swap the apple with this", "this room instead of the
+cathedral"), is what invokes the card's skill (`plugins/genobi/skills/<id>/`, [templates](templates.md#run-kind-mechanical-or-agent)).
+`checkBrief` (`shared/templates/run-kind.ts`) refuses an empty brief, one over
+480 characters or three sentences, or one with control characters; it is not
+the editable brief an agent template's drawer offers, which is the person's.
+`tests/template-briefs.test.tsx` fails when a gallery card has no brief, when
+a card that is not mechanical has no skill folder, or when the drawer stops
+showing the brief between the description and the actions.
+
 What Generate does depends on the template's declared run kind
 ([templates](templates.md#run-kind-mechanical-or-agent)): mechanical when
 the template is one generation its recipe fully describes, agent when it

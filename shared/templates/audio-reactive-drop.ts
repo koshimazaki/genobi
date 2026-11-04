@@ -110,6 +110,8 @@ export const audioReactiveDrop: HouseTemplate = {
   run: "mix",
   description:
     "The 3D + LTX template, version two: five World Builder 3D rooms rendered by LTX-2.5 (open weights) on one track, each room's own CPU room sound under it. Every room, the track and every overlay is a layer to swap.",
+  brief:
+    "Say or type the room you want and which one it replaces, for example 'a jazz club instead of the cathedral'; dropping an image as a reference is optional. The agent writes the prompt for the first still, builds the room in 3D, measures its room sound, renders the video with LTX-2.5 and puts the measured reverb under it. Ask for another track the same way and the agent re-measures the beat; each paid step is quoted first.",
   tier: "open",
   style: {
     name: "Reactive spaces",

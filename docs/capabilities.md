@@ -71,7 +71,7 @@ Every model a feature runs, whether its weights are open, the routes it runs on 
 The first view: template and generation cards, a drawer per card with drop zones, Take it to Director, and watch and embed pages.
 
 - **Where:** Gallery · / (the first view), /watch/:id, /embed/:id · **Runs:** Local, free · **Status:** verified, 29 October 2026 ([record](falling-room.md#what-was-run-29-october-2026))
-- **MCP tools:** [`genobi_template_plan`](registry-tools.md#genobi_template_plan) · **CLI:** `genobi template-plan` · **Skills:** [`genobi-studio`](registry-skills.md#genobi-studio) · **Docs:** [template-gallery.md](template-gallery.md), [templates.md](templates.md)
+- **MCP tools:** [`genobi_template_plan`](registry-tools.md#genobi_template_plan) · **CLI:** `genobi template-plan` · **Skills:** [`genobi-studio`](registry-skills.md#genobi-studio), [`fruits-swap`](registry-skills.md#fruits-swap), [`audio-reactive-drop`](registry-skills.md#audio-reactive-drop), [`adaptive-reverb`](registry-skills.md#adaptive-reverb), [`bloom-teaser`](registry-skills.md#bloom-teaser), [`dimensions-mix`](registry-skills.md#dimensions-mix) · **Docs:** [template-gallery.md](template-gallery.md), [templates.md](templates.md)
 
 ### Product video, Character piece and Audio-visual
 
@@ -92,7 +92,7 @@ A track, a character sheet and a storyboard (each dropped or generated) become t
 A finished 23-second teaser cut from three bundled clips to a 140 BPM track with Signal overlays; nothing to generate, opens as editable lanes.
 
 - **Where:** Gallery · second card, /director?example=dimensions-mix · **Runs:** Local, free · **Status:** implemented
-- **MCP tools:** none · **CLI:** none · **Skills:** none · **Docs:** [dimensions-mix.md](dimensions-mix.md)
+- **MCP tools:** none · **CLI:** none · **Skills:** [`dimensions-mix`](registry-skills.md#dimensions-mix) · **Docs:** [dimensions-mix.md](dimensions-mix.md)
 
 ### Genobi teaser
 
