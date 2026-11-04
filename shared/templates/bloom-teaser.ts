@@ -62,7 +62,7 @@ export const bloomTeaser: HouseTemplate = {
   description:
     "An anime teaser for one character: two MiniMax H3 (open weights) takes cut to the beat under a character-scan, surveillance HUD. Nothing to generate.",
   brief:
-    "Ask for the character sheet to see the sheet and the prompt both takes were made from, or drop your own sheet for a new take. The agent makes that take in Camera on MiniMax H3 with the same prompt and cuts it to the beat. The take is quoted and waits for your yes.",
+    "Say or type 'show me the character sheet' to see the sheet and the prompt both takes were made from, or describe your own character for a new take; dropping a sheet as a reference is optional. The agent makes that take in Camera on MiniMax H3 with the same prompt and cuts it to the beat. Each paid step is quoted and waits for your yes.",
   tier: "open",
   style: {
     name: "Bloom scan",

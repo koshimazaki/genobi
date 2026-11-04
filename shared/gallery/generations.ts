@@ -151,7 +151,7 @@ export function generationTemplate(
     description:
       "One start image and one prompt become one FLUX 3 image-to-video shot, run here.",
     brief:
-      "Drop a start image and write the prompt. Generate runs one FLUX 3 image-to-video shot here once you accept its price.",
+      "Drop a start image, then say or type the prompt. Generate runs one FLUX 3 image-to-video shot here once you accept its price.",
     tier: "premium",
     // A generation carries no house style: its prompt is sent as written.
     style: {

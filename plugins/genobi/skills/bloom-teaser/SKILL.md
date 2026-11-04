@@ -24,13 +24,16 @@ nothing. The cut, the look, the track and how to repeat it are in
 
 ## What the person hands in
 
-| Slot            | They drop or ask            | "With what" sentence                 | What happens                                           |
-| --------------- | --------------------------- | ------------------------------------ | ------------------------------------------------------ |
-| character sheet | nothing, or their own sheet | "show me the character sheet"        | the sheet and the prompt are shown                     |
-| new take        | their character sheet       | "make one of my character like this" | a new MiniMax H3 take in Camera, quoted first          |
-| take            | a clip of 15 s or more      | "this instead of the forest take"    | `bloom-h3-a.mp4` (forest) or `bloom-h3-b.mp4` (studio) |
-| track           | a track                     | "cut it to this song"                | `bloom-track.mp3`, re-measured                         |
-| words           | a line of text              | "call it …"                          | the end card's words, the HUD's subject                |
+The person **says or types** what they want; a sheet, a clip or a track is
+an optional reference, and a spoken sentence alone is enough to start.
+
+| Slot            | They say or type (a reference is optional)     | Example sentence                      | What happens                                           |
+| --------------- | ---------------------------------------------- | ------------------------------------- | ------------------------------------------------------ |
+| character sheet | that they want to see it                       | "show me the character sheet"         | the sheet and the prompt are shown                     |
+| new take        | their character, in words or as a sheet        | "make one of a moss knight like this" | a new MiniMax H3 take in Camera, quoted first          |
+| take            | which take to replace, and with what or a clip | "this instead of the forest take"     | `bloom-h3-a.mp4` (forest) or `bloom-h3-b.mp4` (studio) |
+| track           | the song they want                             | "cut it to this song"                 | `bloom-track.mp3`, re-measured                         |
+| words           | a line of text                                 | "call it …"                           | the end card's words, the HUD's subject                |
 
 ## What the agent does with each slot
 
@@ -47,7 +50,9 @@ sheet is a reference image whose own model is not recorded, so never name
 one for it or call it open.
 
 **A new take.** It goes through **Camera** with `BLOOM_PROMPT`, the person's
-sheet in place of Bloom's. Camera's MiniMax H3 on Comfy Router
+sheet in place of Bloom's. When they only describe their character, make the
+sheet first, the way the `anime-teaser` skill does (FLUX 3 Edit, quoted and
+confirmed), and show it before the take. Camera's MiniMax H3 on Comfy Router
 (`minimax-h3-router`) takes **exactly two** reference images (the character
 sheet, then the storyboard), while the recorded takes name one sheet; so ask
 for a second reference (a storyboard panel or another view of the character)

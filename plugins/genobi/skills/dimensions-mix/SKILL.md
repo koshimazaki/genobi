@@ -1,6 +1,6 @@
 ---
 name: dimensions-mix
-description: Make a version of the Dimensions mix, the first mix template - a swap-only edit where the person drops a clip and says which creature it replaces ("this instead of the forest one"), and the agent swaps it into that creature's slices while the cut keeps its beats. Nothing is generated; the optional SeedVR2 upscale of the render is quoted and waits for a yes. For a generated teaser it points at the anime-teaser skill.
+description: Make a version of the Dimensions mix, the first mix template - a swap-only edit where the person says or types which creature to replace and with what ("a fox spirit instead of the forest one"), a clip being optional, and the agent swaps the clip into that creature's slices while the cut keeps its beats. Nothing is generated; the optional SeedVR2 upscale of the render is quoted and waits for a yes. For a generated teaser it points at the anime-teaser skill.
 license: MIT
 compatibility: Needs this checkout with npm ci, Node 22 or later and Chrome or Edge for the Director's Render MP4; the optional upscale needs the Genobi studio with a Comfy key.
 metadata:
@@ -30,17 +30,26 @@ load the `anime-teaser` skill instead and say so.
 
 ## What the person hands in
 
-| Slot     | They drop                | "With what" sentence             | What it replaces                        |
-| -------- | ------------------------ | -------------------------------- | --------------------------------------- |
-| creature | a clip of 13.5 s or more | "this instead of the forest one" | one creature's clip, in all its slices  |
-| track    | a track                  | "cut it to this song"            | `mix-track.wav`, measured first         |
-| words    | a line of text           | "call it …", "rename Duneward"   | the end card's words, a creature's name |
+The person **says or types** what they want; a clip or a track is an
+optional reference, and a spoken sentence alone is enough to start.
+
+| Slot     | They say or type (a reference is optional)         | Example sentence                                                                         | What it replaces                        |
+| -------- | -------------------------------------------------- | ---------------------------------------------------------------------------------------- | --------------------------------------- |
+| creature | which creature to replace, and with what or a clip | "a fox spirit instead of the forest one", or a clip and "this instead of the forest one" | one creature's clip, in all its slices  |
+| track    | the song they want                                 | "cut it to this song"                                                                    | `mix-track.wav`, measured first         |
+| words    | a line of text                                     | "call it …", "rename Duneward"                                                           | the end card's words, a creature's name |
 
 The creatures and their clips: **Nocthorn** (forest, horned) is `mix-03`,
 **Mirebloom** (lake, flower) is `mix-01`, **Duneward** (desert plinth) is
 `mix-02`. If the sentence does not say which creature, ask.
 
 ## What the agent does with each slot
+
+**A creature from words.** This template generates nothing, so a new
+creature described in words is made the anime teaser's way (the
+`anime-teaser` skill: a sheet, then a MiniMax H3 shot, each quoted and
+confirmed); the resulting clip then swaps in as below. A clip of 13.5 s or
+more covers every slice.
 
 **A creature.** Swap the clip into that creature's asset in the Director
 (Make my version, or the Editor). It then plays in every slice that creature

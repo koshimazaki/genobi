@@ -11,7 +11,7 @@ Each skill of the Genobi plugin: what it is for, the tools its instructions use 
 
 ## `adaptive-reverb`
 
-Make a version of Adaptive reverb, the first 3D + LTX mix template - the person drops an image of a space as a reference and says which room it replaces ("this room instead of the hall"), and the agent writes the first still's prompt from it, builds the room in World Builder, renders it with LTX-2.5 Layout-to-Render on the hosted deployment, processes the track with the room's CPU reverb and labels it with a fixed AKUSPACE preset RT60. Every paid step is quoted and waits for the person's yes.
+Make a version of Adaptive reverb, the first 3D + LTX mix template - the person says or types the room they want and which one it replaces ("a stone cellar instead of the hall"), an image being an optional reference, and the agent writes the first still's prompt, builds the room in World Builder, renders it with LTX-2.5 Layout-to-Render on the hosted deployment, processes the track with the room's CPU reverb and labels it with a fixed AKUSPACE preset RT60. Every paid step is quoted and waits for the person's yes.
 
 - Tags: `agents`, `director`, `templates`, `world-builder`, `sound`, `ltx`
 - Instructions: [plugins/genobi/skills/adaptive-reverb/SKILL.md](https://github.com/koshimazaki/Genobi/blob/main/plugins/genobi/skills/adaptive-reverb/SKILL.md)
@@ -29,7 +29,7 @@ Make Genobi's Anime teaser template (docs/anime-teaser-template.md) - take or ge
 
 ## `audio-reactive-drop`
 
-Make a version of Acoustic Spaces v2, the 3D + LTX mix template - the person drops an image of a space as a reference and says which room it replaces ("this room instead of the cathedral"), or swaps the track, and the agent writes the first still's prompt from it, builds the room in World Builder, measures its CPU room sound, renders it with LTX-2.5 Layout-to-Render on the hosted deployment and lays the measured reverb under it. Every paid step is quoted and waits for the person's yes.
+Make a version of Acoustic Spaces v2, the 3D + LTX mix template - the person says or types the room they want and which one it replaces ("a jazz club instead of the cathedral"), an image being an optional reference, or asks for another track, and the agent writes the first still's prompt, builds the room in World Builder, measures its CPU room sound, renders it with LTX-2.5 Layout-to-Render on the hosted deployment and lays the measured reverb under it. Every paid step is quoted and waits for the person's yes.
 
 - Tags: `agents`, `director`, `templates`, `world-builder`, `sound`, `ltx`
 - Instructions: [plugins/genobi/skills/audio-reactive-drop/SKILL.md](https://github.com/koshimazaki/Genobi/blob/main/plugins/genobi/skills/audio-reactive-drop/SKILL.md)
@@ -65,7 +65,7 @@ Make Genobi's Character piece house template (North light) end to end through th
 
 ## `dimensions-mix`
 
-Make a version of the Dimensions mix, the first mix template - a swap-only edit where the person drops a clip and says which creature it replaces ("this instead of the forest one"), and the agent swaps it into that creature's slices while the cut keeps its beats. Nothing is generated; the optional SeedVR2 upscale of the render is quoted and waits for a yes. For a generated teaser it points at the anime-teaser skill.
+Make a version of the Dimensions mix, the first mix template - a swap-only edit where the person says or types which creature to replace and with what ("a fox spirit instead of the forest one"), a clip being optional, and the agent swaps the clip into that creature's slices while the cut keeps its beats. Nothing is generated; the optional SeedVR2 upscale of the render is quoted and waits for a yes. For a generated teaser it points at the anime-teaser skill.
 
 - Tags: `agents`, `director`, `templates`, `sound`
 - Instructions: [plugins/genobi/skills/dimensions-mix/SKILL.md](https://github.com/koshimazaki/Genobi/blob/main/plugins/genobi/skills/dimensions-mix/SKILL.md)
@@ -83,7 +83,7 @@ Make Genobi's Falling room template end to end through the Genobi MCP tools - li
 
 ## `fruits-swap`
 
-Make a version of Dance with Fruits, the content-swap mix template - the person drops an image of a fruit or a character as a reference and says what it replaces ("swap the apple with this"), and the agent writes the prompt for the first still from it, builds the moving fruit in Three.js, renders the loop's window with LTX-2.5 Layout-to-Render on the hosted deployment and cuts it in on the beat. Every paid step is quoted and waits for the person's yes.
+Make a version of Dance with Fruits, the content-swap mix template - the person says or types what they want and what it replaces ("a mango instead of the apple"), an image being an optional reference, and the agent writes the prompt for the first still, builds the moving fruit in Three.js, renders the loop's window with LTX-2.5 Layout-to-Render on the hosted deployment and cuts it in on the beat. Every paid step is quoted and waits for the person's yes.
 
 - Tags: `agents`, `director`, `templates`, `world-builder`, `ltx`
 - Instructions: [plugins/genobi/skills/fruits-swap/SKILL.md](https://github.com/koshimazaki/Genobi/blob/main/plugins/genobi/skills/fruits-swap/SKILL.md)

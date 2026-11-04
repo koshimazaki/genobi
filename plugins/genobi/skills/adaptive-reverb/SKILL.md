@@ -1,6 +1,6 @@
 ---
 name: adaptive-reverb
-description: Make a version of Adaptive reverb, the first 3D + LTX mix template - the person drops an image of a space as a reference and says which room it replaces ("this room instead of the hall"), and the agent writes the first still's prompt from it, builds the room in World Builder, renders it with LTX-2.5 Layout-to-Render on the hosted deployment, processes the track with the room's CPU reverb and labels it with a fixed AKUSPACE preset RT60. Every paid step is quoted and waits for the person's yes.
+description: Make a version of Adaptive reverb, the first 3D + LTX mix template - the person says or types the room they want and which one it replaces ("a stone cellar instead of the hall"), an image being an optional reference, and the agent writes the first still's prompt, builds the room in World Builder, renders it with LTX-2.5 Layout-to-Render on the hosted deployment, processes the track with the room's CPU reverb and labels it with a fixed AKUSPACE preset RT60. Every paid step is quoted and waits for the person's yes.
 license: MIT
 compatibility: Needs this checkout with npm ci, Node 22 or later and FFmpeg; World Builder captures need Chrome (Playwright) or the World Builder ComfyUI nodes; renders run on the hosted Comfy deployment (studio, site or CLI), or on a rented GPU box (scripts/vast) as the alternative.
 metadata:
@@ -30,20 +30,38 @@ rooms, use [Acoustic Spaces v2](../../../../docs/audio-reactive-drop.md) and its
 
 ## What the person hands in
 
-| Slot      | They drop                   | "With what" sentence            | What it replaces                             |
-| --------- | --------------------------- | ------------------------------- | -------------------------------------------- |
-| room      | an image of a space         | "this room instead of the hall" | one slice of the take and its sound          |
-| recording | a 16:9 still of a recording | "show my ComfyUI graph here"    | `reverb-workflow.jpg`, the 20 to 22.5 s card |
-| words     | a line of text              | "call it …"                     | the end card's parameters                    |
+Genobi is voice-first: the person **says or types** what they want ("say
+what it replaces, or drop a reference and say what it is for"). An image is
+optional; a spoken sentence alone is enough to start, and the agent then
+generates what it needs. When they do drop an image, **it is the reference**:
+the agent writes the prompt for the first still from it (or from their words
+alone), builds the moving room in 3D, and renders the video. The image itself
+never goes into the video.
 
-**Their image is the reference.** The agent writes the prompt for the first
-still from it, builds the moving room in 3D, and renders the video; the image
-itself never goes into the video. If the sentence does not say which room,
-ask. The recording still and the
+| Slot      | They say or type (a reference is optional)         | Example sentence                                                                      | What it replaces                             |
+| --------- | -------------------------------------------------- | ------------------------------------------------------------------------------------- | -------------------------------------------- |
+| room      | the space they want and which room it replaces     | "a stone cellar instead of the hall", or an image and "this room instead of the hall" | one slice of the take and its sound          |
+| recording | what to show on the workflow card, or a 16:9 still | "show my ComfyUI graph here"                                                          | `reverb-workflow.jpg`, the 20 to 22.5 s card |
+| words     | a line of text                                     | "call it …"                                                                           | the end card's parameters                    |
+
+If the sentence does not say which room, ask. The recording still and the
 words are free swaps in the Director (Make my version, or the Editor); the
 card takes a still, not a moving clip.
 
 ## What the agent does with each slot
+
+**Track and space, in the owner's words: "audio track gives interaction +
+reverb is measured to space".**
+
+- **The track drives the motion.** The capture moves the Three.js layout to
+  the track's measured beat and low band, never to an assumed grid.
+- **The reverb in v1.** The on-screen numbers are fixed AKUSPACE preset
+  RT60s, not measurements; the sound itself is the track processed with the
+  scene's CPU impulse response (the room sound and wet mix the hosted
+  deployment returns alongside the clip, or the local CPU reverb template).
+  Measured RT60s for each room are Acoustic Spaces v2.
+- A swapped track means re-measuring it and re-capturing; a swapped room means
+  re-running its reverb and choosing its preset label again.
 
 **A room.** Follow the page's "How to regenerate a room":
 
@@ -76,6 +94,35 @@ card takes a still, not a moving clip.
 7. **Cut it in**: the new take replaces the slice in the Editor, or replaces
    `reverb-ltx.mp4` and `reverb-track.mp3` together and set their `durationSeconds`; run
    `checkMix`, render with the in-page renderer and show a contact sheet.
+
+The route, in the owner's words: "LTX video or any image, to layout, so
+Three.js to video". The reference still has one of three sources:
+
+1. **A frame of an LTX video**: the towers' first still was a screenshot of a
+   video made with the LTX text-to-video workflow.
+2. **A generated image** from a prompt the agent writes (FLUX 3 Klein or
+   Genobi Image): the pyramid, below.
+3. **The person's own image.**
+
+From that still the agent builds the Three.js layout (a World Builder room),
+captures it, and renders with LTX-2.5 Layout-to-Render.
+
+The prompt-made example is the owner's pyramid. Its first still was made from
+this prompt, verbatim:
+
+> cybernetic pyramid, isometric view, architectural concept, realistic
+> cyberpunk, movie capture, on the desert, pyramid its on its own, fuji
+> camera shot
+
+Then the World Builder (Three.js) scene was built to match that still,
+captured, and rendered with LTX-2.5 Layout-to-Render with the room's
+measured sound under it. Follow that pattern for a person's room: their
+image is the reference; write a prompt in this shape (the space and its
+style, the view, "movie capture", the setting, a camera line) and show it
+before quoting the still; make the still; build the matching 3D room; and
+send the same still and scene into the render. The still and the capture's
+frame 0 must line up (check a 50 percent blend), so adjust the scene's camera
+or remake the still until they do.
 
 The AKUSPACE i2v/a2v workflow is a separate route that learns room sound but
 partly regenerates the music at mask 0.5; it is the deployment's

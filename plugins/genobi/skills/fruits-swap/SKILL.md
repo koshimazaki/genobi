@@ -1,6 +1,6 @@
 ---
 name: fruits-swap
-description: Make a version of Dance with Fruits, the content-swap mix template - the person drops an image of a fruit or a character as a reference and says what it replaces ("swap the apple with this"), and the agent writes the prompt for the first still from it, builds the moving fruit in Three.js, renders the loop's window with LTX-2.5 Layout-to-Render on the hosted deployment and cuts it in on the beat. Every paid step is quoted and waits for the person's yes.
+description: Make a version of Dance with Fruits, the content-swap mix template - the person says or types what they want and what it replaces ("a mango instead of the apple"), an image being an optional reference, and the agent writes the prompt for the first still, builds the moving fruit in Three.js, renders the loop's window with LTX-2.5 Layout-to-Render on the hosted deployment and cuts it in on the beat. Every paid step is quoted and waits for the person's yes.
 license: MIT
 compatibility: Needs this checkout with npm ci, Node 22 or later, Chrome (Playwright) and FFmpeg for captures; the Genobi studio, site or CLI for the paid first still and the render on the hosted Comfy deployment; a rented GPU box (scripts/vast) is the alternative render route.
 metadata:
@@ -25,16 +25,19 @@ Read both before touching anything.
 
 ## What the person hands in
 
-The person drops one image (or writes a few words) and one sentence: what it
-replaces. **Their image is the reference.** The agent writes the prompt for
-the first still from it, builds the moving fruit in 3D, and renders the
-video. The image itself never goes into the video.
+Genobi is voice-first: the person **says or types** what they want ("say
+what it replaces, or drop a reference and say what it is for"). An image is
+optional; a spoken sentence alone is enough to start, and the agent then
+generates what it needs. When they do drop an image, **it is the reference**:
+the agent writes the prompt for the first still from it (or from their words
+alone), builds the moving fruit in 3D, and renders the video. The image itself
+never goes into the video.
 
-| Slot      | They drop                           | "With what" sentence                     | Default when absent        |
-| --------- | ----------------------------------- | ---------------------------------------- | -------------------------- |
-| fruit     | an image of a fruit, or its name    | "swap the apple with this"               | banana and apple           |
-| character | one image of a character, any style | "this instead of the gorilla"            | the grey and gold mecha    |
-| track     | a track, or a caption for new music | "use this song" / "make it a slow bossa" | the Dance with Fruits loop |
+| Slot      | They say or type (a reference is optional)         | Example sentence                                                                | Default when absent        |
+| --------- | -------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------- |
+| fruit     | the fruit they want and which one it replaces      | "a mango instead of the apple", or an image and "swap the apple with this"      | banana and apple           |
+| character | the character they want and which loop it replaces | "a gorilla instead of the mecha", or an image and "this instead of the gorilla" | the grey and gold mecha    |
+| track     | the song, or a caption for new music               | "use this song" / "make it a slow bossa"                                        | the Dance with Fruits loop |
 
 One character is one loop (about 8 s); up to three characters make about
 24 s, the first one opening the piece. Nothing beyond three: the loop wears
