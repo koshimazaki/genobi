@@ -1060,6 +1060,7 @@
       "tags": ["workflows", "world-builder", "sound"],
       "summary": "Capture editable music-driven fruit, architecture and descending-camera studies, then compare two local LTX candidates with the original soundtrack.",
       "links": [
+        "comfy-deploy.md",
         "vast-runner.md",
         "world-builder-dynamic-sound.md",
         "world-builder-loops.md"
@@ -1070,14 +1071,14 @@
       "path": "audio-reactive-pyramid.md",
       "tags": ["workflows", "comfy", "models", "world-builder"],
       "summary": "How to repeat the audio-reactive pyramid — World Builder guide capture with measured band gain, a look still, LTX-2.5 Layout-to-Render on a rented GPU, and the checks that prove the motion follows the music.",
-      "links": ["vast-runner.md"]
+      "links": ["comfy-deploy.md", "vast-runner.md"]
     },
     {
       "title": "Audio-reactive architecture: the second pass",
       "path": "audio-reactive-second-pass.md",
       "tags": ["workflows", "comfy", "models", "world-builder"],
       "summary": "The next Vast session, planned so the box time is renders only — walls that move to the music, a second image guide at the closed-walls frame, Union Control from the depth track, the LTX refine pass, Klein looks made on the box, and the stitch.",
-      "links": ["audio-reactive-pyramid.md"]
+      "links": ["audio-reactive-pyramid.md", "comfy-deploy.md"]
     },
     {
       "title": "Audiovisual scene gap audit",
@@ -2450,7 +2451,7 @@
       "path": "vast-runner.md",
       "tags": ["workflows", "comfy", "models"],
       "summary": "Prepare a pinned local ComfyUI worker on Vast, connect by SSH and check it before running LTX experiments.",
-      "links": []
+      "links": ["comfy-deploy.md"]
     },
     {
       "title": "Verification",

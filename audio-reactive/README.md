@@ -116,6 +116,7 @@ unusable. Then change the render prompt's nouns to the new space.
    with the box; `run-queue.sh` otherwise logs `SKIP` for a missing bundle.
 5. Render on the box: `scripts/vast/box/run-queue.sh <bundle>…` in tmux,
    about 8 minutes and $0.25 per clip on an RTX PRO 6000.
+   The hosted [deployment v2](../docs/comfy-deploy.md#deployment-v2-reported-4-november-2026) is now the first render route and the rented box the alternative.
 6. Measure follow (clip motion against guide motion) and bass correlation.
 7. Review a contact sheet; record the verdict and any correction.
 
