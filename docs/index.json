@@ -1623,7 +1623,7 @@
       "title": "Make your version",
       "path": "director-generate.md",
       "tags": ["director", "templates"],
-      "summary": "Make my version — swap media into a finished template's slots with Undo; new media is made in Camera and comes back through Assets → Generated. Nothing here generates.",
+      "summary": "Make my version — swap media into a finished template's slots with Undo, or drop a reference and say what it replaces to start the agent with the template's skill. New media is made in Camera or by the agent, which quotes every paid step; the panel itself starts no paid job.",
       "links": ["genobi-cli.md", "taste-memory.md"]
     },
     {
@@ -2357,6 +2357,7 @@
         "audio-reactive-drop.md",
         "bloom-teaser.md",
         "dimensions-mix.md",
+        "director-generate.md",
         "falling-room.md",
         "fruits-swap.md",
         "genobi-teaser.md",

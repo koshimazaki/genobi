@@ -63,6 +63,16 @@ Generate, since a mix generates nothing. A mix's preview is a render of the
 template, so it is not labelled preview footage, and it has watch and embed
 pages at the render's own size.
 
+Four of those mixes (Dance with Fruits, Acoustic Spaces v2, Adaptive reverb
+and Bloom) also offer **Make it with the agent** once they are open in
+Director's [Make my version](director-generate.md#make-it-with-the-agent): the
+person says or types what they want, with an optional reference, and that
+starts an agent session with the template's skill, the way the drawer's Generate now
+does for an agent template. The drawer itself still never generates. The
+Camera reaches the same place from its LTX models: the **Audio Reactive ·
+Layout to Motion** card is not a registry entry and submits nothing; its one
+button opens the Director on Acoustic Spaces v2 with Make my version open.
+
 ## Model badges and Open only
 
 Every card's badge names the models it runs and their route, read from the
