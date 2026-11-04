@@ -49,7 +49,7 @@ Local-only endpoints such as `/api/voice/status`, `/api/projects` and
 The [worked workflow release](comfy-deploy.md) provides two GPU selectors and local CPU reverb, plus an
 offline-validated shared build recipe. That does not establish a deployed GPU
 service. Verify the build/release, endpoint address, model and asset loading,
-FFmpeg/FFprobe and an explicitly approved test run before calling it live.
+a WebM take decoding through PyAV and an explicitly approved test run before calling it live.
 The hosted studio’s fixed workflow destination remains Comfy Cloud.
 
 ## Known issues — 26 October 2026

@@ -199,9 +199,11 @@ still need to succeed under the platform's access rules and model licences.
 Verified resolver results are not proof of a completed remote build; a fetch
 failure is a release blocker, not permission to silently upload local weights.
 
-**FFmpeg and FFprobe must exist on the worker's PATH for WebM Capture.**
-The YAML generator does not install OS packages. Check the release worker's
-binaries before accepting it for Layout-to-video. CPU-only local reverb does
+**WebM Capture needs no FFmpeg or FFprobe binary on the worker.** The YAML
+generator does not install OS packages, and the worker image has neither, so
+the World Builder pack reads and writes takes with PyAV (`av`), which ComfyUI
+core requires. Check one WebM take on the release worker before accepting it
+for Layout-to-video. CPU-only local reverb does
 not decode a take and has no Capture dependency.
 
 ## Owner commands: materialize and run

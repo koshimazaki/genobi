@@ -2,9 +2,9 @@
 
 Build from the Director root with `node scripts/build-scene-adapter.mjs`, then copy
 this `director_world_builder` directory into your local ComfyUI `custom_nodes`
-and restart ComfyUI. FFmpeg must be on PATH, or in `/opt/homebrew/bin`,
-`/usr/local/bin` or `/opt/local/bin` (ComfyUI Desktop starts the server with a
-minimal PATH on macOS); torch, numpy and Pillow come with ComfyUI. The generated bundle is the same World Builder as Director, with no
+and restart ComfyUI. WebM takes are read and written with PyAV (`av`), which
+ComfyUI itself requires, so no FFmpeg or FFprobe binary is needed on PATH;
+torch, numpy and Pillow come with ComfyUI too. The generated bundle is the same World Builder as Director, with no
 Director backend dependency. Its `.mjs` extension avoids Comfy loading the
 bundle as a top-level extension.
 
@@ -105,7 +105,8 @@ while 1024 × 576 at that length is refused. The fixed hosted Layout-to-video
 deployment remains a separate 193-frame contract.
 Inputs shrinks large image batches to the 320M-value preview budget, keeping
 full-resolution source tensors unchanged; it still allows at most 721 RGB frames.
-FFprobe must accompany FFmpeg for WebM metadata checks.
+A WebM take must hold exactly one video stream at the recipe's size and 24 fps,
+and its frames are counted by decoding them with PyAV, never from metadata.
 
 Comfy Cloud uses the external World Builder's downloads with supported Load
 Image/Load Video/Load Audio nodes. This custom node is for local installations;
@@ -150,5 +151,6 @@ and `output/` (add `--asset-root <dir>` for anywhere else) and lists each
 upload. Each run is a billed job.
 
 Not yet verified on the platform: that the worker resolves an uploaded asset
-to the same `input/` relative path the node reads, and that FFmpeg/FFprobe
-exist in the worker image. WebM takes need both; PNG stills need neither.
+to the same `input/` relative path the node reads, and that a WebM take decodes
+there with PyAV. The worker image has no FFmpeg or FFprobe binary, which the
+node no longer needs.
