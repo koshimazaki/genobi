@@ -22,7 +22,7 @@
     },
     {
       "asset": "fruits-swap-mecha",
-      "label": "Mecha · loop 1, from the voice (title typed, fruit swarm)",
+      "label": "Mecha · loop 1, from the voice",
       "sourceSeconds": 0,
       "startBeat": 4,
       "beats": 13,
@@ -38,7 +38,7 @@
     },
     {
       "asset": "fruits-swap-gold-ninja",
-      "label": "Gold ninja · the drop (WATERMELON baked in)",
+      "label": "Gold ninja · the drop",
       "sourceSeconds": 4.79,
       "startBeat": 27,
       "beats": 5,
@@ -378,6 +378,112 @@
         "direction": "up",
         "size": 10,
         "seed": 42
+      }
+    },
+    {
+      "id": "title-typed",
+      "name": "Title · DANCE WITH FRUITS, typed",
+      "module": "typewriter",
+      "kind": "graphics",
+      "lane": "title",
+      "startBeat": 4,
+      "beats": 7,
+      "opacity": 1,
+      "parameters": {
+        "text": "DANCE WITH FRUITS",
+        "font": "\"Press Start 2P\", monospace",
+        "color": "#f6f8f2",
+        "shadow": "#0c0e0c",
+        "cursorColor": "#ff4dff",
+        "size": 72,
+        "x": 0.5,
+        "y": 0.86,
+        "bpm": 100,
+        "chars": 2,
+        "division": 2
+      }
+    },
+    {
+      "id": "word-gorilla",
+      "name": "Swap word · GORILLA",
+      "module": "kinetic",
+      "kind": "graphics",
+      "lane": "impact",
+      "startBeat": 17,
+      "beats": 2,
+      "opacity": 1,
+      "parameters": {
+        "text": "GORILLA",
+        "font": "\"Press Start 2P\", monospace",
+        "weight": 400,
+        "color": "#f6f8f2",
+        "accent": "#0c0e0c",
+        "bpm": 100,
+        "size": 120,
+        "beats": 2
+      }
+    },
+    {
+      "id": "word-watermelon",
+      "name": "Swap word · WATERMELON (the drop)",
+      "module": "kinetic",
+      "kind": "graphics",
+      "lane": "impact",
+      "startBeat": 27,
+      "beats": 2,
+      "opacity": 1,
+      "parameters": {
+        "text": "WATERMELON",
+        "font": "\"Press Start 2P\", monospace",
+        "weight": 400,
+        "color": "#f6f8f2",
+        "accent": "#0c0e0c",
+        "bpm": 100,
+        "size": 120,
+        "beats": 2
+      }
+    },
+    {
+      "id": "word-pink-cat",
+      "name": "Swap word · PINK CAT",
+      "module": "kinetic",
+      "kind": "graphics",
+      "lane": "impact",
+      "startBeat": 32,
+      "beats": 2,
+      "opacity": 1,
+      "parameters": {
+        "text": "PINK CAT",
+        "font": "\"Press Start 2P\", monospace",
+        "weight": 400,
+        "color": "#f6f8f2",
+        "accent": "#0c0e0c",
+        "bpm": 100,
+        "size": 120,
+        "beats": 2
+      }
+    },
+    {
+      "id": "fruit-swarm",
+      "name": "Pixel fruit · swarm over the shoulder",
+      "module": "sprite-swarm",
+      "kind": "graphics",
+      "lane": "swarm",
+      "startBeat": 5.375,
+      "beats": 3.5,
+      "opacity": 1,
+      "parameters": {
+        "x": 0.535,
+        "y": 0.21,
+        "radius": 0.172,
+        "count": 180,
+        "size": 10,
+        "bpm": 100,
+        "bob": 6,
+        "swirl": 0.5,
+        "gather": 0.5,
+        "burst": 1.708,
+        "seed": 7
       }
     },
     {

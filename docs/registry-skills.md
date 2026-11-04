@@ -83,12 +83,12 @@ Make Genobi's Falling room template end to end through the Genobi MCP tools - li
 
 ## `fruits-swap`
 
-Make a version of Dance with Fruits, the content-swap mix template - the person says or types what they want and what it replaces ("a mango instead of the apple"), an image being an optional reference, and the agent writes the prompt for the first still, builds the moving fruit in Three.js, renders the loop's window with LTX-2.5 Layout-to-Render on the hosted deployment and cuts it in on the beat. Every paid step is quoted and waits for the person's yes.
+Make a version of Dance with Fruits, the content-swap mix template - the person says or types what they want and what it replaces ("a mango instead of the apple"), an image being an optional reference, and the agent writes the prompt for the first still, builds the moving fruit in Three.js, renders the loop's window with LTX-2.5 Layout-to-Render on the hosted deployment and cuts it in on the beat. Words, icons and UI are live recipe layers, changed with Director commands, never baked into the clips. Every paid step is quoted and waits for the person's yes.
 
 - Tags: `agents`, `director`, `templates`, `world-builder`, `ltx`
 - Instructions: [plugins/genobi/skills/fruits-swap/SKILL.md](https://github.com/koshimazaki/Genobi/blob/main/plugins/genobi/skills/fruits-swap/SKILL.md)
-- Uses: [`genobi_quote`](registry-tools.md#genobi_quote), [`genobi_submit`](registry-tools.md#genobi_submit), [`genobi_decision`](registry-tools.md#genobi_decision), [`genobi_skill`](registry-tools.md#genobi_skill)
-- Docs: [docs/fruits-swap.md](fruits-swap.md), [audio-reactive/videos/fruits-template.md](https://github.com/koshimazaki/Genobi/blob/main/audio-reactive/videos/fruits-template.md), [audio-reactive/videos/fruits.md](https://github.com/koshimazaki/Genobi/blob/main/audio-reactive/videos/fruits.md), [docs/comfy-deploy.md](comfy-deploy.md), [docs/tester-access.md](tester-access.md)
+- Uses: [`genobi_quote`](registry-tools.md#genobi_quote), [`genobi_submit`](registry-tools.md#genobi_submit), [`genobi_project`](registry-tools.md#genobi_project), [`genobi_decision`](registry-tools.md#genobi_decision), [`genobi_take_to_project`](registry-tools.md#genobi_take_to_project), [`genobi_skill`](registry-tools.md#genobi_skill)
+- Docs: [docs/fruits-swap.md](fruits-swap.md), [docs/fruits-swap-recipes.md](fruits-swap-recipes.md), [audio-reactive/videos/fruits-template.md](https://github.com/koshimazaki/Genobi/blob/main/audio-reactive/videos/fruits-template.md), [audio-reactive/videos/fruits.md](https://github.com/koshimazaki/Genobi/blob/main/audio-reactive/videos/fruits.md), [docs/comfy-deploy.md](comfy-deploy.md), [docs/tester-access.md](tester-access.md)
 
 ## `genobi-3d`
 

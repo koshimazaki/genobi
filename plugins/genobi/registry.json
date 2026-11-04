@@ -764,6 +764,7 @@
         "audio-visual",
         "character-piece",
         "falling-room",
+        "fruits-swap",
         "genobi-3d",
         "genobi-cli",
         "genobi-director",
@@ -939,6 +940,7 @@
         "audio-visual",
         "character-piece",
         "falling-room",
+        "fruits-swap",
         "genobi-comfy",
         "genobi-director",
         "genobi-hermes",
@@ -1423,10 +1425,11 @@
     {
       "kind": "skill",
       "name": "fruits-swap",
-      "description": "Make a version of Dance with Fruits, the content-swap mix template - the person says or types what they want and what it replaces (\"a mango instead of the apple\"), an image being an optional reference, and the agent writes the prompt for the first still, builds the moving fruit in Three.js, renders the loop's window with LTX-2.5 Layout-to-Render on the hosted deployment and cuts it in on the beat. Every paid step is quoted and waits for the person's yes.",
+      "description": "Make a version of Dance with Fruits, the content-swap mix template - the person says or types what they want and what it replaces (\"a mango instead of the apple\"), an image being an optional reference, and the agent writes the prompt for the first still, builds the moving fruit in Three.js, renders the loop's window with LTX-2.5 Layout-to-Render on the hosted deployment and cuts it in on the beat. Words, icons and UI are live recipe layers, changed with Director commands, never baked into the clips. Every paid step is quoted and waits for the person's yes.",
       "tags": ["agents", "director", "templates", "world-builder", "ltx"],
       "docs": [
         "docs/fruits-swap.md",
+        "docs/fruits-swap-recipes.md",
         "audio-reactive/videos/fruits-template.md",
         "audio-reactive/videos/fruits.md",
         "docs/comfy-deploy.md",
@@ -1436,7 +1439,9 @@
       "tools": [
         "genobi_quote",
         "genobi_submit",
+        "genobi_project",
         "genobi_decision",
+        "genobi_take_to_project",
         "genobi_skill"
       ]
     },
