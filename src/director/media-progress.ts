@@ -112,23 +112,29 @@ export async function fetchMediaFiles(
   };
   try {
     report();
-    const responses = await Promise.all(
-      urls.map((url) => fetch(url, { signal: controller.signal })),
-    );
-    if (responses.some((r) => !r.ok)) throw new Error(error);
-    const lengths = responses.map((r) =>
-      Number(r.headers.get("Content-Length") ?? NaN),
-    );
-    if (lengths.every((n) => Number.isFinite(n) && n > 0))
-      load.totalBytes = lengths.reduce((a, b) => a + b, 0);
-    report();
+    // Each body is read in its own fetch's continuation. Waiting for every
+    // header first would hold HTTP/1.1's six connections per origin with
+    // unread bodies while the seventh request never starts: a deadlock.
+    const lengths: number[] = urls.map(() => NaN);
+    let headersSeen = 0;
     return await Promise.all(
-      responses.map((r) =>
-        readCounted(r, (count) => {
+      urls.map(async (url, i) => {
+        const response = await fetch(url, { signal: controller.signal });
+        if (!response.ok) throw new Error(error);
+        lengths[i] = Number(response.headers.get("Content-Length") ?? NaN);
+        // Indeterminate until every file has said its length.
+        if (
+          ++headersSeen === urls.length &&
+          lengths.every((n) => Number.isFinite(n) && n > 0)
+        ) {
+          load.totalBytes = lengths.reduce((a, b) => a + b, 0);
+          report();
+        }
+        return readCounted(response, (count) => {
           load.doneBytes += count;
           report();
-        }),
-      ),
+        });
+      }),
     );
   } catch (e) {
     // One failure fails the batch, so the other downloads stop spending

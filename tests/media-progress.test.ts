@@ -171,3 +171,48 @@ it("stays cleared when another file keeps streaming after one fails", async () =
   );
   expect(mediaLoadNow()).toBeUndefined();
 });
+
+it("reads each body as its headers arrive, so a held connection cannot deadlock", async () => {
+  // HTTP/1.1 allows six connections per origin: a later request only starts
+  // once an earlier body is drained. The third file's headers are released
+  // from inside the first file's body, after its last chunk is read.
+  let release: () => void = () => {};
+  const third = new Promise<void>((resolve) => (release = resolve));
+  const first = new Uint8Array([1, 2, 3, 4]);
+  const second = new Uint8Array([5, 6]);
+  const last = new Uint8Array([7, 8, 9]);
+  const body = (bytes: Uint8Array, done?: () => void) => {
+    let sent = false;
+    return new ReadableStream<Uint8Array>({
+      pull(controller) {
+        if (sent) {
+          done?.();
+          return controller.close();
+        }
+        sent = true;
+        controller.enqueue(bytes);
+      },
+    });
+  };
+  const response = (bytes: Uint8Array, done?: () => void) =>
+    new Response(body(bytes, done), {
+      headers: { "Content-Length": String(bytes.byteLength) },
+    });
+  let total: number | undefined;
+  vi.stubGlobal("fetch", async (url: string) => {
+    if (url === "/1") return response(first, release);
+    if (url === "/2") return response(second);
+    await third;
+    total = mediaLoadNow()?.totalBytes;
+    return response(last, () => (total = mediaLoadNow()?.totalBytes));
+  });
+  const files = await fetchMediaFiles("Acoustic Spaces v2", ["/1", "/2", "/3"]);
+  expect(files.map((f) => [...f])).toEqual([
+    [...first],
+    [...second],
+    [...last],
+  ]);
+  // Every header arrived before the last body finished, so the total was set.
+  expect(total).toBe(9);
+  expect(mediaLoadNow()).toBeUndefined();
+});
