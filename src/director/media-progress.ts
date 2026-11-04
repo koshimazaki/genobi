@@ -84,7 +84,8 @@ async function readCounted(
  * Fetches every URL in parallel and returns their bytes in the same order,
  * reporting overall progress under `name`. The total comes from the
  * `Content-Length` headers when every response sends one; otherwise the load
- * is indeterminate. The activity is always cleared, failed or not.
+ * is indeterminate. The activity is always cleared, failed or not, and one
+ * failure aborts the rest.
  */
 export async function fetchMediaFiles(
   name: string,
@@ -94,7 +95,12 @@ export async function fetchMediaFiles(
   const id = `template-media-${++serial}`;
   const load: MediaLoad = { name, files: urls.length, doneBytes: 0 };
   let shown = "";
+  // Set once the batch settles: a reader still streaming after another file
+  // failed must not publish the load again with nothing left to clear it.
+  let closed = false;
+  const controller = new AbortController();
   const report = () => {
+    if (closed) return;
     const line = mediaLoadLine(load);
     const key = `${line}|${mediaLoadStatus(load)}`;
     // Only a change a person can see re-renders the header and the stage.
@@ -106,7 +112,9 @@ export async function fetchMediaFiles(
   };
   try {
     report();
-    const responses = await Promise.all(urls.map((url) => fetch(url)));
+    const responses = await Promise.all(
+      urls.map((url) => fetch(url, { signal: controller.signal })),
+    );
     if (responses.some((r) => !r.ok)) throw new Error(error);
     const lengths = responses.map((r) =>
       Number(r.headers.get("Content-Length") ?? NaN),
@@ -122,7 +130,13 @@ export async function fetchMediaFiles(
         }),
       ),
     );
+  } catch (e) {
+    // One failure fails the batch, so the other downloads stop spending
+    // bandwidth; their readers reject on the aborted bodies.
+    controller.abort();
+    throw e;
   } finally {
+    closed = true;
     loads.delete(id);
     setActivity(id, undefined);
     publish();

@@ -1,9 +1,11 @@
+import spinners from "cli-spinners";
 import { useActivity, type Activity } from "../busy";
 import {
   isMediaActivity,
   parseActivityLine,
   useMediaLoad,
 } from "../director/media-progress";
+import { useSpinnerFrame } from "../spinner";
 import "./load-progress.css";
 
 /**
@@ -24,20 +26,52 @@ export function headerProgress(
   return undefined;
 }
 
+// The cells come from the package's own `aesthetic` frames, so nothing of
+// cli-spinners is copied into the repo: its first frame is one full cell then
+// empty ones (`▰▱▱▱▱▱▱`).
+const AESTHETIC = spinners.aesthetic.frames;
+const FULL = AESTHETIC[0][0];
+const EMPTY = AESTHETIC[0].at(-1)!;
+const CELLS = [...AESTHETIC[0]].length;
+
+/** Splits a bar into its filled and empty runs, for the two colours. */
+function cells(bar: string) {
+  const glyphs = [...bar];
+  const filled = glyphs.filter((g) => g === FULL).length;
+  return { filled: FULL.repeat(filled), empty: EMPTY.repeat(CELLS - filled) };
+}
+
+/** The `aesthetic` bar filled to `percent`: round(percent / 100 × 7) cells. */
+export function percentCells(percent: number) {
+  const filled = Math.round(
+    (Math.min(100, Math.max(0, percent)) / 100) * CELLS,
+  );
+  return FULL.repeat(filled) + EMPTY.repeat(CELLS - filled);
+}
+
 /**
- * A slim bar beside the wordmark while a load or job reports its progress.
- * About 96 px wide and shorter than the name, so it never moves the header or
- * pushes the navigation.
+ * A glyph loader beside the wordmark while a load or job reports progress,
+ * drawn from cli-spinners (Sindre Sorhus, MIT), whose catalogue entry says
+ * "aesthetic and binary are useful starting points for loaders and video
+ * overlays". With a known total it is `[binary] ▰▰▰▱▱▱▱ 36%`: the `aesthetic`
+ * cells as a real bar, not animated by time, and a `binary` frame cycling so
+ * the load reads as alive. Without a total, the `aesthetic` spinner runs as
+ * the package defines it, with no percent. Frames hold still under reduced
+ * motion (`useSpinnerFrame`). Text in the header's mono, so it never moves the
+ * header or pushes the navigation.
  */
 export default function LoadProgress() {
   const shown = headerProgress(useActivity());
   const load = useMediaLoad();
+  const known = shown?.percent !== undefined;
+  const binary = useSpinnerFrame("binary", !!shown && known);
+  const aesthetic = useSpinnerFrame("aesthetic", !!shown && !known);
   if (!shown) return null;
   const label = load ? `Loading ${load.name}` : shown.label;
-  const known = shown.percent !== undefined;
+  const bar = cells(known ? percentCells(shown.percent!) : aesthetic);
   return (
     <span
-      className={`brand-progress${known ? "" : " brand-progress--sweep"}`}
+      className="brand-progress"
       role="progressbar"
       aria-label={label}
       aria-valuemin={0}
@@ -45,11 +79,14 @@ export default function LoadProgress() {
       aria-valuenow={known ? shown.percent : undefined}
       title={label}
     >
-      <span className="brand-progress-track">
-        <span
-          className="brand-progress-fill"
-          style={known ? { width: `${shown.percent}%` } : undefined}
-        />
+      {known && (
+        <span className="brand-progress-binary" aria-hidden="true">
+          {binary}
+        </span>
+      )}
+      <span className="brand-progress-bar" aria-hidden="true">
+        <span className="brand-progress-filled">{bar.filled}</span>
+        <span className="brand-progress-empty">{bar.empty}</span>
       </span>
       {known && <span className="brand-progress-label">{shown.percent}%</span>}
     </span>

@@ -2,6 +2,7 @@
 import { act } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import { readFile } from "node:fs/promises";
+import spinners from "cli-spinners";
 import { afterEach, expect, it } from "vitest";
 import Wordmark from "../src/components/Wordmark";
 import { setActivity } from "../src/busy";
@@ -38,7 +39,13 @@ it("shows a progress bar beside the name while a load reports a percent", async 
   const bar = host.querySelector('[role="progressbar"]')!;
   expect(bar.getAttribute("aria-valuenow")).toBe("36");
   expect(bar.getAttribute("aria-label")).toBe("LOADING ACOUSTIC SPACES V2");
-  expect(bar.textContent).toBe("36%");
+  // round(0.36 × 7) = 3 of the aesthetic spinner's 7 cells, then the percent.
+  expect(bar.querySelector(".brand-progress-filled")?.textContent).toBe("▰▰▰");
+  expect(bar.querySelector(".brand-progress-empty")?.textContent).toBe("▱▱▱▱");
+  expect(bar.querySelector(".brand-progress-label")?.textContent).toBe("36%");
+  expect(spinners.binary.frames as string[]).toContain(
+    bar.querySelector(".brand-progress-binary")?.textContent,
+  );
   // The name still says what the document title says.
   const title = /<title>([^<]*)<\/title>/.exec(
     await readFile("index.html", "utf8"),
@@ -48,11 +55,13 @@ it("shows a progress bar beside the name while a load reports a percent", async 
   expect(host.querySelector('[role="progressbar"]')).toBeNull();
 });
 
-it("sweeps without a percent when the total is unknown", () => {
+it("runs the aesthetic spinner without a percent when the total is unknown", () => {
   const host = mount();
   act(() => setActivity("template-media-test", "LOADING BLOOM"));
   const bar = host.querySelector('[role="progressbar"]')!;
-  expect(bar.className).toContain("brand-progress--sweep");
+  expect(spinners.aesthetic.frames as string[]).toContain(bar.textContent);
+  expect(bar.textContent).not.toContain("%");
+  expect(bar.querySelector(".brand-progress-binary")).toBeNull();
   expect(bar.hasAttribute("aria-valuenow")).toBe(false);
 });
 

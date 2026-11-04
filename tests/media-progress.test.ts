@@ -123,3 +123,51 @@ it("draws the line with the shared bar and MB, and reads it back", () => {
     }),
   ).toBe("Loading 9 files · 24 of 66 MB");
 });
+
+it("stays cleared when another file keeps streaming after one fails", async () => {
+  let late: () => void = () => {};
+  const delivered = new Promise<void>((resolve) => (late = resolve));
+  let aborted = false;
+  vi.stubGlobal("fetch", async (url: string, init?: RequestInit) => {
+    init?.signal?.addEventListener("abort", () => (aborted = true));
+    if (url === "/breaks") {
+      let sent = false;
+      const body = new ReadableStream<Uint8Array>({
+        pull(controller) {
+          if (sent) return controller.error(new Error("connection reset"));
+          sent = true;
+          controller.enqueue(new Uint8Array(4));
+        },
+      });
+      return new Response(body, { headers: { "Content-Length": "8" } });
+    }
+    // The survivor ignores the abort and delivers a chunk after the batch
+    // has rejected, the way a reader already mid-read can.
+    let step = 0;
+    const body = new ReadableStream<Uint8Array>({
+      async pull(controller) {
+        step++;
+        if (step === 1) return controller.enqueue(new Uint8Array(2));
+        await new Promise((resolve) => setTimeout(resolve, 20));
+        if (step === 2) {
+          controller.enqueue(new Uint8Array(3));
+          late();
+        } else controller.close();
+      },
+    });
+    return new Response(body, { headers: { "Content-Length": "5" } });
+  });
+  await expect(
+    fetchMediaFiles("Bloom", ["/breaks", "/survives"]),
+  ).rejects.toThrow("connection reset");
+  expect(aborted).toBe(true);
+  expect(mediaLoadNow()).toBeUndefined();
+  // The late chunk lands and is counted by its reader, but nothing is
+  // published again: the header and the stage stay clear.
+  await delivered;
+  await new Promise((resolve) => setTimeout(resolve, 30));
+  expect(activityNow().some((a) => a.id.startsWith("template-media"))).toBe(
+    false,
+  );
+  expect(mediaLoadNow()).toBeUndefined();
+});

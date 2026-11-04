@@ -1,87 +1,39 @@
-/* The wordmark's progress bar (LoadProgress.tsx): about 96 px with its
-   label, shorter than the name, so the header keeps its height and the
-   navigation keeps its room. */
+/* The wordmark's glyph loader (LoadProgress.tsx): cli-spinners frames as mono
+   text, `[binary] ▰▰▰▱▱▱▱ 36%`, about 110 px at this size and shorter than
+   the name, so the header keeps its height and the navigation its room. */
 .brand-progress {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  width: 96px;
+  gap: 4px;
+  max-width: 116px;
   flex: none;
-  line-height: 1;
-}
-.brand-progress-track {
-  position: relative;
-  flex: 1;
-  height: 3px;
   overflow: hidden;
-  border-radius: 2px;
-  background: color-mix(in srgb, var(--accent) 22%, transparent);
-}
-.brand-progress-fill {
-  position: absolute;
-  inset: 0 auto 0 0;
-  width: 0;
-  border-radius: inherit;
-  background: var(--accent);
-  overflow: hidden;
-  transition: width 0.4s ease-out;
-}
-/* A light glint travelling along the filled part, so a slow load reads as alive. */
-.brand-progress-fill::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    color-mix(in srgb, white 55%, transparent),
-    transparent
-  );
-  transform: translateX(-100%);
-  animation: brand-progress-shimmer 1.4s ease-in-out infinite;
-}
-.brand-progress-label {
-  min-width: 4ch;
+  white-space: nowrap;
   font-family: var(--mono);
   font-size: var(--space-9);
   font-weight: 400;
   letter-spacing: 0;
-  color: var(--accent);
-  text-align: right;
+  line-height: 1;
   font-variant-numeric: tabular-nums;
 }
-/* No total yet: a short segment sweeps the track instead of a percent. */
-.brand-progress--sweep .brand-progress-fill {
-  width: 35%;
-  transition: none;
-  animation: brand-progress-sweep 1.2s ease-in-out infinite;
+.brand-progress-binary {
+  color: var(--muted);
 }
-@keyframes brand-progress-shimmer {
-  to {
-    transform: translateX(100%);
-  }
+.brand-progress-filled,
+.brand-progress-label {
+  color: var(--accent);
 }
-@keyframes brand-progress-sweep {
-  from {
-    transform: translateX(-100%);
-  }
-  to {
-    transform: translateX(290%);
-  }
+.brand-progress-empty {
+  color: var(--muted);
+  opacity: 0.6;
 }
+.brand-progress-label {
+  min-width: 4ch;
+  text-align: right;
+}
+/* Phones: the bar and percent carry the meaning; the binary frame goes. */
 @media (max-width: 420px) {
-  .brand-progress {
-    width: 64px;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .brand-progress-fill,
-  .brand-progress-fill::after {
-    animation: none;
-    transition: none;
-  }
-  .brand-progress--sweep .brand-progress-fill {
-    width: 100%;
-    opacity: 0.5;
+  .brand-progress-binary {
+    display: none;
   }
 }
