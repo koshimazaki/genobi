@@ -1,14 +1,14 @@
 ---
 name: fruits-swap
-description: Make a version of Dance with Fruits, the content-swap mix template - the person says or types what they want and what it replaces ("a mango instead of the apple"), an image being an optional reference, and the agent writes the prompt for the first still, builds the moving fruit in Three.js, renders the loop's window with LTX-2.5 Layout-to-Render on the hosted deployment and cuts it in on the beat. Every paid step is quoted and waits for the person's yes.
+description: Make a version of Dance with Fruits, the content-swap mix template - the person says or types what they want and what it replaces ("a mango instead of the apple"), an image being an optional reference, and the agent writes the prompt for the first still, builds the moving fruit in Three.js, renders the loop's window with LTX-2.5 Layout-to-Render on the hosted deployment and cuts it in on the beat. Words, icons and UI are live recipe layers, changed with Director commands, never baked into the clips. Every paid step is quoted and waits for the person's yes.
 license: MIT
 compatibility: Needs this checkout with npm ci, Node 22 or later, Chrome (Playwright) and FFmpeg for captures; the Genobi studio, site or CLI for the paid first still and the render on the hosted Comfy deployment; a rented GPU box (scripts/vast) is the alternative render route.
 metadata:
-  version: "0.1.0"
+  version: "0.2.0"
   template: "fruits-swap"
   tier: "Open"
   tags: "agents, director, templates, world-builder, ltx"
-  docs: "docs/fruits-swap.md, audio-reactive/videos/fruits-template.md, audio-reactive/videos/fruits.md, docs/comfy-deploy.md, docs/tester-access.md"
+  docs: "docs/fruits-swap.md, docs/fruits-swap-recipes.md, audio-reactive/videos/fruits-template.md, audio-reactive/videos/fruits.md, docs/comfy-deploy.md, docs/tester-access.md"
 ---
 
 # Dance with Fruits (content swap)
@@ -18,7 +18,14 @@ LTX-2.5 Layout-to-Render (open weights) renders of **the same guide window**
 (window 0 of the explode capture, 8.04 s), cut hard on the loop and on the
 drop beat so the pose, the fruits, the floor and the camera carry across and
 only the dancer changes. It is a **mix** template (`run: "mix"`): opening it
-generates nothing. The cut, the media and how to repeat it are in
+generates nothing.
+
+This is version 7, 33 s at 100 BPM. It opens on a splash of pixel fruit
+flying over Signal black (`sprite-shower`), then the mecha with DANCE WITH
+FRUITS typed on the beat (`typewriter`); the gorilla and the pink cat land on
+loop restarts, the gold ninja on the drop of loop 2, and the end card closes
+it. The words are set in Press Start 2P. The clips are plain footage: every
+word, icon and UI element is a live recipe layer in the cut. The cut, the media and how to repeat it are in
 [the template page](../../../../docs/fruits-swap.md); what a person can hand
 in is in [the swap template](../../../../audio-reactive/videos/fruits-template.md).
 Read both before touching anything.
@@ -39,9 +46,10 @@ never goes into the video.
 | character | the character they want and which loop it replaces | "a gorilla instead of the mecha", or an image and "this instead of the gorilla" | the grey and gold mecha    |
 | track     | the song, or a caption for new music               | "use this song" / "make it a slow bossa"                                        | the Dance with Fruits loop |
 
-One character is one loop (about 8 s); up to three characters make about
-24 s, the first one opening the piece. Nothing beyond three: the loop wears
-out. If the sentence does not say what is replaced, ask; never guess which
+The cut has four dancers: three on loops (mecha, gorilla, pink cat, each
+13 beats of picture and a two-beat swap card) and the gold ninja swapped in
+on the drop. A character replaces one of those four; the cut keeps its
+length and its beats. If the sentence does not say what is replaced, ask; never guess which
 fruit or which loop.
 
 ## What the agent does with each slot
@@ -82,7 +90,10 @@ Three.js capture and the LTX render below.
 
 **The render.** **LTX-2.5 Layout-to-Render** renders the window on the guide
 with that still. The new render takes that loop's place in the cut
-(`fruits-swap-<character>.mp4`, 8.04 s), so the cut keeps its beats.
+(`fruits-swap-<character>.mp4`, 8.04 s), so the cut keeps its beats. Hand it
+in with `genobi_take_to_project` and `replace-plate` on that shot's layer
+(`shot-02` mecha, `shot-03` gorilla, `shot-04` gold ninja, `shot-05` pink
+cat; `shot-01` is the splash). The render stays plain: no word goes into it.
 
 - **First route: the hosted Comfy deployment** `genobi-ltx-world-v2`
   (release v2, min 0 / max 1, scales to zero between jobs). The studio and the
@@ -106,6 +117,31 @@ quoting.
 After any swap, `checkMix` must pass, then render with the in-page renderer
 (step 5 of the page's How to repeat it) and show a contact sheet before
 saying anything about the result.
+
+## Words, icons and UI: live layers
+
+A version changes the layers, not the footage (the house rule, [Layers, not
+bakes](../genobi-director/SKILL.md#layers-not-bakes)). After a swap, rename
+what names the old character with `set-parameters`, read the layer's current
+`parameters` from `genobi_project` first and keep the rest:
+
+| Layer id                                           | Recipe                          | What a swap changes                                                |
+| -------------------------------------------------- | ------------------------------- | ------------------------------------------------------------------ |
+| `title-typed`                                      | `typewriter`                    | `text` (DANCE WITH FRUITS)                                         |
+| `word-gorilla`, `word-watermelon`, `word-pink-cat` | `kinetic`                       | `text`, the word slammed on the swap                               |
+| `swap-1`, `swap-2`                                 | `space-hud`                     | `label` (SWAP // MECHA OUT), `credit` (NEXT · GORILLA)             |
+| `hud-gorilla`                                      | `hud`                           | `text` (● REC CAM 02 // SUBJECT GORILLA)                           |
+| `scan-gorilla`                                     | `scan-lock`                     | `text` while acquiring, `locked` once locked (" / " breaks a line) |
+| `fruit-swarm`, `splash-fruit*`, `flood-*`          | `sprite-swarm`, `sprite-shower` | `count`, `x`/`y` (swarm); `density`, `speed` (shower); `size`      |
+| `end-card`                                         | `end-card-still`                | `eyebrow`, `title`, `subtitle`, `credit1`, `credit2`               |
+
+For example, a mango instead of the watermelon:
+`set-parameters {layerId: "word-watermelon", parameters: {text: "MANGO"}}`.
+To move a word in time use `move-clip`; to place it, `set-placement`; a new
+word or icon is `add-graphic` with a recipe the cut already uses, so it
+copies that layer's look. Never burn a word, icon or HUD into a clip, and
+never re-encode a render to change one; the full layer list is in [changing
+the words and icons](../../../../docs/fruits-swap.md#changing-the-words-and-icons).
 
 ## The paid gates
 
@@ -142,6 +178,10 @@ one entry per correction.
 
 ## Not built yet
 
+- The swap cards hold darkened frames of the outgoing clip
+  (`fruits-swap-card-1.jpg` from the mecha, `-2` from the gold ninja, made by
+  `audio-reactive/edit/fruits-swap-media.py`, no words); a new mecha or gold
+  ninja render needs its card still made again from that render.
 - The suggested bounding box in the interface: the rectangle is written by
   the capture, and the agent shows it by hand.
 - The Klein region edit from a person's reference has a route but was not

@@ -110,6 +110,19 @@ or space, video or audio) goes in the same way with `sourceId` in place of
 its inputs (`derivation`), and the render report lists their models. A sound
 cut goes on an audio track with `add-clip`.
 
+## Layers, not bakes
+
+Templates and versions ship layers, not baked video. Footage or animation, UI
+overlays (HUDs, boxes, cards, icons) and text are separate layers in the cut,
+and the clips stay plain footage. A new version adds or changes layers with
+`add-graphic`, `set-parameters`, `set-placement` and `move-clip`; it does not
+re-encode a clip. Never burn a word, an icon or a HUD into a clip: push a new
+layer instead. If something truly cannot be a recipe, bake it, say so in the
+template's doc, and keep the clean clip beside the baked one. The worked
+example is Dance with Fruits v7
+([changing the words and icons](../../../../docs/fruits-swap.md#changing-the-words-and-icons)):
+plain renders, and every word, icon and HUD a live recipe layer.
+
 ## Audio and the beat grid
 
 To recreate the Genobi teaser (a mix cut written as data, nothing generated)

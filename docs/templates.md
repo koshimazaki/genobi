@@ -182,6 +182,14 @@ refuses a mix in the planner, since it plans no runs. Mixes are listed apart
 Director's template list puts them first (`TemplateCards.tsx`) and
 `/director?example=<id>` builds the cut (`src/director/mix-template.ts`).
 
+A mix ships layers, not baked video (the owner's rule, 4 November 2026). The
+media files are plain footage or animation; UI overlays (HUDs, boxes, cards,
+icons) and every word are separate recipe layers in the cut, so a version
+changes a layer instead of re-encoding a clip. A word or icon burnt into a
+clip is a regression unless the template's page says why it could not be a
+recipe, and then the clean clip ships beside it. Dance with Fruits v7 is the
+reference ([changing the words and icons](fruits-swap.md#changing-the-words-and-icons)).
+
 ## Inputs
 
 The templates share one input shape, and each says what an input means for

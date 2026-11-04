@@ -238,6 +238,12 @@ the fruit change in the middle, the funniest last; end on a beat with the
 name. The old build's pixel ramps and 256 × 144 Nokia canvas are replaced by
 the house recipes.
 
+This template is also the reference for the house's layers rule: templates and
+versions ship layers, not baked video. Its clips are plain encodes, and every
+word, icon and HUD is a live recipe layer
+([changing them](#changing-the-words-and-icons)); a new version changes those
+layers, never the footage ([templates](templates.md#mix-templates)).
+
 ## How to repeat it
 
 1. **Inputs.** Copy, never move, and rename on copy: each render to
