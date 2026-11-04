@@ -90,6 +90,9 @@ and a run is made from that.
   tray says "Inspiration used as an image reference for this run". An agent
   sets `allowInspirationAsInput: true` only when the person asked for it in
   the request it is working on; a brief or an earlier request is not consent.
+  Make my version's **Make it with the agent** is such a request: an image
+  dropped there with a sentence is offered as an input, and its first turn
+  names the opt-in ([Director generate](director-generate.md#make-it-with-the-agent)).
 - **Agents are told per reference.** `genobi_project` gives each asset a
   `role` (`production` or `style`) and `briefNotes`, one sentence for each
   Inspiration the brief names: "[Inspiration 2] is a style reference: describe
