@@ -1,0 +1,119 @@
+/* The rail's Expand control sits beside Hide, at the header's end. */
+.studio-asset-rail > header .studio-assets-expand {
+  margin-left: auto;
+  margin-right: 4px;
+}
+
+/*
+ * The expanded assets view: Camera's gallery (grid, cards, type) over the
+ * whole studio. `top` is set inline: 0, or under the tool dock on phones.
+ */
+.assets-expanded {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--bg);
+  transition: opacity var(--motion-enter);
+}
+/* A drag from here drops on the studio beneath, as from the rail. */
+.assets-expanded[data-dragging] {
+  opacity: 0.12;
+  pointer-events: none;
+}
+.assets-expanded-inner {
+  max-width: 1680px;
+  margin: 0 auto;
+  padding: var(--space-24) 28px 48px;
+}
+.assets-expanded-heading {
+  gap: var(--space-20);
+  flex-wrap: wrap;
+}
+.assets-expanded-heading > div:first-child {
+  margin-right: auto;
+}
+.assets-expanded-heading .gallery-filters button {
+  min-height: 32px;
+}
+.assets-expanded-shelf {
+  display: grid;
+  gap: var(--space-20);
+}
+.assets-expanded [role="tabpanel"][hidden] {
+  display: none;
+}
+/* The Library host keeps Camera's own gallery; it needs no extra margin. */
+.assets-expanded .gallery {
+  margin: 0;
+  max-width: none;
+}
+.assets-expanded .gallery-heading h2 {
+  display: none;
+}
+.assets-expanded-media {
+  display: block;
+  width: 100%;
+  padding: 0;
+  cursor: grab;
+}
+.assets-expanded-media:active {
+  cursor: grabbing;
+}
+.assets-expanded-media .dir-asset-frame {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+  border-radius: 0;
+}
+.assets-expanded-media .dir-asset-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+.assets-expanded-media:focus-visible {
+  outline: var(--space-2) solid var(--accent);
+  outline-offset: var(--space-2);
+}
+.clip-badge.assets-expanded-mark {
+  left: auto;
+  right: var(--space-12);
+  color: var(--muted);
+}
+.assets-expanded-card[data-kind="audio"] .dir-asset-frame {
+  display: grid;
+  place-items: center;
+}
+/* The light view's previous / next, between the title and Close. */
+.lightbox-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+  font: var(--text-small-8) var(--mono);
+  color: var(--muted);
+}
+.lightbox-nav .lightbox-next svg {
+  transform: scaleX(-1);
+}
+.video-lightbox .audio-take {
+  min-height: 30dvh;
+}
+@media (max-width: 700px) {
+  .assets-expanded-inner {
+    padding: 14px 12px 32px;
+  }
+  .assets-expanded-heading .gallery-filters {
+    width: 100%;
+    order: 3;
+  }
+  .assets-expanded-heading .gallery-filters button {
+    flex: 1;
+    min-height: 44px;
+  }
+  .assets-expanded-close {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
