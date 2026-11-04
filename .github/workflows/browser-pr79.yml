@@ -1,0 +1,40 @@
+name: PR #79 browser smoke
+
+on:
+  pull_request:
+    paths:
+      - .github/workflows/browser-pr79.yml
+      - scripts/browser-pr79-smoke.mjs
+      - src/studio/**
+      - src/useComposerRecreate.ts
+      - src/upload-video-source.ts
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  chromium:
+    name: Chromium Assets gallery and MP4 handoff
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.head.ref == 'feat/assets-expanded'
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Install headless Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Exercise the actual PR branch in Chromium
+        run: node scripts/browser-pr79-smoke.mjs
+      - name: Store desktop, phone, and failure screenshots
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: browser-pr79-screenshots
+          path: output/browser-pr79/
+          if-no-files-found: ignore
+          retention-days: 7
