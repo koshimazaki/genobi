@@ -88,6 +88,7 @@
         "agent-workspace.md",
         "animations-effects-plan.md",
         "anime-teaser-template.md",
+        "audio-reactive-drop.md",
         "bloom-teaser.md",
         "construction-motion.md",
         "credits/README.md",
@@ -123,6 +124,7 @@
         "director-bundle/project-copy.md",
         "director-bundle/showcase/README.md",
         "director-bundle/showcase/adaptive-reverb/README.md",
+        "director-bundle/showcase/audio-reactive-drop/README.md",
         "director-bundle/showcase/bloom-teaser/README.md",
         "director-bundle/showcase/dimensions-mix/README.md",
         "director-bundle/showcase/genobi-teaser/README.md",
@@ -199,6 +201,7 @@
         "akuspace-docker.md",
         "anime-teaser-template.md",
         "audio-analysis.md",
+        "audio-reactive-drop.md",
         "audio-reactive-ltx-pilot.md",
         "audiovisual-gaps.md",
         "audiovisual-gpu-evaluation.md",
@@ -208,6 +211,7 @@
         "comfy-deploy.md",
         "dimensions-mix.md",
         "director-bundle/showcase/adaptive-reverb/README.md",
+        "director-bundle/showcase/audio-reactive-drop/README.md",
         "director-bundle/showcase/bloom-teaser/README.md",
         "director-bundle/showcase/dimensions-mix/README.md",
         "director-bundle/showcase/genobi-teaser/README.md",
@@ -316,6 +320,7 @@
         "adaptive-reverb.md",
         "animations-effects-plan.md",
         "anime-teaser-template.md",
+        "audio-reactive-drop.md",
         "bloom-teaser.md",
         "director-generate.md",
         "falling-room.md",
@@ -488,6 +493,7 @@
       "meaning": "World Builder and Scene Adapter",
       "pages": [
         "adaptive-reverb.md",
+        "audio-reactive-drop.md",
         "audio-reactive-ltx-pilot.md",
         "audio-reactive-pyramid.md",
         "audio-reactive-second-pass.md",
@@ -496,6 +502,7 @@
         "audiovisual-implementation.md",
         "comfy-deploy.md",
         "director-bundle/showcase/adaptive-reverb/README.md",
+        "director-bundle/showcase/audio-reactive-drop/README.md",
         "effects-catalogue.md",
         "project-assets.md",
         "world-builder-acoustic-zones.md",
@@ -647,6 +654,7 @@
       "pages": [
         "director-bundle/showcase/README.md",
         "director-bundle/showcase/adaptive-reverb/README.md",
+        "director-bundle/showcase/audio-reactive-drop/README.md",
         "director-bundle/showcase/bloom-teaser/README.md",
         "director-bundle/showcase/dimensions-mix/README.md",
         "director-bundle/showcase/genobi-teaser/README.md"
@@ -683,6 +691,7 @@
         "architecture.md",
         "arena.md",
         "audio-analysis.md",
+        "audio-reactive-drop.md",
         "audio-reactive-ltx-pilot.md",
         "audio-reactive-pyramid.md",
         "audio-reactive-second-pass.md",
@@ -733,6 +742,7 @@
         "director-bundle/project-copy.md",
         "director-bundle/showcase/README.md",
         "director-bundle/showcase/adaptive-reverb/README.md",
+        "director-bundle/showcase/audio-reactive-drop/README.md",
         "director-bundle/showcase/bloom-teaser/README.md",
         "director-bundle/showcase/dimensions-mix/README.md",
         "director-bundle/showcase/genobi-teaser/README.md",
@@ -1032,11 +1042,26 @@
       "links": []
     },
     {
+      "title": "Audio Reactive Acoustic Spaces v2: the 3D + LTX template",
+      "path": "audio-reactive-drop.md",
+      "tags": ["director", "sound", "templates", "world-builder"],
+      "summary": "Audio Reactive Acoustic Spaces v2, the 3D + LTX template - five World Builder rooms rendered by LTX-2.5 Layout-to-Render on one track, each room's own CPU room sound under it, cut on the phrases with every room, the track and every overlay a swappable layer.",
+      "links": [
+        "adaptive-reverb.md",
+        "director-bundle/showcase/audio-reactive-drop/README.md",
+        "director-generate.md",
+        "media-previews.md",
+        "templates.md",
+        "world-builder-dynamic-sound.md"
+      ]
+    },
+    {
       "title": "Audio-reactive LTX pilot",
       "path": "audio-reactive-ltx-pilot.md",
       "tags": ["workflows", "world-builder", "sound"],
       "summary": "Capture editable music-driven fruit, architecture and descending-camera studies, then compare two local LTX candidates with the original soundtrack.",
       "links": [
+        "comfy-deploy.md",
         "vast-runner.md",
         "world-builder-dynamic-sound.md",
         "world-builder-loops.md"
@@ -1047,14 +1072,14 @@
       "path": "audio-reactive-pyramid.md",
       "tags": ["workflows", "comfy", "models", "world-builder"],
       "summary": "How to repeat the audio-reactive pyramid — World Builder guide capture with measured band gain, a look still, LTX-2.5 Layout-to-Render on a rented GPU, and the checks that prove the motion follows the music.",
-      "links": ["vast-runner.md"]
+      "links": ["comfy-deploy.md", "vast-runner.md"]
     },
     {
       "title": "Audio-reactive architecture: the second pass",
       "path": "audio-reactive-second-pass.md",
       "tags": ["workflows", "comfy", "models", "world-builder"],
       "summary": "The next Vast session, planned so the box time is renders only — walls that move to the music, a second image guide at the closed-walls frame, Union Control from the depth track, the LTX refine pass, Klein looks made on the box, and the stitch.",
-      "links": ["audio-reactive-pyramid.md"]
+      "links": ["audio-reactive-pyramid.md", "comfy-deploy.md"]
     },
     {
       "title": "Audiovisual scene gap audit",
@@ -1549,6 +1574,7 @@
       "summary": "Showcase projects - finished cuts kept version by version as Director project files, with the memory that explains each change, so any version opens in the Editor, can be recreated, and an agent can continue from it.",
       "links": [
         "director-bundle/showcase/adaptive-reverb/README.md",
+        "director-bundle/showcase/audio-reactive-drop/README.md",
         "director-bundle/showcase/bloom-teaser/README.md",
         "director-bundle/showcase/dimensions-mix/README.md",
         "director-bundle/showcase/genobi-teaser/README.md"
@@ -1560,6 +1586,13 @@
       "tags": ["director", "sound", "memory", "world-builder"],
       "summary": "Adaptive reverb's version history, including the scene-derived CPU reverb credit correction in v3, and how to recreate it or regenerate a room.",
       "links": ["adaptive-reverb.md"]
+    },
+    {
+      "title": "Audio Reactive Acoustic Spaces v2: how it was made",
+      "path": "director-bundle/showcase/audio-reactive-drop/README.md",
+      "tags": ["director", "sound", "memory", "world-builder"],
+      "summary": "How Audio Reactive Acoustic Spaces v2, the 3D + LTX template, was made - v1, five World Builder rooms in LTX-2.5 on one track, every room, the track and every overlay a swappable layer - and how to recreate it.",
+      "links": ["audio-reactive-drop.md"]
     },
     {
       "title": "Bloom: how it was made",
@@ -1593,8 +1626,13 @@
       "title": "Make your version",
       "path": "director-generate.md",
       "tags": ["director", "templates"],
-      "summary": "Make my version — swap media into a finished template's slots with Undo; new media is made in Camera and comes back through Assets → Generated. Nothing here generates.",
-      "links": ["genobi-cli.md", "taste-memory.md"]
+      "summary": "Make my version — swap media into a finished template's slots with Undo, or drop a reference and say what it replaces to start the agent with the template's skill. New media is made in Camera or by the agent, which quotes every paid step; the panel itself starts no paid job.",
+      "links": [
+        "audio-reactive-drop.md",
+        "fruits-swap.md",
+        "genobi-cli.md",
+        "taste-memory.md"
+      ]
     },
     {
       "title": "Prompts and directions",
@@ -1712,15 +1750,20 @@
       "title": "Dance with Fruits: its recipes",
       "path": "fruits-swap-recipes.md",
       "tags": ["director", "bundle", "templates"],
-      "summary": "The four recipes Dance with Fruits added to the trusted registry - a comic speech bubble, a pixel-art fruit shower, a surveillance treatment confined to a box and a scan with its own lock line - with their parameters and checks.",
+      "summary": "The six recipes Dance with Fruits added to the trusted registry - a line typed on the beat, a pixel-art fruit shower and swarm, a surveillance treatment confined to a box, a scan with its own lock line and a comic speech bubble - with their parameters and checks.",
       "links": ["fruits-swap.md"]
     },
     {
       "title": "Dance with Fruits: the swap edit",
       "path": "fruits-swap.md",
       "tags": ["director", "sound", "templates"],
-      "summary": "Dance with Fruits, the content-swap mix template - 33 seconds of the owner's four LTX-2.5 Layout-to-Render (open weights) renders of one dance guide, opened by a splash of flying pixel fruit and a typed title, swapped hard on the loop and the drop, with Retro Gaming words baked into the media, a neon-pink surveillance scan confined to the gorilla and the house end card. Nothing to generate.",
-      "links": ["fruits-swap-recipes.md", "templates.md"]
+      "summary": "Dance with Fruits, the content-swap mix template - 33 seconds of the owner's four LTX-2.5 Layout-to-Render (open weights) renders of one dance guide, opened by a splash of flying pixel fruit and a typed title, swapped hard on the loop and the drop, every word and icon a live layer in the Director, a neon-pink surveillance scan confined to the gorilla and the house end card. Nothing to generate.",
+      "links": [
+        "director-generate.md",
+        "fruits-swap-recipes.md",
+        "motion-fonts.md",
+        "templates.md"
+      ]
     },
     {
       "title": "Gen-Mod: one take, modified",
@@ -1988,21 +2031,29 @@
       "summary": "Every Genobi plugin skill with its description, the tools it uses and its docs; generated from the plugin registry.",
       "links": [
         "3d-tab.md",
+        "adaptive-reverb.md",
         "agent-approvals.md",
         "agent-sessions.md",
         "anime-teaser-template.md",
         "architecture.md",
+        "audio-reactive-drop.md",
         "audio-reactive-pyramid.md",
         "audio-reactive-second-pass.md",
+        "bloom-teaser.md",
         "camera-wording.md",
+        "comfy-deploy.md",
         "comfy-deployment.md",
         "credits/README.md",
         "credits/libraries/teardown/README.md",
+        "dimensions-mix.md",
         "director-agent-tools.md",
         "director-bundle/README.md",
+        "director-generate.md",
         "dual-editor.md",
         "effects-catalogue.md",
         "falling-room.md",
+        "fruits-swap-recipes.md",
+        "fruits-swap.md",
         "genobi-cli.md",
         "genobi-teaser-run/README.md",
         "genobi-teaser-run/claims.md",
@@ -2025,8 +2076,10 @@
         "supervisor.md",
         "taste-memory.md",
         "templates.md",
+        "tester-access.md",
         "upscaling.md",
         "vast-runner.md",
+        "world-builder-dynamic-sound.md",
         "world-builder-sound.md",
         "world-builder.md",
         "world-live.md"
@@ -2084,26 +2137,33 @@
       "links": [
         "3d-tab.md",
         "README.md",
+        "adaptive-reverb.md",
         "agent-approvals.md",
         "agent-sessions.md",
         "anime-teaser-template.md",
         "architecture.md",
         "arena.md",
         "audio-analysis.md",
+        "audio-reactive-drop.md",
         "audio-reactive-pyramid.md",
         "audio-reactive-second-pass.md",
+        "bloom-teaser.md",
         "camera-wording.md",
         "capabilities.md",
         "comfy-deploy.md",
         "comfy-deployment.md",
         "credits/README.md",
         "credits/libraries/teardown/README.md",
+        "dimensions-mix.md",
         "director-agent-tools.md",
         "director-bundle/README.md",
+        "director-generate.md",
         "director-working-version.md",
         "dual-editor.md",
         "effects-catalogue.md",
         "falling-room.md",
+        "fruits-swap-recipes.md",
+        "fruits-swap.md",
         "genobi-cli.md",
         "genobi-teaser-run/README.md",
         "genobi-teaser-run/claims.md",
@@ -2127,9 +2187,11 @@
         "tags.md",
         "taste-memory.md",
         "templates.md",
+        "tester-access.md",
         "upscaling.md",
         "vast-runner.md",
         "voice-mode.md",
+        "world-builder-dynamic-sound.md",
         "world-builder-sound.md",
         "world-builder.md",
         "world-live.md",
@@ -2325,8 +2387,10 @@
       "summary": "The Gallery-first studio view, its card order, its model badges (named from the registry) and Open only toggle, its \"Make your own\" drawer (mechanical templates generated in place, agent templates started in a session), its FLUX 3 generation cards, its preview clips, and the public watch and embed pages with their link-preview metadata and security headers.",
       "links": [
         "adaptive-reverb.md",
+        "audio-reactive-drop.md",
         "bloom-teaser.md",
         "dimensions-mix.md",
+        "director-generate.md",
         "falling-room.md",
         "fruits-swap.md",
         "genobi-teaser.md",
@@ -2348,6 +2412,7 @@
         "director-generate.md",
         "director-working-version.md",
         "falling-room.md",
+        "fruits-swap.md",
         "hermes-runs.md",
         "template-gallery.md",
         "vision.md"
@@ -2402,7 +2467,7 @@
       "path": "vast-runner.md",
       "tags": ["workflows", "comfy", "models"],
       "summary": "Prepare a pinned local ComfyUI worker on Vast, connect by SSH and check it before running LTX experiments.",
-      "links": []
+      "links": ["comfy-deploy.md"]
     },
     {
       "title": "Verification",

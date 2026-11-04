@@ -46,6 +46,21 @@ const media: TemplateMix["media"] = {
 };
 
 /**
+ * What made both takes: the owner's prompt with the character sheet as its
+ * reference. Which MiniMax H3 entry ran them is not recorded.
+ */
+const recipe = {
+  prompt: BLOOM_PROMPT,
+  reference: BLOOM_SHEET,
+  referenceLabel: "Character sheet",
+  model: "MiniMax H3 (open weights)",
+};
+const recipes: TemplateMix["recipes"] = {
+  "bloom-h3-a": recipe,
+  "bloom-h3-b": recipe,
+};
+
+/**
  * Bloom (30 October 2026): a 19-second anime teaser of the owner's Bloom
  * character, cut from two MiniMax H3 (open weights) takes to the owner's track at 140
  * BPM,
@@ -61,6 +76,8 @@ export const bloomTeaser: HouseTemplate = {
   run: "mix",
   description:
     "An anime teaser for one character: two MiniMax H3 (open weights) takes cut to the beat under a character-scan, surveillance HUD. Nothing to generate.",
+  brief:
+    "Say or type 'show me the character sheet' to see the sheet and the prompt both takes were made from, or describe your own character for a new take; dropping a sheet as a reference is optional. The agent makes that take in Camera on MiniMax H3 with the same prompt and cuts it to the beat. Each paid step is quoted and waits for your yes.",
   tier: "open",
   style: {
     name: "Bloom scan",
@@ -107,5 +124,5 @@ export const bloomTeaser: HouseTemplate = {
       },
     },
   ],
-  mix: { cut: cut as unknown as MixSpec, media },
+  mix: { cut: cut as unknown as MixSpec, media, recipes },
 };

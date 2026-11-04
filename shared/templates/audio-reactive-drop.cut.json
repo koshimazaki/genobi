@@ -1,0 +1,513 @@
+{
+  "id": "audio-reactive-drop",
+  "bpm": 273.6,
+  "inPointSeconds": 0,
+  "fps": 24,
+  "width": 1920,
+  "height": 1080,
+  "designSize": {
+    "width": 1440,
+    "height": 810
+  },
+  "beats": 147.44,
+  "track": {
+    "asset": "drop-track",
+    "seconds": 32.341
+  },
+  "trackName": "Track · Adaptive Reverb v2 with each room's own sound",
+  "shots": [
+    {
+      "asset": "drop-towers",
+      "label": "Towers · the drop between the skyscrapers",
+      "sourceSeconds": 0,
+      "startBeat": 0,
+      "beats": 33,
+      "cropY": null
+    },
+    {
+      "asset": "drop-cathedral",
+      "label": "Cathedral · floor colours pulsing to the voice",
+      "sourceSeconds": 0,
+      "startBeat": 33,
+      "beats": 32,
+      "cropY": null
+    },
+    {
+      "asset": "drop-pyramid-inside",
+      "label": "Pyramid inside · hologram and dancer heatmap",
+      "sourceSeconds": 0,
+      "startBeat": 65,
+      "beats": 32,
+      "cropY": null
+    },
+    {
+      "asset": "drop-pyramid-outside",
+      "label": "Pyramid outside · desert hologram",
+      "sourceSeconds": 0,
+      "startBeat": 97,
+      "beats": 32,
+      "cropY": null
+    },
+    {
+      "asset": "drop-studio",
+      "label": "Studio · the singer turns to the camera",
+      "sourceSeconds": 0,
+      "startBeat": 129,
+      "beats": 18.44,
+      "cropY": null
+    }
+  ],
+  "layers": [
+    {
+      "id": "open",
+      "name": "Screen open",
+      "module": "screen-open",
+      "kind": "graphics",
+      "lane": "open",
+      "startBeat": 0,
+      "beats": 4,
+      "opacity": 1,
+      "parameters": {
+        "color": "#62f2e4",
+        "matte": "#0b0d0c",
+        "duration": 0.6,
+        "glyphs": 28,
+        "seed": 7
+      }
+    },
+    {
+      "id": "visor",
+      "name": "Helmet visor · CRT, gentle",
+      "module": "crt",
+      "kind": "filter",
+      "lane": "crt",
+      "startBeat": 4,
+      "beats": 143.44,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.3,
+        "curvature": 0.03,
+        "rgb": 0.7,
+        "vignette": 0.4
+      }
+    },
+    {
+      "id": "hud-1",
+      "name": "HUD · GENOBI / BETWEEN TOWERS",
+      "module": "hud",
+      "kind": "graphics",
+      "lane": "hud",
+      "startBeat": 4,
+      "beats": 28.878,
+      "opacity": 1,
+      "parameters": {
+        "color": "#f6f8f2",
+        "accent": "#f2b84b",
+        "bpm": 136.8,
+        "text": "● REC  DRONE 01 // DESCENT",
+        "credit": "GENOBI / BETWEEN TOWERS",
+        "seconds": 6.33
+      }
+    },
+    {
+      "id": "hud-2",
+      "name": "HUD · GENOBI / CATHEDRAL",
+      "module": "hud",
+      "kind": "graphics",
+      "lane": "hud",
+      "startBeat": 32.878,
+      "beats": 32.08,
+      "opacity": 1,
+      "parameters": {
+        "color": "#f6f8f2",
+        "accent": "#f2b84b",
+        "bpm": 136.8,
+        "text": "● REC  CAM 01 // ROOM SCAN",
+        "credit": "GENOBI / CATHEDRAL",
+        "seconds": 7.04
+      }
+    },
+    {
+      "id": "hud-3",
+      "name": "HUD · GENOBI / PYRAMID · INSIDE",
+      "module": "hud",
+      "kind": "graphics",
+      "lane": "hud",
+      "startBeat": 64.958,
+      "beats": 32.124,
+      "opacity": 1,
+      "parameters": {
+        "color": "#f6f8f2",
+        "accent": "#f2b84b",
+        "bpm": 136.8,
+        "text": "● REC  CAM 02 // PYRAMID INTERIOR",
+        "credit": "GENOBI / PYRAMID · INSIDE",
+        "seconds": 7.04
+      }
+    },
+    {
+      "id": "hud-4",
+      "name": "HUD · GENOBI / DESERT · HOLOGRAM",
+      "module": "hud",
+      "kind": "graphics",
+      "lane": "hud",
+      "startBeat": 97.082,
+      "beats": 32.102,
+      "opacity": 1,
+      "parameters": {
+        "color": "#f6f8f2",
+        "accent": "#f2b84b",
+        "bpm": 136.8,
+        "text": "● REC  DRONE 02 // PYRAMID EXTERIOR",
+        "credit": "GENOBI / DESERT · HOLOGRAM",
+        "seconds": 7.04
+      }
+    },
+    {
+      "id": "hud-5",
+      "name": "HUD · GENOBI / BOOTH",
+      "module": "hud",
+      "kind": "graphics",
+      "lane": "hud",
+      "startBeat": 129.184,
+      "beats": 18.256,
+      "opacity": 1,
+      "parameters": {
+        "color": "#f6f8f2",
+        "accent": "#f2b84b",
+        "bpm": 136.8,
+        "text": "● REC  CAM 03 // STUDIO",
+        "credit": "GENOBI / BOOTH",
+        "seconds": 4.0
+      }
+    },
+    {
+      "id": "wire-1",
+      "name": "Wireframe sweep · into room 1",
+      "module": "wire-scan",
+      "kind": "filter",
+      "lane": "wire",
+      "startBeat": 26.878,
+      "beats": 6,
+      "opacity": 1,
+      "parameters": {
+        "color": "#62f2e4",
+        "amount": 0.8,
+        "sweep": 1.4,
+        "trail": 0.35
+      }
+    },
+    {
+      "id": "glitch-1",
+      "name": "Slice glitch · the cut into room 1",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 32.878,
+      "beats": 1.0,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.9,
+        "slices": 18,
+        "seed": 11,
+        "duration": 0.25
+      }
+    },
+    {
+      "id": "wire-2",
+      "name": "Wireframe sweep · into room 2",
+      "module": "wire-scan",
+      "kind": "filter",
+      "lane": "wire",
+      "startBeat": 58.958,
+      "beats": 6,
+      "opacity": 1,
+      "parameters": {
+        "color": "#62f2e4",
+        "amount": 0.8,
+        "sweep": 1.4,
+        "trail": 0.35
+      }
+    },
+    {
+      "id": "glitch-2",
+      "name": "Slice glitch · the cut into room 2",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 64.958,
+      "beats": 1.0,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.9,
+        "slices": 18,
+        "seed": 18,
+        "duration": 0.25
+      }
+    },
+    {
+      "id": "wire-3",
+      "name": "Wireframe sweep · into room 3",
+      "module": "wire-scan",
+      "kind": "filter",
+      "lane": "wire",
+      "startBeat": 91.082,
+      "beats": 6,
+      "opacity": 1,
+      "parameters": {
+        "color": "#62f2e4",
+        "amount": 0.8,
+        "sweep": 1.4,
+        "trail": 0.35
+      }
+    },
+    {
+      "id": "glitch-3",
+      "name": "Slice glitch · the cut into room 3",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 97.082,
+      "beats": 1.0,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.9,
+        "slices": 18,
+        "seed": 25,
+        "duration": 0.25
+      }
+    },
+    {
+      "id": "wire-4",
+      "name": "Wireframe sweep · into room 4",
+      "module": "wire-scan",
+      "kind": "filter",
+      "lane": "wire",
+      "startBeat": 123.184,
+      "beats": 6,
+      "opacity": 1,
+      "parameters": {
+        "color": "#62f2e4",
+        "amount": 0.8,
+        "sweep": 1.4,
+        "trail": 0.35
+      }
+    },
+    {
+      "id": "glitch-4",
+      "name": "Slice glitch · the cut into room 4",
+      "module": "slice-glitch",
+      "kind": "filter",
+      "lane": "glitch",
+      "startBeat": 129.184,
+      "beats": 1.0,
+      "opacity": 1,
+      "parameters": {
+        "amount": 0.9,
+        "slices": 18,
+        "seed": 31,
+        "duration": 0.25
+      }
+    },
+    {
+      "id": "title-0",
+      "name": "Reveal · the drop",
+      "module": "gen-title",
+      "kind": "graphics",
+      "lane": "cards",
+      "startBeat": 5.0,
+      "beats": 28,
+      "opacity": 1,
+      "parameters": {
+        "text": "DROP",
+        "line": "OUTSIDE / BETWEEN TOWERS / ROOM AHEAD",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "size": 64,
+        "color": "#f6f8f2",
+        "muted": "#cfd6d2",
+        "accent": "#62f2e4",
+        "x": 0.2,
+        "y": 0.32,
+        "duration": 4.0,
+        "mode": "trace-texts",
+        "steps": "Scanning / Tracing / Inking",
+        "done": "Locked",
+        "fadeAt": 5.64,
+        "plate": 0
+      }
+    },
+    {
+      "id": "scan-1",
+      "name": "Scan · cathedral",
+      "module": "scan",
+      "kind": "graphics",
+      "lane": "scan",
+      "startBeat": 33.878,
+      "beats": 16,
+      "opacity": 0.95,
+      "parameters": {
+        "color": "#f6f8f2",
+        "accent": "#62f2e4",
+        "text": "RT60 ~3.3 S",
+        "x": 0.36,
+        "y": 0.6,
+        "bpm": 136.8
+      }
+    },
+    {
+      "id": "target-1",
+      "name": "Room measure · nave",
+      "module": "ui-focus",
+      "kind": "graphics",
+      "lane": "focus",
+      "startBeat": 49.878,
+      "beats": 10,
+      "opacity": 1,
+      "parameters": {
+        "x": 0.3,
+        "y": 0.2,
+        "w": 0.4,
+        "h": 0.7,
+        "label": "MEASURE · NAVE",
+        "color": "#62f2e4",
+        "dim": 0.25,
+        "draw": 0.3,
+        "fadeAt": 2.0,
+        "view": ""
+      }
+    },
+    {
+      "id": "status-2",
+      "name": "Status · tracking the dancer",
+      "module": "gen-status",
+      "kind": "graphics",
+      "lane": "status",
+      "startBeat": 68.958,
+      "beats": 12,
+      "opacity": 1,
+      "parameters": {
+        "label": "Scanning the room · RT60 ~3.1 s",
+        "done": "Dancer found",
+        "variant": "scan",
+        "color": "#62f2e4",
+        "x": 0.5,
+        "y": 0.9,
+        "scale": 1.2,
+        "doneAt": 1.6,
+        "fadeAt": 2.23
+      }
+    },
+    {
+      "id": "target-2",
+      "name": "Track · the dancer",
+      "module": "ui-focus",
+      "kind": "graphics",
+      "lane": "focus",
+      "startBeat": 81.958,
+      "beats": 10,
+      "opacity": 1,
+      "parameters": {
+        "x": 0.38,
+        "y": 0.5,
+        "w": 0.22,
+        "h": 0.45,
+        "label": "TRACK · DANCER",
+        "color": "#62f2e4",
+        "dim": 0.25,
+        "draw": 0.3,
+        "fadeAt": 2.0,
+        "view": ""
+      }
+    },
+    {
+      "id": "wire-reveal",
+      "name": "Wireframe reveal · the pyramid",
+      "module": "wire-scan",
+      "kind": "filter",
+      "lane": "wire",
+      "startBeat": 100.082,
+      "beats": 10,
+      "opacity": 1,
+      "parameters": {
+        "color": "#62f2e4",
+        "amount": 0.9,
+        "sweep": 2.4,
+        "trail": 0.55
+      }
+    },
+    {
+      "id": "title-3",
+      "name": "Reveal · pyramid, desert",
+      "module": "gen-title",
+      "kind": "graphics",
+      "lane": "cards",
+      "startBeat": 112.082,
+      "beats": 16,
+      "opacity": 1,
+      "parameters": {
+        "text": "PYRAMID · DESERT",
+        "line": "OPEN AIR / LAYOUT HOLOGRAM · LOW BAND",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "size": 52,
+        "color": "#f6f8f2",
+        "muted": "#cfd6d2",
+        "accent": "#62f2e4",
+        "x": 0.78,
+        "y": 0.3,
+        "duration": 2.4,
+        "mode": "trace-texts",
+        "steps": "Scanning / Tracing / Inking",
+        "done": "Locked",
+        "fadeAt": 3.01,
+        "plate": 0.3
+      }
+    },
+    {
+      "id": "caption-5",
+      "name": "Readout · studio",
+      "module": "build-panel",
+      "kind": "graphics",
+      "lane": "captions",
+      "startBeat": 131.184,
+      "beats": 8,
+      "opacity": 1,
+      "parameters": {
+        "side": "left",
+        "title": "ROOM · STUDIO",
+        "lines": "RT60 ~0.33 S / SMALL ROOM / DRY",
+        "color": "#f6f8f2",
+        "muted": "#cfd6d2",
+        "accent": "#f2b84b",
+        "bpm": 136.8,
+        "duration": 0.6
+      }
+    },
+    {
+      "id": "end-title",
+      "name": "Reveal · Reactive spaces",
+      "module": "gen-title",
+      "kind": "graphics",
+      "lane": "cards",
+      "startBeat": 137.04,
+      "beats": 10.4,
+      "opacity": 1,
+      "parameters": {
+        "text": "REACTIVE SPACES",
+        "line": "ADAPTIVE REVERB · V2  /  WORLD BUILDER ROOMS · LTX-2.5  /  KOSHIMAZAKI",
+        "font": "\"Nokia Cellphone FC\", \"Pixelify Sans\", monospace",
+        "size": 46,
+        "color": "#f6f8f2",
+        "muted": "#cfd6d2",
+        "accent": "#62f2e4",
+        "x": 0.31,
+        "y": 0.3,
+        "duration": 1.6,
+        "mode": "trace-texts",
+        "steps": "Scanning / Tracing / Inking",
+        "done": "Locked",
+        "fadeAt": 60,
+        "plate": 0.3
+      }
+    }
+  ]
+}

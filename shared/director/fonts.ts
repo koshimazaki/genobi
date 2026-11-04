@@ -47,6 +47,13 @@ export const BUNDLED_FONTS: readonly BundledFont[] = [
     licence: "Zeh Fernando's notice: free to distribute, not to sell",
     source: "public/motion/fonts/nokia-fc (src/director/mix-fonts.css)",
   },
+  {
+    // Dance with Fruits' arcade face; one face, declared 400 to 700.
+    family: "Press Start 2P",
+    weights: [400, 700],
+    licence: "SIL OFL 1.1",
+    source: "public/motion/fonts/press-start-2p (src/director/mix-fonts.css)",
+  },
 ];
 
 const GENERIC = new Set([

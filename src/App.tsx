@@ -55,6 +55,7 @@ import { useAgentSettings } from "./agent/studio-context";
 import { useJobActivity } from "./busy";
 import { runsKeyless } from "./local-menu";
 import { runPayer } from "./run-mode";
+import { uploadVideoSource } from "./upload-video-source";
 export default function App() {
   const shell = useShell();
   const { state, set, update, dispatch, edited } = useComposer();
@@ -110,13 +111,7 @@ export default function App() {
     useServerKey(setError);
   const { hiddenIds, hide, restoreAll } = useHiddenJobs();
   const visibleJobs = jobs.filter((job) => !hiddenIds.has(job.id));
-  /**
-   * The run the screen holds: the one the visitor chose, even when they have
-   * hidden it from the gallery, otherwise the newest visible run. Resolving the
-   * choice against every run rather than the visible ones is what keeps the
-   * hero and the composer on one run when the selected card is hidden — the
-   * composer keeps that run, so the main view has to keep showing it.
-   */
+  // Keep hero and composer on the same selected run, even when it is hidden.
   const selectedRun = activeRun(selectedId, jobs, visibleJobs);
   const samples = sources.filter((source) => source.origin === "sample");
   const source = upscaleSource(state.sourceId, jobs, sources);
@@ -210,11 +205,16 @@ export default function App() {
   }
 
   const images = useImageReferences(state, update);
-  const { recreate, pending: recreating } = useComposerRecreate(
+  const {
+    recreate,
+    pending: recreating,
+    uploadingVideo,
+  } = useComposerRecreate(
     state,
     dispatch,
     setError,
     update,
+    async (file) => (await uploadVideoSource(file, key, refresh)).id,
   );
   const [layoutRevision, setLayoutRevision] = useState(0);
 
@@ -251,6 +251,7 @@ export default function App() {
     composerRef.current?.scrollIntoView(smoothScroll("center"));
   }
   function submit() {
+    if (uploading || uploadingVideo) return;
     if (
       ((!key && !hasServerKey) || (isImage(generator) && !payer)) &&
       !runsKeyless(generator, model)
@@ -431,6 +432,7 @@ export default function App() {
                     recreating={recreating}
                     disabled={
                       uploading ||
+                      uploadingVideo ||
                       images.loading ||
                       composerBlocked(state, sourceId, composed)
                     }

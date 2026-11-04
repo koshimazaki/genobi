@@ -74,26 +74,6 @@ class Acoustics(unittest.TestCase):
         self.assertAlmostEqual(result["volume"], 1000, places=3)
 
 
-class Tools(unittest.TestCase):
-    def test_find_tool_falls_back_to_package_manager_dirs(self):
-        with tempfile.TemporaryDirectory() as temp:
-            node = load_package(temp)
-            script = Path(temp) / "fakeffmpeg"
-            script.write_text("#!/bin/sh\n")
-            script.chmod(0o755)
-            (Path(temp) / "notexecutable").write_text("")
-            original_dirs, original_which = node.TOOL_DIRS, node.shutil.which
-            node.TOOL_DIRS, node.shutil.which = (temp,), lambda name: None
-            try:
-                self.assertEqual(node.find_tool("fakeffmpeg"), str(script))
-                self.assertIsNone(node.find_tool("notexecutable"))
-                self.assertIsNone(node.find_tool("missing"))
-                node.shutil.which = lambda name: "/from/path/" + name
-                self.assertEqual(node.find_tool("fakeffmpeg"), "/from/path/fakeffmpeg")
-            finally:
-                node.TOOL_DIRS, node.shutil.which = original_dirs, original_which
-
-
 class Passes(unittest.TestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()

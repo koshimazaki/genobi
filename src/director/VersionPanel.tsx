@@ -18,13 +18,17 @@ import VersionInputSlot, { VersionPreview } from "./VersionInputSlot";
 import { writeBrief } from "./prompt-brief";
 import { readVersionBrief } from "./version-brief";
 import { ApprovalWaitingNotice } from "../agent/ApprovalWaitingNotice";
+import { hasVersionAgent } from "../../shared/templates/version-agent";
+import VersionAgentSection from "./VersionAgentSection";
 
 /**
- * Make my version (#57, swap only): a finished template keeps its timeline,
- * effects and soundtrack, and the person swaps media into its slots. Every
- * action here is a local, undoable edit. Nothing starts an agent, a quote or
- * a GPU job; new media is made in Camera (each slot's Recreate / Create in
- * Camera) and comes back through Assets → Generated.
+ * Make my version (#57): a finished template keeps its timeline, effects and
+ * soundtrack, and the person swaps media into its slots. Every swap here is a
+ * local, undoable edit; new media is made in Camera (each slot's Recreate /
+ * Create in Camera) and comes back through Assets → Generated. A mix template
+ * whose skill ships in the Genobi plugin also offers Make it with the agent
+ * (`VersionAgentSection`): a dropped file and what it replaces start an agent
+ * session, which quotes every paid step. Nothing here starts a paid job.
  */
 export default function VersionPanel({
   template,
@@ -62,6 +66,22 @@ export default function VersionPanel({
       lock.current = false;
       setWorking(false);
     }
+  }
+  /** Commits a draft against the bundle this panel opened, or refuses. */
+  function commitDraft(next: Bundle) {
+    const current = studioStore.getState();
+    if (
+      current.director.bundle !== base ||
+      Object.values(current.operations).some(Boolean)
+    )
+      throw new Error(
+        "Project changed or is busy. Close and reopen this panel to review the latest inputs.",
+      );
+    current.actions.commit(next, base);
+    const committed = studioStore.getState().director.bundle!;
+    setBase(committed);
+    setDraft(committed);
+    return committed;
   }
   async function apply() {
     const before = studioStore.getState();
@@ -154,6 +174,18 @@ export default function VersionPanel({
           />
         ))}
       </section>
+      {hasVersionAgent(template) && (
+        <VersionAgentSection
+          template={template}
+          draft={draft}
+          setDraft={setDraft}
+          commit={commitDraft}
+          run={act}
+          disabled={working}
+          started={close}
+          cancelled={setNotice}
+        />
+      )}
       <details className="dir-version-advanced">
         <summary>Advanced · description and references</summary>
         <section className="dir-version-brief" aria-label="Make it yours brief">

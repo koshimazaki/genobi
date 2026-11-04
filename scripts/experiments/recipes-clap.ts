@@ -26,6 +26,23 @@ export function squeezeX(open: SceneTransform[], fraction = CLAP_FRACTION) {
   }));
 }
 
+/**
+ * The gap between the inner faces of a layout's two side rows, in metres: the
+ * acoustic width a street or nave proxy follows. Only parts at least `minX`
+ * from the centre line count, so what stands inside the gap (the cathedral
+ * in the street) does not narrow it.
+ */
+export function rowGap(parts: SceneTransform[], minX: number): number {
+  let gap = Infinity;
+  for (const part of parts) {
+    const centre = Math.abs(part.x);
+    if (centre < minX) continue;
+    const width = (part.scale ?? 1) * (part.scaleX ?? 1);
+    gap = Math.min(gap, 2 * (centre - width / 2));
+  }
+  return Math.round(gap * 1000) / 1000;
+}
+
 const box = (
   x: number,
   y: number,
@@ -123,13 +140,24 @@ export function towersDescent(recipe: Recipe): RoomDesign {
   motion.instances!.count = open.length;
   motion.instances!.size = 1;
   motion.instances!.palette = ["#a7b7bb", "#8ca5b2", "#9fb4c0", "#b49c82"];
+  // The street proxy's width is measured from the tower rows themselves: the
+  // gap between their inner faces open and closed, so the decay follows the
+  // picture's squeeze instead of a fixed 4 m offset.
+  const gap = {
+    open: rowGap(open, STREET.rowX - 1),
+    closed: rowGap(closed, STREET.rowX * CLAP_FRACTION - 1),
+  };
   const room = {
-    dimensions: [18, 60, 70] as SceneVector,
+    dimensions: [gap.open, 60, 70] as SceneVector,
     listener: [0, 1.7, 0] as SceneVector,
   };
-  bandBlend(recipe, "Tower street", open, closed, room);
+  const closedRoom = {
+    ...room,
+    dimensions: [gap.closed, 60, 70] as SceneVector,
+  };
+  bandBlend(recipe, "Tower street", open, closed, room, closedRoom);
   motion.room = interiorRoom("street-proxy", room.dimensions, room.listener);
-  motion.mappings = [mapping("width", "low", "roomWidth", -4)];
+  motion.mappings = [];
   const last = recipe.frames - 1;
   recipe.cameraMotion = {
     version: 1,
@@ -153,7 +181,7 @@ export function towersDescent(recipe: Recipe): RoomDesign {
       camera: `looking almost straight down the street, descending from ${DESCENT.start.position.join(", ")} to ${DESCENT.end.position.join(", ")}, ${DESCENT.fov} degree lens`,
       street: `${open.length} pieces: ten ${STREET.towerHeight} m towers in two rows at x ±${STREET.rowX}, a gothic cathedral in the street`,
       close: `blend: morphControl open -> closed on low, the whole street squeezed to ${CLAP_FRACTION} in x`,
-      roomSign: "negative: the street proxy narrows on the same bars",
+      roomSign: `measured: the street proxy is the gap between the tower rows' inner faces, ${gap.open} m open to ${gap.closed} m closed, on the same bars`,
     },
   };
 }
@@ -223,14 +251,14 @@ export function galleryNave(): NavePiece[] {
 /**
  * The grow close: a side piece keeps its outer face and thickens inwards
  * until its inner face is at `fraction` of its open distance; the rest of the
- * nave (pews, altar, far wall, ribs) is squeezed in x by the same fraction.
+ * nave (pews, altar, far wall, ribs) stays where it is, so only stone moves.
  */
 export function growInward(
   pieces: NavePiece[],
   fraction = CLAP_FRACTION,
 ): SceneTransform[] {
   return pieces.map(({ part, side }) => {
-    if (!side) return squeezeX([part], fraction)[0];
+    if (!side) return { ...part };
     const width = part.scale * (part.scaleX ?? 1),
       centre = Math.abs(part.x),
       sign = Math.sign(part.x);
@@ -260,13 +288,19 @@ export function cathedralGallery(recipe: Recipe, grow = false): RoomDesign {
   motion.instances!.count = open.length;
   motion.instances!.size = 1;
   motion.instances!.palette = ["#c9bda4", "#b6aa91", "#d6ccb6", "#a99f8a"];
+  // The nave proxy closes with the side stone: both closures bring the inner
+  // gap to CLAP_FRACTION of the open one, so the acoustic width does the same.
   const room = {
     dimensions: [28, 30, 30] as SceneVector,
     listener: [0, 1.7, 0] as SceneVector,
   };
-  bandBlend(recipe, "Gallery nave", open, closed, room);
+  const closedRoom = {
+    ...room,
+    dimensions: [28 * CLAP_FRACTION, 30, 30] as SceneVector,
+  };
+  bandBlend(recipe, "Gallery nave", open, closed, room, closedRoom);
   motion.room = interiorRoom("nave-proxy", room.dimensions, room.listener);
-  motion.mappings = [mapping("width", "low", "roomWidth", -4)];
+  motion.mappings = [];
   recipe.cameraMotion = heldCamera(
     GALLERY.position,
     GALLERY.target,
@@ -282,8 +316,150 @@ export function cathedralGallery(recipe: Recipe, grow = false): RoomDesign {
       camera: `held at the west gallery ${GALLERY.position.join(", ")} looking at ${GALLERY.target.join(", ")}, ${GALLERY.fov} degree lens`,
       nave: `${open.length} pieces: piers, arcade heads, gallery ledges, aisle walls, far wall with three arches and windows, pews, altar, vault ribs`,
       close: grow
-        ? `blend: morphControl open -> closed on low, the side stone keeps its outer face and thickens inwards to ${CLAP_FRACTION} of the open gap`
+        ? `blend: morphControl open -> closed on the capture band (low unless --band), the side stone keeps its outer face and thickens inwards to ${CLAP_FRACTION} of the open gap; pews, altar, far wall and ribs hold`
         : `blend: morphControl open -> closed on low, the whole nave squeezed to ${CLAP_FRACTION} in x`,
+      roomSign: "negative: the nave proxy narrows on the same bars",
+    },
+  };
+}
+
+/**
+ * The towers take works because the camera moves down the street while the
+ * rows close around it; the gallery take did not, because a held camera plus a
+ * whole-nave squeeze reads as the room imploding. This is the cathedral with
+ * the towers' mechanics: the camera descends the nave and only the pieces that
+ * line the sides move, so the pews, altar, far wall and ribs hold still.
+ */
+export const NAVE_DESCENT = {
+  start: {
+    position: [0, 20, 20] as SceneVector,
+    target: [0, 1.5, -4] as SceneVector,
+  },
+  end: {
+    position: [0, 6.5, 7] as SceneVector,
+    target: [0, 2.5, -7] as SceneVector,
+  },
+  fov: 60,
+};
+
+export function cathedralDescent(recipe: Recipe): RoomDesign {
+  const motion = recipe.motion!;
+  const pieces = galleryNave(),
+    open = pieces.map((p) => p.part);
+  const closed = pieces.map(({ part, side }) =>
+    side
+      ? {
+          ...part,
+          x: part.x * CLAP_FRACTION,
+          scaleX: Math.max(0.1, (part.scaleX ?? 1) * CLAP_FRACTION),
+        }
+      : { ...part },
+  );
+  motion.instances!.count = open.length;
+  motion.instances!.size = 1;
+  motion.instances!.palette = ["#c9bda4", "#b6aa91", "#d6ccb6", "#a99f8a"];
+  const room = {
+    dimensions: [28, 30, 30] as SceneVector,
+    listener: [0, 1.7, 0] as SceneVector,
+  };
+  bandBlend(recipe, "Gallery nave", open, closed, room);
+  motion.room = interiorRoom("nave-proxy", room.dimensions, room.listener);
+  motion.mappings = [mapping("width", "low", "roomWidth", -4)];
+  const last = recipe.frames - 1;
+  recipe.cameraMotion = {
+    version: 1,
+    enabled: true,
+    keys: [
+      { id: "high", frame: 0, ...NAVE_DESCENT.start },
+      { id: "low", frame: last, ...NAVE_DESCENT.end },
+    ].map((key) => ({
+      ...key,
+      fov: NAVE_DESCENT.fov,
+      easing: "easeInOut" as const,
+    })),
+    audio: { enabled: false, source: "low", amount: 0, motion: "push" },
+  };
+  recipe.depthFar = 80;
+  recipe.prompt =
+    "Looking down the nave of a gothic cathedral from high under the vault, the stone piers and arcade arches on both sides close in toward the centre and open again on the beat while the camera descends above the pews toward the altar, stained glass at the far end, soft daylight, no people.";
+  return {
+    indoorFromFrame: 0,
+    design: {
+      camera: `descending down the nave from ${NAVE_DESCENT.start.position.join(", ")} to ${NAVE_DESCENT.end.position.join(", ")}, ${NAVE_DESCENT.fov} degree lens`,
+      nave: `${open.length} pieces: piers, arcade heads, gallery ledges, aisle walls, far wall with three arches and windows, pews, altar, vault ribs`,
+      close: `blend: morphControl open -> closed on low, only the side pieces squeeze to ${CLAP_FRACTION} in x; pews, altar, far wall and ribs hold`,
+      roomSign: "negative: the nave proxy narrows on the same bars",
+    },
+  };
+}
+
+/**
+ * A stripped nave for the render: the towers take held because every object was
+ * a big block, while the full nave (five rows of pews, arcade heads, gallery
+ * ledges, tracery, candle columns) gave the model too many small things to
+ * re-invent between frames and it churned them. Here only the masses stay:
+ * twelve piers, two aisle walls, the far wall with three windows, the altar
+ * platform and the vault ribs. Same descent and close as cathedral-descent.
+ */
+export function cathedralDescentSimple(recipe: Recipe): RoomDesign {
+  const motion = recipe.motion!;
+  const bays = [-10, -5, 0, 5, 10, 15];
+  const pieces: NavePiece[] = [];
+  for (const s of [-1, 1]) {
+    for (const z of bays)
+      pieces.push({ side: true, part: box(s * 9, 15, z, 1.4, 30, 1.4) });
+    pieces.push({ side: true, part: box(s * 13.5, 15, 2.5, 0.8, 30, 27) });
+  }
+  pieces.push({ side: false, part: box(0, 20.5, -11.5, 18, 21, 1) });
+  for (const x of [-4.9, 0, 4.9])
+    pieces.push({ side: false, part: box(x, 23, -11.2, 2.4, 9, 0.2) });
+  pieces.push({ side: false, part: box(0, 0.15, 7.9, 5, 0.3, 5) });
+  for (const z of bays)
+    pieces.push({ side: false, part: box(0, 31, z, 18, 0.6, 0.8) });
+  const open = pieces.map((p) => p.part);
+  const closed = pieces.map(({ part, side }) =>
+    side
+      ? {
+          ...part,
+          x: part.x * 0.3,
+          scaleX: Math.max(0.1, (part.scaleX ?? 1) * 0.3),
+        }
+      : { ...part },
+  );
+  motion.instances!.count = open.length;
+  motion.instances!.size = 1;
+  motion.instances!.palette = ["#c9bda4", "#b6aa91", "#d6ccb6", "#a99f8a"];
+  const room = {
+    dimensions: [28, 30, 30] as SceneVector,
+    listener: [0, 1.7, 0] as SceneVector,
+  };
+  bandBlend(recipe, "Gallery nave", open, closed, room);
+  motion.room = interiorRoom("nave-proxy", room.dimensions, room.listener);
+  motion.mappings = [mapping("width", "low", "roomWidth", -4)];
+  const last = recipe.frames - 1;
+  recipe.cameraMotion = {
+    version: 1,
+    enabled: true,
+    keys: [
+      { id: "high", frame: 0, ...NAVE_DESCENT.start },
+      { id: "low", frame: last, ...NAVE_DESCENT.end },
+    ].map((key) => ({
+      ...key,
+      fov: NAVE_DESCENT.fov,
+      easing: "easeInOut" as const,
+    })),
+    audio: { enabled: false, source: "low", amount: 0, motion: "push" },
+  };
+  recipe.depthFar = 80;
+  recipe.prompt =
+    "Looking down the nave of a gothic cathedral from high under the vault, massive pale limestone piers and the high aisle walls on both sides close in toward the centre and open again on the beat while the camera descends toward the altar, three stained glass windows at the far end, soft daylight, no people.";
+  return {
+    indoorFromFrame: 0,
+    design: {
+      camera: `descending down the nave from ${NAVE_DESCENT.start.position.join(", ")} to ${NAVE_DESCENT.end.position.join(", ")}, ${NAVE_DESCENT.fov} degree lens`,
+      nave: `${open.length} masses only: 12 piers, 2 aisle walls, far wall with 3 windows (no pews, no tracery, no candle columns)`,
+      close:
+        "blend: morphControl open -> closed on low, side masses squeeze to 0.3 in x; far wall, windows, altar platform and ribs hold",
       roomSign: "negative: the nave proxy narrows on the same bars",
     },
   };

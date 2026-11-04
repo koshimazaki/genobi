@@ -27,8 +27,8 @@ const DIR = "public/media/director-templates/fruits-swap";
 const LOOP = 9.0008;
 /** The splash: four beats before loop 1, over the loop's last 2.4 s. */
 const S = 4;
-/** v5: the cut's one pink, for every line and plate; words are white. */
-const PINK = "#ff2bd6";
+/** v6: the cut's one pink, brighter, for every line and plate; words are white. */
+const PINK = "#ff4dff";
 const layer = (id: string) => cut.layers.find((l) => l.id === id)!;
 const of = (module: string) =>
   cut.layers
@@ -122,15 +122,58 @@ describe("Dance with Fruits, the swap edit", () => {
       [S + 13, 2, true],
       [S + 28, 2, true],
     ]);
-    // The names are baked into each card's still (Retro Gaming, never
-    // bundled), which is dimmed already, so the card does not dim it again.
+    // Each card's still is the held frame, darkened already (no words in
+    // it), so the card does not dim it again.
     expect(cards.map((c) => [c.parameters.still, c.parameters.dim])).toEqual([
       [`/media/director-templates/fruits-swap/fruits-swap-card-1.jpg`, 0],
       [`/media/director-templates/fruits-swap/fruits-swap-card-2.jpg`, 0],
     ]);
-    // Every word is baked: the splash, the typed title, the swap words.
-    expect(of("kinetic")).toEqual([]);
+    // v7: every word is a live layer, editable in the Director.
+    expect(of("kinetic").map((w) => [w.parameters.text, w.startBeat])).toEqual([
+      ["GORILLA", S + 13],
+      ["WATERMELON", S + 23],
+      ["PINK CAT", S + 28],
+    ]);
     expect(of("speech-bubble")).toEqual([]);
+  });
+
+  it("types the title live on the eighth, a pink cursor after it", () => {
+    const [title] = of("typewriter");
+    expect([title.startBeat, title.beats]).toEqual([S, 7]);
+    expect(title.parameters).toMatchObject({
+      text: "DANCE WITH FRUITS",
+      cursorColor: PINK,
+      chars: 2,
+      division: 2,
+      bpm: cut.bpm,
+    });
+  });
+
+  it("covers the opening's third hand with a live swarm of pixel fruit", () => {
+    // The defect: clip frames 36 to 54 of the opening mecha, near its
+    // right shoulder (x 0.42-0.65, y 0-0.35).
+    const [swarm] = of("sprite-swarm");
+    const mecha = cut.shots.find((s) => s.asset === "fruits-swap-mecha")!;
+    const clip0 = beatFrame(cut, mecha.startBeat);
+    const start = beatFrame(cut, swarm.startBeat);
+    const end = beatFrame(cut, swarm.startBeat + swarm.beats);
+    const p = swarm.parameters as Record<string, number>;
+    // Gathered before the defect shows, bursting only after it has gone.
+    expect(start + p.gather * cut.fps).toBeLessThanOrEqual(clip0 + 36);
+    expect(start + p.burst * cut.fps).toBeGreaterThanOrEqual(clip0 + 55);
+    expect(end).toBeGreaterThan(clip0 + 60);
+    // The disc reaches the defect's corners (a 1920 x 1080 frame).
+    const r = p.radius * 1920;
+    for (const [x, y] of [
+      [0.42, 0],
+      [0.65, 0],
+      [0.42, 0.35],
+      [0.65, 0.35],
+    ])
+      expect(
+        Math.hypot((x - p.x) * 1920, (y - p.y) * 1080),
+        `${x}, ${y}`,
+      ).toBeLessThan(r + 6 * p.size);
   });
 
   it("marks every cut with a slice glitch", () => {
@@ -193,7 +236,7 @@ describe("Dance with Fruits, the swap edit", () => {
     ]);
   });
 
-  it("ends on the house end card; every live word is in IBM Plex Mono", () => {
+  it("ends on the house end card; the pixel words are in Press Start 2P", () => {
     const end = layer("end-card");
     expect(end.module).toBe("end-card-still");
     expect(end.startBeat).toBe(S + 43);
@@ -204,9 +247,11 @@ describe("Dance with Fruits, the swap edit", () => {
       subtitle: "DANCE WITH FRUITS",
       still: "/media/director-templates/fruits-swap/fruits-swap-end-card.jpg",
     });
-    for (const l of cut.layers)
-      if (typeof l.parameters.font === "string")
-        expect(l.parameters.font, l.id).toMatch(/^"?IBM Plex Mono/);
+    // The pixel words in the bundled OFL arcade face; the end card and the
+    // readouts keep the studio's IBM Plex Mono.
+    for (const l of [...of("kinetic"), ...of("typewriter")])
+      expect(l.parameters.font, l.id).toBe('"Press Start 2P", monospace');
+    expect(end.parameters.font).toMatch(/^"IBM Plex Mono"/);
   });
 
   it("draws every line and plate in one neon pink, no lime left", () => {
@@ -221,7 +266,7 @@ describe("Dance with Fruits, the swap edit", () => {
       ),
     );
     // Pink, white type, and Signal black behind the slams' offset only.
-    expect([...colours].sort()).toEqual([PINK, "#f6f8f2"].sort());
+    expect([...colours].sort()).toEqual([PINK, "#f6f8f2", "#0c0e0c"].sort());
   });
 
   it("uses only trusted recipes, each layer valid", () => {
@@ -234,6 +279,8 @@ describe("Dance with Fruits, the swap edit", () => {
   it("keeps the bundled media within the Pages and project limits", () => {
     let total = 0;
     for (const name of readdirSync(DIR)) {
+      // The slot stills sit in stills/ (tests/template-slot-stills.test.ts).
+      if (name === "stills") continue;
       expect(name).toMatch(/^fruits-swap-[a-z0-9-]+\.(mp4|mp3|jpg)$/);
       const size = statSync(`${DIR}/${name}`).size;
       expect(size, name).toBeLessThan(25 * 1024 * 1024);

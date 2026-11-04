@@ -110,7 +110,7 @@ describe("sprite shower", () => {
 describe("scan lock", () => {
   const lock = {
     color: "#f6f8f2",
-    accent: "#ff2bd6",
+    accent: "#ff4dff",
     text: "GORILLA",
     locked: "GORILLA SALSA / DANCE UNLOCKED",
     x: 0.5,
@@ -144,7 +144,7 @@ describe("scan lock", () => {
     );
     // The plate is filled in the accent once locked.
     const fills = after.filter(
-      ([k, key, v]) => k === "set" && key === "fillStyle" && v === "#ff2bd6",
+      ([k, key, v]) => k === "set" && key === "fillStyle" && v === "#ff4dff",
     );
     expect(fills.length).toBeGreaterThan(0);
     const { inOrder, scrambled } = await seekOrders(frame, FRAMES);

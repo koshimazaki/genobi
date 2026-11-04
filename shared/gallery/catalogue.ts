@@ -74,6 +74,9 @@ const MIX_FOOTAGE: Readonly<Record<string, string[]>> = {
   // Adaptive reverb (30 October 2026): one LTX-2.5 (open weights) take with
   // the AKUSPACE LoRA, nothing else.
   "adaptive-reverb": ["ltx-2-5-akuspace"],
+  // Audio Reactive Acoustic Spaces v2 (3 November 2026): five LTX-2.5 (open weights)
+  // Layout-to-Render rooms through the open workflow, nothing else.
+  "audio-reactive-drop": ["ltx-2-5-open"],
   // Dance with Fruits (3 November 2026): the owner's four LTX-2.5
   // Layout-to-Render (open weights) renders. That IC-LoRA workflow has no
   // registry entry of its own, so the badge names the open LTX-2.5 entry
@@ -95,14 +98,21 @@ export function footageEntries(template: HouseTemplate): string[] {
   return previews[houseClip(template.id)]?.made ?? [];
 }
 
-/** The owner's gallery order; Director and agent catalogues keep their order. */
+/**
+ * The owner's gallery order of 4 November 2026; Director and agent catalogues
+ * keep their order. The gallery is a two-column grid (1.7fr / 1fr,
+ * src/template-gallery/gallery.css) whose first card spans two rows, so this
+ * puts Forest guardian up beside Adaptive reverb, Audio Reactive Acoustic
+ * Spaces v2 in the wide column and Dance with Fruits in the side column.
+ */
 export const GALLERY_ORDER: readonly string[] = [
   "genobi-teaser",
   "dimensions-mix",
   "bloom-teaser",
   "adaptive-reverb",
-  "fruits-swap",
   "character-piece-generation",
+  "audio-reactive-drop",
+  "fruits-swap",
   "product-video-generation",
   "sheet-to-shot",
 ];
@@ -113,6 +123,7 @@ export const GALLERY_SUBTITLE: Readonly<Record<string, string>> = {
   "dimensions-mix": "Anime teaser",
   "bloom-teaser": "Sheet to shot",
   "adaptive-reverb": "3D · LTX template",
+  "audio-reactive-drop": "3D · LTX template",
   "fruits-swap": "Content swap",
 };
 
@@ -222,6 +233,7 @@ export const GALLERY_AUDIO: ReadonlySet<string> = new Set([
   "dimensions-mix",
   "bloom-teaser",
   "adaptive-reverb",
+  "audio-reactive-drop",
   "fruits-swap",
   "character-piece-generation",
 ]);

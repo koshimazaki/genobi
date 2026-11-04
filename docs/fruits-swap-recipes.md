@@ -1,16 +1,60 @@
 ---
 tags: [director, bundle, templates]
-summary: The four recipes Dance with Fruits added to the trusted registry - a comic speech bubble, a pixel-art fruit shower, a surveillance treatment confined to a box and a scan with its own lock line - with their parameters and checks.
+summary: The six recipes Dance with Fruits added to the trusted registry - a line typed on the beat, a pixel-art fruit shower and swarm, a surveillance treatment confined to a box, a scan with its own lock line and a comic speech bubble - with their parameters and checks.
 ---
 
 # Dance with Fruits: its recipes
 
-[Dance with Fruits](fruits-swap.md) added four recipes. They are registered
+[Dance with Fruits](fruits-swap.md) added six recipes. They are registered
 in the studio example (`docs/director-bundle/example/studio.json`) beside the
 other mix recipes, because a mix takes its recipes from there, and in the
 browser by `src/director/mix-recipes.ts`. Every parameter is required and
 checked against the schema, and every frame is a function of the layer's
 time alone, so a seek in any order draws the same frame.
+
+## `typewriter`
+
+`graphics/mix-typewriter.mjs`, a Canvas 2D overlay under the `animejs` entry.
+A line typed on the beat from the layer's start: `chars` characters land every
+step, a step being a beat divided by `division`; a block cursor follows the
+last one and blinks on the step once the line is done. The finished line is
+centred on (x, y), so it types out from its left edge without moving. Its
+`size` scales with the output resolution, as `kinetic`'s does.
+
+| Parameter     | Values                                                                  |
+| ------------- | ----------------------------------------------------------------------- |
+| `text`        | 1 to 60 characters, no control characters                               |
+| `font`        | a CSS family stack, resolved to a bundled face                          |
+| `color`       | `#rrggbb`: the words                                                    |
+| `shadow`      | `#rrggbb`: the offset behind them                                       |
+| `cursorColor` | `#rrggbb`: the block cursor                                             |
+| `size`        | 8 to 240 px                                                             |
+| `x`, `y`      | the finished line's centre, 0 to 1 of the frame                         |
+| `bpm`         | 20 to 300                                                               |
+| `chars`       | 1 to 8 characters a step                                                |
+| `division`    | 1 to 4 steps a beat (1 a beat, 2 an eighth, 3 a triplet, 4 a sixteenth) |
+
+## `sprite-swarm`
+
+`graphics/mix-sprite-swarm.mjs`, a Canvas 2D overlay under the `animejs`
+entry: the shower's pixel fruit gathered round a point. Over `gather` seconds
+they fly in along their own rays into a disc on (x, y), swirl and bob on the
+beat there, and fly out from `burst` seconds. Its own recipe rather than a
+mode of `sprite-shower`, so that recipe, and every project pinned to its hash
+since version 5, stays as it is.
+
+| Parameter | Values                                                      |
+| --------- | ----------------------------------------------------------- |
+| `x`, `y`  | the anchor, 0 to 1 of the frame                             |
+| `radius`  | 0.01 to 0.5 of the frame's width                            |
+| `count`   | 1 to 300 sprites                                            |
+| `size`    | 1 to 32 screen pixels per sprite pixel on a 1920-wide frame |
+| `bpm`     | 20 to 300: the bob's beat                                   |
+| `bob`     | 0 to 40 px on a 1920-wide frame                             |
+| `swirl`   | 0 to 4 radians a second                                     |
+| `gather`  | 0 to 4 s to fly in                                          |
+| `burst`   | 0 to 60 s from the layer's start, then they fly out         |
+| `seed`    | 0 to 9999                                                   |
 
 ## `speech-bubble`
 
@@ -90,6 +134,10 @@ to that recipe's hash, stay as they are.
 
 ## Checks
 
+- `tests/mix-live-words.test.ts`: both new recipes' schema refusals and seek
+  order; the typewriter's characters a step, its shadow and its blinking
+  cursor; the swarm off frame at its start, in its disc once gathered, gone
+  after the burst.
 - `tests/mix-speech-bubble.test.ts`: schema refusals, seek order, the pop
   and its overshoot, line breaks, the bubble inside the frame.
 - `tests/mix-pixel-recipes.test.ts`: both recipes' schema refusals and seek

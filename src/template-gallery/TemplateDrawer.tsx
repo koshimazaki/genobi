@@ -93,10 +93,9 @@ export default function TemplateDrawer({
   const root = useRef<HTMLElement>(null);
   const [share, setShare] = useState<"link" | "embed">("link");
   const [message, setMessage] = useState("");
+  const watchUrl = new URL(watchLink(template.id), location.origin).href;
   const value =
-    share === "embed"
-      ? embedMarkup(template.id, location.origin)
-      : new URL(watchLink(template.id), location.origin).href;
+    share === "embed" ? embedMarkup(template.id, location.origin) : watchUrl;
   useEffect(() => {
     close.current?.focus({ preventScroll: true });
   }, []);
@@ -248,6 +247,9 @@ export default function TemplateDrawer({
           : `Models: ${cardModels(template).join(", ")}`}
       </p>
       <p>{template.description}</p>
+      {template.brief && (
+        <p className="template-card-brief">{template.brief}</p>
+      )}
       {generation && (
         <GenerationNote
           generation={generation}
@@ -316,6 +318,16 @@ export default function TemplateDrawer({
             <Icon name="copy" size={14} />
             Copy {share}
           </button>
+          <a
+            className="template-share-open"
+            href={watchUrl}
+            target="_blank"
+            rel="noopener"
+            aria-label="Open the public page"
+            title="Open the public page"
+          >
+            <Icon name="link" size={14} />
+          </a>
         </div>
         <textarea
           aria-label={share === "embed" ? "Embed code" : "Public preview link"}

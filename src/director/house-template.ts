@@ -17,6 +17,7 @@ import type {
   TemplateInputs,
 } from "../../shared/templates/types";
 import { digest, loadExample, validateFiles, type Bundle } from "./bundle";
+import { fetchMediaFile } from "./media-progress";
 import { contrastRatio, platePng } from "./plate";
 import { BRIEF_PATH, readBrief, type PromptBrief } from "./prompt-brief";
 
@@ -328,12 +329,6 @@ export function projectPlan(template: HouseTemplate, project: Project) {
   return withShotCameras(planTemplate(template, value), project);
 }
 
-async function fetchBytes(url: string) {
-  const response = await fetch(url);
-  if (!response.ok) throw new Error("Template media unavailable");
-  return new Uint8Array(await response.arrayBuffer());
-}
-
 /**
  * The sample media a template opens with: a reference's own `example` (the
  * anime teaser's Scrolls sheet and storyboard), else the remix character
@@ -349,7 +344,7 @@ export async function sampleReferences(
   const out: TemplateReferences = {};
   for (const ref of template.references) {
     if (ref.example) {
-      const bytes = await fetchBytes(ref.example);
+      const bytes = await fetchMediaFile(template.name, ref.example);
       const { ext, durationSeconds } = await readTemplateMedia(ref, bytes);
       out[ref.id] = [
         {
@@ -363,7 +358,7 @@ export async function sampleReferences(
     else if (ref.role === "character")
       out[ref.id] = [
         {
-          bytes: await fetchBytes(characterStill),
+          bytes: await fetchMediaFile(template.name, characterStill),
           ext: "png",
           origin: "fixture",
         },

@@ -1,6 +1,6 @@
 ---
 tags: [director, templates]
-summary: Make my version — swap media into a finished template's slots with Undo; new media is made in Camera and comes back through Assets → Generated. Nothing here generates.
+summary: Make my version — swap media into a finished template's slots with Undo, or drop a reference and say what it replaces to start the agent with the template's skill. New media is made in Camera or by the agent, which quotes every paid step; the panel itself starts no paid job.
 ---
 
 # Make your version
@@ -8,7 +8,9 @@ summary: Make my version — swap media into a finished template's slots with Un
 **Swap only, 2 November 2026 (#57).** Template editing is content swap, not
 regeneration and not character swap. A finished template keeps its
 timeline, effects, crops, timing and soundtrack; the person swaps media into
-its slots. No action in this panel starts an agent, a quote or a GPU job.
+its slots. No swap in this panel starts an agent, a quote or a GPU job; the
+one exception is [Make it with the agent](#make-it-with-the-agent), which
+starts an agent session and still never a paid job.
 This replaced the earlier **Generate my version** panel with its generation
 plan, **Generate replacement with my agent** checkboxes, preselected
 replacement slots and **Prepare with Genobi** handoff.
@@ -44,6 +46,35 @@ The main Director panel's **Your template assets** (`TemplateMediaInputs`)
 shows the same slots inline. There, a slot also accepts a drag from the Assets
 rail: a **Project** asset or a Camera result from **Generated**.
 
+## Make it with the agent
+
+**4 November 2026, the owner's decision:** "giving assets invokes it, like
+user wants this image to swap with something, and text should be with what."
+For a mix template whose skill ships in the Genobi plugin (Dance with Fruits,
+Acoustic Spaces v2, Adaptive reverb and Bloom, listed in
+`VERSION_AGENT_TEMPLATES`, `shared/templates/version-agent.ts`), the panel
+has one optional drop zone and one **With what?** sentence ("Swap the apple
+with this"). Genobi is voice-first: the sentence is a voice destination
+("Version · with what"), and since the panel is modal the same mic as the
+header's sits beside it and aims at it while the panel is open. A dropped
+file is the person's reference: it steers the look and is not swapped into the
+video. It is imported through the version-inputs path (an image as a reference
+asset) and committed as one undoable edit. **Make it with the agent** waits for
+the server's copy, then starts one agent session through the same spawn as the
+gallery's Generate now, as `voice` when the sentence was dictated and `typed`
+otherwise. The sentence alone ("make a papaya instead of the apple") is
+enough. The first turn (`versionAgentPrompt`) names the template, tells the
+agent to load the skill of the same id, names the reference by asset id and
+file name when there is one, quotes the sentence verbatim with control
+characters removed, and says every paid step is quoted and approved first.
+With no agent set up, the button stays live and the spawn dialog walks the
+person through choosing one. A studio that keeps no project copy disables it
+and says why. When the open version has edits the panel asks first. The
+Camera's **Audio Reactive · Layout to Motion** card, under the LTX models,
+opens the Director on Acoustic Spaces v2 with this panel open; that route
+renders on the hosted deployment the studio and the site share (Comfy Deploy
+`genobi-ltx-world-v2`, which scales to zero between jobs).
+
 ## Recreate in Camera
 
 Every slot (image, video or audio) has one optional action that only
@@ -58,12 +89,37 @@ navigates (`src/director/recreate-in-camera.ts`):
   Deploy entries), the prompt, and the image references and inputs read from
   the project's own files. A project video the run read (an upscale's or an
   H3 workflow's source) is not a Camera library clip, so it is named as not
-  stored. Bloom's untouched bundled takes restore the owner's recorded
-  `BLOOM_PROMPT` and character sheet; which H3 entry made them is not
-  recorded, so the model is named as not stored.
+  stored. A mix template's untouched bundled take restores what the
+  template records for that slot in `mix.recipes`
+  (`shared/templates/types.ts`, `SlotRecipe`): the still it started from as
+  Camera's reference (after its shape guide, when the still was made from
+  one), the still's own prompt when it was written down, and the preset,
+  named in the notice ("Made from preset char-gorilla-explode; model and
+  settings not stored"). Bloom (the owner's `BLOOM_PROMPT` and character
+  sheet), Dance with Fruits ([what made each shot](fruits-swap.md#what-made-each-shot))
+  and Acoustic Spaces v2 ([what made each room](audio-reactive-drop.md#what-made-each-room))
+  record theirs. A part not written down is named, never filled in: a slot
+  whose still prompt is unknown restores its still with "prompt" listed as
+  not stored. A take's video render prompt is kept beside it as
+  `renderPrompt` for the person to read; Camera does not restore it. A
+  still that was not made as a still says where it came from (`source`; the
+  Spaces towers' still is a frame of an LTX video, and the notice says
+  "First still taken from an LTX video"). No
+  bundled take records which Camera model made it.
 - **Create in Camera** otherwise (Dimensions records cut points, not
-  per-creature prompts; swapped-in uploads record nothing). Camera opens as
-  it was and says "Settings not stored for this asset"; nothing is invented.
+  per-creature prompts; Adaptive reverb is one continuous take; a room or
+  take whose still could not be matched has no record; swapped-in uploads
+  record nothing). Camera opens as it was and says "Settings not stored for
+  this asset"; nothing is invented.
+
+A slot with a record also shows its still in the version panel, a small
+**First still** thumbnail (Bloom's says **Character sheet**) under the slot's
+current media, with its shape guide when it has one and the preset beside it
+(`src/director/SlotFirstStill.tsx`).
+The stills are static files under
+`public/media/director-templates/<template>/stills/<slot>.jpg`, 1360 × 765
+JPEGs (the booth's 1920 × 1080), quality 90, each under 1 MiB
+(`tests/template-slot-stills.test.ts`); they are not copied into the project.
 
 For a FLUX 3 still, the recorded route also sets Camera's provider (BFL
 direct or Comfy Router); with no route recorded the provider is named as

@@ -47,7 +47,7 @@
       "where": "Gallery · / (the first view), /watch/:id, /embed/:id",
       "description": "The first view: template and generation cards, a drawer per card with drop zones, Take it to Director, and watch and embed pages.",
       "mcp": ["genobi_template_plan"], "cli": ["template-plan"],
-      "skills": ["genobi-studio"], "docs": ["docs/template-gallery.md", "docs/templates.md"],
+      "skills": ["genobi-studio", "fruits-swap", "audio-reactive-drop", "adaptive-reverb", "bloom-teaser", "dimensions-mix"], "docs": ["docs/template-gallery.md", "docs/templates.md"],
       "runs": [{ "route": "local-free" }]
     },
     {
@@ -87,7 +87,7 @@
       "where": "Gallery · second card, /director?example=dimensions-mix",
       "description": "A finished 23-second teaser cut from three bundled clips to a 140 BPM track with Signal overlays; nothing to generate, opens as editable lanes.",
       "mcp": [], "cli": [],
-      "skills": [], "docs": ["docs/dimensions-mix.md"],
+      "skills": ["dimensions-mix"], "docs": ["docs/dimensions-mix.md"],
       "runs": [{ "route": "local-free" }]
     },
     {

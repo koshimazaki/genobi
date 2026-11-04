@@ -75,7 +75,8 @@ footer{height:42px;display:flex;align-items:center;gap:12px;padding:0 12px;backg
 a{color:inherit;text-decoration:none}a:focus-visible{outline:2px solid #c0d672;outline-offset:3px}
 .brand{font-weight:650;color:#c0d672}footer span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}footer>a:last-child{margin-left:auto}
 p{color:#a4abb4;line-height:1.5}.action{display:inline-block;padding:10px 16px;border-radius:5px;background:#c0d672;color:#14180e}nav{display:flex;align-items:center;gap:20px}
-</style></head><body><main><div class="player">
+header{height:42px;display:flex;align-items:center}
+</style></head><body><main>${embedded ? "" : `<header><a class="brand" href="${absolute("/")}" aria-label="Genobi home">Genobi</a></header>`}<div class="player">
 <video controls playsinline preload="none" poster="${escape(media.poster)}" src="${escape(media.video)}" aria-label="${title}"></video>
 <footer><a class="brand" href="${absolute("/")}" target="_blank" rel="noopener">Genobi</a><span>${title}</span><a href="${absolute(editLink)}" target="_blank" rel="noopener" aria-label="${template.generation ? "Open gallery" : "Open in Editor"}">Open ↗</a></footer></div>
 ${embedded ? "" : `<p>${note}</p><nav><a class="action" href="${absolute(editLink)}">Make your own</a><a href="${escape(media.video)}" download>Download video</a></nav>`}

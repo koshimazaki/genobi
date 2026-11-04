@@ -6,6 +6,8 @@ summary: The three key adaptive-reverb workflows, one remote-model LTX build wit
 # Deploy the key LTX and World Builder workflows
 
 One shared deployment, **genobi-ltx-world**, serves two GPU workflow selectors.
+A second deployment, **genobi-ltx-world-v2**, now serves them; see
+[deployment v2](#deployment-v2-reported-4-november-2026).
 The CPU reverb workflow stays local. These are API-format graphs; selecting a
 name fills a graph on that shared service. The hosted and local studios can register its
 endpoint and run these two GPU workflows from Camera.
@@ -199,9 +201,11 @@ still need to succeed under the platform's access rules and model licences.
 Verified resolver results are not proof of a completed remote build; a fetch
 failure is a release blocker, not permission to silently upload local weights.
 
-**FFmpeg and FFprobe must exist on the worker's PATH for WebM Capture.**
-The YAML generator does not install OS packages. Check the release worker's
-binaries before accepting it for Layout-to-video. CPU-only local reverb does
+**WebM Capture needs no FFmpeg or FFprobe binary on the worker.** The YAML
+generator does not install OS packages, and the worker image has neither, so
+the World Builder pack reads and writes takes with PyAV (`av`), which ComfyUI
+core requires. Check one WebM take on the release worker before accepting it
+for Layout-to-video. CPU-only local reverb does
 not decode a take and has no Capture dependency.
 
 ## Owner commands: materialize and run
@@ -261,3 +265,27 @@ checks only: no build, release, deploy or paid generation. The Camera handoff is
 this does not verify a live Camera generation or managed Comfy Cloud availability.
 [Adaptive reverb](adaptive-reverb.md#how-to-regenerate-a-room) distinguishes the
 v5 scene-derived CPU soundtrack from the separate AKUSPACE experiment.
+
+### Deployment v2, reported 4 November 2026
+
+The text above stands as the record of this port's own offline checks. What
+follows is the owner's report from the night of 3 to 4 November 2026, relayed
+from another session; this change did not run or re-check any of it.
+
+- **Deployment v2, `genobi-ltx-world-v2`,** runs release v2, which adds the
+  PyAV capture node, at `--min 0 --max 1`, so it scales to zero between jobs.
+- **Deployment v1** is stopped, not deleted, and holds no compute.
+- **The hosted site** [genobi.pages.dev](https://genobi.pages.dev) has
+  [tester access](tester-access.md) on, with its deployment secret pointing at
+  deployment v2.
+- **The reviewer route worked end to end on the Developer Platform.** The
+  second tester job on v2 went from Generating to Ready in about nine minutes
+  and returned a real clip, the skydive-cathedral take (a mannequin free-falling
+  between the towers): an MP4 of 2560×1408 at 24 fps, 8.04 s, with 48 kHz
+  stereo audio, plus the two companion files, the room impulse response and the
+  room wet mix.
+- **The hosted UI exposes only two graphs,** `layout-to-video` and `akuspace`.
+  The three box graphs from the Vast session run on v2 through the CLI.
+
+This is deployed behaviour as reported, distinct from the local and
+rented-GPU evidence above.

@@ -115,6 +115,8 @@ export const genobiTeaser: HouseTemplate = {
   run: "mix",
   description:
     "Two minutes of the studio in use, cut to the beat with generated titles and reveals: studio screen recordings, with the owner's MiniMax H3 (open weights) creature clips and a FLUX 3 (API) forest guardian. Nothing to generate.",
+  brief:
+    "Say or type which shot to replace or which title words to change; dropping a screen recording or a clip is optional. The agent records or swaps the footage into the cut, keeps the beats and renders the MP4 on your machine. Nothing is generated or paid for.",
   tier: "open",
   style: {
     name: "Signal",

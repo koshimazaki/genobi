@@ -12,12 +12,8 @@ import { useShell } from "./ShellContext";
 import MediaTile from "../director/MediaTile";
 import { stopPlayback } from "../director/media-playback";
 import { findTemplate } from "../director/template-catalogue";
-import {
-  linkedAsset,
-  linkedClip,
-  rangeLabel,
-  sourceRange,
-} from "../director/clip-source";
+import { linkedAsset } from "../director/clip-source";
+import { assetFacts, REFERENCE_MARK } from "./asset-facts";
 
 export function ProjectShelf({ role }: { role: "production" | "reference" }) {
   const director = useShell()?.preset === "director";
@@ -101,9 +97,10 @@ export function ProjectShelf({ role }: { role: "production" | "reference" }) {
       )}
       <div className="genobi-project-assets">
         {entries.slice(0, 12).map(([id, asset]) => {
-          const clip = linkedClip(project, id, selected);
-          const layer = project.layers.find(
-            (l) => "assetId" in l && l.assetId === id,
+          const { layer, range, meta, name } = assetFacts(
+            project,
+            id,
+            selected,
           );
           const slot = findTemplate(project.id)?.slots.find((slot) =>
             slot.layerIds.every((layerId) =>
@@ -112,17 +109,7 @@ export function ProjectShelf({ role }: { role: "production" | "reference" }) {
               ),
             ),
           );
-          const range =
-            clip && sourceRange(clip, asset, project.composition.fps);
           const uses = assetUses(project, id);
-          const name = asset.file.path.split("/").at(-1);
-          const meta =
-            [
-              !inspiration && (layer ? `Used · ${layer.name}` : "Not placed"),
-              asset.kind !== "image" && range && rangeLabel(range),
-            ]
-              .filter(Boolean)
-              .join(" · ") || (asset.kind !== "image" ? "Not placed" : "");
           return (
             <MediaTile
               key={id}
@@ -130,7 +117,7 @@ export function ProjectShelf({ role }: { role: "production" | "reference" }) {
               asset={asset}
               bytes={bundle.files.get(asset.file.path)}
               seconds={range?.inSeconds}
-              name={name ?? ""}
+              name={name}
             >
               {(frame) => (
                 <>
@@ -158,6 +145,11 @@ export function ProjectShelf({ role }: { role: "production" | "reference" }) {
                     {meta && (
                       <span className="genobi-asset-use" title={layer?.name}>
                         {meta}
+                      </span>
+                    )}
+                    {inspiration && (
+                      <span className="genobi-asset-role">
+                        {REFERENCE_MARK}
                       </span>
                     )}
                   </button>
