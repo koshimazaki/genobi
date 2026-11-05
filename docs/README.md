@@ -268,6 +268,8 @@ user action through every layer.
   runs; the session's log, approvals and Stop are in the deck.
 - [Genobi deck](genobi-deck.md) — the footer terminal: what is running, the
   agent log and ASCII visualisers; the MVP and the plan to grow it.
+- [Easter eggs](easter-eggs.md) — hidden extras: the Konami code opens the
+  walkers game in the deck.
 - [Teachings](teachings.md) — short fixed hints, each saying what a part of
   the studio is for, shown while nothing is running.
 - [Director agent tools](director-agent-tools.md) — the agent commands over a
