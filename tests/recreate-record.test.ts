@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 
 vi.mock("../src/director/project-copy", () => ({
@@ -82,3 +83,36 @@ it("keeps every reference slot in order when the same image fills two", async ()
   expect(handoff.patch.imageReferences).toEqual(references);
   expect(recipe.missing.join(" ")).not.toContain("reference images");
 });
+
+const mp4 = () => ({
+  blob: new Blob(
+    [readFileSync("docs/director-bundle/example/media/test-pattern.mp4")],
+    { type: "video/mp4" },
+  ),
+  name: "upscaled.mp4",
+});
+
+it.each([
+  ["SeedVR2", "seedvr2-upscale", "seedvr2-upscale"],
+  ["FLUX with no prompt", "flux-3", "flux-video-upscale"],
+])(
+  "recreates a %s upscale that had no prompt from its recorded settings",
+  async (_name, model, entryId) => {
+    const job = readyJob({
+      generator: "upscale",
+      model: model as never,
+      description: "",
+      prompt: "",
+      upscalePrompt: "",
+      upscaleFactor: 4,
+      upscaleCreativity: 0,
+      sourceId: "source-private",
+    });
+    const { added, bundle } = await sendJob(job, {}, mp4());
+    const { recipe, landed } = await recreate(bundle, added.assetId);
+    expect(recipe.label).toBe("Recreate in Camera");
+    expect(recipe.entry?.id).toBe(entryId);
+    expect(landed.generator).toBe("upscale");
+    expect(landed.upscaleFactor).toBe(4);
+  },
+);

@@ -106,7 +106,8 @@ const CREATE: CameraRecipe = {
 /**
  * What a generated asset's own run records: its prompt, the registry entry
  * that made it and the project images it read. Undefined when the asset has
- * no generation or its generation recorded no prompt. Shared by a template
+ * no generation, or its generation recorded neither a prompt nor a model and
+ * settings. Shared by a template
  * slot and the expanded Assets gallery (`src/studio/camera-handoff.ts`).
  */
 export function generatedRecipe(
@@ -118,11 +119,14 @@ export function generatedRecipe(
   const generation = asset?.generationId
     ? project.generations.find((g) => g.id === asset.generationId)
     : undefined;
-  const prompt = generation?.prompt.trim();
-  if (!generation || !prompt) return undefined;
+  if (!generation) return undefined;
+  const prompt = generation.prompt.trim();
   const entry = generation.recipe && readyEntry(generation.recipe.id);
   const read = [...generation.referenceAssetIds, ...generation.inputAssetIds];
   const settings = publicGenerationSettings(generation.settings);
+  // A run with no prompt text (SeedVR2, a FLUX upscale left blank) is still
+  // identified by its recorded model and settings.
+  if (!prompt && !(entry && settings)) return undefined;
   const image = (a: string | undefined) =>
     !!a && project.assets[a]?.kind === "image";
   // The run's own slots when one image filled several (`referenceSlots`), so
@@ -180,7 +184,7 @@ export function generatedRecipe(
   const location = generation.recipe?.location;
   return {
     label: "Recreate in Camera",
-    prompt,
+    ...(prompt ? { prompt } : {}),
     ...(entry ? { entry } : {}),
     ...(provider.imageProvider
       ? { imageProvider: provider.imageProvider }
