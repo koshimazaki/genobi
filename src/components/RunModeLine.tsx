@@ -50,7 +50,7 @@ export default function RunModeLine({
     !hosts;
   const check = useLocalCheck(
     localGraph,
-    String(state?.revision ?? ""),
+    `${state?.revision ?? ""}:${state?.box?.port ?? ""}:${state?.local?.reachable ?? ""}`,
     entry.id,
   );
   const line = saving

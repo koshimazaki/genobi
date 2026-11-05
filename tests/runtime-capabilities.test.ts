@@ -16,6 +16,9 @@ it("discovers local support without claiming installed voice or headless renderi
     features: {
       voice: { supported: true, statusRoute: "/api/voice/status" },
       projects: { supported: true },
+      projectMediaStaging: { supported: true },
+      projectMediaOperations: { supported: true },
+      worldMedia: { supported: true, execution: "browser" },
       editor: { execution: "browser", headlessExport: false },
       worldCapture: { execution: "browser", headlessCapture: false },
     },

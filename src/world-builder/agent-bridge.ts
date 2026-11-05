@@ -2,6 +2,7 @@ import type { SceneAdapter } from "./useBuilderSession";
 import { RECIPE_BYTES, worldCommand } from "../../shared/world-control";
 import { takeFacts, takeFiles } from "./agent-capture";
 import type { Take } from "./export-take";
+import { attachAgentMedia } from "./agent-media";
 /** A recipe as a command result: what getRecipe gives, within its 64 KB. */
 export function boundedRecipe(recipe: unknown) {
   if (JSON.stringify(recipe).length > RECIPE_BYTES)
@@ -70,6 +71,13 @@ export async function connectWorld(
         try {
           const command = worldCommand.parse(job.command);
           switch (command.op) {
+            case "attach-media":
+              result = await attachAgentMedia(
+                adapter,
+                command,
+                `/api/world/${connected.id}/commands/${job.id}/media`,
+              );
+              break;
             case "status":
               result = adapter.live.status();
               break;
