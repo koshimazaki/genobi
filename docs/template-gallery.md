@@ -444,7 +444,8 @@ Discord, X and other messengers control their own rendering; the Genobi footer
 belongs to the opened or embedded player, and is not burned into the video or
 guaranteed in a messenger's native player. A real unfurl needs a public HTTPS
 deployment: X only plays `twitter:player` from HTTPS, and neither service can
-reach a local server. That has not been tried.
+reach a local server. Discord playback from the hosted site has been tried and
+works (5 November 2026); X has not been tried.
 
 ### Headers
 
