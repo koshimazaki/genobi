@@ -105,7 +105,7 @@ reach the same project. Both then record the result as the agent's revision
 | Command               | Fields                                                                                                                                         | Effect                                                                                                              |
 | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- |
 | `add-clip`            | `layerId` (new), `assetId`, `track` (id or `new`), `startFrame`, `durationFrames`, `name?`, `sourceStartFrame?`                                | Place a production asset on a track of its family; audio and video start at the in-point (default 0)                |
-| `add-graphic`         | `layerId` (new), `moduleId`, `track`, `startFrame`, `durationFrames`, `name?`, `parameters?`                                                   | Add a recipe layer; `parameters` go over a using layer's settings, and an unused recipe needs all it requires       |
+| `add-graphic`         | `layerId` (new), `moduleId`, `track`, `startFrame`, `durationFrames`, `name?`, `parameters?`, `allowInspirationAsInput?`                       | Add a recipe layer; `parameters` go over a using layer's settings, and an unused recipe needs all it requires       |
 | `move-clip`           | `layerId`, `startFrame`, `track?`                                                                                                              | Move in time, or to another track of the same family                                                                |
 | `trim-clip`           | `layerId`, `startFrame`, `durationFrames`                                                                                                      | New in and out; a left trim moves the source or recipe clock in step                                                |
 | `set-prompt`          | `text` (up to 12,000 characters)                                                                                                               | The project prompt (brief text); references stay bound                                                              |
@@ -113,7 +113,7 @@ reach the same project. Both then record the result as the agent's revision
 | `set-template-inputs` | `inputs` (`subject?`, `title?`, `acoustic?`)                                                                                                   | Template record, title layer and every plan prompt; frame and tempo stay studio-only                                |
 | `replace-plate`       | `layerId`, `assetId`                                                                                                                           | Put an image or clip on a picture layer, keeping its place (the cross-kind path); a reference gets a `-plate` alias |
 | `set-placement`       | `layerId`, `position?` (`x?`, `y?`), `scale?`, `opacity?`, `rotationDegrees?`, `motion?` (`scaleTo?`, `xTo?`, `yTo?`, `opacityTo?`, or `null`) | A video, image or graphics layer's start placement and the end its linear motion reaches (`visualAt`)               |
-| `set-parameters`      | `layerId`, `parameters` (name to text, number or true/false)                                                                                   | A graphics or filter recipe's controls, its text included, checked against the parameters the recipe declares       |
+| `set-parameters`      | `layerId`, `parameters` (name to text, number or true/false), `allowInspirationAsInput?`                                                       | A graphics or filter recipe's controls, its text included, checked against the parameters the recipe declares       |
 | `add-note`            | `noteId` (new), `frame`, `text` (up to 500 characters), `layerId?`, `author?` (`person` or `agent`), `createdAt?` (UTC)                        | A frame note, pinned to a frame inside the composition and, optionally, to a layer (locked ones included)           |
 | `resolve-note`        | `noteId`, `resolved?` (default true; false reopens it)                                                                                         | Mark a note done, or open it again                                                                                  |
 | `delete-note`         | `noteId`                                                                                                                                       | Remove a note; the last one gone removes the `notes` field                                                          |
@@ -148,6 +148,15 @@ The browser's `text` command uses the same rule. `genobi_project` returns each
 clip's in-point, gain, placement (`motion` is null when it holds still) and
 parameters, and each recipe's parameter schema, so an agent can review framing
 and text before it changes them.
+
+A recipe image (`asset:<id>` in a parameter whose schema declares that
+binding) that names an Inspiration is refused when `set-parameters` or
+`add-graphic` writes it, unless the command carries
+`allowInspirationAsInput: true` because the person asked for it in this
+request; the binding then points at a production copy, the same `-plate` alias
+`replace-plate` makes (`shared/director/recipe-inspiration.ts`). The rule is
+checked at the write, not on load: a project saved earlier with a recipe bound
+to an Inspiration still opens and edits, and only a new binding is checked.
 
 `add-graphic` (`shared/director/graphic-commands.ts`) takes a recipe the
 project holds or one from the trusted registry it does not hold yet (the

@@ -34,6 +34,7 @@ export default function DeckLog({
 }) {
   const shell = useShell();
   const log = useRef<HTMLDivElement>(null);
+  const work = activity.filter((a) => !a.background);
   // Opening lands on the newest lines and the actions; after that, arriving
   // lines never move the reading position.
   useEffect(() => {
@@ -42,7 +43,13 @@ export default function DeckLog({
   }, []);
   return (
     <div ref={log} className="deck-log" role="log" aria-live="off" tabIndex={0}>
-      <StepChain steps={deckSteps({ session, jobs: activity })} />
+      {/* Play (the walkers game's status) is not a step of the work. */}
+      <StepChain
+        steps={deckSteps({
+          session,
+          jobs: work,
+        })}
+      />
       {session && (
         <>
           <p className="deck-line is-head">
@@ -88,7 +95,7 @@ export default function DeckLog({
         </p>
       )}
       {!session &&
-        activity.length === 0 &&
+        work.length === 0 &&
         actors.length === 0 &&
         !supervisor.origin && (
           <p className="deck-line is-quiet">

@@ -201,6 +201,10 @@ it("imports the dropped file, commits it, then spawns once with the built prompt
     ),
     source: "typed",
   });
+  // The dropped still is an Inspiration the sentence asks to use (#77's rule).
+  expect(state.spawn.mock.calls[0][0].prompt).toContain(
+    `passes ${id} as an image reference, set allowInspirationAsInput: true`,
+  );
   // Started: the panel closes so the Genobi log's approvals are reachable.
   expect(document.querySelector("dialog")).toBeNull();
   expect(fetch).not.toHaveBeenCalled();

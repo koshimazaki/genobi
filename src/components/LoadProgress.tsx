@@ -10,7 +10,8 @@ import "./load-progress.css";
 
 /**
  * What the header bar shows: the newest template media load, else the newest
- * activity whose line carries a real percent. A media load without a known
+ * activity whose line carries a real percent (background play only when
+ * nothing real is listed). A media load without a known
  * total is indeterminate; any other line without a percent shows nothing,
  * because the bar never stands in for progress nobody reported.
  */
@@ -19,7 +20,10 @@ export function headerProgress(
 ): { label: string; percent?: number } | undefined {
   const media = activity.filter((a) => isMediaActivity(a.id)).at(-1);
   if (media) return parseActivityLine(media.line);
-  for (const a of [...activity].reverse()) {
+  // Play (the walkers game) shows only when no real work is listed, so a job
+  // without a reported percent is never covered by a game's bar.
+  const real = activity.filter((a) => !a.background);
+  for (const a of [...(real.length ? real : activity)].reverse()) {
     const parsed = parseActivityLine(a.line);
     if (parsed.percent !== undefined) return parsed;
   }

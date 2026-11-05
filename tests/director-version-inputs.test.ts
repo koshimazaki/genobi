@@ -274,6 +274,53 @@ describe("declaration-derived version inputs", () => {
     URL.revokeObjectURL(resolved.still as string);
   });
 
+  it("binds an Inspiration the person picks for a recipe picture through its production copy", async () => {
+    const before = await mix(bloomTeaser);
+    vi.stubGlobal("createImageBitmap", async () => ({
+      width: 540,
+      height: 540,
+      close() {},
+    }));
+    const slot = versionSlots(bloomTeaser).find(
+      (s) => s.picture?.layer === "end-card",
+    )!;
+    const still = readFileSync("tests/fixtures/reference.png");
+    // The slot's picker offers Inspirations; picking one is the explicit ask.
+    const imported = await importVersionFiles(
+      before,
+      slot,
+      [new File([still], "pin.png", { type: "image/png" })],
+      "reference",
+    );
+    const [pin] = imported.assetIds;
+    expect(imported.bundle.project.assets[pin].use).toBe("reference");
+    const picks = versionPicks(before, bloomTeaser);
+    picks[slot.id] = [pin];
+    const next = await applyVersionInputs(
+      imported.bundle,
+      bloomTeaser,
+      picks,
+      readInputs(bloomTeaser),
+    );
+    const layer = next.project.layers.find((l) => l.id === "end-card")!;
+    expect(layer).toMatchObject({
+      parameters: { still: `asset:${pin}-plate` },
+    });
+    expect(next.project.assets[`${pin}-plate`].use).toBe("production");
+    expect(next.project.assets[pin].use).toBe("reference");
+    validateProject(next.project);
+    // A later text edit re-applies the bound copy without asking again.
+    const again = await applyVersionInputs(
+      next,
+      bloomTeaser,
+      versionPicks(next, bloomTeaser),
+      readInputs(bloomTeaser),
+    );
+    expect(again.project.layers.find((l) => l.id === "end-card")).toMatchObject(
+      { parameters: { still: `asset:${pin}-plate` } },
+    );
+  });
+
   it("uses replace-plate / add-clip and rejects stale revisions", async () => {
     const before = await build();
     const command = versionPlacement(
@@ -307,11 +354,19 @@ describe("declaration-derived version inputs", () => {
       durationFrames: 120,
       track: "shots",
     });
+    // The fixture's character-1 is an Inspiration, not production footage.
+    expect(() =>
+      versionCommand(before.project, before.project.revision, command),
+    ).toThrow(/is an Inspiration/);
+    const optedIn =
+      command.op === "replace-plate"
+        ? { ...command, allowInspirationAsInput: true }
+        : command;
     expect(
       versionCommand(
         before.project,
         before.project.revision,
-        command,
+        optedIn,
       ).layers.find((l) => l.id === "shot-arrive"),
     ).toMatchObject({ startFrame: 0, durationFrames: 120 });
   });

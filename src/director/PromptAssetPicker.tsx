@@ -203,7 +203,7 @@ export function PromptAssetPicker({
               {r.font
                 ? "Font"
                 : bundle.project.assets[r.assetId!].use === "reference"
-                  ? "Inspiration"
+                  ? "Inspiration · style reference"
                   : "Asset"}
             </small>
           </button>
