@@ -44,6 +44,8 @@ user action through every layer.
 
 ## Templates and evidence
 
+- [Maintenance priorities](maintenance-priorities.md) — the fifteen open issues, remaining implementation slices and local/hosted/agent coverage.
+- [Recreate library plan](recreate-library-plan.md) — durable original inputs, reusable creature recipes and explicit Recreate / Make similar flows.
 - [Audiovisual implementation plan](audiovisual-implementation.md) — ten linked issues, Camera-consistent UI, two-agent sequencing and modular scene scope.
 - [Audiovisual gap audit](audiovisual-gaps.md) — corrected status and ownership for the seventeen PRD gaps.
 - [Audiovisual GPU and evaluator runbook](audiovisual-gpu-evaluation.md) — offline fixtures, real GPU gates, CPU/AKUSPACE comparisons and hosted evaluator acceptance.

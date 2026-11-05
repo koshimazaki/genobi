@@ -31,6 +31,7 @@
         "architecture.md",
         "audiovisual-gpu-evaluation.md",
         "cloudflare.md",
+        "maintenance-priorities.md",
         "read-through.md",
         "review-checklist.md",
         "runner-pairing.md",
@@ -56,6 +57,7 @@
         "director-comfy.md",
         "genmod.md",
         "gpu-box.md",
+        "maintenance-priorities.md",
         "media-space.md",
         "openjutsu-swap.md",
         "run-location.md",
@@ -153,6 +155,7 @@
         "motion-fonts.md",
         "poster-grid-direction.md",
         "project-assets.md",
+        "recreate-library-plan.md",
         "runs/anime-teaser.md",
         "scrolls.md",
         "studio-guide.md",
@@ -279,6 +282,8 @@
         "hermes-runs/2026-10-28-hermes-audio-visual-library-review.md",
         "licence-strategy.md",
         "machine-check.md",
+        "maintenance-priorities.md",
+        "recreate-library-plan.md",
         "registry-skills.md",
         "registry-tools.md",
         "registry.md",
@@ -330,6 +335,7 @@
         "fruits-swap.md",
         "media-previews.md",
         "poster-grid-direction.md",
+        "recreate-library-plan.md",
         "tutorial-video.md"
       ]
     },
@@ -475,8 +481,10 @@
         "genobi-deck.md",
         "getting-started.md",
         "gpu-box.md",
+        "maintenance-priorities.md",
         "project-assets.md",
         "read-through.md",
+        "recreate-library-plan.md",
         "run-location.md",
         "studio-guide.md",
         "studio-interface.md",
@@ -792,6 +800,7 @@
         "layout-to-render-status.md",
         "licence-strategy.md",
         "machine-check.md",
+        "maintenance-priorities.md",
         "media-previews.md",
         "media-space.md",
         "minimax-h3-camera.md",
@@ -800,6 +809,7 @@
         "poster-grid-direction.md",
         "project-assets.md",
         "read-through.md",
+        "recreate-library-plan.md",
         "registry-skills.md",
         "registry-tools.md",
         "registry.md",
@@ -1993,6 +2003,13 @@
       ]
     },
     {
+      "title": "Maintenance priorities",
+      "path": "maintenance-priorities.md",
+      "tags": ["architecture", "agents", "studio", "workflows"],
+      "summary": "Priority order for the fifteen open issues, existing implementation, remaining slices, and local, hosted and agent surface coverage.",
+      "links": ["recreate-library-plan.md"]
+    },
+    {
       "title": "Gallery and Camera media preparation",
       "path": "media-previews.md",
       "tags": ["templates", "cloudflare"],
@@ -2061,6 +2078,13 @@
         "run-location.md",
         "studio-guide.md"
       ]
+    },
+    {
+      "title": "Recreate library: preserve the inputs behind an asset",
+      "path": "recreate-library-plan.md",
+      "tags": ["studio", "templates", "agents", "director"],
+      "summary": "A plan for durable asset recipes, honest Recreate and Make similar actions, and reusable creature examples with original inputs.",
+      "links": []
     },
     {
       "title": "Registry: skills",
