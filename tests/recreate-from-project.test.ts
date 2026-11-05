@@ -236,6 +236,39 @@ describe("a Camera run sent to the Director", () => {
     expect(request(landed)).toBe(request(original));
   });
 
+  it("an imported record's malformed nested settings are dropped, not restored", async () => {
+    const { added, bundle } = await sent();
+    const project = structuredClone(bundle.project);
+    const g = project.generations.find(
+      (x) => x.id === project.assets[added.assetId].generationId,
+    )!;
+    g.settings = {
+      ...g.settings,
+      ltxPrompt: { main: 42 },
+      camera: { angles: "not-a-term" },
+      cameraEdits: { "dolly-in": 7 },
+      acoustic: { mode: "nowhere" },
+      swap: { size: 3, seed: -1 },
+    } as never;
+    // A bundle from anywhere: the project still opens.
+    expect(() => validateProject(structuredClone(project))).not.toThrow();
+    const recipe = cameraRecipe(project, bloomA, [added.assetId]);
+    for (const key of [
+      "ltxPrompt",
+      "camera",
+      "cameraEdits",
+      "acoustic",
+      "swap",
+    ])
+      expect(recipe.job, key).not.toHaveProperty(key);
+    expect(recipe.job?.duration).toBe(8);
+    const state = composerReducer(initialComposer, {
+      type: "restore",
+      job: recipe.job!,
+    });
+    expect(() => composerInput(state)).not.toThrow();
+  });
+
   it("an older upload without a record still says Create in Camera", () => {
     const p = assetFixture().project;
     const [id] = Object.keys(p.assets);

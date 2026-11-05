@@ -1,4 +1,5 @@
 import type { GenerateInput, Job } from "../types";
+import { readNestedSettings } from "./generation-settings-read";
 
 /**
  * The settings a Camera run was made with, recorded on the project's
@@ -11,7 +12,9 @@ import type { GenerateInput, Job } from "../types";
  * Public by construction: an allowlist of request settings only. Never a
  * job, provider or source id, a deployment URL or its file tickets, image
  * bytes, the session or a key. It is checked again on every read, since a
- * bundle can come from anywhere; an unknown or ill-typed field is dropped.
+ * bundle can come from anywhere; an unknown or ill-typed field is dropped,
+ * and a nested record (camera, LTX prompt parts, Acoustic, swap) must read
+ * as its own reader reads it (`generation-settings-read.ts`).
  */
 export type GenerationSettings = Partial<
   Pick<
@@ -68,8 +71,6 @@ const NUMBERS = [
   "imageReferenceCount",
 ] as const;
 const BOOLEANS = ["cameraEnabled", "draft", "imageGrounding"] as const;
-/** Plain JSON objects the composer's own reducer fits on restore. */
-const OBJECTS = ["camera", "cameraEdits", "acoustic", "ltxPrompt", "swap"];
 
 /** The JSON size one record may take in a project. */
 export const GENERATION_SETTINGS_BYTES = 32_000;
@@ -98,8 +99,8 @@ export function publicGenerationSettings(
       out[key] = value[key];
   for (const key of BOOLEANS)
     if (typeof value[key] === "boolean") out[key] = value[key];
-  for (const key of OBJECTS) if (plain(value[key])) out[key] = value[key];
-  if (value.acoustic === null) out.acoustic = null;
+  // Nested records are read by their own rules; a malformed one is dropped.
+  Object.assign(out, readNestedSettings(value));
   const deploy = value.deploy;
   if (
     plain(deploy) &&
