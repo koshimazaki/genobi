@@ -35,9 +35,9 @@ Acoustic Spaces v2 the decay runs from 0.2 s in a booth to over 5 s between
 towers. AKUSPACE, our LoRA on LTX-2.5, is a separate route for room-conditioned sound
 ([adaptive reverb evidence](docs/adaptive-reverb-proof.md)).
 
-<p align="center"><video src="https://github.com/user-attachments/assets/REPLACE-ME-acoustic-spaces-v2" width="320" autoplay loop muted></video><br><em>Audio Reactive Acoustic Spaces v2: five World Builder rooms, LTX-2.5 Layout-to-Render, each room's own reverb</em></p>
+https://github.com/user-attachments/assets/8721af01-1a54-44dc-8d7d-c96eade6aa13
 
-[![Watch Audio Reactive Acoustic Spaces v2](docs/media/acoustic-spaces-v2-readme.jpg)](docs/media/acoustic-spaces-v2-readme.mp4?raw=true)
+<p align="center"><em>Audio Reactive Acoustic Spaces v2. Five World Builder rooms rendered with LTX-2.5 Layout-to-Render; the reverb follows each room's measured size.</em><br><a href="https://genobi.pages.dev/watch/audio-reactive-drop">Watch page</a> · <a href="docs/media/acoustic-spaces-v2-readme.mp4?raw=true">MP4</a></p>
 
 ### Built with FLUX
 
@@ -63,9 +63,9 @@ link or the iframe; each page puts the MP4 and a player in its link preview
 pattern: a technical LTX workflow turned into a 33-second loop anyone can
 watch, share and remix.
 
-<p align="center"><video src="https://github.com/user-attachments/assets/REPLACE-ME-dance-with-fruits" width="320" autoplay loop muted></video><br><em>Dance with Fruits: four LTX-2.5 Layout-to-Render characters on one dance guide</em></p>
+https://github.com/user-attachments/assets/10b0805f-91a8-44df-9c8b-98ec109b9f31
 
-[![Watch Dance with Fruits](docs/media/dance-with-fruits-readme.jpg)](docs/media/dance-with-fruits-readme.mp4?raw=true)
+<p align="center"><em>Dance with Fruits. Fruits as architecture, morphed in Three.js and used as model guidance: four LTX-2.5 Layout-to-Render characters on one dance guide.</em><br><a href="https://genobi.pages.dev/watch/fruits-swap">Watch page</a> · <a href="docs/media/dance-with-fruits-readme.mp4?raw=true">MP4</a></p>
 
 ### Open Weights Only
 
@@ -126,15 +126,9 @@ Agents need your approval before paid operations. See [setup and keys](docs/gett
 
 ## One scene guides picture and sound
 
-https://github.com/user-attachments/assets/8721af01-1a54-44dc-8d7d-c96eade6aa13
-Audio reactive acoustic spaces 
+Acoustic Spaces v2 and Dance with Fruits, the two clips [above](#how-genobi-answers-the-challenge), both come from this mechanism.
 
-
-https://github.com/user-attachments/assets/10b0805f-91a8-44df-9c8b-98ec109b9f31
-
-Dance with fruits using fruits as architecture and model morphing in Threejs. Then using this as model guidance. 
-
-// drop threejs mp4 here as example for fruit morph /// 
+<!-- Three.js fruit-morph clip: drop the mp4 here as the example for the morph. -->
 
 [![Watch the Acoustic Space demo: falling between rooms](docs/media/acoustic-space-demo.jpg)](docs/media/acoustic-space-demo.mp4?raw=true)
 
