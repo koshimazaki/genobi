@@ -8,16 +8,21 @@ import type { RateBucket } from "../shared/limits";
 import type { AgentSessions } from "./agent-sessions";
 import { worldRouter } from "./world-routes";
 import { scrollsFillRouter } from "./scrolls-fill-routes";
+import type { ProjectCopies } from "./projects";
 
 export function mountPairings(
   app: express.Express,
   limit: (bucket: RateBucket, id: string) => void,
   agents: Pick<AgentSessions, "active">,
+  projects?: ProjectCopies,
 ) {
   // A World tab may grant only its owner's running session.
   app.use(
     "/api/world",
-    worldRouter({ ownsRun: (run, owner) => agents.active(owner)?.id === run }),
+    worldRouter({
+      ownsRun: (run, owner) => agents.active(owner)?.id === run,
+      projects,
+    }),
   );
   // Scrolls' fill counts in the server's ceilings (edit, poll).
   app.use("/api/scrolls", scrollsFillRouter(limit));

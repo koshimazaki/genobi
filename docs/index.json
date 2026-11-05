@@ -2819,7 +2819,7 @@
       "path": "world-live.md",
       "tags": ["3d", "agents", "mcp"],
       "summary": "Walk, switch characters, animate the local creature, and record camera and character movement through World, API or CLI.",
-      "links": ["world-builder.md"]
+      "links": ["project-media.md", "world-builder.md"]
     },
     {
       "title": "World Builder recipe handoffs",

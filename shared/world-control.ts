@@ -1,5 +1,7 @@
 import { z } from "zod";
 import { CHARACTER_POSES } from "./scene/characters";
+import { COPY_ID, DIRECTOR_ID } from "./director/commands";
+import { WORLD_RECIPE_REVISION } from "./world-recipe-revision";
 export const worldControl = z.strictObject({
   move: z
     .tuple([z.number().min(-1).max(1), z.number().min(-1).max(1)])
@@ -26,6 +28,19 @@ export const WORLD_FILES = {
 } as const;
 export type WorldFile = keyof typeof WORLD_FILES;
 export const worldCommand = z.discriminatedUnion("op", [
+  z.strictObject({
+    op: z.literal("attach-media"),
+    requestId: z.string().uuid(),
+    expectedRevision: z.string().regex(WORLD_RECIPE_REVISION),
+    copyId: z.string().regex(COPY_ID),
+    assetId: z.string().regex(DIRECTOR_ID),
+    target: z
+      .string()
+      .min(1)
+      .max(120)
+      .regex(/^[A-Za-z0-9_:/-]+$/),
+    allowInspirationAsInput: z.boolean().optional(),
+  }),
   z.strictObject({ op: z.literal("status") }),
   z.strictObject({ op: z.literal("control"), input: worldControl }),
   z.strictObject({ op: z.literal("record-start") }),

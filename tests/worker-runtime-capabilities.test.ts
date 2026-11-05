@@ -16,11 +16,16 @@ it("advertises hosted routes and browser requirements without local-only endpoin
     routes: [],
   });
   expect(capabilities.features.projects.supported).toBe(false);
+  expect(capabilities.features.projectMediaOperations.supported).toBe(false);
   expect(capabilities.features.projectMediaStaging).toMatchObject({
     supported: false,
     routes: [],
   });
   expect(capabilities.features.worldRecipe.supported).toBe(false);
+  expect(capabilities.features.worldMedia).toMatchObject({
+    supported: false,
+    execution: "browser",
+  });
   expect(capabilities.features.workflows.supported).toBe(true);
   expect(capabilities.features.worldCapture.headlessCapture).toBe(false);
   const settings = (await call("/api/settings/run-location").then((r) =>

@@ -16,12 +16,15 @@ import { AGENT_SESSION_ID } from "../shared/agent-session-events";
 import type { AgentScope } from "./agent-session-types";
 import { AppError } from "./errors";
 import { sameCode } from "./pairing-code";
+import type { ProjectCopies } from "./projects";
+import { readWorldMedia, type OwnedWorldMedia } from "./world-media";
 interface Command {
   id: string;
   caller: string;
   command: WorldCommand;
   state: "queued" | "running" | "done" | "error";
   result?: unknown;
+  media?: OwnedWorldMedia;
 }
 interface Session {
   id: string;
@@ -32,6 +35,7 @@ interface Session {
   /** Agent runs (by session id) the tab's owner granted, to grant order. */
   runs: Map<string, number>;
   commands: Map<string, Command>;
+  mediaReads: number;
   files: Map<string, { bytes: Buffer; type: string }>;
 }
 /** A fixed take holds colour and depth passes, so the session allows two clips. */
@@ -42,11 +46,13 @@ const filePath = (id: string, file: string) => `/api/world/${id}/files/${file}`;
 /** A live tab polls every 250 ms; one silent this long has gone. */
 const STALE_MS = 15_000;
 export interface WorldRouterOptions {
+  projects?: ProjectCopies;
   /** True while `run` is `owner`'s own running agent session. */
   ownsRun?: (run: string, owner: string) => boolean;
 }
 export function worldRouter({
   ownsRun = () => false,
+  projects,
 }: WorldRouterOptions = {}) {
   const router = express.Router(),
     sessions = new Map<string, Session>();
@@ -113,6 +119,7 @@ export function worldRouter({
       links: new Set(),
       runs: new Map(),
       commands: new Map(),
+      mediaReads: 0,
       files: new Map(),
     };
     sessions.set(s.id, s);
@@ -177,7 +184,7 @@ export function worldRouter({
     if (command) command.state = "running";
     res.json(command ? { id: command.id, command: command.command } : null);
   });
-  router.post("/:id/commands", json, (req, res) => {
+  router.post("/:id/commands", json, async (req, res) => {
     const s = session(req, res);
     if (Date.now() - s.seen > 10_000)
       throw new AppError(
@@ -186,6 +193,73 @@ export function worldRouter({
       );
     const parsed = worldCommand.safeParse(req.body);
     if (!parsed.success) throw new AppError(400, "Invalid World command.");
+    const command = parsed.data;
+    if (command.op === "attach-media") {
+      const prior = [...s.commands.values()].find(
+        (c) =>
+          c.caller === owner(res) &&
+          c.command.op === "attach-media" &&
+          c.command.requestId === command.requestId,
+      );
+      if (prior) {
+        if (JSON.stringify(prior.command) !== JSON.stringify(command))
+          throw new AppError(
+            409,
+            "That requestId names a different World media command.",
+          );
+        res.status(202).json({ id: prior.id, state: prior.state });
+        return;
+      }
+    }
+    let media: OwnedWorldMedia | undefined;
+    if (command.op === "attach-media") {
+      if (!projects)
+        throw new AppError(
+          503,
+          "Project media is unavailable in this runtime.",
+        );
+      if (s.mediaReads >= 2)
+        throw new AppError(
+          429,
+          "World is loading media. Wait for the current command.",
+        );
+      s.mediaReads++;
+      try {
+        media = await readWorldMedia(projects, owner(res), command);
+      } finally {
+        s.mediaReads--;
+      }
+      session(req, res); // Pairing may have expired during the project read.
+      const prior = [...s.commands.values()].find(
+        (c) =>
+          c.caller === owner(res) &&
+          c.command.op === "attach-media" &&
+          c.command.requestId === command.requestId,
+      );
+      if (prior) {
+        if (JSON.stringify(prior.command) !== JSON.stringify(command))
+          throw new AppError(
+            409,
+            "That requestId names a different World media command.",
+          );
+        res.status(202).json({ id: prior.id, state: prior.state });
+        return;
+      }
+    }
+    session(req, res); // Recheck pairing after the asynchronous project read.
+    if (
+      media &&
+      [...s.commands.values()].reduce(
+        (total, c) => total + (c.media?.bytes.length ?? 0),
+        media.bytes.length,
+      ) +
+        [...s.files.values()].reduce((total, f) => total + f.bytes.length, 0) >
+        SESSION_BYTES
+    )
+      throw new AppError(
+        413,
+        "World pending inputs and capture files exceed 144 MiB.",
+      );
     if (
       [...s.commands.values()].filter(
         (c) => c.state === "queued" || c.state === "running",
@@ -204,6 +278,7 @@ export function worldRouter({
       caller: owner(res),
       command: parsed.data,
       state: "queued",
+      ...(media ? { media } : {}),
     };
     s.commands.set(c.id, c);
     res.status(202).json({ id: c.id, state: c.state });
@@ -215,6 +290,18 @@ export function worldRouter({
       throw new AppError(404, "Command not found.");
     res.json({ id: c.id, state: c.state, result: c.result });
   });
+  router.get("/:id/commands/:command/media", (req, res) => {
+    const s = session(req, res, true),
+      media = s.commands.get(String(req.params.command))?.media;
+    if (!media) throw new AppError(404, "World command media unavailable.");
+    res
+      .set({
+        "Content-Type": media.contentType,
+        "Cache-Control": "no-store",
+        "X-Content-SHA256": media.sha256,
+      })
+      .send(media.bytes);
+  });
   router.post("/:id/commands/:command", json, (req, res) => {
     const s = session(req, res, true),
       c = s.commands.get(String(req.params.command));
@@ -224,6 +311,7 @@ export function worldRouter({
       throw new AppError(400, "Invalid command result.");
     c.state = req.body.state;
     c.result = req.body.result;
+    c.media = undefined;
     res.json({ accepted: true });
   });
   router.post(
@@ -248,7 +336,14 @@ export function worldRouter({
         (n, [k, f]) => n + (k === file ? 0 : f.bytes.length),
         bytes.length,
       );
-      if (total > SESSION_BYTES)
+      if (
+        total +
+          [...s.commands.values()].reduce(
+            (sum, command) => sum + (command.media?.bytes.length ?? 0),
+            0,
+          ) >
+        SESSION_BYTES
+      )
         throw new AppError(413, "Session files exceed 144 MB.");
       s.files.set(file, { bytes, type: WORLD_FILES[file] });
       res.json({ path: filePath(s.id, file), bytes: bytes.length });

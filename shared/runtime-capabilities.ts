@@ -75,6 +75,12 @@ export function runtimeCapabilities(runtime: "local" | "hosted") {
         "POST /api/projects/:id/media/:sha256",
         "GET /api/projects/:id/media/:sha256",
       ]),
+      projectMediaOperations: localFeature(["POST /api/projects/:id/media"]),
+      worldMedia: {
+        ...localFeature(["POST /api/world/:id/commands"]),
+        execution: "browser",
+        requires: ["world-pairing", "project-grant", "scene-revision"],
+      },
       worldRecipe: localFeature([
         "GET /api/projects/:id/world-recipe",
         "POST /api/projects/:id/world-recipe",

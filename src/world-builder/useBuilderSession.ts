@@ -307,8 +307,9 @@ export function useBuilderSession() {
       async setScreen(blob) {
         await adapter.setSurface("screen/all", blob);
       },
-      async setSurface(target, blob) {
+      async setSurface(target, blob, guard) {
         idle();
+        revision.assert(guard);
         if (!validSurface(target, current.current))
           throw new Error("Choose a valid surface.");
         const textures = {
@@ -325,8 +326,8 @@ export function useBuilderSession() {
         lockLoading(true);
         try {
           await previewQueue.current.catch(() => {});
-          await world.setMedia(blob, target);
-          await applyRecipe(next);
+          await world.setMedia(blob, target, () => revision.assert(guard));
+          await applyRecipe(next, guard);
           setMediaName("Texture loaded");
         } finally {
           lockLoading(false);
