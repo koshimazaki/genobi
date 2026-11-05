@@ -29,12 +29,14 @@ export function record(
   from: "person" | "agent",
   text: string,
   pending = false,
+  source?: "voice" | "typed",
 ) {
   const exchange = (session.view.exchange ??= []);
   exchange.push({
     from,
     text,
     at: new Date().toISOString(),
+    ...(source ? { source } : {}),
     ...(pending ? { pending } : {}),
   });
   if (exchange.length > AGENT_EXCHANGE_MAX)

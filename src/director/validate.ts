@@ -1,4 +1,5 @@
 import { COMPOSITION_MAX_PIXELS } from "../../shared/director/resolution";
+import { COMPOSITION_MAX_SECONDS } from "../../shared/director/editor-commands";
 import validators from "./generated-validators.mjs";
 import knownProject from "../../docs/director-bundle/example/studio.json";
 import versionMedia from "../../docs/director-bundle/version-media/modules.json";
@@ -48,9 +49,11 @@ function checkProject(p: Project) {
     );
   if (
     p.composition.width * p.composition.height > COMPOSITION_MAX_PIXELS ||
-    p.composition.durationFrames / p.composition.fps > 120
+    p.composition.durationFrames / p.composition.fps > COMPOSITION_MAX_SECONDS
   )
-    throw new Error("First renderer supports up to 1080p and 120 seconds");
+    throw new Error(
+      `First renderer supports up to 1080p and ${COMPOSITION_MAX_SECONDS} seconds`,
+    );
   checkReferences(p);
   for (const [id, m] of Object.entries(p.modules)) {
     const trusted = [

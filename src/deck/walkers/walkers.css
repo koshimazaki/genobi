@@ -1,0 +1,75 @@
+/* The walkers game (Konami code) inside the deck: it takes the visualiser's
+   column while open, so the deck keeps its size and the log stays beside. */
+.deck-walkers-hold:not([hidden]) {
+  display: contents;
+}
+.walkers {
+  min-width: 0;
+}
+.walkers-title {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-width: 40ch;
+  margin: 0;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+}
+.walkers-hint {
+  color: var(--muted);
+  letter-spacing: normal;
+}
+.walkers-score {
+  margin: 0;
+  color: var(--accent);
+}
+.walkers-score span {
+  color: var(--muted);
+}
+.walkers-jobs,
+.walkers-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-5) var(--space-10);
+}
+.walkers-job {
+  min-height: 28px;
+  padding: 2px 8px;
+  border: 1px solid var(--line, rgba(255, 255, 255, 0.12));
+  border-radius: var(--space-6);
+  background: transparent;
+  color: var(--soft);
+  font: inherit;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+}
+.walkers-job[aria-pressed="true"] {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.walkers-job:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.walkers-controls button {
+  min-height: 28px;
+}
+@media (max-width: 640px) {
+  .walkers {
+    align-items: stretch;
+  }
+  .walkers-jobs {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .deck-vis .walkers-job {
+    min-height: 40px;
+  }
+  .walkers .walkers-field {
+    align-self: center;
+  }
+  /* Phones have the deck's full width: a larger field is easier to tap. */
+  .walkers .ascii-screen {
+    font-size: 11px;
+  }
+}

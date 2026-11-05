@@ -1,5 +1,4 @@
 import type { Layer, Project } from "../../shared/director/types";
-import { reorderLane } from "../../shared/director/tracks";
 import Inspector from "./Inspector";
 
 export default function LayerInspector({
@@ -8,7 +7,6 @@ export default function LayerInspector({
   disabled,
   close,
   edit,
-  changeList,
   select,
   replace,
   command,
@@ -19,7 +17,6 @@ export default function LayerInspector({
   disabled: boolean;
   close: () => void;
   edit: (patch: Partial<Layer>) => void;
-  changeList: (layers: Layer[]) => void;
   select: (id: string) => void;
   replace: () => void;
   command: (command: unknown) => string;
@@ -50,10 +47,21 @@ export default function LayerInspector({
         const error = command({ op: "remove-clip", layerId: layer.id });
         if (error) report(new Error(error));
       }}
-      reorder={(delta) =>
-        layer &&
-        changeList(reorderLane(project.layers, layer.id, delta > 0 ? 1 : -1))
-      }
+      rename={(name) => {
+        if (!layer) return "";
+        const error = command({ op: "rename-layer", layerId: layer.id, name });
+        if (error) report(new Error(error));
+        return error;
+      }}
+      reorder={(delta) => {
+        if (!layer) return;
+        const error = command({
+          op: "reorder-layer",
+          layerId: layer.id,
+          by: delta > 0 ? 1 : -1,
+        });
+        if (error) report(new Error(error));
+      }}
     />
   );
 }

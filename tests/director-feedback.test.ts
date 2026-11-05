@@ -260,7 +260,7 @@ describe("feedback commands reproduce the person's project", () => {
 });
 
 describe("what no command expresses is listed, never dropped", () => {
-  it("maps removal, mute and gain while listing renamed and protected fields", () => {
+  it("maps removal, rename, mute and gain while listing protected fields", () => {
     const current = person((p) => {
       const q = layer(
         layer(layer(p, "score", { gain: 0.5, name: "Song" }), "pulse", {
@@ -282,13 +282,9 @@ describe("what no command expresses is listed, never dropped", () => {
     const diff = diffCopies(agent(), current);
     const listed = diff.unmapped.map((u) => `${u.kind} ${u.id} ${u.field}`);
     expect(listed).toEqual(
-      expect.arrayContaining([
-        "layer score name",
-        "layer pulse locked",
-        "layer labels timing",
-      ]),
+      expect.arrayContaining(["layer pulse locked", "layer labels timing"]),
     );
-    expect(listed).toHaveLength(3);
+    expect(listed).toHaveLength(2);
     const locked = diff.unmapped.find((u) => u.id === "labels")!;
     expect(locked.reason).toContain("Unlock Anime bars first");
     expect(diff.unmapped.every((u) => u.reason && u.label)).toBe(true);
@@ -307,8 +303,12 @@ describe("what no command expresses is listed, never dropped", () => {
         label: "removed image Orbit 2",
       },
       {
+        command: { op: "rename-layer", layerId: "score", name: "Song" },
+        label: 'Pulse / 120 BPM renamed to "Song"',
+      },
+      {
         command: { op: "set-gain", layerId: "score", gain: 0.5 },
-        label: "Pulse / 120 BPM gain 1 → 0.5",
+        label: "Song gain 1 → 0.5",
       },
       {
         command: { op: "set-muted", layerId: "pulse", muted: true },
@@ -317,7 +317,7 @@ describe("what no command expresses is listed, never dropped", () => {
     ]);
   });
 
-  it("lists a recipe no layer uses yet, and a restacked layer", () => {
+  it("lists a recipe no layer uses yet, and restacks past a locked track", () => {
     const current = person((p) => {
       const title = p.layers.find((l) => l.id === "title")!;
       const caption = {
@@ -337,9 +337,15 @@ describe("what no command expresses is listed, never dropped", () => {
     const diff = diffCopies(agent(), current);
     expect(diff.unmapped.map((u) => `${u.kind} ${u.id} ${u.field}`)).toEqual([
       "layer caption-1 layer",
-      "project signal-studies layer order",
     ]);
     expect(diff.unmapped[0].reason).toContain("No layer uses caption yet");
+    // Pulse moves up past the locked bars' track, which cannot carry itself.
+    expect(diff.commands).toEqual([
+      {
+        command: { op: "reorder-layer", layerId: "pulse", by: 1 },
+        label: "track of p5 rings moved up 1 in the stack",
+      },
+    ]);
   });
 });
 

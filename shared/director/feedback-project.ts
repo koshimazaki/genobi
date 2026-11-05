@@ -132,15 +132,15 @@ export function projectSteps(b: Builder) {
 }
 
 /**
- * Tempo, downbeat and beats per bar the person set, as one `set-beat-grid`.
- * A field removed has no command; the residual pass lists it.
+ * Tempo, downbeat and beats per bar the person set or cleared, as one
+ * `set-beat-grid`; a cleared field is sent as null.
  */
 function beatGridStep(b: Builder) {
   const was = b.work.project.composition,
     now = b.current.project.composition;
   const grid: BeatGridPatch = {};
   for (const key of BEAT_GRID_FIELDS)
-    if (now[key] !== undefined && now[key] !== was[key]) grid[key] = now[key];
+    if (now[key] !== was[key]) grid[key] = now[key] ?? null;
   if (!Object.keys(grid).length) return;
   const error = b.attempt([
     {
@@ -149,7 +149,7 @@ function beatGridStep(b: Builder) {
         `beat grid ${Object.entries(grid)
           .map(
             ([k, v]) =>
-              `${k} ${value(was[k as keyof typeof grid])} → ${value(v)}`,
+              `${k} ${value(was[k as keyof typeof grid])} → ${v === null ? "cleared" : value(v)}`,
           )
           .join(", ")}`,
     },

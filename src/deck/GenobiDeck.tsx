@@ -9,6 +9,8 @@ import TerminalVisualiser from "./TerminalVisualiser";
 import DeckLog from "./DeckLog";
 import { DECK_READY, deckNow } from "./deck-now";
 import "./deck.css";
+import { useWalkers } from "./walkers/konami";
+import WalkersSlot from "./walkers/WalkersSlot";
 import { useSupervisor } from "../supervisor/store";
 import { teachingLine } from "../../shared/teachings";
 import { useIdleTeaching } from "../teachings/useIdleTeaching";
@@ -46,6 +48,9 @@ export default function GenobiDeck() {
   const activity = useActivity();
   const session = useLatestAgentSession();
   const supervisor = useSupervisor();
+  // The Konami code opens the walkers game in the deck; Esc hands it back.
+  const walkers = useWalkers();
+  const open = state.open || walkers.on;
   const actors = supervisor.connected ? supervisor.actors : [];
   const linked = actors.filter(
     (actor) => actor.state !== "stopped" && actor.state !== "finished",
@@ -93,20 +98,22 @@ export default function GenobiDeck() {
 
   return (
     <section
-      className={`genobi-deck${state.open ? " is-open" : ""}`}
+      className={`genobi-deck${open ? " is-open" : ""}`}
       aria-label="Genobi terminal"
     >
-      {state.open && (
+      {open && (
         <div className="deck-body">
-          <TerminalVisualiser
-            program={
-              NAMES.includes(state.program) ? state.program : "metaballs"
-            }
-            working={working}
-            onCycle={cycle}
-            score={score}
-            onScore={setScore}
-          />
+          <WalkersSlot walkers={walkers}>
+            <TerminalVisualiser
+              program={
+                NAMES.includes(state.program) ? state.program : "metaballs"
+              }
+              working={working}
+              onCycle={cycle}
+              score={score}
+              onScore={setScore}
+            />
+          </WalkersSlot>
           <DeckLog
             activity={activity}
             session={session}
@@ -119,8 +126,12 @@ export default function GenobiDeck() {
       <button
         type="button"
         className="deck-bar"
-        aria-expanded={state.open}
-        onClick={() => setState((s) => ({ ...s, open: !s.open }))}
+        aria-expanded={open}
+        onClick={() =>
+          walkers.on
+            ? walkers.exit()
+            : setState((s) => ({ ...s, open: !s.open }))
+        }
       >
         <Spinner name={working ? "dots12" : "sand"} on={working} />
         <span className="deck-title">GENOBI</span>
@@ -130,7 +141,7 @@ export default function GenobiDeck() {
         >
           {now}
         </span>
-        <span className="deck-toggle">{state.open ? "▾" : "▴"}</span>
+        <span className="deck-toggle">{open ? "▾" : "▴"}</span>
       </button>
     </section>
   );

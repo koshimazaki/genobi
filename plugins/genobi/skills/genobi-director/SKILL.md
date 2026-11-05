@@ -187,10 +187,15 @@ one `command`.
 | `remove-clip`         | `layerId` (media stays; notes stay at their frames)                                                                             |
 | `set-muted`           | `layerId`, `muted` (boolean; audio mute or visual hide)                                                                         |
 | `set-gain`            | `layerId`, `gain` (audio only, 0–2)                                                                                             |
+| `set-fps`             | `fps` (whole, 1–120; every clip and note keeps its moment in seconds)                                                           |
+| `set-duration`        | `durationFrames` (at most 120 seconds; refused while a clip or note would fall after the end)                                   |
+| `rename-project`      | `name` (1–120 characters)                                                                                                       |
+| `rename-layer`        | `layerId`, `name` (1–120 characters; unlocked clips only)                                                                       |
+| `reorder-layer`       | `layerId`, `by` (whole tracks: positive moves its track up the stack, negative down; unlocked clips only)                       |
 | `set-placement`       | `layerId`, `position?`, `scale?`, `opacity?`, `rotationDegrees?`, `motion?`                                                     |
 | `set-parameters`      | `layerId`, `parameters`, `allowInspirationAsInput?`                                                                             |
 | `set-resolution`      | `width`, `height` (whole pixels; at most 1920 × 1080 pixels in total)                                                           |
-| `set-beat-grid`       | `bpm?`, `beatOffsetSeconds?`, `beatsPerBar?` (at least one)                                                                     |
+| `set-beat-grid`       | `bpm?`, `beatOffsetSeconds?`, `beatsPerBar?` (at least one; null clears one)                                                    |
 | `set-prompt`          | `text` (the earlier prompt brief)                                                                                               |
 | `set-global-prompt`   | `text` (up to 12,000 characters; empty clears it)                                                                               |
 | `set-clip-prompt`     | `layerId`, `text` (up to 1,200 characters; empty clears it)                                                                     |

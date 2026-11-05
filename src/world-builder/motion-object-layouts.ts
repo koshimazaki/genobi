@@ -5,6 +5,11 @@ export { palmGroveLayouts } from "./motion-palm-layouts";
 
 /** 128 authored parts: the same hull, cockpit, pods, wings and jets become a robot. */
 export function spacecraftLayouts(): SceneTransform[][] {
+  return compactLayouts(spacecraftStates());
+}
+
+/** The spacecraft, mecha and winged mecha before compaction, in part order. */
+export function spacecraftStates(): SceneTransform[][] {
   const states: SceneTransform[][] = [[], [], []];
   const add = (...parts: [SceneTransform, SceneTransform, SceneTransform]) =>
     parts.forEach((part, state) => states[state].push(part));
@@ -138,5 +143,5 @@ export function spacecraftLayouts(): SceneTransform[][] {
         pose(side * (top ? 0.19 : 0.45), top ? 4.02 : 2.24, 0, 0.32),
         pose(side * (top ? 0.19 : 0.6), top ? 4.2 : 2.24, 0, 0.32),
       );
-  return compactLayouts(states);
+  return states;
 }

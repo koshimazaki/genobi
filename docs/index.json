@@ -1631,6 +1631,7 @@
         "audio-reactive-drop.md",
         "fruits-swap.md",
         "genobi-cli.md",
+        "project-assets.md",
         "taste-memory.md"
       ]
     },
@@ -2005,7 +2006,11 @@
       "path": "project-assets.md",
       "tags": ["studio", "director", "world-builder", "dual-editor"],
       "summary": "Every studio output lands in the open project's assets through one path - 3D takes and first frames, Dual Swords frames, rendered and saved videos, gallery results.",
-      "links": ["director-agent-tools.md", "templates.md"]
+      "links": [
+        "director-agent-tools.md",
+        "director-generate.md",
+        "templates.md"
+      ]
     },
     {
       "title": "Read-through",

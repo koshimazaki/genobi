@@ -51,7 +51,12 @@ The deck is where an agent session shows, and with it the session's controls:
   received text only, never an inferred step or percentage. With none of
   those, it reads `READY · SPEAK OR TYPE TO START`, then cycles
   [teachings](teachings.md) (`TEACHING · …`) until something real arrives.
-- **Opening the deck** shows the whole log: what is working now, the
+- **The chain of steps** (#96, `shared/deck-steps.ts`, `src/deck/StepChain.tsx`)
+  sits at the top of the open log and stays there while it scrolls. Each
+  step has a state (✓ done, a spinner while working, … waiting for you,
+  ✗ failed, ? unknown) and a short label. See
+  [the chain of steps](#the-chain-of-steps) below.
+- **Opening the deck** shows the whole log: the chain, the
   session's request, every retained update oldest first (up to 40), the
   summary, the conversation (**YOU ›** / **GENOBI ›**) and linked agents. It
   opens scrolled to the newest lines and then never moves the reading
@@ -65,6 +70,42 @@ The deck is where an agent session shows, and with it the session's controls:
 - **Its other actions** only move the person: **Speak to agent**, **Project
   assets ↗** and **Open Development ↗**. The deck never starts or pays for
   anything by itself; Approve is the person's click on a quoted step.
+
+### The chain of steps
+
+The chain is built only from structured data the studio already receives,
+oldest first:
+
+1. **The person's words**, from the conversation (`AgentSession.exchange`):
+   `Voice · 'swap the apple' · heard`, `Typed · '…' · sent`, or `· not read
+yet` while a queued message waits for the runner. The server records
+   whether the first prompt was spoken or typed (`source`); a later message,
+   and an older server, show `You`.
+2. **Tool calls**, from the runner's own events (`AgentSession.tools`): Claude
+   Code's `tool_use` and `tool_result` (paired by call id) and Hermes'
+   (paired by name), read in `server/agent-stream.ts` and
+   `server/agent-hermes-stream.ts`. `Director · add-graphic anime-fruit-icons
+· applied`, `Quote · priced`, `Jobs · working`. A call still working when
+   the session ends reads `· no result`, state unknown. The only word read
+   from a call's input is a Director command's `op` (and an added graphic's
+   `moduleId`), each checked as a plain word.
+3. **Quoted paid steps**, from `approvals`: `Quote · LTX upscale · $0.40 ·
+waiting for you`, then `approved · started`, `declined`, `expired`,
+   `refused` or `may have started · check the gallery`.
+4. **Running jobs**, from Activity (`src/busy.ts`): each job's
+   `progressLine`, so `UPSCALING LTX 42%` only when the provider reported 42%.
+5. **The session's own state**: starting, working (only when no other step is
+   working), waiting for your next message or approval, done, stopped,
+   failed or interrupted.
+
+The agent's free text is never read into a step: a line saying "upscale
+done ✓" makes no step look done. That text still shows in the log below as
+received. The newest three steps stay in view; older ones fold behind
+`N earlier steps`, which opens to its own short scrolling list. With nothing
+in the chain, nothing is drawn, so the idle bar keeps its ready line and
+teachings. A relayed (hosted) session carries no tool calls or source, so its
+chain has the request, quotes and state only. `tests/deck-steps.test.tsx`
+builds a chain from a recorded Claude Code stream plus a job.
 
 The deck reads the session through `useLatestAgentSession`: the panel's
 newest poll, or the session just shown before its first poll, so a new spawn
@@ -110,6 +151,52 @@ only and faint behind the installer's progress (`src/deck/AsciiBackdrop.tsx`,
 12 frames a second, still under reduced motion;
 [voice setup](voice-setup.md#while-it-installs)).
 
+## The walkers game (Konami code)
+
+Typing ↑ ↑ ↓ ↓ ← → ← → B A anywhere in the studio, except in a text field,
+a contenteditable or a dialog, opens a small walkers puzzle in the deck
+(#97): little Genobi creatures (`o>`) leave a door (`∩`), walk, fall and turn
+at walls, and the person gives them jobs (**dig** down through soil, **build**
+a five-brick stair, **block** to turn others back), each a limited count, to
+get enough of them home (`⌂`). It is our own design in that genre: the
+creature, five fields, their names and art and the music are written for
+Genobi. A fall of more than five cells splats; water (`≈`) and steel (`█`,
+which will not dig) are the hazards.
+
+| Field        | Teaches                                           |
+| ------------ | ------------------------------------------------- |
+| Turn Around  | Block one walker so the rest turn from the pond   |
+| Soft Floor   | Dig through the floor to the corridor below       |
+| Mind the Gap | Build a stair over water; hold the line meanwhile |
+| Steel Pocket | Find the soil among steel before the pond         |
+| Up and Over  | Stair over a hill, then a timed stair over a pond |
+
+- **Where:** a pure, fixed-step simulation in `shared/walkers/` (`levels.ts`,
+  `sim.ts`, `render.ts`, drawn as the same `Frame` the visualisers use);
+  the deck side in `src/deck/walkers/`. `GenobiDeck.tsx` has one mount point,
+  `WalkersSlot`: while the game is open the visualiser stays mounted but
+  hidden, and Esc (or the bar, or EXIT) hands the deck back exactly: its open
+  state, mode, pause and metaball game, and focus where it was.
+- **Grid:** 40 × 9 while the game is open (the visualisers use 36 × 7), in the
+  visualiser's column beside the log; phones draw it larger, above the log.
+- **Controls:** tap or click a creature to give it the selected job; job
+  buttons (1/2/3, or D/B/K) choose it; ←/→ pick a creature and Enter gives the
+  job; P pauses, R restarts, N moves on, M mutes, `.` steps, Esc leaves. A
+  hidden tab pauses the game and stops all sound. Under reduced motion nothing
+  animates: STEP (or `.`) moves one tick.
+- **Sound:** handheld-style chip audio synthesised with Web Audio
+  (`chip-audio.ts`, `chip-tune.ts`): 12.5/25/50% pulse waves, a triangle
+  bass and LFSR noise; an original eight-bar loop and effects for spawn,
+  job, dig, build, splat, home, win and fail. No sample files. It starts on
+  the Konami key press, plays quietly, mutes with M or SOUND (remembered in
+  this browser) and stops on exit.
+- **Metaballs stays.** The walkers game is hidden behind the code and borrows
+  the deck only while open, so the visible metaball game keeps its place.
+- **Checks:** `tests/walkers-sim.test.ts` (walk, fall, turn, dig, build,
+  block, splat, level complete, determinism, a recorded solution for every
+  field) and `tests/walkers-audio.test.ts` (scheduling and stop with a fake
+  `AudioContext`, the code and where it is ignored).
+
 The programs follow Andreas Gysin's
 [play.core](https://github.com/ertdfgcvb/play.core) (Apache-2.0) idea of a
 program as a per-cell function; they are written for Genobi, not copied.
@@ -118,11 +205,10 @@ program as a per-cell function; they are written for Genobi, not copied.
 
 Each step stands alone and is useful without the next.
 
-1. **Stages for chained runs.** When a run has several steps (find the subject,
-   the Klein still, the video), the deck lists them as a playlist:
-   `✓ FIND SUBJECT · ⠍⡐ KLEIN IMAGE 73% · ○ VIDEO`, the current one highlighted.
-   It needs the agent to name its steps in its progress lines, which the
-   `genobi-studio` skill can ask for.
+1. **Stages for chained runs.** The chain of steps (above, #96) shows what
+   happened and what runs now. Steps not yet started
+   (`○ VIDEO` after `KLEIN IMAGE 73%`) still need a structured plan from the
+   run itself, such as a chain's stage list, never the agent's own words.
 2. **Voice in the deck.** The live transcript of what was said and what Genobi
    replied, as two coloured lines, so a voice session can be read back.
 3. **Taste quiz while waiting.** Two visuals side by side (two ASCII programs,

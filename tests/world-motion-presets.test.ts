@@ -52,10 +52,13 @@ describe("editable scene motion presets", () => {
       expect(recipe.objects.length).toBeLessThanOrEqual(24);
       expect(recipe.motion?.instances?.count ?? 0).toBeLessThanOrEqual(256);
       const times = recipe.motion!.stateKeys.map((k) => k.frame);
-      expect(times.length).toBeGreaterThanOrEqual(3);
+      // bike-mecha is the one two-state preset: its per-part colours leave no
+      // room in the 64 KB budget for a third coloured state and a soundtrack.
+      const twoState = definition.id === "bike-mecha";
+      expect(times.length).toBeGreaterThanOrEqual(twoState ? 2 : 3);
       expect(times[0]).toBe(0);
       expect(times[1]).toBeGreaterThan(0);
-      expect(times[1]).toBeLessThan(recipe.frames - 1);
+      if (!twoState) expect(times[1]).toBeLessThan(recipe.frames - 1);
       expect(times.at(-1)).toBe(recipe.frames - 1);
       expect(recipe.orbit).toBe(0);
       expect(recipe.dolly).toBe(0);
@@ -85,13 +88,21 @@ describe("editable scene motion presets", () => {
         Math.round(((recipe.frames - 1) * i) / 4),
       );
       const signatures = frames.map((frame) => evaluateScene(recipe, frame));
-      const first = signatures[0].objects.map((p) => [p.id, p.shape, p.color]);
+      // A preset whose states author per-part colours (bike-mecha) blends them
+      // through the morph; every other preset keeps each block's colour.
+      const blends = recipe.motion.stateKeys.some((key) =>
+        Object.values(key.objects).some((part) => part.color !== undefined),
+      );
+      const signature = (p: (typeof signatures)[number]["objects"][number]) => [
+        p.id,
+        p.shape,
+        blends ? undefined : p.color,
+      ];
+      const first = signatures[0].objects.map(signature);
       expect(first).toHaveLength(recipe.motion.instances.count);
       for (let i = signatures.length - 1; i >= 0; i--) {
         expect(evaluateScene(recipe, frames[i])).toEqual(signatures[i]);
-        expect(
-          signatures[i].objects.map((p) => [p.id, p.shape, p.color]),
-        ).toEqual(first);
+        expect(signatures[i].objects.map(signature)).toEqual(first);
       }
       expect(recipe).toEqual(before);
       expect(signatures[0].objects).not.toEqual(signatures[2].objects);
