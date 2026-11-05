@@ -108,7 +108,9 @@ and a run is made from that.
   unless the command sets `allowInspirationAsInput: true`; with it, the recipe
   binds a production copy (the `-plate` alias `replace-plate` makes). Opening a
   project never refuses one, so a project saved before this rule with a recipe
-  bound to an Inspiration still opens and edits.
+  bound to an Inspiration still opens and edits. In Make my version, picking
+  an Inspiration for a recipe picture slot (Bloom's end-card still) is the
+  person's own choice, so it binds the production copy.
 
 The rule and its wording live in one portable module,
 `shared/director/reference-role.ts`, so the MCP adapter, the CLI and the studio

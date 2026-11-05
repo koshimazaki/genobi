@@ -60,6 +60,9 @@ export async function bindVersionPicture(
     op: "set-parameters",
     layerId: layer.id,
     parameters: { [target.parameter]: `asset:${assetId}` },
+    // The person picked this picture in the slot, Inspirations included: that
+    // pick is the explicit ask, so an Inspiration binds its production copy.
+    allowInspirationAsInput: true,
   });
   return { project, files };
 }
