@@ -219,10 +219,10 @@ Attach inspected upload receipts, replace/relink clips and alias/remove assets t
 
 ### Editable project bundle
 
-Download bundle writes the project, its media, the brief, feedback and the World Builder recipe as a ZIP; Open bundle checks it and reads it back for editing.
+Download bundle validates the project, media, brief, feedback and World source documents before saving a ZIP with an integrity index. Open bundle checks every indexed file before a guarded restore; legacy bundles remain readable.
 
-- **Where:** Director · Download bundle, Open bundle · **Runs:** Local, free · **Status:** verified, 29 October 2026 ([record](falling-room.md#what-was-run-29-october-2026))
-- **MCP tools:** none · **CLI:** none · **Skills:** [`director-remix`](https://github.com/koshimazaki/Genobi/blob/main/.agents/skills/director-remix/SKILL.md) · **Docs:** [director-bundle/README.md](director-bundle/README.md), [falling-room.md](falling-room.md)
+- **Where:** Director · Download bundle, Open bundle · **Runs:** Local, free · **Status:** verified, 5 November 2026 ([record](project-archives.md#verification--5-november-2026))
+- **MCP tools:** none · **CLI:** none · **Skills:** [`director-remix`](https://github.com/koshimazaki/Genobi/blob/main/.agents/skills/director-remix/SKILL.md) · **Docs:** [director-bundle/README.md](director-bundle/README.md), [falling-room.md](falling-room.md), [project-archives.md](project-archives.md)
 
 ### Motion effects and MP4 export
 
