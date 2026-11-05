@@ -257,7 +257,7 @@ var require_validators = __commonJS({
                 description:
                   "A Camera run's public request settings, recorded when it was sent to the Director so Recreate restores it from the project (shared/director/generation-settings.ts). Optional and additive. An allowlist of setting names only: no job, provider or source ids, deployment URLs or file tickets, image bytes or keys. Values are re-checked field by field on every read.",
                 type: "object",
-                maxProperties: 25,
+                maxProperties: 26,
                 propertyNames: {
                   enum: [
                     "generator",
@@ -284,6 +284,7 @@ var require_validators = __commonJS({
                     "imageGrounding",
                     "imageSafetyTolerance",
                     "imageReferenceCount",
+                    "imageRegionCount",
                     "deploy",
                   ],
                 },
@@ -11184,15 +11185,15 @@ var require_validators = __commonJS({
                     typeof data60 == "object" &&
                     !Array.isArray(data60)
                   ) {
-                    if (Object.keys(data60).length > 25) {
+                    if (Object.keys(data60).length > 26) {
                       const err156 = {
                         instancePath:
                           instancePath + "/generations/" + i4 + "/settings",
                         schemaPath:
                           "#/properties/generations/items/properties/settings/maxProperties",
                         keyword: "maxProperties",
-                        params: { limit: 25 },
-                        message: "must NOT have more than 25 properties",
+                        params: { limit: 26 },
+                        message: "must NOT have more than 26 properties",
                       };
                       if (vErrors === null) {
                         vErrors = [err156];
@@ -11228,6 +11229,7 @@ var require_validators = __commonJS({
                         key13 === "imageGrounding" ||
                         key13 === "imageSafetyTolerance" ||
                         key13 === "imageReferenceCount" ||
+                        key13 === "imageRegionCount" ||
                         key13 === "deploy"
                       )) {
                         const err157 = {

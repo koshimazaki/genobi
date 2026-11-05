@@ -149,6 +149,9 @@ export function generatedRecipe(
       if (words && !missing.includes(words)) missing.push(words);
     }
   else if (entry) missing.push("settings (duration, aspect, camera)");
+  // Klein boxes are not stored; their instructions stay in the prompt.
+  if (settings?.imageRegionCount)
+    missing.push("region boxes (their instructions stay in the prompt)");
   // A project video the run read is never a Camera library clip, whatever
   // recorded (or did not record) the model.
   const source = "source video (choose it in Camera)";

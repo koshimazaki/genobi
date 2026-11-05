@@ -92,12 +92,19 @@ export async function cameraGeneration(
     });
   }
   const stored = await inputs.load(job.id).catch(() => undefined);
-  const urls = restoredRunInputs(job, stored).imageReferences ?? [];
+  const restored = restoredRunInputs(job, stored);
+  const urls = restored.imageReferences ?? [];
+  const regions = restored.imageRegions?.length ?? 0;
   const references = await referenceFiles(urls, load).catch(() => []);
   const settings = publicGenerationSettings({
     ...job,
     // The browser's own wording for an image run (regions not composed in).
-    ...(urls.length && stored ? { description: stored.description } : {}),
+    // With Klein boxes the project cannot hold the boxes, so it keeps the
+    // description as sent, their instructions composed in, and counts them.
+    ...(urls.length && stored && !regions
+      ? { description: stored.description }
+      : {}),
+    ...(regions ? { imageRegionCount: regions } : {}),
   });
   return {
     prompt: job.prompt.slice(0, 2000),

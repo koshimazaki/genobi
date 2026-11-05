@@ -46,6 +46,11 @@ export type GenerationSettings = Partial<
 > & {
   /** How many reference images the run sent (they are project assets). */
   imageReferenceCount?: number;
+  /**
+   * How many Klein edit boxes the run drew. The boxes are not stored: their
+   * instructions stay in `description`, as composed, and Recreate names them.
+   */
+  imageRegionCount?: number;
   /** A deployment run's own inputs; its file tickets are never kept. */
   deploy?: { seed: number; negativePrompt: string; recipe?: string };
 };
@@ -69,6 +74,7 @@ const NUMBERS = [
   "upscaleCreativity",
   "imageSafetyTolerance",
   "imageReferenceCount",
+  "imageRegionCount",
 ] as const;
 const BOOLEANS = ["cameraEnabled", "draft", "imageGrounding"] as const;
 
