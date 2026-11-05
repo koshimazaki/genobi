@@ -407,3 +407,5 @@ from GitHub:
 - [Shared project memory and taste](taste-memory.md) — local evidence, agent checkpoints, preferences and privacy.
 
 - [Generate your version](director-generate.md): template inputs, local swaps and agent generation.
+
+- [Live Scroll agents](live-scrolls.md): linked document, revision, selection and safe live edits.

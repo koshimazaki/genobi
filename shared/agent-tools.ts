@@ -33,6 +33,7 @@ export const GENOBI_TOOLS = [
   "genobi_project_media",
   "genobi_project_media_receipt",
   "genobi_export",
+  "genobi_scrolls_live",
   "genobi_projects",
   "genobi_link_project",
   "genobi_project",

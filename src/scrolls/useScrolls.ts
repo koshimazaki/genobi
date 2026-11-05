@@ -42,9 +42,15 @@ export function useScrolls() {
     document: createScroll("storyboard", 8, `scroll-${crypto.randomUUID()}`),
     files: new Map(),
   }));
+  const mount = useRef(crypto.randomUUID());
   const held = useRef(bundle);
   held.current = bundle;
-  const [selectedCell, setSelectedCell] = useState<string | null>(null);
+  const [selectedCell, setCell] = useState<string | null>(null);
+  const heldCell = useRef<string | null>(null);
+  const setSelectedCell = (cell: string | null) => {
+    heldCell.current = cell;
+    setCell(cell);
+  };
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
   const inFlight = useRef(false);
@@ -64,13 +70,17 @@ export function useScrolls() {
   const pending = pendingRuns.length ? pendingRuns : undefined;
   const collecting = useRef(new Set<string>());
   const bridge = useGenerationBridge();
-  const commit = useCallback((next: ScrollBundle, expected = held.current) => {
-    if (held.current !== expected)
-      throw new Error("Scroll changed while preparing media. Try again.");
-    held.current = next;
-    setBundle(next);
-    setApprovals(undefined);
-  }, []);
+  const commit = useCallback(
+    (next: ScrollBundle, expected = held.current, replacement = false) => {
+      if (held.current !== expected)
+        throw new Error("Scroll changed while preparing media. Try again.");
+      if (replacement) mount.current = crypto.randomUUID();
+      held.current = next;
+      setBundle(next);
+      setApprovals(undefined);
+    },
+    [],
+  );
   const run = useCallback(async (task: () => Promise<void>) => {
     if (inFlight.current) return false;
     inFlight.current = true;
@@ -181,7 +191,7 @@ export function useScrolls() {
         },
       };
       next = await addPanelFrames(next, example);
-      commit(next, before);
+      commit(next, before, true);
       setSelectedCell(null);
       setAnalysis(undefined);
       setMessage(
@@ -202,14 +212,18 @@ export function useScrolls() {
       )
     )
       return;
-    commit({
-      document: createScroll(
-        kind,
-        kind === "character" ? 6 : 8,
-        `scroll-${crypto.randomUUID()}`,
-      ),
-      files: new Map(),
-    });
+    commit(
+      {
+        document: createScroll(
+          kind,
+          kind === "character" ? 6 : 8,
+          `scroll-${crypto.randomUUID()}`,
+        ),
+        files: new Map(),
+      },
+      before,
+      true,
+    );
     setSelectedCell(null);
     setAnalysis(undefined);
   }
@@ -257,7 +271,7 @@ export function useScrolls() {
     run(async () => {
       const before = held.current,
         next = await openScroll(file, before);
-      commit(next, before);
+      commit(next, before, true);
       setSelectedCell(null);
       setAnalysis(undefined);
       setMessage("Scroll opened. Media and prompts restored.");
@@ -394,7 +408,10 @@ export function useScrolls() {
       );
     });
   return {
+    mountId: mount.current,
+    currentMount: () => mount.current,
     current: () => held.current,
+    currentCell: () => heldCell.current,
     bundle,
     isCurrent: (expected: ScrollBundle) => held.current === expected,
     commit,

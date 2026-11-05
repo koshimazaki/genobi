@@ -313,6 +313,14 @@ Export through the open browser · writes. Export the exact revision in a local 
 - Taught by: [`genobi-director`](registry-skills.md#genobi-director), [`genobi-scrolls`](registry-skills.md#genobi-scrolls)
 - Docs: [docs/browser-exports.md](browser-exports.md), [docs/project-archives.md](project-archives.md)
 
+## `genobi_scrolls_live`
+
+Inspect or edit the mounted Scroll · writes. Link the one-use code shown in Scrolls Document & agent tools, then inspect the exact tab. Returns document, revision, selected cell and available media IDs. Keep that original context with the conversation; never silently retarget after a document/cell switch. Request applies an existing Scroll command against context and command.revision; metadata-only add-asset is refused. Read status for the applied document or explicit conflict. Reuse the exact requestId/body after an uncertain answer; never make a new request to retry. Commands and results are ephemeral, bounded to one hour; a server restart loses them, so inspect before proceeding. This is local paired-browser control; no headless service, paid generation or arbitrary document opening. Pure genobi_scrolls JSON tools remain available.
+
+- Tags: `agents`, `mcp`, `storyboard`
+- Taught by: [`genobi-scrolls`](registry-skills.md#genobi-scrolls)
+- Docs: [docs/live-scrolls.md](live-scrolls.md), [docs/browser-exports.md](browser-exports.md)
+
 ## `genobi_provenance`
 
 Genobi provenance card · read-only. Build the provenance card for finished takes: the agent and its model, every generation model, workflow files, where it ran and on what, time taken, cost, outputs with SHA-256 hashes, and the tier (open, semi-open, premium) derived from the models. Returns the card, its Markdown and a small gallery summary. Reads only; never submits or pays.
