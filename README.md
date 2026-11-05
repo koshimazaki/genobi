@@ -66,6 +66,7 @@ is two minutes of the studio in use, cut in the studio to the owner's track
 with lyric-synced cards ([how](docs/genobi-teaser.md)), and the Acoustic Space
 demo ([v1](#one-scene-guides-picture-and-sound), v2 above) was made the same
 way: LTX clips from the UI on one audio track, the reverb following the rooms.
+In effect, Genobi is a demo and project showcase engine for any technical work.
 
 https://github.com/user-attachments/assets/10b0805f-91a8-44df-9c8b-98ec109b9f31
 
