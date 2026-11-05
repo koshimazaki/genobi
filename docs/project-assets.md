@@ -65,8 +65,13 @@ project's track, cut to the file's length and the composition
 Nothing here starts a generation. A first frame in Inspirations can be dragged
 into Camera's reference tray (see below), quoted and approved as usual; the
 result appears in the gallery, and **Send to Director** on its card takes
-the same path. A finished Camera generation is not added to a project
-automatically; a generated Scrolls result is (below). A take the Genobi CLI or
+the same path. A Camera result sent that way keeps its run: the asset is
+recorded as a project generation with the take's public recipe, its public
+settings and its reference images (copied in as Inspirations), in one undoable
+edit, so the Director's **Recreate in Camera** restores the model, settings
+and run location and names whatever the project does not hold
+(`src/studio/project-generation.ts`). A finished Camera generation is not
+added to a project automatically; a generated Scrolls result is (below). A take the Genobi CLI or
 an MCP client made on this machine appears in the gallery once Ready, marked
 **From terminal** or **From agent** (local server only), and its **Send to
 Director** copies it like any other card, audio included; an agent linked to

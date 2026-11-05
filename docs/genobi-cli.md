@@ -182,7 +182,10 @@ It returns a two-hour session/endpoint-bound ticket. Put the tickets in
 recipe when required. Quote the complete input, disclose the returned GPU-time
 billing, then submit only after agreement. The model catalogue exposes both
 deployment models with `inputModel` and `requiresDeployment`; installation and
-credentials are checked by the server. See [run location](run-location.md).
+credentials are checked by the server. A deployment job read back (local or
+hosted) carries `deploy.seed`, `deploy.negativePrompt` and the recipe, so
+Recreate restores them, but never the tickets: `deploy.assets` is empty and
+the files are staged again. See [run location](run-location.md).
 
 `genobi voice-status` reads local speech-to-text readiness.
 `genobi voice-transcribe` accepts exactly one local `filePath`, session audio

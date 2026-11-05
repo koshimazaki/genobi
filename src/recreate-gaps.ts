@@ -13,8 +13,10 @@ import { restoredRunInputs, type RunInputs } from "./run-inputs";
  *   (`run-inputs.ts`), never in the job;
  * - the source video (an upscale, the H3 OmniRef workflows) is a library id
  *   on the job, absent on runs recorded without one;
- * - a deployment's inputs and the swap's settings are on the job when it
- *   recorded them.
+ * - a deployment's inputs (seed, negative prompt, capture recipe) and the
+ *   swap's settings are on the job when it recorded them; a deployment's
+ *   input files are short-lived session tickets the server never returns,
+ *   so they are always reattached.
  *
  * Each missing piece is named rather than silently dropped, so Camera can
  * say "settings not stored" instead of looking restored.
@@ -24,6 +26,7 @@ export type RecreateGap =
   | "reference images"
   | "source video"
   | "deployment inputs"
+  | "deployment input files"
   | "swap settings";
 
 /** Which inputs a run of this model needs beyond its prompt and settings. */
@@ -48,6 +51,8 @@ export function recreateGaps(job: Job, inputs?: RunInputs): RecreateGap[] {
     gaps.push("reference images");
   if (needs.source && !job.sourceId) gaps.push("source video");
   if (needs.deploy && !job.deploy) gaps.push("deployment inputs");
+  else if (needs.deploy && !Object.keys(job.deploy?.assets ?? {}).length)
+    gaps.push("deployment input files");
   if (needs.swap && !job.swap) gaps.push("swap settings");
   if (needs.provider && !job.imageProvider) gaps.push("provider");
   return gaps;

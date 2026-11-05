@@ -3,11 +3,18 @@ import type { VersionSlot } from "../../shared/templates/version";
 import { versionTemplate } from "../../shared/templates/version";
 import { readyEntry, type ReadyEntry } from "../../shared/registry";
 import {
+  SOURCE_UNRESOLVED,
   applyCameraRecipe,
   beginCameraRecipeHandoff,
   currentCameraRecipeHandoff,
 } from "../camera-recipe-target";
 import { studioStore } from "../studio/store";
+import type { Job } from "../../shared/types";
+import {
+  publicGenerationSettings,
+  settingsJob,
+} from "../../shared/director/generation-settings";
+import { recreateGaps } from "../recreate-gaps";
 
 /**
  * Recreate in Camera (#57, swap only): a template slot's way to new media.
@@ -21,6 +28,13 @@ import { studioStore } from "../studio/store";
  * notice. Anything not stored is named in
  * Camera's notice line; nothing is invented. The person runs Camera
  * themselves; the result lands in Assets → Generated.
+ *
+ * A Camera run sent to the Director records its public settings on the
+ * generation (`shared/director/generation-settings.ts`): then the whole run
+ * comes back through Camera's own restore (duration, aspect, resolution,
+ * camera, LTX gaps and Light, swap, a deployment's seed, image options) and
+ * its run location, and `recreate-gaps.ts` names what the project does not
+ * hold.
  */
 export interface CameraRecipe {
   label: "Recreate in Camera" | "Create in Camera";
@@ -41,7 +55,26 @@ export interface CameraRecipe {
   missing: string[];
   /** FLUX 3 stills: the provider the run used, as Camera's choice. */
   imageProvider?: "bfl" | "comfy";
+  /** The recorded settings as a job for Camera's restore, when recorded. */
+  job?: Job;
+  /** A workflow run's recorded run location. */
+  location?: "local" | "cloud";
 }
+
+/** A source clip the project never holds: Camera waits for the person's pick. */
+const SOURCE_GAP =
+  "source video (choose it in Camera; Generate waits until you do)";
+
+/** Camera's gap names, in the words a Director notice uses. */
+const GAP_WORDS: Record<string, string | undefined> = {
+  "source video": SOURCE_GAP,
+  "deployment inputs": "deployment inputs",
+  "deployment input files": "deployment input files (reattach them)",
+  "swap settings": "swap settings",
+  // Counted against the images restored, and said by `recordedProvider`.
+  "reference images": undefined,
+  provider: undefined,
+};
 
 /**
  * The provider a run used, as far as Camera has a choice for it. Only FLUX 3
@@ -78,7 +111,8 @@ const CREATE: CameraRecipe = {
 /**
  * What a generated asset's own run records: its prompt, the registry entry
  * that made it and the project images it read. Undefined when the asset has
- * no generation or its generation recorded no prompt. Shared by a template
+ * no generation, or its generation recorded neither a prompt nor a model and
+ * settings. Shared by a template
  * slot and the expanded Assets gallery (`src/studio/camera-handoff.ts`).
  */
 export function generatedRecipe(
@@ -90,29 +124,80 @@ export function generatedRecipe(
   const generation = asset?.generationId
     ? project.generations.find((g) => g.id === asset.generationId)
     : undefined;
-  const prompt = generation?.prompt.trim();
-  if (!generation || !prompt) return undefined;
+  if (!generation) return undefined;
+  const prompt = generation.prompt.trim();
   const entry = generation.recipe && readyEntry(generation.recipe.id);
   const read = [...generation.referenceAssetIds, ...generation.inputAssetIds];
-  const imageIds = [...new Set(read)].filter(
-    (a) => project.assets[a]?.kind === "image",
+  const settings = publicGenerationSettings(generation.settings);
+  // A run with no prompt text (SeedVR2, a FLUX upscale left blank) is still
+  // identified by its recorded model and settings.
+  if (!prompt && !(entry && settings)) return undefined;
+  const image = (a: string | undefined) =>
+    !!a && project.assets[a]?.kind === "image";
+  // The run's own slots when one image filled several (`referenceSlots`), so
+  // image numbers in the prompt still point where they did.
+  const slots = settings?.referenceSlots?.map(
+    (i) => generation.referenceAssetIds[i],
   );
+  const imageIds =
+    slots && slots.every(image)
+      ? [
+          ...slots,
+          ...[...new Set(generation.inputAssetIds)].filter(
+            (a) => image(a) && !slots.includes(a),
+          ),
+        ]
+      : [...new Set(read)].filter(image);
   const missing: string[] = [];
   if (!entry) missing.push("model and settings");
+  // A run on Auto: the recipe's route is the registry's fallback when the
+  // take could not be read, never the person's choice of payer. Auto comes
+  // back through the job, and the provider is named as not recorded.
+  const auto = settings?.imageProvider === "auto";
   const provider = entry
-    ? recordedProvider(entry, generation.recipe?.route)
+    ? recordedProvider(entry, auto ? undefined : generation.recipe?.route)
     : {};
   if (provider.missing) missing.push(provider.missing);
+  const job =
+    settings && entry
+      ? settingsJob(
+          {
+            ...settings,
+            generator: entry.generator,
+            model: entry.videoModel,
+          },
+          prompt,
+        )
+      : undefined;
+  if (job)
+    for (const gap of recreateGaps(job)) {
+      const words = GAP_WORDS[gap];
+      if (words && !missing.includes(words)) missing.push(words);
+    }
+  else if (entry) missing.push("settings (duration, aspect, camera)");
+  // Klein boxes are not stored; their instructions stay in the prompt.
+  if (settings?.imageRegionCount)
+    missing.push("region boxes (their instructions stay in the prompt)");
   // A project video the run read is never a Camera library clip, whatever
   // recorded (or did not record) the model.
-  if (read.some((a) => project.assets[a]?.kind === "video"))
-    missing.push("source video (choose it in Camera)");
+  const source = SOURCE_GAP;
+  if (
+    read.some((a) => project.assets[a]?.kind === "video") &&
+    !missing.includes(source)
+  )
+    missing.push(source);
+  const location = generation.recipe?.location;
   return {
     label: "Recreate in Camera",
-    prompt,
+    ...(prompt ? { prompt } : {}),
     ...(entry ? { entry } : {}),
     ...(provider.imageProvider
       ? { imageProvider: provider.imageProvider }
+      : {}),
+    ...(job ? { job } : {}),
+    ...(entry?.route === "workflow" &&
+    (location === "local" || location === "cloud")
+      ? { location }
       : {}),
     imageIds,
     missing,
@@ -200,15 +285,21 @@ const STILL_SOURCES: Record<string, string> = {
 export function recipeNote(recipe: CameraRecipe, images: number) {
   if (recipe.label === "Create in Camera")
     return "Settings not stored for this asset: Camera opened as it was. Nothing was generated.";
-  const recorded =
+  // The run's own count outranks what the project still holds: a reference
+  // the run sent but the project lost is named, never "none recorded".
+  const recorded = Math.max(
     recipe.imageIds.length +
-    (recipe.reference ? 1 : 0) +
-    (recipe.guide ? 1 : 0);
+      (recipe.reference ? 1 : 0) +
+      (recipe.guide ? 1 : 0),
+    recipe.job?.imageReferenceCount ?? 0,
+  );
   const missing = [...recipe.missing];
   if (recorded > images) missing.push("reference images (reattach them)");
   const restored = [
     ...(recipe.prompt ? ["prompt"] : []),
     ...(recipe.entry ? ["model"] : []),
+    ...(recipe.job ? ["settings"] : []),
+    ...(recipe.location ? ["run location"] : []),
     ...(images ? ["references"] : []),
   ];
   const list =
@@ -274,16 +365,33 @@ export async function openInCamera(
       ? { generator: recipe.entry.generator, model: recipe.entry.videoModel }
       : {}),
     ...(recipe.imageProvider ? { imageProvider: recipe.imageProvider } : {}),
-    // An upscale's words are its own prompt field, not the description.
+    // An upscale's words are its own prompt field, not the description. A
+    // recorded job restores the person's own words (the description before
+    // camera, scene and Light wording were composed into `recipe.prompt`), so
+    // the composed prompt never lands over them to be composed a second time.
     ...(recipe.prompt
       ? recipe.entry?.generator === "upscale"
-        ? { upscalePrompt: recipe.prompt }
-        : { description: recipe.prompt }
+        ? recipe.job?.upscalePrompt === undefined
+          ? { upscalePrompt: recipe.prompt }
+          : {}
+        : recipe.job
+          ? {}
+          : { description: recipe.prompt }
       : {}),
     // Always replaced, as the restore reducer does: an earlier run's
     // references or boxes must not ride along into a paid Generate.
     imageReferences: images,
     imageRegions: [],
+    // An upscale's source is never in the project: hold Generate until the
+    // person picks one, rather than sending the newest generated clip.
+    ...(recipe.entry?.generator === "upscale" && !recipe.job?.sourceId
+      ? { sourceId: SOURCE_UNRESOLVED }
+      : {}),
   };
-  applyCameraRecipe({ patch, note });
+  applyCameraRecipe({
+    patch,
+    note,
+    ...(recipe.job ? { job: recipe.job } : {}),
+    ...(recipe.location ? { location: recipe.location } : {}),
+  });
 }

@@ -31,6 +31,7 @@ import { MAX_DEPLOYMENT_SETTINGS } from "../shared/limits";
 import { testerDeploymentOnly } from "./tester-errors";
 
 export { HOSTED_DEPLOY_INPUT_BYTES } from "../shared/comfy/deploy-file";
+export { withoutDeployTickets } from "../shared/comfy/deploy-input";
 /** Unexpired input tickets one session may hold. */
 const MAX_STAGED = 32;
 const EXTENSIONS: Record<string, string> = {

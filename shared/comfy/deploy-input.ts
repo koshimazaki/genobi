@@ -87,6 +87,28 @@ export function readDeployInput(value: unknown): DeployInput {
   };
 }
 
+/**
+ * A run's deployment inputs as a job keeps and returns them: the seed, the
+ * negative prompt and the capture recipe, for Recreate. The file tickets are
+ * short-lived and session-bound, so neither backend keeps them on the job;
+ * Recreate names the files to reattach (`src/recreate-gaps.ts`).
+ */
+export function publicDeployInput(deploy: DeployInput): DeployInput {
+  return {
+    seed: deploy.seed,
+    negativePrompt: deploy.negativePrompt,
+    ...(deploy.recipe === undefined ? {} : { recipe: deploy.recipe }),
+    assets: {},
+  };
+}
+export function withoutDeployTickets<T extends { deploy?: DeployInput }>(
+  value: T,
+): T {
+  return value.deploy
+    ? { ...value, deploy: publicDeployInput(value.deploy) }
+    : value;
+}
+
 export function requireDeployGeometry(input: GenerateInput) {
   if (!isDeployModel(input.model)) return;
   const seconds = 8;

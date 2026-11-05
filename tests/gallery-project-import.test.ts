@@ -1,6 +1,7 @@
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 import { importGalleryMedia } from "../src/director/import-gallery-media";
 import { createStudioStore } from "../src/studio/store";
+import type { Job } from "../shared/types";
 import { assetFixture, imageFile } from "./director-asset-fixture";
 import {
   DIRECTOR_MEDIA_BYTES,
@@ -69,6 +70,45 @@ it("rejects a project switch while a result is downloading", async () => {
   await expect(pending).rejects.toThrow("Project changed");
   expect(store.getState().director.bundle!.project.assets).toEqual(
     other.project.assets,
+  );
+});
+
+it("rejects a project switch while a Camera job's record is loading", async () => {
+  const store = fixture();
+  let take!: (response: Response) => void;
+  const fetch = vi.fn((url: RequestInfo | URL) =>
+    String(url).startsWith("/api/takes/")
+      ? new Promise<Response>((r) => {
+          take = r;
+        })
+      : Promise.resolve(imageResponse()),
+  );
+  vi.stubGlobal("fetch", fetch);
+  const job = {
+    id: "job-a",
+    generator: "image",
+    model: "flux-3",
+    description: "A forest.",
+    prompt: "A forest.",
+  } as Job;
+  const pending = importGalleryMedia(
+    "/api/jobs/owned/result",
+    "forest.png",
+    store,
+    { job },
+  );
+  await vi.waitFor(() => expect(take).toBeTypeOf("function"));
+  // Sent from project A; project B opens while the record loads.
+  const other = assetFixture();
+  other.project.id = "other";
+  store.getState().actions.commit(other, store.getState().director.bundle);
+  take(new Response(null, { status: 404 }));
+  await expect(pending).rejects.toThrow("Project changed");
+  expect(store.getState().director.bundle!.project.assets).toEqual(
+    other.project.assets,
+  );
+  expect(store.getState().director.bundle!.project.generations).toEqual(
+    other.project.generations,
   );
 });
 

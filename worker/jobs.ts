@@ -1,7 +1,7 @@
 import { readImageResponse } from "./image-response";
 import { isKleinEdit, kleinFiles } from "../shared/comfy/klein-edit";
 import type { Expectation } from "../shared/comfy/expectation";
-import { deploymentClient } from "./deployments";
+import { deploymentClient, withoutDeployTickets } from "./deployments";
 import {
   copyDeploymentAudio,
   forgetDeploymentAudio,
@@ -62,9 +62,9 @@ const statuses = new Set<JobStatus>([
   "Content Moderated",
   "Error",
 ]);
-const publicJob = (row: JobRow) => JSON.parse(row.data) as Job;
+const publicJob = (row: JobRow): Job =>
+  withoutDeployTickets(JSON.parse(row.data) as Job);
 function duplicate(row: JobRow, input: GenerateInput) {
-  // Both backends answer a replay with shared/idempotency.ts, never raw JSON.
   if (canonicalInput(JSON.parse(row.input)) !== canonicalInput(input))
     throw new AppError(
       409,
@@ -142,7 +142,7 @@ export async function submit(
   }
   const now = new Date().toISOString();
   const job: Job = {
-    ...input,
+    ...withoutDeployTickets(input),
     imageReferences: undefined,
     ...(takesVideoReferences(model)
       ? { imageReferenceCount: input.imageReferences?.length ?? 0 }

@@ -1,6 +1,7 @@
 import { mkdir, readFile, rename, writeFile } from "node:fs/promises";
 import path from "node:path";
 import type { ChainRecord } from "../shared/chain";
+import { publicDeployInput } from "../shared/comfy/deploy-input";
 import type { QuoteRecord } from "../shared/quote";
 import type { TakeStart } from "../shared/take";
 import type { GenerateInput, Job, Source } from "../shared/types";
@@ -165,10 +166,12 @@ export function publicJob(job: StoredJob): Job {
     companionDownloads: _downloads,
     lastPolledAt: _last,
     take: _take,
-    deploy: _deploy,
+    deploy,
     ...visible
   } = job;
-  return visible;
+  // A deployment's seed, negative prompt and capture recipe come back for
+  // Recreate; its session-bound file tickets never do (`deploy-input.ts`).
+  return deploy ? { ...visible, deploy: publicDeployInput(deploy) } : visible;
 }
 export function publicSource(source: StoredSource): Source {
   const {

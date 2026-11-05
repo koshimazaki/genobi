@@ -294,6 +294,11 @@ describe("hosted caller-owned Comfy deployments", () => {
       "Room impulse response",
       "Room wet mix",
     ]);
+    // Recreate gets the seed, negative prompt and recipe back, as from the
+    // local server; the session-bound file tickets are never kept on the job.
+    for (const kept of [job, ready.job])
+      expect(kept.deploy).toEqual({ ...input.deploy, assets: {} });
+    expect(JSON.stringify(ready)).not.toContain(body.deploy.assets.TAKE_WEBM);
     expect(
       deploymentRequests
         .filter((r) => r.path.includes("jobs/deployed-1"))
@@ -318,6 +323,48 @@ describe("hosted caller-owned Comfy deployments", () => {
       .first();
     expect(JSON.stringify(persisted)).not.toContain(key);
   });
+  it("sanitizes legacy hosted deployment tickets on history, poll and replay", async () => {
+    const session = newSession();
+    const body = await staged(session);
+    const quote = await quoted(session, body);
+    const requestId = crypto.randomUUID();
+    const response = await submit(session, body, quote.id, requestId);
+    expect(response.status).toBe(202);
+    const { job } = (await response.json()) as { job: Job };
+    const db = await mf.getD1Database("DB");
+    // Simulate a D1 job saved before the write-time ticket scrubbing fix.
+    const legacy = {
+      ...job,
+      deploy: { ...job.deploy!, assets: body.deploy.assets },
+    };
+    await db
+      .prepare("UPDATE jobs SET data=? WHERE id=?")
+      .bind(JSON.stringify(legacy), job.id)
+      .run();
+
+    const history = await call("/api/history", {
+      headers: { cookie: session },
+    });
+    expect(history.status).toBe(200);
+    const listed = (await history.json()) as { jobs: Job[] };
+    const inHistory = listed.jobs.find((item) => item.id === job.id)!;
+    expect(inHistory.deploy?.assets).toEqual({});
+
+    const polled = await call(`/api/jobs/${job.id}`, {
+      headers: headers(session),
+    });
+    expect(polled.status).toBe(200);
+    expect(((await polled.json()) as { job: Job }).job.deploy?.assets).toEqual(
+      {},
+    );
+    const replay = await submit(session, body, quote.id, requestId);
+    expect(replay.status).toBe(202);
+    expect(((await replay.json()) as { job: Job }).job.deploy?.assets).toEqual(
+      {},
+    );
+    expect(JSON.stringify(listed)).not.toContain(body.deploy.assets.TAKE_WEBM);
+  });
+
   it.each(["video", "ir"] as const)(
     "rejects an incomplete %s output group without retaining a partial take",
     async (missing) => {

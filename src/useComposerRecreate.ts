@@ -7,8 +7,13 @@ import {
   onCameraRecipe,
   setCameraNotice,
 } from "./camera-recipe-target";
-import { setupChoices, supersedeRestores } from "./settings-store";
+import {
+  restoreWrites,
+  setupChoices,
+  supersedeRestores,
+} from "./settings-store";
 import { restoreRun } from "./useRecreate";
+import { RESTORE_FAILED } from "./run-restore";
 import type { ComposerState, useComposer } from "./useComposer";
 import { studioStore } from "./studio/store";
 
@@ -33,29 +38,40 @@ export function useComposerRecreate(
   const latest = useRef(state);
   latest.current = state;
   // A Director slot's Recreate in Camera (#57) arrives here as an edit.
-  const edit = useRef({ update, onError, uploadVideo });
-  edit.current = { update, onError, uploadVideo };
+  const edit = useRef({ update, onError, dispatch, uploadVideo });
+  edit.current = { update, onError, dispatch, uploadVideo };
   const uploads = useRef(0);
   const [uploadingVideo, setUploadingVideo] = useState(false);
   // The handoff whose note Camera shows; a dropped upload takes it along.
   const noticeOwner = useRef({ upload: 0, note: "" });
   useEffect(
     () =>
-      onCameraRecipe(({ patch, note, video }) => {
+      onCameraRecipe(({ patch, note, job, location, video }) => {
         const upload = ++uploads.current;
         // A commit replaces the bundle object; only another project drops it.
         const project = () =>
           studioStore.getState().director.bundle?.project.id;
         const originalProject = project();
+        // A recorded run comes back whole through Camera's own restore; the
+        // patch then replaces its references with the project's images.
+        if (job) {
+          supersedeRestores();
+          edit.current.dispatch({ type: "restore", job });
+        }
         // Never let the composer silently fall back to a previous source while
         // another MP4 is being uploaded. Generate stays disabled until it ends.
         setUploadingVideo(Boolean(video));
         edit.current.update?.(
           video ? { ...patch, sourceId: ASSET_UPLOAD_PENDING } : patch,
         );
+        // A restore is not an error: its note is a neutral status line.
         edit.current.onError("");
         noticeOwner.current = { upload, note };
         setCameraNotice(note);
+        if (location)
+          restoreWrites
+            .location(location)
+            .catch(() => edit.current.onError(RESTORE_FAILED));
         if (!video) return;
         const send = edit.current.uploadVideo;
         if (!send) {
@@ -140,7 +156,10 @@ export function useComposerRecreate(
       // Name whatever this browser or the job did not keep, per model.
       const gaps = recreateGapMessage(recreateGaps(job, inputs));
       if (gaps) onError(gaps);
-      await restoreRun(job, onError);
+      // A failed take read adds its sentence; it never hides what is missing.
+      await restoreRun(job, (message) =>
+        onError(message && gaps ? `${gaps} ${message}` : message),
+      );
     } finally {
       if (sequenceId === sequence.current) setPending(false);
     }

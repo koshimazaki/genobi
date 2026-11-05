@@ -1,4 +1,5 @@
 import { useSyncExternalStore } from "react";
+import type { Job } from "../shared/types";
 import type { ComposerState } from "./useComposer";
 
 /**
@@ -13,12 +14,26 @@ export interface CameraRecipePatch {
   /** Said in Camera's notice line; "" when everything was restored. */
   note: string;
   /**
+   * The asset's recorded settings, restored through Camera's own restore
+   * before the patch (references) lands. Absent: the patch alone.
+   */
+  job?: Job;
+  /** A workflow run's recorded run location, saved for the session. */
+  location?: "local" | "cloud";
+  /**
    * An MP4 the person chose to use in Camera (an expanded Assets card's Use
    * in Camera): the composer uploads it as Upscale's source, exactly as the
    * Upscale drop zone does, and selects it. An upload, never a generation.
    */
   video?: File;
 }
+/**
+ * A recreated upscale's source the project cannot name. A source id no
+ * source has, so Camera neither falls back to the newest generated clip nor
+ * enables Generate (`composerBlocked`) until the person picks a source.
+ */
+export const SOURCE_UNRESOLVED = "__source-unresolved__";
+
 type Target = (recipe: CameraRecipePatch) => void;
 let target: Target | undefined;
 

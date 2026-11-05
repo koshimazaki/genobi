@@ -45,7 +45,13 @@ function jobFor(entry: ReadyEntry, complete: boolean): Job {
       ? { swap: { start: 0, size: 480 as const, seed: 7 } }
       : {}),
     ...(complete && needs.deploy
-      ? { deploy: { seed: 1, negativePrompt: "", assets: {} } }
+      ? {
+          deploy: {
+            seed: 41,
+            negativePrompt: "No cuts, no text.",
+            assets: { REFERENCE_PNG: "11111111-2222-4333-8444-555555555555" },
+          },
+        }
       : {}),
     ...(complete && needs.provider ? { imageProvider: "bfl" as const } : {}),
   };

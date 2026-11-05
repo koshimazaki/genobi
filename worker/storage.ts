@@ -1,5 +1,6 @@
 import type { Job, Source } from "../shared/types";
 import catalogue from "../public/media/gallery.json";
+import { withoutDeployTickets } from "../shared/comfy/deploy-input";
 import { AppError } from "../server/errors";
 import { parseLibrary } from "../shared/library";
 import {
@@ -225,7 +226,10 @@ export async function history(env: Env, session: string) {
     .bind(session)
     .all<{ data: string }>();
   return {
-    jobs: jobs.results.map((r) => JSON.parse(r.data)),
+    // Legacy rows predate write-time ticket removal. Never return them to Camera.
+    jobs: jobs.results.map((r) =>
+      withoutDeployTickets(JSON.parse(r.data) as Job),
+    ),
     sources: [...library, ...sources.results.map((r) => JSON.parse(r.data))],
   };
 }
