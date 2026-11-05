@@ -245,7 +245,10 @@ workflow model, `Genobi-Workflow`: the values its controls show
 (`expectedHeaders` in `src/settings-store.ts`). Where the run is priced, before
 anything is reserved, the server compares them with the session's settings and
 refuses a difference with `409 settings_changed` (`server/settings-expectation.ts`),
-so a run never goes to Cloud while the studio showed Local. A chain approval
+so a run never goes to Cloud while the studio showed Local. Where the adapter offers GPU boxes the studio also sends `Genobi-Gpu-Box`
+(`<port>:<name>`, or `none` on Local), because a box and Local both run at
+`location: "local"`: a stale tab never sends to a box it did not show, or to
+another box's port. A chain approval
 names the paused stage's own model, so a template swapped in another tab (whose
 refreshed quote prices the other graph) is refused rather than run. A paid
 request without the two headers (an MCP client) runs as before.

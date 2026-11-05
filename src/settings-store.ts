@@ -221,13 +221,22 @@ export function expectedHeaders(input?: {
   generator: Generator;
   model?: VideoModel;
 }): Record<string, string> {
-  const { location, workflows } = useSettingsStore.getState();
+  const { location, workflows, runLocation } = useSettingsStore.getState();
   const entry = input && entryFor(input.generator, input.model);
   const workflow =
     entry?.route === "workflow" ? workflows[entry.id] : undefined;
+  // A box and Local share `location: "local"`: where boxes are offered, name
+  // the box shown (`<port>:<name>`) or `none`.
+  const box =
+    location && runLocation?.choices.includes("box")
+      ? runLocation.mode === "box" && runLocation.box
+        ? `${runLocation.box.port}:${encodeURIComponent(runLocation.box.name)}`
+        : "none"
+      : undefined;
   return {
     ...(location ? { "Genobi-Run-Location": location } : {}),
     ...(workflow ? { "Genobi-Workflow": workflow } : {}),
+    ...(box ? { "Genobi-Gpu-Box": box } : {}),
   };
 }
 

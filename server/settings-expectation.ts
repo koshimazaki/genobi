@@ -20,11 +20,12 @@ const store = new AsyncLocalStorage<Expectation>();
 const one = (value: string | string[] | undefined) =>
   Array.isArray(value) ? value[0] : value;
 
-/** Reads and checks the two headers; a malformed one is a 400. */
+/** Reads and checks the headers, `Genobi-Gpu-Box` too; a malformed one is a 400. */
 export function expectationOf(headers: IncomingHttpHeaders): Expectation {
   const location = one(headers["genobi-run-location"]);
   const workflow = one(headers["genobi-workflow"]);
-  return readExpectation(location, workflow);
+  const box = one(headers["genobi-gpu-box"]);
+  return readExpectation(location, workflow, box);
 }
 
 /**
