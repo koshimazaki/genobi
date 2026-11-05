@@ -32,7 +32,11 @@ it ([featured workflow](audio-reactive/README.md)). The same geometry feeds
 acoustic measurement and CPU room reverb, so each room sounds its size: in
 Acoustic Spaces v2 the decay runs from 0.2 s in a booth to over 5 s between
 towers. AKUSPACE, our LoRA on LTX-2.5, is a separate route for room-conditioned sound
-([adaptive reverb evidence](docs/adaptive-reverb-proof.md)).
+([adaptive reverb evidence](docs/adaptive-reverb-proof.md)). The innovation
+is the whole product around that workflow: a Layout-to-Render path built for
+architecture turned into audio-visual work, carried by one agentic loop with
+its tools and voice mode, in a product that is shareable and editable and
+makes this kind of video accessible.
 
 https://github.com/user-attachments/assets/8721af01-1a54-44dc-8d7d-c96eade6aa13
 
@@ -95,8 +99,12 @@ Terms per model: [LICENCES.md](LICENCES.md) and [credits](docs/credits.md).
 
 ### One agentic loop (Best Overall)
 
-The agent and you edit one Director/Editor timeline; it reads back your
-changes and quotes every paid step first. A **licence layer** records each
+Everything above adds up in one product: World Builder inside ComfyUI,
+acoustic measurement, audio-reactive rendering, voice, the agent and the
+editor, and to my knowledge no other project combines them. The result is a
+new way of working that teaches as it goes and makes fresh-looking content
+people share. The agent and you edit one Director/Editor timeline; it reads
+back your changes and quotes every paid step first. A **licence layer** records each
 model's terms, a **Taste layer** points agents at aesthetic choices first:
 curated libraries and credited references kept as project memory, editable
 per project and exportable as JSON ([taste](docs/taste-memory.md)),
