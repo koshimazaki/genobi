@@ -21,6 +21,7 @@ export default function GalleryCard({
   onPreview,
   soundAllowed,
   onOpen,
+  onView,
 }: {
   template: HouseTemplate;
   featured: boolean;
@@ -29,6 +30,8 @@ export default function GalleryCard({
   onPreview: (playing: boolean) => void;
   soundAllowed: boolean;
   onOpen: (button: HTMLButtonElement) => void;
+  /** Opens the full-resolution cut in the lightbox. */
+  onView?: (button: HTMLButtonElement) => void;
 }) {
   const [pointer, setPointer] = useState(false);
   const [focus, setFocus] = useState(false);
@@ -163,7 +166,11 @@ export default function GalleryCard({
             <span className="sr-only">Director recipe</span>
           </span>
         )}
-        <ShareLink id={template.id} name={template.name} />
+        <ShareLink
+          id={template.id}
+          name={template.name}
+          onView={media && onView}
+        />
       </div>
     </article>
   );

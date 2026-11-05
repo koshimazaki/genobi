@@ -29,10 +29,13 @@ export default function VideoLightbox({
   onClose,
   nav,
   onMeasure,
+  sound = false,
 }: {
   clip: ViewingClip | null;
   onClose: () => void;
   nav?: LightboxNav;
+  /** Start a video with sound: the click that opened it is the gesture. */
+  sound?: boolean;
   /** The media's own pixel size, once it has loaded. */
   onMeasure?: (width: number, height: number) => void;
 }) {
@@ -49,7 +52,16 @@ export default function VideoLightbox({
     const player = video.current;
     box?.showModal();
     document.body.style.overflow = "hidden";
-    void player?.play().catch(() => {});
+    if (player && sound) player.muted = false;
+    void player?.play().catch((error: unknown) => {
+      // A browser that refuses audio still plays the clip, muted. A play
+      // cut short by a pause (closing, stepping) is not a refusal.
+      if (!player || player.muted) return;
+      if (error instanceof DOMException && error.name !== "NotAllowedError")
+        return;
+      player.muted = true;
+      void player.play().catch(() => {});
+    });
     return () => {
       player?.pause();
       box?.close();
