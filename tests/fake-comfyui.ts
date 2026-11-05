@@ -11,6 +11,8 @@ export interface FakeComfyOptions {
   outputs?: Record<string, unknown>;
   /** The bytes `/view` serves. */
   media?: Uint8Array;
+  /** What `/system_stats` lists under `devices`: none by default. */
+  devices?: unknown[];
 }
 
 export interface FakeComfy {
@@ -70,7 +72,7 @@ export async function fakeComfy(options: FakeComfyOptions): Promise<FakeComfy> {
           argv: ["/home/someone/ComfyUI/main.py"],
           python_version: "3.12",
         },
-        devices: [],
+        devices: options.devices ?? [],
       });
     if (url.pathname === "/object_info") return json(200, objectInfo);
     if (url.pathname === "/upload/image" && request.method === "POST") {

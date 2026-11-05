@@ -56,6 +56,8 @@ export interface WorkflowRunOptions {
    */
   location?: DestinationKind;
   deployment?: { url: string; name: string };
+  /** A GPU box's loopback address, for a `local` run the take sent there. */
+  box?: { name: string; url: string };
   /** Files for the template's `image` and `video` slots, by slot name. */
   files?: Record<string, WorkflowFile>;
 }

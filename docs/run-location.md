@@ -1,6 +1,6 @@
 ---
 tags: [workflows, comfy, backend, studio, mcp]
-summary: Local ComfyUI, Comfy Cloud and registered deployments; capability-aware controls, workflow swapping and the local model map.
+summary: Local ComfyUI, Comfy Cloud, GPU boxes and registered deployments; capability-aware controls, workflow swapping and the local model map.
 ---
 
 # Run location and workflow swapping
@@ -16,6 +16,16 @@ that mixed configuration explicit. Router and BFL entries are the paid extras on
 do not follow it. Each workflow entry also runs a **template**, a graph under
 `workflows/`, which a session can swap for another template that serves the
 same capability.
+
+## GPU box
+
+**GPU box** (`location: "box"`) runs open workflows on a ComfyUI on a Vast
+instance or the lab machine, through an SSH tunnel the person runs to a
+loopback port: a named local destination with a port, so it resolves to
+`local` with `recipe.box` recorded beside it. Settings show the tunnel command,
+the box's GPU, VRAM, readiness, uptime and an idle reminder; nothing ever stops
+the box. Only the name and port are kept. See [GPU box](gpu-box.md), which
+also describes the pre-submit model and node check every ComfyUI route now runs.
 
 ## Comfy Deploy
 
@@ -80,7 +90,7 @@ support does not provide authenticated remote MCP access.
 | Who      | How                                                                                                                                            |
 | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
 | Operator | `GENOBI_WORKFLOW_DESTINATION` (`cloud`, `local` or `deployment`) and `GENOBI_WORKFLOW_URL`: the server's default                               |
-| Studio   | **Studio setup** in Studio settings (the key button): advertised Local ComfyUI, Comfy Cloud, Both or Comfy Deploy choices                      |
+| Studio   | **Studio setup** in Studio settings (the key button): advertised Local ComfyUI, Comfy Cloud, Both, Comfy Deploy or GPU box choices             |
 | Studio   | The **Local** tick in the model menu's header, beside Open only (below)                                                                        |
 | Agents   | `genobi_run_location` (read, or set with `location`), `genobi_workflows` (list; `checkLocal` asks the local ComfyUI), `genobi_workflow_select` |
 | HTTP     | `GET`/`POST /api/settings/run-location`, `GET /api/settings/workflows[?check=local]`, `POST /api/settings/workflows/selection`                 |

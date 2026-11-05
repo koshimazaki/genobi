@@ -59,6 +59,14 @@ to the experiment runner. A hosted Genobi page is not automatically connected
 to the machine by this tunnel; use the local studio or run the prepared graph
 through the worker API, then import the result into Genobi.
 
+In the local studio, choose the **GPU box** run location
+([GPU box](gpu-box.md)): it builds this tunnel command from what you type,
+keeps only the box's name and local port, checks the box's nodes and models
+before every run, shows its GPU, VRAM and uptime, and reminds you to stop the
+instance after a stretch with no job. The October 2026 image runs ComfyUI on
+18188 behind Caddy, so forward `-L 8188:127.0.0.1:18188` there. Genobi never
+stops a Vast instance; stop it in Vast's console when done.
+
 Tailscale is optional. It works only when **the machine executing the agent's
 commands and the GPU worker** both have an authorized route on the same tailnet.
 Installing it on the Mac and GPU alone does not connect a separate agent sandbox.

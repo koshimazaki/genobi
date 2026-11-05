@@ -12,6 +12,7 @@ import type {
   WorkflowTemplate,
 } from "../shared/comfy/workflow";
 import type { LocalComfyWorkflows } from "./comfy-local";
+import type { GpuBoxes } from "./gpu-boxes";
 
 /** A client that can say which handles and result URLs are its own. */
 export type OwningClient = WorkflowClient & { owns(value: string): boolean };
@@ -22,6 +23,8 @@ export interface OtherDestinations {
   fetcher?: typeof fetch;
   /** The server's Comfy API deployment (`GENOBI_DEPLOYMENT_URL`). */
   deployment?: OwningClient;
+  /** GPU boxes: loopback ComfyUIs at their own tunnel ports. */
+  boxes?: GpuBoxes;
 }
 
 /**
@@ -42,8 +45,10 @@ export class WorkflowDestinations implements WorkflowClient {
   }
 
   private owner(value: string): WorkflowClient {
-    const { local, deployment } = this.others;
+    const { local, deployment, boxes } = this.others;
     if (local?.owns(value)) return local;
+    const box = boxes?.owner(value);
+    if (box) return box;
     if (deployment?.owns(value)) return deployment;
     try {
       const url = new URL(value);
@@ -62,9 +67,13 @@ export class WorkflowDestinations implements WorkflowClient {
     options: WorkflowRunOptions,
   ): Promise<string> {
     const location = options.location ?? "cloud";
+    // A GPU box run goes to its own loopback port or nowhere: never to the
+    // default local ComfyUI, whose models and bill may differ.
     const client = options.deployment
       ? this.deployment(options.deployment.url)
-      : this.client(location);
+      : location === "local" && options.box
+        ? this.others.boxes?.client(options.box.url)
+        : this.client(location);
     if (!client) throw notConfigured({ kind: location });
     return client.run(template, values, key, options);
   }

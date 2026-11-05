@@ -76,13 +76,19 @@ const isCatalogue = (value: unknown): value is WorkflowCatalogue =>
 
 export const readRunLocation = (signal?: AbortSignal) =>
   send("/api/settings/run-location", undefined, isLocation, signal);
+/** A GPU box is sent as its label and tunnel port only, never an SSH host. */
 export const saveRunLocation = (
   location: RunLocation,
   deploymentUrl?: string,
+  box?: { name: string; port: number },
 ) =>
   send(
     "/api/settings/run-location",
-    { location, ...(deploymentUrl === undefined ? {} : { deploymentUrl }) },
+    {
+      location,
+      ...(deploymentUrl === undefined ? {} : { deploymentUrl }),
+      ...(box === undefined ? {} : { box }),
+    },
     isLocation,
   );
 export const readWorkflows = (signal?: AbortSignal) =>

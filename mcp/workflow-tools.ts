@@ -4,6 +4,7 @@ import type { WorkflowCatalogue } from "../shared/comfy/workflows";
 import type { ToolDefinition } from "./definition";
 import { RUN_LOCATIONS } from "../shared/comfy/run-location";
 import { parseWorkflowDestination } from "../shared/comfy/destination";
+import { parseGpuBox } from "../shared/comfy/gpu-box";
 
 // The run location and workflow swapping, through the same session settings
 // the studio uses (`/api/settings` on the local server). Nothing here is paid
@@ -16,7 +17,7 @@ export const workflowTools: ToolDefinition[] = [
     name: "genobi_run_location",
     title: "Genobi run location",
     description:
-      "Read or set this session's open-workflow destination: local, cloud, both, or deployment with deploymentUrl (https://<name>.run.comfy.app). A deployment uses its workspace's billing. Without location this only reads readiness and input limits. No automatic fallback. A destination change invalidates earlier quotes and staged tickets; stage and quote again before an approved submission.",
+      "Read or set this session's open-workflow destination: local, cloud, both, deployment with deploymentUrl (https://<name>.run.comfy.app), or box with a GPU box's name and the local port of the person's SSH tunnel (a Vast or lab ComfyUI at http://127.0.0.1:<port>). A deployment uses its workspace's billing; a GPU box is billed by its provider while it runs, so mention its idle reminder and never stop or start it. Without location this only reads readiness and input limits. No automatic fallback. A destination change invalidates earlier quotes and staged tickets; stage and quote again before an approved submission.",
     inputSchema: {
       location: z
         .enum(RUN_LOCATIONS)
@@ -28,6 +29,15 @@ export const workflowTools: ToolDefinition[] = [
         .optional()
         .describe(
           "Required with location deployment; an exact https://<name>.run.comfy.app endpoint, without credentials, path or query.",
+        ),
+      box: z
+        .object({
+          name: z.string().max(40),
+          port: z.number().int().min(1024).max(65535),
+        })
+        .optional()
+        .describe(
+          "With location box: the box's label and the local end of the person's SSH tunnel. Never an SSH host, user or key.",
         ),
     },
     tags: ["agents", "mcp", "workflows", "comfy"],
@@ -42,6 +52,9 @@ export const workflowTools: ToolDefinition[] = [
         throw new Error("deploymentUrl requires location deployment.");
       if (args.location === "deployment")
         parseWorkflowDestination("deployment", args.deploymentUrl);
+      if (args.box !== undefined && args.location !== "box")
+        throw new Error("box requires location box.");
+      if (args.box !== undefined) parseGpuBox(args.box);
       return args.location === undefined
         ? api.get<RunLocationState>("/api/settings/run-location")
         : api.post<RunLocationState>("/api/settings/run-location", {
@@ -49,6 +62,7 @@ export const workflowTools: ToolDefinition[] = [
             ...(args.deploymentUrl !== undefined
               ? { deploymentUrl: args.deploymentUrl }
               : {}),
+            ...(args.box !== undefined ? { box: args.box } : {}),
           });
     },
   },

@@ -36,6 +36,7 @@ import { JobService } from "./jobs";
 import type { WorkflowClient } from "../shared/comfy/workflow";
 import type { WorkflowDestination } from "../shared/comfy/destination";
 import type { LocalComfyWorkflows } from "./comfy-local";
+import type { GpuBoxes } from "./gpu-boxes";
 import { WorkflowSettings } from "./workflow-settings";
 import { settingsRouter } from "./settings-routes";
 import { layoutRouter } from "./layout-routes";
@@ -109,6 +110,10 @@ export interface AppOptions extends DevOptions {
   runLocation?: {
     destination?: WorkflowDestination;
     local?: LocalComfyWorkflows;
+    /** GPU boxes reached through SSH tunnels (`server/gpu-boxes.ts`). */
+    boxes?: GpuBoxes;
+    /** Ports a GPU box may not claim: this server's own. */
+    reservedPorts?: readonly number[];
   };
   /** The local ffmpeg service; tests inject a runner. */
   mediaTools?: MediaToolsOptions;
@@ -146,9 +151,12 @@ export async function createApp(options: AppOptions) {
   const keys = options.keys ?? ServerKeys.single(options.serverKey);
   await keys.load();
   const local = options.runLocation?.local;
+  const boxes = options.runLocation?.boxes;
   const settings = new WorkflowSettings(store, {
     destination: options.runLocation?.destination,
     localStatus: local && (() => local.status()),
+    boxStatus: boxes && ((box) => boxes.status(box)),
+    reservedPorts: options.runLocation?.reservedPorts,
   });
   const deploymentAssets = new DeploymentAssets(
     settings,
@@ -449,7 +457,7 @@ export async function createApp(options: AppOptions) {
   app.use("/api/settings", deploymentAssets.router(limit));
   app.use(
     "/api/settings",
-    settingsRouter(settings, limit, local, {
+    settingsRouter(settings, limit, local, boxes, {
       key: () => keys.key("comfy"),
       fetcher: options.cloudCheckFetcher,
     }),

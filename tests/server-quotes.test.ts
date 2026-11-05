@@ -8,6 +8,8 @@ import {
 } from "../shared/comfy/workflow";
 import { ComfySdkWorkflows } from "../server/comfy-sdk";
 import { input, setup } from "./server-harness";
+import { infoForGraphs } from "./comfy-readiness-fixture";
+import { workflowTemplates } from "../shared/comfy/workflows";
 
 // Quotes and what each provider is sent and charged: budgets, upscale controls,
 // edited camera text, Comfy keys and Acoustic Space on the workflow route.
@@ -287,6 +289,11 @@ describe("local job API: quotes, pricing and providers", () => {
     const calls: { url: string; init?: RequestInit }[] = [];
     const fetcher: typeof fetch = async (target, init) => {
       const url = String(target);
+      // The account's catalogue, read before the run (#47); not counted.
+      if (url === "https://cloud.comfy.org/api/object_info")
+        return Response.json(
+          infoForGraphs(...workflowTemplates.map((c) => c.template.graph)),
+        );
       calls.push({ url, init });
       if (url === "https://cloud.comfy.org/api/v2/jobs")
         return Response.json(job("queued"), { status: 201 });

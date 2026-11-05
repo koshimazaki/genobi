@@ -23,14 +23,21 @@ import {
   type TemplateChoice,
 } from "../shared/comfy/workflows";
 import type { TakeRecipe, WorkflowPlan } from "../shared/take";
+import {
+  boxUrl,
+  parseGpuBox,
+  type BoxStatus,
+  type GpuBox,
+} from "../shared/comfy/gpu-box";
 import type { Store, StoredSettings } from "./store";
 import { requireExpected } from "./settings-expectation";
 
 /** A session's run location and template choices, as another may adopt them. */
 export interface SettingsSnapshot {
-  location: DestinationKind | "both";
+  location: DestinationKind | "both" | "box";
   workflows: Record<string, string>;
   deployment?: { url: string };
+  box?: GpuBox;
 }
 
 /** Sessions whose choices are kept; the oldest go first past this. */
@@ -41,6 +48,10 @@ export interface WorkflowSettingsOptions {
   destination?: WorkflowDestination;
   /** Asks the local ComfyUI whether it answers; absent where there is none. */
   localStatus?: () => Promise<LocalComfyStatus>;
+  /** Asks a GPU box what it reports (`server/gpu-boxes.ts`). */
+  boxStatus?: (box: GpuBox) => Promise<BoxStatus>;
+  /** Ports a GPU box may not claim: this server's own. */
+  reservedPorts?: readonly number[];
 }
 
 /**
@@ -104,6 +115,7 @@ export class WorkflowSettings {
       ...(this.deployment(sessionId)
         ? { deployment: { url: this.deployment(sessionId)!.url } }
         : {}),
+      ...(this.box(sessionId) ? { box: this.box(sessionId) } : {}),
     };
   }
 
@@ -130,6 +142,14 @@ export class WorkflowSettings {
     }
     if (location === "deployment" && !deployment && !this.deployment(sessionId))
       location = undefined;
+    let box: GpuBox | undefined;
+    try {
+      box = snapshot.box && parseGpuBox(snapshot.box, this.reservedPorts);
+    } catch {
+      /* Invalid inherited settings name no box. */
+    }
+    if (location === "box" && !box && !this.box(sessionId))
+      location = undefined;
     const workflows: Record<string, string> = {};
     for (const [entry, template] of Object.entries(snapshot.workflows))
       try {
@@ -143,6 +163,7 @@ export class WorkflowSettings {
       (record) => {
         if (location) record.location = location;
         if (deployment) record.deployment = deployment;
+        if (box) record.box = box;
         record.workflows = { ...record.workflows, ...workflows };
       },
       () => {},
@@ -153,9 +174,36 @@ export class WorkflowSettings {
     return this.record(sessionId)?.location ?? this.destination.kind;
   }
 
+  /** Both and a GPU box run workflows on a loopback ComfyUI: `local`. */
   location(sessionId: string): DestinationKind {
     const mode = this.mode(sessionId);
-    return mode === "both" ? "local" : mode;
+    return mode === "both" || mode === "box" ? "local" : mode;
+  }
+
+  private get reservedPorts() {
+    return this.options.reservedPorts ?? [];
+  }
+
+  /** The session's GPU box, when it named one that still reads as valid. */
+  box(sessionId: string): GpuBox | undefined {
+    const saved = this.record(sessionId)?.box;
+    if (!saved) return undefined;
+    try {
+      return parseGpuBox(saved, this.reservedPorts);
+    } catch {
+      return undefined;
+    }
+  }
+
+  /** The GPU boxes sessions run on now, each once: for the uptime watch. */
+  activeBoxes(): GpuBox[] {
+    const ports = new Map<number, GpuBox>();
+    for (const record of this.store.data.settings)
+      if (record.location === "box") {
+        const box = this.box(record.sessionId);
+        if (box && !ports.has(box.port)) ports.set(box.port, box);
+      }
+    return [...ports.values()];
   }
 
   /**
@@ -169,15 +217,32 @@ export class WorkflowSettings {
     const mode = this.mode(sessionId);
     const deployment = this.deployment(sessionId);
     const source = this.record(sessionId)?.location ? "session" : "server";
-    const local = this.options.localStatus
-      ? await this.options.localStatus()
-      : null;
+    const box = this.box(sessionId);
+    const onBox = mode === "box" && box !== undefined;
+    const boxStatus =
+      onBox && this.options.boxStatus
+        ? await this.options.boxStatus(box)
+        : null;
+    const local = boxStatus
+      ? { reachable: boxStatus.reachable, version: boxStatus.version }
+      : this.options.localStatus
+        ? await this.options.localStatus()
+        : null;
     return {
       revision,
       location,
       mode,
-      label: LOCATION_LABEL[location],
+      label: onBox ? `GPU box ${box.name}` : LOCATION_LABEL[location],
       ...(deployment ? { deployment } : {}),
+      ...(box
+        ? {
+            box: {
+              ...box,
+              url: boxUrl(box.port),
+              status: boxStatus,
+            },
+          }
+        : {}),
       source,
       fixed: false,
       choices: [...RUN_LOCATIONS],
@@ -186,17 +251,34 @@ export class WorkflowSettings {
       note:
         mode === "both"
           ? "Open workflows run on local ComfyUI; API models run through Comfy Router or BFL. No automatic cloud fallback."
-          : location === "local"
-            ? "Workflows run on the ComfyUI on this machine, with its own models. Nothing is charged."
-            : location === "cloud"
-              ? "Workflows run on Comfy Cloud with your Comfy key, and each run is charged to it."
-              : "Workflows run on your Comfy deployment. GPU time is billed by Comfy to its workspace.",
+          : onBox
+            ? "Open workflows run on your GPU box through its SSH tunnel, with its own models; API models run through Comfy Router or BFL. The box's provider bills its uptime, not Genobi."
+            : location === "local"
+              ? "Workflows run on the ComfyUI on this machine, with its own models. Nothing is charged."
+              : location === "cloud"
+                ? "Workflows run on Comfy Cloud with your Comfy key, and each run is charged to it."
+                : "Workflows run on your Comfy deployment. GPU time is billed by Comfy to its workspace.",
     };
   }
 
   /** Answers with the state this write made, whatever lands while it saves. */
-  async setLocation(sessionId: string, value: unknown, url?: unknown) {
+  async setLocation(
+    sessionId: string,
+    value: unknown,
+    url?: unknown,
+    boxValue?: unknown,
+  ) {
     const location = parseRunLocation(value);
+    const box =
+      boxValue === undefined
+        ? undefined
+        : parseGpuBox(boxValue, this.reservedPorts);
+    if (location === "box" && !box && !this.box(sessionId))
+      throw new AppError(
+        400,
+        "Name the GPU box and its tunnel port first.",
+        "invalid_destination",
+      );
     const destination =
       url === undefined
         ? undefined
@@ -220,6 +302,7 @@ export class WorkflowSettings {
       (record) => {
         record.location = location;
         if (deployment) record.deployment = { url: deployment.url };
+        if (box) record.box = box;
       },
       () => (answer = this.state(sessionId)),
     );
@@ -301,10 +384,15 @@ export class WorkflowSettings {
         "Register your Comfy deployment in Settings → run location.",
         "invalid_destination",
       );
+    const box =
+      location === "local" && this.mode(sessionId) === "box"
+        ? this.box(sessionId)
+        : undefined;
     return {
       workflow: choice.id,
       location,
       ...(deployment ? { deployment } : {}),
+      ...(box ? { box: { name: box.name, url: boxUrl(box.port) } } : {}),
     };
   }
 
@@ -333,7 +421,8 @@ export class WorkflowSettings {
     return (
       recipe.workflow === plan.workflow &&
       recipe.location === plan.location &&
-      recipe.deployment?.url === plan.deployment?.url
+      recipe.deployment?.url === plan.deployment?.url &&
+      recipe.box?.url === plan.box?.url
     );
   }
 }

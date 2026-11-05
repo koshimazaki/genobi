@@ -61,6 +61,7 @@ const SAY = {
   cloud: "Runs on Comfy Cloud on your Comfy key",
   deployment: "Runs on the Comfy deployment on your Comfy key",
   local: "Runs on the local ComfyUI",
+  box: "Runs on the GPU box through its SSH tunnel",
 } as const;
 const TAG = {
   router: "Comfy Router",
@@ -69,6 +70,7 @@ const TAG = {
   cloud: "Comfy Cloud",
   deployment: "Comfy deployment",
   local: "Local ComfyUI",
+  box: "GPU box",
 } as const;
 type Where = keyof typeof SAY;
 
@@ -161,27 +163,38 @@ export function runModeLine({
       note: "its own host, not Local or Cloud",
     });
   if (host !== "local") return line(entry, host);
+  // A GPU box is a loopback ComfyUI at its own port: the same checks.
+  const here: Where = state.mode === "box" && state.box ? "box" : "local";
   if (
     check?.reachable === false ||
     (!check && state.local?.reachable === false)
   )
-    return line(entry, "local", {
+    return line(entry, here, {
       warn: true,
       note: "not answering",
-      said: ", which is not answering. Start ComfyUI, or untick Local",
+      said:
+        here === "box"
+          ? ", which is not answering. Start its SSH tunnel and ComfyUI, or choose another run location"
+          : ", which is not answering. Start ComfyUI, or untick Local",
     });
   const found = template ? check?.templates[template] : undefined;
   if (found?.missingNodes.length)
-    return line(entry, "local", {
+    return line(entry, here, {
       warn: true,
       note: `lacks nodes ${list(found.missingNodes)}`,
       said: `, which lacks the nodes ${list(found.missingNodes)}`,
     });
   if (found?.missingModels.length)
-    return line(entry, "local", {
+    return line(entry, here, {
       warn: true,
       note: `lacks ${list(found.missingModels)}`,
       said: `, which lacks the model files for ${list(found.missingModels)}`,
     });
-  return line(entry, "local");
+  if (here === "box" && state.box?.status?.idle)
+    return line(entry, "box", {
+      warn: true,
+      note: "idle: stop it when done",
+      said: `, which has had no job for ${state.box.status.idleMinutes} min. Vast bills by the hour; stop the box when done`,
+    });
+  return line(entry, here);
 }

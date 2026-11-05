@@ -348,6 +348,7 @@ export class JobService {
           idempotencyKey: job.id,
           location: take.recipe.location,
           deployment: take.recipe.deployment,
+          ...(take.recipe.box ? { box: take.recipe.box } : {}),
           ...(isKleinEdit(requestInput)
             ? { files: kleinFiles(requestInput) }
             : {}),

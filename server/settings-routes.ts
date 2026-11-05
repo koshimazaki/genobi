@@ -3,6 +3,8 @@ import { AppError } from "./errors";
 import type { RateBucket } from "../shared/limits";
 import { workflowTemplates } from "../shared/comfy/workflows";
 import type { LocalComfyWorkflows } from "./comfy-local";
+import type { GpuBoxes } from "./gpu-boxes";
+import { boxUrl } from "../shared/comfy/gpu-box";
 import type { WorkflowSettings } from "./workflow-settings";
 import { checkedCloudCatalogue } from "./comfy-cloud-check";
 import type { Fetcher } from "../shared/provider";
@@ -18,8 +20,16 @@ export function settingsRouter(
   settings: WorkflowSettings,
   limit: (bucket: RateBucket, id: string) => void,
   local?: LocalComfyWorkflows,
+  boxes?: GpuBoxes,
   cloud?: { key: () => string | undefined; fetcher?: Fetcher },
 ) {
+  /** The ComfyUI a local check reads: the session's GPU box, when it runs on one. */
+  const localFor = (sessionId: string) => {
+    const box = settings.box(sessionId);
+    return settings.snapshot(sessionId).location === "box" && box
+      ? boxes?.client(boxUrl(box.port))
+      : local;
+  };
   const router = express.Router();
   const body = express.json({ limit: "2kb" });
   const fields = (value: unknown) => {
@@ -33,12 +43,14 @@ export function settingsRouter(
   });
   router.post("/run-location", body, async (request, response) => {
     limit("edit", response.locals.sessionId);
-    const { location, deploymentUrl } = fields(request.body);
+    // A GPU box is a label and a tunnel port; an SSH host is never sent.
+    const { location, deploymentUrl, box } = fields(request.body);
     response.json(
       await settings.setLocation(
         response.locals.sessionId,
         location,
         deploymentUrl,
+        box,
       ),
     );
   });
@@ -57,10 +69,18 @@ export function settingsRouter(
       return;
     }
     // A detection read only when asked: /object_info can be large.
-    const check =
-      request.query.check === "local" && local
-        ? await local.check(workflowTemplates.map((c) => c.template))
+    const target =
+      request.query.check === "local"
+        ? localFor(response.locals.sessionId)
         : undefined;
+    const check = target
+      ? await target.check(
+          // Templates pinned to a deployment never run on a ComfyUI here.
+          workflowTemplates
+            .map((c) => c.template)
+            .filter((t) => !t.hosts?.length),
+        )
+      : undefined;
     response.json(check ? { ...catalogue, local: check } : catalogue);
   });
   router.post("/workflows/selection", body, async (request, response) => {

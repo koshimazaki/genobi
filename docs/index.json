@@ -55,6 +55,7 @@
         "comfy-readiness.md",
         "director-comfy.md",
         "genmod.md",
+        "gpu-box.md",
         "media-space.md",
         "openjutsu-swap.md",
         "run-location.md",
@@ -348,6 +349,7 @@
         "comfy-deploy.md",
         "comfy-deployment.md",
         "genobi-cli.md",
+        "gpu-box.md",
         "layout-to-render-status.md",
         "machine-check.md",
         "media-space.md",
@@ -385,6 +387,7 @@
         "director-comfy.md",
         "director-remix-verification.md",
         "getting-started.md",
+        "gpu-box.md",
         "minimax-h3-camera.md",
         "openjutsu-swap.md",
         "run-location.md",
@@ -470,6 +473,7 @@
         "editor-timeline.md",
         "genobi-deck.md",
         "getting-started.md",
+        "gpu-box.md",
         "project-assets.md",
         "read-through.md",
         "run-location.md",
@@ -775,6 +779,7 @@
         "genobi-teaser-run/run-log-template.md",
         "genobi-teaser.md",
         "getting-started.md",
+        "gpu-box.md",
         "hermes-open-route.md",
         "hermes-profiles.md",
         "hermes-runs.md",
@@ -1881,6 +1886,13 @@
       ]
     },
     {
+      "title": "GPU box run location",
+      "path": "gpu-box.md",
+      "tags": ["workflows", "comfy", "studio", "backend"],
+      "summary": "The GPU box run location, a ComfyUI on a Vast box or the lab machine reached through an SSH tunnel to loopback, with its readiness, uptime and idle reminder.",
+      "links": ["vast-runner.md"]
+    },
+    {
       "title": "The Hermes open route",
       "path": "hermes-open-route.md",
       "tags": ["agents", "models", "mcp"],
@@ -2219,8 +2231,13 @@
       "title": "Run location and workflow swapping",
       "path": "run-location.md",
       "tags": ["workflows", "comfy", "backend", "studio", "mcp"],
-      "summary": "Local ComfyUI, Comfy Cloud and registered deployments; capability-aware controls, workflow swapping and the local model map.",
-      "links": ["comfy-deploy.md", "comfy-readiness.md", "openjutsu-swap.md"]
+      "summary": "Local ComfyUI, Comfy Cloud, GPU boxes and registered deployments; capability-aware controls, workflow swapping and the local model map.",
+      "links": [
+        "comfy-deploy.md",
+        "comfy-readiness.md",
+        "gpu-box.md",
+        "openjutsu-swap.md"
+      ]
     },
     {
       "title": "Hosted runner pairing",
@@ -2477,7 +2494,7 @@
       "path": "vast-runner.md",
       "tags": ["workflows", "comfy", "models"],
       "summary": "Prepare a pinned local ComfyUI worker on Vast, connect by SSH and check it before running LTX experiments.",
-      "links": ["comfy-deploy.md"]
+      "links": ["comfy-deploy.md", "gpu-box.md"]
     },
     {
       "title": "Verification",

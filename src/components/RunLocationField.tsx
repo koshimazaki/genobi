@@ -10,12 +10,14 @@ import {
   type SettingView,
 } from "../run-settings";
 import { settingSaver, useSettingSaving } from "../settings-store";
+import GpuBoxField from "./GpuBoxField";
 
 const LABEL = {
   local: "Local ComfyUI",
   cloud: "Comfy Cloud",
   both: "Both",
   deployment: "Comfy Deploy",
+  box: "GPU box",
 } as const;
 const EMPTY: SettingView<RunLocationState> = {
   value: null,
@@ -51,15 +53,21 @@ export default function RunLocationField() {
   }, []);
   const state = view.value;
   if (!state) return null;
-  const choose = (location: RunLocation, deploymentUrl?: string) =>
+  const choose = (
+    location: RunLocation,
+    deploymentUrl?: string,
+    box?: { name: string; port: number },
+  ) =>
     void saver.current!.save(
       {
         ...state,
         mode: location,
-        location: location === "both" ? "local" : location,
+        location:
+          location === "both" || location === "box" ? "local" : location,
       },
-      () => saveRunLocation(location, deploymentUrl),
+      () => saveRunLocation(location, deploymentUrl, box),
     );
+  const onBox = (state.mode ?? state.location) === "box";
   return (
     <fieldset
       className="run-location"
@@ -68,8 +76,10 @@ export default function RunLocationField() {
     >
       <legend>Generation setup</legend>
       <div className="run-location__choices">
-        {(["local", "cloud", "both", "deployment"] as const)
+        {(["local", "cloud", "both", "deployment", "box"] as const)
           .filter((choice) => state.choices.includes(choice))
+          // A box needs a name and port first: its own panel's button.
+          .filter((choice) => choice !== "box" || state.box)
           .map((choice) => (
             <label key={choice}>
               <input
@@ -129,6 +139,17 @@ export default function RunLocationField() {
           Deployment setup guide
         </a>
       </p>
+      {!state.fixed && state.choices.includes("box") && (
+        <GpuBoxField
+          state={state}
+          active={view.confirmed && onBox}
+          saving={saving}
+          onUse={(box) => choose("box", undefined, box)}
+          onRefresh={() =>
+            void saver.current!.read(readRunLocation().catch(() => null))
+          }
+        />
+      )}
       {state.deployment && (
         <a href={state.deployment.url} target="_blank" rel="noreferrer">
           Runs on your Comfy deployment {state.deployment.name}
@@ -143,7 +164,10 @@ export default function RunLocationField() {
         {saving
           ? "Saving…"
           : view.message ||
-            (state.location === "local" && state.local && !state.local.reachable
+            (state.location === "local" &&
+            !onBox &&
+            state.local &&
+            !state.local.reachable
               ? "No local ComfyUI answers yet. Start ComfyUI, or choose Comfy Cloud."
               : state.note)}
       </p>
