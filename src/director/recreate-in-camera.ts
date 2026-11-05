@@ -127,11 +127,15 @@ export function generatedRecipe(
   );
   const missing: string[] = [];
   if (!entry) missing.push("model and settings");
+  const settings = publicGenerationSettings(generation.settings);
+  // A run on Auto: the recipe's route is the registry's fallback when the
+  // take could not be read, never the person's choice of payer. Auto comes
+  // back through the job, and the provider is named as not recorded.
+  const auto = settings?.imageProvider === "auto";
   const provider = entry
-    ? recordedProvider(entry, generation.recipe?.route)
+    ? recordedProvider(entry, auto ? undefined : generation.recipe?.route)
     : {};
   if (provider.missing) missing.push(provider.missing);
-  const settings = publicGenerationSettings(generation.settings);
   const job =
     settings && entry
       ? settingsJob(
