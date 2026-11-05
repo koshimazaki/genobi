@@ -1,5 +1,6 @@
 import type { GenerateInput, Job } from "../types";
 import { readNestedSettings } from "./generation-settings-read";
+import { presets } from "../legacy-camera";
 
 /**
  * The settings a Camera run was made with, recorded on the project's
@@ -26,6 +27,7 @@ export type GenerationSettings = Partial<
     | "camera"
     | "cameraEdits"
     | "cameraText"
+    | "presetId"
     | "duration"
     | "resolution"
     | "aspectRatio"
@@ -107,6 +109,10 @@ export function publicGenerationSettings(
     if (typeof value[key] === "boolean") out[key] = value[key];
   // Nested records are read by their own rules; a malformed one is dropped.
   Object.assign(out, readNestedSettings(value));
+  // A legacy camera preset (runs before `camera`): Camera's restore turns it
+  // into camera terms, so its wording comes back with the description.
+  if (presets.some((p) => p.id === value.presetId))
+    out.presetId = value.presetId;
   const deploy = value.deploy;
   if (
     plain(deploy) &&

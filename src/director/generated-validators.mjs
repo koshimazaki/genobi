@@ -257,7 +257,7 @@ var require_validators = __commonJS({
                 description:
                   "A Camera run's public request settings, recorded when it was sent to the Director so Recreate restores it from the project (shared/director/generation-settings.ts). Optional and additive. An allowlist of setting names only: no job, provider or source ids, deployment URLs or file tickets, image bytes or keys. Values are re-checked field by field on every read.",
                 type: "object",
-                maxProperties: 26,
+                maxProperties: 27,
                 propertyNames: {
                   enum: [
                     "generator",
@@ -267,6 +267,7 @@ var require_validators = __commonJS({
                     "camera",
                     "cameraEdits",
                     "cameraText",
+                    "presetId",
                     "duration",
                     "resolution",
                     "aspectRatio",
@@ -11185,15 +11186,15 @@ var require_validators = __commonJS({
                     typeof data60 == "object" &&
                     !Array.isArray(data60)
                   ) {
-                    if (Object.keys(data60).length > 26) {
+                    if (Object.keys(data60).length > 27) {
                       const err156 = {
                         instancePath:
                           instancePath + "/generations/" + i4 + "/settings",
                         schemaPath:
                           "#/properties/generations/items/properties/settings/maxProperties",
                         keyword: "maxProperties",
-                        params: { limit: 26 },
-                        message: "must NOT have more than 26 properties",
+                        params: { limit: 27 },
+                        message: "must NOT have more than 27 properties",
                       };
                       if (vErrors === null) {
                         vErrors = [err156];
@@ -11212,6 +11213,7 @@ var require_validators = __commonJS({
                         key13 === "camera" ||
                         key13 === "cameraEdits" ||
                         key13 === "cameraText" ||
+                        key13 === "presetId" ||
                         key13 === "duration" ||
                         key13 === "resolution" ||
                         key13 === "aspectRatio" ||

@@ -4,6 +4,11 @@ vi.mock("../src/director/project-copy", () => ({
   copyAvailable: vi.fn(async () => false),
 }));
 import {
+  composerInput,
+  composerReducer,
+  initialComposer,
+} from "../src/useComposer";
+import {
   recreate,
   readyJob,
   sendJob,
@@ -27,4 +32,28 @@ it("keeps a FLUX still's Auto provider when the take cannot be read, and names t
   expect(handoff.patch).not.toHaveProperty("imageProvider");
   expect(landed.imageProvider).toBe("auto");
   expect(recipe.missing.join(" ")).toContain("provider");
+});
+
+/** The request a composer state sends, less the session's own source id. */
+const request = (state: typeof initialComposer) => {
+  const { sourceId: _source, ...rest } = composerInput(state);
+  return JSON.stringify(rest);
+};
+
+it("keeps a legacy camera preset, so Recreate sends the preset's wording", async () => {
+  const job = readyJob({
+    generator: "video",
+    model: "flux-3",
+    description: "A lighthouse in a storm.",
+    prompt: "Low angle. A lighthouse in a storm.",
+    cameraEnabled: true,
+    presetId: "low",
+  });
+  delete (job as { camera?: unknown }).camera;
+  const original = composerReducer(initialComposer, { type: "restore", job });
+  expect(original.camera.angles).toBe("low-angle");
+  const { added, bundle } = await sendJob(job, {});
+  const { landed } = await recreate(bundle, added.assetId);
+  expect(landed.camera.angles).toBe("low-angle");
+  expect(request(landed)).toBe(request(original));
 });

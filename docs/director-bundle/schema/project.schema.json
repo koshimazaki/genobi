@@ -299,7 +299,7 @@
           "settings": {
             "description": "A Camera run's public request settings, recorded when it was sent to the Director so Recreate restores it from the project (shared/director/generation-settings.ts). Optional and additive. An allowlist of setting names only: no job, provider or source ids, deployment URLs or file tickets, image bytes or keys. Values are re-checked field by field on every read.",
             "type": "object",
-            "maxProperties": 26,
+            "maxProperties": 27,
             "propertyNames": {
               "enum": [
                 "generator",
@@ -309,6 +309,7 @@
                 "camera",
                 "cameraEdits",
                 "cameraText",
+                "presetId",
                 "duration",
                 "resolution",
                 "aspectRatio",
