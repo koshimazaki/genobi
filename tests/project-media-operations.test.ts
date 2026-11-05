@@ -45,46 +45,52 @@ async function prepared() {
   return { ...s, agent, copyId, stage, operation, project };
 }
 
-it("attaches inspected image/audio/video as uploaded assets, with readable exact bytes", async () => {
-  const s = await prepared();
-  let revision = 1;
-  for (const [bytes, type, kind] of [
-    [
-      await readFile("docs/director-bundle/templates/poster-motion.png"),
-      "image/png",
-      "image",
-    ],
-    [Buffer.from(wav(2)), "audio/wav", "audio"],
-    [await readFile("tests/fixtures/metadata.mp4"), "video/mp4", "video"],
-  ] as const) {
-    const receiptId = await s.stage(bytes, type);
-    const result = await s.operation(
-      { op: "attach", receiptId, use: "production" },
-      revision++,
-    );
-    expect(result).toMatchObject({
-      status: 200,
-      revision,
-      assetIds: [expect.any(String)],
-      layerIds: [],
-    });
-    const project = await s.project();
-    const asset = project.assets[(result.assetIds as string[])[0]];
-    expect(asset).toMatchObject({
-      kind,
-      use: "production",
-      origin: "uploaded",
-      file: { sha256: receiptId },
-    });
-    expect(JSON.stringify(project)).not.toContain(s.directory);
-    const response = await fetch(
-      `${s.base}/api/projects/${s.copyId}/files/${receiptId}`,
-      { headers: { cookie: s.cookie } },
-    );
-    expect(Buffer.from(await response.arrayBuffer())).toEqual(bytes);
-  }
-  expect(s.bfl.submissions).toBe(0);
-});
+// Three real HTTP/disk imports include the MP4 reader's first initialization;
+// concurrent CI shards can exceed Vitest's five-second default on cold start.
+it(
+  "attaches inspected image/audio/video as uploaded assets, with readable exact bytes",
+  { timeout: 15_000 },
+  async () => {
+    const s = await prepared();
+    let revision = 1;
+    for (const [bytes, type, kind] of [
+      [
+        await readFile("docs/director-bundle/templates/poster-motion.png"),
+        "image/png",
+        "image",
+      ],
+      [Buffer.from(wav(2)), "audio/wav", "audio"],
+      [await readFile("tests/fixtures/metadata.mp4"), "video/mp4", "video"],
+    ] as const) {
+      const receiptId = await s.stage(bytes, type);
+      const result = await s.operation(
+        { op: "attach", receiptId, use: "production" },
+        revision++,
+      );
+      expect(result).toMatchObject({
+        status: 200,
+        revision,
+        assetIds: [expect.any(String)],
+        layerIds: [],
+      });
+      const project = await s.project();
+      const asset = project.assets[(result.assetIds as string[])[0]];
+      expect(asset).toMatchObject({
+        kind,
+        use: "production",
+        origin: "uploaded",
+        file: { sha256: receiptId },
+      });
+      expect(JSON.stringify(project)).not.toContain(s.directory);
+      const response = await fetch(
+        `${s.base}/api/projects/${s.copyId}/files/${receiptId}`,
+        { headers: { cookie: s.cookie } },
+      );
+      expect(Buffer.from(await response.arrayBuffer())).toEqual(bytes);
+    }
+    expect(s.bfl.submissions).toBe(0);
+  },
+);
 
 it("replays a lost acknowledgement after human edits and restart, but refuses changed request bodies", async () => {
   const s = await prepared();
