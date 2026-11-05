@@ -13,21 +13,39 @@ export interface Activity {
   id: string;
   /** The terminal line: `GENERATING KLEIN IMAGE  73% ⣿⣿⣀⣀`. */
   line: string;
+  /**
+   * Play, not work (the deck's walkers game): listed before every real entry,
+   * so readers that show the newest line (`.at(-1)`) never show it over a job
+   * or an agent's activity.
+   */
+  background?: true;
 }
 
 /** By entry id, each owner's latest line; insertion order is display order. */
 const owned = new Map<string, Map<string, string>>();
+/** Entry ids set through `setBackgroundActivity`: always the lowest priority. */
+const background = new Set<string>();
 let working: Activity[] = [];
 const listeners = new Set<() => void>();
 
 function changed() {
-  const next = [...owned].map(([id, owners]) => ({
+  const all: Activity[] = [...owned].map(([id, owners]) => ({
     id,
     line: [...owners.values()].at(-1)!,
+    ...(background.has(id) ? { background: true as const } : {}),
   }));
+  const next = [
+    ...all.filter((a) => a.background),
+    ...all.filter((a) => !a.background),
+  ];
   const same =
     next.length === working.length &&
-    next.every((a, i) => a.id === working[i].id && a.line === working[i].line);
+    next.every(
+      (a, i) =>
+        a.id === working[i].id &&
+        a.line === working[i].line &&
+        a.background === working[i].background,
+    );
   if (same) return;
   working = next;
   listeners.forEach((listener) => listener());
@@ -55,6 +73,17 @@ export const setActivity = (id: string, line: string | undefined) =>
     `self:${id}`,
     line === undefined ? new Map() : new Map([[id, line]]),
   );
+
+/**
+ * `setActivity` for play rather than work: the entry sorts below every real
+ * one, so a running job or agent line always outranks it. Clear it with
+ * `undefined`, as `setActivity`.
+ */
+export function setBackgroundActivity(id: string, line: string | undefined) {
+  if (line === undefined) background.delete(id);
+  else background.add(id);
+  setActivity(id, line);
+}
 
 /** `setActivity` with a plain on or off, for workers with no line of their own. */
 export const setBusy = (id: string, on: boolean, line = "WORKING") =>

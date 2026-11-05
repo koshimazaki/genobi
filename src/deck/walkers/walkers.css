@@ -19,12 +19,15 @@
   color: var(--muted);
   letter-spacing: normal;
 }
-.walkers-score {
-  margin: 0;
+/* The status lines, written like the studio's progress lines. */
+.walkers-hud {
+  display: flex;
+  flex-direction: column;
+  white-space: pre;
   color: var(--accent);
 }
-.walkers-score span {
-  color: var(--muted);
+.walkers-hud span + span {
+  color: var(--readout, var(--accent));
 }
 .walkers-jobs,
 .walkers-controls {
