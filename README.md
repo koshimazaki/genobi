@@ -45,7 +45,9 @@ workflows start from, through BFL's API or as a Comfy workflow. The camera
 panel, with a Three.js diagram of each shot, gives camera control in the UI
 that follows each model lab's own prompting guidance for FLUX 3, LTX-2.5 and
 MiniMax H3 ([camera wording](docs/camera-wording.md),
-[H3](docs/minimax-h3-camera.md)); we have not seen this on a hosted platform.
+[H3](docs/minimax-h3-camera.md)). The diagram doubles as a teaching layer,
+showing what each camera term does before you spend a credit. To my
+knowledge no platform offers native camera control across all three.
 [Dual Swords](docs/dual-editor.md) compares two clips and exports exact frames
 to Assets for the next generation.
 
@@ -67,15 +69,17 @@ watch, share and remix.
 ### Open Weights Only
 
 The critical path is open source end to end; API and paid routes are a thin
-optional layer. Open-weight steps: LTX-2.5 and its IC-LoRAs, AKUSPACE, Klein,
-SeedVR2 for upscaling, and MiniMax H3 and Music 3 as optional routes, run on
-your own ComfyUI, Comfy Cloud or the Comfy deployment `genobi-ltx-world-v2`.
-Hermes Agent, which Start Genobi sets up, is MIT. Optional closed routes:
-FLUX 3 video, FLUX Video Upscale, Klein through BFL's API, and LTX Fast/Pro
-through Comfy Router. Inputs are format-agnostic: swap a template's track or
-clips for your own or open-weight media with **Make my version**. State your
-project's licence needs at setup and the agent picks models and libraries
-that fit ([licence-aware direction](docs/licence-strategy.md#the-setup-question)).
+optional layer. Open-weight steps: LTX-2.5 and its IC-LoRAs, AKUSPACE, Klein
+and SeedVR2 for upscaling, run on your own ComfyUI, on Comfy Cloud or on the
+Comfy deployment `genobi-ltx-world-v2`; most of the hosted path runs on Comfy
+Cloud and Comfy Deploy. Hermes Agent, which Start Genobi sets up, is MIT.
+Optional closed routes: FLUX 3 video, FLUX Video Upscale, Klein through BFL's
+API, MiniMax H3 and Music 3, and LTX Fast/Pro through Comfy Router. Inputs
+are format-agnostic: swap a template's track or clips for your own or
+open-weight media with **Make my version**. State your project's licence
+needs at setup and the agent picks models and libraries that fit
+([licence-aware direction](docs/licence-strategy.md#the-setup-question)); to
+my knowledge no other platform has a licence layer that selects models this way.
 Terms per model: [LICENCES.md](LICENCES.md) and [credits](docs/credits.md).
 
 ### One agentic loop (Best Overall)
