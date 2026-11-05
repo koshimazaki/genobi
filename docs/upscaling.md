@@ -12,6 +12,20 @@ its slots and models, the licence) are on
 [the SeedVR2 page](seedvr2-upscale.md). Agents load the
 [`genobi-upscale` skill](https://github.com/koshimazaki/Genobi/blob/main/plugins/genobi/skills/genobi-upscale/SKILL.md).
 
+FLUX 3 text-to-video and FLUX Video Upscale have a provider menu beside
+Generate: **Auto (BFL preferred)**, **BFL direct**, or **Comfy Router**. Auto
+keeps the existing connected-key rule. An explicit choice requires that
+provider's key; it never falls back to another provider. The payer, destination
+and credit estimate below the controls follow that choice. Comfy credit
+conversions remain approximate where the model has no published credit rate.
+
+Agents use `videoProvider: "auto" | "bfl" | "comfy"` with `generator: "video"`
+or `"upscale"` and `model: "flux-3"`. This is independent of `imageProvider`.
+Omitting it preserves old replay hashes; an explicit choice is bound to the
+quote and request ID. Changing it requires a fresh quote. Poll an earlier run
+with its original provider's key. An uncertain submission is never retried or
+sent to the other provider. Single-provider models reject this override.
+
 ## The two upscalers
 
 | Upscaler                                                 | Weights           | Where it runs and who pays                                                                                       | Length per run                                       |

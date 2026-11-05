@@ -42,6 +42,7 @@ export type GenerationSettings = Partial<
     | "swap"
     | "imageResolution"
     | "imageProvider"
+    | "videoProvider"
     | "imageAspectRatio"
     | "imageGrounding"
     | "imageSafetyTolerance"
@@ -75,6 +76,7 @@ const STRINGS = [
   "lyrics",
   "imageResolution",
   "imageProvider",
+  "videoProvider",
   "imageAspectRatio",
 ] as const;
 const NUMBERS = [

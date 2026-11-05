@@ -1,6 +1,6 @@
 import { isKleinEdit, kleinFiles } from "../shared/comfy/klein-edit";
 import { WorkflowDestinations } from "./workflow-destinations";
-import { pollJob } from "./job-poll";
+import { pollJob, needsPollKey } from "./job-poll";
 import { DeploymentAssets } from "./deployment-assets";
 import { isDeployModel } from "../shared/comfy/deploy-catalogue";
 import { takesVideoReferences } from "../shared/h3";
@@ -19,7 +19,11 @@ import {
 } from "../shared/types";
 import { AppError, requireKey } from "./errors";
 import { requireQuote } from "./take";
-import { isComfyKey, requireRoute } from "../shared/provider";
+import {
+  isComfyKey,
+  providerPreference,
+  requireRoute,
+} from "../shared/provider";
 import {
   CLOUD_UNCHECKED,
   estimateRunUsd,
@@ -95,7 +99,7 @@ export class JobService {
       model,
       byo,
       plan.location,
-      input.imageProvider ?? "auto",
+      providerPreference(input),
     );
   }
   private provider(key: string) {
@@ -456,10 +460,8 @@ export class JobService {
       await this.store.save();
       return { job };
     }
-    // A local ComfyUI run needs no key on any path: none is sent to it.
     const local = isLocalRun(job);
-    if (!local && job.keyMode === "byo" && !byoKey)
-      return { job, needsKey: true };
+    if (!local && needsPollKey(job, byoKey)) return { job, needsKey: true };
     const key = local ? "" : requireKey(this.keys.forPoll(job, byoKey));
     const existing = this.locks.get(id);
     if (existing) return { job: await existing };

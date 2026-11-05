@@ -281,6 +281,7 @@ var require_validators = __commonJS({
                     "swap",
                     "imageResolution",
                     "imageProvider",
+                    "videoProvider",
                     "imageAspectRatio",
                     "imageGrounding",
                     "imageSafetyTolerance",
@@ -11234,6 +11235,7 @@ var require_validators = __commonJS({
                         key13 === "swap" ||
                         key13 === "imageResolution" ||
                         key13 === "imageProvider" ||
+                        key13 === "videoProvider" ||
                         key13 === "imageAspectRatio" ||
                         key13 === "imageGrounding" ||
                         key13 === "imageSafetyTolerance" ||

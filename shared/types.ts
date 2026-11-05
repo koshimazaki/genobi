@@ -60,6 +60,8 @@ export interface GenerateInput {
   imageResolution?: ImageResolution;
   /** Image-only provider choice. Auto keeps the compatible-key routing. */
   imageProvider?: "auto" | "bfl" | "comfy";
+  /** FLUX 3 text-to-video/upscale provider; independent of image routing. */
+  videoProvider?: "auto" | "bfl" | "comfy";
   imageGrounding?: boolean;
   imageSafetyTolerance?: number;
   /** Request-only image data URLs; persisted jobs contain no reference bytes. */

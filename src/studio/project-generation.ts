@@ -1,3 +1,7 @@
+import {
+  providerPreference,
+  selectableVideoProvider,
+} from "../../shared/provider";
 /**
  * A Camera run sent to the Director keeps its recipe (#64 follow-up): the
  * output lands as a generated asset with a project generation that records
@@ -78,15 +82,16 @@ export async function cameraGeneration(
   } catch {
     // An unreadable take still records the entry below.
   }
+  const recordedRoute = recipe?.route;
   if (!recipe) {
     const entry = entryFor(job.generator, job.model);
     recipe = publicGenerationRecipe({
       id: entry.id,
       version: entry.recipeVersion,
       route:
-        job.imageProvider === "bfl"
+        providerPreference(job) === "bfl"
           ? "bfl"
-          : job.imageProvider === "comfy"
+          : providerPreference(job) === "comfy"
             ? "router"
             : entry.route,
     });
@@ -98,6 +103,16 @@ export async function cameraGeneration(
   const references = await referenceFiles(urls, load).catch(() => []);
   const settings = publicGenerationSettings({
     ...job,
+    ...(selectableVideoProvider(job.generator, job.model)
+      ? {
+          videoProvider:
+            recordedRoute === "bfl"
+              ? "bfl"
+              : recordedRoute === "router"
+                ? "comfy"
+                : providerPreference(job),
+        }
+      : {}),
     // The browser's own wording for an image run (regions not composed in).
     // With Klein boxes the project cannot hold the boxes, so it keeps the
     // description as sent, their instructions composed in, and counts them.

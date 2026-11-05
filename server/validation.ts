@@ -25,6 +25,7 @@ import { composedRefusal, readLtxPrompt } from "../shared/ltx-prompt";
 import { isLtxModel } from "../shared/camera";
 import { IDEMPOTENCY_KEY } from "../shared/idempotency";
 import { QUOTE_ID } from "../shared/quote";
+import { readVideoProvider } from "../shared/provider";
 
 const aspectRatios = new Set<AspectRatio>([
   "21:9",
@@ -77,6 +78,7 @@ export function validateInput(value: unknown): GenerateInput {
     throw new AppError(400, "Expected a generation request.");
   const body = value as Record<string, unknown>;
   const revision = readProjectRevision(body.projectRevision);
+  const videoProvider = readVideoProvider(body);
   if (body.generator === "image" || body.generator === "edit")
     return validateImage(body, revision);
   if (isSwap(body.model)) return validateSwap(body, revision);
@@ -233,6 +235,7 @@ export function validateInput(value: unknown): GenerateInput {
   return {
     generator: body.generator,
     model,
+    ...videoProvider,
     description: body.description.trim(),
     ...(camera ?? {
       presetId: body.presetId as GenerateInput["presetId"],

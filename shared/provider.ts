@@ -5,7 +5,12 @@ import { isSwap } from "./openjutsu";
 import { AppError } from "../server/errors";
 import { isLtx } from "./comfy/ltx";
 import { isSeedvr2 } from "./comfy/seedvr2";
-import type { DurationEstimate, Generator, VideoModel } from "./types";
+import type {
+  DurationEstimate,
+  GenerateInput,
+  Generator,
+  VideoModel,
+} from "./types";
 
 /**
  * One provider, two implementations: BFL direct (`server/bfl.ts`) and Comfy
@@ -67,8 +72,62 @@ export const isComfyKey = (key: string) => key.startsWith("comfyui-");
 /** Which provider a key belongs to, by the same prefix rule. */
 export type KeyKind = "comfy" | "bfl";
 export type ProviderChoice = KeyKind | "auto";
+/** Only these two video lanes have interchangeable provider hosts. */
+export function selectableVideoProvider(generator: unknown, model: unknown) {
+  return (
+    (generator === "video" || generator === "upscale") &&
+    (model === undefined || model === "flux-3")
+  );
+}
+export function providerPreference(
+  input: Pick<
+    GenerateInput,
+    "generator" | "model" | "imageProvider" | "videoProvider"
+  >,
+): ProviderChoice {
+  if (selectableVideoProvider(input.generator, input.model))
+    return input.videoProvider ?? "auto";
+  return (input.generator === "image" || input.generator === "edit") &&
+    input.model === "flux-3"
+    ? (input.imageProvider ?? "auto")
+    : "auto";
+}
+/** Supplied overrides are refused on another model, even when set to Auto. */
+export function readVideoProvider(
+  input: Record<string, unknown>,
+): Pick<GenerateInput, "videoProvider"> {
+  const value = input.videoProvider;
+  if (value === undefined) return {};
+  if (
+    !selectableVideoProvider(input.generator, input.model) ||
+    (value !== "auto" && value !== "bfl" && value !== "comfy")
+  )
+    throw new AppError(
+      400,
+      "Video provider must be Auto, BFL or Comfy for FLUX 3 text-to-video or upscale only.",
+      "invalid_provider",
+    );
+  return { videoProvider: value };
+}
 export const keyKind = (key: string): KeyKind =>
   isComfyKey(key) ? "comfy" : "bfl";
+
+/** The provider actually used, with the pre-take legacy fallback preserved. */
+export function recordedKeyKind(
+  generator: Generator,
+  route?: string,
+  pollingUrl?: string,
+): KeyKind {
+  if (route) return route === "bfl" ? "bfl" : "comfy";
+  if (generator === "upscale") return "bfl";
+  let host = "";
+  try {
+    host = new URL(pollingUrl ?? "").hostname;
+  } catch {
+    /* No handle. */
+  }
+  return host === "bfl.ai" || host.endsWith(".bfl.ai") ? "bfl" : "comfy";
+}
 
 /**
  * Whether the provider a key selects can run this generator and model. Both

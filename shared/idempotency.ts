@@ -74,6 +74,15 @@ export function canonicalInput(input: Partial<GenerateInput>): string {
     value.imageProvider !== "auto"
   )
     values.push(["imageProvider", value.imageProvider]);
+  // The distinct video preference is appended only when explicit, preserving
+  // hashes for every legacy request and omitted/Auto choices.
+  if (
+    (value.generator === "video" || value.generator === "upscale") &&
+    value.model === "flux-3" &&
+    value.videoProvider &&
+    value.videoProvider !== "auto"
+  )
+    values.push(["videoProvider", value.videoProvider]);
   return JSON.stringify(values);
 }
 

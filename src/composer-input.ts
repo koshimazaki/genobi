@@ -6,6 +6,7 @@ import { isH3, takesVideoReferences } from "../shared/h3";
 import { imageEditing, isImage, isKlein } from "../shared/image";
 import { entryFor } from "../shared/registry";
 import { takesCamera } from "../shared/controls";
+import { selectableVideoProvider } from "../shared/provider";
 import { cameraClauses } from "../shared/camera";
 
 export function requestInput({
@@ -18,6 +19,7 @@ export function requestInput({
   imageGrounding,
   imageSafetyTolerance,
   imageProvider,
+  videoProvider,
   lyrics,
   deploy,
   ...state
@@ -28,6 +30,9 @@ export function requestInput({
   if (!isKlein(state.model)) imageRegions = [];
   return {
     ...state,
+    ...(selectableVideoProvider(state.generator, entry.videoModel)
+      ? { videoProvider: videoProvider ?? "auto" }
+      : {}),
     ...(isDeployModel(state.model) && deploy ? { deploy } : {}),
 
     ...(controls.kind === "audio" ? { lyrics: lyrics ?? "" } : {}),

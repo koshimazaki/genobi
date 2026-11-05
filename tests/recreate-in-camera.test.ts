@@ -369,9 +369,10 @@ describe("the recorded provider", () => {
     expect(recipe.missing).toContain("provider (BFL or Comfy) not recorded");
   });
 
-  it("a video run on BFL direct is named, since Camera follows the key", () => {
+  it("a video run restores its independent BFL provider choice", () => {
     const recipe = cameraRecipe(withRoute(video, "bfl"), bloomA, ["mine"]);
-    expect(recipe.missing.join(" ")).toContain("it ran on BFL direct");
+    expect(recipe.videoProvider).toBe("bfl");
+    expect(recipe.missing.join(" ")).not.toContain("provider");
     expect(recipe.imageProvider).toBeUndefined();
   });
 });

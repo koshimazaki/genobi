@@ -323,6 +323,7 @@
                 "swap",
                 "imageResolution",
                 "imageProvider",
+                "videoProvider",
                 "imageAspectRatio",
                 "imageGrounding",
                 "imageSafetyTolerance",

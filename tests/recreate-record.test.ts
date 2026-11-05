@@ -51,6 +51,23 @@ it("keeps a FLUX still's Auto provider when the take cannot be read, and names t
   expect(recipe.missing.join(" ")).toContain("provider");
 });
 
+it("records the actual Auto video route and restores its independent choice", async () => {
+  for (const route of ["bfl", "router"]) {
+    const job = readyJob({
+      generator: "video",
+      model: "flux-3",
+      videoProvider: "auto",
+    });
+    const { added, bundle } = await sendJob(job, {
+      load: takeLoad({ id: "flux-3-video", version: 1, route }),
+    });
+    const { recipe, landed } = await recreate(bundle, added.assetId);
+    expect(recipe.videoProvider).toBe(route === "bfl" ? "bfl" : "comfy");
+    expect(landed.videoProvider).toBe(recipe.videoProvider);
+    expect(recipe.missing.join(" ")).not.toContain("provider");
+  }
+});
+
 /** The request a composer state sends, less the session's own source id. */
 const request = (state: typeof initialComposer) => {
   const { sourceId: _source, ...rest } = composerInput(state);

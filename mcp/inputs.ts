@@ -222,6 +222,12 @@ export const generationShape = {
     .describe(
       "openjutsu-swap only: the part's start, size and seed; duration is the part's length and description the direction (500 characters)",
     ),
+  videoProvider: z
+    .enum(["auto", "bfl", "comfy"])
+    .optional()
+    .describe(
+      "FLUX 3 text-to-video or upscale only: Auto prefers BFL when both keys exist; explicit choice requires the matching key and never falls back.",
+    ),
   imageResolution: choices(KLEIN_RESOLUTIONS)
     .optional()
     .describe("Image tier; 1.5k is Klein only, the server bounds it per model"),
