@@ -12,6 +12,7 @@ import {
 import {
   clean,
   cleanSummary,
+  toolDetail,
   toolName,
   type StreamUpdate,
 } from "./agent-stream";
@@ -58,25 +59,48 @@ export function hermesReader() {
       return /\n\s*\n/.test(held) ? flush(false) : [];
     }
     if (event.type === "tool_use") {
-      const name = toolName(event.name);
+      const name = clean(toolName(event.name), 60);
+      const detail = name ? toolDetail(name, event.input) : undefined;
       return [
         ...flush(true),
-        ...(name ? [{ line: `Using ${clean(name, 60)}` }] : []),
+        ...(name
+          ? [
+              {
+                line: `Using ${name}`,
+                tool: {
+                  phase: "started" as const,
+                  name,
+                  ...(detail ? { detail } : {}),
+                },
+              },
+            ]
+          : []),
       ];
     }
     if (event.type === "tool_result") {
       const output = typeof event.output === "string" ? event.output : "";
+      const name = clean(toolName(event.name), 60);
+      // Hermes gives no call id: the name pairs the result with its call.
+      const tool = {
+        phase:
+          event.is_error === true ? ("failed" as const) : ("done" as const),
+        ...(name ? { name } : {}),
+      };
       if (output.includes(AGENT_SPEND_CODE))
         return [
           ...flush(true),
           {
             refusedSpend: true,
             line: "A paid step needs your approval in the studio.",
+            tool,
           },
         ];
       return event.is_error === true
-        ? [...flush(true), { line: `A tool refused: ${clean(output, 160)}` }]
-        : flush(true);
+        ? [
+            ...flush(true),
+            { line: `A tool refused: ${clean(output, 160)}`, tool },
+          ]
+        : [...flush(true), { tool }];
     }
     if (event.type === "result") {
       const failed = event.exit_code !== 0;

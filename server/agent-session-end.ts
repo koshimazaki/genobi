@@ -3,15 +3,23 @@
 // line and summary once its runner exits, is stopped or runs out of time. A
 // Terminal session ends the same way when its window's harness exits.
 import type { AgentSession } from "../shared/agent-session";
-import { AGENT_LINES_MAX } from "../shared/agent-session-events";
+import {
+  AGENT_LINES_MAX,
+  AGENT_TOOLS_MAX,
+  type AgentToolCall,
+} from "../shared/agent-session-events";
 import { approvalViews } from "./agent-approvals";
 import type { Running } from "./agent-session-types";
+import type { ToolUpdate } from "./agent-stream";
 
 /** A copy of the session's view, with its steps and results. */
 export function viewOf(session: Running): AgentSession {
   return {
     ...session.view,
     lines: [...session.view.lines],
+    ...(session.view.tools
+      ? { tools: session.view.tools.map((call) => ({ ...call })) }
+      : {}),
     ...(session.view.exchange
       ? { exchange: session.view.exchange.map((entry) => ({ ...entry })) }
       : {}),
@@ -29,6 +37,39 @@ export function pushLine(session: Running, line: string) {
   session.view.lines.push(line);
   if (session.view.lines.length > AGENT_LINES_MAX)
     session.view.lines.splice(0, session.view.lines.length - AGENT_LINES_MAX);
+}
+
+/**
+ * Records a tool call the runner's events reported: a `started` adds it as
+ * working, keeping the newest `AGENT_TOOLS_MAX`; a result settles its call,
+ * found by id (Claude Code) or else as the oldest working call of that name,
+ * or the oldest working call (Hermes). A result with no call is dropped.
+ */
+export function noteTool(session: Running, update: ToolUpdate) {
+  const tools = (session.view.tools ??= []);
+  const open = (session.toolCalls ??= new Map<string, AgentToolCall>());
+  if (update.phase === "started") {
+    if (!update.name) return;
+    const call: AgentToolCall = {
+      name: update.name,
+      state: "working",
+      at: new Date().toISOString(),
+      ...(update.detail ? { detail: update.detail } : {}),
+    };
+    tools.push(call);
+    if (update.id) open.set(update.id, call);
+    if (tools.length > AGENT_TOOLS_MAX) {
+      const dropped = new Set(tools.splice(0, tools.length - AGENT_TOOLS_MAX));
+      for (const [id, held] of open) if (dropped.has(held)) open.delete(id);
+    }
+    return;
+  }
+  const working = tools.filter((call) => call.state === "working");
+  const call = update.id
+    ? open.get(update.id)
+    : (working.find((c) => c.name === update.name) ?? working[0]);
+  if (update.id) open.delete(update.id);
+  if (call?.state === "working") call.state = update.phase;
 }
 
 /**

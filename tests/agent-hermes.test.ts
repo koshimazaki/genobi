@@ -406,7 +406,11 @@ describe("hermesReader", () => {
     expect(updates).toEqual([
       { started: true, line: "Hermes on deepseek/deepseek-v4-pro." },
       { line: "Linking the project ." },
-      { line: "Using genobi_link_project" },
+      {
+        line: "Using genobi_link_project",
+        tool: { phase: "started", name: "genobi_link_project" },
+      },
+      { tool: { phase: "done", name: "x" } },
       { line: "One." },
       { line: "Two and three." },
       { finished: "done", summary: "Done.\n\nApprove it." },
@@ -427,13 +431,14 @@ describe("hermesReader", () => {
       {
         refusedSpend: true,
         line: "A paid step needs your approval in the studio.",
+        tool: { phase: "failed" },
       },
     ]);
     expect(
       read(
         JSON.stringify({ type: "tool_result", output: "Nope", is_error: true }),
       ),
-    ).toEqual([{ line: "A tool refused: Nope" }]);
+    ).toEqual([{ line: "A tool refused: Nope", tool: { phase: "failed" } }]);
     expect(
       read(
         JSON.stringify({
