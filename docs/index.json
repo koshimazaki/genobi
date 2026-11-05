@@ -31,6 +31,7 @@
         "architecture.md",
         "audiovisual-gpu-evaluation.md",
         "cloudflare.md",
+        "first-nine-pr-plan.md",
         "maintenance-priorities.md",
         "read-through.md",
         "review-checklist.md",
@@ -55,6 +56,7 @@
         "comfy-deployment.md",
         "comfy-readiness.md",
         "director-comfy.md",
+        "first-nine-pr-plan.md",
         "genmod.md",
         "gpu-box.md",
         "maintenance-priorities.md",
@@ -267,6 +269,7 @@
         "dual-editor.md",
         "effects-catalogue.md",
         "falling-room.md",
+        "first-nine-pr-plan.md",
         "genobi-cli.md",
         "genobi-deck.md",
         "genobi-teaser-run/README.md",
@@ -478,6 +481,7 @@
         "director-working-version.md",
         "easter-eggs.md",
         "editor-timeline.md",
+        "first-nine-pr-plan.md",
         "genobi-deck.md",
         "getting-started.md",
         "gpu-box.md",
@@ -778,6 +782,7 @@
         "editor-timeline.md",
         "effects-catalogue.md",
         "falling-room.md",
+        "first-nine-pr-plan.md",
         "fruits-swap-recipes.md",
         "fruits-swap.md",
         "genmod.md",
@@ -1784,6 +1789,17 @@
       ]
     },
     {
+      "title": "First nine: implementation PR queue",
+      "path": "first-nine-pr-plan.md",
+      "tags": ["architecture", "agents", "studio", "workflows"],
+      "summary": "Sequential implementation PRs for the first nine maintenance priorities, with dependencies, acceptance gates and explicit remaining scope.",
+      "links": [
+        "maintenance-priorities.md",
+        "recreate-library-plan.md",
+        "review-checklist.md"
+      ]
+    },
+    {
       "title": "Dance with Fruits: its recipes",
       "path": "fruits-swap-recipes.md",
       "tags": ["director", "bundle", "templates"],
@@ -2007,7 +2023,7 @@
       "path": "maintenance-priorities.md",
       "tags": ["architecture", "agents", "studio", "workflows"],
       "summary": "Priority order for the fifteen open issues, existing implementation, remaining slices, and local, hosted and agent surface coverage.",
-      "links": ["recreate-library-plan.md"]
+      "links": ["first-nine-pr-plan.md", "recreate-library-plan.md"]
     },
     {
       "title": "Gallery and Camera media preparation",

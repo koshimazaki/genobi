@@ -45,6 +45,7 @@ user action through every layer.
 ## Templates and evidence
 
 - [Maintenance priorities](maintenance-priorities.md) — the fifteen open issues, remaining implementation slices and local/hosted/agent coverage.
+- [First nine PR plan](first-nine-pr-plan.md) — the ordered implementation queue, dependencies and acceptance gates for the first nine priorities.
 - [Recreate library plan](recreate-library-plan.md) — durable original inputs, reusable creature recipes and explicit Recreate / Make similar flows.
 - [Audiovisual implementation plan](audiovisual-implementation.md) — ten linked issues, Camera-consistent UI, two-agent sequencing and modular scene scope.
 - [Audiovisual gap audit](audiovisual-gaps.md) — corrected status and ownership for the seventeen PRD gaps.

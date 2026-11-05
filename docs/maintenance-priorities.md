@@ -104,6 +104,9 @@ and user actions do not expose a path the selected runtime cannot complete.
 
 ## First implementation sequence
 
+The [first nine PR plan](first-nine-pr-plan.md) turns ranks 1–9 into a sequential
+implementation queue with concrete scopes, dependencies and acceptance gates.
+
 1. Fix #107 and #108's confirmed restore bugs; retain the focused regressions.
 2. Complete #47's warning/quote parity and qualify one full archive under #12.
 3. Implement #37 input attachment and #39 export receipts, with #14's CLI inbox
