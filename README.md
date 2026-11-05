@@ -21,10 +21,8 @@ https://github.com/user-attachments/assets/b2665e97-2836-4e02-8b38-4694a5c6b6c7
 
 ## How Genobi answers the challenge
 
-Genobi is my entry to Comfy's
-[Open Source Higgsfield](https://comfy.org/open-source-higgsfield) challenge.
-Each angle links to its evidence; the full record is the
-[submission dossier](docs/submission.md).
+My entry to Comfy's [Open Source Higgsfield](https://comfy.org/open-source-higgsfield)
+challenge; the full record is the [submission dossier](docs/submission.md).
 
 ### Built with LTX (Most Innovative, LTX VFX bonus)
 
@@ -43,11 +41,13 @@ towers. AKUSPACE, our LoRA on LTX-2.5, is a separate route for room-conditioned 
 ### Built with FLUX
 
 FLUX 3 Image Klein makes the stills, first frames and box edits most
-workflows start from, through BFL's API or as a Comfy workflow. One camera
-panel, with a Three.js diagram of each shot, writes the move in each model's
-documented wording for FLUX 3, LTX-2.5 and MiniMax H3
-([camera wording](docs/camera-wording.md)). [Dual Swords](docs/dual-editor.md)
-compares two clips and exports exact frames to Assets for the next generation.
+workflows start from, through BFL's API or as a Comfy workflow. The camera
+panel, with a Three.js diagram of each shot, gives camera control in the UI
+that follows each model lab's own prompting guidance for FLUX 3, LTX-2.5 and
+MiniMax H3 ([camera wording](docs/camera-wording.md),
+[H3](docs/minimax-h3-camera.md)); we have not seen this on a hosted platform.
+[Dual Swords](docs/dual-editor.md) compares two clips and exports exact frames
+to Assets for the next generation.
 
 ### Made to be shared (Most Viral)
 
@@ -66,12 +66,17 @@ watch, share and remix.
 
 ### Open Weights Only
 
-Open-weight steps: LTX-2.5 and its IC-LoRAs, AKUSPACE, Klein, SeedVR2 for
-upscaling and MiniMax H3, run on your own ComfyUI or on Comfy Cloud and the
-Comfy deployment `genobi-ltx-world-v2`. Hermes Agent, which Start Genobi sets up, is MIT.
-Optional closed routes: FLUX 3 video, FLUX Video Upscale, Klein through BFL's
-API, and LTX Fast/Pro through Comfy Router. Terms per model:
-[LICENCES.md](LICENCES.md) and [credits](docs/credits.md).
+The critical path is open source end to end; API and paid routes are a thin
+optional layer. Open-weight steps: LTX-2.5 and its IC-LoRAs, AKUSPACE, Klein,
+SeedVR2 for upscaling, and MiniMax H3 and Music 3 as optional routes, run on
+your own ComfyUI, Comfy Cloud or the Comfy deployment `genobi-ltx-world-v2`.
+Hermes Agent, which Start Genobi sets up, is MIT. Optional closed routes:
+FLUX 3 video, FLUX Video Upscale, Klein through BFL's API, and LTX Fast/Pro
+through Comfy Router. Inputs are format-agnostic: swap a template's track or
+clips for your own or open-weight media with **Make my version**. State your
+project's licence needs at setup and the agent picks models and libraries
+that fit ([licence-aware direction](docs/licence-strategy.md#the-setup-question)).
+Terms per model: [LICENCES.md](LICENCES.md) and [credits](docs/credits.md).
 
 ### One agentic loop (Best Overall)
 
@@ -81,11 +86,9 @@ model's terms, a **Taste layer** keeps credited references as project memory,
 the deck shows what the agent is doing and the hosted studio keeps
 [count-only statistics](observability/README.md). Templates sit on top as
 skills an agent can rerun. Dance with Fruits came from spoken rounds of "take
-this one, make a new one, add this" ([log](audio-reactive/edit/LOG.md)): one
-guide, four characters cutting on the same pose. Acoustic Spaces v2 is version
-two of [Adaptive reverb](docs/adaptive-reverb.md); every slot keeps the still
-and prompt that made it ([v2](docs/audio-reactive-drop.md),
-[Fruits](docs/fruits-swap.md)).
+this one, make a new one, add this" ([log](audio-reactive/edit/LOG.md)); every
+slot keeps the still and prompt that made it ([Fruits](docs/fruits-swap.md),
+[Acoustic Spaces v2](docs/audio-reactive-drop.md)).
 
 ## Start here
 
