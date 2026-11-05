@@ -282,16 +282,18 @@ export class ComfySdkWorkflows implements WorkflowClient {
     }
   }
 
-  async run(
+  /**
+   * Checks the account before uploads, the single provider POST, or any GPU
+   * spend (#47). A missing node or model is a known, unsent refusal; Klein's
+   * loader is resolved against the same read. `checked` is false when Cloud's
+   * catalogue could not be read (availability unknown).
+   */
+  private async preflight(
     template: WorkflowTemplate,
     values: Record<string, unknown>,
     key: string,
-    { idempotencyKey, files = {} }: WorkflowRunOptions,
-  ): Promise<string> {
-    const client = this.client(key);
-    // Check the account before uploads, reservation's single provider POST,
-    // or any GPU spend (#47). A missing node or model is a known, unsent
-    // refusal; Klein's loader is resolved against the same read.
+    fileSlots: string[] = [],
+  ): Promise<{ values: Record<string, unknown>; checked: boolean }> {
     const info =
       this.destination.kind === "cloud"
         ? await this.cloudInfo(template, key)
@@ -305,7 +307,7 @@ export class ComfySdkWorkflows implements WorkflowClient {
         template,
         fillSlots(template.graph, template.slots, {
           ...resolvedValues,
-          ...Object.fromEntries(Object.keys(files).map((n) => [n, "pending"])),
+          ...Object.fromEntries(fileSlots.map((n) => [n, "pending"])),
         }),
         info,
       );
@@ -319,6 +321,35 @@ export class ComfySdkWorkflows implements WorkflowClient {
           }),
         );
     }
+    return { values: resolvedValues, checked: info !== undefined };
+  }
+
+  /** The quote's read-only check: refuses a definite gap, says when unknown. */
+  async availability(
+    template: WorkflowTemplate,
+    values: Record<string, unknown>,
+    key: string,
+  ): Promise<"checked" | "unknown" | undefined> {
+    if (this.destination.kind !== "cloud") return undefined;
+    this.client(key);
+    const { checked } = await this.preflight(template, values, key);
+    return checked ? "checked" : "unknown";
+  }
+
+  async run(
+    template: WorkflowTemplate,
+    values: Record<string, unknown>,
+    key: string,
+    { idempotencyKey, files = {} }: WorkflowRunOptions,
+  ): Promise<string> {
+    const client = this.client(key);
+    const { values: resolvedValues } = await this.preflight(
+      template,
+      values,
+      key,
+      Object.keys(files),
+    );
+
     // Filled first: a graph that does not match its slots is refused unsent.
     // Cloud keeps the catalogue model names written in the graph; a local
     // ComfyUI's own files are filled by `server/comfy-local.ts`.

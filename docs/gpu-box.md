@@ -103,7 +103,12 @@ slot (named `NodeClass.input`). A definitely missing dependency is refused with
 A loader whose choices the target does not enumerate stays unknown and does not
 block. On Cloud, an unreadable catalogue leaves availability unknown and the run
 goes ahead, except for FLUX 3 Klein, which needs the catalogue to choose its
-loader and keeps its own refusal. Comfy deployments keep their own validator.
+loader and keeps its own refusal. A local server quote for a Cloud
+workflow runs the same check first: a definite gap refuses the quote, and an
+unreadable catalogue puts `availability: "Couldn't check Cloud availability
+for this workflow."` on it, repeated in the MCP quote's `next`, the agent
+approval line and the template gallery's price, so the person decides before
+paying. Comfy deployments keep their own validator.
 
 ## Not verified here
 

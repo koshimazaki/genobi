@@ -40,7 +40,17 @@ export interface Quote {
    * is then 0, meaning unpriced, never free.
    */
   billing?: string;
+  /**
+   * Said when the run's availability could not be checked before it was
+   * quoted (`CLOUD_UNCHECKED`): the run may still go ahead, so the person
+   * decides before paying.
+   */
+  availability?: string;
 }
+
+/** A Cloud workflow quoted while the account's catalogue could not be read. */
+export const CLOUD_UNCHECKED =
+  "Couldn't check Cloud availability for this workflow.";
 
 /** What an adapter keeps: the quote, the settings it covers and its spender. */
 export interface QuoteRecord extends Quote {
@@ -118,6 +128,7 @@ export const publicQuote = ({
   estimateUsd,
   recipe,
   expiresAt,
+  availability,
 }: Quote): Quote => {
   const billing = billingOf(recipe);
   return {
@@ -126,5 +137,6 @@ export const publicQuote = ({
     recipe,
     expiresAt,
     ...(billing ? { billing } : {}),
+    ...(availability ? { availability } : {}),
   };
 };

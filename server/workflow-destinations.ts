@@ -78,6 +78,21 @@ export class WorkflowDestinations implements WorkflowClient {
     return client.run(template, values, key, options);
   }
 
+  /** Cloud's catalogue check for a quote; other locations say nothing here. */
+  availability(
+    template: WorkflowTemplate,
+    values: Record<string, unknown>,
+    key: string,
+    options: Pick<WorkflowRunOptions, "location" | "deployment" | "box">,
+  ) {
+    if ((options.location ?? "cloud") !== "cloud" || options.deployment)
+      return Promise.resolve(undefined);
+    return (
+      this.cloud.availability?.(template, values, key, options) ??
+      Promise.resolve(undefined)
+    );
+  }
+
   /** The client a run at this location goes to, or undefined when unset. */
   private client(location: DestinationKind): WorkflowClient | undefined {
     return location === "cloud"
