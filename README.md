@@ -1,4 +1,3 @@
-
 # Genobi
 
 **Build the scene. Shape the sound. Make the cut.**
