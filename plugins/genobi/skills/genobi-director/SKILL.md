@@ -7,7 +7,7 @@ metadata:
   version: "0.1.0"
   phase: "1 - quoted generation"
   tags: "agents, director, bundle, mcp"
-  docs: "docs/director-agent-tools.md, docs/director-bundle/README.md, docs/effects-catalogue.md"
+  docs: "docs/director-agent-tools.md, docs/director-bundle/README.md, docs/effects-catalogue.md, docs/project-media.md"
 ---
 
 # Genobi director
@@ -65,6 +65,24 @@ licences and creator credits beside the output. Unknown rights are not a pass.
    before you edit again.
 
 ## Generate a shot
+
+For an external agent's local file, `genobi_project_media_stage` takes a linked
+`copyId`, absolute `filePath` and canonical `contentType`. It inspects and stores
+bounded bytes for one hour, returning a session/project-bound receipt. Only
+the adapter reads the path; never put it in a project. Recover a lost answer
+with `genobi_project_media_receipt` or retry the exact file. Staging does not
+attach an asset or modify the cut. Studio-started agents cannot read arbitrary
+local files; ask the person to import those, and keep using linked assets and
+`genobi_take_to_project` for owned takes. See `docs/project-media.md` for limits.
+
+Use `genobi_project_media` with `copyId`, current `baseRevision`, a fresh UUID
+`requestId` and `command` to `attach` a staged receipt, `replace` clips from one,
+`relink` clips to an existing asset, `alias` its production/reference role or
+`remove` an unused asset. Read `schema project-media` in the CLI or the tool's
+schema first. Preserve locks and the person's edits. A lost answer is recovered
+with the exact same request ID and body, never a new ID; its result identifies
+the applied revision and asset/clip IDs. A newer `currentRevision` means read
+again before another edit. Stale revisions and protected assets are refused.
 
 Read the complete `genobi_project.brief`, including `references`, before using
 an image mentioned as `[Image 1]` or similar. Each reference binds the label to

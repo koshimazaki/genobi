@@ -1,6 +1,7 @@
 import type { Project } from "../shared/director/types";
 import type { PromptBrief } from "../src/director/prompt-brief";
 import type { ProjectMemory } from "../shared/memory/schema";
+import type { MediaOperationReceipt } from "../shared/project-media-command";
 export interface CopyRecord {
   id: string;
   /**
@@ -18,4 +19,11 @@ export interface CopyRecord {
   brief: PromptBrief | null;
   updatedAt: string;
   memory?: ProjectMemory;
+  /** Private replay ledger, never part of the portable project manifest. */
+  mediaWrites?: {
+    caller: string;
+    requestId: string;
+    digest: string;
+    receipt: MediaOperationReceipt;
+  }[];
 }
