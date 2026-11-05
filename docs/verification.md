@@ -170,7 +170,9 @@ gzip for the lazily loaded Three.js scene. The four library clips ship as
 
 Every push to `main` and every pull request runs
 [`.github/workflows/ci.yml`](https://github.com/koshimazaki/Genobi/blob/main/.github/workflows/ci.yml): the checks above,
-plus a second job guarding the cloud boundary.
+plus a job guarding the cloud boundary. The checks run as parallel jobs (the
+cheap checks, the vitest suite in four shards, and the build), gathered under
+the single `Format, lint, types, tests, build` status that deployment waits on.
 
 - `npm run check:worker` compiles `shared/` and the portable server modules
   under `"types": []`, so a Node-only import in the layer meant to move to
