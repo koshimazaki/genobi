@@ -1227,7 +1227,7 @@
     {
       "kind": "skill",
       "name": "adaptive-reverb",
-      "description": "Make a version of Adaptive reverb, the first 3D + LTX mix template - the person says or types the room they want and which one it replaces (\"a stone cellar instead of the hall\"), an image being an optional reference, and the agent writes the first still's prompt, builds the room in World Builder, renders it with LTX-2.5 Layout-to-Render on the hosted deployment, processes the track with the room's CPU reverb and, in this v1, uses a fixed AKUSPACE preset for each room's reverb (Acoustic Spaces v2 instead works out each room's reverb from its measured size). Every paid step is quoted and waits for the person's yes.",
+      "description": "Make a version of Adaptive reverb, the first 3D + LTX mix template - the person says or types the room they want and which one it replaces (\"a stone cellar instead of the hall\"), an image being an optional reference, and the agent writes the first still's prompt, builds the room in World Builder, renders it with LTX-2.5 Layout-to-Render on the hosted deployment, processes the track with the room's CPU reverb and, in this v1, only labels it with a fixed AKUSPACE preset whose RT60 is the preset's, not a measurement (Acoustic Spaces v2 measures each room instead). Every paid step is quoted and waits for the person's yes.",
       "tags": [
         "agents",
         "director",
