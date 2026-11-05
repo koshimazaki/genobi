@@ -31,6 +31,7 @@ import { developTools } from "./develop-tools";
 import { skillTools } from "./skill-tools";
 import { takeTools } from "./take-tools";
 import { projectMediaTools } from "./project-media-tools";
+import { exportTools } from "./export-tools";
 import { upscalePartsTools } from "./upscale-parts-tools";
 import { templateTools } from "./template-tools";
 import { workflowTools } from "./workflow-tools";
@@ -190,6 +191,7 @@ export const tools: ToolDefinition[] = [
   ...effectTools,
   ...takeTools,
   ...projectMediaTools,
+  ...exportTools,
   ...provenanceTools,
   ...audioTools,
   ...mediaTools,

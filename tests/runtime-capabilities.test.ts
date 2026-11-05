@@ -19,6 +19,11 @@ it("discovers local support without claiming installed voice or headless renderi
       projectMediaStaging: { supported: true },
       projectMediaOperations: { supported: true },
       worldMedia: { supported: true, execution: "browser" },
+      browserExport: {
+        supported: true,
+        execution: "browser",
+        headlessExport: false,
+      },
       editor: { execution: "browser", headlessExport: false },
       worldCapture: { execution: "browser", headlessCapture: false },
     },

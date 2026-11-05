@@ -32,6 +32,7 @@ export const GENOBI_TOOLS = [
   // Revision-checked linked-project writes; staging cannot read arbitrary local files here.
   "genobi_project_media",
   "genobi_project_media_receipt",
+  "genobi_export",
   "genobi_projects",
   "genobi_link_project",
   "genobi_project",

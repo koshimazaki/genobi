@@ -7,7 +7,7 @@ metadata:
   version: "0.1.0"
   phase: "1 - quoted generation"
   tags: "agents, director, bundle, mcp"
-  docs: "docs/director-agent-tools.md, docs/director-bundle/README.md, docs/effects-catalogue.md, docs/project-media.md, docs/project-archives.md"
+  docs: "docs/director-agent-tools.md, docs/director-bundle/README.md, docs/effects-catalogue.md, docs/project-media.md, docs/project-archives.md, docs/browser-exports.md"
 ---
 
 # Genobi director
@@ -15,6 +15,12 @@ metadata:
 For a finished cut, keep an editable project ZIP using the studio's Save action.
 Saving validates all required bytes and writes an integrity index; opening a bad
 archive retains the current project. See [Local project archives](../../../../docs/project-archives.md).
+
+For agent exports, read `genobi_export` targets, then request the exact tab and
+source revision as `project-zip` or `mp4`. Poll status and return the completed
+receipt; an accepted request is not a finished file. Cancellation stops rendering;
+an atomic storage commit already started finishes. See
+[browser exports](../../../../docs/browser-exports.md) for retention and replay.
 
 The Director is the timeline where the person's piece lives. This skill is
 the global approach: start from their project, decide what the cut needs, use

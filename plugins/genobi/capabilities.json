@@ -235,6 +235,14 @@
       "runs": [{ "route": "local-free" }]
     },
     {
+      "id": "browser-export", "name": "Agent browser exports", "status": "implemented",
+      "where": "Director · open local Director or Editor",
+      "description": "Request a revision-bound MP4 or validated project ZIP through the mounted browser. Progress, cancellation, private hash receipts and one-hour completed-artifact retention; no headless or hosted export.",
+      "mcp": ["genobi_export"], "cli": ["export"],
+      "skills": ["genobi-director"], "docs": ["docs/browser-exports.md", "docs/project-archives.md"],
+      "runs": [{ "route": "local-free" }]
+    },
+    {
       "id": "motion-mp4", "name": "Motion effects and MP4 export", "status": "implemented",
       "where": "Director · effects and Render MP4",
       "description": "Registered motion-effect recipes (shake, transitions, grade, speed lines, titles) and a rendered MP4 of the composition.",

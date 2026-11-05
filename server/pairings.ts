@@ -9,8 +9,9 @@ import type { AgentSessions } from "./agent-sessions";
 import { worldRouter } from "./world-routes";
 import { scrollsFillRouter } from "./scrolls-fill-routes";
 import type { ProjectCopies } from "./projects";
+import { browserExportRouter } from "./browser-export-routes";
 
-export function mountPairings(
+export async function mountPairings(
   app: express.Express,
   limit: (bucket: RateBucket, id: string) => void,
   agents: Pick<AgentSessions, "active">,
@@ -26,4 +27,6 @@ export function mountPairings(
   );
   // Scrolls' fill counts in the server's ceilings (edit, poll).
   app.use("/api/scrolls", scrollsFillRouter(limit));
+  if (projects)
+    app.use("/api/exports", await browserExportRouter(projects, limit));
 }

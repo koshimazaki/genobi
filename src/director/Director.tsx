@@ -32,6 +32,7 @@ import ProgramRow from "./ProgramRow";
 import { applyCommand } from "../../shared/director/commands";
 import ComposerHeader from "./ComposerHeader";
 import CopyConflictQuestion from "./CopyConflictQuestion";
+import ExportReceiptLink from "./ExportReceiptLink";
 import "./director.css";
 import "./timeline.css";
 import "./compact.css";
@@ -85,6 +86,7 @@ export default function Director({
     setReady,
     waveforms,
     renderUrl,
+    exportReceipt,
     renderSummary,
     setRenderUrl,
   } = directorRuntime;
@@ -284,6 +286,11 @@ export default function Director({
           switchMode={() => setAdvanced(!advanced)}
         />
         {p && <ProjectMemoryPanel key={p.id} projectId={p.id} />}
+        <ExportReceiptLink
+          receipt={
+            exportReceipt?.source.id === p?.id ? exportReceipt : undefined
+          }
+        />
       </StudioPanel>
       <input
         hidden
