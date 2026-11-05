@@ -24,8 +24,13 @@
   color: var(--text);
 }
 /* A card's model badge, from its tier. */
+/* On a narrow card it shortens before the name does; its title has it all. */
 .template-tier {
-  flex: none;
+  flex: 0 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   padding: 2px 6px;
   border: 1px solid var(--border);
   border-radius: 4px;

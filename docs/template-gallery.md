@@ -396,7 +396,20 @@ open `/?workspace=camera`.
 
 ## Sharing
 
-Every card's link icon copies its absolute `/watch/<id>` URL and shows
+Each card's caption ends in a row of icons (`ShareLink.tsx`): **View full
+size**, **Copy link** and **Open page in new tab**. None opens the drawer, and
+their clicks do not count as the gesture that lets card previews play sound.
+View full size, also in the drawer beside **Download preview**, opens Camera's
+lightbox (`VideoLightbox`) on the full-resolution `media.video`, with the card's
+name and model badge (`TemplateLightbox.tsx`, `template-clip.ts`). The full file
+is requested only then; card previews pause while it is open; a cut with a
+track starts with sound, muted if the browser refuses. Opened from a card, the
+arrow keys step through the visible cards with a video, and Esc or Close
+returns focus to the View icon of the card on show; opened from the drawer it
+shows that template alone and focus returns to the drawer. The card title still
+opens the drawer: it is not a link, so that click keeps its meaning.
+
+The link icon copies the card's absolute `/watch/<id>` URL and shows
 **Link copied** beside it. Clipboard denial or absence falls back to a selected
 text copy; if that also fails, a selectable URL and **Open video page** remain.
 The drawer's Link/Embed tabs copy the watch URL or an iframe for `/embed/<id>`.

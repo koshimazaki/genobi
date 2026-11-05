@@ -19,6 +19,29 @@
 .template-card-share {
   position: relative;
   flex: none;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+/* The name keeps room for a few words beside the badge and the icon row. */
+.template-card-caption > button:first-child {
+  flex: 1 1 0;
+  min-width: 7em;
+}
+/* View full size, copy link, open page: one icon row, in the caption's 32 px. */
+.template-card-caption .template-card-share > button:first-child,
+.template-card-caption .template-card-share > button,
+.template-card-caption .template-card-share > a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  min-height: 24px;
+  padding: 4px 2px;
+  color: inherit;
+}
+.template-card-caption .template-card-share > :is(button, a):hover {
+  color: var(--text);
 }
 .template-card-share > [role="status"]:not(:empty),
 .template-copy-fallback {
@@ -46,4 +69,22 @@
 }
 .template-card-share > button:first-child {
   margin: 0;
+}
+/* The drawer's full-size view, beside the download it would otherwise need. */
+.template-share-full {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 11px;
+}
+.template-share-full button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 0;
+  color: var(--readout);
+}
+.template-share-full a {
+  color: var(--soft);
+  text-decoration: underline;
 }

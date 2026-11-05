@@ -9,6 +9,7 @@ import type { HouseTemplate } from "../../shared/templates/types";
 import { useShell } from "../studio/ShellContext";
 import GalleryFilters from "./GalleryFilters";
 import GalleryCard from "./GalleryCard";
+import TemplateLightbox, { type Viewing } from "./TemplateLightbox";
 import { useSoundGesture } from "./useSoundGesture";
 import TemplateDrawer, { type DrawerBusy } from "./TemplateDrawer";
 import type { TemplatePicks } from "./open-template";
@@ -44,6 +45,8 @@ export default function TemplateGallery({ active }: { active: boolean }) {
   const agent = useShownAgentSession();
   const openId = useStudio((s) => s.director.bundle?.project.id);
   const trigger = useRef<HTMLButtonElement | null>(null);
+  const cards = useRef<HTMLDivElement>(null);
+  const [viewing, setViewing] = useState<Viewing>();
   const shown = galleryTemplates.filter((t) => matchesFilters(t, filters));
   function close() {
     setSelected(undefined);
@@ -117,13 +120,13 @@ export default function TemplateGallery({ active }: { active: boolean }) {
         </button>
         <p>{GALLERY_LEGEND}</p>
       </div>
-      <div className="template-cards" inert={!!selected}>
+      <div className="template-cards" ref={cards} inert={!!selected}>
         {shown.map((template, index) => (
           <GalleryCard
             key={template.id}
             template={template}
             featured={index === 0 && !Object.values(filters).some(Boolean)}
-            active={active && !selected}
+            active={active && !selected && !viewing}
             previewing={previewId === template.id}
             onPreview={(playing) =>
               setPreviewId((current) =>
@@ -139,6 +142,7 @@ export default function TemplateGallery({ active }: { active: boolean }) {
               trigger.current = button;
               setSelected(template);
             }}
+            onView={() => setViewing({ id: template.id, from: "card" })}
           />
         ))}
         {!shown.length && (
@@ -174,8 +178,17 @@ export default function TemplateGallery({ active }: { active: boolean }) {
             onGenerate={(chosen) => void generate(selected, chosen)}
             onDirector={(chosen) => void director(selected, chosen)}
             onEditor={(chosen) => void editor(selected, chosen)}
+            onView={() => setViewing({ id: selected.id, from: "drawer" })}
           />
         </>
+      )}
+      {active && viewing && (
+        <TemplateLightbox
+          viewing={viewing}
+          shown={shown}
+          cards={cards}
+          onViewing={setViewing}
+        />
       )}
     </div>
   );

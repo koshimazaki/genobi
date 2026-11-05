@@ -51,6 +51,7 @@ export default function TemplateDrawer({
   onGenerate,
   onDirector,
   onEditor,
+  onView,
   busy,
   error,
   status,
@@ -61,6 +62,8 @@ export default function TemplateDrawer({
   onGenerate: (chosen: TemplatePicks) => void;
   onDirector: (chosen: TemplatePicks) => void;
   onEditor: (chosen?: TemplatePicks) => void;
+  /** Opens the full-resolution cut in the lightbox. */
+  onView?: () => void;
   busy: DrawerBusy;
   error: string;
   status: string;
@@ -337,9 +340,21 @@ export default function TemplateDrawer({
           rows={share === "embed" ? 3 : 2}
         />
         {media && (
-          <a href={media.video} download>
-            Download preview
-          </a>
+          <div className="template-share-full">
+            {onView && (
+              <button
+                title="View full size"
+                aria-label={`View ${template.name} full size`}
+                onClick={onView}
+              >
+                <Icon name="expand" size={14} />
+                View full size
+              </button>
+            )}
+            <a href={media.video} download>
+              Download preview
+            </a>
+          </div>
         )}
         <span role="status">{message}</span>
       </section>
