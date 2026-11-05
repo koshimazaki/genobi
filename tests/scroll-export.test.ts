@@ -167,7 +167,9 @@ it.each(["scroll-json", "scroll-zip"] as const)(
       headers: { cookie: s.agent },
     });
     const actual = new Uint8Array(await download.arrayBuffer());
-    expect(actual).toEqual(bytes);
+    // Native byte equality avoids blocking the event loop while Vitest walks
+    // a multi-megabyte image, which can expire an idle HTTP connection in CI.
+    expect(Buffer.from(actual).equals(Buffer.from(bytes))).toBe(true);
     const restored = await openScroll(
       new File(
         [actual],
@@ -176,7 +178,11 @@ it.each(["scroll-json", "scroll-zip"] as const)(
       format === "scroll-json" ? bundle : undefined,
     );
     expect(restored.document).toEqual(bundle.document);
-    expect(restored.files).toEqual(bundle.files);
+    expect([...restored.files.keys()]).toEqual([...bundle.files.keys()]);
+    for (const [path, bytes] of bundle.files)
+      expect(
+        Buffer.from(restored.files.get(path)!).equals(Buffer.from(bytes)),
+      ).toBe(true);
     expect(await exportTools[0].run(s.api, request)).toEqual(done);
     expect(s.bfl.submissions).toBe(0);
   },
