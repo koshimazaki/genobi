@@ -110,8 +110,8 @@ export function galleryBadge(template: HouseTemplate) {
     detail: models.length
       ? models.join(", ")
       : template.mix && named.length
-        ? `Nothing to generate: a finished cut of ${names.join(" + ")} (${route(named)}) clips`
-        : "Nothing to generate: a finished cut of bundled clips",
+        ? `Clips included, ready to edit: a finished cut of ${names.join(" + ")} (${route(named)}) clips`
+        : "Clips included, ready to edit: a finished cut of bundled clips",
   };
 }
 

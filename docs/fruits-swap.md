@@ -1,6 +1,6 @@
 ---
 tags: [director, sound, templates]
-summary: Dance with Fruits, the content-swap mix template - 33 seconds of the owner's four LTX-2.5 Layout-to-Render (open weights) renders of one dance guide, opened by a splash of flying pixel fruit and a typed title, swapped hard on the loop and the drop, every word and icon a live layer in the Director, a neon-pink surveillance scan confined to the gorilla and the house end card. Nothing to generate.
+summary: Dance with Fruits, the content-swap mix template - 33 seconds of the owner's four LTX-2.5 Layout-to-Render (open weights) renders of one dance guide, opened by a splash of flying pixel fruit and a typed title, swapped hard on the loop and the drop, every word and icon a live layer in the Director, a neon-pink surveillance scan confined to the gorilla and the house end card. The clips are included, so it opens ready to edit at no cost.
 ---
 
 # Dance with Fruits: the swap edit
