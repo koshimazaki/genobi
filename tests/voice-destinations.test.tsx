@@ -108,7 +108,13 @@ const click = async (label: string) => {
 it("defaults to the agent once, even for a Camera request in StrictMode", async () => {
   const prompt = field("description");
   await render();
-  expect(send).toHaveBeenCalledExactlyOnceWith(words, undefined, undefined);
+  expect(send).toHaveBeenCalledExactlyOnceWith(
+    words,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+  );
   expect(intent).not.toHaveBeenCalled();
   expect(prompt.value).toBe("Existing prompt");
   expect(host.textContent).toContain("Sent to Hermes");
@@ -131,7 +137,13 @@ it("sends a sentence that only mentions a workspace to the agent", async () => {
   words = "open a door in the director scene";
   await render();
   expect(select).not.toHaveBeenCalled();
-  expect(send).toHaveBeenCalledExactlyOnceWith(words, undefined, undefined);
+  expect(send).toHaveBeenCalledExactlyOnceWith(
+    words,
+    undefined,
+    undefined,
+    undefined,
+    undefined,
+  );
 });
 
 it("a refusal keeps the words without changing a prompt or retrying automatically", async () => {
@@ -155,10 +167,16 @@ it("keeps a correction bound to the session that received the note after another
   words = "make the penguin blue";
   await render();
   await click("Send correction");
-  expect(send).toHaveBeenLastCalledWith(words, undefined, {
-    session: SESSION,
-    projectId: undefined,
-  });
+  expect(send).toHaveBeenLastCalledWith(
+    words,
+    undefined,
+    {
+      session: SESSION,
+      projectId: undefined,
+    },
+    undefined,
+    undefined,
+  );
   expect(voiceRouting().agent?.session.id).toBe("two");
 });
 
@@ -169,10 +187,16 @@ it("a new note reuses the pinned conversation without selecting it again", async
   arrival = voiceRouting();
   words = "Make it slower";
   await render();
-  expect(send).toHaveBeenLastCalledWith(words, undefined, {
-    session: SESSION,
-    projectId: undefined,
-  });
+  expect(send).toHaveBeenLastCalledWith(
+    words,
+    undefined,
+    {
+      session: SESSION,
+      projectId: undefined,
+    },
+    undefined,
+    undefined,
+  );
 });
 
 it("only an explicit action sends an existing transcript to a changed destination", async () => {

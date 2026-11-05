@@ -301,6 +301,9 @@ user action through every layer.
   settings a session starts with, and "my last two picks" resolved to ids.
 - [Agent sessions](agent-sessions.md) — the project prompt runs the person's
   own agent locally with the Genobi tools and its own browser; it never spends.
+- [Continue or start a new conversation](agent-continue.md) — Voice's two agent
+  choices, a finished Hermes run resumed by its own session id, and why a
+  finished Claude Code run cannot be.
 - [Agent setup](agent-setup.md) — setup's Connect step and sign-in checks,
   Hermes' open models as a list, Set up Hermes with no script or restart, and
   the environment variables.

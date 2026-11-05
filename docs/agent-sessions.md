@@ -111,9 +111,8 @@ agent_messages_waiting` past that), records it in the conversation with
   studio copies the words to the clipboard and says so.
   `409 agent_no_live_transport` remains for a caller that passes no `source`
   to `AgentSessions.message`.
-- **Ended:** a message for a session that has ended answers
-  `409 agent_session_ended`, and the studio starts a new session with the
-  words. One whose input just closed answers `409 agent_session_finishing`.
+- **Ended:** `409 agent_session_ended`; Voice then [continues](agent-continue.md)
+  it in a new run or holds the words. Input just closed: `agent_session_finishing`.
 
 The view carries the conversation, `exchange` (the first prompt, each message
 and each reply, newest 24, oldest first), `live` while it takes messages and
@@ -303,21 +302,21 @@ add the header without a CORS preflight the server never grants
 (`403 agent_cross_site`). Every route checks ownership by the studio session
 cookie, as the other routes do; another session's id reads as not found.
 
-| Route                                   | Answers                                                                                                                                                          |
-| --------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `GET /api/agent/status`                 | `AgentRunnerStatus`: `available`, the runner's name and a fixed sentence. Never a path or a variable's value.                                                    |
-| `POST /api/agent/sessions`              | `201 AgentSession` (body up to 24 kB). `400 agent_request`, `404` (copy not owned), `409 agent_busy`, `429`, `503 agent_unavailable`                             |
-| `GET /api/agent/sessions/:id`           | `AgentSession`: status, prompt, lines, summary, and `approvals` when the agent quoted                                                                            |
-| `POST /api/agent/sessions/:id/messages` | `202 AgentSession` with the message queued. `400 agent_request`, `404`, `409 agent_no_live_transport`, `agent_session_ended` or `agent_session_finishing`, `429` |
-| `POST /api/agent/sessions/:id/stop`     | `AgentSession`, now stopping                                                                                                                                     |
-| `POST …/:id/approvals/:quote/approve`   | `202 { session, job }`: the quoted run, once ([Confirm before spending](agent-approvals.md))                                                                     |
-| `POST …/:id/approvals/:quote/decline`   | `AgentSession`, the step declined and its quote voided                                                                                                           |
-| `GET /api/agent/ticket/:ticket`         | `303` to the studio with an agent's session cookie, or `404`                                                                                                     |
-| `GET /api/agent/sign-in`                | Each harness: installed, signed in (`true`, `false` or `unknown`), and for Hermes `profile: "missing"`. Run fresh, `no-store`.                                   |
-| `POST /api/agent/hermes-profile`        | `202` with the steps, or `400` with the reason before anything runs; `409` while one runs. Refused to an agent's session.                                        |
-| `GET /api/agent/hermes-profile`         | `HermesProfileSetupState`: each step's outcome, `done` or `failed` with a fixed sentence                                                                         |
-| `POST /api/development/agent`           | Only a running agent session's Genobi tools, without the studio header: `201 DevelopReceipt` ([above](#genobi-starts-a-developer))                               |
-| `GET /api/development/agent/:id`        | The `DevelopReceipt` of a Developer this agent session started, or `404`                                                                                         |
+| Route                                   | Answers                                                                                                                                                                                    |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `GET /api/agent/status`                 | `AgentRunnerStatus`: `available`, the runner's name and a fixed sentence. Never a path or a variable's value.                                                                              |
+| `POST /api/agent/sessions`              | `201 AgentSession` (body up to 24 kB). `400 agent_request`, `404` (copy not owned), `409 agent_busy` or `agent_continue_unavailable` (a `continues` start), `429`, `503 agent_unavailable` |
+| `GET /api/agent/sessions/:id`           | `AgentSession`: status, prompt, lines, summary, and `approvals` when the agent quoted                                                                                                      |
+| `POST /api/agent/sessions/:id/messages` | `202 AgentSession` with the message queued. `400 agent_request`, `404`, `409 agent_no_live_transport`, `agent_session_ended` or `agent_session_finishing`, `429`                           |
+| `POST /api/agent/sessions/:id/stop`     | `AgentSession`, now stopping                                                                                                                                                               |
+| `POST …/:id/approvals/:quote/approve`   | `202 { session, job }`: the quoted run, once ([Confirm before spending](agent-approvals.md))                                                                                               |
+| `POST …/:id/approvals/:quote/decline`   | `AgentSession`, the step declined and its quote voided                                                                                                                                     |
+| `GET /api/agent/ticket/:ticket`         | `303` to the studio with an agent's session cookie, or `404`                                                                                                                               |
+| `GET /api/agent/sign-in`                | Each harness: installed, signed in (`true`, `false` or `unknown`), and for Hermes `profile: "missing"`. Run fresh, `no-store`.                                                             |
+| `POST /api/agent/hermes-profile`        | `202` with the steps, or `400` with the reason before anything runs; `409` while one runs. Refused to an agent's session.                                                                  |
+| `GET /api/agent/hermes-profile`         | `HermesProfileSetupState`: each step's outcome, `done` or `failed` with a fixed sentence                                                                                                   |
+| `POST /api/development/agent`           | Only a running agent session's Genobi tools, without the studio header: `201 DevelopReceipt` ([above](#genobi-starts-a-developer))                                                         |
+| `GET /api/development/agent/:id`        | The `DevelopReceipt` of a Developer this agent session started, or `404`                                                                                                                   |
 
 Starts, messages, approvals and **Set up Hermes** count against the paid-write
 rate limit (`submit`), Stop and Decline against `edit`, session reads against `poll`

@@ -83,6 +83,15 @@ export interface AgentScope {
 export interface Running {
   view: AgentSession;
   copyId?: string;
+  /** The project the start named (`request.copyId`), for Continue's check. */
+  project?: string;
+  /**
+   * The runner's own conversation id (Hermes `session_id`), for Continue.
+   * Server-only: never in `view`, a log line or project memory.
+   */
+  resumeId?: string;
+  /** The newer run that continued this conversation: one thread, no forks. */
+  continuedBy?: string;
   owner: string;
   pid?: number;
   /** Ends the runner's process group, and the groups of the children it

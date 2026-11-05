@@ -16,6 +16,11 @@ export interface StreamUpdate {
   finished?: "done" | "failed";
   /** A paid route refused this agent; the person has to approve. */
   refusedSpend?: true;
+  /**
+   * The runner's own conversation id, once the run actually answered, so a
+   * later Continue can resume it (Hermes' `session_id`, issue #58).
+   */
+  runnerSession?: string;
 }
 
 /** One line of text: control characters and runs of space collapsed. */

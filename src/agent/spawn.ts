@@ -327,7 +327,7 @@ export const ALREADY_RUNNING =
  * session outlives a reload): the bubble shows and follows that session,
  * and the refusal says so. Any other refusal is passed on.
  */
-async function followBusy(error: unknown): Promise<never> {
+export async function followBusy(error: unknown): Promise<never> {
   if (
     error instanceof AgentRefusal &&
     error.code === "agent_busy" &&

@@ -8,6 +8,7 @@
 import { COPY_ID, DIRECTOR_ID } from "./director/commands";
 import type { AgentApproval, ApprovalResult } from "./agent-approval";
 import { parseAgentContext, type AgentContext } from "./agent-context";
+import { AGENT_SESSION_ID } from "./agent-session-events";
 
 export const AGENT_RUNNERS = ["claude", "hermes"] as const;
 export type AgentRunner = (typeof AGENT_RUNNERS)[number];
@@ -51,6 +52,13 @@ export interface AgentSessionRequest {
    * its own login in the window). Only `true`.
    */
   signIn?: true;
+  /**
+   * Continue this earlier, finished session's conversation (issue #58): its
+   * Genobi session id. The server resumes the runner's own conversation
+   * (Hermes `--resume`) in a new run, or refuses with
+   * `agent_continue_unavailable`; it never starts a clean context instead.
+   */
+  continues?: string;
 }
 
 export type AgentSessionStatus =
@@ -98,6 +106,13 @@ export interface AgentSession {
   live?: true;
   /** Its last turn is over and it waits for the person's next message. */
   idle?: true;
+  /**
+   * Once ended, a new run can resume this conversation (`continues`): the
+   * server holds the runner's own conversation id, which never leaves it.
+   */
+  resumable?: true;
+  /** The earlier Genobi session whose conversation this run continues. */
+  continues?: string;
 }
 
 /** One entry of a session's conversation, as the server recorded it. */
@@ -163,7 +178,7 @@ export function parseAgentMessage(value: unknown): AgentMessageRequest {
 export function parseAgentSessionRequest(value: unknown): AgentSessionRequest {
   if (!value || typeof value !== "object" || Array.isArray(value))
     throw new Error("Send a JSON object with a prompt.");
-  const { prompt, copyId, source, context, setup, mode, signIn } =
+  const { prompt, copyId, source, context, setup, mode, signIn, continues } =
     value as Record<string, unknown>;
   const text = promptText(prompt);
   if (
@@ -183,6 +198,14 @@ export function parseAgentSessionRequest(value: unknown): AgentSessionRequest {
     throw new Error("Run the session headless or in a terminal.");
   if (signIn !== undefined && (signIn !== true || mode !== "terminal"))
     throw new Error("Only a Terminal start signs in first, marked true.");
+  if (
+    continues !== undefined &&
+    (typeof continues !== "string" ||
+      !AGENT_SESSION_ID.test(continues) ||
+      setup !== undefined ||
+      mode === "terminal")
+  )
+    throw new Error("Continue one earlier session, headless, by its id.");
   return {
     prompt: text,
     ...(copyId ? { copyId } : {}),
@@ -191,5 +214,6 @@ export function parseAgentSessionRequest(value: unknown): AgentSessionRequest {
     ...(setup ? { setup: true as const } : {}),
     ...(mode === "terminal" ? { mode: "terminal" as const } : {}),
     ...(signIn ? { signIn: true as const } : {}),
+    ...(typeof continues === "string" ? { continues } : {}),
   };
 }

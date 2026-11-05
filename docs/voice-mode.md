@@ -53,9 +53,9 @@ needs one explicit selection through **Shown conversation** or its log's
 
 | Destination                 | Result                                                                                  |
 | --------------------------- | --------------------------------------------------------------------------------------- |
-| Agent                       | Send the entire transcript as a direction to the selected agent.                        |
-| Current agent / new session | Explicitly release the previous conversation and use the current session, or start one. |
-| Shown conversation          | Select the different conversation currently shown in the deck.                          |
+| Continue · _runner · title_ | Send the entire transcript to that conversation, resuming it if its run has finished.   |
+| Start new conversation      | Start a clean context through the usual start flow, even while another one is selected. |
+| Continue shown · _runner_   | Select the different conversation currently shown in the deck.                          |
 | Current prompt              | Dictate into the last focused editable prompt, or the first visible prompt.             |
 | A named prompt              | Dictate only into that field, including an LTX gap or World Builder scene direction.    |
 | Camera request              | Interpret a medium/model/subject request with the existing Camera parser.               |
@@ -88,9 +88,14 @@ or renders nothing. Choose Agent to ask for scene manipulation instead.
 The selected conversation remains the destination across notes even if another
 session becomes the latest one shown in the deck. A conversation's **Speak to agent**
 action explicitly selects that conversation. Each send checks the selected
-session again. If it finished, is unavailable, or the open project changed, the
-transcript stays visible and the person chooses a destination again. It is not
-sent to another session or inserted into an unrelated prompt.
+session again. If its run finished, Continue resumes the same conversation in a
+new run when the runner kept one (Hermes, by its own session id); Claude Code
+keeps none, so the picker reads **Can't continue** and the words are held until
+**Start new conversation** is chosen. If it is unavailable or the open project
+changed, the transcript stays visible and the person chooses a destination
+again. It is not sent to another session, started clean or inserted into an
+unrelated prompt. [Continue or start a new conversation](agent-continue.md) has
+the details.
 
 The studio uses the same `POST /api/agent/sessions/:id/messages` route as typed
 directions, with `source: "voice"`. Headless Claude Code takes it as its next

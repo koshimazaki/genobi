@@ -58,8 +58,19 @@ const out = (event) =>
 const say = (text) => out({ type: "text", text: `${text}\n\n` });
 const flag = (name) => process.argv[process.argv.indexOf(name) + 1];
 
-out({ type: "system", subtype: "init", model: flag("-m"), session_id: "s1" });
+// `--resume <id>` continues that conversation, as Hermes' own init reports.
+const resumed = process.argv.includes("--resume") ? flag("--resume") : "";
+out({
+  type: "system",
+  subtype: "init",
+  model: flag("-m"),
+  session_id: resumed || "20261105_000000_fake01",
+});
 process.stdout.write("not json at all\n");
+if (resumed)
+  say(
+    `resumed ${resumed}${process.argv.includes("--no-restore-cwd") ? " here" : ""}`,
+  );
 
 if (prompt.includes("ticket")) {
   const brief = process.env.HERMES_EPHEMERAL_SYSTEM_PROMPT ?? "";
@@ -125,7 +136,10 @@ if (prompt.includes("hang")) {
   }
   out({
     type: "result",
-    session_id: "s1",
+    // "compress" rotates the id mid-run, as Hermes' compression does.
+    session_id: prompt.includes("compress")
+      ? "20261105_000001_fake02"
+      : resumed || "20261105_000000_fake01",
     exit_code: failed ? 1 : 0,
     text: failed ? "" : "The studio is up.\n\nNothing was spent.",
     tokens: { input: 1, output: 1, total: 2, cache_read: 0, cache_write: 0 },
