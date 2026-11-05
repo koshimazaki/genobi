@@ -18,6 +18,7 @@ Every capture line takes three placeholders: `TRACK` (the audio file), `START` (
 | [fruit-apple-banana](fruit-apple-banana.md)         | `fruit-apple-banana`     | Fruits (single morph) | Fruit loop 0 (Rubik, gain 1)            | rendered               |
 | [fruit-banana-apple](fruit-banana-apple.md)         | `fruit-banana-apple`     | Fruits (single morph) | Fruit loop (gain 2)                     | rendered               |
 | [ship-mecha](ship-mecha.md)                         | `ship-mecha`             | Objects               | Dimensions 40.125                       | captured, not rendered |
+| [car-mecha](car-mecha.md)                           | `car-mecha`              | Objects               | Dimensions 40.125                       | captured, not rendered |
 | [diamond](diamond.md)                               | `diamond`                | Objects               | Adaptive Reverb (start not recorded)    | captured, not rendered |
 
 "Rendered" means at least one window was rendered on 2 or 3 November; the page says which.

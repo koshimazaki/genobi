@@ -1,0 +1,71 @@
+/* The deck's chain of steps (StepChain.tsx): stuck to the top of the log
+   while it scrolls, one line per step, the newest last. */
+.deck-steps {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  margin: 0 0 var(--space-6);
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid var(--line, rgba(255, 255, 255, 0.12));
+  background: var(--status-bg, rgba(14, 16, 18, 0.92));
+}
+.deck-steps ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.deck-step {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-6);
+  min-width: 0;
+  line-height: 1.45;
+}
+.deck-step-mark {
+  flex: none;
+  width: 2ch;
+  white-space: nowrap;
+  text-align: center;
+}
+.deck-step-label {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.deck-step.is-done .deck-step-mark {
+  color: var(--readout);
+}
+.deck-step.is-working,
+.deck-step.is-working .deck-step-mark {
+  color: var(--accent);
+}
+.deck-step.is-waiting {
+  color: var(--text, inherit);
+}
+.deck-step.is-waiting .deck-step-mark {
+  color: var(--accent);
+}
+.deck-step.is-failed .deck-step-mark {
+  color: var(--error-text, #f27d9c);
+}
+.deck-step.is-unknown,
+.deck-step.is-done .deck-step-label {
+  color: var(--muted);
+}
+.deck-steps-older summary {
+  color: var(--muted);
+  cursor: pointer;
+}
+/* Opened, the folded steps scroll in their own short box, so the newest
+   steps below them stay in view. */
+.deck-steps-older[open] ol {
+  max-height: 6.5em;
+  overflow-y: auto;
+}
+@media (max-width: 640px) {
+  .deck-steps-older summary {
+    min-height: 28px;
+    line-height: 28px;
+  }
+}

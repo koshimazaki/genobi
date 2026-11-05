@@ -1,10 +1,7 @@
 import { AgentMemory } from "./agent-memory";
 import { AgentInbox, collectQueued, dropQueued } from "./agent-inbox";
-import {
-  continueFrom,
-  joinConversation,
-  keepRunnerSession,
-} from "./agent-continue";
+import { continueFrom, joinConversation } from "./agent-continue";
+import { applyUpdate } from "./agent-session-updates";
 type MessageSource = "voice" | "typed";
 // Project-prompt sessions on the local server (issue #23): one running agent
 // per studio session, its recent progress in memory, tickets that sign the
@@ -33,7 +30,6 @@ import {
   IDLE_MS,
   openInput,
   record,
-  turnEnded,
 } from "./agent-conversation";
 import { AgentTickets } from "./agent-tickets";
 import {
@@ -200,7 +196,7 @@ export class AgentSessions {
       },
     };
     if (earlier) joinConversation(session, earlier);
-    record(session, "person", request.prompt);
+    record(session, "person", request.prompt, false, request.source);
     this.keep(id, session);
     try {
       const projectMemory = await this.memory.begin(session, request.copyId);
@@ -328,22 +324,7 @@ export class AgentSessions {
   }
 
   private consume(session: Running, updates: StreamUpdate[]) {
-    for (const update of updates) {
-      if (update.started && session.view.status === "starting")
-        session.view.status = "running";
-      if (update.line) pushLine(session, update.line);
-      if (update.summary) {
-        session.view.summary = update.summary;
-        record(session, "agent", update.summary);
-      }
-      if (update.refusedSpend) session.refusedSpend = true;
-      if (update.runnerSession)
-        keepRunnerSession(session, update.runnerSession);
-      if (update.finished) {
-        session.finished = update.finished;
-        turnEnded(session);
-      }
-    }
+    for (const update of updates) applyUpdate(session, update);
     void this.memory.progress(session).catch(() => {
       this.signal(session);
       this.fail(session, "Project memory could not be saved; session stopped.");
@@ -372,6 +353,7 @@ export class AgentSessions {
       session,
       text,
       source && ((at, words) => void this.inbox.post(at, words, source)),
+      source,
     );
     return viewOf(session);
   }

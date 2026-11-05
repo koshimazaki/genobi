@@ -126,6 +126,7 @@ describe("the clip inspector's prompt", () => {
         edit={() => {}}
         duplicate={() => {}}
         remove={() => {}}
+        rename={() => ""}
         reorder={() => {}}
         replace={() => {}}
         command={command}

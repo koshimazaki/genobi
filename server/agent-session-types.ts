@@ -6,6 +6,7 @@ import type { ChildProcess } from "node:child_process";
 import type { Writable } from "node:stream";
 import type { AgentSession } from "../shared/agent-session";
 import type { ApprovalResult } from "../shared/agent-approval";
+import type { AgentToolCall } from "../shared/agent-session-events";
 import type { SetupFacts } from "../shared/agent-setup";
 import type { AgentConfig } from "./agent-config";
 import type { ApprovalService, Proposal } from "./agent-approvals";
@@ -131,4 +132,6 @@ export interface Running {
   approvals: Proposal[];
   /** What each approval came to, by quote id, past the visible six. */
   results: Map<string, ApprovalResult>;
+  /** Tool calls still waiting for their result, by the runner's call id. */
+  toolCalls?: Map<string, AgentToolCall>;
 }

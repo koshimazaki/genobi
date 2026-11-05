@@ -25,6 +25,12 @@ import {
   timingOf,
 } from "./feedback-labels";
 import { noteSteps, projectSteps } from "./feedback-project";
+import {
+  durationStep,
+  fpsStep,
+  orderSteps,
+  renameSteps,
+} from "./feedback-editor";
 import { clipSettingSteps, removedClipSteps } from "./feedback-clips";
 import { promptSteps } from "./feedback-prompts";
 import { residual } from "./feedback-residual";
@@ -84,15 +90,20 @@ export function diffCopies(base: DirectorCopy, current: DirectorCopy): Diff {
     current,
     timingOf(current.project.composition),
   );
+  fpsStep(b);
+  durationStep(b, false);
   projectSteps(b);
   removedClipSteps(b);
   plateSteps(b);
   timingSteps(b);
   addSteps(b);
+  renameSteps(b);
+  orderSteps(b);
   lookSteps(b);
   clipSettingSteps(b);
   promptSteps(b);
   noteSteps(b);
+  durationStep(b, true);
   residual(b, base);
   return { commands: b.commands, unmapped: b.unmapped };
 }

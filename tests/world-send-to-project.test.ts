@@ -301,10 +301,11 @@ describe("recipe op and presets", () => {
       expect(preset.name).toBe(name);
       expect(preset.recipe.motion?.stateKeys).toHaveLength(
         (
-          { "fruit-audio-branches": 5, "bass-avenue": 4 } as Record<
-            string,
-            number
-          >
+          {
+            "fruit-audio-branches": 5,
+            "bass-avenue": 4,
+            "bike-mecha": 2,
+          } as Record<string, number>
         )[id] ?? 3,
       );
       expect(presetSummary(preset)).toMatchObject({ file: id });

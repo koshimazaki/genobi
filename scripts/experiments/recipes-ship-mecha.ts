@@ -36,13 +36,14 @@ export const SWELL_HOLD = 8,
  * on Dimensions at 40.125 s: after auto gain the low band never fell below
  * 0.54, so the raw band held the mecha for the whole take. A band without
  * that spread (silence, a constant) is returned unchanged, so zero bass is
- * still the spacecraft and full bass the mecha.
+ * still the spacecraft and full bass the mecha. `minSwell` lowers that guard
+ * for a band smoothed and released into a narrow spread.
  */
-export function bassSwells(low: number[]) {
+export function bassSwells(low: number[], minSwell = MIN_SWELL) {
   const sorted = [...low].sort((a, b) => a - b);
   const floor = sorted[Math.floor((sorted.length - 1) * 0.75)] ?? 0,
     peak = sorted[Math.floor((sorted.length - 1) * 0.95)] ?? 0;
-  if (peak - floor < MIN_SWELL) return { low: [...low], floor: null };
+  if (peak - floor < minSwell) return { low: [...low], floor: null };
   const swell = low.map((v) =>
     Math.max(0, Math.min(1, (v - floor) / (peak - floor))),
   );

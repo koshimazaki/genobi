@@ -7,9 +7,12 @@ import { useShell } from "../studio/ShellContext";
 import { studioStore } from "../studio/store";
 import { AgentVoiceButton } from "../voice/AgentVoiceButton";
 import DeckSession from "./DeckSession";
+import StepChain from "./StepChain";
+import { deckSteps } from "../../shared/deck-steps";
 
 /**
- * The open deck's log: what is working now, then the whole received log of
+ * The open deck's log: the chain of steps (`StepChain`), kept in view at
+ * its top (running jobs are steps there), then the whole received log of
  * the shown agent session (the request, every retained update oldest first,
  * the summary) with its approvals and Stop (`DeckSession`), then linked
  * agents. Not a live region; the approvals announce their own status. The
@@ -39,11 +42,7 @@ export default function DeckLog({
   }, []);
   return (
     <div ref={log} className="deck-log" role="log" aria-live="off" tabIndex={0}>
-      {activity.map((a) => (
-        <p key={a.id} className="deck-line is-now">
-          {a.line}
-        </p>
-      ))}
+      <StepChain steps={deckSteps({ session, jobs: activity })} />
       {session && (
         <>
           <p className="deck-line is-head">
