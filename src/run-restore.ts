@@ -1,11 +1,14 @@
 import { entryFor } from "../shared/registry";
 import type { Job } from "../shared/types";
 import { saveRunLocation, selectWorkflow } from "./run-settings";
+import { parseWorkflowDestination } from "../shared/comfy/destination";
+import { parseGpuBox, type GpuBox } from "../shared/comfy/gpu-box";
 
 /**
  * Recreate restores the full setup, so a workflow run made on another
  * template or run location is recreated on its own: the take records both
- * (`recipe.workflow`, `recipe.location`), and they are set for the session
+ * (`recipe.workflow`, `recipe.location`, and a GPU box run's `recipe.box`),
+ * and they are set for the session
  * before anything can be generated.
  *
  * - Generate waits while a restore is pending (`pending`).
@@ -18,11 +21,35 @@ import { saveRunLocation, selectWorkflow } from "./run-settings";
  */
 export const RESTORE_FAILED =
   "This run's workflow or run location could not be restored. Check both before generating.";
+/** A GPU box run whose box cannot be named again: nothing switches to Local. */
+const boxUnrestorable = (name: string) =>
+  `This run used the GPU box ${name}, which could not be restored. The run location was left as it was; set the box up in Studio settings before generating.`;
+const boxSilent = (box: GpuBox) =>
+  `Recreate restored this run's GPU box. The GPU box ${box.name} (port ${box.port}) is not answering now. Start its SSH tunnel and ComfyUI before generating.`;
+
+/** The box a recipe recorded, as name and tunnel port, or a refusal. */
+function recordedBox(value: unknown): GpuBox | "invalid" | undefined {
+  if (value === undefined) return undefined;
+  const { name, url } = (value ?? {}) as { name?: unknown; url?: unknown };
+  try {
+    const destination = parseWorkflowDestination("local", url);
+    if (destination.kind !== "local") return "invalid";
+    const parsed = new URL(destination.url);
+    if (parsed.hostname !== "127.0.0.1") return "invalid";
+    return parseGpuBox({ name, port: Number(parsed.port) });
+  } catch {
+    return "invalid";
+  }
+}
 
 export interface RestoreIo {
   readTake(jobId: string): Promise<Response>;
   selectWorkflow(entry: string, template: string): Promise<unknown>;
-  saveRunLocation(location: "local" | "cloud"): Promise<unknown>;
+  /** With a box: `box` mode on that box's name and tunnel port. */
+  saveRunLocation(
+    location: "local" | "cloud" | "box",
+    box?: GpuBox,
+  ): Promise<unknown>;
 }
 const browserIo: RestoreIo = {
   readTake: (jobId) =>
@@ -32,10 +59,15 @@ const browserIo: RestoreIo = {
       signal: AbortSignal.timeout(10_000),
     }),
   selectWorkflow,
-  saveRunLocation,
+  saveRunLocation: (location, box) => saveRunLocation(location, undefined, box),
 };
 
-type Recipe = { id?: unknown; workflow?: unknown; location?: unknown };
+type Recipe = {
+  id?: unknown;
+  workflow?: unknown;
+  location?: unknown;
+  box?: unknown;
+};
 
 /**
  * The generation of the person's setup choices. Every newer choice that
@@ -104,7 +136,25 @@ export class RunRestorer {
           )
             await this.io.selectWorkflow(recipe.id, recipe.workflow);
           if (!current()) return;
-          if (recipe.location === "local" || recipe.location === "cloud")
+          const box =
+            recipe.location === "local" ? recordedBox(recipe.box) : undefined;
+          if (box === "invalid") {
+            const name = (recipe.box as { name?: unknown } | null)?.name;
+            return onError(
+              boxUnrestorable(
+                typeof name === "string" && /^[\w .-]{1,40}$/.test(name)
+                  ? name
+                  : "it ran on",
+              ),
+            );
+          }
+          if (box) {
+            const state = (await this.io.saveRunLocation("box", box)) as {
+              box?: { status?: { reachable?: unknown } | null };
+            } | null;
+            if (current() && state?.box?.status?.reachable === false)
+              onError(boxSilent(box));
+          } else if (recipe.location === "local" || recipe.location === "cloud")
             await this.io.saveRunLocation(recipe.location);
         } catch {
           if (current()) onError(RESTORE_FAILED);
