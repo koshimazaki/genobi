@@ -77,8 +77,16 @@ export const AGENT_EXCHANGE_MAX = 24;
 export const AGENT_NO_TRANSPORT_CODE = "agent_no_live_transport";
 export const AGENT_NO_TRANSPORT_MESSAGE =
   "This session takes no further messages while it runs. Paste the words into its window, or send them once it finishes.";
-/** A message for a session that has ended: the studio starts a new one. */
+/**
+ * A message for a session that has ended. Voice's Continue resumes it when
+ * the server can (`resumable`) and otherwise holds the words (issue #58).
+ */
 export const AGENT_ENDED_CODE = "agent_session_ended";
+/**
+ * A Continue start the server cannot honour: the runner kept no
+ * conversation to resume, or it belongs to another project or runner.
+ */
+export const AGENT_CONTINUE_CODE = "agent_continue_unavailable";
 /** A message for a session whose input just closed and is still exiting. */
 export const AGENT_FINISHING_CODE = "agent_session_finishing";
 

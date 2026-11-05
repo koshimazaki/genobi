@@ -94,6 +94,8 @@ export function deliver(
   session: Running,
   text: string,
   queue?: (id: string, text: string) => void,
+  /** Spoken or typed, so the deck's chain says how it was heard. */
+  source?: "voice" | "typed",
 ) {
   if (!isAgentActive(session.view.status) || session.stopping)
     throw new AppError(
@@ -105,7 +107,7 @@ export function deliver(
   // Genobi MCP server collects it at the agent's next tool call (Box 1.8).
   if (!session.input && !session.streams && queue) {
     queue(session.view.id, text);
-    record(session, "person", text, true);
+    record(session, "person", text, true, source);
     return;
   }
   if (!session.input)
@@ -123,5 +125,5 @@ export function deliver(
   session.finished = undefined;
   session.turns = (session.turns ?? 0) + 1;
   session.input.write(userTurn(text));
-  record(session, "person", text);
+  record(session, "person", text, false, source);
 }

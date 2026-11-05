@@ -117,6 +117,9 @@ const startedOn = new Map<string, string>();
 /** A spawn is under way; a second `spawnFromStudio` would share it. */
 export const spawnInFlight = () => running !== undefined;
 export const sessionProject = (sessionId: string) => startedOn.get(sessionId);
+/** A session started outside the spawn (Continue) still knows its project. */
+export const noteSessionProject = (sessionId: string, projectId: string) =>
+  void startedOn.set(sessionId, projectId);
 
 /**
  * Spawns the agent from anywhere in the studio, with the open Director

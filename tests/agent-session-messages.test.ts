@@ -84,9 +84,11 @@ describe("a further message", { timeout: 20_000 }, () => {
     );
     expect(sent.status).toBe(202);
     expect(sent.body.idle).toBeUndefined();
+    // A later message keeps how it was heard, as the first prompt does.
     expect(sent.body.exchange.at(-1)).toMatchObject({
       from: "person",
       text: "say: Second reply",
+      source: "voice",
     });
     const second = await until(
       studio,

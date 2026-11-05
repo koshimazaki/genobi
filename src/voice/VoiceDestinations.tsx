@@ -142,7 +142,13 @@ export function VoiceDestinations({
       if (opened) {
         result = { kind: "intent", words, text: `Opened ${opened}.` };
       } else if (destination.destination === "agent") {
-        const sent = await sendVoiceToAgent(words, project, destination.agent);
+        const sent = await sendVoiceToAgent(
+          words,
+          project,
+          destination.agent,
+          undefined,
+          destination.conversation,
+        );
         if (sent.kind === "closed") {
           result = {
             kind: "none",
@@ -159,7 +165,7 @@ export function VoiceDestinations({
             kind: "session",
             words,
             session: sent.session.id,
-            text: `${sent.kind === "started" ? "Started" : "Sent to"} ${runnerName(sent.session.runner)}.${sent.session.exchange?.at(-1)?.pending ? " Your message waits for the agent's next Genobi step." : ""} Paid steps still wait for your approval.`,
+            text: `${sent.kind === "sent" ? "Sent to" : sent.session.continues ? "Continued the conversation with" : "Started a new conversation with"} ${runnerName(sent.session.runner)}.${sent.session.exchange?.at(-1)?.pending ? " Your message waits for the agent's next Genobi step." : ""} Paid steps still wait for your approval.`,
           };
         }
       } else if (destination.destination === "camera") {
@@ -219,7 +225,8 @@ export function VoiceDestinations({
     delivery &&
     (selected.destination !== delivery.routing.destination ||
       (selected.destination === "agent" &&
-        selected.agent?.session.id !== delivery.routing.agent?.session.id));
+        (selected.agent?.session.id !== delivery.routing.agent?.session.id ||
+          selected.conversation !== delivery.routing.conversation)));
   const correction =
     routed?.kind === "session" ? "Send correction" : "Update prompt";
   function update() {

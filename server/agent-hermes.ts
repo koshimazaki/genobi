@@ -20,12 +20,18 @@
 //   time and never saved (reference/environment-variables.md).
 // - `-m` and `--provider` name the open model and its provider, both
 //   required; the profile pins the same pair with fallback off.
+// - `--resume <id>` continues one exact earlier conversation from the
+//   profile's session store (`hermes chat --help`); `--no-restore-cwd` keeps
+//   the new scratch folder. Checked on v0.21.4: both are accepted with
+//   `--oneshot --format stream-json --source tool`, and `init` then carries
+//   the resumed id. Never `--continue` or `--resume latest`.
 import { randomBytes } from "node:crypto";
 import { OPEN_ROUTE_REFUSAL, openRouteRefusal } from "../shared/open-route";
 import type { AgentConfig } from "./agent-config";
 import { RUN_TOKEN_VARIABLE } from "./agent-reap";
 import { assertOpenProfile } from "./agent-hermes-pins";
 import { assertOpenRoute } from "./agent-hermes-probe";
+import { HERMES_SESSION_ID } from "./agent-hermes-stream";
 import {
   HERMES_BROWSER_SERVER,
   PROFILE_NAME,
@@ -137,6 +143,11 @@ export async function hermesPlan(
       ...["--source", "tool"],
       // The agent hears it is out of time at 80% of the session's ceiling.
       ...["--run-budget", String(Math.floor(config.timeoutMs / 1000))],
+      // Continue: this exact conversation, in this profile, from this
+      // session's own scratch folder rather than the earlier (removed) one.
+      ...(input.resume && HERMES_SESSION_ID.test(input.resume)
+        ? ["--resume", input.resume, "--no-restore-cwd"]
+        : []),
     ],
     cwd: input.workdir,
     env: hermesEnv(

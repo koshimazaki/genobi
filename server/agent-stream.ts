@@ -17,6 +17,11 @@ export interface StreamUpdate {
   /** A paid route refused this agent; the person has to approve. */
   refusedSpend?: true;
   /**
+   * The runner's own conversation id, once the run actually answered, so a
+   * later Continue can resume it (Hermes' `session_id`, issue #58).
+   */
+  runnerSession?: string;
+  /**
    * A tool call the runner's events reported: `started` by its `tool_use`,
    * then `done` or `failed` by its `tool_result`. `id` pairs the two when
    * the runner gives one (Claude Code); otherwise the name does (Hermes).
