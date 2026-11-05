@@ -241,6 +241,7 @@
         "agent-approvals.md",
         "agent-bubble.md",
         "agent-context.md",
+        "agent-continue.md",
         "agent-sessions.md",
         "agent-setup.md",
         "agent-workspace.md",
@@ -335,6 +336,7 @@
       "meaning": "Server and Worker API, jobs, storage and providers",
       "pages": [
         "agent-approvals.md",
+        "agent-continue.md",
         "agent-sessions.md",
         "agent-setup.md",
         "architecture.md",
@@ -457,6 +459,7 @@
         "agent-approvals.md",
         "agent-bubble.md",
         "agent-context.md",
+        "agent-continue.md",
         "agent-sessions.md",
         "agent-setup.md",
         "arena.md",
@@ -682,6 +685,7 @@
         "agent-approvals.md",
         "agent-bubble.md",
         "agent-context.md",
+        "agent-continue.md",
         "agent-sessions.md",
         "agent-setup.md",
         "agent-workspace.md",
@@ -900,6 +904,13 @@
       ]
     },
     {
+      "title": "Continue or start a new conversation",
+      "path": "agent-continue.md",
+      "tags": ["agents", "studio", "backend"],
+      "summary": "Voice's Continue this conversation and Start new conversation, how a finished Hermes run is resumed by its own session id, and why a finished Claude Code run cannot be.",
+      "links": []
+    },
+    {
       "title": "Agent sessions",
       "path": "agent-sessions.md",
       "tags": ["agents", "backend", "mcp", "studio"],
@@ -908,6 +919,7 @@
         "agent-approvals.md",
         "agent-bubble.md",
         "agent-context.md",
+        "agent-continue.md",
         "agent-setup.md",
         "dual-editor.md",
         "genobi-cli.md",
@@ -2547,6 +2559,7 @@
       "links": [
         "agent-approvals.md",
         "agent-context.md",
+        "agent-continue.md",
         "agent-sessions.md",
         "agent-setup.md",
         "genobi-cli.md",

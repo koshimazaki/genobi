@@ -55,6 +55,11 @@ export interface SessionPlanInput {
   setup?: { harness: string; facts: SetupFacts };
   /** A Terminal start whose harness was signed out: the window signs in first. */
   signIn?: true;
+  /**
+   * Continue: the runner's own id for the earlier conversation (Hermes
+   * `--resume`, issue #58). Only a runner that recorded one is given it.
+   */
+  resume?: string;
 }
 
 export interface LaunchPlan {

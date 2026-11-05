@@ -1,5 +1,7 @@
 import { AgentMemory } from "./agent-memory";
 import { AgentInbox, collectQueued, dropQueued } from "./agent-inbox";
+import { continueFrom, joinConversation } from "./agent-continue";
+import { applyUpdate } from "./agent-session-updates";
 type MessageSource = "voice" | "typed";
 // Project-prompt sessions on the local server (issue #23): one running agent
 // per studio session, its recent progress in memory, tickets that sign the
@@ -21,14 +23,13 @@ import { runnerStatus } from "./agent-config";
 import { OpenRouteError } from "./agent-hermes-pins";
 import { Reaper } from "./agent-reap";
 import { launch, type SessionPlanInput } from "./agent-runner";
-import { noteTool, pushLine, settleEnded, viewOf } from "./agent-session-end";
+import { pushLine, settleEnded, viewOf } from "./agent-session-end";
 import {
   closeInput,
   deliver,
   IDLE_MS,
   openInput,
   record,
-  turnEnded,
 } from "./agent-conversation";
 import { AgentTickets } from "./agent-tickets";
 import {
@@ -45,8 +46,8 @@ import {
 } from "./agent-runner-table";
 import type { StreamUpdate } from "./agent-stream";
 import { AppError } from "./errors";
-import { propose, type SetSource } from "./agent-approvals";
-import { approveStep, declineStep } from "./agent-session-steps";
+import type { SetSource } from "./agent-approvals";
+import { approveStep, declineStep, proposeStep } from "./agent-session-steps";
 import { type ApprovalPayer } from "../shared/agent-approval";
 import type { Quote } from "../shared/quote";
 import type { GenerateInput } from "../shared/types";
@@ -160,6 +161,8 @@ export class AgentSessions {
       owner,
       RUNNING_MAX,
     );
+    // Continue resumes that exact conversation, or is refused (issue #58).
+    const earlier = continueFrom(this.sessions, owner, request, status.runner);
     // Minted before anything is spawned: a copy the owner does not hold is a 404.
     const linkCode = request.copyId
       ? this.options.link(request.copyId, owner).code
@@ -177,6 +180,7 @@ export class AgentSessions {
     const id = randomUUID();
     const session: Running = {
       owner,
+      ...(request.copyId ? { project: request.copyId } : {}),
       approvals: [],
       results: new Map(),
       readable,
@@ -191,6 +195,7 @@ export class AgentSessions {
         lines: [`Starting ${runner.label}…`],
       },
     };
+    if (earlier) joinConversation(session, earlier);
     record(session, "person", request.prompt, false, request.source);
     this.keep(id, session);
     try {
@@ -217,6 +222,7 @@ export class AgentSessions {
         ...(linkCode ? { linkCode } : {}),
         workdir: session.workdir,
         ...(request.signIn && { signIn: request.signIn }),
+        ...(earlier?.resumeId ? { resume: earlier.resumeId } : {}),
       };
       if (request.mode === "terminal")
         return await this.openTerminal(session, input);
@@ -294,29 +300,16 @@ export class AgentSessions {
     const session = [...this.sessions.values()].find(
       (s) => s.grant === grant && isAgentActive(s.view.status),
     );
-    if (!session) return;
-    try {
-      session.approvals = propose(
-        session.approvals,
+    if (session)
+      proposeStep(
+        session,
         input,
         quote,
         quoteSession,
-        payer(),
+        payer,
         source,
         sourceSession,
       );
-    } catch (error) {
-      // Too many steps in flight: said in the session, nothing dropped.
-      if (error instanceof AppError) pushLine(session, error.message);
-      // Nobody can pay, or an upscale without its measured source: no step.
-      return;
-    }
-    pushLine(
-      session,
-      quote.billing
-        ? `A paid step is waiting for your approval: ${quote.billing}${quote.recipe.deployment ? ` (${quote.recipe.deployment.name})` : ""}.`
-        : `A paid step is waiting for your approval: about $${quote.estimateUsd.toFixed(2)}.`,
-    );
   }
 
   /** The person's Approve: the quoted run, once, in their own session. */
@@ -331,21 +324,7 @@ export class AgentSessions {
   }
 
   private consume(session: Running, updates: StreamUpdate[]) {
-    for (const update of updates) {
-      if (update.started && session.view.status === "starting")
-        session.view.status = "running";
-      if (update.line) pushLine(session, update.line);
-      if (update.summary) {
-        session.view.summary = update.summary;
-        record(session, "agent", update.summary);
-      }
-      if (update.refusedSpend) session.refusedSpend = true;
-      if (update.tool) noteTool(session, update.tool);
-      if (update.finished) {
-        session.finished = update.finished;
-        turnEnded(session);
-      }
-    }
+    for (const update of updates) applyUpdate(session, update);
     void this.memory.progress(session).catch(() => {
       this.signal(session);
       this.fail(session, "Project memory could not be saved; session stopped.");
@@ -374,6 +353,7 @@ export class AgentSessions {
       session,
       text,
       source && ((at, words) => void this.inbox.post(at, words, source)),
+      source,
     );
     return viewOf(session);
   }
