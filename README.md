@@ -110,8 +110,12 @@ editor and the deck sit in one coherent studio shell
 the agent you talk to can start a Developer agent for a change to the studio,
 with Hermes in its developer and creative profiles, so new tools and workflows
 arrive the way edits do ([agent sessions](docs/agent-sessions.md#genobi-starts-a-developer)).
-There are Easter eggs in the terminal, from the gaming world; the repo knows
-where. A **licence layer** records each
+An educational layer runs through it: the Genobi guide bubble below the logo
+explains what is on screen and what each tool does
+([bubble](docs/agent-bubble.md)), the question mark opens a quick studio
+guide ([guide](docs/studio-guide.md)), and the deck shows where things are and
+what the agent is doing ([deck](docs/genobi-deck.md)). There are Easter eggs
+in the terminal, from the gaming world; the repo knows where. A **licence layer** records each
 model's terms, a **Taste layer** points agents at aesthetic choices first:
 curated libraries and credited references kept as project memory, editable
 per project and exportable as JSON ([taste](docs/taste-memory.md)),
@@ -132,6 +136,7 @@ slot keeps the still and prompt that made it ([Fruits](docs/fruits-swap.md),
 | Shareable: watch and embed pages, Make your own, Make my version                                                                        | [docs/template-gallery.md#sharing](docs/template-gallery.md#sharing), [genobi.pages.dev/watch/fruits-swap](https://genobi.pages.dev/watch/fruits-swap)                                                                                                     |
 | Open weights: the open path per step, from agent and voice to generation and upscaling, the optional closed routes, every model's terms | [LICENCES.md](LICENCES.md), [docs/capabilities.md](docs/capabilities.md), [docs/agent-setup.md](docs/agent-setup.md), [docs/voice-setup.md](docs/voice-setup.md), [docs/credits.md](docs/credits.md), [docs/licence-strategy.md](docs/licence-strategy.md) |
 | Agentic loop: plugin with MCP, CLI and skills, Director and Editor, observability                                                       | [plugins/genobi/README.md](plugins/genobi/README.md), [audio-reactive/edit/LOG.md](audio-reactive/edit/LOG.md), [observability/README.md](observability/README.md)                                                                                         |
+| Educational layer: guide bubble, studio guide, deck                                                                                     | [docs/agent-bubble.md](docs/agent-bubble.md), [docs/studio-guide.md](docs/studio-guide.md), [docs/genobi-deck.md](docs/genobi-deck.md)                                                                                                                     |
 | Run it: local studio, Comfy Cloud, the Comfy deployment                                                                                 | [docs/getting-started.md](docs/getting-started.md), [comfy-build/](comfy-build/)                                                                                                                                                                           |
 
 ## Start here
