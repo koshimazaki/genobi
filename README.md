@@ -1,3 +1,4 @@
+
 # Genobi
 
 **Build the scene. Shape the sound. Make the cut.**
@@ -49,6 +50,16 @@ media, connect your own Comfy or BFL key and check the selected model's cost.
 Agents need your approval before paid operations. See [setup and keys](docs/getting-started.md).
 
 ## One scene guides picture and sound
+
+https://github.com/user-attachments/assets/8721af01-1a54-44dc-8d7d-c96eade6aa13
+Audio reactive acoustic spaces 
+
+
+https://github.com/user-attachments/assets/10b0805f-91a8-44df-9c8b-98ec109b9f31
+
+Dance with fruits using fruits as architecture and model morphing in Threejs. Then using this as model guidance. 
+
+// drop threejs mp4 here as example for fruit morph /// 
 
 [![Watch the Acoustic Space demo: falling between rooms](docs/media/acoustic-space-demo.jpg)](docs/media/acoustic-space-demo.mp4?raw=true)
 
