@@ -1,4 +1,3 @@
-
 # Genobi
 
 **Build the scene. Shape the sound. Make the cut.**
@@ -19,6 +18,93 @@ or connect cloud models, and bring the agent harness that fits your project.
 [Documentation](docs/README.md)
 
 https://github.com/user-attachments/assets/b2665e97-2836-4e02-8b38-4694a5c6b6c7
+
+## How Genobi answers the challenge
+
+My entry to Comfy's [Open Source Higgsfield](https://comfy.org/open-source-higgsfield)
+challenge; the full record is the [submission dossier](docs/submission.md).
+
+### Built with LTX (Most Innovative, LTX VFX bonus)
+
+A World Builder scene moves to the music, one still sets the look, and
+LTX-2.5 with the Layout-to-Render IC-LoRA paints the video with the track in
+it ([featured workflow](audio-reactive/README.md)). The same geometry feeds
+acoustic measurement and CPU room reverb, so each room sounds its size: in
+Acoustic Spaces v2 the decay runs from 0.2 s in a booth to over 5 s between
+towers. AKUSPACE, our LoRA on LTX-2.5, is a separate route for room-conditioned sound
+([adaptive reverb evidence](docs/adaptive-reverb-proof.md)).
+
+https://github.com/user-attachments/assets/8721af01-1a54-44dc-8d7d-c96eade6aa13
+
+<p align="center"><em>Audio Reactive Acoustic Spaces v2. Five World Builder rooms rendered with LTX-2.5 Layout-to-Render; the reverb follows each room's measured size.</em><br><a href="https://genobi.pages.dev/watch/audio-reactive-drop">Watch page</a> · <a href="docs/media/acoustic-spaces-v2-readme.mp4?raw=true">MP4</a></p>
+
+### Built with FLUX
+
+FLUX 3 Image Klein makes the stills, first frames and box edits most
+workflows start from, through BFL's API or as a Comfy workflow. The camera
+panel, with a Three.js diagram of each shot, gives camera control in the UI
+that follows each model lab's own prompting guidance for FLUX 3, LTX-2.5 and
+MiniMax H3 ([camera wording](docs/camera-wording.md),
+[H3](docs/minimax-h3-camera.md)). The diagram doubles as a teaching layer,
+showing what each camera term does before you spend a credit. To my
+knowledge no platform offers native camera control across all three.
+[Dual Swords](docs/dual-editor.md) compares two clips and exports exact frames
+to Assets for the next generation.
+
+### Made to be shared (Most Viral)
+
+Every Gallery card has a public watch page and an embed page, such as
+[/watch/fruits-swap](https://genobi.pages.dev/watch/fruits-swap). Copy the
+link or the iframe; each page puts the MP4 and a player in its link preview
+(`og:video`, `twitter:player`), so the clip plays inside Discord and X.
+**Make your own** opens the cut as an editable project for your own media
+([sharing](docs/template-gallery.md#sharing)). Dance with Fruits shows the
+pattern: a technical LTX workflow turned into a 33-second loop anyone can
+watch, share and remix.
+
+https://github.com/user-attachments/assets/10b0805f-91a8-44df-9c8b-98ec109b9f31
+
+<p align="center"><em>Dance with Fruits. Fruits as architecture, morphed in Three.js and used as model guidance: four LTX-2.5 Layout-to-Render characters on one dance guide.</em><br><a href="https://genobi.pages.dev/watch/fruits-swap">Watch page</a> · <a href="docs/media/dance-with-fruits-readme.mp4?raw=true">MP4</a></p>
+
+### Open Weights Only
+
+The critical path is open source end to end; API and paid routes are a thin
+optional layer. Open-weight steps: LTX-2.5 and its IC-LoRAs, AKUSPACE, Klein
+and SeedVR2 for upscaling, run on your own ComfyUI, on Comfy Cloud or on the
+Comfy deployment `genobi-ltx-world-v2`; most of the hosted path runs on Comfy
+Cloud and Comfy Deploy. Hermes Agent, which Start Genobi sets up, is MIT.
+Optional closed routes: FLUX 3 video, FLUX Video Upscale, Klein through BFL's
+API, MiniMax H3 and Music 3, and LTX Fast/Pro through Comfy Router. Inputs
+are format-agnostic: swap a template's track or clips for your own or
+open-weight media with **Make my version**. State your project's licence
+needs at setup and the agent picks models and libraries that fit
+([licence-aware direction](docs/licence-strategy.md#the-setup-question)); to
+my knowledge no other platform has a licence layer that selects models this way.
+Terms per model: [LICENCES.md](LICENCES.md) and [credits](docs/credits.md).
+
+### One agentic loop (Best Overall)
+
+The agent and you edit one Director/Editor timeline; it reads back your
+changes and quotes every paid step first. A **licence layer** records each
+model's terms, a **Taste layer** keeps credited references as project memory,
+the deck shows what the agent is doing and the hosted studio keeps
+[count-only statistics](observability/README.md). Templates sit on top as
+skills an agent can rerun. Dance with Fruits came from spoken rounds of "take
+this one, make a new one, add this" ([log](audio-reactive/edit/LOG.md)); every
+slot keeps the still and prompt that made it ([Fruits](docs/fruits-swap.md),
+[Acoustic Spaces v2](docs/audio-reactive-drop.md)).
+
+### Evidence map, for reviewers and their agents
+
+| Claim                                                                                         | Where to look                                                                                                                                                                                              |
+| --------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| What Genobi is and how the entry was built                                                    | [docs/submission.md](docs/submission.md), [docs/README.md](docs/README.md)                                                                                                                                 |
+| LTX: audio-reactive Layout-to-Render, acoustic measurement, AKUSPACE, adaptive reverb         | [audio-reactive/README.md](audio-reactive/README.md), [workflows/](workflows/), [docs/audio-reactive-drop.md](docs/audio-reactive-drop.md), [docs/adaptive-reverb-proof.md](docs/adaptive-reverb-proof.md) |
+| FLUX: Klein stills, camera control that follows each lab's guidance, Dual Swords frame export | [docs/camera-wording.md](docs/camera-wording.md), [docs/minimax-h3-camera.md](docs/minimax-h3-camera.md), [docs/dual-editor.md](docs/dual-editor.md)                                                       |
+| Shareable: watch and embed pages, Make your own, Make my version                              | [docs/template-gallery.md#sharing](docs/template-gallery.md#sharing), [genobi.pages.dev/watch/fruits-swap](https://genobi.pages.dev/watch/fruits-swap)                                                     |
+| Open weights: the open path per step, the optional closed routes, every model's terms         | [LICENCES.md](LICENCES.md), [docs/capabilities.md](docs/capabilities.md), [docs/credits.md](docs/credits.md), [docs/licence-strategy.md](docs/licence-strategy.md)                                         |
+| Agentic loop: plugin with MCP, CLI and skills, Director and Editor, observability             | [plugins/genobi/README.md](plugins/genobi/README.md), [audio-reactive/edit/LOG.md](audio-reactive/edit/LOG.md), [observability/README.md](observability/README.md)                                         |
+| Run it: local studio, Comfy Cloud, the Comfy deployment                                       | [docs/getting-started.md](docs/getting-started.md), [comfy-build/](comfy-build/)                                                                                                                           |
 
 ## Start here
 
@@ -51,15 +137,9 @@ Agents need your approval before paid operations. See [setup and keys](docs/gett
 
 ## One scene guides picture and sound
 
-https://github.com/user-attachments/assets/8721af01-1a54-44dc-8d7d-c96eade6aa13
-Audio reactive acoustic spaces 
+Acoustic Spaces v2 and Dance with Fruits, the two clips [above](#how-genobi-answers-the-challenge), both come from this mechanism.
 
-
-https://github.com/user-attachments/assets/10b0805f-91a8-44df-9c8b-98ec109b9f31
-
-Dance with fruits using fruits as architecture and model morphing in Threejs. Then using this as model guidance. 
-
-// drop threejs mp4 here as example for fruit morph /// 
+<!-- Three.js fruit-morph clip: drop the mp4 here as the example for the morph. -->
 
 [![Watch the Acoustic Space demo: falling between rooms](docs/media/acoustic-space-demo.jpg)](docs/media/acoustic-space-demo.mp4?raw=true)
 
@@ -128,7 +208,7 @@ itself an editable example. Those production choices do not lock your next
 project to the same models. The Gallery includes music-led creature edits, Bloom and the
 adaptive-reverb demonstration, with
 [Audio Reactive Acoustic Spaces v2](docs/audio-reactive-drop.md) and
-[Dance with Fruits](docs/fruits-swap.md) as editable mix templates. Public watch/embed pages share the result;
+[Dance with Fruits](docs/fruits-swap.md) as editable mix templates. [Public watch/embed pages](#made-to-be-shared-most-viral) share the result;
 editable templates and exported project bundles let someone else remix it.
 Private projects are not automatically public.
 
