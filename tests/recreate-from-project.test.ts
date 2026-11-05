@@ -19,7 +19,11 @@ import {
   onCameraRecipe,
   type CameraRecipePatch,
 } from "../src/camera-recipe-target";
-import { composerReducer, initialComposer } from "../src/useComposer";
+import {
+  composerInput,
+  composerReducer,
+  initialComposer,
+} from "../src/useComposer";
 import type { RunInputs } from "../src/run-inputs";
 import { validateProject } from "../src/director/validate";
 import { assetFixture } from "./director-asset-fixture";
@@ -205,6 +209,31 @@ describe("a Camera run sent to the Director", () => {
     expect(state.slots.audio).toBe("Distant gulls.");
     expect(state.light.lighting).toBe("neon-glow");
     expect(state.camera.movements).toBe("dolly-in");
+  });
+
+  it("restore then handoff patch sends the run's own request, wording composed once", async () => {
+    const { added, bundle } = await sent();
+    const recipe = cameraRecipe(bundle.project, bloomA, [added.assetId]);
+    stop = onCameraRecipe((r) => received.push(r));
+    await openInCamera(() => {}, recipe, bundle.project, bundle.files);
+    const [{ job: restored, patch }] = received;
+    // What useComposerRecreate does: the restore, then the patch as an edit.
+    const landed = composerReducer(
+      composerReducer(initialComposer, { type: "restore", job: restored! }),
+      { type: "update", patch },
+    );
+    // The run as Camera first sent it: the same job, its references held.
+    const original = composerReducer(initialComposer, {
+      type: "restore",
+      job,
+      inputs,
+    });
+    const request = (state: typeof landed) => {
+      const { sourceId: _source, ...rest } = composerInput(state);
+      return JSON.stringify(rest);
+    };
+    expect(landed.description).toBe(job.ltxPrompt!.main);
+    expect(request(landed)).toBe(request(original));
   });
 
   it("an older upload without a record still says Create in Camera", () => {

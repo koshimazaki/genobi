@@ -332,11 +332,18 @@ export async function openInCamera(
       ? { generator: recipe.entry.generator, model: recipe.entry.videoModel }
       : {}),
     ...(recipe.imageProvider ? { imageProvider: recipe.imageProvider } : {}),
-    // An upscale's words are its own prompt field, not the description.
+    // An upscale's words are its own prompt field, not the description. A
+    // recorded job restores the person's own words (the description before
+    // camera, scene and Light wording were composed into `recipe.prompt`), so
+    // the composed prompt never lands over them to be composed a second time.
     ...(recipe.prompt
       ? recipe.entry?.generator === "upscale"
-        ? { upscalePrompt: recipe.prompt }
-        : { description: recipe.prompt }
+        ? recipe.job?.upscalePrompt === undefined
+          ? { upscalePrompt: recipe.prompt }
+          : {}
+        : recipe.job
+          ? {}
+          : { description: recipe.prompt }
       : {}),
     // Always replaced, as the restore reducer does: an earlier run's
     // references or boxes must not ride along into a paid Generate.
