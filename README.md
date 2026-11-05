@@ -64,8 +64,13 @@ link or the iframe; each page puts the MP4 and a player in its link preview
 **Make your own** opens the cut as an editable project for your own media
 ([sharing](docs/template-gallery.md#sharing)). Dance with Fruits shows the
 pattern: a technical LTX workflow turned into a 33-second loop anyone can
-watch, share and remix. Genobi makes a complex architecture accessible and
-shareable, and is its own example: the [teaser](https://genobi.pages.dev/watch/genobi-teaser)
+watch, share and remix. The Gallery is a set of worked examples, each a
+different approach, each carrying the brief and recipe that made it
+([briefs](docs/template-gallery.md#the-cards-brief)), each editable and
+shareable; several landed on the first build, Dance with Fruits v1 was cut
+within half an hour of the spoken ask ([log](audio-reactive/edit/LOG.md)),
+and the versions since are fine-tuning. Genobi makes a complex architecture
+accessible and shareable, and is its own example: the [teaser](https://genobi.pages.dev/watch/genobi-teaser)
 is two minutes of the studio in use, cut in the studio to the owner's track
 with lyric-synced cards ([how](docs/genobi-teaser.md)), and the Acoustic Space
 demo ([v1](#one-scene-guides-picture-and-sound), v2 above) was made the same
