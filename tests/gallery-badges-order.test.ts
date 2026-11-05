@@ -156,7 +156,7 @@ describe("gallery card order", () => {
       25 * 1024 * 1024,
     );
     expect(galleryBadge(card("audio-reactive-drop")).detail).toBe(
-      "Nothing to generate: a finished cut of LTX-2.5 (open weights) clips",
+      "Clips included, ready to edit: a finished cut of LTX-2.5 (open weights) clips",
     );
   });
 
@@ -219,14 +219,14 @@ describe("model badges", () => {
 
   it("say a mix's footage in the tooltip, or bundled clips when mixed", () => {
     expect(galleryBadge(card("dimensions-mix")).detail).toBe(
-      "Nothing to generate: a finished cut of MiniMax H3 (open weights) clips",
+      "Clips included, ready to edit: a finished cut of MiniMax H3 (open weights) clips",
     );
     expect(galleryBadge(card("bloom-teaser")).detail).toBe(
-      "Nothing to generate: a finished cut of MiniMax H3 (open weights) clips",
+      "Clips included, ready to edit: a finished cut of MiniMax H3 (open weights) clips",
     );
     // Teaser v3 names its generated footage; the rest is screen recordings.
     expect(galleryBadge(card("genobi-teaser")).detail).toBe(
-      "Nothing to generate: a finished cut of MiniMax H3 + FLUX 3 video (open + API) clips",
+      "Clips included, ready to edit: a finished cut of MiniMax H3 + FLUX 3 video (open + API) clips",
     );
   });
 });

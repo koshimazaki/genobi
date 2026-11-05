@@ -75,7 +75,7 @@ export const bloomTeaser: HouseTemplate = {
   name: "Bloom",
   run: "mix",
   description:
-    "An anime teaser for one character: two MiniMax H3 (open weights) takes cut to the beat under a character-scan, surveillance HUD. Nothing to generate.",
+    "A 19-second anime teaser for one character: two MiniMax H3 (open weights) clips cut to a 140 BPM track, with a scanner HUD of REC readouts, target boxes and callouts over the figure. The clips are included, so it opens ready to edit at no cost.",
   brief:
     "Say or type 'show me the character sheet' to see the sheet and the prompt both takes were made from, or describe your own character for a new take; dropping a sheet as a reference is optional. The agent makes that take in Camera on MiniMax H3 with the same prompt and cuts it to the beat. Each paid step is quoted and waits for your yes.",
   tier: "open",
