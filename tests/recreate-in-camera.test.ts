@@ -333,7 +333,7 @@ it("names a source video the run read even when no model was recorded", () => {
   p.generations[0].inputAssetIds = ["clip"];
   expect(cameraRecipe(p, bloomA, ["mine"]).missing).toEqual([
     "model and settings",
-    "source video (choose it in Camera)",
+    "source video (choose it in Camera; Generate waits until you do)",
   ]);
 });
 

@@ -27,6 +27,13 @@ export interface CameraRecipePatch {
    */
   video?: File;
 }
+/**
+ * A recreated upscale's source the project cannot name. A source id no
+ * source has, so Camera neither falls back to the newest generated clip nor
+ * enables Generate (`composerBlocked`) until the person picks a source.
+ */
+export const SOURCE_UNRESOLVED = "__source-unresolved__";
+
 type Target = (recipe: CameraRecipePatch) => void;
 let target: Target | undefined;
 

@@ -3,6 +3,7 @@ import type { VersionSlot } from "../../shared/templates/version";
 import { versionTemplate } from "../../shared/templates/version";
 import { readyEntry, type ReadyEntry } from "../../shared/registry";
 import {
+  SOURCE_UNRESOLVED,
   applyCameraRecipe,
   beginCameraRecipeHandoff,
   currentCameraRecipeHandoff,
@@ -60,9 +61,13 @@ export interface CameraRecipe {
   location?: "local" | "cloud";
 }
 
+/** A source clip the project never holds: Camera waits for the person's pick. */
+const SOURCE_GAP =
+  "source video (choose it in Camera; Generate waits until you do)";
+
 /** Camera's gap names, in the words a Director notice uses. */
 const GAP_WORDS: Record<string, string | undefined> = {
-  "source video": "source video (choose it in Camera)",
+  "source video": SOURCE_GAP,
   "deployment inputs": "deployment inputs",
   "deployment input files": "deployment input files (reattach them)",
   "swap settings": "swap settings",
@@ -175,7 +180,7 @@ export function generatedRecipe(
     missing.push("region boxes (their instructions stay in the prompt)");
   // A project video the run read is never a Camera library clip, whatever
   // recorded (or did not record) the model.
-  const source = "source video (choose it in Camera)";
+  const source = SOURCE_GAP;
   if (
     read.some((a) => project.assets[a]?.kind === "video") &&
     !missing.includes(source)
@@ -377,6 +382,11 @@ export async function openInCamera(
     // references or boxes must not ride along into a paid Generate.
     imageReferences: images,
     imageRegions: [],
+    // An upscale's source is never in the project: hold Generate until the
+    // person picks one, rather than sending the newest generated clip.
+    ...(recipe.entry?.generator === "upscale" && !recipe.job?.sourceId
+      ? { sourceId: SOURCE_UNRESOLVED }
+      : {}),
   };
   applyCameraRecipe({
     patch,

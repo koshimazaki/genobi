@@ -5,6 +5,8 @@ vi.mock("../src/director/project-copy", () => ({
   copyAvailable: vi.fn(async () => false),
 }));
 import {
+  composerBlocked,
+  upscaleSource,
   composerInput,
   composerReducer,
   initialComposer,
@@ -155,4 +157,53 @@ it("says the recipe was recorded, with Undo, when an earlier upload gains its pr
   expect(
     store.getState().director.bundle!.project.assets[plain.assetId].origin,
   ).not.toBe("generated");
+});
+
+it("holds Generate on a recreated project upscale until the person picks its source", async () => {
+  const job = readyJob({
+    generator: "upscale",
+    model: "flux-3",
+    description: "",
+    prompt: "Sharpen the fur.",
+    upscalePrompt: "Sharpen the fur.",
+    upscaleFactor: 2,
+    sourceId: "source-private",
+  });
+  const { added, bundle } = await sendJob(job, {}, mp4());
+  const { landed, handoff } = await recreate(bundle, added.assetId);
+  // The newest generated clip is what an empty source would fall back to.
+  const clip = (id: string) =>
+    ({
+      id,
+      label: id,
+      url: `/media/${id}.mp4`,
+      mediaType: "video",
+      width: 1280,
+      height: 720,
+      duration: 5,
+      origin: "generated",
+    }) as const;
+  const sources = [clip("newest"), clip("chosen")];
+  const jobs = [
+    readyJob({
+      id: "newest",
+      generator: "video",
+      createdAt: "2026-11-05T12:00:00Z",
+    }),
+  ];
+  // As App.tsx derives it: the source Generate would send, then the gate.
+  const gate = (state: typeof landed) => {
+    const source = upscaleSource(state.sourceId, jobs, sources);
+    return {
+      source: source?.id,
+      blocked: composerBlocked(state, source?.id ?? "", state.upscalePrompt),
+    };
+  };
+  expect(gate(landed)).toEqual({ source: undefined, blocked: true });
+  expect(handoff.note).toContain("Generate waits");
+  const picked = composerReducer(landed, {
+    type: "update",
+    patch: { sourceId: "chosen" },
+  });
+  expect(gate(picked)).toEqual({ source: "chosen", blocked: false });
 });
