@@ -5,7 +5,8 @@ import type { ComposerState } from "./useComposer";
 import { readReference } from "./image-files";
 import { remapReferences } from "./image-regions";
 import { useShell } from "./studio/ShellContext";
-import { studioDropFiles } from "./studio/media-drop";
+import { droppedInspiration, studioDropFiles } from "./studio/media-drop";
+import { INSPIRATION_INPUT_NOTICE } from "../shared/director/reference-role";
 import { studioStore } from "./studio/store";
 
 export const REFERENCE_DRAG = "application/x-camera-director-reference";
@@ -29,19 +30,27 @@ export function useImageReferences(
     transfer: DataTransfer,
     target: "source" | "tray" | string = "tray",
   ) {
-    studioDropFiles(transfer, studioStore.getState().director.bundle, library)
-      .then((files) => add(files, target))
+    const bundle = studioStore.getState().director.bundle;
+    // The person's own drag of an Inspiration is an explicit act, so it is
+    // allowed; the notice makes the role change visible for this run.
+    const inspiration = droppedInspiration(transfer, bundle);
+    studioDropFiles(transfer, bundle, library)
+      .then(async (files) => {
+        if ((await add(files, target)) && inspiration)
+          setNotice(INSPIRATION_INPUT_NOTICE);
+      })
       .catch((error: unknown) =>
         setNotice(
           error instanceof Error ? error.message : "Could not read image.",
         ),
       );
   }
+  /** True once the files joined the references. */
   async function add(
     files: File[],
     target: "source" | "tray" | string = "tray",
-  ) {
-    if (!files.length || busy.current) return;
+  ): Promise<boolean> {
+    if (!files.length || busy.current) return false;
     const origin = latest.current;
     const refs = origin.imageReferences ?? [];
     const source = target === "source";
@@ -52,7 +61,7 @@ export function useImageReferences(
       setNotice(
         `Up to ${max} images. Remove a reference before adding another.`,
       );
-      return;
+      return false;
     }
     busy.current = true;
     setLoading(true);
@@ -69,7 +78,7 @@ export function useImageReferences(
         setNotice(
           "The workspace changed while reading. Please drop the image again.",
         );
-        return;
+        return false;
       }
       const next = source ? [added[0], ...refs.slice(1)] : [...refs, ...added];
       if (next.reduce((n, r) => n + r.length, 0) > 14 * 1024 * 1024)
@@ -86,10 +95,12 @@ export function useImageReferences(
                 : r,
             ),
       });
+      return true;
     } catch (error) {
       setNotice(
         error instanceof Error ? error.message : "Could not read image.",
       );
+      return false;
     } finally {
       busy.current = false;
       setLoading(false);

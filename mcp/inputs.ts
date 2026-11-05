@@ -175,7 +175,13 @@ export const generationShape = {
     .max(MAX_IMAGE_REFERENCES)
     .optional()
     .describe(
-      "Image assets of linked projects, in reference order. The adapter resolves their bytes; use instead of imageReferences. Read the full brief's reference bindings from genobi_project.",
+      'Production image assets of linked projects, in reference order. The adapter resolves their bytes; use instead of imageReferences. Read the full brief\'s reference bindings from genobi_project. An Inspiration (use "reference") is a style reference and is refused here unless allowInspirationAsInput is true.',
+    ),
+  allowInspirationAsInput: z
+    .boolean()
+    .optional()
+    .describe(
+      'Only when the person asked, in this request, for an Inspiration (use "reference") to be an image input. Otherwise projectImageReferences naming an Inspiration is refused: describe its style in the prompt instead.',
     ),
   deploy: z
     .strictObject({
@@ -250,7 +256,11 @@ export const idempotencyKeyField = z
 export function generationBody(args: Record<string, unknown>) {
   const body: Record<string, unknown> = {};
   for (const field of Object.keys(generationShape))
-    if (field !== "projectImageReferences" && args[field] !== undefined)
+    if (
+      field !== "projectImageReferences" &&
+      field !== "allowInspirationAsInput" &&
+      args[field] !== undefined
+    )
       body[field] = args[field];
   if (body.generator === "video" || body.generator === "upscale") {
     body.cameraEnabled ??= false;
@@ -282,6 +292,7 @@ export async function resolvedGenerationBody(
     body.imageReferences = await projectImageReferences(
       api,
       args.projectImageReferences,
+      args.allowInspirationAsInput === true,
     );
   }
   if (

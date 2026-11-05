@@ -7,6 +7,7 @@
  * skill from the Genobi plugin. Portable: no framework, Node or DOM APIs.
  */
 import { AGENT_PROMPT_MAX } from "../agent-session";
+import { INSPIRATION_OPT_IN } from "../director/reference-role";
 import type { HouseTemplate } from "./types";
 
 /**
@@ -46,9 +47,20 @@ export interface VersionAgentAsset {
 const KIND_WORD = { image: "an image", audio: "a track", video: "a clip" };
 
 /**
+ * A dropped image is kept as an Inspiration (use "reference"), which the
+ * adapters refuse as a generation input unless the request opts in. Dropping
+ * it here with a sentence ("Swap the apple with this") is the person asking,
+ * in this request, for it to be used, so the prompt says so and names the
+ * opt-in. A dropped track or clip is production media and needs none.
+ */
+export const versionAgentOptIn = (assetId: string) =>
+  `The person offered this image explicitly as an input for this request: it is an Inspiration (use "reference"), so when a quoted step passes ${assetId} as an image reference, set ${INSPIRATION_OPT_IN}: true on that quote and its submit.`;
+
+/**
  * The first turn of the session: the template, the skill to load, the
  * person's reference by asset id and file name when they dropped one (the
- * line is left out otherwise), their sentence quoted verbatim (control
+ * line is left out otherwise), for a dropped image the opt-in that lets it
+ * be an input (above), their sentence quoted verbatim (control
  * characters stripped, within `AGENT_PROMPT_MAX`), and the rule that every
  * paid step is quoted and approved first. Throws a sentence safe to show.
  */
@@ -71,6 +83,7 @@ export function versionAgentPrompt(
     ...(asset
       ? [
           `The person dropped ${KIND_WORD[asset.kind]} as a reference, not a file to swap into the video: the person's reference asset ${asset.id}, file "${name}". It steers the look; their sentence says what it replaces.`,
+          ...(asset.kind === "image" ? [versionAgentOptIn(asset.id)] : []),
         ]
       : []),
     `In their words: "${words}"`,

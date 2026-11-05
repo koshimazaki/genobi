@@ -129,7 +129,7 @@ export default function ProjectAssetDrawer({
     }
     setNotice(
       assetRole === "reference"
-        ? "Inspiration added. It stays outside the video."
+        ? "Inspiration added. It guides style and stays outside the video."
         : "Added to project. Choose where to use it.",
     );
   }
@@ -197,7 +197,7 @@ export default function ProjectAssetDrawer({
         </div>
         <p>
           {assetRole === "reference"
-            ? "Style guidance kept with the project. Not included in the rendered video."
+            ? "Style references: the prompt describes their style, layout or mood. Not sent as images, and not in the rendered video."
             : "Choose existing media, or add a file. Importing does not change your video."}
         </p>
         <MediaDropZone

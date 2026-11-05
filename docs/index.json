@@ -1542,7 +1542,8 @@
         "director-prompts.md",
         "director-resolution.md",
         "hermes-runs.md",
-        "licence-strategy.md"
+        "licence-strategy.md",
+        "project-assets.md"
       ]
     },
     {
@@ -1647,6 +1648,7 @@
         "audio-reactive-drop.md",
         "fruits-swap.md",
         "genobi-cli.md",
+        "project-assets.md",
         "taste-memory.md"
       ]
     },
@@ -1802,6 +1804,7 @@
       "links": [
         "capabilities.md",
         "hermes-open-route.md",
+        "project-assets.md",
         "run-location.md",
         "taste-memory.md",
         "voice-mode.md",
@@ -2027,7 +2030,11 @@
       "path": "project-assets.md",
       "tags": ["studio", "director", "world-builder", "dual-editor"],
       "summary": "Every studio output lands in the open project's assets through one path - 3D takes and first frames, Dual Swords frames, rendered and saved videos, gallery results.",
-      "links": ["director-agent-tools.md", "templates.md"]
+      "links": [
+        "director-agent-tools.md",
+        "director-generate.md",
+        "templates.md"
+      ]
     },
     {
       "title": "Read-through",

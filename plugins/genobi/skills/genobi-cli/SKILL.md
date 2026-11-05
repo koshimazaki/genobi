@@ -127,6 +127,12 @@ the session's linked files and check their hashes; an asset change invalidates
 the quote. Do not mix this field with inline references. Source-conditioned open
 Klein derives its aspect from the source and uses `imageAspectRatio: "auto"`.
 
+Inspirations are style references. Name them in the prompt and describe what
+to take from them (style, palette, layout, mood, structure, wording); never pass
+one as `projectImageReferences`, a source frame, a swap source or a deployment
+input unless the person asked for that in the current request, and then set
+`allowInspirationAsInput: true`. The adapter refuses an Inspiration otherwise.
+
 Load `genobi-comfy` for deployment registration and `genobi_deployment_stage`
 (`genobi deployment-stage`). Read its schema: the input is a local file for
 external agents, a linked project asset, or a paired World file. Put its returned

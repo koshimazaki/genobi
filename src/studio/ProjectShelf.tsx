@@ -61,14 +61,16 @@ export function ProjectShelf({ role }: { role: "production" | "reference" }) {
         disabled={blocked}
         label={inspiration ? "Drop inspirations" : "Drop project assets"}
         hint={
-          inspiration ? "Style and sound references" : "Images, video or audio"
+          inspiration
+            ? "Style to describe, not generate from"
+            : "Images, video or audio"
         }
         accept="image/png,image/jpeg,image/webp,video/mp4,video/webm,video/quicktime,audio/*"
         onFiles={async (files) => {
           await importProjectMedia(files, role);
           setNotice(
             inspiration
-              ? "Inspiration added. Drag it into the prompt."
+              ? "Inspiration added. Name it in the prompt for its style; it is not sent as an image."
               : "Media added to your project.",
           );
         }}

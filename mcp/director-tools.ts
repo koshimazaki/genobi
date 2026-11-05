@@ -9,6 +9,11 @@ import {
 import { lanes, laneLabels } from "../shared/director/tracks";
 import { assetLabel } from "../shared/director/asset-media";
 import {
+  briefRoleNotes,
+  INSPIRATION_RULE,
+  referenceRole,
+} from "../shared/director/reference-role";
+import {
   directionWords,
   LENSES,
   SHOT_TYPES,
@@ -103,6 +108,15 @@ export function projectSummary(read: ProjectRead) {
     prompt: read.brief?.text ?? "",
     // Preserve token → asset bindings so model references use the owner's actual files.
     brief: read.brief ?? null,
+    // One sentence per Inspiration the brief's text names: style only.
+    briefNotes: read.brief
+      ? briefRoleNotes(
+          read.brief.references.filter((r) =>
+            read.brief!.text.includes(`[${r.label}]`),
+          ),
+          p.assets,
+        )
+      : [],
     template: p.template ?? null,
     preferences: p.preferences ?? null,
     // The revision your last command left, which genobi_project_feedback
@@ -128,6 +142,8 @@ export function projectSummary(read: ProjectRead) {
       label: assetLabel(a.file.path),
       kind: a.kind,
       use: a.use,
+      // "style" for an Inspiration: describe it, never pass it as input.
+      role: referenceRole(a.use),
       file: a.file,
       durationSeconds: a.durationSeconds ?? null,
     })),
@@ -210,8 +226,7 @@ export const directorTools: ToolDefinition[] = [
   {
     name: "genobi_project",
     title: "Genobi Director project",
-    description:
-      "Read one Director project: revision, globalPrompt, tracks/clips with timing, placement, parameters, prompts and directions; assets with assetId, label, kind, use, file path/hash and duration; recipes and registryRecipes; shots; complete brief (text plus reference bindings); and frame notes. Resolve brief.references to assets and pass image references to genobi_quote as projectImageReferences [{copyId,assetId}], in the intended order. The adapter reads the authorized file bytes; never invent references from filenames. Send commands against the revision you read. agentRevision is the revision your last command left; genobi_project_feedback returns the person's changes since then.",
+    description: `Read one Director project: revision, globalPrompt, tracks/clips with timing, placement, parameters, prompts and directions; assets with assetId, label, kind, use, role, file path/hash and duration; recipes and registryRecipes; shots; complete brief (text plus reference bindings); and frame notes. Resolve brief.references to assets and pass production image references (role "production") to genobi_quote as projectImageReferences [{copyId,assetId}], in the intended order. ${INSPIRATION_RULE} briefNotes says this for each Inspiration the brief names; the adapter refuses one unless allowInspirationAsInput is true. The adapter reads the authorized file bytes; never invent references from filenames. Send commands against the revision you read. agentRevision is the revision your last command left; genobi_project_feedback returns the person's changes since then.`,
     inputSchema: { copyId },
     tags: ["agents", "mcp", "director", "bundle"],
     docs: [
@@ -252,12 +267,12 @@ export const directorTools: ToolDefinition[] = [
     description: [
       "Apply one Director command to a project at the revision you read; the studio shows it live and can undo it. A stale revision is refused with the current one: read the project again and decide afresh. Frames are composition frames.",
       "Commands: add-clip {layerId (new), assetId, track (track id or new), startFrame, durationFrames, name?, sourceStartFrame? (in-point, source frames, audio and video only)};",
-      "add-graphic {layerId (new), moduleId, track, startFrame, durationFrames, name?, parameters? {name: value}} (a recipe from recipes or registryRecipes; parameters go over the settings of a layer already using it, and a recipe no layer uses needs every name in its required list, each checked against its type and range);",
+      "add-graphic {layerId (new), moduleId, track, startFrame, durationFrames, name?, parameters? {name: value}, allowInspirationAsInput?} (a recipe from recipes or registryRecipes; parameters go over the settings of a layer already using it, and a recipe no layer uses needs every name in its required list, each checked against its type and range);",
       "apply-effect-preset {presetId, instanceId (fresh lowercase prefix, at most 44 characters), expectedRevision (same as baseRevision), startFrame, durationFrames, parameters?, variant?, sourceLayerId?} inserts every configured layer together. Inspect genobi_effects first. Filter presets require visible picture for the full interval and affect composite-below; sourceLayerId validates a chosen source but does not isolate that clip. Layers stay independently editable; one studio Undo restores the prior composition.",
       "move-clip {layerId, startFrame, track?}; trim-clip {layerId, startFrame, durationFrames};",
       "split-clip {layerId, frame, newLayerId} (cut strictly inside the clip on a composition frame; keeps source samples, animation and track); duplicate-clip {layerId, newLayerId} (independent unlocked copy on a new lane at the top of the stack); remove-clip {layerId} (keeps media/provenance and detaches its review notes to their frames); set-muted {layerId, muted: boolean} (audio mute or visual hide); set-gain {layerId, gain} (audio only, 0 to 2). Split, remove and gain respect locks; copying and mute follow the UI's allowed operations on locked clips without unlocking or changing the original. New ids must not collide with any clip or track.",
       "set-placement {layerId, position? {x?, y?} (composition pixels from the centre, y down), scale? (0-10], opacity? [0,1], rotationDegrees? [-360,360], motion? {scaleTo?, xTo?, yTo?, opacityTo?} (the end it moves to linearly over the clip) or null} (video, image and graphics layers);",
-      "set-parameters {layerId, parameters: {name: value}} (a graphics or filter recipe's declared parameters, text included; genobi_project lists each recipe's names, types and ranges);",
+      "set-parameters {layerId, parameters: {name: value}, allowInspirationAsInput?} (a graphics or filter recipe's declared parameters, text included; genobi_project lists each recipe's names, types and ranges). A recipe image ('asset:<assetId>') naming an Inspiration is refused, here and in add-graphic, unless allowInspirationAsInput is true because the person asked in this request to put it in the cut; it then binds a production copy. Projects that already bind one still open;",
       "set-resolution {width, height} (whole pixels 16-4096 per side, width × height <= 1920 × 1080; presets 960×540, 1280×720, 1920×1080; rescales composition-pixel positions and motion offsets, preserving fitted zoom ratios and timing; for Match assets measure the largest video and fit the current aspect ratio within it and the pixel cap, using even dimensions);",
       "set-beat-grid {bpm? [20,300], beatOffsetSeconds? [0,3600] (where a downbeat falls, in seconds), beatsPerBar? (whole, 1-16)} (at least one; each may be null to clear it to its default; the others keep their value; a genobi_audio_analysis report's composition applies as is, once the person confirms the downbeat);",
       "set-fps {fps} (whole, 1-120; the Editor offers 24, 25, 30, 48, 60; every clip, locked ones included, and every note keeps its moment in seconds, rounded to whole frames; a short clip may start a frame later so neighbours never overlap; media is never asked for a frame past its end; refused, naming the clip, when a track no longer fits); set-duration {durationFrames} (the composition's length at its current rate, at most 120 seconds; it may run past the last clip and is refused when a clip or note would fall after the end);",
@@ -265,7 +280,7 @@ export const directorTools: ToolDefinition[] = [
       "set-prompt {text} (the earlier prompt brief); set-camera {shotId, camera: {shot-sizes, angles, movements}} (template projects);",
       `set-global-prompt {text} (the project's primary direction, up to 12000 characters; empty clears it); set-clip-prompt {layerId, text} (that clip only, up to 1200 characters; empty clears it); set-clip-directions {layerId, directions: {shot?, lens?, camera?, action?}} (each given field set, null clears it, others kept; shot: ${SHOT_TYPES.map((c) => c.id).join("|")}; lens: ${LENSES.map((c) => c.id).join("|")} (creative feel, not a model parameter); camera: {shot-sizes, angles, movements} as set-camera; action: ${SUBJECT_ACTIONS.map((c) => c.id).join("|")}). Prompts and directions are separate fields: setting one never changes the other, and none of these quotes, submits or regenerates anything. A locked clip refuses them.`,
       "set-preferences {preferences: {selection?: {family?: any|flux|ltx|h3|upscale, weights?: any|open-weights|commercial, execution?: any|local|cloud, agent?: any|hermes|claude|codex}, usage?: {purpose: demo|commercial-video|redistribute-source|resell-template, policy: any-licensed|open-source|mit-only}} or null}. Replaces explicit project preferences; null restores global defaults. Use when asked to remember project choices, not for a temporary session instruction.",
-      "set-template-inputs {inputs: {subject?, title?, acoustic?}}; replace-plate {layerId, assetId};",
+      `set-template-inputs {inputs: {subject?, title?, acoustic?}}; replace-plate {layerId, assetId, allowInspirationAsInput? (true only when the person explicitly asked in this request to use an Inspiration as timeline media)}. Inspirations are style-only by default; without opt-in replacement is refused.`,
       "add-note {noteId (new), frame, text (up to 500 characters), layerId?} (a note pinned to a frame and maybe a layer; author and createdAt are filled in); resolve-note {noteId, resolved? (default true; false reopens it)}; delete-note {noteId}.",
     ].join(" "),
     inputSchema: {

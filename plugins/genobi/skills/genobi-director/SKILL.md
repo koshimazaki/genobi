@@ -76,6 +76,18 @@ Do not combine this field with inline `imageReferences`. If an asset changes,
 quote again and obtain approval for the new inputs. Source-conditioned open
 Klein must use `imageAspectRatio: "auto"` because it derives shape from the source.
 
+**Inspirations are inspiration, not input.** An asset with `use: "reference"`
+(`role: "style"`, shown as an Inspiration: a moodboard, a found photo) informs
+the style, palette, layout, mood, structure and wording of your prompt; you do
+not generate from it. Read `briefNotes` and, for each `[Inspiration N]`, write
+what to take from it into the prompt. Pass only production images as
+`projectImageReferences`. Only when the person asks, in the current request, for
+an Inspiration to be an image input, add `allowInspirationAsInput: true`; the
+adapter refuses one otherwise, naming the asset. A recipe image is the same:
+`set-parameters` or `add-graphic` with `asset:<id>` naming an Inspiration is
+refused without that opt-in, and with it binds a production copy. Older
+projects that already bind one still open; only the write is checked.
+
 Use the `genobi-camera` card for the model. The loop is the paying rule from
 `genobi-studio`: `genobi_quote`, show the price and wait for the person's yes,
 `genobi_submit` with that `quoteId`, the same arguments and a new
@@ -166,7 +178,7 @@ one `command`.
 | Command               | Fields beyond `op`                                                                                                              |
 | --------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
 | `add-clip`            | `layerId` (new), `assetId`, `track`, `startFrame`, `durationFrames`, `name?`, `sourceStartFrame?`                               |
-| `add-graphic`         | `layerId` (new), `moduleId`, `track`, `startFrame`, `durationFrames`, `name?`, `parameters?`                                    |
+| `add-graphic`         | `layerId` (new), `moduleId`, `track`, `startFrame`, `durationFrames`, `name?`, `parameters?`, `allowInspirationAsInput?`        |
 | `apply-effect-preset` | `presetId`, `instanceId` (new), `expectedRevision`, `startFrame`, `durationFrames`, `parameters?`, `variant?`, `sourceLayerId?` |
 | `move-clip`           | `layerId`, `startFrame`, `track?`                                                                                               |
 | `trim-clip`           | `layerId`, `startFrame`, `durationFrames`                                                                                       |
@@ -181,7 +193,7 @@ one `command`.
 | `rename-layer`        | `layerId`, `name` (1–120 characters; unlocked clips only)                                                                       |
 | `reorder-layer`       | `layerId`, `by` (whole tracks: positive moves its track up the stack, negative down; unlocked clips only)                       |
 | `set-placement`       | `layerId`, `position?`, `scale?`, `opacity?`, `rotationDegrees?`, `motion?`                                                     |
-| `set-parameters`      | `layerId`, `parameters`                                                                                                         |
+| `set-parameters`      | `layerId`, `parameters`, `allowInspirationAsInput?`                                                                             |
 | `set-resolution`      | `width`, `height` (whole pixels; at most 1920 × 1080 pixels in total)                                                           |
 | `set-beat-grid`       | `bpm?`, `beatOffsetSeconds?`, `beatsPerBar?` (at least one; null clears one)                                                    |
 | `set-prompt`          | `text` (the earlier prompt brief)                                                                                               |

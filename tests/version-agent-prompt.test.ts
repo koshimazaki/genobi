@@ -36,7 +36,21 @@ describe("versionAgentPrompt", () => {
     expect(prompt).toContain(
       "Quote every paid step and wait for the person's approval before you run it",
     );
-    expect(prompt.split("\n")).toHaveLength(6);
+    expect(prompt).toContain(
+      `passes ${asset.id} as an image reference, set allowInspirationAsInput: true`,
+    );
+    expect(prompt.split("\n")).toHaveLength(7);
+  });
+
+  it("names the opt-in only for an image, which is kept as an Inspiration", () => {
+    const track = versionAgentPrompt(
+      fruits,
+      { ...asset, name: "song.mp3", kind: "audio" },
+      "use this song",
+    );
+    expect(track).toContain("as a reference");
+    expect(track).not.toContain("allowInspirationAsInput");
+    expect(track.split("\n")).toHaveLength(6);
   });
 
   it("strips control characters and keeps the sentence on one line", () => {
