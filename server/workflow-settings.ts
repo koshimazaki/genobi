@@ -357,6 +357,19 @@ export class WorkflowSettings {
    */
   planFor(sessionId: string, generator: Generator, model?: VideoModel) {
     const plan = this.plan(sessionId, entryFor(generator, model));
+    // Refused only here, where a run is priced or sent. `plan` itself stays
+    // total, so reading a paused chain or part set (through `fits`) answers
+    // with the stage's pause reason instead of failing the whole read.
+    if (
+      plan.location === "local" &&
+      this.mode(sessionId) === "box" &&
+      !plan.box
+    )
+      throw new AppError(
+        400,
+        "The saved GPU box is no longer valid. Update its tunnel port in Settings → run location, or choose another run location.",
+        "invalid_destination",
+      );
     requireExpected(plan);
     return plan;
   }
@@ -388,12 +401,6 @@ export class WorkflowSettings {
       location === "local" && this.mode(sessionId) === "box"
         ? this.box(sessionId)
         : undefined;
-    if (location === "local" && this.mode(sessionId) === "box" && !box)
-      throw new AppError(
-        400,
-        "The saved GPU box is no longer valid. Update its tunnel port in Settings → run location, or choose another run location.",
-        "invalid_destination",
-      );
     return {
       workflow: choice.id,
       location,
