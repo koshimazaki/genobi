@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { JOBS, LEVELS, type Job } from "../../../shared/walkers/levels";
 import { drawField, drawOutcome } from "../../../shared/walkers/render";
 import {
-  active,
   assignJob,
   createLevel,
   stepWalkers,
@@ -11,11 +10,18 @@ import {
   type WalkerEvent,
   type WalkersState,
 } from "../../../shared/walkers/sim";
+import {
+  energyLeft,
+  energyLine,
+  savedLine,
+  walkersActivityLine,
+} from "../../../shared/walkers/hud";
 import AsciiScreen from "../AsciiScreen";
 import { rememberMute, rememberedMute, type ChipAudio } from "./chip-audio";
 import type { SfxName } from "./chip-tune";
 import { useFixedStep, useOnHidden, useReducedMotion } from "./useWalkersClock";
 import { countsTowardCode } from "./konami";
+import { useWalkersActivity } from "./useWalkersActivity";
 import "./walkers.css";
 
 const LABEL: Record<Job, string> = {
@@ -191,7 +197,8 @@ export default function WalkersGame({
         last,
       });
   const stepping = reduced || paused;
-  const out = active(sim).length;
+  const left = energyLeft(sim);
+  useWalkersActivity(walkersActivityLine(sim, paused));
 
   return (
     <div className="deck-vis walkers" data-status={sim.status}>
@@ -229,18 +236,20 @@ export default function WalkersGame({
           frame={frame}
         />
       </button>
-      <p className="walkers-score">
-        <output aria-live="polite">
-          HOME {sim.saved}/{sim.total} · NEED {sim.need}
+      <div className="walkers-hud">
+        <span aria-hidden="true">{savedLine(sim)}</span>
+        <span aria-hidden="true">{energyLine(sim)}</span>
+        <output className="sr-only" aria-live="polite">
+          Saved {sim.saved} of {sim.need} needed, {left} of {sim.total} still in
+          play
           {sim.status === "won"
-            ? " · WON"
+            ? ". Field won"
             : sim.status === "failed"
-              ? " · FAILED"
+              ? ". Field failed"
               : ""}
-          {paused ? " · PAUSED" : ""}
+          {paused ? ". Paused" : ""}
         </output>
-        <span aria-hidden="true"> · OUT {out}</span>
-      </p>
+      </div>
       <div className="walkers-jobs" role="group" aria-label="Jobs">
         {JOBS.map((j, i) => (
           <button
@@ -252,7 +261,7 @@ export default function WalkersGame({
             title={`${LABEL[j]} (${i + 1})`}
             onClick={() => setJob(j)}
           >
-            {LABEL[j]} ×{sim.jobs[j]}
+            {LABEL[j]} {sim.jobs[j]}
           </button>
         ))}
       </div>

@@ -190,6 +190,20 @@ which will not dig) are the hazards.
   job, dig, build, splat, home, win and fail. No sample files. It starts on
   the Konami key press, plays quietly, mutes with M or SOUND (remembered in
   this browser) and stops on exit.
+- **Status:** written with the studio's progress lines (`progressLine` in
+  `shared/progress-line.ts`, through `shared/walkers/hud.ts`), never a bar of
+  its own: `SAVED 1/4  25% ⣿⣤⣀⣀⣀` counts against the field's target, and
+  `ENERGY 4/5  80% ⣿⣿⣿⣿⣀` is what is still in play (creatures on the field
+  plus those still behind the door). The simulation has no clock, so energy
+  is creatures, not time; it runs down to zero as the field resolves. Job
+  buttons show their stock in the same capitals (`DIG 2`).
+- **Activity line:** while open, the game publishes
+  `WALKERS · FIELD 2 SOFT FLOOR · SAVED 3/4  75% ⣿⣿⣿⣀` to `busy.ts`
+  through `setBackgroundActivity`, so the wordmark's loader and the deck bar
+  show it. Background entries sort below every real one, the loader skips
+  them while any real work is listed, and the deck's step chain leaves them
+  out, so a job or an agent's line is never hidden. Leaving the game (Esc,
+  EXIT, the bar, unmount) clears it.
 - **Metaballs stays.** The walkers game is hidden behind the code and borrows
   the deck only while open, so the visible metaball game keeps its place.
 - **Checks:** `tests/walkers-sim.test.ts` (walk, fall, turn, dig, build,
