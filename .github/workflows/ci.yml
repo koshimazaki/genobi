@@ -16,8 +16,11 @@ permissions:
   contents: read
 
 jobs:
-  verify:
-    name: Format, lint, types, tests, build
+  # Verification runs as parallel jobs: the cheap checks, the vitest suite in
+  # shards, and the build. `verify` below gathers them under the one status
+  # name the deploy job and any required-check setting depend on.
+  checks:
+    name: Format, lint, types, validators
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -33,7 +36,7 @@ jobs:
         run: npm ci
 
       # Ordered cheapest-first, so an obvious failure reports in seconds
-      # rather than after a full build.
+      # rather than after the slower checks.
       - name: Format
         run: npm run format:check
       - name: Lint
@@ -63,8 +66,6 @@ jobs:
         run: npm run check:size
       - name: Types
         run: npm run typecheck
-      - name: Tests
-        run: npm test
       # Offline evidence-contract tests only; no GPU, network or paid job.
       - name: Audiovisual qualification fixtures
         run: python3 -B -m unittest discover -s workflows/qualification -p 'test_*.py' -v
@@ -72,6 +73,41 @@ jobs:
         run: python3 -B -m unittest discover -s scripts/vast -p 'test_*.py' -v
       - name: LTX candidate runner offline tests
         run: python3 -B -m unittest discover -s workflows/experiments -p 'test_*.py' -v
+
+  # The vitest suite is most of the wall clock, so it runs in shards. Vitest
+  # splits the test files between shards; every file still runs exactly once.
+  tests:
+    name: Tests (${{ matrix.shard }}/4)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      # Let every shard finish, so one failure does not hide another.
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install
+        run: npm ci
+      - name: Tests
+        run: npm test -- --shard=${{ matrix.shard }}/4
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install
+        run: npm ci
       - name: Build
         run: npm run build
       # The World Builder node's standalone bundle builds from src/world-builder
@@ -88,6 +124,24 @@ jobs:
           name: dist-${{ github.sha }}
           path: dist
           retention-days: 1
+
+  # The aggregate keeps the status name this workflow has always reported, so
+  # the deploy job and any required check keep pointing at one gate. It runs
+  # even when a job it needs failed or was cancelled, and fails unless every
+  # one of them succeeded; a skipped job counts as a failure here.
+  verify:
+    name: Format, lint, types, tests, build
+    if: always()
+    needs: [checks, tests, build]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Every verification job passed
+        env:
+          RESULTS: ${{ toJSON(needs) }}
+        run: |
+          echo "$RESULTS" | jq -r 'to_entries[] | "\(.key): \(.value.result)"'
+          echo "$RESULTS" | jq -e 'all(.[]; .result == "success")' > /dev/null
 
   cloudflare:
     name: Cloudflare boundary
@@ -127,8 +181,10 @@ jobs:
 
       # The Worker serves ./dist through its ASSETS binding, so wrangler
       # refuses to bundle without it ("assets.directory ... does not exist").
-      # Building here keeps this job independent of `verify` rather than
-      # chaining the two through an artifact.
+      # Building here keeps this job independent of `build` rather than
+      # chaining the two through an artifact: the build takes well under a
+      # minute, and waiting for the other job's upload would put this job's
+      # remaining steps after it on the critical path.
       - name: Build assets for the Worker
         if: steps.detect.outputs.present == 'true'
         run: npm run build
