@@ -41,6 +41,17 @@ export function settingsRouter(
     limit("history", response.locals.sessionId);
     response.json(await settings.state(response.locals.sessionId));
   });
+  // A GPU box's live status: telemetry, not a setting, so it carries no
+  // settings revision. Free: `/system_stats` and `/queue` on the box only.
+  router.get("/run-location/box", async (_request, response) => {
+    limit("history", response.locals.sessionId);
+    const box = settings.box(response.locals.sessionId);
+    const onBox =
+      settings.snapshot(response.locals.sessionId).location === "box";
+    response.json({
+      status: onBox && box && boxes ? await boxes.status(box) : null,
+    });
+  });
   router.post("/run-location", body, async (request, response) => {
     limit("edit", response.locals.sessionId);
     // A GPU box is a label and a tunnel port; an SSH host is never sent.

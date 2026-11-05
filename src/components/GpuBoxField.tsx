@@ -11,9 +11,7 @@ import { readLocalCheck } from "../local-check";
 import type { LocalCheck } from "../run-mode";
 import { boxReadiness } from "../gpu-box-view";
 import { copyText } from "../template-gallery/copy-text";
-
-/** How often an active box is read again, for its uptime and idle reminder. */
-const REFRESH_MS = 30_000;
+import { useLiveBoxStatus } from "../box-status";
 
 interface Props {
   state: RunLocationState;
@@ -21,7 +19,6 @@ interface Props {
   active: boolean;
   saving: boolean;
   onUse(box: { name: string; port: number }): void;
-  onRefresh(): void;
 }
 
 /**
@@ -31,13 +28,7 @@ interface Props {
  * port stay in this panel's memory to build the command, and never leave the
  * browser. The studio never stops a box: the idle line only reminds.
  */
-export default function GpuBoxField({
-  state,
-  active,
-  saving,
-  onUse,
-  onRefresh,
-}: Props) {
+export default function GpuBoxField({ state, active, saving, onUse }: Props) {
   const [name, setName] = useState(state.box?.name ?? "");
   const [port, setPort] = useState(String(state.box?.port ?? DEFAULT_BOX_PORT));
   const [remotePort, setRemotePort] = useState("");
@@ -45,7 +36,11 @@ export default function GpuBoxField({
   const [sshPort, setSshPort] = useState("");
   const [copied, setCopied] = useState("");
   const [check, setCheck] = useState<LocalCheck | null>(null);
-  const reachable = Boolean(state.box?.status?.reachable);
+  // Live, not from the settings answer: its revision does not move when the
+  // tunnel comes up or the box goes idle (`src/box-status.ts`).
+  const live = useLiveBoxStatus(active, String(state.box?.port ?? ""));
+  const status = live ?? state.box?.status ?? null;
+  const reachable = Boolean(status?.reachable);
   const command = tunnelCommand({
     localPort: port,
     remotePort,
@@ -64,22 +59,17 @@ export default function GpuBoxField({
       setCheck(null);
       return;
     }
-    let live = true;
+    let current = true;
     void readLocalCheck(`box-${state.revision}-${reachable}`).then((answer) => {
-      if (live) setCheck(answer);
+      if (current) setCheck(answer);
     });
-    const timer = setInterval(onRefresh, REFRESH_MS);
     return () => {
-      live = false;
-      clearInterval(timer);
+      current = false;
     };
-    // onRefresh is stable in intent; a new revision reads again.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [active, state.revision, reachable]);
 
   const box = state.box;
-  const view =
-    active && box ? boxReadiness(box.status, check, box.url) : undefined;
+  const view = active && box ? boxReadiness(status, check, box.url) : undefined;
   return (
     <div className="gpu-box" aria-label="GPU box">
       <p className="run-location__note">

@@ -54,6 +54,12 @@ While the box is the run location the panel reads, for free:
   models**, naming node classes and slot names, never file names. Templates
   pinned to a deployment are left out.
 
+The box's status is live telemetry, not a setting: it changes when the tunnel
+comes up or the box goes idle while the settings revision stays the same, so it
+has its own read, `GET /api/settings/run-location/box`, every 30 seconds while
+the box is the run location (`src/box-status.ts`), laid over the settings
+answer rather than sent through the revision-ordered settings lane.
+
 The composer's run-mode line tags **GPU BOX** and warns the same way as for
 Local when the box does not answer or lacks what the held template needs.
 

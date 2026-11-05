@@ -145,9 +145,6 @@ export default function RunLocationField() {
           active={view.confirmed && onBox}
           saving={saving}
           onUse={(box) => choose("box", undefined, box)}
-          onRefresh={() =>
-            void saver.current!.read(readRunLocation().catch(() => null))
-          }
         />
       )}
       {state.deployment && (
