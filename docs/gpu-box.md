@@ -62,6 +62,9 @@ answer rather than sent through the revision-ordered settings lane.
 
 The composer's run-mode line tags **GPU BOX** and warns the same way as for
 Local when the box does not answer or lacks what the held template needs.
+Connecting or dropping the tunnel refreshes that template check without a
+settings write. Results from a previous box or reachability check cannot
+overwrite the current destination's readiness.
 
 ## Uptime and the idle reminder
 
@@ -83,7 +86,10 @@ never calls Vast; the person stops the instance in Vast's console.
 `recipe.box: { name, url }` beside `location: "local"`. The run goes to that
 port alone (`GpuBoxes` in `server/gpu-boxes.ts`), never to the default local
 ComfyUI, and a quote taken for one box is `409 quote_mismatch` on another port
-or on Local. Every rule of the local client holds: no provider key is sent,
+or on Local. If a saved box becomes invalid after restart (for example, the
+studio now listens on its tunnel port), quoting and submitting refuse it with
+`invalid_destination`; update the box in Settings or choose another location.
+Every rule of the local client holds: no provider key is sent,
 the graph is checked before anything is uploaded, `/prompt` is called once, and
 a lost answer is `submission_unknown`, never resent. A box run is free to
 Genobi; the box's provider bills its uptime. Polls return to the box through
