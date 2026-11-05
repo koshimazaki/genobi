@@ -84,7 +84,7 @@ https://github.com/user-attachments/assets/10b0805f-91a8-44df-9c8b-98ec109b9f31
 ### Open Weights Only
 
 The critical path is open source end to end; API and paid routes are a thin
-optional layer. Open-weight steps: LTX-2.5 and its IC-LoRAs, AKUSPACE, Klein
+optional layer. Open-weight steps: LTX-2.5 and its IC-LoRAs, AKUSPACE, FLUX 3 Klein
 and SeedVR2 for upscaling, run on your own ComfyUI, on Comfy Cloud or on the
 Comfy deployment `genobi-ltx-world-v2`; most of the hosted path runs on Comfy
 Cloud and Comfy Deploy. The agent is open too: Hermes Agent (MIT), which
@@ -93,7 +93,7 @@ or Qwen3-VL ([agent setup](docs/agent-setup.md)), and the built-in voice mode
 transcribes on your machine with the open Qwen3-ASR, which you can adapt in
 your own setup ([voice setup](docs/voice-setup.md)). The open path runs end
 to end: agent, voice, generation and upscaling.
-Optional closed routes: FLUX 3 video, FLUX Video Upscale, Klein through BFL's
+Optional closed routes: FLUX 3 video, FLUX Video Upscale, FLUX 3 Klein through BFL's
 API, MiniMax H3 and Music 3, and LTX Fast/Pro through Comfy Router. Inputs
 are format-agnostic: swap a template's track or clips for your own or
 open-weight media with **Make my version**. State your project's licence
@@ -137,7 +137,7 @@ slot keeps the still and prompt that made it ([Fruits](docs/fruits-swap.md),
 | --------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | What Genobi is and how the entry was built                                                                                              | [docs/submission.md](docs/submission.md), [docs/README.md](docs/README.md)                                                                                                                                                                                 |
 | LTX: audio-reactive Layout-to-Render, acoustic measurement, AKUSPACE, adaptive reverb                                                   | [audio-reactive/README.md](audio-reactive/README.md), [workflows/](workflows/), [docs/audio-reactive-drop.md](docs/audio-reactive-drop.md), [docs/adaptive-reverb-proof.md](docs/adaptive-reverb-proof.md)                                                 |
-| FLUX: Klein stills, camera control that follows each lab's guidance, Dual Swords frame export                                           | [docs/camera-wording.md](docs/camera-wording.md), [docs/minimax-h3-camera.md](docs/minimax-h3-camera.md), [docs/dual-editor.md](docs/dual-editor.md)                                                                                                       |
+| FLUX 3: Klein stills, camera control that follows each lab's guidance, Dual Swords frame export                                           | [docs/camera-wording.md](docs/camera-wording.md), [docs/minimax-h3-camera.md](docs/minimax-h3-camera.md), [docs/dual-editor.md](docs/dual-editor.md)                                                                                                       |
 | Shareable: watch and embed pages, Make your own, Make my version                                                                        | [docs/template-gallery.md#sharing](docs/template-gallery.md#sharing), [genobi.pages.dev/watch/fruits-swap](https://genobi.pages.dev/watch/fruits-swap)                                                                                                     |
 | Open weights: the open path per step, from agent and voice to generation and upscaling, the optional closed routes, every model's terms | [LICENCES.md](LICENCES.md), [docs/capabilities.md](docs/capabilities.md), [docs/agent-setup.md](docs/agent-setup.md), [docs/voice-setup.md](docs/voice-setup.md), [docs/credits.md](docs/credits.md), [docs/licence-strategy.md](docs/licence-strategy.md) |
 | Agentic loop: plugin with MCP, CLI and skills, Director and Editor, observability                                                       | [plugins/genobi/README.md](plugins/genobi/README.md), [audio-reactive/edit/LOG.md](audio-reactive/edit/LOG.md), [observability/README.md](observability/README.md)                                                                                         |
@@ -188,7 +188,7 @@ Three.js scenes inside ComfyUI guide the visuals and the scene-derived CPU rever
 **Acoustic Space connects the room you build to the sound you hear.** Build a
 Three.js set yourself or with an agent in World Builder, also available inside
 ComfyUI through Genobi’s custom nodes. Capture layouts and camera moves to guide
-LTX-2.5 with Layout-to-Render IC-LoRA, with Klein for look development and
+LTX-2.5 with Layout-to-Render IC-LoRA, with FLUX 3 Image Klein for look development and
 first-frame references.
 
 The same scene supplies geometry and materials to the Acoustics and Reverb
@@ -218,9 +218,9 @@ The apartment and cathedral studies also render [changing room sound](docs/world
 ## Create, edit and revise
 
 - **Make audio-reactive video, repeatably.** A World Builder scene moves to a track window, one still sets the look and LTX-2.5 Layout-to-Render paints it: three videos and thirteen presets with track, subject and space swaps an agent can rerun. [The featured workflow](audio-reactive/README.md).
-- **Edit an existing Klein image.** Drop your source straight onto Image layout, add bounding boxes and describe changes. Resize the preview from its corner for detailed work.
+- **Edit an existing FLUX 3 Klein image.** Drop your source straight onto Image layout, add bounding boxes and describe changes. Resize the preview from its corner for detailed work.
 - **Direct across models.** Camera controls adapt to FLUX video, LTX and
-  MiniMax H3 using their documented prompting language. Klein has image framing,
+  MiniMax H3 using their documented prompting language. FLUX 3 Klein has image framing,
   layouts and first-frame references. [Camera wording and sources](docs/camera-wording.md).
 - **Make music and shape sound.** Generate with MiniMax Music 3 in the local
   studio, bring your own tracks, and use room reverb in your ComfyUI workflows.
