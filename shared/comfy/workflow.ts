@@ -56,10 +56,24 @@ export interface WorkflowRunOptions {
    */
   location?: DestinationKind;
   deployment?: { url: string; name: string };
+  /** A GPU box's loopback address, for a `local` run the take sent there. */
+  box?: { name: string; url: string };
   /** Files for the template's `image` and `video` slots, by slot name. */
   files?: Record<string, WorkflowFile>;
 }
 export interface WorkflowClient {
+  /**
+   * Free and read-only: whether a run of this graph was checked against the
+   * target's catalogue (`checked`) or could not be (`unknown`). Refuses, unsent,
+   * when the target definitely lacks a node or model. Where absent, nothing is
+   * said.
+   */
+  availability?(
+    template: WorkflowTemplate,
+    values: Record<string, unknown>,
+    key: string,
+    options: Pick<WorkflowRunOptions, "location" | "deployment" | "box">,
+  ): Promise<"checked" | "unknown" | undefined>;
   /**
    * Submit a filled workflow once; resolves to a handle the job services store
    * where a Router job keeps its polling URL.

@@ -25,7 +25,8 @@ const restorer = new RunRestorer(
     // Through each setting's lane, numbered with every save and read of it.
     selectWorkflow: (entry, template) =>
       restoreWrites.workflow(entry, template),
-    saveRunLocation: (location) => restoreWrites.location(location),
+    saveRunLocation: (location, box) =>
+      restoreWrites.location(location, undefined, box),
   },
   // Superseded by any newer setup choice, not only another Recreate.
   setupChoices,

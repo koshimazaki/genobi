@@ -7,6 +7,7 @@ import {
   type SdkJob,
 } from "../server/comfy-sdk";
 import { akuspaceValues, akuspaceWorkflow } from "../shared/comfy/akuspace";
+import { infoFor } from "./comfy-readiness-fixture";
 
 // The workflow route through @comfyorg/sdk, with no network: either a fake SDK
 // client, or the real SDK handed a fake fetch.
@@ -17,6 +18,13 @@ const values = akuspaceValues(
   () => 0.5,
 );
 const signed = "https://storage.googleapis.com/out/clip.mp4?X-Goog-Sig=1";
+/** The account's catalogue, read once before a Cloud run (#47). */
+const INFO = "https://cloud.comfy.org/api/object_info";
+const catalogue = vi.fn<typeof fetch>(async () =>
+  Response.json(infoFor(akuspaceWorkflow.graph)),
+);
+const posts = (fetcher: ReturnType<typeof vi.fn<typeof fetch>>) =>
+  fetcher.mock.calls.filter(([url]) => String(url) !== INFO);
 const run = (client: ComfySdkWorkflows) =>
   client.run(akuspaceWorkflow, values, key, { idempotencyKey: "job-a" });
 const v2Job = (status: string, outputs: object[] = []) => ({
@@ -66,7 +74,11 @@ function fakeSdk(job: Partial<SdkJob> = {}) {
 describe("the workflow route on Comfy Cloud through the SDK", () => {
   it("submits the filled graph once under the reserved job's key", async () => {
     const { connect, submitted } = fakeSdk();
-    const client = new ComfySdkWorkflows({ connect, env: {} });
+    const client = new ComfySdkWorkflows({
+      connect,
+      fetcher: catalogue,
+      env: {},
+    });
     expect(await run(client)).toBe("https://cloud.comfy.org/api/v2/jobs/job-1");
     expect(connect).toHaveBeenCalledOnce();
     expect(connect.mock.calls[0][0]).toBe(key);
@@ -87,6 +99,7 @@ describe("the workflow route on Comfy Cloud through the SDK", () => {
     const calls: { url: string; init?: RequestInit }[] = [];
     const fetcher = vi.fn<typeof fetch>(async (target, init) => {
       const url = String(target);
+      if (url === INFO) return Response.json(infoFor(akuspaceWorkflow.graph));
       calls.push({ url, init });
       if (url === "https://cloud.comfy.org/api/v2/jobs")
         return Response.json(v2Job("queued"), { status: 201 });
@@ -154,12 +167,13 @@ describe("the workflow route on Comfy Cloud through the SDK", () => {
         code: "submission_unknown",
       });
       await expect(refusal).rejects.not.toThrow(key);
-      expect(fetcher).toHaveBeenCalledOnce();
+      // The catalogue read, then exactly one submission.
+      expect(posts(fetcher)).toHaveLength(1);
     }
   });
 
   it("names the node Cloud refused, and the LoRA fix", async () => {
-    const fetcher = vi.fn<typeof fetch>().mockResolvedValue(
+    const fetcher = vi.fn<typeof fetch>().mockImplementation(async () =>
       Response.json(
         {
           error: {
@@ -179,7 +193,7 @@ describe("the workflow route on Comfy Cloud through the SDK", () => {
       code: "workflow_rejected",
       message: expect.stringContaining("Import akuspace-ltx25-v0.5"),
     });
-    expect(fetcher).toHaveBeenCalledOnce();
+    expect(posts(fetcher)).toHaveLength(1);
   });
 
   it("maps job states, progress, a missing output and a gone job", async () => {

@@ -147,6 +147,7 @@ const NOT_SCOPED: Record<string, string> = {
   "POST /api/projects/:id/world-recipe/applied":
     "projects have their own link scope; owner only",
   "GET /api/settings/run-location": "settings, not media",
+  "GET /api/settings/run-location/box": "GPU box status telemetry, not media",
   "POST /api/settings/run-location": "settings, not media",
   "GET /api/settings/workflows": "settings, not media",
   "POST /api/settings/workflows/selection": "settings, not media",

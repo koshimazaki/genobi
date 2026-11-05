@@ -1,0 +1,61 @@
+.gpu-box {
+  display: grid;
+  gap: 0.5rem;
+  min-width: 0;
+  margin-top: 0.75rem;
+}
+.gpu-box__fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+  gap: 0.5rem;
+  min-width: 0;
+}
+.gpu-box__fields label {
+  display: grid;
+  gap: 0.3rem;
+  min-width: 0;
+}
+.gpu-box__fields input {
+  width: 100%;
+  min-width: 0;
+}
+.gpu-box__command {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+.gpu-box__command code {
+  flex: 1;
+  min-width: 0;
+  padding: 0.45rem 0.6rem;
+  overflow-wrap: anywhere;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  background: var(--sunken);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+  user-select: all;
+}
+.gpu-box__status {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.5rem 0.6rem;
+  font-size: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+  overflow-wrap: anywhere;
+}
+.gpu-box__status--unreachable,
+.gpu-box__status--missing-nodes,
+.gpu-box__status--missing-models {
+  border-color: var(--error-border);
+}
+.gpu-box__gap {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.68rem;
+}
+.gpu-box__idle {
+  color: var(--error-text);
+}

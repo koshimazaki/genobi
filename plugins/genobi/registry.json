@@ -1082,7 +1082,7 @@
       "kind": "tool",
       "name": "genobi_run_location",
       "title": "Genobi run location",
-      "description": "Read or set this session's open-workflow destination: local, cloud, both, or deployment with deploymentUrl (https://<name>.run.comfy.app). A deployment uses its workspace's billing. Without location this only reads readiness and input limits. No automatic fallback. A destination change invalidates earlier quotes and staged tickets; stage and quote again before an approved submission.",
+      "description": "Read or set this session's open-workflow destination: local, cloud, both, deployment with deploymentUrl (https://<name>.run.comfy.app), or box with a GPU box's name and the local port of the person's SSH tunnel (a Vast or lab ComfyUI at http://127.0.0.1:<port>). A deployment uses its workspace's billing; a GPU box is billed by its provider while it runs, so mention its idle reminder and never stop or start it. Without location this only reads readiness and input limits. No automatic fallback. A destination change invalidates earlier quotes and staged tickets; stage and quote again before an approved submission.",
       "tags": ["agents", "mcp", "workflows", "comfy"],
       "docs": ["docs/run-location.md"],
       "readOnly": false,

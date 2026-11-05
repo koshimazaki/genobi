@@ -21,12 +21,13 @@ import { AppError, requireKey } from "./errors";
 import { requireQuote } from "./take";
 import { isComfyKey, requireRoute } from "../shared/provider";
 import {
+  CLOUD_UNCHECKED,
   estimateRunUsd,
   newQuote,
   publicQuote,
   settingsHash,
 } from "../shared/quote";
-import { startTake } from "../shared/take";
+import { startTake, type TakeRecipe } from "../shared/take";
 import { workflowRun } from "../shared/comfy/runs";
 import {
   handleJobId,
@@ -204,8 +205,18 @@ export class JobService {
       );
       return priced;
     });
+    const availability = await this.cloudAvailability(
+      input,
+      take.recipe,
+      byoKey,
+      sessionId,
+    );
     const now = Date.now();
-    const quote = { ...newQuote(take, estimate, now), sessionId };
+    const quote = {
+      ...newQuote(take, estimate, now),
+      sessionId,
+      ...(availability === "unknown" ? { availability: CLOUD_UNCHECKED } : {}),
+    };
     // An expired quote can never be spent, so it goes rather than accumulating.
     this.store.data.quotes = this.store.data.quotes.filter(
       (item) => Date.parse(item.expiresAt) > now,
@@ -213,6 +224,37 @@ export class JobService {
     this.store.data.quotes.push(quote);
     await this.store.save();
     return publicQuote(quote);
+  }
+
+  /**
+   * A Cloud workflow quote reads the account's catalogue (free): a definite
+   * gap refuses the quote, and an unreadable catalogue is said on it, so the
+   * person decides before paying. Nothing for any other route or location.
+   */
+  private async cloudAvailability(
+    input: GenerateInput,
+    recipe: TakeRecipe,
+    byoKey: string | undefined,
+    sessionId: string,
+  ) {
+    if (
+      recipe.route !== "workflow" ||
+      recipe.location !== "cloud" ||
+      recipe.deployment ||
+      !this.workflows.availability
+    )
+      return undefined;
+    const { key } = this.credential(input, sessionId, byoKey);
+    const { template, values } = workflowRun(
+      entryFor(input.generator, input.model ?? "flux-3").model,
+      input,
+      composePrompt(input),
+      recipe.workflow,
+      recipe.location,
+    );
+    return this.workflows.availability(template, values, key, {
+      location: recipe.location,
+    });
   }
 
   /** Chooses the key, prices, checks and records the run; nothing is sent. */
@@ -348,6 +390,7 @@ export class JobService {
           idempotencyKey: job.id,
           location: take.recipe.location,
           deployment: take.recipe.deployment,
+          ...(take.recipe.box ? { box: take.recipe.box } : {}),
           ...(isKleinEdit(requestInput)
             ? { files: kleinFiles(requestInput) }
             : {}),

@@ -6,6 +6,7 @@ import { createApp } from "./app";
 import { ComfySdkWorkflows } from "./comfy-sdk";
 import { DEFAULT_LOCAL_URL, LocalComfyWorkflows } from "./comfy-local";
 import { WorkflowDestinations } from "./workflow-destinations";
+import { GpuBoxes } from "./gpu-boxes";
 import { parseWorkflowDestination } from "../shared/comfy/destination";
 import { parseLocalModels } from "../shared/comfy/local-models";
 import { ServerKeys } from "./keys";
@@ -28,13 +29,22 @@ const destination = parseWorkflowDestination(
 // The model files a local ComfyUI loads, by workflow and slot, named as
 // ComfyUI lists them. Distilled and Base have separate override variables.
 // Never print model paths or file names in provider errors.
+const models = parseLocalModels(
+  process.env.GENOBI_LOCAL_MODELS,
+  process.env.GENOBI_KLEIN_MODEL,
+  process.env.GENOBI_KLEIN_BASE_MODEL,
+);
 const local = new LocalComfyWorkflows({
   url: destination.kind === "local" ? destination.url : DEFAULT_LOCAL_URL,
-  models: parseLocalModels(
-    process.env.GENOBI_LOCAL_MODELS,
-    process.env.GENOBI_KLEIN_MODEL,
-    process.env.GENOBI_KLEIN_BASE_MODEL,
-  ),
+  models,
+});
+// GPU boxes (a Vast instance or the lab machine) reached through an SSH
+// tunnel to a loopback port each session names. They share the local model
+// map; the idle reminder's minutes come from GENOBI_BOX_IDLE_MINUTES.
+const boxes = new GpuBoxes({
+  models,
+  reservedPorts: [port],
+  idleMinutes: Number(process.env.GENOBI_BOX_IDLE_MINUTES) || undefined,
 });
 // A Comfy API deployment (a Comfy Developer Platform deployment's https URL):
 // the default destination when it is one, else GENOBI_DEPLOYMENT_URL, which
@@ -51,6 +61,7 @@ const deployment =
       : undefined;
 const {
   app,
+  settings,
   service,
   projects,
   voice,
@@ -71,10 +82,11 @@ const {
   ),
   workflows: new WorkflowDestinations(new ComfySdkWorkflows(), {
     local,
+    boxes,
     deployment:
       deployment && new ComfySdkWorkflows({ destination: deployment }),
   }),
-  runLocation: { destination, local },
+  runLocation: { destination, local, boxes, reservedPorts: [port] },
   agent: { studioOrigin: `http://127.0.0.1:${port}` },
   // Only under scripts/dev-server.mjs, which starts the server again.
   restart:
@@ -116,6 +128,14 @@ const tick = setInterval(() => {
   void service.resumeServerJobs().catch(() => {});
 }, 5_000);
 tick.unref();
+// A GPU box's uptime counts from its first answer, so the boxes sessions run
+// on are read every half minute (`/system_stats` and `/queue`, free). This
+// only ever informs the idle reminder; nothing here stops a box.
+const boxWatch = setInterval(() => {
+  for (const box of settings.activeBoxes())
+    void boxes.status(box).catch(() => {});
+}, 30_000);
+boxWatch.unref();
 void service.sweep();
 void service.resumeServerJobs();
 let stopping = false;
@@ -124,6 +144,7 @@ function shutdown(code: number) {
   if (stopping) return;
   stopping = true;
   clearInterval(tick);
+  clearInterval(boxWatch);
   projects.close();
   const installClosed = voiceInstaller.close();
   voice.close();

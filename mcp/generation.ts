@@ -84,6 +84,8 @@ export const generationTools: ToolDefinition[] = [
         estimateUsd: quote.estimateUsd,
         recipe: quote.recipe,
         expiresAt: quote.expiresAt,
+        // Cloud's catalogue was unreadable: the run may fail after paying.
+        ...(quote.availability ? { availability: quote.availability } : {}),
         // A run its host bills by GPU time has no price here: say who bills it.
         ...(quote.billing
           ? {
@@ -91,7 +93,7 @@ export const generationTools: ToolDefinition[] = [
               next: `Genobi has no price for this run: it is ${quote.billing}. Ask the person to agree to that before calling genobi_submit with this quoteId, these same inputs and a new idempotencyKey. Do not submit without their agreement.`,
             }
           : {
-              next: `Ask the person to agree to about $${quote.estimateUsd.toFixed(2)} before calling genobi_submit with this quoteId, these same inputs and a new idempotencyKey. Do not submit without their agreement.`,
+              next: `Ask the person to agree to about $${quote.estimateUsd.toFixed(2)}${quote.availability ? ` (tell them: ${quote.availability})` : ""} before calling genobi_submit with this quoteId, these same inputs and a new idempotencyKey. Do not submit without their agreement.`,
             }),
       };
     },

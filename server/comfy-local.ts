@@ -4,7 +4,9 @@ import { fillSlots, type ApiGraph } from "../shared/comfy/slots";
 import { parseWorkflowDestination } from "../shared/comfy/destination";
 import type { LocalModels } from "../shared/comfy/local-models";
 import type { LocalComfyStatus } from "../shared/comfy/run-location";
-import { inspectWorkflow, type ObjectInfo } from "../shared/comfy/readiness";
+import type { ObjectInfo } from "../shared/comfy/readiness";
+import { preflightGraph } from "../shared/comfy/preflight";
+import { boxDevice, type BoxDevice } from "../shared/comfy/gpu-box";
 import { selectWorkflowOutputs } from "../shared/comfy/outputs";
 import {
   FILE_NAME,
@@ -57,7 +59,7 @@ const EXTENSION: Record<WorkflowFile["contentType"], string> = {
 
 const noAnswer = () =>
   unsent(
-    "No local ComfyUI answered at the run location's address. Start ComfyUI, or switch the run location to Comfy Cloud.",
+    "No local ComfyUI answered at the run location's address. Start ComfyUI (for a GPU box, its SSH tunnel), or switch the run location to Comfy Cloud.",
   );
 const unconfirmedLocal = () =>
   new AppError(
@@ -101,12 +103,18 @@ export interface LocalComfyOptions {
   /** Model files by template and slot, already read by `parseLocalModels`. */
   models?: LocalModels;
   fetcher?: Fetcher;
+  /** Told once a submission is accepted: the GPU box's idle clock. */
+  onSubmitted?: () => void;
+  /** What a refusal calls this ComfyUI: "The local ComfyUI" by default. */
+  label?: string;
 }
 
 export class LocalComfyWorkflows implements WorkflowClient {
   readonly base: string;
   private readonly models: LocalModels;
   private readonly fetcher: Fetcher;
+  private readonly onSubmitted?: () => void;
+  private readonly label: string;
   constructor(options: LocalComfyOptions = {}) {
     const destination = parseWorkflowDestination(
       "local",
@@ -116,6 +124,8 @@ export class LocalComfyWorkflows implements WorkflowClient {
     this.base = destination.url;
     this.models = options.models ?? {};
     this.fetcher = options.fetcher ?? ((...args) => fetch(...args));
+    this.onSubmitted = options.onSubmitted;
+    this.label = options.label ?? "The local ComfyUI";
   }
 
   private call(path: string, timeout: number, init: RequestInit = {}) {
@@ -144,9 +154,24 @@ export class LocalComfyWorkflows implements WorkflowClient {
 
   /** Whether a ComfyUI answers, and its version. Free; reads `/system_stats` only. */
   async status(): Promise<LocalComfyStatus> {
+    const { reachable, version } = await this.stats();
+    return { reachable, version };
+  }
+
+  /**
+   * `status` with the first GPU's name and memory, for a GPU box. Reads
+   * `/system_stats` only; ComfyUI's argv and paths are never kept.
+   */
+  async stats(): Promise<LocalComfyStatus & BoxDevice> {
+    const none = {
+      reachable: false,
+      version: null,
+      gpu: null,
+      vramBytes: null,
+    };
     try {
       const response = await this.call("/system_stats", TIMEOUT.detect);
-      if (!response.ok) return { reachable: false, version: null };
+      if (!response.ok) return none;
       const body = (await response.json()) as {
         system?: { comfyui_version?: unknown };
       };
@@ -157,9 +182,25 @@ export class LocalComfyWorkflows implements WorkflowClient {
           typeof version === "string" && /^[0-9A-Za-z.+-]{1,32}$/.test(version)
             ? version
             : null,
+        ...boxDevice(body),
       };
     } catch {
-      return { reachable: false, version: null };
+      return none;
+    }
+  }
+
+  /** Whether the queue holds a run: free, `/queue` only; false when unread. */
+  async busy(): Promise<boolean> {
+    try {
+      const queue = await this.read<{
+        queue_running?: unknown[];
+        queue_pending?: unknown[];
+      }>("/queue", TIMEOUT.detect);
+      return Boolean(
+        queue?.queue_running?.length || queue?.queue_pending?.length,
+      );
+    } catch {
+      return false;
     }
   }
 
@@ -197,9 +238,12 @@ export class LocalComfyWorkflows implements WorkflowClient {
     return { ...values, ...overrides };
   }
 
-  /** What a filled graph needs that this ComfyUI lacks: node types, and model slots. */
+  /**
+   * What a filled graph needs that this ComfyUI lacks: node types, and model
+   * slots or pinned loader inputs (`shared/comfy/preflight.ts`).
+   */
   missing(template: WorkflowTemplate, graph: ApiGraph, info: ObjectInfo) {
-    const check = inspectWorkflow(template, graph, info);
+    const check = preflightGraph(template, graph, info);
     return { nodes: check.missingNodes, models: check.missingModels };
   }
 
@@ -294,11 +338,11 @@ export class LocalComfyWorkflows implements WorkflowClient {
     const { nodes, models } = this.missing(template, check, info);
     if (nodes.length)
       throw unsent(
-        `The local ComfyUI lacks the node types this workflow needs: ${nodes.filter((n) => CLASS.test(n)).join(", ")}. Install them, or switch the run location to Comfy Cloud.`,
+        `${this.label} lacks the node types this workflow needs: ${nodes.filter((n) => CLASS.test(n)).join(", ")}. Install them, or switch the run location to Comfy Cloud.`,
       );
     if (models.length)
       throw unsent(
-        `The local ComfyUI does not list the model file for ${models.join(", ")}. Put the file in its models folder, or name it in GENOBI_LOCAL_MODELS.`,
+        `${this.label} does not list the model file for ${models.join(", ")}. Put the file in its models folder, or name it in GENOBI_LOCAL_MODELS.`,
       );
     for (const [slot, file] of Object.entries(files))
       filled[slot] = await this.upload(
@@ -339,6 +383,7 @@ export class LocalComfyWorkflows implements WorkflowClient {
       throw unconfirmedLocal();
     }
     if (typeof id !== "string" || !PROMPT_ID.test(id)) throw unconfirmedLocal();
+    this.onSubmitted?.();
     return `${this.base}/history/${id}`;
   }
 

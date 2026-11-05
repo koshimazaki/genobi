@@ -1,15 +1,24 @@
 import { AppError } from "../../server/errors";
 import { HOSTED_DEPLOY_INPUT_BYTES } from "./deploy-file";
 import type { DestinationKind } from "./destination";
+import type { BoxStatus } from "./gpu-box";
 
 /**
  * The run location: one setting every `workflow` entry follows, Local (a
- * ComfyUI on this machine), Cloud (Comfy Cloud), or Both (local workflows
- * alongside cloud API models). The local server reads its
+ * ComfyUI on this machine), Cloud (Comfy Cloud), Both (local workflows
+ * alongside cloud API models), or a GPU box (a ComfyUI on a Vast instance or
+ * a lab machine, reached through an SSH tunnel to a loopback port: a local
+ * destination with its own port and name, `shared/comfy/gpu-box.ts`). The local server reads its
  * default from `GENOBI_WORKFLOW_DESTINATION` and keeps a per-session choice
  * the studio and agents share; the hosted Worker offers Comfy Cloud and registered deployments.
  */
-export const RUN_LOCATIONS = ["local", "cloud", "both", "deployment"] as const;
+export const RUN_LOCATIONS = [
+  "local",
+  "cloud",
+  "both",
+  "deployment",
+  "box",
+] as const;
 export type RunLocation = (typeof RUN_LOCATIONS)[number];
 
 export const LOCATION_LABEL: Record<DestinationKind, string> = {
@@ -23,12 +32,13 @@ export function parseRunLocation(value: unknown): RunLocation {
     value === "local" ||
     value === "cloud" ||
     value === "both" ||
-    value === "deployment"
+    value === "deployment" ||
+    value === "box"
   )
     return value;
   throw new AppError(
     400,
-    "The run location must be local, cloud, both or deployment.",
+    "The run location must be local, cloud, both, deployment or box.",
     "invalid_run_location",
   );
 }
@@ -68,6 +78,11 @@ export interface RunLocationState {
   /** The local ComfyUI, where the adapter has one to ask. */
   local: LocalComfyStatus | null;
   deployment?: { url: string; name: string };
+  /**
+   * The session's GPU box, once one is named: its label, tunnel port and
+   * loopback address, and what it reports while the box location is chosen.
+   */
+  box?: { name: string; port: number; url: string; status: BoxStatus | null };
   /** Maximum bytes per staged deployment input, enforced by this adapter. */
   deploymentInputBytes?: number;
   note: string;

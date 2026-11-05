@@ -11,6 +11,10 @@ export interface FakeComfyOptions {
   outputs?: Record<string, unknown>;
   /** The bytes `/view` serves. */
   media?: Uint8Array;
+  /** A fixed port, as a tunnel that comes up again; any free one by default. */
+  port?: number;
+  /** What `/system_stats` lists under `devices`: none by default. */
+  devices?: unknown[];
 }
 
 export interface FakeComfy {
@@ -70,7 +74,7 @@ export async function fakeComfy(options: FakeComfyOptions): Promise<FakeComfy> {
           argv: ["/home/someone/ComfyUI/main.py"],
           python_version: "3.12",
         },
-        devices: [],
+        devices: options.devices ?? [],
       });
     if (url.pathname === "/object_info") return json(200, objectInfo);
     if (url.pathname === "/upload/image" && request.method === "POST") {
@@ -134,7 +138,9 @@ export async function fakeComfy(options: FakeComfyOptions): Promise<FakeComfy> {
     }
     json(404, {});
   });
-  await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
+  await new Promise<void>((resolve) =>
+    server.listen(options.port ?? 0, "127.0.0.1", resolve),
+  );
   const address = server.address();
   if (!address || typeof address === "string") throw new Error("No listener");
   fake.url = `http://127.0.0.1:${address.port}`;

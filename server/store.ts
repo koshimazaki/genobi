@@ -82,8 +82,10 @@ export interface StoredPartSet {
 /** A session's run location and workflow choices (`server/workflow-settings.ts`). */
 export interface StoredSettings {
   sessionId: string;
-  location?: "local" | "cloud" | "both" | "deployment";
+  location?: "local" | "cloud" | "both" | "deployment" | "box";
   deployment?: { url: string };
+  /** A GPU box's label and tunnel port; never an SSH host or key. */
+  box?: { name: string; port: number };
   /** Template id by workflow entry id. */
   workflows: Record<string, string>;
   updatedAt: string;
