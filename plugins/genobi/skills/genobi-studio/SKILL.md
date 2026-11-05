@@ -152,8 +152,10 @@ text before any action; the tool neither executes the transcript nor installs
 models. Studio-started agents cannot pass a filesystem path.
 
 For generation from project images, read `genobi_project.brief.references` and
-pass ordered `projectImageReferences: [{copyId, assetId}]`. The adapter resolves
-the linked bytes internally for quote and submit. Load `genobi-comfy` to stage
+pass ordered `projectImageReferences: [{copyId, assetId}]` of production images;
+an Inspiration is a style reference to describe in the prompt, refused here
+unless the person asked for it this request (`allowInspirationAsInput: true`).
+The adapter resolves the linked bytes internally for quote and submit. Load `genobi-comfy` to stage
 deployment files and quote a deployment recipe. Staging and transcription are
 available to studio-started agents within their existing project/World/source
 scope; submitting a paid generation remains unavailable.

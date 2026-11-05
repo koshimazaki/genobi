@@ -299,11 +299,29 @@ describe("applying Director commands", () => {
       startFrame: 60,
       durationFrames: 30,
     });
-    // A reference still gets a production alias with a fixed id.
+    // A style-only Inspiration must never become a timeline plate
+    // just because an agent named its asset id.
+    expect(
+      refused(copy, {
+        op: "replace-plate",
+        layerId: "photo-1",
+        assetId: "moodboard",
+      }),
+    ).toMatch(/is an Inspiration/);
+    expect(() =>
+      parseCommand({
+        op: "replace-plate",
+        layerId: "photo-1",
+        assetId: "moodboard",
+        allowInspirationAsInput: "yes",
+      }),
+    ).toThrow(/must be a boolean/);
+    // Only a person-requested opt-in permits the existing production alias.
     const aliased = ok(copy, {
       op: "replace-plate",
       layerId: "photo-1",
       assetId: "moodboard",
+      allowInspirationAsInput: true,
     }).project;
     expect(aliased.layers.find((l) => l.id === "photo-1")).toMatchObject({
       kind: "image",

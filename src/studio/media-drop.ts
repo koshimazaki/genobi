@@ -37,6 +37,21 @@ export function projectAssetFile(bundle: Bundle, assetId: string) {
     type: mime[ext] ?? `${asset.kind}/octet-stream`,
   });
 }
+/**
+ * Whether a drop carries an Inspiration (a `reference` asset) of this
+ * project. Read during the event, like the drag's identity; never throws.
+ */
+export function droppedInspiration(
+  transfer: Pick<DataTransfer, "types" | "getData">,
+  bundle?: Bundle,
+) {
+  if (!bundle || !transfer.types.includes(PROJECT_ASSET_DRAG)) return false;
+  try {
+    return readAssetDrag(transfer, bundle).asset.use === "reference";
+  } catch {
+    return false;
+  }
+}
 /** Read protected drag identity synchronously; resolve only known local sources. */
 export async function studioDropFile(
   transfer: DataTransfer,

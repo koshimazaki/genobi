@@ -31,7 +31,15 @@ const shape = {
     ),
   projectAsset: projectAssetSchema
     .optional()
-    .describe("An asset of a project this session owns or linked."),
+    .describe(
+      'A production asset of a project this session owns or linked. An Inspiration (use "reference") is a style reference and is refused unless allowInspirationAsInput is true.',
+    ),
+  allowInspirationAsInput: z
+    .boolean()
+    .optional()
+    .describe(
+      "Only when the person asked, in this request, for an Inspiration to be this deployment's input.",
+    ),
   worldFile: z
     .strictObject({
       session: z.string().uuid(),
@@ -100,7 +108,17 @@ export const deploymentTools: ToolDefinition[] = [
       const bytes = input.filePath
         ? await readLocalFile(input.filePath, limit)
         : input.projectAsset
-          ? (await readProjectAsset(api, input.projectAsset, limit)).bytes
+          ? (
+              await readProjectAsset(
+                api,
+                input.projectAsset,
+                limit,
+                undefined,
+                {
+                  allowInspirationAsInput: input.allowInspirationAsInput,
+                },
+              )
+            ).bytes
           : await api.bytes(
               `/api/world/${input.worldFile!.session}/files/${input.worldFile!.file}`,
               limit,

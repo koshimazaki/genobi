@@ -67,6 +67,13 @@ enough. The first turn (`versionAgentPrompt`) names the template, tells the
 agent to load the skill of the same id, names the reference by asset id and
 file name when there is one, quotes the sentence verbatim with control
 characters removed, and says every paid step is quoted and approved first.
+A dropped image is kept as an Inspiration (`use: "reference"`), which the
+adapters refuse as a generation input unless the request opts in
+([project assets](project-assets.md)). Dropping it with a sentence is the
+person asking for it in this request, so the first turn says the image was
+offered explicitly as an input and tells the agent to set
+`allowInspirationAsInput: true` on the quote and submit that pass it. A dropped
+track or clip is production media and needs no opt-in.
 With no agent set up, the button stays live and the spawn dialog walks the
 person through choosing one. A studio that keeps no project copy disables it
 and says why. When the open version has edits the panel asks first. The

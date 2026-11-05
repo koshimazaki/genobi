@@ -159,6 +159,13 @@ Do not mix this form with inline `imageReferences`. Reusing the IDs after the
 owner changes an asset invalidates an older quote. Source-conditioned open Klein
 uses `imageAspectRatio: "auto"` and derives its shape from the source image.
 
+Inspirations are style references. Name them in the prompt and describe what
+to take from them (style, palette, layout, mood, structure, wording); never pass
+one as `projectImageReferences`, a source frame, a swap source or a deployment
+input unless the person asked for that in the current request, and then set
+`allowInspirationAsInput: true`. The adapter refuses an Inspiration otherwise.
+See [what Inspirations are for](project-assets.md#what-inspirations-are-for).
+
 For a registered Comfy deployment, load `genobi-comfy` and inspect these schemas:
 
 ```sh

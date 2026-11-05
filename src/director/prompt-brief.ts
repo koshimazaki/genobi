@@ -1,6 +1,10 @@
 import { strToU8, zipSync } from "fflate";
 import type { Bundle } from "./bundle";
 import type { Asset } from "../../shared/director/types";
+import {
+  briefRoleNotes,
+  referenceRole,
+} from "../../shared/director/reference-role";
 
 export const BRIEF_PATH = "brief/prompt.json";
 export interface PromptReference {
@@ -136,7 +140,10 @@ export function resolveBrief(bundle: Bundle) {
       label: r.label,
       assetId: r.assetId,
       kind: r.font ? "font" : asset!.kind,
-      role: r.font ? "font" : asset!.use,
+      // "style" for an Inspiration: described in the prompt, never sent as
+      // an image input (shared/director/reference-role.ts).
+      role: r.font ? "font" : referenceRole(asset!.use),
+      ...(asset ? { use: asset.use } : {}),
       ...file,
     };
   });
@@ -145,6 +152,8 @@ export function resolveBrief(bundle: Bundle) {
     projectId: bundle.project.id,
     prompt: brief.text,
     references,
+    // One sentence per Inspiration the prompt names, for the agent's plan.
+    notes: briefRoleNotes(activeReferences(brief), bundle.project.assets),
   };
 }
 export function briefArchive(bundle: Bundle) {
