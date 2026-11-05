@@ -227,11 +227,11 @@
       "runs": [{ "route": "local-free" }]
     },
     {
-      "id": "director-bundle", "name": "Editable project bundle", "status": "verified", "evidence": "2026-10-29 docs/falling-room.md#what-was-run-29-october-2026",
+      "id": "director-bundle", "name": "Editable project bundle", "status": "verified", "evidence": "2026-11-05 docs/project-archives.md#verification--5-november-2026",
       "where": "Director · Download bundle, Open bundle",
-      "description": "Download bundle writes the project, its media, the brief, feedback and the World Builder recipe as a ZIP; Open bundle checks it and reads it back for editing.",
+      "description": "Download bundle validates the project, media, brief, feedback and World source documents before saving a ZIP with an integrity index. Open bundle checks every indexed file before a guarded restore; legacy bundles remain readable.",
       "mcp": [], "cli": [],
-      "skills": ["director-remix"], "docs": ["docs/director-bundle/README.md", "docs/falling-room.md"],
+      "skills": ["director-remix"], "docs": ["docs/director-bundle/README.md", "docs/falling-room.md", "docs/project-archives.md"],
       "runs": [{ "route": "local-free" }]
     },
     {

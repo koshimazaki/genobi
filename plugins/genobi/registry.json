@@ -1663,7 +1663,8 @@
         "docs/director-agent-tools.md",
         "docs/director-bundle/README.md",
         "docs/effects-catalogue.md",
-        "docs/project-media.md"
+        "docs/project-media.md",
+        "docs/project-archives.md"
       ],
       "path": "plugins/genobi/skills/genobi-director/SKILL.md",
       "tools": [

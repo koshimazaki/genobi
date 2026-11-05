@@ -7,10 +7,14 @@ metadata:
   version: "0.1.0"
   phase: "1 - quoted generation"
   tags: "agents, director, bundle, mcp"
-  docs: "docs/director-agent-tools.md, docs/director-bundle/README.md, docs/effects-catalogue.md, docs/project-media.md"
+  docs: "docs/director-agent-tools.md, docs/director-bundle/README.md, docs/effects-catalogue.md, docs/project-media.md, docs/project-archives.md"
 ---
 
 # Genobi director
+
+For a finished cut, keep an editable project ZIP using the studio's Save action.
+Saving validates all required bytes and writes an integrity index; opening a bad
+archive retains the current project. See [Local project archives](../../../../docs/project-archives.md).
 
 The Director is the timeline where the person's piece lives. This skill is
 the global approach: start from their project, decide what the cut needs, use

@@ -32,6 +32,7 @@ export default function ProjectAssetDrawer({
   const dialog = useRef<HTMLDialogElement>(null);
   const [notice, setNotice] = useState("");
   const [limit, setLimit] = useState(12);
+  const [saving, setSaving] = useState(false);
   const {
     drawerOpen,
     assetRole,
@@ -346,8 +347,23 @@ export default function ProjectAssetDrawer({
           >
             Undo
           </button>
-          <button disabled={disabled} onClick={() => saveBundle(bundle)}>
-            Save editable project
+          <button
+            disabled={disabled || saving}
+            onClick={async () => {
+              setSaving(true);
+              try {
+                await saveBundle(bundle);
+                setNotice(
+                  "Project archive ready · keep the downloaded ZIP to restore it.",
+                );
+              } catch (error) {
+                report(error);
+              } finally {
+                setSaving(false);
+              }
+            }}
+          >
+            {saving ? "Checking archive…" : "Save editable project"}
           </button>
           <small>
             Includes assets and inspirations. Save before closing or reloading.

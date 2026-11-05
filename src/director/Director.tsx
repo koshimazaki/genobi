@@ -15,7 +15,8 @@ import { useTrimPreview } from "./useTrimPreview";
 import { moveToLane } from "../../shared/director/tracks";
 import { editLayer, type Layer } from "../../shared/director/types";
 import { keepNotes } from "../../shared/director/notes";
-import { importBundle, saveBundle, type Bundle } from "./bundle";
+import { saveBundle, type Bundle } from "./bundle";
+import { restoreProject } from "./restore-project";
 import { guardUnload } from "./leave-guard";
 import { upgradeOpenedBundle } from "./upgrade-bundle";
 import { studioStore } from "../studio/store";
@@ -112,6 +113,25 @@ export default function Director({
       setError("");
     } catch (e) {
       report(e);
+    }
+  }
+  async function saveProject() {
+    if (!bundle || busy) return;
+    setWorkingFile(true);
+    setStatus("Checking project archive…");
+    try {
+      await saveBundle(bundle);
+      setStatus(
+        "Project archive ready · keep the downloaded ZIP to restore it",
+      );
+      setError("");
+    } catch (error) {
+      report(error);
+      setStatus(
+        "Archive not saved · restore the missing or changed files first",
+      );
+    } finally {
+      setWorkingFile(false);
     }
   }
   function edit(id: string, patch: Partial<Layer>) {
@@ -259,7 +279,7 @@ export default function Director({
           busy={busy}
           transportBusy={playing || rendering || workingFile}
           open={() => imports.current?.click()}
-          save={() => bundle && saveBundle(bundle)}
+          save={() => void saveProject()}
           render={() => void exportVideo()}
           switchMode={() => setAdvanced(!advanced)}
         />
@@ -278,14 +298,15 @@ export default function Director({
           setStatus("Opening bundle…");
           setWorkingFile(true);
           try {
-            const next = await importBundle(f, bundle);
+            const next = await restoreProject(f);
+            setRenderUrl("");
+            setError("");
             setFrame(0);
             select(
               next.project.layers.some((l) => l.id === selected)
                 ? selected
                 : (next.project.layers[0]?.id ?? ""),
             );
-            commit(next);
             // A bundle an older studio saved is brought up to date as an
             // edit on top of it, so Undo returns to it as saved.
             const note = await upgradeOpenedBundle(studioStore);

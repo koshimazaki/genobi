@@ -185,6 +185,7 @@ user action through every layer.
   Dual Swords, render and saved-video output takes into the project's assets.
 - [Director project copy](director-bundle/project-copy.md) — local synchronization and commands.
 - [Agent project media](project-media.md) — inspected local uploads and session-owned staging receipts.
+- [Local project archives](project-archives.md) — complete ZIP saves, integrity checks and recovery without the original browser cache.
 - [Director bundle v1](director-bundle/README.md) — the interchange format: JSON
   manifest, media files, graphics modules and their schemas.
 - [Prompts and directions](director-prompts.md) — the global prompt, each
