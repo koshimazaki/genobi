@@ -146,19 +146,26 @@ export async function importCameraGeneration(
     const asset = project.assets[assetId];
     if (asset && asset.origin !== "generated") {
       const id = `generation-${crypto.randomUUID().slice(0, 8)}`;
+      // The project holds each image once; the run's slots keep their order.
+      const unique = [...new Set(refs.assetIds)].filter(
+        (ref) => ref !== assetId,
+      );
+      const slots = refs.assetIds.map((ref) => unique.indexOf(ref));
+      const settings =
+        slots.length > unique.length && !slots.includes(-1)
+          ? { ...generation.settings, referenceSlots: slots }
+          : generation.settings;
       asset.origin = "generated";
       asset.generationId = id;
       project.generations.push({
         id,
         inputAssetIds: [],
-        referenceAssetIds: [...new Set(refs.assetIds)].filter(
-          (ref) => ref !== assetId,
-        ),
+        referenceAssetIds: unique,
         outputAssetIds: [assetId],
         prompt: generation.prompt,
         tool: generation.tool,
         ...(generation.recipe ? { recipe: generation.recipe } : {}),
-        ...(generation.settings ? { settings: generation.settings } : {}),
+        ...(settings ? { settings } : {}),
       });
     }
     validateProject(project);

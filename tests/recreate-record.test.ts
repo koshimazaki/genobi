@@ -9,6 +9,9 @@ import {
   initialComposer,
 } from "../src/useComposer";
 import {
+  keptInputs,
+  otherUrl,
+  pngUrl,
   recreate,
   readyJob,
   sendJob,
@@ -56,4 +59,26 @@ it("keeps a legacy camera preset, so Recreate sends the preset's wording", async
   const { landed } = await recreate(bundle, added.assetId);
   expect(landed.camera.angles).toBe("low-angle");
   expect(request(landed)).toBe(request(original));
+});
+
+it("keeps every reference slot in order when the same image fills two", async () => {
+  const references = [pngUrl, pngUrl, otherUrl];
+  const job = readyJob({
+    generator: "edit",
+    model: "flux-3-klein-api",
+    description: "Put image 3's hat on the figure from image 2.",
+    prompt: "Put image 3's hat on the figure from image 2.",
+    imageReferenceCount: 3,
+  });
+  const { added, bundle } = await sendJob(job, {
+    inputs: keptInputs(job, references),
+  });
+  const g = bundle.project.generations.find(
+    (x) => x.id === bundle.project.assets[added.assetId].generationId,
+  )!;
+  // The project holds each image once.
+  expect(g.referenceAssetIds).toHaveLength(2);
+  const { handoff, recipe } = await recreate(bundle, added.assetId);
+  expect(handoff.patch.imageReferences).toEqual(references);
+  expect(recipe.missing.join(" ")).not.toContain("reference images");
 });

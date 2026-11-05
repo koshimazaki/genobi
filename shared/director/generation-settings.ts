@@ -1,6 +1,7 @@
 import type { GenerateInput, Job } from "../types";
 import { readNestedSettings } from "./generation-settings-read";
 import { presets } from "../legacy-camera";
+import { MAX_IMAGE_REFERENCES } from "../image";
 
 /**
  * The settings a Camera run was made with, recorded on the project's
@@ -53,6 +54,12 @@ export type GenerationSettings = Partial<
    * instructions stay in `description`, as composed, and Recreate names them.
    */
   imageRegionCount?: number;
+  /**
+   * The run's reference slots in order, each an index into the generation's
+   * `referenceAssetIds`, when one image filled more than one slot (the
+   * project holds it once). Image numbers in the prompt follow these slots.
+   */
+  referenceSlots?: number[];
   /** A deployment run's own inputs; its file tickets are never kept. */
   deploy?: { seed: number; negativePrompt: string; recipe?: string };
 };
@@ -109,6 +116,16 @@ export function publicGenerationSettings(
     if (typeof value[key] === "boolean") out[key] = value[key];
   // Nested records are read by their own rules; a malformed one is dropped.
   Object.assign(out, readNestedSettings(value));
+  const slots = value.referenceSlots;
+  if (
+    Array.isArray(slots) &&
+    slots.length > 0 &&
+    slots.length <= MAX_IMAGE_REFERENCES &&
+    slots.every(
+      (i) => Number.isInteger(i) && i >= 0 && i < MAX_IMAGE_REFERENCES,
+    )
+  )
+    out.referenceSlots = [...slots];
   // A legacy camera preset (runs before `camera`): Camera's restore turns it
   // into camera terms, so its wording comes back with the description.
   if (presets.some((p) => p.id === value.presetId))

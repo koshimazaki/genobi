@@ -122,12 +122,25 @@ export function generatedRecipe(
   if (!generation || !prompt) return undefined;
   const entry = generation.recipe && readyEntry(generation.recipe.id);
   const read = [...generation.referenceAssetIds, ...generation.inputAssetIds];
-  const imageIds = [...new Set(read)].filter(
-    (a) => project.assets[a]?.kind === "image",
+  const settings = publicGenerationSettings(generation.settings);
+  const image = (a: string | undefined) =>
+    !!a && project.assets[a]?.kind === "image";
+  // The run's own slots when one image filled several (`referenceSlots`), so
+  // image numbers in the prompt still point where they did.
+  const slots = settings?.referenceSlots?.map(
+    (i) => generation.referenceAssetIds[i],
   );
+  const imageIds =
+    slots && slots.every(image)
+      ? [
+          ...slots,
+          ...[...new Set(generation.inputAssetIds)].filter(
+            (a) => image(a) && !slots.includes(a),
+          ),
+        ]
+      : [...new Set(read)].filter(image);
   const missing: string[] = [];
   if (!entry) missing.push("model and settings");
-  const settings = publicGenerationSettings(generation.settings);
   // A run on Auto: the recipe's route is the registry's fallback when the
   // take could not be read, never the person's choice of payer. Auto comes
   // back through the job, and the provider is named as not recorded.
