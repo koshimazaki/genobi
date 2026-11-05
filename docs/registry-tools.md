@@ -281,6 +281,22 @@ Genobi take to project · writes. Hand a Ready take you made (id), or a video or
 - Taught by: [`anime-teaser`](registry-skills.md#anime-teaser), [`audio-visual`](registry-skills.md#audio-visual), [`character-piece`](registry-skills.md#character-piece), [`falling-room`](registry-skills.md#falling-room), [`fruits-swap`](registry-skills.md#fruits-swap), [`genobi-comfy`](registry-skills.md#genobi-comfy), [`genobi-director`](registry-skills.md#genobi-director), [`genobi-hermes`](registry-skills.md#genobi-hermes), [`genobi-swords`](registry-skills.md#genobi-swords), [`genobi-upscale`](registry-skills.md#genobi-upscale), [`product-video`](registry-skills.md#product-video)
 - Docs: [docs/director-agent-tools.md](director-agent-tools.md), [docs/director-bundle/README.md](director-bundle/README.md), [docs/dual-editor.md](dual-editor.md)
 
+## `genobi_project_media_stage`
+
+Stage owned project media · writes. Inspect and stage one local image, audio file or MP4 for a linked Director project. External agents only: studio-started agents cannot read arbitrary local files. Sends bounded bytes, never the machine path. Returns a hash-addressed receipt bound to this session and project for one hour; exact retry or receipt read is safe after a lost acknowledgement. Does not attach media, modify a project revision, generate or pay. Local server only.
+
+- Tags: `agents`, `mcp`, `director`, `bundle`
+- Taught by: [`genobi-director`](registry-skills.md#genobi-director)
+- Docs: [docs/project-media.md](project-media.md)
+
+## `genobi_project_media_receipt`
+
+Read a staged media receipt · read-only. Read and verify a staged file's receipt in the same session and linked project. Safe after an interrupted acknowledgement. Missing, expired, corrupt or another session's receipt is refused. A receipt is temporary staging, not an attached project asset. Local server only.
+
+- Tags: `agents`, `mcp`, `director`, `bundle`
+- Taught by: [`genobi-director`](registry-skills.md#genobi-director)
+- Docs: [docs/project-media.md](project-media.md)
+
 ## `genobi_provenance`
 
 Genobi provenance card · read-only. Build the provenance card for finished takes: the agent and its model, every generation model, workflow files, where it ran and on what, time taken, cost, outputs with SHA-256 hashes, and the tier (open, semi-open, premium) derived from the models. Returns the card, its Markdown and a small gallery summary. Reads only; never submits or pays.

@@ -46,6 +46,11 @@ Unknown command fields are rejected. Writes require the current revision; the sh
 
 ### Shared timeline controls
 
+External agents can [stage inspected media](project-media.md) with
+`genobi_project_media_stage`, then recover the same receipt after a lost
+acknowledgement with `genobi_project_media_receipt`. Staging does not alter
+the cut; attachment and replacement remain distinct revision-checked operations.
+
 The `*-clip`, mute, gain, rate, length, rename and reorder commands above use the same parser and implementation in the
 browser console and `genobi_director_command` over HTTP, MCP or CLI. The browser
 passes `revision`; HTTP/MCP/CLI pass `baseRevision` outside `command`. A stale

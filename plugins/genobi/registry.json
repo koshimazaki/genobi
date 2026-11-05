@@ -42,6 +42,8 @@
         "genobi_effects",
         "genobi_effect_variant",
         "genobi_take_to_project",
+        "genobi_project_media_stage",
+        "genobi_project_media_receipt",
         "adaptive-reverb",
         "anime-teaser",
         "audio-reactive-drop",
@@ -131,6 +133,8 @@
         "genobi_effects",
         "genobi_effect_variant",
         "genobi_take_to_project",
+        "genobi_project_media_stage",
+        "genobi_project_media_receipt",
         "genobi_provenance",
         "genobi_audio_upload",
         "genobi_audio_analysis",
@@ -272,6 +276,8 @@
         "genobi_effects",
         "genobi_effect_variant",
         "genobi_take_to_project",
+        "genobi_project_media_stage",
+        "genobi_project_media_receipt",
         "genobi_provenance",
         "genobi_audio_upload",
         "genobi_audio_analysis",
@@ -339,6 +345,8 @@
         "genobi_project",
         "genobi_director_command",
         "genobi_take_to_project",
+        "genobi_project_media_stage",
+        "genobi_project_media_receipt",
         "genobi-director"
       ]
     },
@@ -948,6 +956,28 @@
         "genobi-upscale",
         "product-video"
       ]
+    },
+    {
+      "kind": "tool",
+      "name": "genobi_project_media_stage",
+      "title": "Stage owned project media",
+      "description": "Inspect and stage one local image, audio file or MP4 for a linked Director project. External agents only: studio-started agents cannot read arbitrary local files. Sends bounded bytes, never the machine path. Returns a hash-addressed receipt bound to this session and project for one hour; exact retry or receipt read is safe after a lost acknowledgement. Does not attach media, modify a project revision, generate or pay. Local server only.",
+      "tags": ["agents", "mcp", "director", "bundle"],
+      "docs": ["docs/project-media.md"],
+      "readOnly": false,
+      "paid": false,
+      "skills": ["genobi-director"]
+    },
+    {
+      "kind": "tool",
+      "name": "genobi_project_media_receipt",
+      "title": "Read a staged media receipt",
+      "description": "Read and verify a staged file's receipt in the same session and linked project. Safe after an interrupted acknowledgement. Missing, expired, corrupt or another session's receipt is refused. A receipt is temporary staging, not an attached project asset. Local server only.",
+      "tags": ["agents", "mcp", "director", "bundle"],
+      "docs": ["docs/project-media.md"],
+      "readOnly": true,
+      "paid": false,
+      "skills": ["genobi-director"]
     },
     {
       "kind": "tool",
@@ -1610,7 +1640,8 @@
       "docs": [
         "docs/director-agent-tools.md",
         "docs/director-bundle/README.md",
-        "docs/effects-catalogue.md"
+        "docs/effects-catalogue.md",
+        "docs/project-media.md"
       ],
       "path": "plugins/genobi/skills/genobi-director/SKILL.md",
       "tools": [
@@ -1629,6 +1660,8 @@
         "genobi_effects",
         "genobi_effect_variant",
         "genobi_take_to_project",
+        "genobi_project_media_stage",
+        "genobi_project_media_receipt",
         "genobi_provenance",
         "genobi_audio_upload",
         "genobi_audio_analysis",

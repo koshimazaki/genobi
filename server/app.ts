@@ -57,6 +57,7 @@ import { partMedia, upscalePartsRouter } from "./upscale-parts-routes";
 import { UpscalePartsService } from "./upscale-parts";
 import { takeToProject } from "./project-takes";
 import { projectRouter } from "./project-routes";
+import { projectMediaRouter } from "./project-media-routes";
 import { worldRecipeRouter } from "./world-recipe-routes";
 import { VoiceService, voiceConfig, type VoiceOptions } from "./voice";
 import { AudioAnalysis, type AudioAnalysisOptions } from "./audio-analysis";
@@ -426,6 +427,7 @@ export async function createApp(options: AppOptions) {
   );
   app.use("/api/memory", memoryRouter(projects, tasteProfiles, limit));
   app.use("/api/projects", projectRouter(projects, limit));
+  app.use("/api/projects", await projectMediaRouter(projects, limit));
   app.use("/api/projects", worldRecipeRouter(projects, limit));
   mountPairings(app, limit, agents);
   const studio = arenaStudio(service, store, options.publicDirectory);

@@ -169,6 +169,7 @@ describe("tools", () => {
       "genobi_taste",
       "genobi_reference",
       "genobi_take_to_project",
+      "genobi_project_media_stage",
       "genobi_audio_upload",
       ...media,
       // Session settings: writes, safe to repeat, never paid.

@@ -184,6 +184,7 @@ user action through every layer.
 - [Outputs into project assets](project-assets.md) — the one path every 3D,
   Dual Swords, render and saved-video output takes into the project's assets.
 - [Director project copy](director-bundle/project-copy.md) — local synchronization and commands.
+- [Agent project media](project-media.md) — inspected local uploads and session-owned staging receipts.
 - [Director bundle v1](director-bundle/README.md) — the interchange format: JSON
   manifest, media files, graphics modules and their schemas.
 - [Prompts and directions](director-prompts.md) — the global prompt, each

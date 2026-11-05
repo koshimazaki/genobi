@@ -157,6 +157,7 @@
         "motion-fonts.md",
         "poster-grid-direction.md",
         "project-assets.md",
+        "project-media.md",
         "recreate-library-plan.md",
         "runs/anime-teaser.md",
         "scrolls.md",
@@ -286,6 +287,7 @@
         "licence-strategy.md",
         "machine-check.md",
         "maintenance-priorities.md",
+        "project-media.md",
         "recreate-library-plan.md",
         "registry-skills.md",
         "registry-tools.md",
@@ -452,6 +454,7 @@
         "machine-check.md",
         "media-space.md",
         "openjutsu-swap.md",
+        "project-media.md",
         "registry-skills.md",
         "registry-tools.md",
         "registry.md",
@@ -551,7 +554,8 @@
         "director-bundle/showcase/README.md",
         "director-prompts.md",
         "effects-catalogue.md",
-        "fruits-swap-recipes.md"
+        "fruits-swap-recipes.md",
+        "project-media.md"
       ]
     },
     "research": {
@@ -813,6 +817,7 @@
         "openjutsu-swap.md",
         "poster-grid-direction.md",
         "project-assets.md",
+        "project-media.md",
         "read-through.md",
         "recreate-library-plan.md",
         "registry-skills.md",
@@ -1243,6 +1248,7 @@
         "minimax-h3-camera.md",
         "openjutsu-swap.md",
         "project-assets.md",
+        "project-media.md",
         "registry-skills.md",
         "registry-tools.md",
         "registry.md",
@@ -1560,7 +1566,8 @@
         "director-resolution.md",
         "hermes-runs.md",
         "licence-strategy.md",
-        "project-assets.md"
+        "project-assets.md",
+        "project-media.md"
       ]
     },
     {
@@ -2079,6 +2086,13 @@
       ]
     },
     {
+      "title": "Agent project media",
+      "path": "project-media.md",
+      "tags": ["agents", "mcp", "director", "bundle"],
+      "summary": "Inspected, session-owned media staging for local project imports, with stable upload receipts and explicit limits.",
+      "links": []
+    },
+    {
       "title": "Read-through",
       "path": "read-through.md",
       "tags": ["architecture", "backend", "studio"],
@@ -2143,6 +2157,7 @@
         "licence-strategy.md",
         "machine-check.md",
         "media-space.md",
+        "project-media.md",
         "registry-tools.md",
         "registry.md",
         "run-location.md",
@@ -2189,6 +2204,7 @@
         "licence-strategy.md",
         "machine-check.md",
         "media-space.md",
+        "project-media.md",
         "registry-skills.md",
         "registry.md",
         "run-location.md",
@@ -2253,6 +2269,7 @@
         "licence-strategy.md",
         "machine-check.md",
         "media-space.md",
+        "project-media.md",
         "registry-skills.md",
         "registry-tools.md",
         "run-location.md",

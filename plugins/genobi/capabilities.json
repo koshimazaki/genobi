@@ -203,6 +203,14 @@
       "runs": [{ "route": "local-free" }]
     },
     {
+      "id": "project-media-staging", "name": "Owned project media staging", "status": "implemented",
+      "where": "Director · external MCP/CLI and local HTTP",
+      "description": "Inspect image, audio and MP4 bytes into a temporary session/project-bound upload receipt. Retry and receipt reads preserve identity; staging does not attach or change the cut. Studio-started agents cannot read arbitrary local files; hosted project ownership is unavailable.",
+      "mcp": ["genobi_project_media_stage", "genobi_project_media_receipt"], "cli": ["project-media-stage", "project-media-receipt"],
+      "skills": ["genobi-director"], "docs": ["docs/project-media.md"],
+      "runs": [{ "route": "local-free" }]
+    },
+    {
       "id": "director-bundle", "name": "Editable project bundle", "status": "verified", "evidence": "2026-10-29 docs/falling-room.md#what-was-run-29-october-2026",
       "where": "Director · Download bundle, Open bundle",
       "description": "Download bundle writes the project, its media, the brief, feedback and the World Builder recipe as a ZIP; Open bundle checks it and reads it back for editing.",
