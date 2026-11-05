@@ -104,7 +104,14 @@ acoustic measurement, audio-reactive rendering, voice, the agent and the
 editor, and to my knowledge no other project combines them. The result is a
 new way of working that teaches as it goes and makes fresh-looking content
 people share. The agent and you edit one Director/Editor timeline; it reads
-back your changes and quotes every paid step first. A **licence layer** records each
+back your changes and quotes every paid step first, and the camera panel, the
+editor and the deck sit in one coherent studio shell
+([shell](docs/director-studio-shell.md)). Genobi grows through the same loop:
+the agent you talk to can start a Developer agent for a change to the studio,
+with Hermes in its developer and creative profiles, so new tools and workflows
+arrive the way edits do ([agent sessions](docs/agent-sessions.md#genobi-starts-a-developer)).
+There are Easter eggs in the terminal, from the gaming world; the repo knows
+where. A **licence layer** records each
 model's terms, a **Taste layer** points agents at aesthetic choices first:
 curated libraries and credited references kept as project memory, editable
 per project and exportable as JSON ([taste](docs/taste-memory.md)),
