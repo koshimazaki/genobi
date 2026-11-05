@@ -41,6 +41,7 @@ const GROUPS: Record<string, (count: number) => (id: string) => string> = {
   "fruit-apple-banana": () => all("fruit"),
   "fruit-banana-apple": () => all("fruit"),
   "ship-mecha": () => all("ship"),
+  "car-mecha": () => all("car"),
   diamond: () => all("diamond"),
 };
 

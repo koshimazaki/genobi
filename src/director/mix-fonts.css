@@ -11,3 +11,16 @@
   font-weight: 400 700;
   font-display: block;
 }
+/*
+ * Press Start 2P (CodeMan38), the arcade face of Dance with Fruits' live
+ * words, SIL OFL 1.1: public/motion/fonts/press-start-2p/OFL.txt. The
+ * google/fonts TTF (commit dbd72d6e) repackaged as WOFF2, unmodified and not
+ * subset. One weight; the range keeps the browser from synthesising a bold.
+ */
+@font-face {
+  font-family: "Press Start 2P";
+  src: url("/motion/fonts/press-start-2p/PressStart2P-Regular.woff2")
+    format("woff2");
+  font-weight: 400 700;
+  font-display: block;
+}

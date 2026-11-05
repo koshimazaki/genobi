@@ -7,6 +7,24 @@ make about 24 s. This page says what the person can hand in, what the agent
 does with each thing, and what is proven today. The cut itself is documented in
 [fruits.md](fruits.md) ("The swap edit") and logged in [`../edit/LOG.md`](../edit/LOG.md).
 
+## Director template
+
+Since 3 November 2026 the swap edit is an official mix template,
+**Dance with Fruits** (`fruits-swap`): mecha, gorilla on the loop, gold ninja
+on the drop beat, pink cat, and the house end card, built from the house
+recipes (a splash of flying pixel fruit, the title typed on the beat,
+Space.js swap cards, slice glitches, a neon-pink surveillance scan whose box
+alone posterizes and turns to wireframe, pixel fruit flooding into the end
+card) instead of the
+Nokia pixel cards below, which the owner turned down. Since version 7 every
+word and icon is a live layer in the Director, set in Press Start 2P (OFL,
+bundled), and the opening mecha is the 2 November `mecha-fruit-song-vox`
+render. The cut is data
+(`shared/templates/fruits-swap.cut.json`) and opens in the Director at
+`/director?example=fruits-swap`; see [the template page](../../docs/fruits-swap.md)
+for the beat table, the media and how to repeat it. The ffmpeg build below
+stays as the record of the first cut.
+
 ## What the person hands in
 
 | Slot      | Accepts                             | Default when absent        |

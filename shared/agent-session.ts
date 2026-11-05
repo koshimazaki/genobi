@@ -8,6 +8,7 @@
 import { COPY_ID, DIRECTOR_ID } from "./director/commands";
 import type { AgentApproval, ApprovalResult } from "./agent-approval";
 import { parseAgentContext, type AgentContext } from "./agent-context";
+import type { AgentToolCall } from "./agent-session-events";
 
 export const AGENT_RUNNERS = ["claude", "hermes"] as const;
 export type AgentRunner = (typeof AGENT_RUNNERS)[number];
@@ -85,6 +86,12 @@ export interface AgentSession {
    */
   results?: ApprovalResult[];
   /**
+   * The tool calls the runner reported, newest last
+   * (`shared/agent-session-events.ts`). Absent from an older server and a
+   * relayed session.
+   */
+  tools?: AgentToolCall[];
+  /**
    * The conversation, oldest first: the first prompt and each message the
    * person sent (`POST …/messages`), and each reply the runner gave at the
    * end of a turn. Absent from an older server.
@@ -105,6 +112,8 @@ export interface AgentExchange {
   from: "person" | "agent";
   text: string;
   at: string;
+  /** How the person gave a message: spoken or typed. Absent on older entries. */
+  source?: "voice" | "typed";
   /**
    * A message queued for a runner without live input (Box 1.8) that its
    * Genobi MCP server has not collected yet.

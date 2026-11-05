@@ -12,7 +12,7 @@ recipes. A successful guide capture is not evidence that LTX preserves its motio
 
 The [loop studio](world-builder-loops.md) supplies the editing foundation and
 [dynamic room sound](world-builder-dynamic-sound.md) supplies CPU treatment.
-The [Vast runner](vast-runner.md) prepares a pinned worker. The separate
+The [Vast runner](vast-runner.md) prepares a pinned worker. The hosted [deployment v2](comfy-deploy.md#deployment-v2-reported-4-november-2026) is now the first render route and the rented box the alternative. The separate
 [experiment tools](https://github.com/koshimazaki/genobi/tree/main/workflows/experiments)
 freeze the inputs and submit a candidate graph once.
 

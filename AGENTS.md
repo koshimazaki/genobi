@@ -115,6 +115,9 @@ Two environment facts are easy to miss:
   Rebuild its standalone bundle with `npm run build:scene-adapter` and run
   `npm run check:scene-adapter` (CI runs it), which fails when the bundle does
   not build, is not reproducible, or a local node bundle is older than the sources.
+- Templates ship layers, not baked video. Media files are plain footage; words,
+  icons and UI are recipe layers in the cut. A baked overlay is a regression
+  unless the template's doc says why ([Dance with Fruits](docs/fruits-swap.md#changing-the-words-and-icons)).
 - Control-character classes in sanitizers are deliberate. Filenames, catalogue
   labels and BFL keys strip `\x00-\x1f\x7f` before use.
 - Keep every file at 500 lines or fewer. Split by topic rather than by count,

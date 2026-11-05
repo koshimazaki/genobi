@@ -1,7 +1,8 @@
 import { useState } from "react";
 import type { Project } from "../../shared/director/types";
+import { COMPOSITION_MAX_SECONDS } from "../../shared/director/editor-commands";
 
-const MAX_SECONDS = 120;
+const MAX_SECONDS = COMPOSITION_MAX_SECONDS;
 
 /**
  * Composition length in seconds: a range for quick changes and a field for

@@ -79,10 +79,31 @@ export const MORPH_ASSETS = [
     state: 0,
   },
   {
+    id: "car",
+    name: "Car",
+    family: "Machines",
+    preset: "car-mecha",
+    state: 0,
+  },
+  {
+    id: "bike",
+    name: "Sports bike",
+    family: "Machines",
+    preset: "bike-mecha",
+    state: 0,
+  },
+  {
     id: "mecha",
     name: "Mecha",
     family: "Machines",
     preset: "spacecraft-mecha",
+    state: 1,
+  },
+  {
+    id: "brawler",
+    name: "Brawler mecha",
+    family: "Machines",
+    preset: "bike-mecha",
     state: 1,
   },
   {
@@ -122,6 +143,8 @@ export interface MorphCompositionOptions {
   durationSeconds?: number;
 }
 
+/** The colour an uncoloured form's parts take beside a coloured form. */
+const UNCOLOURED_PART = "#ccd4dc";
 const sourceCache = new Map<string, SceneTransform[]>();
 const compositionCache = new Map<string, Recipe>();
 function assetLayout(id: string, count: MorphCompositionOptions["count"]) {
@@ -184,6 +207,11 @@ export function createMorphComposition(
       layouts.length ? matchLayout(layouts.at(-1)!, layout) : layout,
     );
   }
+  // A coloured form (the bike, the brawler) beside an uncoloured one must
+  // still supply a colour for every part in every state.
+  if (layouts.some((layout) => layout.some((part) => part.color)))
+    for (const layout of layouts)
+      for (const part of layout) part.color ??= UNCOLOURED_PART;
   const compact = compactLayouts(layouts);
   const labels = options.assetIds.map(
     (id) => MORPH_ASSETS.find((a) => a.id === id)!.name,

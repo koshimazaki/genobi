@@ -55,7 +55,7 @@ export const sameCopy = (a: DirectorCopy, b: DirectorCopy) =>
   stable(normalProject(a.project)) === stable(normalProject(b.project));
 
 const LAYER_REASONS: Record<string, string> = {
-  name: "No Director command renames a layer",
+  name: "rename-layer could not give this layer its name",
   locked: "No Director command locks or unlocks a layer",
   moduleId: "No Director command swaps a layer's recipe",
   parameters: "set-parameters sets values; it cannot remove one",
@@ -63,9 +63,9 @@ const LAYER_REASONS: Record<string, string> = {
     "Director commands reach an existing track or a new one with its own id",
 };
 const PROJECT_REASONS: Record<string, string> = {
-  name: "No Director command renames the project",
+  name: "rename-project could not give the project its name",
   composition:
-    "Resolution and beat grid have Director commands; change frame rate or length, or clear a tempo field, in the studio",
+    "set-fps, set-duration, set-resolution and set-beat-grid change the composition; this change is not one they make",
   modules: "No Director command adds, removes or changes a recipe",
   generations: "No Director command records a generation",
   generationPlans:
@@ -212,7 +212,7 @@ function layerResidual(b: Builder) {
       field: "layer order",
       label: `layers stack bottom to top as ${short(order(now).join(", "), 200)}`,
       reason:
-        "No Director command restacks layers; move-clip onto a track puts the clip at the end of that track's run",
+        "reorder-layer moves a whole track and needs an unlocked clip on it; clips within one track keep the order move-clip gives them",
     });
 }
 

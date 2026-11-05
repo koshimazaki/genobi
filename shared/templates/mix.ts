@@ -62,6 +62,11 @@ export interface MixLayer {
   opacity: number;
   /** Holds the frame where no shot plays (a title or shader beat on its own). */
   card?: boolean;
+  /**
+   * Starts the recipe this far into its own clock (`animationOffsetFrames`):
+   * an end card that enters already built. Absent: 0.
+   */
+  offsetSeconds?: number;
   parameters: Record<string, string | number | boolean>;
 }
 export interface MixSpec {
@@ -221,6 +226,11 @@ export function checkMix(spec: MixSpec, media: Record<string, MixMedia>) {
       layer.startBeat + layer.beats > spec.beats + 1e-9
     )
       fail(`${layer.name} runs outside the cut`);
+    if (
+      layer.offsetSeconds !== undefined &&
+      !(layer.offsetSeconds >= 0 && layer.offsetSeconds <= 60)
+    )
+      fail(`${layer.name} starts its clock outside 0 to 60 s`);
     lanes.set(layer.lane, [...(lanes.get(layer.lane) ?? []), layer]);
   }
   for (const [lane, members] of lanes) {
@@ -426,6 +436,9 @@ export function mixProject(
         moduleId: l.module,
         parameters: l.parameters,
         ...beatSpan(spec, l.startBeat, l.beats),
+        ...(l.offsetSeconds
+          ? { animationOffsetFrames: Math.round(l.offsetSeconds * fps) }
+          : {}),
         locked: false,
         ...(shared.get(lane)! > 1 ? { track: lane } : {}),
       };

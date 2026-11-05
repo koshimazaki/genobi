@@ -11,6 +11,8 @@ export declare const STUDIES: readonly [
   "cathedral-walls",
   "cathedral-gallery",
   "cathedral-gallery-grow",
+  "cathedral-descent",
+  "cathedral-descent-simple",
   "canyon",
   "towers-descent",
   "falling",
@@ -18,7 +20,9 @@ export declare const STUDIES: readonly [
   "room-walls",
   "pyramid-inside",
   "pyramid-inside-spin",
+  "pyramid-inside-party",
   "party-walls",
+  "party-walls-grow",
   "studio-walls",
   "diamond",
   "fruit-apple",
@@ -27,5 +31,6 @@ export declare const STUDIES: readonly [
   "fruit-apple-banana",
   "fruit-banana-apple",
   "ship-mecha",
+  "car-mecha",
 ];
 export declare const OUTPUT_NAME: RegExp;

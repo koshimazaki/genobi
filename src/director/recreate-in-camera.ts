@@ -1,5 +1,4 @@
 import type { Project } from "../../shared/director/types";
-import { BLOOM_PROMPT, BLOOM_SHEET } from "../../shared/templates/bloom-teaser";
 import type { VersionSlot } from "../../shared/templates/version";
 import { versionTemplate } from "../../shared/templates/version";
 import { readyEntry, type ReadyEntry } from "../../shared/registry";
@@ -22,8 +21,10 @@ import { recreateGaps } from "../recreate-gaps";
  * restores what the slot's media actually records: a generated asset's
  * prompt, the registry entry that made it (model and route, so the right
  * Camera model is selected), and its image references and inputs from the
- * project's own files. Bloom's untouched bundled takes carry the owner's
- * recorded prompt and character sheet. Anything not stored is named in
+ * project's own files. A template's untouched bundled take restores what
+ * the template records for its slot (`mix.recipes`): the still it started
+ * from, the prompt when written down, and its preset, named in Camera's
+ * notice. Anything not stored is named in
  * Camera's notice line; nothing is invented. The person runs Camera
  * themselves; the result lands in Assets → Generated.
  *
@@ -41,8 +42,14 @@ export interface CameraRecipe {
   entry?: ReadyEntry;
   /** Project image assets the run read (references, then inputs). */
   imageIds: string[];
-  /** A recorded static reference image (Bloom's sheet). */
+  /** A recorded static reference image (a template's first still). */
   reference?: string;
+  /** A recorded shape-guide image, attached before `reference`. */
+  guide?: string;
+  /** Where a recorded still came from (`SlotRecipe.source`). */
+  stillSource?: string;
+  /** The preset a bundled take was made from, named in Camera's notice. */
+  preset?: string;
   /** What this asset does not record, said in Camera. */
   missing: string[];
   /** FLUX 3 stills: the provider the run used, as Camera's choice. */
@@ -90,27 +97,83 @@ export function recordedProvider(
   return {};
 }
 
-/**
- * Prompts recorded for a finished mix's bundled media, by template and slot.
- * Only what the repository records: Bloom's owner prompt and its character
- * sheet (`shared/templates/bloom-teaser.ts`), not which H3 entry ran them.
- * Dimensions records cut points, not per-creature prompts, so it has none.
- */
-const RECORDED: Record<
-  string,
-  Record<string, { prompt: string; reference: string }>
-> = {
-  "bloom-teaser": {
-    "bloom-h3-a": { prompt: BLOOM_PROMPT, reference: BLOOM_SHEET },
-    "bloom-h3-b": { prompt: BLOOM_PROMPT, reference: BLOOM_SHEET },
-  },
-};
-
 const CREATE: CameraRecipe = {
   label: "Create in Camera",
   imageIds: [],
   missing: ["prompt, references and settings"],
 };
+
+/**
+ * What a generated asset's own run records: its prompt, the registry entry
+ * that made it and the project images it read. Undefined when the asset has
+ * no generation or its generation recorded no prompt. Shared by a template
+ * slot and the expanded Assets gallery (`src/studio/camera-handoff.ts`).
+ */
+export function generatedRecipe(
+  project: Project,
+  id: string | undefined,
+): CameraRecipe | undefined {
+  const asset =
+    id && Object.hasOwn(project.assets, id) ? project.assets[id] : undefined;
+  const generation = asset?.generationId
+    ? project.generations.find((g) => g.id === asset.generationId)
+    : undefined;
+  const prompt = generation?.prompt.trim();
+  if (!generation || !prompt) return undefined;
+  const entry = generation.recipe && readyEntry(generation.recipe.id);
+  const read = [...generation.referenceAssetIds, ...generation.inputAssetIds];
+  const imageIds = [...new Set(read)].filter(
+    (a) => project.assets[a]?.kind === "image",
+  );
+  const missing: string[] = [];
+  if (!entry) missing.push("model and settings");
+  const provider = entry
+    ? recordedProvider(entry, generation.recipe?.route)
+    : {};
+  if (provider.missing) missing.push(provider.missing);
+  const settings = publicGenerationSettings(generation.settings);
+  const job =
+    settings && entry
+      ? settingsJob(
+          {
+            ...settings,
+            generator: entry.generator,
+            model: entry.videoModel,
+          },
+          prompt,
+        )
+      : undefined;
+  if (job)
+    for (const gap of recreateGaps(job)) {
+      const words = GAP_WORDS[gap];
+      if (words && !missing.includes(words)) missing.push(words);
+    }
+  else if (entry) missing.push("settings (duration, aspect, camera)");
+  // A project video the run read is never a Camera library clip, whatever
+  // recorded (or did not record) the model.
+  const source = "source video (choose it in Camera)";
+  if (
+    read.some((a) => project.assets[a]?.kind === "video") &&
+    !missing.includes(source)
+  )
+    missing.push(source);
+  const location = generation.recipe?.location;
+  return {
+    label: "Recreate in Camera",
+    prompt,
+    ...(entry ? { entry } : {}),
+    ...(provider.imageProvider
+      ? { imageProvider: provider.imageProvider }
+      : {}),
+    ...(job ? { job } : {}),
+    ...(entry?.route === "workflow" &&
+    (location === "local" || location === "cloud")
+      ? { location }
+      : {}),
+    imageIds,
+    missing,
+  };
+}
 
 /** What Recreate can restore for the slot's current media, if anything. */
 export function cameraRecipe(
@@ -119,69 +182,12 @@ export function cameraRecipe(
   ids: readonly string[],
 ): CameraRecipe {
   const id = ids[0];
+  const generated = generatedRecipe(project, id);
+  if (generated) return generated;
   const asset =
     id && Object.hasOwn(project.assets, id) ? project.assets[id] : undefined;
-  const generation = asset?.generationId
-    ? project.generations.find((g) => g.id === asset.generationId)
-    : undefined;
-  const prompt = generation?.prompt.trim();
-  if (generation && prompt) {
-    const entry = generation.recipe && readyEntry(generation.recipe.id);
-    const read = [...generation.referenceAssetIds, ...generation.inputAssetIds];
-    const imageIds = [...new Set(read)].filter(
-      (a) => project.assets[a]?.kind === "image",
-    );
-    const missing: string[] = [];
-    if (!entry) missing.push("model and settings");
-    const provider = entry
-      ? recordedProvider(entry, generation.recipe?.route)
-      : {};
-    if (provider.missing) missing.push(provider.missing);
-    const settings = publicGenerationSettings(generation.settings);
-    const job =
-      settings && entry
-        ? settingsJob(
-            {
-              ...settings,
-              generator: entry.generator,
-              model: entry.videoModel,
-            },
-            prompt,
-          )
-        : undefined;
-    if (job)
-      for (const gap of recreateGaps(job)) {
-        const words = GAP_WORDS[gap];
-        if (words && !missing.includes(words)) missing.push(words);
-      }
-    else if (entry) missing.push("settings (duration, aspect, camera)");
-    // A project video the run read is never a Camera library clip, whatever
-    // recorded (or did not record) the model.
-    const source = "source video (choose it in Camera)";
-    if (
-      read.some((a) => project.assets[a]?.kind === "video") &&
-      !missing.includes(source)
-    )
-      missing.push(source);
-    const location = generation.recipe?.location;
-    return {
-      label: "Recreate in Camera",
-      prompt,
-      ...(entry ? { entry } : {}),
-      ...(provider.imageProvider
-        ? { imageProvider: provider.imageProvider }
-        : {}),
-      ...(job ? { job } : {}),
-      ...(entry?.route === "workflow" &&
-      (location === "local" || location === "cloud")
-        ? { location }
-        : {}),
-      imageIds,
-      missing,
-    };
-  }
   const template = versionTemplate(project);
-  const recorded = template && RECORDED[template.id]?.[slot.id];
+  const recorded = template?.mix?.recipes?.[slot.id];
   // The bundled take itself: the slot's own asset at the template's path (a
   // swap imports a new asset under another id).
   if (
@@ -191,9 +197,13 @@ export function cameraRecipe(
   )
     return {
       label: "Recreate in Camera",
-      ...recorded,
+      ...(recorded.prompt ? { prompt: recorded.prompt } : {}),
+      reference: recorded.reference,
+      ...(recorded.guide ? { guide: recorded.guide } : {}),
+      ...(recorded.source ? { stillSource: recorded.source } : {}),
+      ...(recorded.preset ? { preset: recorded.preset } : {}),
       imageIds: [],
-      missing: ["model and settings"],
+      missing: [...(recorded.missing ?? []), "model and settings"],
     };
   return CREATE;
 }
@@ -228,22 +238,32 @@ export async function recipeImages(
     if (type && bytes)
       out.push(await dataUrl(new Blob([bytes.slice()], { type })));
   }
-  if (recipe.reference?.startsWith("/")) {
-    const response = await load(recipe.reference);
-    if (response.ok) out.push(await dataUrl(await response.blob()));
-  }
+  // The shape guide first, then the still, as the run that made it read them.
+  for (const url of [recipe.guide, recipe.reference])
+    if (url?.startsWith("/")) {
+      const response = await load(url);
+      if (response.ok) out.push(await dataUrl(await response.blob()));
+    }
   return out;
 }
+
+/** How Camera's notice names a recorded still's source. */
+const STILL_SOURCES: Record<string, string> = {
+  "ltx-video frame": "First still taken from an LTX video.",
+};
 
 /** Camera's notice for a recipe: what was restored and what was not. */
 export function recipeNote(recipe: CameraRecipe, images: number) {
   if (recipe.label === "Create in Camera")
     return "Settings not stored for this asset: Camera opened as it was. Nothing was generated.";
-  const recorded = recipe.imageIds.length + (recipe.reference ? 1 : 0);
+  const recorded =
+    recipe.imageIds.length +
+    (recipe.reference ? 1 : 0) +
+    (recipe.guide ? 1 : 0);
   const missing = [...recipe.missing];
   if (recorded > images) missing.push("reference images (reattach them)");
   const restored = [
-    "prompt",
+    ...(recipe.prompt ? ["prompt"] : []),
     ...(recipe.entry ? ["model"] : []),
     ...(recipe.job ? ["settings"] : []),
     ...(recipe.location ? ["run location"] : []),
@@ -253,12 +273,26 @@ export function recipeNote(recipe: CameraRecipe, images: number) {
     restored.length > 1
       ? `${restored.slice(0, -1).join(", ")} and ${restored.at(-1)}`
       : restored[0];
+  const unstored = missing.length
+    ? recipe.preset
+      ? [`Made from preset ${recipe.preset}; ${missing.join(", ")} not stored.`]
+      : [`Not stored: ${missing.join(", ")}.`]
+    : recipe.preset
+      ? [`Made from preset ${recipe.preset}.`]
+      : [];
+  const source = recipe.stillSource
+    ? [
+        STILL_SOURCES[recipe.stillSource] ??
+          `First still: ${recipe.stillSource}.`,
+      ]
+    : [];
   return [
-    `Restored this asset's ${list}.`,
+    list ? `Restored this asset's ${list}.` : "Nothing could be restored.",
+    ...source,
     // Camera's earlier references are cleared either way, so a Generate
     // never sends images this asset did not record.
     ...(recorded ? [] : ["No references recorded; Camera's were cleared."]),
-    ...(missing.length ? [`Not stored: ${missing.join(", ")}.`] : []),
+    ...unstored,
     "Nothing was generated.",
   ].join(" ");
 }

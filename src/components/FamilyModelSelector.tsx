@@ -16,6 +16,7 @@ import Icon from "./Icon";
 import { useHostedStudio } from "../hosted-studio";
 import { useSettingsStore } from "../settings-store";
 import LocalTick from "./LocalTick";
+import LayoutToMotionCard from "./LayoutToMotionCard";
 import { hiddenNote, useLocalFilter } from "../local-menu";
 
 /** Browsing a family never changes the run until a ready model is chosen. */
@@ -242,6 +243,8 @@ export default function FamilyModelSelector({
                 />
               ))}
             </div>
+            {/* Outside the listbox: a route through the agent, not a model. */}
+            {family === "ltx" && <LayoutToMotionCard onOpen={() => close()} />}
           </div>
         )}
       </div>

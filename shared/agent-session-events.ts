@@ -49,6 +49,23 @@ export const AGENT_LINES_MAX = 40;
 export const AGENT_LINE_CHARS = 300;
 export const AGENT_SUMMARY_CHARS = 2000;
 
+/** Tool calls kept per session (`AgentSession.tools`), newest last. */
+export const AGENT_TOOLS_MAX = 24;
+
+/**
+ * One tool call the runner's own event stream reported (`tool_use`, then
+ * its `tool_result`), never read out of the agent's words. `working` until
+ * its result arrives; a call still `working` when the session ends never
+ * reported one. `detail` is a bounded, validated word from the call's input
+ * (a Director command's `op`), shown with it and claimed by nothing else.
+ */
+export interface AgentToolCall {
+  name: string;
+  state: "working" | "done" | "failed";
+  at: string;
+  detail?: string;
+}
+
 /** Conversation entries kept per session (`AgentSession.exchange`). */
 export const AGENT_EXCHANGE_MAX = 24;
 

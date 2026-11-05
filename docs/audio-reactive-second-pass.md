@@ -10,6 +10,7 @@ proved the pyramid breathes with the music. This one plans the session that
 makes the architecture move (walls, buildings, rooms), renders it twice (layout
 first, refine second) and cuts the pieces together. Everything here is built
 and tested on the Mac before the box is rented; the box runs a queue.
+The hosted [deployment v2](comfy-deploy.md#deployment-v2-reported-4-november-2026) is now the first render route and the rented box the alternative.
 
 ## The three demos
 

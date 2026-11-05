@@ -1,7 +1,9 @@
 import { adaptiveReverb } from "./adaptive-reverb";
 import { animeTeaser } from "./anime-teaser";
+import { audioReactiveDrop } from "./audio-reactive-drop";
 import { bloomTeaser } from "./bloom-teaser";
 import { dimensionsMix } from "./dimensions-mix";
+import { fruitsSwap } from "./fruits-swap";
 import { genobiTeaser } from "./genobi-teaser";
 import { sheetToShot } from "./sheet-to-shot";
 import type { HouseTemplate } from "./types";
@@ -357,6 +359,8 @@ export const mixTemplates: readonly HouseTemplate[] = [
   genobiTeaser,
   bloomTeaser,
   adaptiveReverb,
+  audioReactiveDrop,
+  fruitsSwap,
 ];
 export const findMixTemplate = (id: string | null | undefined) =>
   mixTemplates.find((t) => t.id === id);

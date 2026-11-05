@@ -122,6 +122,8 @@ describe("template gallery", () => {
       "dimensions-mix",
       "bloom-teaser",
       "adaptive-reverb",
+      "audio-reactive-drop",
+      "fruits-swap",
       "sheet-to-shot",
     ]);
     expect(shown.every(openOnly)).toBe(true);

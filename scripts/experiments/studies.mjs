@@ -12,6 +12,8 @@ export const STUDIES = Object.freeze([
   "cathedral-walls",
   "cathedral-gallery",
   "cathedral-gallery-grow",
+  "cathedral-descent",
+  "cathedral-descent-simple",
   "canyon",
   "towers-descent",
   "falling",
@@ -19,7 +21,9 @@ export const STUDIES = Object.freeze([
   "room-walls",
   "pyramid-inside",
   "pyramid-inside-spin",
+  "pyramid-inside-party",
   "party-walls",
+  "party-walls-grow",
   "studio-walls",
   "diamond",
   "fruit-apple",
@@ -28,6 +32,7 @@ export const STUDIES = Object.freeze([
   "fruit-apple-banana",
   "fruit-banana-apple",
   "ship-mecha",
+  "car-mecha",
 ]);
 
 /** `<study>/<file>` as the browser may write it; nothing else reaches disk. */

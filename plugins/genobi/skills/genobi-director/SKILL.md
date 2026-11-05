@@ -110,6 +110,19 @@ or space, video or audio) goes in the same way with `sourceId` in place of
 its inputs (`derivation`), and the render report lists their models. A sound
 cut goes on an audio track with `add-clip`.
 
+## Layers, not bakes
+
+Templates and versions ship layers, not baked video. Footage or animation, UI
+overlays (HUDs, boxes, cards, icons) and text are separate layers in the cut,
+and the clips stay plain footage. A new version adds or changes layers with
+`add-graphic`, `set-parameters`, `set-placement` and `move-clip`; it does not
+re-encode a clip. Never burn a word, an icon or a HUD into a clip: push a new
+layer instead. If something truly cannot be a recipe, bake it, say so in the
+template's doc, and keep the clean clip beside the baked one. The worked
+example is Dance with Fruits v7
+([changing the words and icons](../../../../docs/fruits-swap.md#changing-the-words-and-icons)):
+plain renders, and every word, icon and HUD a live recipe layer.
+
 ## Audio and the beat grid
 
 To recreate the Genobi teaser (a mix cut written as data, nothing generated)
@@ -162,10 +175,15 @@ one `command`.
 | `remove-clip`         | `layerId` (media stays; notes stay at their frames)                                                                             |
 | `set-muted`           | `layerId`, `muted` (boolean; audio mute or visual hide)                                                                         |
 | `set-gain`            | `layerId`, `gain` (audio only, 0–2)                                                                                             |
+| `set-fps`             | `fps` (whole, 1–120; every clip and note keeps its moment in seconds)                                                           |
+| `set-duration`        | `durationFrames` (at most 120 seconds; refused while a clip or note would fall after the end)                                   |
+| `rename-project`      | `name` (1–120 characters)                                                                                                       |
+| `rename-layer`        | `layerId`, `name` (1–120 characters; unlocked clips only)                                                                       |
+| `reorder-layer`       | `layerId`, `by` (whole tracks: positive moves its track up the stack, negative down; unlocked clips only)                       |
 | `set-placement`       | `layerId`, `position?`, `scale?`, `opacity?`, `rotationDegrees?`, `motion?`                                                     |
 | `set-parameters`      | `layerId`, `parameters`                                                                                                         |
 | `set-resolution`      | `width`, `height` (whole pixels; at most 1920 × 1080 pixels in total)                                                           |
-| `set-beat-grid`       | `bpm?`, `beatOffsetSeconds?`, `beatsPerBar?` (at least one)                                                                     |
+| `set-beat-grid`       | `bpm?`, `beatOffsetSeconds?`, `beatsPerBar?` (at least one; null clears one)                                                    |
 | `set-prompt`          | `text` (the earlier prompt brief)                                                                                               |
 | `set-global-prompt`   | `text` (up to 12,000 characters; empty clears it)                                                                               |
 | `set-clip-prompt`     | `layerId`, `text` (up to 1,200 characters; empty clears it)                                                                     |

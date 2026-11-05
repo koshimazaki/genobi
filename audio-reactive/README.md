@@ -28,7 +28,7 @@ Three swaps change a video without changing the pipeline: the **track**, the
 | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
 | Rooms    | [pyramid-inside](presets/pyramid-inside.md) (the base; interior swaps in the sci-fi family), [towers-descent](presets/towers-descent.md), [cathedral-gallery](presets/cathedral-gallery.md) slide and [grow](presets/cathedral-gallery-grow.md), [party-walls](presets/party-walls.md), [studio-walls](presets/studio-walls.md) | [spaces](videos/spaces.md), [pyramid](videos/pyramid.md) |
 | Fruits   | [fruit-mecha](presets/fruit-mecha.md) (explode) and [fruit-mecha-morph](presets/fruit-mecha-morph.md), [fruit-apple-banana](presets/fruit-apple-banana.md), [fruit-banana-apple](presets/fruit-banana-apple.md) with Rubik flecks                                                                                               | [fruits](videos/fruits.md)                               |
-| Objects  | [pyramid-outside](presets/pyramid-outside.md) (pulse), [diamond](presets/diamond.md), [ship-mecha](presets/ship-mecha.md)                                                                                                                                                                                                       | [pyramid](videos/pyramid.md)                             |
+| Objects  | [pyramid-outside](presets/pyramid-outside.md) (pulse), [diamond](presets/diamond.md), [ship-mecha](presets/ship-mecha.md), [car-mecha](presets/car-mecha.md)                                                                                                                                                                    | [pyramid](videos/pyramid.md)                             |
 
 All presets with their study ids, windows and status:
 [presets/README.md](presets/README.md).
@@ -116,6 +116,7 @@ unusable. Then change the render prompt's nouns to the new space.
    with the box; `run-queue.sh` otherwise logs `SKIP` for a missing bundle.
 5. Render on the box: `scripts/vast/box/run-queue.sh <bundle>…` in tmux,
    about 8 minutes and $0.25 per clip on an RTX PRO 6000.
+   The hosted [deployment v2](../docs/comfy-deploy.md#deployment-v2-reported-4-november-2026) is now the first render route and the rented box the alternative.
 6. Measure follow (clip motion against guide motion) and bass correlation.
 7. Review a contact sheet; record the verdict and any correction.
 

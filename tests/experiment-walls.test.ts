@@ -9,6 +9,8 @@ import {
   HALL,
   WALLS_BLEND,
   WALLS_CLOSED,
+  growX,
+  hall,
 } from "../scripts/experiments/recipes-walls";
 
 const WALLS = ["party-walls", "studio-walls"] as const;
@@ -153,5 +155,39 @@ describe.each(WALLS)("%s", (study) => {
         expect(apart, o.id).toBe(true);
       }
     }
+  });
+});
+
+describe("party-walls-grow", () => {
+  const GLASS = "#eef2ee";
+  it("thickens the long walls inwards from a fixed outer face; the rest holds", () => {
+    const open = hall(),
+      half = HALL.width / 2,
+      closed = growX(open, half);
+    let grown = 0;
+    open.forEach((part, i) => {
+      const c = closed[i];
+      const w = (p: typeof part) => (p.scale * (p.scaleX ?? 1)) / 2;
+      if (Math.abs(part.x) < half - 0.01 || part.color === GLASS) {
+        expect(c).toEqual(part);
+        return;
+      }
+      grown++;
+      expect(Math.abs(c.x) + w(c)).toBeCloseTo(Math.abs(part.x) + w(part), 2);
+      expect(Math.abs(c.x) - w(c)).toBeCloseTo(half * WALLS_CLOSED, 2);
+      expect(c.y).toBe(part.y);
+      expect(c.z).toBe(part.z);
+    });
+    expect(grown).toBeGreaterThan(10);
+  });
+
+  it("reaches the grown layout at full bass and the open one in silence", () => {
+    const quiet = voxels(captured("party-walls-grow", 0), 30),
+      loud = voxels(captured("party-walls-grow", 1), 30);
+    const open = hall(),
+      half = HALL.width / 2,
+      closed = growX(open, half);
+    quiet.forEach((o, i) => expect(o.x).toBeCloseTo(open[i].x, 2));
+    loud.forEach((o, i) => expect(o.x).toBeCloseTo(closed[i].x, 2));
   });
 });

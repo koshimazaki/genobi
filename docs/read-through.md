@@ -384,7 +384,9 @@ not mounted yet, the recipe waits (up to 15 s) and lands whole, patch and note,
 as it registers; it is never reduced to typing the prompt alone. A Director slot's **Recreate in Camera** hands the composer the same kind
 of edit through `src/camera-recipe-target.ts`: the recorded registry entry
 (model and route), the prompt and the project's own reference images, with a
-note naming what the asset does not store.
+note naming what the asset does not store. A mix template's bundled take reads
+its record from the template instead (`mix.recipes`: first still, prompt when
+written down, preset).
 
 The servers read the rows back: `readLayout` (`shared/image-layout.ts`) finds the
 trailing JSON array of rows, and `validateImage` (`server/validate-image.ts`, used

@@ -63,6 +63,16 @@ user action through every layer.
 - [Adaptive reverb](adaptive-reverb.md) — the fourth mix template, the 3D +
   LTX template: one LTX-2.5 (open weights) + AKUSPACE LoRA take through three
   rooms, its reverb changing with each, and Acoustic Space end to end.
+- [Audio Reactive Acoustic Spaces v2](audio-reactive-drop.md) — the fifth mix template, the
+  3D + LTX template v2: five World Builder rooms in LTX-2.5 (open weights) on
+  one track, each room's own CPU room sound, every room, the track and every
+  overlay a swappable layer.
+- [Dance with Fruits](fruits-swap.md) — the sixth mix template, the
+  content swap: the owner's four LTX-2.5 (open weights) renders of one dance
+  guide, opened by an apple-logo title splash, swapped on the loop and the
+  drop, with pixel words and fruit and the house end card;
+  [its recipes](fruits-swap-recipes.md): a speech bubble, a pixel fruit shower
+  and a boxed surveillance filter.
 - [Adaptive reverb proof](adaptive-reverb-proof.md) — the 30 October runs: one
   Three.js scene guiding LTX Layout-to-Render picture and scene-derived reverb.
 - [Audio-reactive pyramid](audio-reactive-pyramid.md) — the 2 November runs:
@@ -77,7 +87,8 @@ user action through every layer.
   [Dimensions mix](director-bundle/showcase/dimensions-mix/README.md) v1 to v4,
   [Genobi teaser](director-bundle/showcase/genobi-teaser/README.md) v1 and v2,
   [Bloom](director-bundle/showcase/bloom-teaser/README.md) v1 and
-  [Adaptive reverb](director-bundle/showcase/adaptive-reverb/README.md) v1 and v2;
+  [Adaptive reverb](director-bundle/showcase/adaptive-reverb/README.md) v1 to v3 and
+  [Audio Reactive Acoustic Spaces v2](director-bundle/showcase/audio-reactive-drop/README.md) v1 and v2;
   each version opens in the Editor from its gallery card.
 - [Anime teaser template](anime-teaser-template.md) — intake, generated sheet,
   storyboard and track, two H3 shots, the cut to the beat.

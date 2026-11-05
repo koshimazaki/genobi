@@ -45,6 +45,13 @@ import {
   type Placement,
 } from "./layer-commands";
 import {
+  applyEditorCommand,
+  EDITOR_FIELDS,
+  isEditorOp,
+  readEditorFields,
+  type EditorCommand,
+} from "./editor-commands";
+import {
   applyNoteCommand,
   isNoteOp,
   NOTE_FIELDS,
@@ -131,6 +138,7 @@ export type DirectorCommand =
   | ({ op: "set-resolution" } & Resolution)
   | ApplyEffectCommand
   | ClipCommand
+  | EditorCommand
   | PromptCommand
   | NoteCommand;
 export type DirectorOp = DirectorCommand["op"];
@@ -158,6 +166,7 @@ const FIELDS: Record<DirectorOp, [string[], string[]]> = {
   "set-resolution": [["width", "height"], []],
   "apply-effect-preset": [EFFECT_APPLY_REQUIRED, EFFECT_APPLY_OPTIONAL],
   ...CLIP_FIELDS,
+  ...EDITOR_FIELDS,
   ...PROMPT_FIELDS,
   ...NOTE_FIELDS,
 };
@@ -244,6 +253,7 @@ export function parseCommand(value: unknown): DirectorCommand {
   if (op === "set-parameters" || value.parameters !== undefined)
     c.parameters = readParameters(value.parameters);
   if (isClipOp(op)) Object.assign(c, readClipFields(value));
+  if (isEditorOp(op)) Object.assign(c, readEditorFields(value));
   if (isNoteOp(op)) Object.assign(c, readNoteFields(value));
   if (isPromptOp(op)) Object.assign(c, readPromptFields(op, value));
   if (op === "set-template-inputs") {
@@ -316,6 +326,12 @@ function apply(copy: DirectorCopy, c: DirectorCommand): DirectorCopy {
     case "set-muted":
     case "set-gain":
       return same(applyClipCommand(project, c));
+    case "set-fps":
+    case "set-duration":
+    case "rename-project":
+    case "rename-layer":
+    case "reorder-layer":
+      return same(applyEditorCommand(project, c));
     case "set-preferences": {
       const { preferences: _previous, ...rest } = project;
       return same(

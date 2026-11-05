@@ -30,6 +30,11 @@ The agent and human use the same `director.bundle.v1` project, trusted graphics 
 | `remove-clip`    | revision, layerId                                          | Remove clip; retain source media, generation history and notes at their frames     |
 | `set-muted`      | revision, layerId, muted (boolean)                         | Mute audio or hide a visual clip in preview/export                                 |
 | `set-gain`       | revision, layerId, gain (0–2)                              | Change an audio clip's gain                                                        |
+| `set-fps`        | revision, fps (whole, 1–120)                               | Retime every clip and note to the new rate, keeping each moment in seconds         |
+| `set-duration`   | revision, durationFrames                                   | Composition length, at most 120 seconds; never before a clip or note ends          |
+| `rename-project` | revision, name (1–120 characters)                          | Rename the project                                                                 |
+| `rename-layer`   | revision, layerId, name (1–120 characters)                 | Rename an unlocked clip, as the inspector's name field                             |
+| `reorder-layer`  | revision, layerId, by (whole tracks, not 0)                | Move the clip's whole track up (positive) or down the stack, as Move up/down       |
 | `project`        | revision, project                                          | Validated full JSON replacement with existing media hashes                         |
 | `frame`          | revision, assetId, frame                                   | PNG plus exact source timestamp/dimensions receipt                                 |
 | `cut`            | revision, assetId, in, out                                 | MP4 via dual editor; inclusive `in`, exclusive `out`                               |
@@ -41,7 +46,7 @@ Unknown command fields are rejected. Writes require the current revision; the sh
 
 ### Shared timeline controls
 
-The five `*-clip`/mute/gain commands above use the same parser and implementation in the
+The `*-clip`, mute, gain, rate, length, rename and reorder commands above use the same parser and implementation in the
 browser console and `genobi_director_command` over HTTP, MCP or CLI. The browser
 passes `revision`; HTTP/MCP/CLI pass `baseRevision` outside `command`. A stale
 revision is refused, so read the current project before another edit.
@@ -59,13 +64,27 @@ locked. The commands provide no unlock bypass. Removal preserves review notes at
 their original frames and never deletes media or generation provenance. Human
 removal, mute and gain changes also appear as replayable feedback commands.
 
+The Editor's transport and inspector run the same commands: the FPS choice is
+`set-fps`, Length and the timeline's END edge are `set-duration`, the beat grid
+fields are `set-beat-grid`, the clip name field is `rename-layer`, and Move up
+and Move down are `reorder-layer`. `set-fps` retimes locked clips too, since the
+whole time base changes, and is refused, naming the clip, when a track no longer
+fits; media clips are never asked for a frame past their file's end.
+`set-duration` may run past the last clip but is refused while any clip or note
+would fall after the new end. Names have control characters replaced with spaces
+and their ends trimmed, then must be 1 to 120 characters. Renaming and
+reordering require an unlocked clip; the rest of its track moves with it.
+`set-beat-grid` takes `null` for a field to clear it to its default. A person's
+rate, length, rename, restack and cleared tempo edits come back as replayable
+feedback commands.
+
 These commands still need a linked local project copy for HTTP/MCP/CLI use.
 The hosted browser can use the console and Undo; pairing a hosted runner does
 not create a canonical hosted project copy or grant direct access to its draft.
 
 A ZIP contains `project.json`, referenced media and approved graphics files. A bare JSON import requires matching media already loaded. Download bundle and Render MP4 use existing Director controls; the command panel does not invent a second exporter. A generation result is applied only after explicit selection and records input/reference hashes, prompt and output backlinks. It excludes the provider key and provider job ID.
 
-Limits: 150 MB bundle, 150 MB imported media, 128 layers, 1080p-equivalent pixel area, 120 seconds. The browser-specific asset, export and full-manifest commands run in the browser only. Agents outside the browser use the Director command set (`add-clip` with an optional in-point, `add-graphic` with its parameters (a registry recipe the project does not hold included), `move-clip`, `trim-clip`, `split-clip`, `duplicate-clip`, `remove-clip`, `set-muted`, `set-gain`, `set-placement`, `set-parameters`, `set-resolution` (width and height, at most 1920 × 1080 pixels; [resolution](director-resolution.md)), `set-beat-grid` (tempo, downbeat and beats per bar), `set-prompt`, `set-global-prompt`, `set-clip-prompt`, `set-clip-directions` ([prompts and directions](director-prompts.md)), `set-camera`, `set-template-inputs`, `replace-plate`, and the frame notes `add-note`, `resolve-note` and `delete-note`) over MCP, against the project copy on the local server, after the person presses **Link an agent** in this panel; see [the Director bundle](director-bundle/README.md#project-copy-and-director-commands).
+Limits: 150 MB bundle, 150 MB imported media, 128 layers, 1080p-equivalent pixel area, 120 seconds. The browser-specific asset, export and full-manifest commands run in the browser only. Agents outside the browser use the Director command set (`add-clip` with an optional in-point, `add-graphic` with its parameters (a registry recipe the project does not hold included), `move-clip`, `trim-clip`, `split-clip`, `duplicate-clip`, `remove-clip`, `set-muted`, `set-gain`, `set-fps`, `set-duration`, `rename-project`, `rename-layer`, `reorder-layer`, `set-placement`, `set-parameters`, `set-resolution` (width and height, at most 1920 × 1080 pixels; [resolution](director-resolution.md)), `set-beat-grid` (tempo, downbeat and beats per bar; null clears one), `set-prompt`, `set-global-prompt`, `set-clip-prompt`, `set-clip-directions` ([prompts and directions](director-prompts.md)), `set-camera`, `set-template-inputs`, `replace-plate`, and the frame notes `add-note`, `resolve-note` and `delete-note`) over MCP, against the project copy on the local server, after the person presses **Link an agent** in this panel; see [the Director bundle](director-bundle/README.md#project-copy-and-director-commands).
 
 ## Template plans and provenance over MCP
 

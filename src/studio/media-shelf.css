@@ -40,6 +40,18 @@
   font-size: 9px;
   margin-top: 4px;
 }
+/* An Inspirations card's role, informational and muted like a model tag. */
+.genobi-asset-role {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 1px 4px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--muted);
+  font: 8px var(--mono);
+  letter-spacing: 0.065em;
+  white-space: nowrap;
+}
 .genobi-shelf-hint,
 .genobi-shelf-notice {
   margin: 10px 0 0;

@@ -8,6 +8,8 @@ import {
   CLAP_FRACTION,
   galleryNave,
   growInward,
+  rowGap,
+  STREET,
 } from "../scripts/experiments/recipes-clap";
 
 const dims = (frames: number) => ({ width: 1024, height: 576, frames });
@@ -93,7 +95,7 @@ describe.each(CLAPS)("%s", (study) => {
 });
 
 describe("cathedral-gallery-grow", () => {
-  it("thickens the side stone inwards from a fixed outer face", () => {
+  it("thickens the side stone inwards from a fixed outer face; the rest holds", () => {
     const pieces = galleryNave(),
       closed = growInward(pieces);
     let sides = 0;
@@ -101,7 +103,7 @@ describe("cathedral-gallery-grow", () => {
       const c = closed[i];
       const half = (p: typeof part) => (p.scale * (p.scaleX ?? 1)) / 2;
       if (!side) {
-        expect(c.x).toBeCloseTo(part.x * CLAP_FRACTION, 6);
+        expect(c).toEqual(part);
         return;
       }
       sides++;
@@ -127,5 +129,35 @@ describe("cathedral-gallery-grow", () => {
       closed = growInward(galleryNave());
     quiet.forEach((o, i) => expect(o.x).toBeCloseTo(open[i].x, 2));
     loud.forEach((o, i) => expect(o.x).toBeCloseTo(closed[i].x, 2));
+  });
+});
+
+describe("the acoustic room follows the measured gap", () => {
+  it("measures the tower rows' inner faces, open and closed", () => {
+    const { recipe } = createStudy("towers-descent", bands(97, 0.5), dims(97));
+    const [open, closed] = recipe.motion!.stateKeys;
+    const inner = 2 * (STREET.rowX - STREET.towerWidth / 2);
+    expect(open.room?.dimensions[0]).toBeCloseTo(inner, 3);
+    expect(closed.room?.dimensions[0]).toBeCloseTo(inner * CLAP_FRACTION, 3);
+    expect(rowGap([{ x: 10, y: 0, z: 0, scale: 1, scaleX: 4 }], 5)).toBe(16);
+    expect(recipe.motion!.mappings).toEqual([]);
+    // Loud bass closes the street: the evaluated room narrows with the towers.
+    const quiet = evaluateScene(recipe, 30).room!.dimensions[0];
+    const loud = evaluateScene(
+      createStudy("towers-descent", bands(97, 1), dims(97)).recipe,
+      30,
+    ).room!.dimensions[0];
+    expect(loud).toBeLessThan(quiet);
+    expect(loud).toBeCloseTo(inner * CLAP_FRACTION, 1);
+  });
+  it("closes the nave proxy to the clap fraction", () => {
+    const { recipe } = createStudy(
+      "cathedral-gallery-grow",
+      bands(97, 0.5),
+      dims(97),
+    );
+    const [open, closed] = recipe.motion!.stateKeys;
+    expect(open.room?.dimensions[0]).toBe(28);
+    expect(closed.room?.dimensions[0]).toBe(28 * CLAP_FRACTION);
   });
 });

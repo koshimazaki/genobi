@@ -33,6 +33,7 @@ const { values } = parseArgs({
     elevation: { type: "string" },
     "band-smooth": { type: "string", default: "1" },
     "band-release": { type: "string", default: "0" },
+    band: { type: "string" },
     stage: { type: "string" },
     help: { type: "boolean" },
   },
@@ -60,6 +61,13 @@ const studies = values.studies.split(",");
 const bandGain =
   values["band-gain"] === "auto" ? "auto" : Number(values["band-gain"]);
 const motionGain = Number(values["motion-gain"]);
+// Which band drives a study's open/closed blend and its "low" mappings. A
+// phrase with no bass (the Adaptive Reverb vocal, 7.2-14.2 s) leaves a
+// low-driven study still; "mid" follows the voice there. Default: the study's own.
+const BANDS = ["sub", "low", "mid", "high", "level"];
+const band = values.band ?? null;
+if (band !== null && !BANDS.includes(band))
+  throw new Error(`Use --band ${BANDS.join("|")}.`);
 if (
   (bandGain !== "auto" &&
     !(Number.isFinite(bandGain) && bandGain >= 0.1 && bandGain <= 20)) ||
@@ -231,6 +239,7 @@ try {
             values.elevation === undefined ? null : Number(values.elevation),
           bandSmooth: Number(values["band-smooth"]),
           bandRelease: Number(values["band-release"]),
+          band,
           stage: values.stage ?? null,
         },
       },

@@ -9,7 +9,7 @@ One repeatable piece: **music → World Builder animation → look still →
 LTX-2.5 Layout-to-Render → the dry track muxed back**. First proven on
 2 November 2026 on a rented RTX PRO 6000 (96 GB). This page is the recipe;
 [the Vast runner](vast-runner.md) and [the experiments README](https://github.com/koshimazaki/genobi/blob/main/workflows/experiments/README.md)
-hold the tool contracts.
+hold the tool contracts. The hosted [deployment v2](comfy-deploy.md#deployment-v2-reported-4-november-2026) is now the first render route and the rented box the alternative.
 
 ## Why the earlier pilots did not move
 
@@ -234,6 +234,15 @@ still (pyramid-inside pans 45 degrees) and move the space on the `low` band.
   percentile and above the mecha, each swell held 8 frames and released
   over 12. On Dimensions at 40.125 s the auto-gained band never fell under
   0.54, so the raw band held the mecha all take long.
+- **car-mecha** (`carMecha`, `recipes-car-mecha.ts`) is ship-mecha's
+  mechanism with the `car` catalogue form at rest: a low wedge car of the
+  same 128 parts (`motion-car-layout.ts`, about 2.2 x 1.0 x 0.7 m, nose at
+  +z) in gunmetal `#2f4458`, the same mecha in `#d9a441` at full bass. Both
+  forms stand on the floor on one vertical axis; the view is a held front
+  three-quarter, 35 degrees round and 12 above, the mecha 55% of the frame
+  height, turning on `mid` (twistY 0.2). Captured with release 30 and smooth
+  5, its band is narrow, so it reads swells over a 0.02 p75-to-p95 spread
+  (`CAR_MIN_SWELL`) where ship-mecha needs 0.05.
 - **Rubik flecks.** In the three continuous morphs (fruit-apple-banana,
   fruit-banana-apple, fruit-mecha-morph) exactly a quarter of the body
   voxels, picked by a seed per voxel index, swap colours between the two

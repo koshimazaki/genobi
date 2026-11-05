@@ -1,9 +1,18 @@
 import { z } from "zod";
-import { DIRECTOR_ID, DIRECTOR_OPS } from "../shared/director/commands";
+import {
+  DIRECTOR_ID,
+  DIRECTOR_OPS,
+  NAME_LIMIT,
+} from "../shared/director/commands";
 import { isClipOp } from "../shared/director/clip-commands";
+import { FPS_LIMITS, isEditorOp } from "../shared/director/editor-commands";
+import { LAYER_LIMIT } from "../shared/director/types";
 
 const layerId = z.string().regex(DIRECTOR_ID);
 const newLayerId = layerId.describe("A new id, not an existing clip or track");
+// Control characters become spaces and the ends are trimmed before the length
+// is counted, by the shared parser the server runs too.
+const name = z.string().min(1).max(NAME_LIMIT);
 
 /** Concrete schemas make the basic timeline controls discoverable by CLI/MCP. */
 export const directorCommandSchema = z.union([
@@ -20,6 +29,27 @@ export const directorCommandSchema = z.union([
     op: z.literal("set-gain"),
     layerId,
     gain: z.number().min(0).max(2),
+  }),
+  z.strictObject({
+    op: z.literal("set-fps"),
+    fps: z.number().int().min(FPS_LIMITS.min).max(FPS_LIMITS.max),
+  }),
+  z.strictObject({
+    op: z.literal("set-duration"),
+    durationFrames: z.number().int().min(1).max(1_000_000),
+  }),
+  z.strictObject({ op: z.literal("rename-project"), name }),
+  z.strictObject({ op: z.literal("rename-layer"), layerId, name }),
+  z.strictObject({
+    op: z.literal("reorder-layer"),
+    layerId,
+    by: z
+      .number()
+      .int()
+      .min(1 - LAYER_LIMIT)
+      .max(LAYER_LIMIT - 1)
+      .refine((n) => n !== 0, "by must not be 0")
+      .describe("Tracks to move up the stack (positive) or down (negative)"),
   }),
   z.strictObject({
     op: z.literal("apply-effect-preset"),
@@ -46,7 +76,8 @@ export const directorCommandSchema = z.union([
     .object({
       op: z.enum(
         DIRECTOR_OPS.filter(
-          (op) => !isClipOp(op) && op !== "apply-effect-preset",
+          (op) =>
+            !isClipOp(op) && !isEditorOp(op) && op !== "apply-effect-preset",
         ) as [string, ...string[]],
       ),
     })

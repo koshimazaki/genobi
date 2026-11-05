@@ -74,6 +74,7 @@ export default tseslint.config(
       "worker/**/*.ts",
       "observability/**/*.{ts,mjs}",
       "scripts/**/*.mjs",
+      "audio-reactive/**/*.{mjs,mts}",
       "tests/**/*.{ts,tsx}",
       "*.config.{ts,js}",
     ],

@@ -151,7 +151,15 @@ shot's order. It is the Camera's own `GenerateInput`: the tests send it and
 the Camera's composer request for the same choices through the shared
 validator and get the same run, body and price. Agent templates keep a skill
 each (`plugins/genobi/skills/<id>/`); a mechanical template needs none, and
-`genobi_template_plan` reports each template's `run`.
+`genobi_template_plan` reports each template's `run`. Since 4 November 2026
+every mix template in the gallery keeps one too (the owner's decision: every
+gallery card is a skill): `genobi-teaser`, `dimensions-mix`, `bloom-teaser`,
+`adaptive-reverb`, `audio-reactive-drop` and `fruits-swap`. Each says what
+the piece is, what the person hands in and with what sentence ("swap the apple
+with this"), what the agent does with each slot, the paid gates, where the
+deep procedure lives and what is not built yet. The card's brief
+([gallery](template-gallery.md#the-cards-brief)) says the same in one to three
+sentences for a viewer.
 
 The gallery's generation cards (`shared/gallery/generations.ts`) are
 mechanical one-shot templates too, built from the owner's start image and
@@ -173,6 +181,14 @@ refuses a mix in the planner, since it plans no runs. Mixes are listed apart
 `findHouseTemplate` do not see them; the gallery lists them first, the
 Director's template list puts them first (`TemplateCards.tsx`) and
 `/director?example=<id>` builds the cut (`src/director/mix-template.ts`).
+
+A mix ships layers, not baked video (the owner's rule, 4 November 2026). The
+media files are plain footage or animation; UI overlays (HUDs, boxes, cards,
+icons) and every word are separate recipe layers in the cut, so a version
+changes a layer instead of re-encoding a clip. A word or icon burnt into a
+clip is a regression unless the template's page says why it could not be a
+recipe, and then the clean clip ships beside it. Dance with Fruits v7 is the
+reference ([changing the words and icons](fruits-swap.md#changing-the-words-and-icons)).
 
 ## Inputs
 

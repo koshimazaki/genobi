@@ -15,12 +15,12 @@ import { join, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { keyframeFile, pickKeyframes } from "./keyframe-pick.mjs";
 
-const BAND = "low";
-
 export async function writeKeyframes(directory, regions) {
   const recipe = JSON.parse(
     await readFile(join(directory, "recipe.json"), "utf8"),
   );
+  // The band the walls follow: the blend's own source (capture --band), else low.
+  const BAND = recipe.motion?.morphControl?.progress?.source ?? "low";
   const series = recipe.bandEnvelopes?.[BAND];
   if (!Array.isArray(series) || series.length !== recipe.frames)
     throw new Error(

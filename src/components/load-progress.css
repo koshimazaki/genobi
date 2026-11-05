@@ -1,0 +1,39 @@
+/* The wordmark's glyph loader (LoadProgress.tsx): cli-spinners frames as mono
+   text, `[binary] ▰▰▰▱▱▱▱ 36%`, about 110 px at this size and shorter than
+   the name, so the header keeps its height and the navigation its room. */
+.brand-progress {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  max-width: 116px;
+  flex: none;
+  overflow: hidden;
+  white-space: nowrap;
+  font-family: var(--mono);
+  font-size: var(--space-9);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.brand-progress-binary {
+  color: var(--muted);
+}
+.brand-progress-filled,
+.brand-progress-label {
+  color: var(--accent);
+}
+.brand-progress-empty {
+  color: var(--muted);
+  opacity: 0.6;
+}
+.brand-progress-label {
+  min-width: 4ch;
+  text-align: right;
+}
+/* Phones: the bar and percent carry the meaning; the binary frame goes. */
+@media (max-width: 420px) {
+  .brand-progress-binary {
+    display: none;
+  }
+}
