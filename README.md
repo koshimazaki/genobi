@@ -60,7 +60,12 @@ link or the iframe; each page puts the MP4 and a player in its link preview
 **Make your own** opens the cut as an editable project for your own media
 ([sharing](docs/template-gallery.md#sharing)). Dance with Fruits shows the
 pattern: a technical LTX workflow turned into a 33-second loop anyone can
-watch, share and remix.
+watch, share and remix. Genobi makes a complex architecture accessible and
+shareable, and is its own example: the [teaser](https://genobi.pages.dev/watch/genobi-teaser)
+is two minutes of the studio in use, cut in the studio to the owner's track
+with lyric-synced cards ([how](docs/genobi-teaser.md)), and the Acoustic Space
+demo ([v1](#one-scene-guides-picture-and-sound), v2 above) was made the same
+way: LTX clips from the UI on one audio track, the reverb following the rooms.
 
 https://github.com/user-attachments/assets/10b0805f-91a8-44df-9c8b-98ec109b9f31
 
@@ -91,7 +96,9 @@ Terms per model: [LICENCES.md](LICENCES.md) and [credits](docs/credits.md).
 
 The agent and you edit one Director/Editor timeline; it reads back your
 changes and quotes every paid step first. A **licence layer** records each
-model's terms, a **Taste layer** keeps credited references as project memory,
+model's terms, a **Taste layer** points agents at aesthetic choices first:
+curated libraries and credited references kept as project memory, editable
+per project and exportable as JSON ([taste](docs/taste-memory.md)),
 the deck shows what the agent is doing and the hosted studio keeps
 [count-only statistics](observability/README.md). Templates sit on top as
 skills an agent can rerun. Dance with Fruits came from spoken rounds of "take
