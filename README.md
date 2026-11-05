@@ -32,7 +32,11 @@ it ([featured workflow](audio-reactive/README.md)). The same geometry feeds
 acoustic measurement and CPU room reverb, so each room sounds its size: in
 Acoustic Spaces v2 the decay runs from 0.2 s in a booth to over 5 s between
 towers. AKUSPACE, our LoRA on LTX-2.5, is a separate route for room-conditioned sound
-([adaptive reverb evidence](docs/adaptive-reverb-proof.md)).
+([adaptive reverb evidence](docs/adaptive-reverb-proof.md)). The innovation
+is the whole product around that workflow: a Layout-to-Render path built for
+architecture turned into audio-visual work, carried by one agentic loop with
+its tools and voice mode, in a product that is shareable and editable and
+makes this kind of video accessible.
 
 https://github.com/user-attachments/assets/8721af01-1a54-44dc-8d7d-c96eade6aa13
 
@@ -60,7 +64,18 @@ link or the iframe; each page puts the MP4 and a player in its link preview
 **Make your own** opens the cut as an editable project for your own media
 ([sharing](docs/template-gallery.md#sharing)). Dance with Fruits shows the
 pattern: a technical LTX workflow turned into a 33-second loop anyone can
-watch, share and remix.
+watch, share and remix. The Gallery is a set of worked examples, each a
+different approach, each carrying the brief and recipe that made it
+([briefs](docs/template-gallery.md#the-cards-brief)), each editable and
+shareable; several landed on the first build, Dance with Fruits v1 was cut
+within half an hour of the spoken ask ([log](audio-reactive/edit/LOG.md)),
+and the versions since are fine-tuning. Genobi makes a complex architecture
+accessible and shareable, and is its own example: the [teaser](https://genobi.pages.dev/watch/genobi-teaser)
+is two minutes of the studio in use, cut in the studio to the owner's track
+with lyric-synced cards ([how](docs/genobi-teaser.md)), and the Acoustic Space
+demo ([v1](#one-scene-guides-picture-and-sound), v2 above) was made the same
+way: LTX clips from the UI on one audio track, the reverb following the rooms.
+In effect, Genobi is a demo and project showcase engine for any technical work.
 
 https://github.com/user-attachments/assets/10b0805f-91a8-44df-9c8b-98ec109b9f31
 
@@ -72,7 +87,12 @@ The critical path is open source end to end; API and paid routes are a thin
 optional layer. Open-weight steps: LTX-2.5 and its IC-LoRAs, AKUSPACE, Klein
 and SeedVR2 for upscaling, run on your own ComfyUI, on Comfy Cloud or on the
 Comfy deployment `genobi-ltx-world-v2`; most of the hosted path runs on Comfy
-Cloud and Comfy Deploy. Hermes Agent, which Start Genobi sets up, is MIT.
+Cloud and Comfy Deploy. The agent is open too: Hermes Agent (MIT), which
+Start Genobi sets up, runs on open-weight models such as DeepSeek V4.1 Flash
+or Qwen3-VL ([agent setup](docs/agent-setup.md)), and the built-in voice mode
+transcribes on your machine with the open Qwen3-ASR, which you can adapt in
+your own setup ([voice setup](docs/voice-setup.md)). The open path runs end
+to end: agent, voice, generation and upscaling.
 Optional closed routes: FLUX 3 video, FLUX Video Upscale, Klein through BFL's
 API, MiniMax H3 and Music 3, and LTX Fast/Pro through Comfy Router. Inputs
 are format-agnostic: swap a template's track or clips for your own or
@@ -84,9 +104,26 @@ Terms per model: [LICENCES.md](LICENCES.md) and [credits](docs/credits.md).
 
 ### One agentic loop (Best Overall)
 
-The agent and you edit one Director/Editor timeline; it reads back your
-changes and quotes every paid step first. A **licence layer** records each
-model's terms, a **Taste layer** keeps credited references as project memory,
+Everything above adds up in one product: World Builder inside ComfyUI,
+acoustic measurement, audio-reactive rendering, voice, the agent and the
+editor, and to my knowledge no other project combines them. The result is a
+new way of working that teaches as it goes and makes fresh-looking content
+people share. The agent and you edit one Director/Editor timeline; it reads
+back your changes and quotes every paid step first, and the camera panel, the
+editor and the deck sit in one coherent studio shell
+([shell](docs/director-studio-shell.md)). Genobi grows through the same loop:
+the agent you talk to can start a Developer agent for a change to the studio,
+with Hermes in its developer and creative profiles, so new tools and workflows
+arrive the way edits do ([agent sessions](docs/agent-sessions.md#genobi-starts-a-developer)).
+An educational layer runs through it: the Genobi guide bubble below the logo
+explains what is on screen and what each tool does
+([bubble](docs/agent-bubble.md)), the question mark opens a quick studio
+guide ([guide](docs/studio-guide.md)), and the deck shows where things are and
+what the agent is doing ([deck](docs/genobi-deck.md)). There are Easter eggs
+in the terminal, from the gaming world; the repo knows where. A **licence layer** records each
+model's terms, a **Taste layer** points agents at aesthetic choices first:
+curated libraries and credited references kept as project memory, editable
+per project and exportable as JSON ([taste](docs/taste-memory.md)),
 the deck shows what the agent is doing and the hosted studio keeps
 [count-only statistics](observability/README.md). Templates sit on top as
 skills an agent can rerun. Dance with Fruits came from spoken rounds of "take
@@ -96,15 +133,16 @@ slot keeps the still and prompt that made it ([Fruits](docs/fruits-swap.md),
 
 ### Evidence map, for reviewers and their agents
 
-| Claim                                                                                         | Where to look                                                                                                                                                                                              |
-| --------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| What Genobi is and how the entry was built                                                    | [docs/submission.md](docs/submission.md), [docs/README.md](docs/README.md)                                                                                                                                 |
-| LTX: audio-reactive Layout-to-Render, acoustic measurement, AKUSPACE, adaptive reverb         | [audio-reactive/README.md](audio-reactive/README.md), [workflows/](workflows/), [docs/audio-reactive-drop.md](docs/audio-reactive-drop.md), [docs/adaptive-reverb-proof.md](docs/adaptive-reverb-proof.md) |
-| FLUX: Klein stills, camera control that follows each lab's guidance, Dual Swords frame export | [docs/camera-wording.md](docs/camera-wording.md), [docs/minimax-h3-camera.md](docs/minimax-h3-camera.md), [docs/dual-editor.md](docs/dual-editor.md)                                                       |
-| Shareable: watch and embed pages, Make your own, Make my version                              | [docs/template-gallery.md#sharing](docs/template-gallery.md#sharing), [genobi.pages.dev/watch/fruits-swap](https://genobi.pages.dev/watch/fruits-swap)                                                     |
-| Open weights: the open path per step, the optional closed routes, every model's terms         | [LICENCES.md](LICENCES.md), [docs/capabilities.md](docs/capabilities.md), [docs/credits.md](docs/credits.md), [docs/licence-strategy.md](docs/licence-strategy.md)                                         |
-| Agentic loop: plugin with MCP, CLI and skills, Director and Editor, observability             | [plugins/genobi/README.md](plugins/genobi/README.md), [audio-reactive/edit/LOG.md](audio-reactive/edit/LOG.md), [observability/README.md](observability/README.md)                                         |
-| Run it: local studio, Comfy Cloud, the Comfy deployment                                       | [docs/getting-started.md](docs/getting-started.md), [comfy-build/](comfy-build/)                                                                                                                           |
+| Claim                                                                                                                                   | Where to look                                                                                                                                                                                                                                              |
+| --------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| What Genobi is and how the entry was built                                                                                              | [docs/submission.md](docs/submission.md), [docs/README.md](docs/README.md)                                                                                                                                                                                 |
+| LTX: audio-reactive Layout-to-Render, acoustic measurement, AKUSPACE, adaptive reverb                                                   | [audio-reactive/README.md](audio-reactive/README.md), [workflows/](workflows/), [docs/audio-reactive-drop.md](docs/audio-reactive-drop.md), [docs/adaptive-reverb-proof.md](docs/adaptive-reverb-proof.md)                                                 |
+| FLUX: Klein stills, camera control that follows each lab's guidance, Dual Swords frame export                                           | [docs/camera-wording.md](docs/camera-wording.md), [docs/minimax-h3-camera.md](docs/minimax-h3-camera.md), [docs/dual-editor.md](docs/dual-editor.md)                                                                                                       |
+| Shareable: watch and embed pages, Make your own, Make my version                                                                        | [docs/template-gallery.md#sharing](docs/template-gallery.md#sharing), [genobi.pages.dev/watch/fruits-swap](https://genobi.pages.dev/watch/fruits-swap)                                                                                                     |
+| Open weights: the open path per step, from agent and voice to generation and upscaling, the optional closed routes, every model's terms | [LICENCES.md](LICENCES.md), [docs/capabilities.md](docs/capabilities.md), [docs/agent-setup.md](docs/agent-setup.md), [docs/voice-setup.md](docs/voice-setup.md), [docs/credits.md](docs/credits.md), [docs/licence-strategy.md](docs/licence-strategy.md) |
+| Agentic loop: plugin with MCP, CLI and skills, Director and Editor, observability                                                       | [plugins/genobi/README.md](plugins/genobi/README.md), [audio-reactive/edit/LOG.md](audio-reactive/edit/LOG.md), [observability/README.md](observability/README.md)                                                                                         |
+| Educational layer: guide bubble, studio guide, deck                                                                                     | [docs/agent-bubble.md](docs/agent-bubble.md), [docs/studio-guide.md](docs/studio-guide.md), [docs/genobi-deck.md](docs/genobi-deck.md)                                                                                                                     |
+| Run it: local studio, Comfy Cloud, the Comfy deployment                                                                                 | [docs/getting-started.md](docs/getting-started.md), [comfy-build/](comfy-build/)                                                                                                                                                                           |
 
 ## Start here
 
