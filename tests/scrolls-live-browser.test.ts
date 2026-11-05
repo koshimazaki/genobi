@@ -113,3 +113,33 @@ it("resends a lost acknowledgement without applying the same edit twice", async 
   expect(s.adapter.snapshot().document.revision).toBe(1);
   stop();
 });
+
+it("does not announce an old handoff after the connection was stopped", async () => {
+  vi.useFakeTimers();
+  const s = mounted(),
+    status = vi.fn();
+  const job: LiveScrollStatus = {
+    id: randomUUID(),
+    request: s.request,
+    state: "running",
+  };
+  let acknowledge!: (response: Response) => void;
+  const pending = new Promise<Response>((resolve) => {
+    acknowledge = resolve;
+  });
+  const fetcher = (async (url: string | URL | Request) =>
+    String(url).endsWith("/poll")
+      ? Response.json({ job })
+      : pending) as typeof fetch;
+  const stop = startScrollLiveBridge(
+    s.request.tabId,
+    s.request.context.documentId,
+    { ...s.adapter, status },
+    fetcher,
+  );
+  await vi.advanceTimersByTimeAsync(0);
+  stop();
+  acknowledge(Response.json({ ...job, state: "done" }));
+  await vi.advanceTimersByTimeAsync(0);
+  expect(status).not.toHaveBeenCalled();
+});

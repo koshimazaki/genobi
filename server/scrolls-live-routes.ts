@@ -1,6 +1,11 @@
+import type { ProjectCopies } from "./projects";
 import express from "express";
 import { z } from "zod";
-import { liveScrollRequest, scrollSnapshot } from "../shared/scrolls/live";
+import {
+  liveScrollRequest,
+  scrollSnapshot,
+  scrollLiveResult,
+} from "../shared/scrolls/live";
 import type { RateBucket } from "../shared/limits";
 import type { BrowserExports } from "./browser-exports";
 import { LiveScrolls } from "./scrolls-live";
@@ -8,9 +13,10 @@ import { AppError } from "./errors";
 
 export function scrollsLiveRouter(
   browsers: BrowserExports,
+  copies: ProjectCopies,
   limit: (bucket: RateBucket, id: string) => void,
 ) {
-  const service = new LiveScrolls(browsers),
+  const service = new LiveScrolls(browsers, copies),
     router = express.Router(),
     json = express.json({ limit: "72kb" });
   const owner = (res: express.Response) => res.locals.sessionId as string;
@@ -50,10 +56,10 @@ export function scrollsLiveRouter(
       ),
     );
   });
-  router.post("/commands", json, (req, res) => {
+  router.post("/commands", json, async (req, res) => {
     limit("edit", owner(res));
     res.status(202).json(
-      service.request(
+      await service.request(
         owner(res),
         parsed(() => liveScrollRequest.parse(req.body)),
       ),
@@ -72,9 +78,20 @@ export function scrollsLiveRouter(
           z.object({ error: z.string().min(1).max(300) }).strict(),
         ])
         .parse(req.body);
-      return "snapshot" in r ? { snapshot: scrollSnapshot(r.snapshot) } : r;
+      return "snapshot" in r ? { snapshot: scrollLiveResult(r.snapshot) } : r;
     });
     res.json(service.finish(String(req.params.id), browser(res), result));
+  });
+  router.get("/commands/:id/media", (req, res) => {
+    limit("media", owner(res));
+    const media = service.media(String(req.params.id), browser(res));
+    res
+      .set({
+        "Content-Type": media.contentType,
+        "X-Content-SHA256": media.sha256,
+        "Cache-Control": "private, no-store",
+      })
+      .send(media.bytes);
   });
   return router;
 }

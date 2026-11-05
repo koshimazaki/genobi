@@ -374,7 +374,7 @@ Timed segments of a clip's own sound put through a room's impulse response by lo
 
 ### Live Scroll document edits
 
-Explicitly linked agents inspect the mounted document, selection and available media, then apply validated revision-bound commands with conflict and acknowledgement read-back. Local paired browser only; metadata alone cannot add media.
+Explicitly linked agents inspect the mounted document, selection and available media, then apply validated revision-bound commands, attach inspected owned media receipts and hand selected assets to Director with actual project/asset/layer read-back. Local paired browser only; metadata alone cannot add media.
 
 - **Where:** Scrolls · Document & agent tools · **Runs:** Local, free · **Status:** implemented
 - **MCP tools:** [`genobi_scrolls_live`](registry-tools.md#genobi_scrolls_live) · **CLI:** `genobi scrolls-live` · **Skills:** [`genobi-scrolls`](registry-skills.md#genobi-scrolls) · **Docs:** [live-scrolls.md](live-scrolls.md)

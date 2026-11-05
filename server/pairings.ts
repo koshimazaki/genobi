@@ -32,7 +32,10 @@ export async function mountPairings(
   if (projects) {
     const browsers = new BrowserExports(projects);
     await browsers.load();
-    app.use("/api/exports/scrolls", scrollsLiveRouter(browsers, limit));
+    app.use(
+      "/api/exports/scrolls",
+      scrollsLiveRouter(browsers, projects, limit),
+    );
     app.use("/api/exports", browserExportRouter(browsers, limit));
   }
 }

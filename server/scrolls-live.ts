@@ -1,3 +1,6 @@
+import { prepareScrollMedia } from "./scrolls-live-media";
+import type { ProjectCopies } from "./projects";
+import type { ScrollLiveResult } from "../shared/scrolls/live";
 import { randomUUID } from "node:crypto";
 import {
   liveScrollEdit,
@@ -21,6 +24,7 @@ interface Job extends LiveScrollStatus {
   caller: string;
   created: number;
   digest: string;
+  bytes?: Buffer;
 }
 const missing = () =>
   new AppError(404, "Live Scroll connection or command not found.");
@@ -28,8 +32,10 @@ const missing = () =>
 export class LiveScrolls {
   private mounted = new Map<string, Mounted>();
   private jobs = new Map<string, Job>();
+  private queue: Promise<unknown> = Promise.resolve();
   constructor(
     private browsers: BrowserExports,
+    private copies: ProjectCopies,
     private now = Date.now,
   ) {}
   private sweep() {
@@ -52,17 +58,19 @@ export class LiveScrolls {
             ? "The Scroll disconnected before acknowledgement. The edit may have applied; inspect before another request."
             : "The Scroll disconnected before the command was dispatched.";
         job.state = "error";
+        job.bytes = undefined;
       }
     }
   }
   private public(job: Job): LiveScrollStatus {
-    const { id, request, state, result, error } = job;
+    const { id, request, state, result, error, media } = job;
     return {
       id,
       request,
       state,
       ...(result ? { result } : {}),
       ...(error ? { error } : {}),
+      ...(media ? { media } : {}),
     };
   }
   private job(id: string, caller: string) {
@@ -94,6 +102,13 @@ export class LiveScrolls {
       }));
   }
   request(caller: string, request: LiveScrollRequest) {
+    const run = this.queue
+      .catch(() => {})
+      .then(() => this.prepare(caller, request));
+    this.queue = run;
+    return run;
+  }
+  private async prepare(caller: string, request: LiveScrollRequest) {
     this.sweep();
     const key = exportIdentity(caller),
       digest = exportIdentity(JSON.stringify(request));
@@ -130,6 +145,28 @@ export class LiveScrolls {
         429,
         "Scroll command history is full; wait for its one-hour expiry.",
       );
+    const media =
+      request.command.op === "attach-media"
+        ? await prepareScrollMedia(this.copies, caller, request.command)
+        : undefined;
+    // Ownership, document and selection may change while bytes are read.
+    const latest = this.inspect(request.tabId, caller);
+    try {
+      liveScrollEdit(latest, request);
+    } catch (error) {
+      throw new AppError(409, (error as Error).message);
+    }
+    if (
+      media &&
+      [...this.jobs.values()].reduce(
+        (n, j) => n + (j.bytes?.length ?? 0),
+        media.bytes.length,
+      ) > 150_000_000
+    )
+      throw new AppError(
+        413,
+        "Live Scroll media queue is full. Finish existing attachments first.",
+      );
     const job: Job = {
       id: randomUUID(),
       request,
@@ -138,6 +175,7 @@ export class LiveScrolls {
       caller: key,
       digest,
       created: this.now(),
+      ...(media ? { media: media.input, bytes: media.bytes } : {}),
     };
     this.jobs.set(job.id, job);
     return this.public(job);
@@ -157,6 +195,7 @@ export class LiveScrolls {
         job.state = "error";
         job.error =
           "The Scroll document, revision or selected cell changed before dispatch. Inspect again.";
+        job.bytes = undefined;
       } else job.state = "running";
     }
     return { job: job ? this.public(job) : null };
@@ -168,7 +207,7 @@ export class LiveScrolls {
   finish(
     id: string,
     owner: string,
-    result: { snapshot: ScrollSnapshot } | { error: string },
+    result: { snapshot: ScrollLiveResult } | { error: string },
   ) {
     this.sweep();
     const job = this.job(id, owner);
@@ -179,11 +218,47 @@ export class LiveScrolls {
     if ("snapshot" in result) {
       if (
         result.snapshot.document.id !== job.request.context.documentId ||
-        result.snapshot.document.revision !== job.request.context.revision + 1
+        result.snapshot.document.revision !==
+          job.request.context.revision +
+            (job.request.command.op === "handoff-director" ? 0 : 1)
       )
         throw new AppError(
           409,
           "The result does not identify the applied Scroll revision.",
+        );
+      const attachment = result.snapshot.attachment,
+        handoff = result.snapshot.handoff;
+      if (
+        (attachment && job.request.command.op !== "attach-media") ||
+        (handoff && job.request.command.op !== "handoff-director")
+      )
+        throw new AppError(
+          409,
+          "This result belongs to a different Scroll operation.",
+        );
+      if (
+        job.request.command.op === "attach-media" &&
+        (!attachment ||
+          attachment.sha256 !== job.media?.sha256 ||
+          !result.snapshot.document.assets.some(
+            (a) =>
+              a.id === attachment.assetId &&
+              a.file.sha256 === attachment.sha256,
+          ))
+      )
+        throw new AppError(
+          409,
+          "The attachment result must identify its checked media asset.",
+        );
+      if (
+        job.request.command.op === "handoff-director" &&
+        (!handoff ||
+          result.snapshot.director?.id !== handoff.destinationProjectId ||
+          result.snapshot.director.revision !== handoff.destinationRevision)
+      )
+        throw new AppError(
+          409,
+          "The handoff result must read back the actual Director project.",
         );
       job.result = result.snapshot;
       job.state = "done";
@@ -197,6 +272,19 @@ export class LiveScrolls {
       job.error = result.error;
       job.state = "error";
     }
+    job.bytes = undefined;
     return this.public(job);
+  }
+  media(id: string, owner: string) {
+    this.sweep();
+    const job = this.job(id, owner);
+    if (
+      job.owner !== exportIdentity(owner) ||
+      job.state !== "running" ||
+      !job.bytes ||
+      !job.media
+    )
+      throw missing();
+    return { bytes: job.bytes, ...job.media };
   }
 }

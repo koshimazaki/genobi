@@ -1,3 +1,11 @@
+import {
+  directorTarget,
+  scrollAttach,
+  scrollDirector,
+  scrollAttachment,
+  scrollDirectorReceipt,
+} from "./live-actions";
+import type { ScrollMediaInput } from "./live-actions";
 import { z } from "zod";
 import { applyScrollCommand } from "./commands";
 import { ID, parseScroll, type ScrollDocument } from "./types";
@@ -27,11 +35,13 @@ export interface ScrollSnapshot {
   document: ScrollDocument;
   context: ScrollContext;
   availableAssetIds: string[];
+  director?: z.infer<typeof directorTarget>;
 }
 export function scrollSnapshot(value: unknown): ScrollSnapshot {
   const raw = z
     .object({
       document: z.unknown(),
+      director: directorTarget.optional(),
       context: scrollContext,
       availableAssetIds: z.array(z.string().regex(ID)).max(48),
     })
@@ -72,12 +82,61 @@ export function liveScrollEdit(
     throw new Error(
       "Use owned media attachment; metadata alone cannot add a live asset.",
     );
+  if (request.command.op === "attach-media") {
+    const command = scrollAttach.parse(request.command);
+    if (command.revision !== snapshot.context.revision)
+      throw new Error("Scroll revision changed.");
+    if (
+      command.cellId &&
+      !snapshot.document.cells.some((c) => c.id === command.cellId)
+    )
+      throw new Error("The attachment cell disappeared.");
+    if (command.cellId && command.role !== "panel")
+      throw new Error("Only panel media names a cell.");
+    return snapshot.document;
+  }
+  if (request.command.op === "handoff-director") {
+    const command = scrollDirector.parse(request.command);
+    if (
+      command.revision !== snapshot.context.revision ||
+      snapshot.director === undefined ||
+      JSON.stringify(command.director) !== JSON.stringify(snapshot.director)
+    )
+      throw new Error(
+        "Director changed or is unknown. Inspect both workspaces before handing off.",
+      );
+    return snapshot.document;
+  }
   return applyScrollCommand(snapshot.document, request.command);
+}
+export interface ScrollLiveResult extends ScrollSnapshot {
+  attachment?: z.infer<typeof scrollAttachment>;
+  handoff?: z.infer<typeof scrollDirectorReceipt>;
+}
+export function scrollLiveResult(value: unknown): ScrollLiveResult {
+  const raw = z
+    .object({
+      document: z.unknown(),
+      context: scrollContext,
+      availableAssetIds: z.array(z.string()).max(48),
+      director: directorTarget.optional(),
+      attachment: scrollAttachment.optional(),
+      handoff: scrollDirectorReceipt.optional(),
+    })
+    .strict()
+    .parse(value);
+  const { attachment, handoff, ...snapshot } = raw;
+  return {
+    ...scrollSnapshot(snapshot),
+    ...(attachment ? { attachment } : {}),
+    ...(handoff ? { handoff } : {}),
+  };
 }
 export interface LiveScrollStatus {
   id: string;
   request: LiveScrollRequest;
   state: "queued" | "running" | "done" | "error";
-  result?: ScrollSnapshot;
+  result?: ScrollLiveResult;
+  media?: ScrollMediaInput;
   error?: string;
 }

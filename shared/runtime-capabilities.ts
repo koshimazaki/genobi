@@ -82,6 +82,7 @@ export function runtimeCapabilities(runtime: "local" | "hosted") {
           "GET /api/exports/scrolls/tabs/:id",
           "POST /api/exports/scrolls/commands",
           "GET /api/exports/scrolls/commands/:id",
+          "GET /api/exports/scrolls/commands/:id/media",
         ]),
         execution: "browser",
         requires: ["scroll-tab-link", "responding-tab"],

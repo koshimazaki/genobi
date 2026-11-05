@@ -45,7 +45,7 @@
     {
       "id": "live-scroll-agents", "name": "Live Scroll document edits", "status": "implemented",
       "where": "Scrolls · Document & agent tools",
-      "description": "Explicitly linked agents inspect the mounted document, selection and available media, then apply validated revision-bound commands with conflict and acknowledgement read-back. Local paired browser only; metadata alone cannot add media.",
+      "description": "Explicitly linked agents inspect the mounted document, selection and available media, then apply validated revision-bound commands, attach inspected owned media receipts and hand selected assets to Director with actual project/asset/layer read-back. Local paired browser only; metadata alone cannot add media.",
       "mcp": ["genobi_scrolls_live"], "cli": ["scrolls-live"],
       "skills": ["genobi-scrolls"], "docs": ["docs/live-scrolls.md"],
       "runs": [{ "route": "local-free" }]

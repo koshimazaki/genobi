@@ -12,6 +12,8 @@ export const PAIRING_ROUTES: Record<string, string> = {
     "Only the registered browser owner; marked agents refused.",
   "POST /api/exports/scrolls/commands":
     "Linked tab, exact document/revision/cell context and validated edits required.",
+  "GET /api/exports/scrolls/commands/:id/media":
+    "Only the dispatching browser owner; agent-marked clients refused; media was read with the requester's project/receipt grant.",
   "GET /api/exports/scrolls/commands/:id":
     "Only command requester or browser owner; bounded retained result.",
   "POST /api/exports/scrolls/commands/:id/result":
