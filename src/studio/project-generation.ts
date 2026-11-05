@@ -172,7 +172,11 @@ export async function importCameraGeneration(
     if (store.getState().director.bundle !== before)
       throw new Error("Project changed while the tool was running; retry");
     state.actions.commit({ project, files: out.bundle.files }, before);
-    return { assetIds: [assetId] };
+    // An upload the project held already changed: its run is now recorded.
+    return {
+      assetIds: [assetId],
+      ...(before.project.assets[assetId] ? { changed: true } : {}),
+    };
   } finally {
     state.actions.operations({ workingFile: false });
   }

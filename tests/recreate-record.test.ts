@@ -9,7 +9,18 @@ import {
   composerReducer,
   initialComposer,
 } from "../src/useComposer";
+import { addToProjectAssets } from "../src/studio/project-assets";
+import { cameraGeneration } from "../src/studio/project-generation";
 import {
+  canUndoSend,
+  sendToDirector,
+  undoSend,
+} from "../src/studio/send-to-director";
+import { createStudioStore } from "../src/studio/store";
+import { assetFixture } from "./director-asset-fixture";
+import {
+  png,
+  takeLoad,
   keptInputs,
   otherUrl,
   pngUrl,
@@ -116,3 +127,32 @@ it.each([
     expect(landed.upscaleFactor).toBe(4);
   },
 );
+
+it("says the recipe was recorded, with Undo, when an earlier upload gains its provenance", async () => {
+  const store = createStudioStore();
+  store.getState().actions.initialize(assetFixture());
+  const media = () => ({
+    blob: new Blob([png], { type: "image/png" }),
+    filename: "out.png",
+    use: "production" as const,
+  });
+  const plain = await addToProjectAssets(media(), store);
+  expect(plain.added).toBe(true);
+  const generation = await cameraGeneration(readyJob({}), takeLoad(), {
+    load: async () => undefined,
+  } as never);
+  const sent = await sendToDirector(
+    () => addToProjectAssets({ ...media(), generation }, store),
+    store,
+  );
+  expect(sent.asset.assetId).toBe(plain.assetId);
+  expect(sent.message).not.toContain("Already");
+  expect(
+    store.getState().director.bundle!.project.assets[plain.assetId].origin,
+  ).toBe("generated");
+  expect(canUndoSend(sent, store)).toBe(true);
+  expect(undoSend(sent, store)).toBe(true);
+  expect(
+    store.getState().director.bundle!.project.assets[plain.assetId].origin,
+  ).not.toBe("generated");
+});

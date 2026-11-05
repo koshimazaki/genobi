@@ -26,11 +26,13 @@ export interface SentToDirector extends DirectorEdit {
 export const inAssetRail = (from: Element) =>
   !!from.closest(".studio-asset-rail");
 
-/** What the person reads: added, or already there, and under which tab. */
+/** What the person reads: added, recorded, or already there, and the tab. */
 export function directorMessage(asset: AddedAsset) {
   return asset.added
     ? `Added to the Director's assets · ${assetTab(asset.use)}.`
-    : `Already in the Director's assets · ${assetTab(asset.use)}.`;
+    : asset.changed
+      ? `Recipe recorded on the Director's asset · ${assetTab(asset.use)}.`
+      : `Already in the Director's assets · ${assetTab(asset.use)}.`;
 }
 
 export async function sendToDirector(
@@ -42,7 +44,10 @@ export async function sendToDirector(
     asset,
     message: directorMessage(asset),
     // A repeat changed nothing, so there is nothing to undo.
-    after: asset.added ? store.getState().director.bundle : undefined,
+    after:
+      asset.added || asset.changed
+        ? store.getState().director.bundle
+        : undefined,
   };
 }
 

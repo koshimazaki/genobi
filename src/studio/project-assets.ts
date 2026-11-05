@@ -43,6 +43,11 @@ export interface AddedAsset {
   assetId: string;
   /** False when the project already held the same bytes for this use. */
   added: boolean;
+  /**
+   * True when the project held these bytes already and the add changed that
+   * asset: a plain upload now records the Camera run that made it.
+   */
+  changed?: boolean;
   use: AssetUse;
   filename: string;
   /** The rail should stay where it is (`OutputMedia.keepTab`). */
@@ -97,7 +102,7 @@ export async function addToProjectAssets(
             store,
           )
         ).receipt
-  ) as { assetIds?: string[] };
+  ) as { assetIds?: string[]; changed?: boolean };
   const assetId = receipt.assetIds?.[0];
   if (!assetId) throw new Error("The media did not reach the project.");
   const added: AddedAsset = {
@@ -105,6 +110,9 @@ export async function addToProjectAssets(
     added: !Object.hasOwn(before.project.assets, assetId),
     use: checked.use,
     filename: checked.filename,
+    ...(receipt.changed && Object.hasOwn(before.project.assets, assetId)
+      ? { changed: true }
+      : {}),
     ...(media.keepTab ? { keepTab: true } : {}),
   };
   store.getState().actions.workspace({ assetRole: checked.use });
