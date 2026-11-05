@@ -470,6 +470,7 @@
         "director-resolution.md",
         "director-studio-shell.md",
         "director-working-version.md",
+        "easter-eggs.md",
         "editor-timeline.md",
         "genobi-deck.md",
         "getting-started.md",
@@ -765,6 +766,7 @@
         "director-working-version.md",
         "dual-editor-editing.md",
         "dual-editor.md",
+        "easter-eggs.md",
         "editor-timeline.md",
         "effects-catalogue.md",
         "falling-room.md",
@@ -1735,6 +1737,13 @@
         "media-space.md",
         "project-assets.md"
       ]
+    },
+    {
+      "title": "Easter eggs",
+      "path": "easter-eggs.md",
+      "tags": ["studio"],
+      "summary": "Hidden extras in the studio — the Konami code opens the walkers game in the deck — and how to find each one.",
+      "links": ["genobi-deck.md"]
     },
     {
       "title": "Editor timeline",
