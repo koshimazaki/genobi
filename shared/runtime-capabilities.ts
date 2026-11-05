@@ -71,6 +71,19 @@ export function runtimeCapabilities(runtime: "local" | "hosted") {
         "GET /api/projects/:id/files/:sha256",
         "POST /api/projects/:id/commands",
       ]),
+      worldControl: {
+        ...localFeature([
+          "GET /api/world/granted",
+          "POST /api/world/link",
+          "GET /api/world/:id/status",
+          "POST /api/world/:id/commands",
+          "GET /api/world/:id/commands/:command",
+          "GET /api/world/:id/files",
+        ]),
+        execution: "browser",
+        requires: ["world-pairing", "responding-tab"],
+        headlessCapture: false,
+      },
       worldRecipe: localFeature([
         "GET /api/projects/:id/world-recipe",
         "POST /api/projects/:id/world-recipe",

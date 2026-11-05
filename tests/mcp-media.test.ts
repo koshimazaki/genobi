@@ -1,3 +1,4 @@
+import { runtimeCapabilities } from "../shared/runtime-capabilities";
 import { describe, expect, it } from "vitest";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { InMemoryTransport } from "@modelcontextprotocol/sdk/inMemory.js";
@@ -34,6 +35,8 @@ async function connect() {
     const method = init?.method ?? "GET";
     const headers = { "Set-Cookie": `camera_session=${SESSION}; Path=/` };
     if (path === "/api/health") return Response.json({ ok: true }, { headers });
+    if (path === "/api/capabilities")
+      return Response.json(runtimeCapabilities("local"));
     // Optional tool history, off: answered as the studio does, and not part of
     // the media requests this test checks (tests/mcp-activity.test.ts does).
     if (path === "/api/activity")
@@ -132,31 +135,37 @@ describe("Dual Swords MCP tools", () => {
     expect(seen).toEqual([
       { method: "GET", path: "/api/media/tools", body: undefined },
       { method: "GET", path: "/api/media/job-1/probe", body: undefined },
+      { method: "GET", path: "/api/media/tools", body: undefined },
       {
         method: "POST",
         path: "/api/media/frames",
         body: { sourceId: "job-1", times: [0, 1.5] },
       },
+      { method: "GET", path: "/api/media/tools", body: undefined },
       {
         method: "POST",
         path: "/api/media/trim",
         body: { sourceId: "job-1", start: 0.5, duration: 1 },
       },
+      { method: "GET", path: "/api/media/tools", body: undefined },
       {
         method: "POST",
         path: "/api/media/concat",
         body: { sourceIds: ["a", "b", "c"] },
       },
+      { method: "GET", path: "/api/media/tools", body: undefined },
       {
         method: "POST",
         path: "/api/media/crossfade",
         body: { sourceIds: ["a", "b"], duration: 0.5 },
       },
+      { method: "GET", path: "/api/media/tools", body: undefined },
       {
         method: "POST",
         path: "/api/media/space",
         body: { sourceId: "job-1", segments: rooms },
       },
+      { method: "GET", path: "/api/media/tools", body: undefined },
       {
         method: "POST",
         path: "/api/media/space",

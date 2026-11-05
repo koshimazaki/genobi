@@ -1,3 +1,4 @@
+import { runtimeCapabilities } from "../shared/runtime-capabilities";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { mkdtemp, rm } from "node:fs/promises";
@@ -173,7 +174,11 @@ it("reports an uncertain operation once, and still delivers its correction", asy
   let error;
   try {
     await sessionCommand(
-      { activity, messages } as unknown as GenobiApi,
+      {
+        activity,
+        messages,
+        get: async () => runtimeCapabilities("local"),
+      } as unknown as GenobiApi,
       tool,
       {},
       notice,
@@ -205,7 +210,11 @@ it("does not turn a completed command into a retry when optional activity is una
   } as unknown as ToolDefinition;
   expect(
     await sessionCommand(
-      { activity, messages } as unknown as GenobiApi,
+      {
+        activity,
+        messages,
+        get: async () => runtimeCapabilities("local"),
+      } as unknown as GenobiApi,
       tool,
       {},
       notice,

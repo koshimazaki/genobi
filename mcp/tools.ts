@@ -1,3 +1,4 @@
+import { diagnoseOperation } from "./availability";
 import { arenaTools } from "./arena-tools";
 import { effectTools } from "./effects-tools";
 import { worldTools } from "./world-tools";
@@ -42,6 +43,31 @@ export { jobSummary, type ToolDefinition } from "./definition";
 // Reading tools never spend. The paid tools in ./generation never spend in one
 // call either: genobi_submit needs a quote the person accepted (docs/agent-approvals.md).
 const readTools: ToolDefinition[] = [
+  {
+    name: "genobi_diagnose",
+    title: "Check an operation's runtime requirements",
+    description:
+      "Read live runtime support and applicable service/browser readiness before choosing a command. This is distinct from the offline feature catalogue. Supply a full tool name and its intended input; checks are read-only and never authorize paid work. Unknown/legacy capability responses stay unknown; a positive check does not replace ownership, revision, quote or server-side validation.",
+    inputSchema: {
+      tool: z.string().regex(/^genobi_[a-z_]{1,60}$/),
+      input: z.record(z.string(), z.unknown()).default({}),
+    },
+    tags: ["agents", "mcp", "backend"],
+    docs: ["docs/agent-capability-checks.md", "docs/genobi-cli.md"],
+    annotations: { readOnlyHint: true, idempotentHint: true },
+    async run(api, args) {
+      const target = tools.find((tool) => tool.name === args.tool);
+      if (!target)
+        throw new Error(
+          "Unknown tool. Read genobi_registry or CLI tools first.",
+        );
+      return diagnoseOperation(
+        api,
+        target.name,
+        (args.input ?? {}) as Record<string, unknown>,
+      );
+    },
+  },
   {
     name: "genobi_status",
     title: "Genobi status",

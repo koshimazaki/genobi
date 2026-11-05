@@ -529,6 +529,14 @@
       "mcp": ["genobi_voice_status", "genobi_voice_transcribe"], "cli": ["voice-status", "voice-transcribe"],
       "skills": ["genobi-studio", "genobi-cli"], "docs": ["docs/voice-mode.md", "docs/genobi-cli.md"],
       "runs": [{ "route": "local-model", "models": ["qwen3-asr"] }]
+    },
+    {
+      "id": "agent-operation-checks", "name": "Live agent operation checks", "status": "implemented",
+      "where": "Agents · diagnose; CLI/MCP execution",
+      "description": "Checks connected runtime support separately from the offline catalogue, with local service and browser connection diagnostics before applicable operations. Unknown support remains unknown.",
+      "mcp": ["genobi_diagnose"], "cli": ["diagnose"],
+      "skills": ["genobi-cli", "genobi-studio"], "docs": ["docs/agent-capability-checks.md"],
+      "runs": [{ "route": "local-free" }]
     }
   ]
 }

@@ -9,6 +9,14 @@ summary: Every Genobi MCP tool with its description, access, teaching skills and
 
 Each tool of the Genobi MCP server: what it does, whether it is read-only, writes or is paid, the skills that teach it and its docs. Grouped by tag on [the registry](registry.md).
 
+## `genobi_diagnose`
+
+Check an operation's runtime requirements · read-only. Read live runtime support and applicable service/browser readiness before choosing a command. This is distinct from the offline feature catalogue. Supply a full tool name and its intended input; checks are read-only and never authorize paid work. Unknown/legacy capability responses stay unknown; a positive check does not replace ownership, revision, quote or server-side validation.
+
+- Tags: `agents`, `mcp`, `backend`
+- Taught by: [`genobi-cli`](registry-skills.md#genobi-cli), [`genobi-studio`](registry-skills.md#genobi-studio)
+- Docs: [docs/agent-capability-checks.md](agent-capability-checks.md), [docs/genobi-cli.md](genobi-cli.md)
+
 ## `genobi_status`
 
 Genobi status · read-only. Check that the local Genobi studio is running, whether it holds a provider key and generation budget, and the runtime's supported operations, configuration and limits. Older servers may omit capabilities; never treat that omission as support for an operation.

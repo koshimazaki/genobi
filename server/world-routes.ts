@@ -177,6 +177,10 @@ export function worldRouter({
     if (command) command.state = "running";
     res.json(command ? { id: command.id, command: command.command } : null);
   });
+  router.get("/:id/status", (req, res) => {
+    const s = session(req, res);
+    res.json({ session: s.id, connected: Date.now() - s.seen <= 10_000 });
+  });
   router.post("/:id/commands", json, (req, res) => {
     const s = session(req, res);
     if (Date.now() - s.seen > 10_000)
