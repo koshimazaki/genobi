@@ -46,11 +46,15 @@ export interface Quote {
    * decides before paying.
    */
   availability?: string;
+  /** A workflow's estimate is not a fixed API per-image price. */
+  estimateNote?: string;
 }
 
 /** A Cloud workflow quoted while the account's catalogue could not be read. */
 export const CLOUD_UNCHECKED =
   "Couldn't check Cloud availability for this workflow.";
+export const CLOUD_GPU_ESTIMATE =
+  "Comfy Cloud bills GPU time; this is an estimate, not a fixed per-image price.";
 
 /** What an adapter keeps: the quote, the settings it covers and its spender. */
 export interface QuoteRecord extends Quote {
@@ -138,5 +142,8 @@ export const publicQuote = ({
     expiresAt,
     ...(billing ? { billing } : {}),
     ...(availability ? { availability } : {}),
+    ...(recipe.route === "workflow" && recipe.location === "cloud"
+      ? { estimateNote: CLOUD_GPU_ESTIMATE }
+      : {}),
   };
 };

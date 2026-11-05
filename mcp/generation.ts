@@ -79,6 +79,9 @@ export const generationTools: ToolDefinition[] = [
           await resolvedGenerationBody(api, args),
         )
         .catch((error) => Promise.reject(refusal(error)));
+      const notes = [quote.estimateNote, quote.availability]
+        .filter(Boolean)
+        .join(" ");
       return {
         quoteId: quote.id,
         estimateUsd: quote.estimateUsd,
@@ -86,6 +89,7 @@ export const generationTools: ToolDefinition[] = [
         expiresAt: quote.expiresAt,
         // Cloud's catalogue was unreadable: the run may fail after paying.
         ...(quote.availability ? { availability: quote.availability } : {}),
+        ...(quote.estimateNote ? { estimateNote: quote.estimateNote } : {}),
         // A run its host bills by GPU time has no price here: say who bills it.
         ...(quote.billing
           ? {
@@ -93,7 +97,7 @@ export const generationTools: ToolDefinition[] = [
               next: `Genobi has no price for this run: it is ${quote.billing}. Ask the person to agree to that before calling genobi_submit with this quoteId, these same inputs and a new idempotencyKey. Do not submit without their agreement.`,
             }
           : {
-              next: `Ask the person to agree to about $${quote.estimateUsd.toFixed(2)}${quote.availability ? ` (tell them: ${quote.availability})` : ""} before calling genobi_submit with this quoteId, these same inputs and a new idempotencyKey. Do not submit without their agreement.`,
+              next: `Ask the person to agree to about $${quote.estimateUsd.toFixed(2)}${notes ? ` (tell them: ${notes})` : ""} before calling genobi_submit with this quoteId, these same inputs and a new idempotencyKey. Do not submit without their agreement.`,
             }),
       };
     },

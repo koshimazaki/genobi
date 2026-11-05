@@ -64,7 +64,9 @@ async function noRuns(session: string) {
     .bind(session.slice(15))
     .first<{ n: number }>();
   expect(jobs?.n).toBe(0);
-  expect(cloudRequests).toEqual([]);
+  // Hosted Cloud quotes now read the account inventory; no paid POST occurs.
+  expect(cloudRequests.filter((r) => r.method !== "GET")).toEqual([]);
+  expect(cloudRequests.every((r) => r.path === "/api/object_info")).toBe(true);
   expect(deploymentRequests).toEqual([]);
 }
 async function layout(session: string) {

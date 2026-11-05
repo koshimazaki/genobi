@@ -103,12 +103,16 @@ slot (named `NodeClass.input`). A definitely missing dependency is refused with
 A loader whose choices the target does not enumerate stays unknown and does not
 block. On Cloud, an unreadable catalogue leaves availability unknown and the run
 goes ahead, except for FLUX 3 Klein, which needs the catalogue to choose its
-loader and keeps its own refusal. A local server quote for a Cloud
-workflow runs the same check first: a definite gap refuses the quote, and an
-unreadable catalogue puts `availability: "Couldn't check Cloud availability
+loader and keeps its own refusal. Local and hosted quotes for a Cloud
+workflow run the same check first: a definite gap refuses the quote, and an
+unreadable catalogue or incomplete loader metadata puts `availability: "Couldn't check Cloud availability
 for this workflow."` on it, repeated in the MCP quote's `next`, the agent
 approval line and the template gallery's price, so the person decides before
-paying. Comfy deployments keep their own validator.
+paying. Camera's direct Generate also quotes Cloud workflows: when availability
+is unknown it shows that warning before asking whether to continue. Cancelling
+sends nothing; a checked run proceeds on the quoted settings without another
+confirmation. Cloud workflow estimates describe GPU time, not a fixed BFL
+per-image price. Comfy deployments keep their own validator.
 
 ## Not verified here
 
