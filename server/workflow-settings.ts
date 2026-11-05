@@ -388,6 +388,12 @@ export class WorkflowSettings {
       location === "local" && this.mode(sessionId) === "box"
         ? this.box(sessionId)
         : undefined;
+    if (location === "local" && this.mode(sessionId) === "box" && !box)
+      throw new AppError(
+        400,
+        "The saved GPU box is no longer valid. Update its tunnel port in Settings → run location, or choose another run location.",
+        "invalid_destination",
+      );
     return {
       workflow: choice.id,
       location,
