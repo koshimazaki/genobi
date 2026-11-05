@@ -33,7 +33,7 @@ export function createSceneMedia() {
     retain(targets: Set<string>) {
       for (const key of slots.keys()) if (!targets.has(key)) this.clear(key);
     },
-    async load(target: string, blob: Blob) {
+    async load(target: string, blob: Blob, beforeCommit?: () => void) {
       if (blob.size > 64 * 1024 * 1024)
         throw new Error("Texture limit: 64 MB per file.");
       if (
@@ -105,6 +105,12 @@ export function createSceneMedia() {
       if (disposed || versions.get(target) !== version) {
         release(media);
         return;
+      }
+      try {
+        beforeCommit?.();
+      } catch (error) {
+        release(media);
+        throw error;
       }
       media.texture.colorSpace = T.SRGBColorSpace;
       const old = slots.get(target);

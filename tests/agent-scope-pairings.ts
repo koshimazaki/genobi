@@ -28,6 +28,8 @@ export const PAIRING_ROUTES: Record<string, string> = {
     "World has explicit, ephemeral pairing and owner-only browser dispatch.",
   "GET /api/world/:id/commands/:command":
     "World has explicit, ephemeral pairing and owner-only browser dispatch.",
+  "GET /api/world/:id/commands/:command/media":
+    "World tab owner only; command caller's project access and media hash checked before queueing.",
   "POST /api/world/:id/commands/:command":
     "World has explicit, ephemeral pairing and owner-only browser dispatch.",
   "POST /api/world/:id/files/:file":

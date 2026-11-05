@@ -75,6 +75,15 @@ attach an asset or modify the cut. Studio-started agents cannot read arbitrary
 local files; ask the person to import those, and keep using linked assets and
 `genobi_take_to_project` for owned takes. See `docs/project-media.md` for limits.
 
+Use `genobi_project_media` with `copyId`, current `baseRevision`, a fresh UUID
+`requestId` and `command` to `attach` a staged receipt, `replace` clips from one,
+`relink` clips to an existing asset, `alias` its production/reference role or
+`remove` an unused asset. Read `schema project-media` in the CLI or the tool's
+schema first. Preserve locks and the person's edits. A lost answer is recovered
+with the exact same request ID and body, never a new ID; its result identifies
+the applied revision and asset/clip IDs. A newer `currentRevision` means read
+again before another edit. Stale revisions and protected assets are refused.
+
 Read the complete `genobi_project.brief`, including `references`, before using
 an image mentioned as `[Image 1]` or similar. Each reference binds the label to
 an `assetId`; the asset list includes its kind, relative file path and hash.

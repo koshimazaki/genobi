@@ -1,4 +1,5 @@
 import { writeFile } from "node:fs/promises";
+import { randomUUID } from "node:crypto";
 import path from "node:path";
 import { expect, it } from "vitest";
 import { GenobiApi, studioUrl } from "../mcp/api";
@@ -67,6 +68,28 @@ it("stages over the real MCP transport, reads the same receipt from CLI, and kee
   expect(
     owner.projects.read(owner.project.id, owner.cookie.slice(15)).revision,
   ).toBe(1);
+  const operation = {
+    copyId,
+    requestId: randomUUID(),
+    baseRevision: 1,
+    command: {
+      op: "attach",
+      receiptId: staged.receipt.receiptId,
+      use: "production",
+    },
+  };
+  const attached = await agent.json("genobi_project_media", operation);
+  expect(attached).toMatchObject({
+    revision: 2,
+    assetIds: [expect.any(String)],
+    replayed: false,
+  });
+  expect(
+    await run(["project-media", "--input", JSON.stringify(operation)], options),
+  ).toEqual({ ...attached, replayed: true });
+  expect(
+    owner.projects.read(owner.project.id, owner.cookie.slice(15)).revision,
+  ).toBe(2);
 });
 
 it("exposes the same bounded schema in CLI and refuses arbitrary local reads for studio agents", async () => {

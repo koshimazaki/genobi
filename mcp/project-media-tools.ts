@@ -9,6 +9,7 @@ import {
 } from "../shared/project-media";
 import { readLocalFile } from "./local-file";
 import type { ToolDefinition } from "./definition";
+import { linkedMediaWrite } from "../shared/project-media-command";
 
 const copyId = z
   .string()
@@ -22,6 +23,28 @@ const route = (copy: unknown, receipt: unknown) =>
   `/api/projects/${encodeURIComponent(String(copy))}/media/${String(receipt)}` as const;
 
 export const projectMediaTools: ToolDefinition[] = [
+  {
+    name: "genobi_project_media",
+    title: "Edit project media",
+    description:
+      "Attach a staged receipt, replace selected clips from one, relink clips to an existing asset, alias an asset's role, or remove an unused asset. Requires the linked copyId, exact baseRevision and a fresh requestId UUID. Uses the browser's import/placement rules; preserves clip timing and transforms, locks, media roles, provenance and prompt reference checks. Returns resulting assetIds/layerIds and applied revision. Retry only the exact same requestId and body after a lost answer; it reads the stored result without repeating the edit, even after a human edit. currentRevision may then differ from the applied revision. Conflicts require a fresh read and new requestId. Local server only; no paid generation.",
+    inputSchema: linkedMediaWrite.shape,
+    inputObject: linkedMediaWrite,
+    tags: ["agents", "mcp", "director", "bundle"],
+    docs: ["docs/project-media.md", "docs/director-agent-tools.md"],
+    annotations: {
+      readOnlyHint: false,
+      idempotentHint: true,
+      destructiveHint: true,
+    },
+    async run(api, args) {
+      const { copyId, ...body } = linkedMediaWrite.parse(args);
+      return api.post(
+        `/api/projects/${encodeURIComponent(copyId)}/media`,
+        body,
+      );
+    },
+  },
   {
     name: "genobi_project_media_stage",
     title: "Stage owned project media",

@@ -5,10 +5,10 @@ import {
 } from "../shared/project-media";
 import type { RateBucket } from "../shared/limits";
 import { ProjectMediaStaging } from "./project-media-stage";
-import type { ProjectCopies } from "./projects";
+import type { MediaProjectCopies } from "./project-media-operations";
 
 export async function projectMediaRouter(
-  copies: ProjectCopies,
+  copies: MediaProjectCopies,
   limit: (bucket: RateBucket, id: string) => void,
 ) {
   const staging = new ProjectMediaStaging(copies);
@@ -16,6 +16,21 @@ export async function projectMediaRouter(
   const router = express.Router();
   const session = (response: express.Response) =>
     response.locals.sessionId as string;
+  router.post(
+    "/:id/media",
+    express.json({ limit: "8kb" }),
+    async (request, response) => {
+      limit("edit", session(response));
+      response.json(
+        await copies.mediaOperation(
+          request.params.id,
+          session(response),
+          request.body,
+          staging,
+        ),
+      );
+    },
+  );
   router.post(
     "/:id/media/:sha256",
     express.raw({

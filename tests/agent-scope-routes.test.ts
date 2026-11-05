@@ -141,6 +141,8 @@ const NOT_SCOPED: Record<string, string> = {
   "GET /api/projects/:id/files/:sha256": "projects have their own link scope",
   "POST /api/projects/:id/media/:sha256":
     "project link scope; stages only this session's bytes",
+  "POST /api/projects/:id/media":
+    "project link scope, uploader receipt ownership and revision checks",
   "GET /api/projects/:id/media/:sha256":
     "project link scope and uploader session receipt ownership",
   "POST /api/projects/:id/commands": "projects have their own link scope",
