@@ -19,6 +19,74 @@ or connect cloud models, and bring the agent harness that fits your project.
 
 https://github.com/user-attachments/assets/b2665e97-2836-4e02-8b38-4694a5c6b6c7
 
+## How Genobi answers the challenge
+
+Genobi is my entry to Comfy's
+[Open Source Higgsfield](https://comfy.org/open-source-higgsfield) challenge.
+Each angle links to its evidence; the full record is the
+[submission dossier](docs/submission.md).
+
+### Built with LTX (Most Innovative, LTX VFX bonus)
+
+A World Builder scene moves to the music, one still sets the look, and
+LTX-2.5 with the Layout-to-Render IC-LoRA paints the video with the track in
+it ([featured workflow](audio-reactive/README.md)). The same geometry feeds
+acoustic measurement and CPU room reverb, so each room sounds its size: in
+Acoustic Spaces v2 the decay runs from 0.2 s in a booth to over 5 s between
+towers. AKUSPACE, our LoRA on LTX-2.5, is a separate route for room-conditioned sound
+([adaptive reverb evidence](docs/adaptive-reverb-proof.md)).
+
+<p align="center"><video src="https://github.com/user-attachments/assets/REPLACE-ME-acoustic-spaces-v2" width="320" autoplay loop muted></video><br><em>Audio Reactive Acoustic Spaces v2: five World Builder rooms, LTX-2.5 Layout-to-Render, each room's own reverb</em></p>
+
+[![Watch Audio Reactive Acoustic Spaces v2](docs/media/acoustic-spaces-v2-readme.jpg)](docs/media/acoustic-spaces-v2-readme.mp4?raw=true)
+
+### Built with FLUX
+
+FLUX 3 Image Klein makes the stills, first frames and box edits most
+workflows start from, through BFL's API or as a Comfy workflow. One camera
+panel, with a Three.js diagram of each shot, writes the move in each model's
+documented wording for FLUX 3, LTX-2.5 and MiniMax H3
+([camera wording](docs/camera-wording.md)). [Dual Swords](docs/dual-editor.md)
+compares two clips and exports exact frames to Assets for the next generation.
+
+### Made to be shared (Most Viral)
+
+Every Gallery card has a public watch page and an embed page, such as
+[/watch/fruits-swap](https://genobi.pages.dev/watch/fruits-swap). Copy the
+link or the iframe; each page puts the MP4 and a player in its link preview
+(`og:video`, `twitter:player`), so the clip plays inside Discord and X.
+**Make your own** opens the cut as an editable project for your own media
+([sharing](docs/template-gallery.md#sharing)). Dance with Fruits shows the
+pattern: a technical LTX workflow turned into a 33-second loop anyone can
+watch, share and remix.
+
+<p align="center"><video src="https://github.com/user-attachments/assets/REPLACE-ME-dance-with-fruits" width="320" autoplay loop muted></video><br><em>Dance with Fruits: four LTX-2.5 Layout-to-Render characters on one dance guide</em></p>
+
+[![Watch Dance with Fruits](docs/media/dance-with-fruits-readme.jpg)](docs/media/dance-with-fruits-readme.mp4?raw=true)
+
+### Open Weights Only
+
+Open-weight steps: LTX-2.5 and its IC-LoRAs, AKUSPACE, Klein, SeedVR2 for
+upscaling and MiniMax H3, run on your own ComfyUI or on Comfy Cloud and the
+Comfy deployment `genobi-ltx-world-v2`. Hermes Agent, which Start Genobi sets up, is MIT.
+Optional closed routes: FLUX 3 video, FLUX Video Upscale, Klein through BFL's
+API, and LTX Fast/Pro through Comfy Router. Terms per model:
+[LICENCES.md](LICENCES.md) and [credits](docs/credits.md).
+
+### One agentic loop (Best Overall)
+
+The agent and you edit one Director/Editor timeline; it reads back your
+changes and quotes every paid step first. A **licence layer** records each
+model's terms, a **Taste layer** keeps credited references as project memory,
+the deck shows what the agent is doing and the hosted studio keeps
+[count-only statistics](observability/README.md). Templates sit on top as
+skills an agent can rerun. Dance with Fruits came from spoken rounds of "take
+this one, make a new one, add this" ([log](audio-reactive/edit/LOG.md)): one
+guide, four characters cutting on the same pose. Acoustic Spaces v2 is version
+two of [Adaptive reverb](docs/adaptive-reverb.md); every slot keeps the still
+and prompt that made it ([v2](docs/audio-reactive-drop.md),
+[Fruits](docs/fruits-swap.md)).
+
 ## Start here
 
 Run the [local studio](#run-locally), then pick a way in:
@@ -117,7 +185,7 @@ itself an editable example. Those production choices do not lock your next
 project to the same models. The Gallery includes music-led creature edits, Bloom and the
 adaptive-reverb demonstration, with
 [Audio Reactive Acoustic Spaces v2](docs/audio-reactive-drop.md) and
-[Dance with Fruits](docs/fruits-swap.md) as editable mix templates. Public watch/embed pages share the result;
+[Dance with Fruits](docs/fruits-swap.md) as editable mix templates. [Public watch/embed pages](#made-to-be-shared-most-viral) share the result;
 editable templates and exported project bundles let someone else remix it.
 Private projects are not automatically public.
 
