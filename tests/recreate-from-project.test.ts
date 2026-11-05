@@ -269,6 +269,22 @@ describe("a Camera run sent to the Director", () => {
     expect(() => composerInput(state)).not.toThrow();
   });
 
+  it("names references the run sent but the project no longer holds", async () => {
+    const { added, bundle } = await sent();
+    const project = structuredClone(bundle.project);
+    const g = project.generations.find(
+      (x) => x.id === project.assets[added.assetId].generationId,
+    )!;
+    // The record still counts the run's one reference; its asset is gone.
+    g.referenceAssetIds = [];
+    const recipe = cameraRecipe(project, bloomA, [added.assetId]);
+    expect(recipe.imageIds).toEqual([]);
+    expect(recipe.job?.imageReferenceCount).toBe(1);
+    const note = recipeNote(recipe, 0);
+    expect(note).toContain("reference images (reattach them)");
+    expect(note).not.toContain("No references recorded");
+  });
+
   it("an older upload without a record still says Create in Camera", () => {
     const p = assetFixture().project;
     const [id] = Object.keys(p.assets);

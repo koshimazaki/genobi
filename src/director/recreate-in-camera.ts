@@ -256,10 +256,14 @@ const STILL_SOURCES: Record<string, string> = {
 export function recipeNote(recipe: CameraRecipe, images: number) {
   if (recipe.label === "Create in Camera")
     return "Settings not stored for this asset: Camera opened as it was. Nothing was generated.";
-  const recorded =
+  // The run's own count outranks what the project still holds: a reference
+  // the run sent but the project lost is named, never "none recorded".
+  const recorded = Math.max(
     recipe.imageIds.length +
-    (recipe.reference ? 1 : 0) +
-    (recipe.guide ? 1 : 0);
+      (recipe.reference ? 1 : 0) +
+      (recipe.guide ? 1 : 0),
+    recipe.job?.imageReferenceCount ?? 0,
+  );
   const missing = [...recipe.missing];
   if (recorded > images) missing.push("reference images (reattach them)");
   const restored = [
