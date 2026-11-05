@@ -7,7 +7,7 @@ metadata:
   version: "0.1.0"
   phase: "1 - quoted generation"
   tags: "storyboard, agents, director, mcp"
-  docs: "docs/scrolls.md"
+  docs: "docs/scrolls.md, docs/browser-exports.md"
 ---
 
 # Genobi Scrolls
@@ -155,3 +155,16 @@ After the person has chosen, `handoff` with a `destination`:
 
 See [Scrolls](../../../../docs/scrolls.md) for the commands, limits and bundle
 format, and the `genobi-director` skill once the panels are in a project.
+
+## Export from the open tab
+
+For the person's mounted Scroll, ask them to expand Document & agent tools and
+choose Link agent to this Scroll, then call `genobi_export` with action `link`
+and that one-use code. Read `targets`, preserve its exact tab and source revision,
+and request `scroll-zip` (media included) or `scroll-json` (metadata only).
+Poll `status` until `done` contains a receipt, then return its download link.
+A successful request alone is not a finished file. Use the same request UUID/body
+after an uncertain answer; do not render again blindly. See
+[browser exports](../../../../docs/browser-exports.md) for cancellation, limits,
+private downloads and expiry. General live editing is not provided by this export
+connection; the pure JSON commands above remain available.

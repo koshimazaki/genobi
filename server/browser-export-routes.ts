@@ -49,6 +49,21 @@ export async function browserExportRouter(
     limit("edit", owner(res));
     res.json(service.disconnect(String(req.params.id), browser(res)));
   });
+  router.post("/tabs/:id/link", json, (req, res) => {
+    limit("edit", owner(res));
+    const source = exportSource.safeParse(req.body);
+    if (!source.success)
+      throw new AppError(400, "Name the Scroll document and revision to link.");
+    res.json(
+      service.createLink(String(req.params.id), browser(res), source.data),
+    );
+  });
+  router.post("/link", json, (req, res) => {
+    limit("runnerPair", owner(res));
+    if (typeof req.body?.code !== "string" || req.body.code.length > 30)
+      throw new AppError(400, "Supply the code from the Scroll tab.");
+    res.json(service.link(owner(res), req.body.code));
+  });
   router.post("/", json, (req, res) => {
     limit("edit", owner(res));
     const request = exportRequest.safeParse(req.body);
@@ -77,7 +92,7 @@ export async function browserExportRouter(
   router.post(
     "/:id/artifact",
     express.raw({
-      type: ["application/zip", "video/mp4"],
+      type: ["application/zip", "video/mp4", "application/json"],
       limit: EXPORT_BYTES,
     }),
     async (req, res) => {

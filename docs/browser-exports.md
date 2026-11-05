@@ -2,19 +2,20 @@
 title: Browser exports
 area: Director
 tags: [agents, director, mcp, bundle]
-summary: Request revision-bound Director MP4 and project ZIP exports through an open local browser.
+summary: Request revision-bound Director and Scrolls exports through an open local browser.
 ---
 
 # Browser exports
 
-`genobi_export` / `genobi export` uses the mounted Director or Editor renderer.
-Open the local studio and link its project before requesting work. Hosted
+`genobi_export` / `genobi export` uses the mounted Director, Editor or Scrolls workspace.
+Open the local studio and link its project or Scroll tab before requesting work. Hosted
 runtime capabilities report this service unavailable; no headless renderer or
 paid generation is involved. World capture continues to use `genobi_world`.
 
 1. Read `schema export`, then `export --input '{"action":"targets"}'`. Each target identifies
    one tab, project revision, supported formats and whether an export is busy.
-2. Request `project-zip` or `mp4` with that `tabId`, exact `source` and a fresh
+2. Request a format from that target (`project-zip` / `mp4` for Director;
+   `scroll-zip` / `scroll-json` for Scrolls) with that `tabId`, exact `source` and a fresh
    UUID `requestId`. For example, pass a JSON file to `export --input @export.json`.
 3. Read `status` using the returned export `id`. Rendering reports progress;
    project ZIP packaging may finish without intermediate progress.
@@ -32,6 +33,29 @@ paid generation is involved. World capture continues to use `genobi_world`.
   "format": "project-zip"
 }
 ```
+
+## Link and export a Scroll
+
+In Scrolls, expand **Document & agent tools**, then choose **Link agent to this
+Scroll**. Give the one-use code to the agent, which calls `export` with
+`{"action":"link","code":"<code>"}`. Each ten-minute code grants access to
+one open tab, even when another tab holds the same document. At most four agents
+can link to a tab. The code is consumed once; after a lost answer, read `targets`
+to find the granted tab before asking for another code.
+
+**Disconnect Scroll agents**, switching documents or closing the tab ends those
+links. Completed files already requested remain downloadable until their receipt
+expiry. Enabling again creates a fresh tab identity and requires a new link.
+Hosted Scrolls still uses its normal browser Save controls without this service.
+
+`scroll-zip` contains the exact document and all verified image/audio bytes,
+up to 100 MiB. `scroll-json` contains at most 64 KB of document metadata and
+references: reopening JSON requires the corresponding media already loaded.
+Choose ZIP for a cache-independent restore. The ordinary Save / Save media
+bundle controls use the same validation; missing or changed media is an error
+before any download. This connection supports export only at this stage;
+`genobi_scrolls` remains the pure JSON command tool. General live edits and
+Director handoff are separate planned slices.
 
 ## Lifecycle and limits
 
@@ -78,3 +102,10 @@ SHA-256 bytes, the ZIP opened in a fresh browser profile, and exact request repl
 returned the original operation. The browser showed the finished video and source
 revision. This is local evidence; no hosted deployment, hardware-specific GPU or
 paid provider call was exercised.
+
+Actual local Chrome also linked a Scroll with creature image and audio, requested
+ZIP and JSON through a separate agent session, downloaded both from the UI
+receipts and verified exact source and hashes. The ZIP reopened with its original
+media and prompt in a fresh browser profile. Disconnect removed the agent target.
+A document-switch race found in acceptance now disables link issuance until the
+registered source matches, with a server revision check as well. No paid calls.

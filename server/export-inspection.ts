@@ -1,6 +1,6 @@
 import { unzipSync } from "fflate";
 import type { ExportRequest } from "../shared/browser-export";
-import { EXPORT_BYTES } from "../shared/browser-export";
+import { EXPORT_BYTES, exportFileInfo } from "../shared/browser-export";
 import { inspectMp4 } from "../shared/mp4";
 import {
   ARCHIVE_PATH,
@@ -13,11 +13,27 @@ import { readManifest } from "../src/director/manifest";
 import { briefFileEntries } from "../src/director/prompt-brief";
 import { readWorldFiles } from "../src/director/world-files";
 import { createHash } from "node:crypto";
+import { parseScrollArchive } from "../src/scrolls/archive";
+import { parseScroll, SCROLLS_LIMIT } from "../shared/scrolls/types";
 
 /** The browser supplies an artifact, never a URL; inspect it before a receipt exists. */
 export async function inspectExport(request: ExportRequest, bytes: Buffer) {
   if (!bytes.length || bytes.length > EXPORT_BYTES)
     throw new Error("Export must be nonempty and within 150 MiB.");
+  if (request.source.kind === "scrolls") {
+    if (request.format === "scroll-json" && bytes.length > SCROLLS_LIMIT)
+      throw new Error("Scroll JSON exceeds 64 KB.");
+    const document =
+      request.format === "scroll-zip"
+        ? (await parseScrollArchive(new Uint8Array(bytes))).document
+        : parseScroll(JSON.parse(bytes.toString("utf8")));
+    if (
+      document.id !== request.source.id ||
+      document.revision !== request.source.revision
+    )
+      throw new Error("Scroll export names a different source revision.");
+    return exportFileInfo(request.format);
+  }
   if (request.format === "mp4") {
     await inspectMp4(
       bytes.length,

@@ -4,6 +4,7 @@ import {
   EXPORT_RETENTION_MS,
   EXPORT_TAB_TTL_MS,
   sameExportSource,
+  exportFormats,
   type ExportRequest,
   type ExportSource,
   type ExportStatus,
@@ -12,11 +13,13 @@ import { ExportArtifacts, exportIdentity } from "./export-artifacts";
 import type { ProjectCopies } from "./projects";
 import { AppError } from "./errors";
 import { bounded } from "./project-bundle";
+import { LinkCodes } from "./project-links";
 
 interface Tab {
   id: string;
   owner: string;
-  copyId: string;
+  copyId?: string;
+  grants: Set<string>;
   source: ExportSource;
   seen: number;
   job?: string;
@@ -40,6 +43,7 @@ const notFound = () =>
 export class BrowserExports {
   private tabs = new Map<string, Tab>();
   private jobs = new Map<string, Job>();
+  private links = new LinkCodes();
   readonly artifacts: ExportArtifacts;
   constructor(
     private projects: ProjectCopies,
@@ -101,7 +105,7 @@ export class BrowserExports {
     const project = this.projects
       .list(owner)
       .find((p) => p.id === source.id && p.access === "owner");
-    if (!project)
+    if (source.kind === "director" && !project)
       throw new AppError(
         409,
         "Wait for this project to sync to the local server before connecting export.",
@@ -115,18 +119,59 @@ export class BrowserExports {
     const tab = {
       id: randomUUID(),
       owner,
-      copyId: project.copyId,
+      copyId: source.kind === "director" ? project?.copyId : undefined,
+      grants: new Set<string>(),
       source,
       seen: this.now(),
     };
     this.tabs.set(tab.id, tab);
     return { tabId: tab.id };
   }
+  private access(tab: Tab, caller: string) {
+    if (tab.owner === caller) return;
+    if (tab.copyId) {
+      this.projects.read(tab.copyId, caller);
+      return;
+    }
+    if (!tab.grants.has(caller)) throw notFound();
+  }
+  createLink(tabId: string, owner: string, source: ExportSource) {
+    this.sweep();
+    const tab = this.ownTab(tabId, owner);
+    if (tab.source.kind !== "scrolls")
+      throw new AppError(
+        400,
+        "Link the Director project through its project tools.",
+      );
+    if (!sameExportSource(tab.source, source))
+      throw new AppError(
+        409,
+        "Wait for this Scroll revision to connect before linking.",
+      );
+    return this.links.create(tab.id);
+  }
+  link(caller: string, code: string) {
+    this.sweep();
+    const id = this.links.spend({ code });
+    const tab = this.tabs.get(id);
+    if (!tab || tab.source.kind !== "scrolls") throw notFound();
+    if (tab.grants.size >= 4 && !tab.grants.has(caller))
+      throw new AppError(
+        429,
+        "This Scroll tab already has four linked agents.",
+      );
+    tab.grants.add(caller);
+    return {
+      tabId: id,
+      source: tab.source,
+      formats: exportFormats(tab.source.kind),
+    };
+  }
   targets(caller: string) {
     this.sweep();
     return [...this.tabs.values()].flatMap((tab) => {
       try {
-        this.projects.read(tab.copyId, caller);
+        this.access(tab, caller);
       } catch {
         return [];
       }
@@ -137,7 +182,7 @@ export class BrowserExports {
           source: tab.source,
           copyId: tab.copyId,
           busy: !!active && !terminal(active),
-          formats: ["project-zip", "mp4"],
+          formats: exportFormats(tab.source.kind),
         },
       ];
     });
@@ -162,10 +207,10 @@ export class BrowserExports {
     if (!tab)
       throw new AppError(
         409,
-        "The export browser is unavailable. Open Director or Editor locally and read targets again.",
+        "The export browser is unavailable. Open the source workspace locally and read targets again.",
         "export_browser_missing",
       );
-    this.projects.read(tab.copyId, caller);
+    this.access(tab, caller);
     if (!sameExportSource(tab.source, request.source))
       throw new AppError(
         409,
@@ -201,7 +246,7 @@ export class BrowserExports {
   poll(tabId: string, owner: string, source: ExportSource) {
     this.sweep();
     const tab = this.ownTab(tabId, owner);
-    if (source.id !== tab.source.id)
+    if (source.id !== tab.source.id || source.kind !== tab.source.kind)
       throw new AppError(
         409,
         "Reconnect export for the newly opened project.",

@@ -14,6 +14,7 @@ import {
   EXPORT_RETENTION_MS,
   exportRequest,
   exportReceipt,
+  exportFileInfo,
   sameExportSource,
   type ExportReceipt,
   type ExportRequest,
@@ -67,13 +68,14 @@ export class ExportArtifacts {
         exportRequest.parse(record.request);
         exportReceipt.parse(record.receipt);
         const r = record.receipt;
-        const extension = record.request.format === "mp4" ? "mp4" : "zip";
+        const { extension, contentType } = exportFileInfo(
+          record.request.format,
+        );
         if (
           !sameExportSource(r.source, record.request.source) ||
           r.format !== record.request.format ||
           r.file !== `${r.source.id}-r${r.source.revision}.${extension}` ||
-          r.contentType !==
-            (extension === "mp4" ? "video/mp4" : "application/zip") ||
+          r.contentType !== contentType ||
           r.download !== `/api/exports/${name}/artifact` ||
           Date.parse(r.createdAt) > this.now() ||
           Date.parse(r.expiresAt) - Date.parse(r.createdAt) !==

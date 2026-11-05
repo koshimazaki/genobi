@@ -16,9 +16,17 @@ export const exportTools: ToolDefinition[] = [
     name: "genobi_export",
     title: "Export through the open browser",
     description:
-      "Export the exact revision in a local Director/Editor browser, using its existing renderer. Read targets first: each tab has its own tabId, source and formats; linked project access is required. Request takes that source, tabId, project-zip or mp4 and a fresh requestId UUID. Status reports queued/running/storing/done/error/cancelled; only done includes a completed artifact receipt with source, hash and download path. Cancel stops queued/rendering work; an atomic storage commit already started finishes and reports its result. Exact requestId/body replay returns the same result after a lost answer, including completed results after restart during one-hour retention. Never invent a new request after an uncertain answer. Download saves an already completed artifact to a new local file for an external agent; studio-started agents use the receipt URL. Missing browser, busy renderer or changed source is an explicit failure. No headless export or paid generation.",
+      "Export the exact revision in a local Director/Editor or Scrolls browser, using its existing renderer. Read targets first: each tab has its own tabId, source and formats; Director needs linked project access; Scrolls needs action link with the one-use code shown under Document & agent tools. A link is consumed once; use targets to recover a lost link acknowledgement. Request takes that source, tabId, a supported format (project-zip, mp4, scroll-zip or scroll-json) and a fresh requestId UUID. Status reports queued/running/storing/done/error/cancelled; only done includes a completed artifact receipt with source, hash and download path. Cancel stops queued/rendering work; an atomic storage commit already started finishes and reports its result. Exact requestId/body replay returns the same result after a lost answer, including completed results after restart during one-hour retention. Never invent a new request after an uncertain answer. Download saves an already completed artifact to a new local file for an external agent; studio-started agents use the receipt URL. Missing browser, busy renderer or changed source is an explicit failure. No headless export or paid generation.",
     inputSchema: {
-      action: z.enum(["targets", "request", "status", "cancel", "download"]),
+      action: z.enum([
+        "targets",
+        "link",
+        "request",
+        "status",
+        "cancel",
+        "download",
+      ]),
+      code: z.string().min(1).max(30).optional(),
       requestId: z.string().uuid().optional(),
       tabId: z.string().uuid().optional(),
       source: exportSource.optional(),
@@ -26,15 +34,20 @@ export const exportTools: ToolDefinition[] = [
       id: z.string().uuid().optional(),
       filePath: z.string().min(1).max(4096).optional(),
     },
-    tags: ["agents", "mcp", "director", "bundle"],
+    tags: ["agents", "mcp", "director", "storyboard", "bundle"],
     docs: ["docs/browser-exports.md", "docs/project-archives.md"],
     annotations: {
       readOnlyHint: false,
-      idempotentHint: true,
+      idempotentHint: false,
       destructiveHint: false,
       openWorldHint: false,
     },
     async run(api, args) {
+      if (args.action === "link") {
+        if (typeof args.code !== "string")
+          throw new Error("Supply the one-use code from the Scroll tab.");
+        return api.post("/api/exports/link", { code: args.code });
+      }
       if (args.action === "targets") return api.get("/api/exports/targets");
       if (args.action === "request")
         return api.post(

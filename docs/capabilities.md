@@ -226,10 +226,10 @@ Download bundle validates the project, media, brief, feedback and World source d
 
 ### Agent browser exports
 
-Request a revision-bound MP4 or validated project ZIP through the mounted browser. Progress, cancellation, private hash receipts and one-hour completed-artifact retention; no headless or hosted export.
+Request a revision-bound Director MP4/project ZIP or paired Scroll media ZIP/JSON. Progress, cancellation, private hash receipts and one-hour completed-artifact retention; no headless or hosted export.
 
-- **Where:** Director · open local Director or Editor · **Runs:** Local, free · **Status:** implemented
-- **MCP tools:** [`genobi_export`](registry-tools.md#genobi_export) · **CLI:** `genobi export` · **Skills:** [`genobi-director`](registry-skills.md#genobi-director) · **Docs:** [browser-exports.md](browser-exports.md), [project-archives.md](project-archives.md)
+- **Where:** Director · open local Director, Editor or Scrolls · **Runs:** Local, free · **Status:** implemented
+- **MCP tools:** [`genobi_export`](registry-tools.md#genobi_export) · **CLI:** `genobi export` · **Skills:** [`genobi-director`](registry-skills.md#genobi-director), [`genobi-scrolls`](registry-skills.md#genobi-scrolls) · **Docs:** [browser-exports.md](browser-exports.md), [project-archives.md](project-archives.md)
 
 ### Motion effects and MP4 export
 

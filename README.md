@@ -347,4 +347,4 @@ For your own hosted instance, follow [Cloudflare deployment](docs/cloudflare.md)
 work and the people and projects that make the studio possible.
 Not affiliated with Comfy, Lightricks, Black Forest Labs or MiniMax.
 
-Agent-driven MP4 and project ZIP downloads use the [open browser export service](docs/browser-exports.md).
+Agent-driven Director and Scroll downloads use the [open browser export service](docs/browser-exports.md).

@@ -236,10 +236,10 @@
     },
     {
       "id": "browser-export", "name": "Agent browser exports", "status": "implemented",
-      "where": "Director · open local Director or Editor",
-      "description": "Request a revision-bound MP4 or validated project ZIP through the mounted browser. Progress, cancellation, private hash receipts and one-hour completed-artifact retention; no headless or hosted export.",
+      "where": "Director · open local Director, Editor or Scrolls",
+      "description": "Request a revision-bound Director MP4/project ZIP or paired Scroll media ZIP/JSON. Progress, cancellation, private hash receipts and one-hour completed-artifact retention; no headless or hosted export.",
       "mcp": ["genobi_export"], "cli": ["export"],
-      "skills": ["genobi-director"], "docs": ["docs/browser-exports.md", "docs/project-archives.md"],
+      "skills": ["genobi-director", "genobi-scrolls"], "docs": ["docs/browser-exports.md", "docs/project-archives.md"],
       "runs": [{ "route": "local-free" }]
     },
     {
