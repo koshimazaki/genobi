@@ -3,12 +3,21 @@ import { ComfyLow } from "@comfyorg/sdk/low";
 import { AppError } from "./errors";
 import { isComfyKey, mediaUrl, type Fetcher } from "../shared/provider";
 import type { ProviderResult } from "../shared/provider";
-import { type ApiGraph } from "../shared/comfy/slots";
+import { fillSlots, type ApiGraph } from "../shared/comfy/slots";
 import { selectWorkflowOutputs } from "../shared/comfy/outputs";
 import { workflowAssetGraph, type SdkAssets } from "./comfy-assets";
 import { runFailure, type RunFailure } from "./comfy-run-failure";
 import { readComfyCloudInfo } from "./comfy-cloud-check";
-import { comboOptions, inspectWorkflow } from "../shared/comfy/readiness";
+import {
+  comboOptions,
+  inspectWorkflow,
+  type ObjectInfo,
+} from "../shared/comfy/readiness";
+import {
+  blocks,
+  preflightGraph,
+  preflightMessage,
+} from "../shared/comfy/preflight";
 import {
   CLOUD_BASE,
   DEFAULT_DESTINATION,
@@ -123,6 +132,9 @@ export function destinationFetch(origin: string, fetcher: Fetcher): Fetcher {
   };
 }
 
+const isKlein = (template: WorkflowTemplate) =>
+  template.id.startsWith("flux-3-klein-");
+
 export interface ComfySdkOptions {
   destination?: WorkflowDestination;
   fetcher?: Fetcher;
@@ -209,18 +221,10 @@ export class ComfySdkWorkflows implements WorkflowClient {
    * against this account's actual UNETLoader combo before a paid submission,
    * never by retrying after a failed job. Other workflows keep their templates.
    */
-  private async kleinCloudValues(
+  private kleinCloudValues(
     template: WorkflowTemplate,
-    key: string,
-  ): Promise<Record<string, unknown>> {
-    let info: Awaited<ReturnType<typeof readComfyCloudInfo>>;
-    try {
-      info = await readComfyCloudInfo(key, this.fetcher);
-    } catch {
-      throw unsent(
-        "Could not check Comfy Cloud's FLUX 3 Klein models. Verify Cloud API access in Settings, or choose BFL API.",
-      );
-    }
+    info: ObjectInfo,
+  ): Record<string, unknown> {
     // Read the actual model slot: the supplied Base edit graph uses node 59,
     // while Base T2I and Distilled use 18:1. Never substitute Distilled weights
     // for Base: their sampler parameters are different.
@@ -257,6 +261,81 @@ export class ComfySdkWorkflows implements WorkflowClient {
     return { unet_name: selected };
   }
 
+  /**
+   * This account's node catalogue, read once before a Cloud run. Klein needs
+   * it to pick its loader, so an unread catalogue refuses Klein; for any
+   * other template availability is then unknown, as the Settings check says,
+   * and the run goes ahead: only a definitely missing dependency blocks it.
+   */
+  private async cloudInfo(
+    template: WorkflowTemplate,
+    key: string,
+  ): Promise<ObjectInfo | undefined> {
+    try {
+      return await readComfyCloudInfo(key, this.fetcher);
+    } catch {
+      if (isKlein(template))
+        throw unsent(
+          "Could not check Comfy Cloud's FLUX 3 Klein models. Verify Cloud API access in Settings, or choose BFL API.",
+        );
+      return undefined;
+    }
+  }
+
+  /**
+   * Checks the account before uploads, the single provider POST, or any GPU
+   * spend (#47). A missing node or model is a known, unsent refusal; Klein's
+   * loader is resolved against the same read. `checked` is false when Cloud's
+   * catalogue could not be read (availability unknown).
+   */
+  private async preflight(
+    template: WorkflowTemplate,
+    values: Record<string, unknown>,
+    key: string,
+    fileSlots: string[] = [],
+  ): Promise<{ values: Record<string, unknown>; checked: boolean }> {
+    const info =
+      this.destination.kind === "cloud"
+        ? await this.cloudInfo(template, key)
+        : undefined;
+    const resolvedValues =
+      info && isKlein(template)
+        ? { ...values, ...this.kleinCloudValues(template, info) }
+        : values;
+    if (info) {
+      const check = preflightGraph(
+        template,
+        fillSlots(template.graph, template.slots, {
+          ...resolvedValues,
+          ...Object.fromEntries(fileSlots.map((n) => [n, "pending"])),
+        }),
+        info,
+      );
+      if (blocks(check))
+        throw unsent(
+          preflightMessage("This Comfy Cloud account", check, {
+            nodes:
+              "Choose another workflow, or run it on a local ComfyUI or GPU box that has them.",
+            models:
+              "Check the Cloud workflow inventory, or choose another workflow.",
+          }),
+        );
+    }
+    return { values: resolvedValues, checked: info !== undefined };
+  }
+
+  /** The quote's read-only check: refuses a definite gap, says when unknown. */
+  async availability(
+    template: WorkflowTemplate,
+    values: Record<string, unknown>,
+    key: string,
+  ): Promise<"checked" | "unknown" | undefined> {
+    if (this.destination.kind !== "cloud") return undefined;
+    this.client(key);
+    const { checked } = await this.preflight(template, values, key);
+    return checked ? "checked" : "unknown";
+  }
+
   async run(
     template: WorkflowTemplate,
     values: Record<string, unknown>,
@@ -264,13 +343,13 @@ export class ComfySdkWorkflows implements WorkflowClient {
     { idempotencyKey, files = {} }: WorkflowRunOptions,
   ): Promise<string> {
     const client = this.client(key);
-    // Resolve the loader before uploads, reservation's single provider POST,
-    // or any GPU spend. A missing model is a known, unsent refusal.
-    const resolvedValues =
-      this.destination.kind === "cloud" &&
-      template.id.startsWith("flux-3-klein-")
-        ? { ...values, ...(await this.kleinCloudValues(template, key)) }
-        : values;
+    const { values: resolvedValues } = await this.preflight(
+      template,
+      values,
+      key,
+      Object.keys(files),
+    );
+
     // Filled first: a graph that does not match its slots is refused unsent.
     // Cloud keeps the catalogue model names written in the graph; a local
     // ComfyUI's own files are filled by `server/comfy-local.ts`.

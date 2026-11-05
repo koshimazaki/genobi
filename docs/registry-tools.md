@@ -363,7 +363,7 @@ Genobi media space · writes. Put an AKUSPACE room on a video or audio clip's ex
 
 ## `genobi_run_location`
 
-Genobi run location · writes. Read or set this session's open-workflow destination: local, cloud, both, or deployment with deploymentUrl (https://<name>.run.comfy.app). A deployment uses its workspace's billing. Without location this only reads readiness and input limits. No automatic fallback. A destination change invalidates earlier quotes and staged tickets; stage and quote again before an approved submission.
+Genobi run location · writes. Read or set this session's open-workflow destination: local, cloud, both, deployment with deploymentUrl (https://<name>.run.comfy.app), or box with a GPU box's name and the local port of the person's SSH tunnel (a Vast or lab ComfyUI at http://127.0.0.1:<port>). A deployment uses its workspace's billing; a GPU box is billed by its provider while it runs, so mention its idle reminder and never stop or start it. Without location this only reads readiness and input limits. No automatic fallback. A destination change invalidates earlier quotes and staged tickets; stage and quote again before an approved submission.
 
 - Tags: `agents`, `mcp`, `workflows`, `comfy`
 - Taught by: [`genobi-akuspace`](registry-skills.md#genobi-akuspace), [`genobi-camera`](registry-skills.md#genobi-camera), [`genobi-cli`](registry-skills.md#genobi-cli), [`genobi-comfy`](registry-skills.md#genobi-comfy), [`genobi-upscale`](registry-skills.md#genobi-upscale)

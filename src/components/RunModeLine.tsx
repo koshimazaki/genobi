@@ -4,6 +4,7 @@ import type { KeyKind } from "../../shared/provider";
 import type { Generator, VideoModel } from "../../shared/types";
 import { useLocalCheck } from "../local-check";
 import { runModeLine } from "../run-mode";
+import { useLiveBoxStatus, withLiveBox } from "../box-status";
 import { useSettingSaving, useSettingsStore } from "../settings-store";
 
 /**
@@ -21,7 +22,13 @@ export default function RunModeLine({
   keyKind: KeyKind | null;
 }) {
   const entry = entryFor(generator, model);
-  const state = useSettingsStore((s) => s.runLocation);
+  const settled = useSettingsStore((s) => s.runLocation);
+  // A box's reachability and idle state are live, outside the settings lane.
+  const live = useLiveBoxStatus(
+    settled?.mode === "box" && Boolean(settled.box),
+    String(settled?.box?.port ?? ""),
+  );
+  const state = withLiveBox(settled, live);
   // Before the catalogue is read, the entry's default template.
   const template = useSettingsStore(
     (s) =>

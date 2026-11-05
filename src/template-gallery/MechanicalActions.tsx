@@ -5,8 +5,9 @@ import type { MechanicalRun } from "./useMechanicalRun";
 
 /** A quote's price as the composer shows a Router run's: dollars and credits. */
 export const quotePrice = (quote: Quote) =>
-  quote.billing ??
-  `$${quote.estimateUsd.toFixed(2)} · ${Math.round(quote.estimateUsd * CREDITS_PER_USD)} credits`;
+  (quote.billing ??
+    `$${quote.estimateUsd.toFixed(2)} · ${Math.round(quote.estimateUsd * CREDITS_PER_USD)} credits`) +
+  (quote.availability ? ` · ${quote.availability}` : "");
 
 /**
  * Generate for a mechanical template: quote, then confirm the price, then

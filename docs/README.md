@@ -49,6 +49,7 @@ user action through every layer.
 - [Audiovisual GPU and evaluator runbook](audiovisual-gpu-evaluation.md) — offline fixtures, real GPU gates, CPU/AKUSPACE comparisons and hosted evaluator acceptance.
 - [Audio-reactive LTX pilot](audio-reactive-ltx-pilot.md) — editable fruit, architecture and descending-camera guides, exact music cues and controlled local model comparisons.
 - [Vast runner](vast-runner.md) — pinned worker setup, SSH, model downloads and read-only checks before the first GPU experiment.
+- [GPU box run location](gpu-box.md) — a Vast box or the lab machine through an SSH tunnel to loopback: tunnel command, readiness, uptime, idle reminder and the pre-submit model and node check.
 
 - [Supervised workflow checks](supervised-workflow-checks.md) — complete asset-to-project acceptance and deferred project/Arena review follow-ups.
 - [Dimensions mix](dimensions-mix.md) — the first mix template: a finished

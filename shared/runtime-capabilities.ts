@@ -21,7 +21,7 @@ export function runtimeCapabilities(runtime: "local" | "hosted") {
     runtime,
     readiness: "Read status routes; supported does not mean configured.",
     runLocations: local
-      ? ["local", "cloud", "both", "deployment"]
+      ? ["local", "cloud", "both", "deployment", "box"]
       : ["cloud", "deployment"],
     limits: {
       deploymentInputBytes: local

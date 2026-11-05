@@ -59,12 +59,15 @@ describe("Cloudflare adapter: the workflow route through the Comfy SDK", () => {
     });
     const { job: ready } = (await polled.json()) as { job: Job };
     expect(ready.status).toBe("Ready");
+    // The account's catalogue first (#47), read with its API-key header.
     expect(cloudRequests.map((r) => `${r.method} ${r.path}`)).toEqual([
+      "GET /api/object_info",
       "POST /api/v2/jobs",
       "GET /api/v2/jobs/wf-1",
       "GET /api/v2/assets/asset-1/content",
     ]);
-    expect(cloudRequests.every((r) => r.bearer)).toBe(true);
+    expect(cloudRequests[0].apiKey).toBe(true);
+    expect(cloudRequests.slice(1).every((r) => r.bearer)).toBe(true);
     const take = await call(`/api/takes/${job.id}`, {
       headers: { cookie: session },
     });

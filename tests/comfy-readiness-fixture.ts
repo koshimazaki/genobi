@@ -20,3 +20,13 @@ export function infoFor(graph: ApiGraph): ObjectInfo {
     ]),
   );
 }
+
+/** One catalogue listing every graph's nodes and loader files together. */
+export const infoForGraphs = (...graphs: ApiGraph[]): ObjectInfo =>
+  infoFor(
+    Object.fromEntries(
+      graphs.flatMap((graph, index) =>
+        Object.entries(graph).map(([id, node]) => [`${index}/${id}`, node]),
+      ),
+    ),
+  );

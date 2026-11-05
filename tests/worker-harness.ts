@@ -11,7 +11,8 @@ import { build } from "esbuild";
 import { readdir, readFile } from "node:fs/promises";
 import { randomUUID } from "node:crypto";
 import { JOB_MAX_AGE_MS } from "../shared/lifecycle";
-import { infoFor } from "./comfy-readiness-fixture";
+import { infoForGraphs } from "./comfy-readiness-fixture";
+import { workflowTemplates } from "../shared/comfy/workflows";
 import { kleinWorkflow } from "../shared/comfy/klein";
 import {
   kleinBaseWorkflow,
@@ -36,12 +37,15 @@ export const cloudRequests: {
 }[] = [];
 /** Explicit Cloud discovery fixture; separate from generation requests. */
 export const cloudCatalogue = {
-  body: {
-    ...infoFor(kleinWorkflow.graph),
-    ...infoFor(kleinEditTemplate(1).graph),
-    ...infoFor(kleinBaseWorkflow.graph),
-    ...infoFor(kleinBaseEditTemplate(1).graph),
-  } as unknown,
+  // Every template's nodes and loader files: a Cloud run is checked against
+  // the account's catalogue before it is submitted (#47).
+  body: infoForGraphs(
+    kleinWorkflow.graph,
+    kleinEditTemplate(1).graph,
+    kleinBaseWorkflow.graph,
+    kleinBaseEditTemplate(1).graph,
+    ...workflowTemplates.map((choice) => choice.template.graph),
+  ) as unknown,
   status: 200,
 };
 /** What reached the fake Router's queued submit, without the key itself. */

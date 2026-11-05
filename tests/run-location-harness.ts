@@ -12,6 +12,7 @@ import type { WorkflowClient } from "../shared/comfy/workflow";
 import { fakeComfy, nodesFor, type FakeComfy } from "./fake-comfyui";
 import { input, setup } from "./server-harness";
 import type { ServerKeys } from "../server/keys";
+import type { GpuBoxes } from "../server/gpu-boxes";
 
 // The local server with a fake ComfyUI behind its Local location and a
 // stand-in Comfy Cloud: the run location tests' studio, and a restart of it.
@@ -49,6 +50,8 @@ export async function studio(
   without: string[] = [],
   keys?: ServerKeys,
   reopen?: { fake: FakeComfy; directory: string },
+  /** GPU boxes beside the local ComfyUI (`tests/gpu-box-route.test.ts`). */
+  boxes?: GpuBoxes,
 ) {
   const nodes = nodesFor(kleinBaseWorkflow.graph);
   // The same ComfyUI provides Base editing (reference and image-aware nodes).
@@ -96,8 +99,8 @@ export async function studio(
   });
   const app = await setup(
     undefined,
-    new WorkflowDestinations(cloud, local),
-    { destination: { kind: "cloud" }, local },
+    new WorkflowDestinations(cloud, { local, boxes }),
+    { destination: { kind: "cloud" }, local, boxes },
     keys,
     reopen?.directory,
   );

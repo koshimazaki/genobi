@@ -146,7 +146,12 @@ describe("reference video contract", () => {
     const { service, store } = await createApp({
       directory,
       publicDirectory: directory,
-      workflows: new ComfySdkWorkflows({ connect: () => sdk, env: {} }),
+      workflows: new ComfySdkWorkflows({
+        connect: () => sdk,
+        // No catalogue: availability stays unknown, nothing reaches a network.
+        fetcher: async () => new Response(null, { status: 404 }),
+        env: {},
+      }),
       serverKey: "test-server-key",
     });
     store.data.sources.push({

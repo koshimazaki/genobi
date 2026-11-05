@@ -30,11 +30,13 @@ export interface TakeRecipe {
   /** A `workflow` entry's run location on the local server. */
   location?: DestinationKind;
   deployment?: { url: string; name: string };
+  /** A run on a GPU box: its label and loopback address (`location: "local"`). */
+  box?: { name: string; url: string };
 }
 /** What the local server adds to a `workflow` entry's recipe. */
 export type WorkflowPlan = Pick<
   TakeRecipe,
-  "workflow" | "location" | "deployment"
+  "workflow" | "location" | "deployment" | "box"
 >;
 
 export type TakeInput =
@@ -119,6 +121,7 @@ export async function startTake(
         ? { workflow: plan.workflow }
         : {}),
       ...(plan.deployment ? { deployment: plan.deployment } : {}),
+      ...(entry.route === "workflow" && plan.box ? { box: plan.box } : {}),
       ...(entry.route === "workflow" && plan.location
         ? { location: plan.location }
         : {}),
