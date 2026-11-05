@@ -36,7 +36,9 @@ it.each(galleryTemplates)(
         doc.querySelector('link[type="image/svg+xml"]')?.getAttribute("href"),
       ).toBe("/favicon.svg?v=genobi-011");
       const actions = [...doc.querySelectorAll<HTMLAnchorElement>("a")].filter(
-        (a) => a.textContent === "Make your own" || a.textContent === "Open ↗",
+        (a) =>
+          a.textContent === "Make your own" ||
+          a.textContent?.startsWith("Open in Genobi "),
       );
       expect(actions.length).toBeGreaterThan(0);
       for (const action of actions) {
@@ -122,4 +124,26 @@ it("keeps a selectable URL and working open-page link when both copy methods fai
   expect(host.querySelector("a")!.getAttribute("href")).toBe(
     "/watch/bloom-teaser",
   );
+});
+
+it("puts the Genobi mark beside the wordmark, once per page", () => {
+  const template = galleryTemplates.find((t) => galleryMedia(t))!;
+  for (const route of ["watch", "embed"]) {
+    const page = galleryPage(
+      `/${route}/${template.id}`,
+      "https://studio.test",
+    )!;
+    const doc = new DOMParser().parseFromString(page.body, "text/html");
+    const brands = [...doc.querySelectorAll(".brand")];
+    // The watch page carries it in the header; an embed has no header, so its
+    // footer keeps the credit. The watch footer shows only the title.
+    expect(brands).toHaveLength(1);
+    expect(
+      brands[0].closest(route === "watch" ? "header" : "footer"),
+    ).not.toBeNull();
+    expect(brands[0].querySelector("img.mark")?.getAttribute("src")).toBe(
+      "/favicon.svg?v=genobi-011",
+    );
+    expect(brands[0].textContent).toBe("Genobi");
+  }
 });

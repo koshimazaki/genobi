@@ -73,12 +73,12 @@ main{max-width:1100px;margin:${embedded ? "0 auto" : "5vh auto"};padding:${embed
 .player{border:1px solid #333a42;border-radius:8px;overflow:hidden}video{display:block;width:100%;max-height:${embedded ? "calc(100vh - 44px)" : "75vh"};background:#080a0c;object-fit:contain}
 footer{height:42px;display:flex;align-items:center;gap:12px;padding:0 12px;background:#171a1e}
 a{color:inherit;text-decoration:none}a:focus-visible{outline:2px solid #c0d672;outline-offset:3px}
-.brand{font-weight:650;color:#c0d672}footer span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}footer>a:last-child{margin-left:auto}
+.brand{font-weight:650;color:#c0d672;display:inline-flex;align-items:center;gap:8px;flex:none}.mark{display:block}footer span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}footer>a:last-child{margin-left:auto;flex:none;white-space:nowrap}
 p{color:#a4abb4;line-height:1.5}.action{display:inline-block;padding:10px 16px;border-radius:5px;background:#c0d672;color:#14180e}nav{display:flex;align-items:center;gap:20px}
 header{height:42px;display:flex;align-items:center}
-</style></head><body><main>${embedded ? "" : `<header><a class="brand" href="${absolute("/")}" aria-label="Genobi home">Genobi</a></header>`}<div class="player">
+</style></head><body><main>${embedded ? "" : `<header><a class="brand" href="${absolute("/")}" aria-label="Genobi home"><img class="mark" src="/favicon.svg?v=genobi-011" alt="" width="20" height="20">Genobi</a></header>`}<div class="player">
 <video controls playsinline preload="none" poster="${escape(media.poster)}" src="${escape(media.video)}" aria-label="${title}"></video>
-<footer><a class="brand" href="${absolute("/")}" target="_blank" rel="noopener">Genobi</a><span>${title}</span><a href="${absolute(editLink)}" target="_blank" rel="noopener" aria-label="${template.generation ? "Open gallery" : "Open in Editor"}">Open ↗</a></footer></div>
+<footer>${embedded ? `<a class="brand" href="${absolute("/")}" target="_blank" rel="noopener"><img class="mark" src="/favicon.svg?v=genobi-011" alt="" width="16" height="16">Genobi</a>` : ""}<span>${title}</span><a href="${absolute(editLink)}" target="_blank" rel="noopener">Open in Genobi ${template.generation ? "gallery" : "Editor"} ↗</a></footer></div>
 ${embedded ? "" : `<p>${note}</p><nav><a class="action" href="${absolute(editLink)}">Make your own</a><a href="${escape(media.video)}" download>Download video</a></nav>`}
 </main></body></html>`
     : pendingPage(

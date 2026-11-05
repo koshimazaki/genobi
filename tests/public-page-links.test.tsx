@@ -58,11 +58,13 @@ it("puts a Genobi home mark above the player on the watch page only", () => {
   expect(home.hasAttribute("target")).toBe(false);
   expect(home.nextElementSibling).toBeNull();
   expect(watch.querySelector("main > header + .player")).not.toBeNull();
-  // The footer's own link is unchanged.
-  expect(watch.querySelector("footer a.brand")?.getAttribute("target")).toBe(
+  // The header carries the brand, so the watch footer shows only the title.
+  expect(watch.querySelector("footer a.brand")).toBeNull();
+  const embed = read("embed");
+  // An embed has no header; its footer link keeps the credit.
+  expect(embed.querySelector("footer a.brand")?.getAttribute("target")).toBe(
     "_blank",
   );
-  const embed = read("embed");
   expect(embed.querySelector('a[aria-label="Genobi home"]')).toBeNull();
   expect(embed.querySelector("main > header")).toBeNull();
 });
