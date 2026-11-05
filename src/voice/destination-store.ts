@@ -13,6 +13,12 @@ export interface VoiceAgentTarget {
 export interface VoiceRouting {
   destination: VoiceDestination;
   agent?: VoiceAgentTarget;
+  /**
+   * `new`: the person chose Start new conversation, so the next agent note
+   * starts a clean context. Absent: Continue this conversation (issue #58).
+   * In memory only, like the conversation it refers to.
+   */
+  conversation?: "new";
 }
 type Store = Pick<Storage, "getItem" | "setItem">;
 const local = (): Store | undefined => {
@@ -70,12 +76,19 @@ export function selectVoiceAgent(session?: AgentSession, projectId?: string) {
   });
   setVoiceDestination("agent");
 }
+/** Start new conversation: no pinned conversation, and the next note spawns. */
+export function startNewVoiceConversation() {
+  publish({ destination: "agent", conversation: "new" });
+  setVoiceDestination("agent");
+}
 export function rememberVoiceAgent(
   target: VoiceAgentTarget,
   expected: VoiceRouting,
 ) {
-  // A result arriving after an explicit re-selection cannot change the destination.
-  if (voiceRouting() === expected) publish({ ...expected, agent: target });
+  // A result arriving after an explicit re-selection cannot change the
+  // destination. The conversation it reached is the one to continue next.
+  if (voiceRouting() === expected)
+    publish({ destination: expected.destination, agent: target });
 }
 export const useVoiceRouting = () =>
   useSyncExternalStore(

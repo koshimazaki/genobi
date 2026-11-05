@@ -48,6 +48,11 @@ export function relayRequest(value: unknown): AgentSessionRequest {
     throw new Error(
       "A Terminal session opens from the local studio only. Run it in the studio here.",
     );
+  // The runner's own conversation ids stay on the machine that holds them.
+  if (request.continues)
+    throw new Error(
+      "Continuing a finished conversation works from the local studio only.",
+    );
   if (
     request.copyId ||
     request.context?.picks.length ||
