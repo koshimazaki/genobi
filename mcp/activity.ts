@@ -2,12 +2,13 @@ import { randomUUID } from "node:crypto";
 import { StudioNoAnswer, type GenobiApi } from "./api";
 import type { ActivityEvent } from "../shared/activity";
 const linked = new WeakMap<GenobiApi, string>();
-/** All registered MCP tools, including pure local transforms, pass this boundary. */
+/** MCP and studio-started CLI tools share activity, including pure transforms. */
 export async function trackedTool<T>(
   api: GenobiApi,
   tool: string,
   args: Record<string, unknown>,
   run: () => Promise<T>,
+  source: "mcp" | "cli" = "mcp",
 ) {
   const id = randomUUID();
   let warning: string | undefined;
@@ -16,7 +17,7 @@ export async function trackedTool<T>(
   async function record(phase: ActivityEvent["phase"]) {
     try {
       await api.activity({
-        event: { id, at: new Date().toISOString(), tool, phase, source: "mcp" },
+        event: { id, at: new Date().toISOString(), tool, phase, source },
         ...(copyId ? { copyId } : {}),
         ...(jobId ? { jobId } : {}),
       });

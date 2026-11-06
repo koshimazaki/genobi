@@ -11,7 +11,7 @@ export interface ActivityEvent {
   at: string;
   tool: string;
   phase: (typeof ACTIVITY_PHASES)[number];
-  source: "server" | "mcp" | "browser";
+  source: "server" | "mcp" | "cli" | "browser";
   backend?: "router" | "bfl" | "local" | "cloud" | "studio";
 }
 export interface ActivityHistory {
@@ -39,7 +39,7 @@ export function cleanActivity(value: unknown): ActivityEvent {
     !/^[a-zA-Z0-9_-]{1,80}$/.test(v.id) ||
     !/^[a-zA-Z0-9_-]{1,80}$/.test(v.tool) ||
     !ACTIVITY_PHASES.includes(v.phase) ||
-    !["server", "mcp", "browser"].includes(v.source) ||
+    !["server", "mcp", "cli", "browser"].includes(v.source) ||
     !Number.isFinite(Date.parse(v.at)) ||
     (v.backend !== undefined &&
       !["router", "bfl", "local", "cloud", "studio"].includes(v.backend))
