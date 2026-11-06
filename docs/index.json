@@ -156,7 +156,9 @@
         "licence-strategy.md",
         "motion-fonts.md",
         "poster-grid-direction.md",
+        "project-archives.md",
         "project-assets.md",
+        "project-media.md",
         "recreate-library-plan.md",
         "runs/anime-teaser.md",
         "scrolls.md",
@@ -286,6 +288,7 @@
         "licence-strategy.md",
         "machine-check.md",
         "maintenance-priorities.md",
+        "project-media.md",
         "recreate-library-plan.md",
         "registry-skills.md",
         "registry-tools.md",
@@ -452,6 +455,7 @@
         "machine-check.md",
         "media-space.md",
         "openjutsu-swap.md",
+        "project-media.md",
         "registry-skills.md",
         "registry-tools.md",
         "registry.md",
@@ -486,6 +490,7 @@
         "getting-started.md",
         "gpu-box.md",
         "maintenance-priorities.md",
+        "project-archives.md",
         "project-assets.md",
         "read-through.md",
         "recreate-library-plan.md",
@@ -551,7 +556,9 @@
         "director-bundle/showcase/README.md",
         "director-prompts.md",
         "effects-catalogue.md",
-        "fruits-swap-recipes.md"
+        "fruits-swap-recipes.md",
+        "project-archives.md",
+        "project-media.md"
       ]
     },
     "research": {
@@ -812,7 +819,9 @@
         "motion-fonts.md",
         "openjutsu-swap.md",
         "poster-grid-direction.md",
+        "project-archives.md",
         "project-assets.md",
+        "project-media.md",
         "read-through.md",
         "recreate-library-plan.md",
         "registry-skills.md",
@@ -1242,7 +1251,9 @@
         "media-space.md",
         "minimax-h3-camera.md",
         "openjutsu-swap.md",
+        "project-archives.md",
         "project-assets.md",
+        "project-media.md",
         "registry-skills.md",
         "registry-tools.md",
         "registry.md",
@@ -1560,7 +1571,8 @@
         "director-resolution.md",
         "hermes-runs.md",
         "licence-strategy.md",
-        "project-assets.md"
+        "project-assets.md",
+        "project-media.md"
       ]
     },
     {
@@ -1573,6 +1585,7 @@
         "director-bundle/motion-effects.md",
         "director-bundle/project-copy.md",
         "director-working-version.md",
+        "project-archives.md",
         "templates.md"
       ]
     },
@@ -2068,6 +2081,13 @@
       "links": ["animations-effects-plan.md"]
     },
     {
+      "title": "Local project archives",
+      "path": "project-archives.md",
+      "tags": ["director", "bundle", "studio"],
+      "summary": "Save a complete local project archive, verify its media and companion files, and restore it without the original browser cache.",
+      "links": ["director-bundle/README.md", "project-media.md"]
+    },
+    {
       "title": "Outputs into project assets",
       "path": "project-assets.md",
       "tags": ["studio", "director", "world-builder", "dual-editor"],
@@ -2077,6 +2097,13 @@
         "director-generate.md",
         "templates.md"
       ]
+    },
+    {
+      "title": "Agent project media",
+      "path": "project-media.md",
+      "tags": ["agents", "mcp", "director", "bundle"],
+      "summary": "Inspected, session-owned media staging for local project imports, with stable upload receipts and explicit limits.",
+      "links": []
     },
     {
       "title": "Read-through",
@@ -2143,6 +2170,8 @@
         "licence-strategy.md",
         "machine-check.md",
         "media-space.md",
+        "project-archives.md",
+        "project-media.md",
         "registry-tools.md",
         "registry.md",
         "run-location.md",
@@ -2189,6 +2218,7 @@
         "licence-strategy.md",
         "machine-check.md",
         "media-space.md",
+        "project-media.md",
         "registry-skills.md",
         "registry.md",
         "run-location.md",
@@ -2253,6 +2283,8 @@
         "licence-strategy.md",
         "machine-check.md",
         "media-space.md",
+        "project-archives.md",
+        "project-media.md",
         "registry-skills.md",
         "registry-tools.md",
         "run-location.md",
@@ -2802,7 +2834,7 @@
       "path": "world-live.md",
       "tags": ["3d", "agents", "mcp"],
       "summary": "Walk, switch characters, animate the local creature, and record camera and character movement through World, API or CLI.",
-      "links": ["world-builder.md"]
+      "links": ["project-media.md", "world-builder.md"]
     },
     {
       "title": "World Builder recipe handoffs",

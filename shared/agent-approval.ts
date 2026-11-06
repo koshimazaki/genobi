@@ -58,6 +58,8 @@ export interface ApprovalPlan {
   workflow?: string;
   /** A GPU-time billed quote has no reliable USD estimate. */
   billing?: string;
+  estimateNote?: string;
+  availability?: string;
   /** The validated endpoint the quoted workflow will reach. */
   deployment?: { url: string; name: string };
   /** An upscale: what it reads and makes, from the server's measured source. */
@@ -173,6 +175,8 @@ export function approvalPlan(
     ...(quote.recipe.location ? { location: quote.recipe.location } : {}),
     ...(quote.recipe.workflow ? { workflow: quote.recipe.workflow } : {}),
     ...(quote.billing ? { billing: quote.billing } : {}),
+    ...(quote.estimateNote ? { estimateNote: quote.estimateNote } : {}),
+    ...(quote.availability ? { availability: quote.availability } : {}),
     ...(quote.recipe.deployment
       ? { deployment: { ...quote.recipe.deployment } }
       : {}),

@@ -203,11 +203,35 @@
       "runs": [{ "route": "local-free" }]
     },
     {
-      "id": "director-bundle", "name": "Editable project bundle", "status": "verified", "evidence": "2026-10-29 docs/falling-room.md#what-was-run-29-october-2026",
+      "id": "project-media-staging", "name": "Owned project media staging", "status": "implemented",
+      "where": "Director · external MCP/CLI and local HTTP",
+      "description": "Inspect image, audio and MP4 bytes into a temporary session/project-bound upload receipt. Retry and receipt reads preserve identity; staging does not attach or change the cut. Studio-started agents cannot read arbitrary local files; hosted project ownership is unavailable.",
+      "mcp": ["genobi_project_media_stage", "genobi_project_media_receipt"], "cli": ["project-media-stage", "project-media-receipt"],
+      "skills": ["genobi-director"], "docs": ["docs/project-media.md"],
+      "runs": [{ "route": "local-free" }]
+    },
+    {
+      "id": "project-media-operations", "name": "Revision-checked project media edits", "status": "implemented",
+      "where": "Director · MCP/CLI and local HTTP",
+      "description": "Attach inspected upload receipts, replace/relink clips and alias/remove assets through the browser media rules. Exact request replay returns the original operation after a lost acknowledgement, owner edits or restart.",
+      "mcp": ["genobi_project_media"], "cli": ["project-media"],
+      "skills": ["genobi-director"], "docs": ["docs/project-media.md", "docs/director-agent-tools.md"],
+      "runs": [{ "route": "local-free" }]
+    },
+    {
+      "id": "world-media", "name": "Owned media in the paired World", "status": "implemented",
+      "where": "3D · paired World Builder and linked project",
+      "description": "Attach owned audio or image/video textures with a live revision guard before and after decoding. Requires the local server, the open renderer and both grants; receipt identifies source hash and applied revision.",
+      "mcp": ["genobi_world"], "cli": ["world"],
+      "skills": ["genobi-3d"], "docs": ["docs/project-media.md", "docs/world-live.md"],
+      "runs": [{ "route": "local-free" }]
+    },
+    {
+      "id": "director-bundle", "name": "Editable project bundle", "status": "verified", "evidence": "2026-11-05 docs/project-archives.md#verification--5-november-2026",
       "where": "Director · Download bundle, Open bundle",
-      "description": "Download bundle writes the project, its media, the brief, feedback and the World Builder recipe as a ZIP; Open bundle checks it and reads it back for editing.",
+      "description": "Download bundle validates the project, media, brief, feedback and World source documents before saving a ZIP with an integrity index. Open bundle checks every indexed file before a guarded restore; legacy bundles remain readable.",
       "mcp": [], "cli": [],
-      "skills": ["director-remix"], "docs": ["docs/director-bundle/README.md", "docs/falling-room.md"],
+      "skills": ["director-remix"], "docs": ["docs/director-bundle/README.md", "docs/falling-room.md", "docs/project-archives.md"],
       "runs": [{ "route": "local-free" }]
     },
     {

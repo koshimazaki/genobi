@@ -185,8 +185,10 @@ describe("a Camera run sent to the Director", () => {
     expect(recipe.entry?.id).toBe("ltx-2-5-open");
     expect(recipe.location).toBe("cloud");
     expect(recipe.imageIds).toHaveLength(1);
-    // A text-to-video LTX run reads no source clip: nothing is missing.
-    expect(recipe.missing).toEqual([]);
+    // Project records do not keep the template (including its LoRA choice).
+    expect(recipe.missing).toEqual([
+      "workflow template (check the selected workflow before generating)",
+    ]);
     stop = onCameraRecipe((r) => received.push(r));
     await openInCamera(() => {}, recipe, bundle.project, bundle.files);
     const [{ job: restored, patch, note, location }] = received;
@@ -195,7 +197,7 @@ describe("a Camera run sent to the Director", () => {
     expect(note).toContain(
       "Restored this asset's prompt, model, settings, run location and references.",
     );
-    expect(note).not.toContain("Not stored");
+    expect(note).toContain("Not stored: workflow template");
     const state = composerReducer(
       { ...initialComposer, duration: 5, aspectRatio: "16:9" },
       { type: "restore", job: restored! },

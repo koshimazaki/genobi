@@ -169,6 +169,8 @@ describe("tools", () => {
       "genobi_taste",
       "genobi_reference",
       "genobi_take_to_project",
+      "genobi_project_media",
+      "genobi_project_media_stage",
       "genobi_audio_upload",
       ...media,
       // Session settings: writes, safe to repeat, never paid.
@@ -179,7 +181,9 @@ describe("tools", () => {
       // Starts a Developer in a worktree; never paid, never on main.
       "genobi_develop",
     ]);
-    expect(tools.every((t) => !t.annotations.destructiveHint)).toBe(true);
+    expect(
+      tools.filter((t) => t.annotations.destructiveHint).map((t) => t.name),
+    ).toEqual(["genobi_project_media"]);
   });
 });
 

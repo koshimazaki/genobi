@@ -12,6 +12,7 @@ import {
 } from "../../shared/director/types";
 import { validateProject } from "./validate";
 import { placeAsset } from "../../shared/director/assets";
+import { importInspectedAsset } from "../../shared/director/import-asset";
 export async function ingestFile(file: File) {
   if (file.size > DIRECTOR_MEDIA_BYTES)
     throw new Error(`Each media file must be under ${DIRECTOR_MEDIA_LIMIT}`);
@@ -89,24 +90,9 @@ export async function importAssets(
   const assetIds: string[] = [];
   for (const file of files) {
     const item = await ingestFile(file);
-    const duplicate = Object.entries(project.assets).find(
-      ([, a]) =>
-        a.kind === item.asset.kind &&
-        a.use === use &&
-        a.file.sha256 === item.asset.file.sha256,
-    );
-    if (duplicate) {
-      assetIds.push(duplicate[0]);
-      continue;
-    }
-    const shared = Object.values(project.assets).find(
-      (a) => a.file.sha256 === item.asset.file.sha256,
-    );
-    if (shared) item.asset.file = { ...shared.file };
-    item.asset.use = use;
-    project.assets[item.id] = item.asset;
-    data.set(item.asset.file.path, item.bytes);
-    assetIds.push(item.id);
+    const imported = importInspectedAsset(project, item.id, item.asset, use);
+    if (imported.added) data.set(imported.asset.file.path, item.bytes);
+    assetIds.push(imported.assetId);
   }
   if (
     [...data.values()].reduce((n, b) => n + b.byteLength, 0) >

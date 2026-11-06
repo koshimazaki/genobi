@@ -54,16 +54,20 @@ export function withLiveBox(
  * port) reads again at once when the box changes.
  */
 export function useLiveBoxStatus(active: boolean, key = "") {
-  const [status, setStatus] = useState<BoxStatus | null>(null);
+  const [result, setResult] = useState<{
+    key: string;
+    status: BoxStatus;
+  } | null>(null);
   useEffect(() => {
     if (!active) {
-      setStatus(null);
+      setResult(null);
       return;
     }
     const controller = new AbortController();
     const read = () =>
       void readBoxStatus(controller.signal).then((answer) => {
-        if (!controller.signal.aborted && answer) setStatus(answer);
+        if (!controller.signal.aborted && answer)
+          setResult({ key, status: answer });
       });
     read();
     const timer = setInterval(read, REFRESH_MS);
@@ -72,5 +76,5 @@ export function useLiveBoxStatus(active: boolean, key = "") {
       clearInterval(timer);
     };
   }, [active, key]);
-  return status;
+  return active && result?.key === key ? result.status : null;
 }
