@@ -1,3 +1,6 @@
+import { readFile } from "node:fs/promises";
+import path from "node:path";
+import type { Plugin } from "vite";
 import { configDefaults, defineConfig } from "vitest/config";
 import react from "@vitejs/plugin-react";
 
@@ -40,8 +43,46 @@ export const PREBUNDLED = [
   "zustand/vanilla",
 ];
 
+const PUBLIC_JSON = "\0public-json:";
+
+/**
+ * Dev only: the clip catalogue (`public/media/gallery.json`) and the motion
+ * presets (`public/motion/presets.json`) stay in `public/`, because the local
+ * server reads the catalogue beside its clips and agents read the presets at
+ * `/motion/presets.json`, yet the app also imports both. Vite serves such an
+ * import at a `/public/…` URL and warns on every load, so this serves a JSON
+ * file under `public/` that source code imports as a plain module instead.
+ * The build already bundles them without a warning, so it is left alone.
+ */
+export function publicJsonImports(): Plugin {
+  let publicDir = "";
+  return {
+    name: "genobi:public-json",
+    apply: "serve",
+    enforce: "pre",
+    configResolved(config) {
+      publicDir = config.publicDir;
+    },
+    resolveId(source, importer) {
+      if (!importer || !source.startsWith(".") || !source.endsWith(".json"))
+        return null;
+      const file = path.resolve(path.dirname(importer.split("?")[0]), source);
+      return publicDir && file.startsWith(publicDir + path.sep)
+        ? PUBLIC_JSON + path.relative(publicDir, file)
+        : null;
+    },
+    async load(id) {
+      if (!id.startsWith(PUBLIC_JSON)) return null;
+      const file = path.join(publicDir, id.slice(PUBLIC_JSON.length));
+      this.addWatchFile(file);
+      // Raw JSON: Vite's own JSON plugin turns it into the module, as usual.
+      return readFile(file, "utf8");
+    },
+  };
+}
+
 export default defineConfig({
-  plugins: [react()],
+  plugins: [publicJsonImports(), react()],
   server: {
     host: "127.0.0.1",
     allowedHosts: ["terminal.local"],
