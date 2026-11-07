@@ -109,56 +109,55 @@ npx wrangler pages dev ../.pages --cwd .pages-project --port 4322
 
 ## Deployment
 
-Production is deployed from this public repository. The `Deploy production`
-job in [CI](https://github.com/koshimazaki/genobi/blob/main/.github/workflows/ci.yml) runs only on a push to `main` of
-`koshimazaki/genobi`, after the verify and Cloudflare jobs pass. It builds the
-Pages bundle, applies pending D1 migrations to `flux-studio-lite`, deploys that
-exact bundle to the `genobi` Pages project and checks `/api/health`. The same
-workflow file lives in the private camera-director repository, where a
-repository guard keeps the job from running even if a credential is added
-there, so production has one deployment path. The Pages project, D1 database
-and R2 bucket are the existing ones; the older resource names are kept on
-purpose, so no data moves.
+Production is deployed **by hand only**, from a clean checkout of `main`. A
+merge never deploys: CI holds no Cloudflare credential, so no pull request or
+push spends the free plan's deployments, and production changes only when
+someone decides it should. That is how `de923f2` went live on 7 November 2026,
+99 commits after the previous build.
 
-The job reads `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` from a GitHub
-environment named `production`. Without them it skips rather than fails, so
-`main` stays green on a fork. Cloudflare's `Cloudflare Pages: Edit` and
-`D1: Edit` are account-scoped, so restrict that environment to the `main`
-branch and add a required reviewer: a merge then waits for an explicit
-approval before production data is touched. The token reaches only the
-migration and deploy steps — never pull-request CI, `npm ci` or the build — and
-fork pull requests are never given secrets at all. Keep production migrations
-additive, so the previous deployment keeps working while Pages switches
-versions.
+```sh
+git switch main && git pull --ff-only
+export CLOUDFLARE_ACCOUNT_ID=…   # npx wrangler whoami prints it
+npm run deploy:pages
+```
 
-`npm run deploy:pages` remains the manual fallback from a clean checkout of
-`main`; it records the checkout's commit hash on the Pages deployment.
+`npm run deploy:pages` builds the Pages bundle (`npm run build:pages`), then
+`scripts/deploy-pages.mjs`:
+
+1. refuses a dirty checkout, because the bundle is stamped with this commit;
+2. asks `/api/health` which commit production serves and refuses when
+   `migrations/` changed since then. Apply them first, then deploy again:
+
+   ```sh
+   npx wrangler d1 migrations apply flux-studio-lite --remote --config wrangler.pages.json
+   npm run deploy:pages -- --migrations-applied
+   ```
+
+   The deploy itself never touches D1. Keep migrations additive, so the live
+   build keeps working while Pages switches versions;
+
+3. uploads `.pages/` to the `genobi` Pages project with this commit's hash;
+4. polls `/api/health` until production serves this commit, and fails if it
+   does not (`scripts/check-production.mjs`).
+
+The Pages project, D1 database and R2 bucket are the existing ones; the older
+resource names are kept on purpose, so no data moves. The private
+camera-director repository shares this workflow file and has no deploy path
+either.
 
 ### Knowing what production serves
-
-A skipped deploy is green, and until the build carried its own identity it was
-indistinguishable from a shipped one: a fix merged into `main` stayed off
-production while CI reported success. Two things close that gap. This only
-checks production; `npm run dev` runs from its own checkout and can use Comfy
-Cloud independently.
 
 `scripts/build-pages.mjs` stamps the commit it builds from into the Worker
 (`__GENOBI_COMMIT__`, read by `shared/build-info.ts`), and `GET /api/health`
 answers `commit` alongside `ok`, `hosted` and `hasServerKey`. A local server
 and the test harness compile without the stamp and answer `dev`.
 
-The `Report the build production serves` step in CI runs whether or not the
-deploy ran and compares that answer with `GITHUB_SHA`
-(`scripts/check-production.mjs`, `GENOBI_PRODUCTION_URL` to point it
-elsewhere). With no credentials it is a warning naming both commits, because
-production was not touched. With credentials it is a failure, because a deploy
-that reports success and leaves production on another bundle is a real fault:
-a cached bundle, the wrong project, or a rolled-back deployment.
-
-So after a merge, read that step before believing a fix is live. If it warns,
-either add `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` to the
-`production` environment, or deploy by hand with `npm run deploy:pages` from a
-clean checkout of `main` and re-read `/api/health`.
+After each push to `main`, CI's **Live build** job reads that answer once and
+compares it with the pushed commit (`scripts/check-production.mjs` with
+`REPORT_ONLY=true`; `GENOBI_PRODUCTION_URL` points it elsewhere). When
+production serves another build it leaves a notice naming both commits and the
+command to deploy; it holds no secret and never fails the run. So a green
+`main` says nothing about what is live: read `/api/health`, or that notice.
 
 `worker/env.d.ts` is generated from that file: `npx wrangler types -c wrangler.pages.json worker/env.d.ts`. Pages binds `ASSETS` without a config entry, so `worker/pages-env.d.ts` declares it.
 

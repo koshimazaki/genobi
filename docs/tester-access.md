@@ -60,13 +60,13 @@ npx wrangler pages secret put TESTER_RUN_CAP       --project-name genobi
 Tester access turns on only when the first four are all set and valid; a short
 code, a short token secret, a key that is not a Comfy key or an endpoint that is
 not a `*.run.comfy.app` origin leaves it off. Secrets apply to the next
-deployment, so redeploy (`npm run deploy:pages`, or the `Deploy production` job)
+deployment, so redeploy (`npm run deploy:pages`)
 and then check `https://genobi.pages.dev/api/health` for `testerAccess: true`.
 
-The migration `0011_tester_runs.sql` must be applied before that deployment. The
-`Deploy production` job applies pending migrations itself; a manual deploy needs
-`npx wrangler d1 migrations apply flux-studio-lite --remote` first. The
-migration is additive.
+The migration `0011_tester_runs.sql` must be applied before that deployment:
+`npm run deploy:pages` refuses while it is pending and prints the
+`npx wrangler d1 migrations apply flux-studio-lite --remote --config wrangler.pages.json`
+command to run first. The migration is additive.
 
 ## What it costs at most
 
