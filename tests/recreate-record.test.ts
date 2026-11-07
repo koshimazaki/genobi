@@ -51,7 +51,7 @@ it("keeps a FLUX still's Auto provider when the take cannot be read, and names t
   expect(recipe.missing.join(" ")).toContain("provider");
 });
 
-it("records the actual Auto video route and restores its independent choice", async () => {
+it("keeps an Auto video run on Auto and records the route it took beside it", async () => {
   for (const route of ["bfl", "router"]) {
     const job = readyJob({
       generator: "video",
@@ -61,10 +61,38 @@ it("records the actual Auto video route and restores its independent choice", as
     const { added, bundle } = await sendJob(job, {
       load: takeLoad({ id: "flux-3-video", version: 1, route }),
     });
+    const generation = bundle.project.generations.at(-1)!;
+    expect(generation.settings?.videoProvider).toBe("auto");
+    expect(generation.settings?.videoProviderUsed).toBe(
+      route === "bfl" ? "bfl" : "comfy",
+    );
     const { recipe, landed } = await recreate(bundle, added.assetId);
-    expect(recipe.videoProvider).toBe(route === "bfl" ? "bfl" : "comfy");
-    expect(landed.videoProvider).toBe(recipe.videoProvider);
+    expect(recipe.videoProvider).toBeUndefined();
+    expect(landed.videoProvider).toBe("auto");
+    expect(recipe.providerNote).toContain(
+      route === "bfl" ? "BFL direct" : "Comfy Router",
+    );
     expect(recipe.missing.join(" ")).not.toContain("provider");
+  }
+});
+
+it("restores an explicit video provider choice as that choice", async () => {
+  for (const choice of ["bfl", "comfy"] as const) {
+    const job = readyJob({
+      generator: "video",
+      model: "flux-3",
+      videoProvider: choice,
+    });
+    const { added, bundle } = await sendJob(job, {
+      load: takeLoad({
+        id: "flux-3-video",
+        version: 1,
+        route: choice === "bfl" ? "bfl" : "router",
+      }),
+    });
+    const { recipe, landed } = await recreate(bundle, added.assetId);
+    expect(recipe.videoProvider).toBe(choice);
+    expect(landed.videoProvider).toBe(choice);
   }
 });
 

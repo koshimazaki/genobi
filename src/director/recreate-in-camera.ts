@@ -161,23 +161,32 @@ export function generatedRecipe(
     );
   // A run on Auto: legacy records may carry only the registry fallback, never
   // the person's choice of payer, so Auto comes back through the job. A newly
-  // read still take records the provider it used separately without changing
-  // Auto; video Auto names its provider as not recorded.
-  const auto =
-    settings?.imageProvider === "auto" || settings?.videoProvider === "auto";
-  const used = settings?.imageProviderUsed;
-  const provider = entry
-    ? recordedProvider(
-        entry,
-        auto
-          ? used === "bfl"
-            ? "bfl"
-            : used === "comfy"
-              ? "router"
-              : undefined
-          : generation.recipe?.route,
-      )
-    : {};
+  // read take records the provider it used separately without changing Auto.
+  // FLUX video had no choice before videoProvider, so a record without an
+  // explicit one restores as Auto, as it did then.
+  const video =
+    !!entry && selectableVideoProvider(entry.generator, entry.videoModel);
+  const auto = video
+    ? settings?.videoProvider !== "bfl" && settings?.videoProvider !== "comfy"
+    : settings?.imageProvider === "auto";
+  const used = video
+    ? settings?.videoProviderUsed
+    : settings?.imageProviderUsed;
+  // Video on Auto with no route read restores Auto with nothing missing: the
+  // choice is the person's, and the provider was Auto's to pick.
+  const provider =
+    !entry || (video && auto && !used)
+      ? {}
+      : recordedProvider(
+          entry,
+          auto
+            ? used === "bfl"
+              ? "bfl"
+              : used === "comfy"
+                ? "router"
+                : undefined
+            : generation.recipe?.route,
+        );
   if (provider.missing) missing.push(provider.missing);
   const job =
     settings && entry
@@ -221,7 +230,7 @@ export function generatedRecipe(
     ...(provider.videoProvider && !auto
       ? { videoProvider: provider.videoProvider }
       : {}),
-    ...(auto && provider.imageProvider
+    ...(auto && (provider.imageProvider || provider.videoProvider)
       ? {
           providerNote: `Recorded provider: ${used === "bfl" ? "BFL direct" : "Comfy Router"}; Camera keeps Auto.`,
         }

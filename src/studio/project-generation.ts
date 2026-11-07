@@ -105,14 +105,14 @@ export async function cameraGeneration(
   const references = await referenceFiles(urls, load).catch(() => []);
   const settings = publicGenerationSettings({
     ...job,
+    // The person's choice is kept (Auto stays Auto); the route the take
+    // actually used is recorded beside it, as for FLUX stills.
     ...(selectableVideoProvider(job.generator, job.model)
       ? {
-          videoProvider:
-            used === "bfl"
-              ? "bfl"
-              : used === "router"
-                ? "comfy"
-                : providerPreference(job),
+          videoProvider: providerPreference(job),
+          ...(used === "bfl" || used === "router"
+            ? { videoProviderUsed: used === "bfl" ? "bfl" : "comfy" }
+            : {}),
         }
       : {}),
     ...(isImage(job.generator) &&

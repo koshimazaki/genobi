@@ -369,9 +369,10 @@ describe("the recorded provider", () => {
     expect(recipe.missing).toContain("provider (BFL or Comfy) not recorded");
   });
 
-  it("a video run restores its independent BFL provider choice", () => {
+  it("a video run with no recorded choice reopens on Auto, not on the route it took", () => {
     const recipe = cameraRecipe(withRoute(video, "bfl"), bloomA, ["mine"]);
-    expect(recipe.videoProvider).toBe("bfl");
+    expect(recipe.videoProvider).toBeUndefined();
+    expect(recipe.providerNote).toBeUndefined();
     expect(recipe.missing.join(" ")).not.toContain("provider");
     expect(recipe.imageProvider).toBeUndefined();
   });

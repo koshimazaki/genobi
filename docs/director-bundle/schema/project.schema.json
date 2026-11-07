@@ -299,7 +299,7 @@
           "settings": {
             "description": "A Camera run's public request settings, recorded when it was sent to the Director so Recreate restores it from the project (shared/director/generation-settings.ts). Optional and additive. An allowlist of setting names only: no job, provider or source ids, deployment URLs or file tickets, image bytes or keys. Values are re-checked field by field on every read.",
             "type": "object",
-            "maxProperties": 29,
+            "maxProperties": 31,
             "propertyNames": {
               "enum": [
                 "generator",
@@ -325,6 +325,7 @@
                 "imageProvider",
                 "videoProvider",
                 "imageProviderUsed",
+                "videoProviderUsed",
                 "imageAspectRatio",
                 "imageGrounding",
                 "imageSafetyTolerance",
@@ -336,6 +337,9 @@
             },
             "properties": {
               "imageProviderUsed": {
+                "enum": ["bfl", "comfy"]
+              },
+              "videoProviderUsed": {
                 "enum": ["bfl", "comfy"]
               },
               "referenceSlots": {

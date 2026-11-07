@@ -257,7 +257,7 @@ var require_validators = __commonJS({
                 description:
                   "A Camera run's public request settings, recorded when it was sent to the Director so Recreate restores it from the project (shared/director/generation-settings.ts). Optional and additive. An allowlist of setting names only: no job, provider or source ids, deployment URLs or file tickets, image bytes or keys. Values are re-checked field by field on every read.",
                 type: "object",
-                maxProperties: 29,
+                maxProperties: 31,
                 propertyNames: {
                   enum: [
                     "generator",
@@ -283,6 +283,7 @@ var require_validators = __commonJS({
                     "imageProvider",
                     "videoProvider",
                     "imageProviderUsed",
+                    "videoProviderUsed",
                     "imageAspectRatio",
                     "imageGrounding",
                     "imageSafetyTolerance",
@@ -294,6 +295,7 @@ var require_validators = __commonJS({
                 },
                 properties: {
                   imageProviderUsed: { enum: ["bfl", "comfy"] },
+                  videoProviderUsed: { enum: ["bfl", "comfy"] },
                   referenceSlots: {
                     type: "array",
                     minItems: 1,
@@ -11196,15 +11198,15 @@ var require_validators = __commonJS({
                     typeof data60 == "object" &&
                     !Array.isArray(data60)
                   ) {
-                    if (Object.keys(data60).length > 29) {
+                    if (Object.keys(data60).length > 31) {
                       const err156 = {
                         instancePath:
                           instancePath + "/generations/" + i4 + "/settings",
                         schemaPath:
                           "#/properties/generations/items/properties/settings/maxProperties",
                         keyword: "maxProperties",
-                        params: { limit: 29 },
-                        message: "must NOT have more than 29 properties",
+                        params: { limit: 31 },
+                        message: "must NOT have more than 31 properties",
                       };
                       if (vErrors === null) {
                         vErrors = [err156];
@@ -11239,6 +11241,7 @@ var require_validators = __commonJS({
                         key13 === "imageProvider" ||
                         key13 === "videoProvider" ||
                         key13 === "imageProviderUsed" ||
+                        key13 === "videoProviderUsed" ||
                         key13 === "imageAspectRatio" ||
                         key13 === "imageGrounding" ||
                         key13 === "imageSafetyTolerance" ||
@@ -11314,11 +11317,38 @@ var require_validators = __commonJS({
                         errors++;
                       }
                     }
+                    if (data60.videoProviderUsed !== void 0) {
+                      let data62 = data60.videoProviderUsed;
+                      if (!(data62 === "bfl" || data62 === "comfy")) {
+                        const err160 = {
+                          instancePath:
+                            instancePath +
+                            "/generations/" +
+                            i4 +
+                            "/settings/videoProviderUsed",
+                          schemaPath:
+                            "#/properties/generations/items/properties/settings/properties/videoProviderUsed/enum",
+                          keyword: "enum",
+                          params: {
+                            allowedValues:
+                              schema11.properties.generations.items.properties
+                                .settings.properties.videoProviderUsed.enum,
+                          },
+                          message: "must be equal to one of the allowed values",
+                        };
+                        if (vErrors === null) {
+                          vErrors = [err160];
+                        } else {
+                          vErrors.push(err160);
+                        }
+                        errors++;
+                      }
+                    }
                     if (data60.referenceSlots !== void 0) {
-                      let data62 = data60.referenceSlots;
-                      if (Array.isArray(data62)) {
-                        if (data62.length > 10) {
-                          const err160 = {
+                      let data63 = data60.referenceSlots;
+                      if (Array.isArray(data63)) {
+                        if (data63.length > 10) {
+                          const err161 = {
                             instancePath:
                               instancePath +
                               "/generations/" +
@@ -11331,14 +11361,14 @@ var require_validators = __commonJS({
                             message: "must NOT have more than 10 items",
                           };
                           if (vErrors === null) {
-                            vErrors = [err160];
+                            vErrors = [err161];
                           } else {
-                            vErrors.push(err160);
+                            vErrors.push(err161);
                           }
                           errors++;
                         }
-                        if (data62.length < 1) {
-                          const err161 = {
+                        if (data63.length < 1) {
+                          const err162 = {
                             instancePath:
                               instancePath +
                               "/generations/" +
@@ -11351,22 +11381,22 @@ var require_validators = __commonJS({
                             message: "must NOT have fewer than 1 items",
                           };
                           if (vErrors === null) {
-                            vErrors = [err161];
+                            vErrors = [err162];
                           } else {
-                            vErrors.push(err161);
+                            vErrors.push(err162);
                           }
                           errors++;
                         }
-                        const len8 = data62.length;
+                        const len8 = data63.length;
                         for (let i12 = 0; i12 < len8; i12++) {
-                          let data63 = data62[i12];
+                          let data64 = data63[i12];
                           if (!(
-                            typeof data63 == "number" &&
-                            !(data63 % 1) &&
-                            !isNaN(data63) &&
-                            isFinite(data63)
+                            typeof data64 == "number" &&
+                            !(data64 % 1) &&
+                            !isNaN(data64) &&
+                            isFinite(data64)
                           )) {
-                            const err162 = {
+                            const err163 = {
                               instancePath:
                                 instancePath +
                                 "/generations/" +
@@ -11380,15 +11410,15 @@ var require_validators = __commonJS({
                               message: "must be integer",
                             };
                             if (vErrors === null) {
-                              vErrors = [err162];
+                              vErrors = [err163];
                             } else {
-                              vErrors.push(err162);
+                              vErrors.push(err163);
                             }
                             errors++;
                           }
-                          if (typeof data63 == "number" && isFinite(data63)) {
-                            if (data63 > 9 || isNaN(data63)) {
-                              const err163 = {
+                          if (typeof data64 == "number" && isFinite(data64)) {
+                            if (data64 > 9 || isNaN(data64)) {
+                              const err164 = {
                                 instancePath:
                                   instancePath +
                                   "/generations/" +
@@ -11402,14 +11432,14 @@ var require_validators = __commonJS({
                                 message: "must be <= 9",
                               };
                               if (vErrors === null) {
-                                vErrors = [err163];
+                                vErrors = [err164];
                               } else {
-                                vErrors.push(err163);
+                                vErrors.push(err164);
                               }
                               errors++;
                             }
-                            if (data63 < 0 || isNaN(data63)) {
-                              const err164 = {
+                            if (data64 < 0 || isNaN(data64)) {
+                              const err165 = {
                                 instancePath:
                                   instancePath +
                                   "/generations/" +
@@ -11423,16 +11453,16 @@ var require_validators = __commonJS({
                                 message: "must be >= 0",
                               };
                               if (vErrors === null) {
-                                vErrors = [err164];
+                                vErrors = [err165];
                               } else {
-                                vErrors.push(err164);
+                                vErrors.push(err165);
                               }
                               errors++;
                             }
                           }
                         }
                       } else {
-                        const err165 = {
+                        const err166 = {
                           instancePath:
                             instancePath +
                             "/generations/" +
@@ -11445,22 +11475,22 @@ var require_validators = __commonJS({
                           message: "must be array",
                         };
                         if (vErrors === null) {
-                          vErrors = [err165];
+                          vErrors = [err166];
                         } else {
-                          vErrors.push(err165);
+                          vErrors.push(err166);
                         }
                         errors++;
                       }
                     }
                     if (data60.deploy !== void 0) {
-                      let data64 = data60.deploy;
+                      let data65 = data60.deploy;
                       if (
-                        data64 &&
-                        typeof data64 == "object" &&
-                        !Array.isArray(data64)
+                        data65 &&
+                        typeof data65 == "object" &&
+                        !Array.isArray(data65)
                       ) {
-                        if (data64.seed === void 0) {
-                          const err166 = {
+                        if (data65.seed === void 0) {
+                          const err167 = {
                             instancePath:
                               instancePath +
                               "/generations/" +
@@ -11473,14 +11503,14 @@ var require_validators = __commonJS({
                             message: "must have required property 'seed'",
                           };
                           if (vErrors === null) {
-                            vErrors = [err166];
+                            vErrors = [err167];
                           } else {
-                            vErrors.push(err166);
+                            vErrors.push(err167);
                           }
                           errors++;
                         }
-                        if (data64.negativePrompt === void 0) {
-                          const err167 = {
+                        if (data65.negativePrompt === void 0) {
+                          const err168 = {
                             instancePath:
                               instancePath +
                               "/generations/" +
@@ -11494,19 +11524,19 @@ var require_validators = __commonJS({
                               "must have required property 'negativePrompt'",
                           };
                           if (vErrors === null) {
-                            vErrors = [err167];
+                            vErrors = [err168];
                           } else {
-                            vErrors.push(err167);
+                            vErrors.push(err168);
                           }
                           errors++;
                         }
-                        for (const key14 in data64) {
+                        for (const key14 in data65) {
                           if (!(
                             key14 === "seed" ||
                             key14 === "negativePrompt" ||
                             key14 === "recipe"
                           )) {
-                            const err168 = {
+                            const err169 = {
                               instancePath:
                                 instancePath +
                                 "/generations/" +
@@ -11519,22 +11549,22 @@ var require_validators = __commonJS({
                               message: "must NOT have additional properties",
                             };
                             if (vErrors === null) {
-                              vErrors = [err168];
+                              vErrors = [err169];
                             } else {
-                              vErrors.push(err168);
+                              vErrors.push(err169);
                             }
                             errors++;
                           }
                         }
-                        if (data64.seed !== void 0) {
-                          let data65 = data64.seed;
+                        if (data65.seed !== void 0) {
+                          let data66 = data65.seed;
                           if (!(
-                            typeof data65 == "number" &&
-                            !(data65 % 1) &&
-                            !isNaN(data65) &&
-                            isFinite(data65)
+                            typeof data66 == "number" &&
+                            !(data66 % 1) &&
+                            !isNaN(data66) &&
+                            isFinite(data66)
                           )) {
-                            const err169 = {
+                            const err170 = {
                               instancePath:
                                 instancePath +
                                 "/generations/" +
@@ -11547,15 +11577,15 @@ var require_validators = __commonJS({
                               message: "must be integer",
                             };
                             if (vErrors === null) {
-                              vErrors = [err169];
+                              vErrors = [err170];
                             } else {
-                              vErrors.push(err169);
+                              vErrors.push(err170);
                             }
                             errors++;
                           }
-                          if (typeof data65 == "number" && isFinite(data65)) {
-                            if (data65 < 0 || isNaN(data65)) {
-                              const err170 = {
+                          if (typeof data66 == "number" && isFinite(data66)) {
+                            if (data66 < 0 || isNaN(data66)) {
+                              const err171 = {
                                 instancePath:
                                   instancePath +
                                   "/generations/" +
@@ -11568,19 +11598,19 @@ var require_validators = __commonJS({
                                 message: "must be >= 0",
                               };
                               if (vErrors === null) {
-                                vErrors = [err170];
+                                vErrors = [err171];
                               } else {
-                                vErrors.push(err170);
+                                vErrors.push(err171);
                               }
                               errors++;
                             }
                           }
                         }
-                        if (data64.negativePrompt !== void 0) {
-                          let data66 = data64.negativePrompt;
-                          if (typeof data66 === "string") {
-                            if (func3(data66) > 12e3) {
-                              const err171 = {
+                        if (data65.negativePrompt !== void 0) {
+                          let data67 = data65.negativePrompt;
+                          if (typeof data67 === "string") {
+                            if (func3(data67) > 12e3) {
+                              const err172 = {
                                 instancePath:
                                   instancePath +
                                   "/generations/" +
@@ -11594,14 +11624,14 @@ var require_validators = __commonJS({
                                   "must NOT have more than 12000 characters",
                               };
                               if (vErrors === null) {
-                                vErrors = [err171];
+                                vErrors = [err172];
                               } else {
-                                vErrors.push(err171);
+                                vErrors.push(err172);
                               }
                               errors++;
                             }
                           } else {
-                            const err172 = {
+                            const err173 = {
                               instancePath:
                                 instancePath +
                                 "/generations/" +
@@ -11614,18 +11644,18 @@ var require_validators = __commonJS({
                               message: "must be string",
                             };
                             if (vErrors === null) {
-                              vErrors = [err172];
+                              vErrors = [err173];
                             } else {
-                              vErrors.push(err172);
+                              vErrors.push(err173);
                             }
                             errors++;
                           }
                         }
-                        if (data64.recipe !== void 0) {
-                          let data67 = data64.recipe;
-                          if (typeof data67 === "string") {
-                            if (func3(data67) > 64e3) {
-                              const err173 = {
+                        if (data65.recipe !== void 0) {
+                          let data68 = data65.recipe;
+                          if (typeof data68 === "string") {
+                            if (func3(data68) > 64e3) {
+                              const err174 = {
                                 instancePath:
                                   instancePath +
                                   "/generations/" +
@@ -11639,14 +11669,14 @@ var require_validators = __commonJS({
                                   "must NOT have more than 64000 characters",
                               };
                               if (vErrors === null) {
-                                vErrors = [err173];
+                                vErrors = [err174];
                               } else {
-                                vErrors.push(err173);
+                                vErrors.push(err174);
                               }
                               errors++;
                             }
                           } else {
-                            const err174 = {
+                            const err175 = {
                               instancePath:
                                 instancePath +
                                 "/generations/" +
@@ -11659,15 +11689,15 @@ var require_validators = __commonJS({
                               message: "must be string",
                             };
                             if (vErrors === null) {
-                              vErrors = [err174];
+                              vErrors = [err175];
                             } else {
-                              vErrors.push(err174);
+                              vErrors.push(err175);
                             }
                             errors++;
                           }
                         }
                       } else {
-                        const err175 = {
+                        const err176 = {
                           instancePath:
                             instancePath +
                             "/generations/" +
@@ -11680,15 +11710,15 @@ var require_validators = __commonJS({
                           message: "must be object",
                         };
                         if (vErrors === null) {
-                          vErrors = [err175];
+                          vErrors = [err176];
                         } else {
-                          vErrors.push(err175);
+                          vErrors.push(err176);
                         }
                         errors++;
                       }
                     }
                   } else {
-                    const err176 = {
+                    const err177 = {
                       instancePath:
                         instancePath + "/generations/" + i4 + "/settings",
                       schemaPath:
@@ -11698,15 +11728,15 @@ var require_validators = __commonJS({
                       message: "must be object",
                     };
                     if (vErrors === null) {
-                      vErrors = [err176];
+                      vErrors = [err177];
                     } else {
-                      vErrors.push(err176);
+                      vErrors.push(err177);
                     }
                     errors++;
                   }
                 }
               } else {
-                const err177 = {
+                const err178 = {
                   instancePath: instancePath + "/generations/" + i4,
                   schemaPath: "#/properties/generations/items/type",
                   keyword: "type",
@@ -11714,15 +11744,15 @@ var require_validators = __commonJS({
                   message: "must be object",
                 };
                 if (vErrors === null) {
-                  vErrors = [err177];
+                  vErrors = [err178];
                 } else {
-                  vErrors.push(err177);
+                  vErrors.push(err178);
                 }
                 errors++;
               }
             }
           } else {
-            const err178 = {
+            const err179 = {
               instancePath: instancePath + "/generations",
               schemaPath: "#/properties/generations/type",
               keyword: "type",
@@ -11730,18 +11760,18 @@ var require_validators = __commonJS({
               message: "must be array",
             };
             if (vErrors === null) {
-              vErrors = [err178];
+              vErrors = [err179];
             } else {
-              vErrors.push(err178);
+              vErrors.push(err179);
             }
             errors++;
           }
         }
         if (data.notes !== void 0) {
-          let data68 = data.notes;
-          if (Array.isArray(data68)) {
-            if (data68.length > 200) {
-              const err179 = {
+          let data69 = data.notes;
+          if (Array.isArray(data69)) {
+            if (data69.length > 200) {
+              const err180 = {
                 instancePath: instancePath + "/notes",
                 schemaPath: "#/properties/notes/maxItems",
                 keyword: "maxItems",
@@ -11749,42 +11779,27 @@ var require_validators = __commonJS({
                 message: "must NOT have more than 200 items",
               };
               if (vErrors === null) {
-                vErrors = [err179];
+                vErrors = [err180];
               } else {
-                vErrors.push(err179);
+                vErrors.push(err180);
               }
               errors++;
             }
-            const len9 = data68.length;
+            const len9 = data69.length;
             for (let i13 = 0; i13 < len9; i13++) {
-              let data69 = data68[i13];
+              let data70 = data69[i13];
               if (
-                data69 &&
-                typeof data69 == "object" &&
-                !Array.isArray(data69)
+                data70 &&
+                typeof data70 == "object" &&
+                !Array.isArray(data70)
               ) {
-                if (data69.id === void 0) {
-                  const err180 = {
+                if (data70.id === void 0) {
+                  const err181 = {
                     instancePath: instancePath + "/notes/" + i13,
                     schemaPath: "#/properties/notes/items/required",
                     keyword: "required",
                     params: { missingProperty: "id" },
                     message: "must have required property 'id'",
-                  };
-                  if (vErrors === null) {
-                    vErrors = [err180];
-                  } else {
-                    vErrors.push(err180);
-                  }
-                  errors++;
-                }
-                if (data69.frame === void 0) {
-                  const err181 = {
-                    instancePath: instancePath + "/notes/" + i13,
-                    schemaPath: "#/properties/notes/items/required",
-                    keyword: "required",
-                    params: { missingProperty: "frame" },
-                    message: "must have required property 'frame'",
                   };
                   if (vErrors === null) {
                     vErrors = [err181];
@@ -11793,13 +11808,13 @@ var require_validators = __commonJS({
                   }
                   errors++;
                 }
-                if (data69.text === void 0) {
+                if (data70.frame === void 0) {
                   const err182 = {
                     instancePath: instancePath + "/notes/" + i13,
                     schemaPath: "#/properties/notes/items/required",
                     keyword: "required",
-                    params: { missingProperty: "text" },
-                    message: "must have required property 'text'",
+                    params: { missingProperty: "frame" },
+                    message: "must have required property 'frame'",
                   };
                   if (vErrors === null) {
                     vErrors = [err182];
@@ -11808,7 +11823,22 @@ var require_validators = __commonJS({
                   }
                   errors++;
                 }
-                for (const key15 in data69) {
+                if (data70.text === void 0) {
+                  const err183 = {
+                    instancePath: instancePath + "/notes/" + i13,
+                    schemaPath: "#/properties/notes/items/required",
+                    keyword: "required",
+                    params: { missingProperty: "text" },
+                    message: "must have required property 'text'",
+                  };
+                  if (vErrors === null) {
+                    vErrors = [err183];
+                  } else {
+                    vErrors.push(err183);
+                  }
+                  errors++;
+                }
+                for (const key15 in data70) {
                   if (!(
                     key15 === "id" ||
                     key15 === "frame" ||
@@ -11818,7 +11848,7 @@ var require_validators = __commonJS({
                     key15 === "createdAt" ||
                     key15 === "resolved"
                   )) {
-                    const err183 = {
+                    const err184 = {
                       instancePath: instancePath + "/notes/" + i13,
                       schemaPath:
                         "#/properties/notes/items/additionalProperties",
@@ -11827,18 +11857,18 @@ var require_validators = __commonJS({
                       message: "must NOT have additional properties",
                     };
                     if (vErrors === null) {
-                      vErrors = [err183];
+                      vErrors = [err184];
                     } else {
-                      vErrors.push(err183);
+                      vErrors.push(err184);
                     }
                     errors++;
                   }
                 }
-                if (data69.id !== void 0) {
-                  let data70 = data69.id;
-                  if (typeof data70 === "string") {
-                    if (!pattern0.test(data70)) {
-                      const err184 = {
+                if (data70.id !== void 0) {
+                  let data71 = data70.id;
+                  if (typeof data71 === "string") {
+                    if (!pattern0.test(data71)) {
+                      const err185 = {
                         instancePath: instancePath + "/notes/" + i13 + "/id",
                         schemaPath:
                           "#/properties/notes/items/properties/id/pattern",
@@ -11847,43 +11877,19 @@ var require_validators = __commonJS({
                         message: 'must match pattern "^[a-z][a-z0-9-]{0,63}$"',
                       };
                       if (vErrors === null) {
-                        vErrors = [err184];
+                        vErrors = [err185];
                       } else {
-                        vErrors.push(err184);
+                        vErrors.push(err185);
                       }
                       errors++;
                     }
                   } else {
-                    const err185 = {
+                    const err186 = {
                       instancePath: instancePath + "/notes/" + i13 + "/id",
                       schemaPath: "#/properties/notes/items/properties/id/type",
                       keyword: "type",
                       params: { type: "string" },
                       message: "must be string",
-                    };
-                    if (vErrors === null) {
-                      vErrors = [err185];
-                    } else {
-                      vErrors.push(err185);
-                    }
-                    errors++;
-                  }
-                }
-                if (data69.frame !== void 0) {
-                  let data71 = data69.frame;
-                  if (!(
-                    typeof data71 == "number" &&
-                    !(data71 % 1) &&
-                    !isNaN(data71) &&
-                    isFinite(data71)
-                  )) {
-                    const err186 = {
-                      instancePath: instancePath + "/notes/" + i13 + "/frame",
-                      schemaPath:
-                        "#/properties/notes/items/properties/frame/type",
-                      keyword: "type",
-                      params: { type: "integer" },
-                      message: "must be integer",
                     };
                     if (vErrors === null) {
                       vErrors = [err186];
@@ -11892,9 +11898,33 @@ var require_validators = __commonJS({
                     }
                     errors++;
                   }
-                  if (typeof data71 == "number" && isFinite(data71)) {
-                    if (data71 < 0 || isNaN(data71)) {
-                      const err187 = {
+                }
+                if (data70.frame !== void 0) {
+                  let data72 = data70.frame;
+                  if (!(
+                    typeof data72 == "number" &&
+                    !(data72 % 1) &&
+                    !isNaN(data72) &&
+                    isFinite(data72)
+                  )) {
+                    const err187 = {
+                      instancePath: instancePath + "/notes/" + i13 + "/frame",
+                      schemaPath:
+                        "#/properties/notes/items/properties/frame/type",
+                      keyword: "type",
+                      params: { type: "integer" },
+                      message: "must be integer",
+                    };
+                    if (vErrors === null) {
+                      vErrors = [err187];
+                    } else {
+                      vErrors.push(err187);
+                    }
+                    errors++;
+                  }
+                  if (typeof data72 == "number" && isFinite(data72)) {
+                    if (data72 < 0 || isNaN(data72)) {
+                      const err188 = {
                         instancePath: instancePath + "/notes/" + i13 + "/frame",
                         schemaPath:
                           "#/properties/notes/items/properties/frame/minimum",
@@ -11903,19 +11933,19 @@ var require_validators = __commonJS({
                         message: "must be >= 0",
                       };
                       if (vErrors === null) {
-                        vErrors = [err187];
+                        vErrors = [err188];
                       } else {
-                        vErrors.push(err187);
+                        vErrors.push(err188);
                       }
                       errors++;
                     }
                   }
                 }
-                if (data69.layerId !== void 0) {
-                  let data72 = data69.layerId;
-                  if (typeof data72 === "string") {
-                    if (!pattern0.test(data72)) {
-                      const err188 = {
+                if (data70.layerId !== void 0) {
+                  let data73 = data70.layerId;
+                  if (typeof data73 === "string") {
+                    if (!pattern0.test(data73)) {
+                      const err189 = {
                         instancePath:
                           instancePath + "/notes/" + i13 + "/layerId",
                         schemaPath:
@@ -11925,14 +11955,14 @@ var require_validators = __commonJS({
                         message: 'must match pattern "^[a-z][a-z0-9-]{0,63}$"',
                       };
                       if (vErrors === null) {
-                        vErrors = [err188];
+                        vErrors = [err189];
                       } else {
-                        vErrors.push(err188);
+                        vErrors.push(err189);
                       }
                       errors++;
                     }
                   } else {
-                    const err189 = {
+                    const err190 = {
                       instancePath: instancePath + "/notes/" + i13 + "/layerId",
                       schemaPath:
                         "#/properties/notes/items/properties/layerId/type",
@@ -11941,18 +11971,18 @@ var require_validators = __commonJS({
                       message: "must be string",
                     };
                     if (vErrors === null) {
-                      vErrors = [err189];
+                      vErrors = [err190];
                     } else {
-                      vErrors.push(err189);
+                      vErrors.push(err190);
                     }
                     errors++;
                   }
                 }
-                if (data69.text !== void 0) {
-                  let data73 = data69.text;
-                  if (typeof data73 === "string") {
-                    if (func3(data73) > 500) {
-                      const err190 = {
+                if (data70.text !== void 0) {
+                  let data74 = data70.text;
+                  if (typeof data74 === "string") {
+                    if (func3(data74) > 500) {
+                      const err191 = {
                         instancePath: instancePath + "/notes/" + i13 + "/text",
                         schemaPath:
                           "#/properties/notes/items/properties/text/maxLength",
@@ -11961,14 +11991,14 @@ var require_validators = __commonJS({
                         message: "must NOT have more than 500 characters",
                       };
                       if (vErrors === null) {
-                        vErrors = [err190];
+                        vErrors = [err191];
                       } else {
-                        vErrors.push(err190);
+                        vErrors.push(err191);
                       }
                       errors++;
                     }
-                    if (func3(data73) < 1) {
-                      const err191 = {
+                    if (func3(data74) < 1) {
+                      const err192 = {
                         instancePath: instancePath + "/notes/" + i13 + "/text",
                         schemaPath:
                           "#/properties/notes/items/properties/text/minLength",
@@ -11977,14 +12007,14 @@ var require_validators = __commonJS({
                         message: "must NOT have fewer than 1 characters",
                       };
                       if (vErrors === null) {
-                        vErrors = [err191];
+                        vErrors = [err192];
                       } else {
-                        vErrors.push(err191);
+                        vErrors.push(err192);
                       }
                       errors++;
                     }
-                    if (!pattern60.test(data73)) {
-                      const err192 = {
+                    if (!pattern60.test(data74)) {
+                      const err193 = {
                         instancePath: instancePath + "/notes/" + i13 + "/text",
                         schemaPath:
                           "#/properties/notes/items/properties/text/pattern",
@@ -11994,14 +12024,14 @@ var require_validators = __commonJS({
                           'must match pattern "^[^\\u0000-\\u001f\\u007f]*$"',
                       };
                       if (vErrors === null) {
-                        vErrors = [err192];
+                        vErrors = [err193];
                       } else {
-                        vErrors.push(err192);
+                        vErrors.push(err193);
                       }
                       errors++;
                     }
                   } else {
-                    const err193 = {
+                    const err194 = {
                       instancePath: instancePath + "/notes/" + i13 + "/text",
                       schemaPath:
                         "#/properties/notes/items/properties/text/type",
@@ -12010,17 +12040,17 @@ var require_validators = __commonJS({
                       message: "must be string",
                     };
                     if (vErrors === null) {
-                      vErrors = [err193];
+                      vErrors = [err194];
                     } else {
-                      vErrors.push(err193);
+                      vErrors.push(err194);
                     }
                     errors++;
                   }
                 }
-                if (data69.author !== void 0) {
-                  let data74 = data69.author;
-                  if (!(data74 === "person" || data74 === "agent")) {
-                    const err194 = {
+                if (data70.author !== void 0) {
+                  let data75 = data70.author;
+                  if (!(data75 === "person" || data75 === "agent")) {
+                    const err195 = {
                       instancePath: instancePath + "/notes/" + i13 + "/author",
                       schemaPath:
                         "#/properties/notes/items/properties/author/enum",
@@ -12033,18 +12063,18 @@ var require_validators = __commonJS({
                       message: "must be equal to one of the allowed values",
                     };
                     if (vErrors === null) {
-                      vErrors = [err194];
+                      vErrors = [err195];
                     } else {
-                      vErrors.push(err194);
+                      vErrors.push(err195);
                     }
                     errors++;
                   }
                 }
-                if (data69.createdAt !== void 0) {
-                  let data75 = data69.createdAt;
-                  if (typeof data75 === "string") {
-                    if (!pattern61.test(data75)) {
-                      const err195 = {
+                if (data70.createdAt !== void 0) {
+                  let data76 = data70.createdAt;
+                  if (typeof data76 === "string") {
+                    if (!pattern61.test(data76)) {
+                      const err196 = {
                         instancePath:
                           instancePath + "/notes/" + i13 + "/createdAt",
                         schemaPath:
@@ -12058,14 +12088,14 @@ var require_validators = __commonJS({
                           'must match pattern "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}(\\.[0-9]{1,3})?Z$"',
                       };
                       if (vErrors === null) {
-                        vErrors = [err195];
+                        vErrors = [err196];
                       } else {
-                        vErrors.push(err195);
+                        vErrors.push(err196);
                       }
                       errors++;
                     }
                   } else {
-                    const err196 = {
+                    const err197 = {
                       instancePath:
                         instancePath + "/notes/" + i13 + "/createdAt",
                       schemaPath:
@@ -12075,16 +12105,16 @@ var require_validators = __commonJS({
                       message: "must be string",
                     };
                     if (vErrors === null) {
-                      vErrors = [err196];
+                      vErrors = [err197];
                     } else {
-                      vErrors.push(err196);
+                      vErrors.push(err197);
                     }
                     errors++;
                   }
                 }
-                if (data69.resolved !== void 0) {
-                  if (typeof data69.resolved !== "boolean") {
-                    const err197 = {
+                if (data70.resolved !== void 0) {
+                  if (typeof data70.resolved !== "boolean") {
+                    const err198 = {
                       instancePath:
                         instancePath + "/notes/" + i13 + "/resolved",
                       schemaPath:
@@ -12094,15 +12124,15 @@ var require_validators = __commonJS({
                       message: "must be boolean",
                     };
                     if (vErrors === null) {
-                      vErrors = [err197];
+                      vErrors = [err198];
                     } else {
-                      vErrors.push(err197);
+                      vErrors.push(err198);
                     }
                     errors++;
                   }
                 }
               } else {
-                const err198 = {
+                const err199 = {
                   instancePath: instancePath + "/notes/" + i13,
                   schemaPath: "#/properties/notes/items/type",
                   keyword: "type",
@@ -12110,15 +12140,15 @@ var require_validators = __commonJS({
                   message: "must be object",
                 };
                 if (vErrors === null) {
-                  vErrors = [err198];
+                  vErrors = [err199];
                 } else {
-                  vErrors.push(err198);
+                  vErrors.push(err199);
                 }
                 errors++;
               }
             }
           } else {
-            const err199 = {
+            const err200 = {
               instancePath: instancePath + "/notes",
               schemaPath: "#/properties/notes/type",
               keyword: "type",
@@ -12126,38 +12156,23 @@ var require_validators = __commonJS({
               message: "must be array",
             };
             if (vErrors === null) {
-              vErrors = [err199];
+              vErrors = [err200];
             } else {
-              vErrors.push(err199);
+              vErrors.push(err200);
             }
             errors++;
           }
         }
         if (data.feedbackBase !== void 0) {
-          let data77 = data.feedbackBase;
-          if (data77 && typeof data77 == "object" && !Array.isArray(data77)) {
-            if (data77.project === void 0) {
-              const err200 = {
+          let data78 = data.feedbackBase;
+          if (data78 && typeof data78 == "object" && !Array.isArray(data78)) {
+            if (data78.project === void 0) {
+              const err201 = {
                 instancePath: instancePath + "/feedbackBase",
                 schemaPath: "#/properties/feedbackBase/required",
                 keyword: "required",
                 params: { missingProperty: "project" },
                 message: "must have required property 'project'",
-              };
-              if (vErrors === null) {
-                vErrors = [err200];
-              } else {
-                vErrors.push(err200);
-              }
-              errors++;
-            }
-            if (data77.prompt === void 0) {
-              const err201 = {
-                instancePath: instancePath + "/feedbackBase",
-                schemaPath: "#/properties/feedbackBase/required",
-                keyword: "required",
-                params: { missingProperty: "prompt" },
-                message: "must have required property 'prompt'",
               };
               if (vErrors === null) {
                 vErrors = [err201];
@@ -12166,9 +12181,24 @@ var require_validators = __commonJS({
               }
               errors++;
             }
-            for (const key16 in data77) {
+            if (data78.prompt === void 0) {
+              const err202 = {
+                instancePath: instancePath + "/feedbackBase",
+                schemaPath: "#/properties/feedbackBase/required",
+                keyword: "required",
+                params: { missingProperty: "prompt" },
+                message: "must have required property 'prompt'",
+              };
+              if (vErrors === null) {
+                vErrors = [err202];
+              } else {
+                vErrors.push(err202);
+              }
+              errors++;
+            }
+            for (const key16 in data78) {
               if (!(key16 === "project" || key16 === "prompt")) {
-                const err202 = {
+                const err203 = {
                   instancePath: instancePath + "/feedbackBase",
                   schemaPath: "#/properties/feedbackBase/additionalProperties",
                   keyword: "additionalProperties",
@@ -12176,19 +12206,19 @@ var require_validators = __commonJS({
                   message: "must NOT have additional properties",
                 };
                 if (vErrors === null) {
-                  vErrors = [err202];
+                  vErrors = [err203];
                 } else {
-                  vErrors.push(err202);
+                  vErrors.push(err203);
                 }
                 errors++;
               }
             }
-            if (data77.project !== void 0) {
-              let data78 = data77.project;
+            if (data78.project !== void 0) {
+              let data79 = data78.project;
               if (
-                !validate10(data78, {
+                !validate10(data79, {
                   instancePath: instancePath + "/feedbackBase/project",
-                  parentData: data77,
+                  parentData: data78,
                   parentDataProperty: "project",
                   rootData,
                 })
@@ -12199,40 +12229,40 @@ var require_validators = __commonJS({
                     : vErrors.concat(validate10.errors);
                 errors = vErrors.length;
               }
-              const _errs165 = errors;
               const _errs166 = errors;
-              if (errors === _errs166) {
+              const _errs167 = errors;
+              if (errors === _errs167) {
                 if (
-                  data78 &&
-                  typeof data78 == "object" &&
-                  !Array.isArray(data78)
+                  data79 &&
+                  typeof data79 == "object" &&
+                  !Array.isArray(data79)
                 ) {
                   let missing0;
                   if (
-                    data78.feedbackBase === void 0 &&
+                    data79.feedbackBase === void 0 &&
                     (missing0 = "feedbackBase")
                   ) {
-                    const err203 = {};
+                    const err204 = {};
                     if (vErrors === null) {
-                      vErrors = [err203];
+                      vErrors = [err204];
                     } else {
-                      vErrors.push(err203);
+                      vErrors.push(err204);
                     }
                     errors++;
                   }
                 } else {
-                  const err204 = {};
+                  const err205 = {};
                   if (vErrors === null) {
-                    vErrors = [err204];
+                    vErrors = [err205];
                   } else {
-                    vErrors.push(err204);
+                    vErrors.push(err205);
                   }
                   errors++;
                 }
               }
-              var valid43 = _errs166 === errors;
+              var valid43 = _errs167 === errors;
               if (valid43) {
-                const err205 = {
+                const err206 = {
                   instancePath: instancePath + "/feedbackBase/project",
                   schemaPath:
                     "#/properties/feedbackBase/properties/project/allOf/1/not",
@@ -12241,27 +12271,27 @@ var require_validators = __commonJS({
                   message: "must NOT be valid",
                 };
                 if (vErrors === null) {
-                  vErrors = [err205];
+                  vErrors = [err206];
                 } else {
-                  vErrors.push(err205);
+                  vErrors.push(err206);
                 }
                 errors++;
               } else {
-                errors = _errs165;
+                errors = _errs166;
                 if (vErrors !== null) {
-                  if (_errs165) {
-                    vErrors.length = _errs165;
+                  if (_errs166) {
+                    vErrors.length = _errs166;
                   } else {
                     vErrors = null;
                   }
                 }
               }
             }
-            if (data77.prompt !== void 0) {
-              let data79 = data77.prompt;
-              if (typeof data79 === "string") {
-                if (func3(data79) > 12e3) {
-                  const err206 = {
+            if (data78.prompt !== void 0) {
+              let data80 = data78.prompt;
+              if (typeof data80 === "string") {
+                if (func3(data80) > 12e3) {
+                  const err207 = {
                     instancePath: instancePath + "/feedbackBase/prompt",
                     schemaPath:
                       "#/properties/feedbackBase/properties/prompt/maxLength",
@@ -12270,14 +12300,14 @@ var require_validators = __commonJS({
                     message: "must NOT have more than 12000 characters",
                   };
                   if (vErrors === null) {
-                    vErrors = [err206];
+                    vErrors = [err207];
                   } else {
-                    vErrors.push(err206);
+                    vErrors.push(err207);
                   }
                   errors++;
                 }
               } else {
-                const err207 = {
+                const err208 = {
                   instancePath: instancePath + "/feedbackBase/prompt",
                   schemaPath:
                     "#/properties/feedbackBase/properties/prompt/type",
@@ -12286,15 +12316,15 @@ var require_validators = __commonJS({
                   message: "must be string",
                 };
                 if (vErrors === null) {
-                  vErrors = [err207];
+                  vErrors = [err208];
                 } else {
-                  vErrors.push(err207);
+                  vErrors.push(err208);
                 }
                 errors++;
               }
             }
           } else {
-            const err208 = {
+            const err209 = {
               instancePath: instancePath + "/feedbackBase",
               schemaPath: "#/properties/feedbackBase/type",
               keyword: "type",
@@ -12302,38 +12332,23 @@ var require_validators = __commonJS({
               message: "must be object",
             };
             if (vErrors === null) {
-              vErrors = [err208];
+              vErrors = [err209];
             } else {
-              vErrors.push(err208);
+              vErrors.push(err209);
             }
             errors++;
           }
         }
         if (data.template !== void 0) {
-          let data80 = data.template;
-          if (data80 && typeof data80 == "object" && !Array.isArray(data80)) {
-            if (data80.id === void 0) {
-              const err209 = {
+          let data81 = data.template;
+          if (data81 && typeof data81 == "object" && !Array.isArray(data81)) {
+            if (data81.id === void 0) {
+              const err210 = {
                 instancePath: instancePath + "/template",
                 schemaPath: "#/properties/template/required",
                 keyword: "required",
                 params: { missingProperty: "id" },
                 message: "must have required property 'id'",
-              };
-              if (vErrors === null) {
-                vErrors = [err209];
-              } else {
-                vErrors.push(err209);
-              }
-              errors++;
-            }
-            if (data80.inputs === void 0) {
-              const err210 = {
-                instancePath: instancePath + "/template",
-                schemaPath: "#/properties/template/required",
-                keyword: "required",
-                params: { missingProperty: "inputs" },
-                message: "must have required property 'inputs'",
               };
               if (vErrors === null) {
                 vErrors = [err210];
@@ -12342,9 +12357,24 @@ var require_validators = __commonJS({
               }
               errors++;
             }
-            for (const key17 in data80) {
+            if (data81.inputs === void 0) {
+              const err211 = {
+                instancePath: instancePath + "/template",
+                schemaPath: "#/properties/template/required",
+                keyword: "required",
+                params: { missingProperty: "inputs" },
+                message: "must have required property 'inputs'",
+              };
+              if (vErrors === null) {
+                vErrors = [err211];
+              } else {
+                vErrors.push(err211);
+              }
+              errors++;
+            }
+            for (const key17 in data81) {
               if (!(key17 === "id" || key17 === "inputs")) {
-                const err211 = {
+                const err212 = {
                   instancePath: instancePath + "/template",
                   schemaPath: "#/properties/template/additionalProperties",
                   keyword: "additionalProperties",
@@ -12352,18 +12382,18 @@ var require_validators = __commonJS({
                   message: "must NOT have additional properties",
                 };
                 if (vErrors === null) {
-                  vErrors = [err211];
+                  vErrors = [err212];
                 } else {
-                  vErrors.push(err211);
+                  vErrors.push(err212);
                 }
                 errors++;
               }
             }
-            if (data80.id !== void 0) {
-              let data81 = data80.id;
-              if (typeof data81 === "string") {
-                if (!pattern0.test(data81)) {
-                  const err212 = {
+            if (data81.id !== void 0) {
+              let data82 = data81.id;
+              if (typeof data82 === "string") {
+                if (!pattern0.test(data82)) {
+                  const err213 = {
                     instancePath: instancePath + "/template/id",
                     schemaPath: "#/properties/template/properties/id/pattern",
                     keyword: "pattern",
@@ -12371,14 +12401,14 @@ var require_validators = __commonJS({
                     message: 'must match pattern "^[a-z][a-z0-9-]{0,63}$"',
                   };
                   if (vErrors === null) {
-                    vErrors = [err212];
+                    vErrors = [err213];
                   } else {
-                    vErrors.push(err212);
+                    vErrors.push(err213);
                   }
                   errors++;
                 }
               } else {
-                const err213 = {
+                const err214 = {
                   instancePath: instancePath + "/template/id",
                   schemaPath: "#/properties/template/properties/id/type",
                   keyword: "type",
@@ -12386,22 +12416,22 @@ var require_validators = __commonJS({
                   message: "must be string",
                 };
                 if (vErrors === null) {
-                  vErrors = [err213];
+                  vErrors = [err214];
                 } else {
-                  vErrors.push(err213);
+                  vErrors.push(err214);
                 }
                 errors++;
               }
             }
-            if (data80.inputs !== void 0) {
-              let data82 = data80.inputs;
+            if (data81.inputs !== void 0) {
+              let data83 = data81.inputs;
               if (
-                data82 &&
-                typeof data82 == "object" &&
-                !Array.isArray(data82)
+                data83 &&
+                typeof data83 == "object" &&
+                !Array.isArray(data83)
               ) {
-                if (data82.subject === void 0) {
-                  const err214 = {
+                if (data83.subject === void 0) {
+                  const err215 = {
                     instancePath: instancePath + "/template/inputs",
                     schemaPath:
                       "#/properties/template/properties/inputs/required",
@@ -12410,14 +12440,14 @@ var require_validators = __commonJS({
                     message: "must have required property 'subject'",
                   };
                   if (vErrors === null) {
-                    vErrors = [err214];
+                    vErrors = [err215];
                   } else {
-                    vErrors.push(err214);
+                    vErrors.push(err215);
                   }
                   errors++;
                 }
-                if (data82.title === void 0) {
-                  const err215 = {
+                if (data83.title === void 0) {
+                  const err216 = {
                     instancePath: instancePath + "/template/inputs",
                     schemaPath:
                       "#/properties/template/properties/inputs/required",
@@ -12426,14 +12456,14 @@ var require_validators = __commonJS({
                     message: "must have required property 'title'",
                   };
                   if (vErrors === null) {
-                    vErrors = [err215];
+                    vErrors = [err216];
                   } else {
-                    vErrors.push(err215);
+                    vErrors.push(err216);
                   }
                   errors++;
                 }
-                if (data82.aspect === void 0) {
-                  const err216 = {
+                if (data83.aspect === void 0) {
+                  const err217 = {
                     instancePath: instancePath + "/template/inputs",
                     schemaPath:
                       "#/properties/template/properties/inputs/required",
@@ -12442,13 +12472,13 @@ var require_validators = __commonJS({
                     message: "must have required property 'aspect'",
                   };
                   if (vErrors === null) {
-                    vErrors = [err216];
+                    vErrors = [err217];
                   } else {
-                    vErrors.push(err216);
+                    vErrors.push(err217);
                   }
                   errors++;
                 }
-                for (const key18 in data82) {
+                for (const key18 in data83) {
                   if (!(
                     key18 === "subject" ||
                     key18 === "title" ||
@@ -12456,7 +12486,7 @@ var require_validators = __commonJS({
                     key18 === "bpm" ||
                     key18 === "acoustic"
                   )) {
-                    const err217 = {
+                    const err218 = {
                       instancePath: instancePath + "/template/inputs",
                       schemaPath:
                         "#/properties/template/properties/inputs/additionalProperties",
@@ -12465,18 +12495,18 @@ var require_validators = __commonJS({
                       message: "must NOT have additional properties",
                     };
                     if (vErrors === null) {
-                      vErrors = [err217];
+                      vErrors = [err218];
                     } else {
-                      vErrors.push(err217);
+                      vErrors.push(err218);
                     }
                     errors++;
                   }
                 }
-                if (data82.subject !== void 0) {
-                  let data83 = data82.subject;
-                  if (typeof data83 === "string") {
-                    if (func3(data83) > 240) {
-                      const err218 = {
+                if (data83.subject !== void 0) {
+                  let data84 = data83.subject;
+                  if (typeof data84 === "string") {
+                    if (func3(data84) > 240) {
+                      const err219 = {
                         instancePath: instancePath + "/template/inputs/subject",
                         schemaPath:
                           "#/properties/template/properties/inputs/properties/subject/maxLength",
@@ -12485,14 +12515,14 @@ var require_validators = __commonJS({
                         message: "must NOT have more than 240 characters",
                       };
                       if (vErrors === null) {
-                        vErrors = [err218];
+                        vErrors = [err219];
                       } else {
-                        vErrors.push(err218);
+                        vErrors.push(err219);
                       }
                       errors++;
                     }
-                    if (func3(data83) < 1) {
-                      const err219 = {
+                    if (func3(data84) < 1) {
+                      const err220 = {
                         instancePath: instancePath + "/template/inputs/subject",
                         schemaPath:
                           "#/properties/template/properties/inputs/properties/subject/minLength",
@@ -12501,14 +12531,14 @@ var require_validators = __commonJS({
                         message: "must NOT have fewer than 1 characters",
                       };
                       if (vErrors === null) {
-                        vErrors = [err219];
+                        vErrors = [err220];
                       } else {
-                        vErrors.push(err219);
+                        vErrors.push(err220);
                       }
                       errors++;
                     }
                   } else {
-                    const err220 = {
+                    const err221 = {
                       instancePath: instancePath + "/template/inputs/subject",
                       schemaPath:
                         "#/properties/template/properties/inputs/properties/subject/type",
@@ -12517,18 +12547,18 @@ var require_validators = __commonJS({
                       message: "must be string",
                     };
                     if (vErrors === null) {
-                      vErrors = [err220];
+                      vErrors = [err221];
                     } else {
-                      vErrors.push(err220);
+                      vErrors.push(err221);
                     }
                     errors++;
                   }
                 }
-                if (data82.title !== void 0) {
-                  let data84 = data82.title;
-                  if (typeof data84 === "string") {
-                    if (func3(data84) > 40) {
-                      const err221 = {
+                if (data83.title !== void 0) {
+                  let data85 = data83.title;
+                  if (typeof data85 === "string") {
+                    if (func3(data85) > 40) {
+                      const err222 = {
                         instancePath: instancePath + "/template/inputs/title",
                         schemaPath:
                           "#/properties/template/properties/inputs/properties/title/maxLength",
@@ -12537,14 +12567,14 @@ var require_validators = __commonJS({
                         message: "must NOT have more than 40 characters",
                       };
                       if (vErrors === null) {
-                        vErrors = [err221];
+                        vErrors = [err222];
                       } else {
-                        vErrors.push(err221);
+                        vErrors.push(err222);
                       }
                       errors++;
                     }
-                    if (func3(data84) < 1) {
-                      const err222 = {
+                    if (func3(data85) < 1) {
+                      const err223 = {
                         instancePath: instancePath + "/template/inputs/title",
                         schemaPath:
                           "#/properties/template/properties/inputs/properties/title/minLength",
@@ -12553,14 +12583,14 @@ var require_validators = __commonJS({
                         message: "must NOT have fewer than 1 characters",
                       };
                       if (vErrors === null) {
-                        vErrors = [err222];
+                        vErrors = [err223];
                       } else {
-                        vErrors.push(err222);
+                        vErrors.push(err223);
                       }
                       errors++;
                     }
                   } else {
-                    const err223 = {
+                    const err224 = {
                       instancePath: instancePath + "/template/inputs/title",
                       schemaPath:
                         "#/properties/template/properties/inputs/properties/title/type",
@@ -12569,25 +12599,25 @@ var require_validators = __commonJS({
                       message: "must be string",
                     };
                     if (vErrors === null) {
-                      vErrors = [err223];
+                      vErrors = [err224];
                     } else {
-                      vErrors.push(err223);
+                      vErrors.push(err224);
                     }
                     errors++;
                   }
                 }
-                if (data82.aspect !== void 0) {
-                  let data85 = data82.aspect;
+                if (data83.aspect !== void 0) {
+                  let data86 = data83.aspect;
                   if (!(
-                    data85 === "21:9" ||
-                    data85 === "2:1" ||
-                    data85 === "16:9" ||
-                    data85 === "4:3" ||
-                    data85 === "1:1" ||
-                    data85 === "3:4" ||
-                    data85 === "9:16"
+                    data86 === "21:9" ||
+                    data86 === "2:1" ||
+                    data86 === "16:9" ||
+                    data86 === "4:3" ||
+                    data86 === "1:1" ||
+                    data86 === "3:4" ||
+                    data86 === "9:16"
                   )) {
-                    const err224 = {
+                    const err225 = {
                       instancePath: instancePath + "/template/inputs/aspect",
                       schemaPath:
                         "#/properties/template/properties/inputs/properties/aspect/enum",
@@ -12600,18 +12630,18 @@ var require_validators = __commonJS({
                       message: "must be equal to one of the allowed values",
                     };
                     if (vErrors === null) {
-                      vErrors = [err224];
+                      vErrors = [err225];
                     } else {
-                      vErrors.push(err224);
+                      vErrors.push(err225);
                     }
                     errors++;
                   }
                 }
-                if (data82.bpm !== void 0) {
-                  let data86 = data82.bpm;
-                  if (typeof data86 == "number" && isFinite(data86)) {
-                    if (data86 > 300 || isNaN(data86)) {
-                      const err225 = {
+                if (data83.bpm !== void 0) {
+                  let data87 = data83.bpm;
+                  if (typeof data87 == "number" && isFinite(data87)) {
+                    if (data87 > 300 || isNaN(data87)) {
+                      const err226 = {
                         instancePath: instancePath + "/template/inputs/bpm",
                         schemaPath:
                           "#/properties/template/properties/inputs/properties/bpm/maximum",
@@ -12620,14 +12650,14 @@ var require_validators = __commonJS({
                         message: "must be <= 300",
                       };
                       if (vErrors === null) {
-                        vErrors = [err225];
+                        vErrors = [err226];
                       } else {
-                        vErrors.push(err225);
+                        vErrors.push(err226);
                       }
                       errors++;
                     }
-                    if (data86 < 20 || isNaN(data86)) {
-                      const err226 = {
+                    if (data87 < 20 || isNaN(data87)) {
+                      const err227 = {
                         instancePath: instancePath + "/template/inputs/bpm",
                         schemaPath:
                           "#/properties/template/properties/inputs/properties/bpm/minimum",
@@ -12636,14 +12666,14 @@ var require_validators = __commonJS({
                         message: "must be >= 20",
                       };
                       if (vErrors === null) {
-                        vErrors = [err226];
+                        vErrors = [err227];
                       } else {
-                        vErrors.push(err226);
+                        vErrors.push(err227);
                       }
                       errors++;
                     }
                   } else {
-                    const err227 = {
+                    const err228 = {
                       instancePath: instancePath + "/template/inputs/bpm",
                       schemaPath:
                         "#/properties/template/properties/inputs/properties/bpm/type",
@@ -12652,22 +12682,22 @@ var require_validators = __commonJS({
                       message: "must be number",
                     };
                     if (vErrors === null) {
-                      vErrors = [err227];
+                      vErrors = [err228];
                     } else {
-                      vErrors.push(err227);
+                      vErrors.push(err228);
                     }
                     errors++;
                   }
                 }
-                if (data82.acoustic !== void 0) {
-                  let data87 = data82.acoustic;
+                if (data83.acoustic !== void 0) {
+                  let data88 = data83.acoustic;
                   if (
-                    data87 &&
-                    typeof data87 == "object" &&
-                    !Array.isArray(data87)
+                    data88 &&
+                    typeof data88 == "object" &&
+                    !Array.isArray(data88)
                   ) {
-                    if (data87.mode === void 0) {
-                      const err228 = {
+                    if (data88.mode === void 0) {
+                      const err229 = {
                         instancePath:
                           instancePath + "/template/inputs/acoustic",
                         schemaPath:
@@ -12677,14 +12707,14 @@ var require_validators = __commonJS({
                         message: "must have required property 'mode'",
                       };
                       if (vErrors === null) {
-                        vErrors = [err228];
+                        vErrors = [err229];
                       } else {
-                        vErrors.push(err228);
+                        vErrors.push(err229);
                       }
                       errors++;
                     }
-                    if (data87.preset === void 0) {
-                      const err229 = {
+                    if (data88.preset === void 0) {
+                      const err230 = {
                         instancePath:
                           instancePath + "/template/inputs/acoustic",
                         schemaPath:
@@ -12694,14 +12724,14 @@ var require_validators = __commonJS({
                         message: "must have required property 'preset'",
                       };
                       if (vErrors === null) {
-                        vErrors = [err229];
+                        vErrors = [err230];
                       } else {
-                        vErrors.push(err229);
+                        vErrors.push(err230);
                       }
                       errors++;
                     }
-                    if (data87.level === void 0) {
-                      const err230 = {
+                    if (data88.level === void 0) {
+                      const err231 = {
                         instancePath:
                           instancePath + "/template/inputs/acoustic",
                         schemaPath:
@@ -12711,20 +12741,20 @@ var require_validators = __commonJS({
                         message: "must have required property 'level'",
                       };
                       if (vErrors === null) {
-                        vErrors = [err230];
+                        vErrors = [err231];
                       } else {
-                        vErrors.push(err230);
+                        vErrors.push(err231);
                       }
                       errors++;
                     }
-                    for (const key19 in data87) {
+                    for (const key19 in data88) {
                       if (!(
                         key19 === "mode" ||
                         key19 === "preset" ||
                         key19 === "level" ||
                         key19 === "text"
                       )) {
-                        const err231 = {
+                        const err232 = {
                           instancePath:
                             instancePath + "/template/inputs/acoustic",
                           schemaPath:
@@ -12734,21 +12764,21 @@ var require_validators = __commonJS({
                           message: "must NOT have additional properties",
                         };
                         if (vErrors === null) {
-                          vErrors = [err231];
+                          vErrors = [err232];
                         } else {
-                          vErrors.push(err231);
+                          vErrors.push(err232);
                         }
                         errors++;
                       }
                     }
-                    if (data87.mode !== void 0) {
-                      let data88 = data87.mode;
+                    if (data88.mode !== void 0) {
+                      let data89 = data88.mode;
                       if (!(
-                        data88 === "room" ||
-                        data88 === "outside" ||
-                        data88 === "sfx"
+                        data89 === "room" ||
+                        data89 === "outside" ||
+                        data89 === "sfx"
                       )) {
-                        const err232 = {
+                        const err233 = {
                           instancePath:
                             instancePath + "/template/inputs/acoustic/mode",
                           schemaPath:
@@ -12762,18 +12792,18 @@ var require_validators = __commonJS({
                           message: "must be equal to one of the allowed values",
                         };
                         if (vErrors === null) {
-                          vErrors = [err232];
+                          vErrors = [err233];
                         } else {
-                          vErrors.push(err232);
+                          vErrors.push(err233);
                         }
                         errors++;
                       }
                     }
-                    if (data87.preset !== void 0) {
-                      let data89 = data87.preset;
-                      if (typeof data89 === "string") {
-                        if (!pattern63.test(data89)) {
-                          const err233 = {
+                    if (data88.preset !== void 0) {
+                      let data90 = data88.preset;
+                      if (typeof data90 === "string") {
+                        if (!pattern63.test(data90)) {
+                          const err234 = {
                             instancePath:
                               instancePath + "/template/inputs/acoustic/preset",
                             schemaPath:
@@ -12784,14 +12814,14 @@ var require_validators = __commonJS({
                               'must match pattern "^[a-z][a-z0-9_]{0,63}$"',
                           };
                           if (vErrors === null) {
-                            vErrors = [err233];
+                            vErrors = [err234];
                           } else {
-                            vErrors.push(err233);
+                            vErrors.push(err234);
                           }
                           errors++;
                         }
                       } else {
-                        const err234 = {
+                        const err235 = {
                           instancePath:
                             instancePath + "/template/inputs/acoustic/preset",
                           schemaPath:
@@ -12801,21 +12831,21 @@ var require_validators = __commonJS({
                           message: "must be string",
                         };
                         if (vErrors === null) {
-                          vErrors = [err234];
+                          vErrors = [err235];
                         } else {
-                          vErrors.push(err234);
+                          vErrors.push(err235);
                         }
                         errors++;
                       }
                     }
-                    if (data87.level !== void 0) {
-                      let data90 = data87.level;
+                    if (data88.level !== void 0) {
+                      let data91 = data88.level;
                       if (!(
-                        data90 === "low" ||
-                        data90 === "mid" ||
-                        data90 === "high"
+                        data91 === "low" ||
+                        data91 === "mid" ||
+                        data91 === "high"
                       )) {
-                        const err235 = {
+                        const err236 = {
                           instancePath:
                             instancePath + "/template/inputs/acoustic/level",
                           schemaPath:
@@ -12829,18 +12859,18 @@ var require_validators = __commonJS({
                           message: "must be equal to one of the allowed values",
                         };
                         if (vErrors === null) {
-                          vErrors = [err235];
+                          vErrors = [err236];
                         } else {
-                          vErrors.push(err235);
+                          vErrors.push(err236);
                         }
                         errors++;
                       }
                     }
-                    if (data87.text !== void 0) {
-                      let data91 = data87.text;
-                      if (typeof data91 === "string") {
-                        if (func3(data91) > 600) {
-                          const err236 = {
+                    if (data88.text !== void 0) {
+                      let data92 = data88.text;
+                      if (typeof data92 === "string") {
+                        if (func3(data92) > 600) {
+                          const err237 = {
                             instancePath:
                               instancePath + "/template/inputs/acoustic/text",
                             schemaPath:
@@ -12850,14 +12880,14 @@ var require_validators = __commonJS({
                             message: "must NOT have more than 600 characters",
                           };
                           if (vErrors === null) {
-                            vErrors = [err236];
+                            vErrors = [err237];
                           } else {
-                            vErrors.push(err236);
+                            vErrors.push(err237);
                           }
                           errors++;
                         }
-                        if (func3(data91) < 1) {
-                          const err237 = {
+                        if (func3(data92) < 1) {
+                          const err238 = {
                             instancePath:
                               instancePath + "/template/inputs/acoustic/text",
                             schemaPath:
@@ -12867,14 +12897,14 @@ var require_validators = __commonJS({
                             message: "must NOT have fewer than 1 characters",
                           };
                           if (vErrors === null) {
-                            vErrors = [err237];
+                            vErrors = [err238];
                           } else {
-                            vErrors.push(err237);
+                            vErrors.push(err238);
                           }
                           errors++;
                         }
                       } else {
-                        const err238 = {
+                        const err239 = {
                           instancePath:
                             instancePath + "/template/inputs/acoustic/text",
                           schemaPath:
@@ -12884,15 +12914,15 @@ var require_validators = __commonJS({
                           message: "must be string",
                         };
                         if (vErrors === null) {
-                          vErrors = [err238];
+                          vErrors = [err239];
                         } else {
-                          vErrors.push(err238);
+                          vErrors.push(err239);
                         }
                         errors++;
                       }
                     }
                   } else {
-                    const err239 = {
+                    const err240 = {
                       instancePath: instancePath + "/template/inputs/acoustic",
                       schemaPath:
                         "#/properties/template/properties/inputs/properties/acoustic/type",
@@ -12901,15 +12931,15 @@ var require_validators = __commonJS({
                       message: "must be object",
                     };
                     if (vErrors === null) {
-                      vErrors = [err239];
+                      vErrors = [err240];
                     } else {
-                      vErrors.push(err239);
+                      vErrors.push(err240);
                     }
                     errors++;
                   }
                 }
               } else {
-                const err240 = {
+                const err241 = {
                   instancePath: instancePath + "/template/inputs",
                   schemaPath: "#/properties/template/properties/inputs/type",
                   keyword: "type",
@@ -12917,15 +12947,15 @@ var require_validators = __commonJS({
                   message: "must be object",
                 };
                 if (vErrors === null) {
-                  vErrors = [err240];
+                  vErrors = [err241];
                 } else {
-                  vErrors.push(err240);
+                  vErrors.push(err241);
                 }
                 errors++;
               }
             }
           } else {
-            const err241 = {
+            const err242 = {
               instancePath: instancePath + "/template",
               schemaPath: "#/properties/template/type",
               keyword: "type",
@@ -12933,19 +12963,19 @@ var require_validators = __commonJS({
               message: "must be object",
             };
             if (vErrors === null) {
-              vErrors = [err241];
+              vErrors = [err242];
             } else {
-              vErrors.push(err241);
+              vErrors.push(err242);
             }
             errors++;
           }
         }
         if (data.preferences !== void 0) {
-          let data92 = data.preferences;
-          if (data92 && typeof data92 == "object" && !Array.isArray(data92)) {
-            for (const key20 in data92) {
+          let data93 = data.preferences;
+          if (data93 && typeof data93 == "object" && !Array.isArray(data93)) {
+            for (const key20 in data93) {
               if (!(key20 === "selection" || key20 === "usage")) {
-                const err242 = {
+                const err243 = {
                   instancePath: instancePath + "/preferences",
                   schemaPath: "#/properties/preferences/additionalProperties",
                   keyword: "additionalProperties",
@@ -12953,28 +12983,28 @@ var require_validators = __commonJS({
                   message: "must NOT have additional properties",
                 };
                 if (vErrors === null) {
-                  vErrors = [err242];
+                  vErrors = [err243];
                 } else {
-                  vErrors.push(err242);
+                  vErrors.push(err243);
                 }
                 errors++;
               }
             }
-            if (data92.selection !== void 0) {
-              let data93 = data92.selection;
+            if (data93.selection !== void 0) {
+              let data94 = data93.selection;
               if (
-                data93 &&
-                typeof data93 == "object" &&
-                !Array.isArray(data93)
+                data94 &&
+                typeof data94 == "object" &&
+                !Array.isArray(data94)
               ) {
-                for (const key21 in data93) {
+                for (const key21 in data94) {
                   if (!(
                     key21 === "family" ||
                     key21 === "weights" ||
                     key21 === "execution" ||
                     key21 === "agent"
                   )) {
-                    const err243 = {
+                    const err244 = {
                       instancePath: instancePath + "/preferences/selection",
                       schemaPath:
                         "#/properties/preferences/properties/selection/additionalProperties",
@@ -12983,23 +13013,23 @@ var require_validators = __commonJS({
                       message: "must NOT have additional properties",
                     };
                     if (vErrors === null) {
-                      vErrors = [err243];
+                      vErrors = [err244];
                     } else {
-                      vErrors.push(err243);
+                      vErrors.push(err244);
                     }
                     errors++;
                   }
                 }
-                if (data93.family !== void 0) {
-                  let data94 = data93.family;
+                if (data94.family !== void 0) {
+                  let data95 = data94.family;
                   if (!(
-                    data94 === "any" ||
-                    data94 === "flux" ||
-                    data94 === "ltx" ||
-                    data94 === "h3" ||
-                    data94 === "upscale"
+                    data95 === "any" ||
+                    data95 === "flux" ||
+                    data95 === "ltx" ||
+                    data95 === "h3" ||
+                    data95 === "upscale"
                   )) {
-                    const err244 = {
+                    const err245 = {
                       instancePath:
                         instancePath + "/preferences/selection/family",
                       schemaPath:
@@ -13013,21 +13043,21 @@ var require_validators = __commonJS({
                       message: "must be equal to one of the allowed values",
                     };
                     if (vErrors === null) {
-                      vErrors = [err244];
+                      vErrors = [err245];
                     } else {
-                      vErrors.push(err244);
+                      vErrors.push(err245);
                     }
                     errors++;
                   }
                 }
-                if (data93.weights !== void 0) {
-                  let data95 = data93.weights;
+                if (data94.weights !== void 0) {
+                  let data96 = data94.weights;
                   if (!(
-                    data95 === "any" ||
-                    data95 === "open-weights" ||
-                    data95 === "commercial"
+                    data96 === "any" ||
+                    data96 === "open-weights" ||
+                    data96 === "commercial"
                   )) {
-                    const err245 = {
+                    const err246 = {
                       instancePath:
                         instancePath + "/preferences/selection/weights",
                       schemaPath:
@@ -13041,21 +13071,21 @@ var require_validators = __commonJS({
                       message: "must be equal to one of the allowed values",
                     };
                     if (vErrors === null) {
-                      vErrors = [err245];
+                      vErrors = [err246];
                     } else {
-                      vErrors.push(err245);
+                      vErrors.push(err246);
                     }
                     errors++;
                   }
                 }
-                if (data93.execution !== void 0) {
-                  let data96 = data93.execution;
+                if (data94.execution !== void 0) {
+                  let data97 = data94.execution;
                   if (!(
-                    data96 === "any" ||
-                    data96 === "local" ||
-                    data96 === "cloud"
+                    data97 === "any" ||
+                    data97 === "local" ||
+                    data97 === "cloud"
                   )) {
-                    const err246 = {
+                    const err247 = {
                       instancePath:
                         instancePath + "/preferences/selection/execution",
                       schemaPath:
@@ -13069,22 +13099,22 @@ var require_validators = __commonJS({
                       message: "must be equal to one of the allowed values",
                     };
                     if (vErrors === null) {
-                      vErrors = [err246];
+                      vErrors = [err247];
                     } else {
-                      vErrors.push(err246);
+                      vErrors.push(err247);
                     }
                     errors++;
                   }
                 }
-                if (data93.agent !== void 0) {
-                  let data97 = data93.agent;
+                if (data94.agent !== void 0) {
+                  let data98 = data94.agent;
                   if (!(
-                    data97 === "any" ||
-                    data97 === "hermes" ||
-                    data97 === "claude" ||
-                    data97 === "codex"
+                    data98 === "any" ||
+                    data98 === "hermes" ||
+                    data98 === "claude" ||
+                    data98 === "codex"
                   )) {
-                    const err247 = {
+                    const err248 = {
                       instancePath:
                         instancePath + "/preferences/selection/agent",
                       schemaPath:
@@ -13098,15 +13128,15 @@ var require_validators = __commonJS({
                       message: "must be equal to one of the allowed values",
                     };
                     if (vErrors === null) {
-                      vErrors = [err247];
+                      vErrors = [err248];
                     } else {
-                      vErrors.push(err247);
+                      vErrors.push(err248);
                     }
                     errors++;
                   }
                 }
               } else {
-                const err248 = {
+                const err249 = {
                   instancePath: instancePath + "/preferences/selection",
                   schemaPath:
                     "#/properties/preferences/properties/selection/type",
@@ -13115,22 +13145,22 @@ var require_validators = __commonJS({
                   message: "must be object",
                 };
                 if (vErrors === null) {
-                  vErrors = [err248];
+                  vErrors = [err249];
                 } else {
-                  vErrors.push(err248);
+                  vErrors.push(err249);
                 }
                 errors++;
               }
             }
-            if (data92.usage !== void 0) {
-              let data98 = data92.usage;
+            if (data93.usage !== void 0) {
+              let data99 = data93.usage;
               if (
-                data98 &&
-                typeof data98 == "object" &&
-                !Array.isArray(data98)
+                data99 &&
+                typeof data99 == "object" &&
+                !Array.isArray(data99)
               ) {
-                if (data98.purpose === void 0) {
-                  const err249 = {
+                if (data99.purpose === void 0) {
+                  const err250 = {
                     instancePath: instancePath + "/preferences/usage",
                     schemaPath:
                       "#/properties/preferences/properties/usage/required",
@@ -13139,14 +13169,14 @@ var require_validators = __commonJS({
                     message: "must have required property 'purpose'",
                   };
                   if (vErrors === null) {
-                    vErrors = [err249];
+                    vErrors = [err250];
                   } else {
-                    vErrors.push(err249);
+                    vErrors.push(err250);
                   }
                   errors++;
                 }
-                if (data98.policy === void 0) {
-                  const err250 = {
+                if (data99.policy === void 0) {
+                  const err251 = {
                     instancePath: instancePath + "/preferences/usage",
                     schemaPath:
                       "#/properties/preferences/properties/usage/required",
@@ -13155,15 +13185,15 @@ var require_validators = __commonJS({
                     message: "must have required property 'policy'",
                   };
                   if (vErrors === null) {
-                    vErrors = [err250];
+                    vErrors = [err251];
                   } else {
-                    vErrors.push(err250);
+                    vErrors.push(err251);
                   }
                   errors++;
                 }
-                for (const key22 in data98) {
+                for (const key22 in data99) {
                   if (!(key22 === "purpose" || key22 === "policy")) {
-                    const err251 = {
+                    const err252 = {
                       instancePath: instancePath + "/preferences/usage",
                       schemaPath:
                         "#/properties/preferences/properties/usage/additionalProperties",
@@ -13172,22 +13202,22 @@ var require_validators = __commonJS({
                       message: "must NOT have additional properties",
                     };
                     if (vErrors === null) {
-                      vErrors = [err251];
+                      vErrors = [err252];
                     } else {
-                      vErrors.push(err251);
+                      vErrors.push(err252);
                     }
                     errors++;
                   }
                 }
-                if (data98.purpose !== void 0) {
-                  let data99 = data98.purpose;
+                if (data99.purpose !== void 0) {
+                  let data100 = data99.purpose;
                   if (!(
-                    data99 === "demo" ||
-                    data99 === "commercial-video" ||
-                    data99 === "redistribute-source" ||
-                    data99 === "resell-template"
+                    data100 === "demo" ||
+                    data100 === "commercial-video" ||
+                    data100 === "redistribute-source" ||
+                    data100 === "resell-template"
                   )) {
-                    const err252 = {
+                    const err253 = {
                       instancePath: instancePath + "/preferences/usage/purpose",
                       schemaPath:
                         "#/properties/preferences/properties/usage/properties/purpose/enum",
@@ -13200,21 +13230,21 @@ var require_validators = __commonJS({
                       message: "must be equal to one of the allowed values",
                     };
                     if (vErrors === null) {
-                      vErrors = [err252];
+                      vErrors = [err253];
                     } else {
-                      vErrors.push(err252);
+                      vErrors.push(err253);
                     }
                     errors++;
                   }
                 }
-                if (data98.policy !== void 0) {
-                  let data100 = data98.policy;
+                if (data99.policy !== void 0) {
+                  let data101 = data99.policy;
                   if (!(
-                    data100 === "any-licensed" ||
-                    data100 === "open-source" ||
-                    data100 === "mit-only"
+                    data101 === "any-licensed" ||
+                    data101 === "open-source" ||
+                    data101 === "mit-only"
                   )) {
-                    const err253 = {
+                    const err254 = {
                       instancePath: instancePath + "/preferences/usage/policy",
                       schemaPath:
                         "#/properties/preferences/properties/usage/properties/policy/enum",
@@ -13227,15 +13257,15 @@ var require_validators = __commonJS({
                       message: "must be equal to one of the allowed values",
                     };
                     if (vErrors === null) {
-                      vErrors = [err253];
+                      vErrors = [err254];
                     } else {
-                      vErrors.push(err253);
+                      vErrors.push(err254);
                     }
                     errors++;
                   }
                 }
               } else {
-                const err254 = {
+                const err255 = {
                   instancePath: instancePath + "/preferences/usage",
                   schemaPath: "#/properties/preferences/properties/usage/type",
                   keyword: "type",
@@ -13243,15 +13273,15 @@ var require_validators = __commonJS({
                   message: "must be object",
                 };
                 if (vErrors === null) {
-                  vErrors = [err254];
+                  vErrors = [err255];
                 } else {
-                  vErrors.push(err254);
+                  vErrors.push(err255);
                 }
                 errors++;
               }
             }
           } else {
-            const err255 = {
+            const err256 = {
               instancePath: instancePath + "/preferences",
               schemaPath: "#/properties/preferences/type",
               keyword: "type",
@@ -13259,15 +13289,15 @@ var require_validators = __commonJS({
               message: "must be object",
             };
             if (vErrors === null) {
-              vErrors = [err255];
+              vErrors = [err256];
             } else {
-              vErrors.push(err255);
+              vErrors.push(err256);
             }
             errors++;
           }
         }
       } else {
-        const err256 = {
+        const err257 = {
           instancePath,
           schemaPath: "#/type",
           keyword: "type",
@@ -13275,9 +13305,9 @@ var require_validators = __commonJS({
           message: "must be object",
         };
         if (vErrors === null) {
-          vErrors = [err256];
+          vErrors = [err257];
         } else {
-          vErrors.push(err256);
+          vErrors.push(err257);
         }
         errors++;
       }
