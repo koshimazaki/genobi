@@ -47,7 +47,7 @@ async function runCheck({ skipped, commits, unavailable = false }) {
         env: {
           ...process.env,
           GITHUB_SHA: HEAD,
-          DEPLOY_SKIPPED: String(skipped),
+          REPORT_ONLY: String(skipped),
           GENOBI_PRODUCTION_URL: "http://127.0.0.1:" + address.port,
           GITHUB_STEP_SUMMARY: summaryPath,
         },
@@ -72,15 +72,16 @@ async function runCheck({ skipped, commits, unavailable = false }) {
 }
 
 describe("production deployment identity script", () => {
-  it("warns for missing credentials and a stale build", async () => {
+  it("reports a stale build once, as a notice that names the hand deploy", async () => {
     const result = await runCheck({ skipped: true, commits: ["1111111"] });
     expect(result.code).toBe(0);
     expect(result.requests).toBe(1);
     expect(result.stdout).toContain(
-      "::warning title=Production was not deployed::",
+      "::notice title=Production serves another build::",
     );
+    expect(result.stdout).toContain("npm run deploy:pages");
     expect(result.summary).toContain(
-      "::warning title=Production was not deployed::",
+      "::notice title=Production serves another build::",
     );
   });
 
@@ -90,7 +91,7 @@ describe("production deployment identity script", () => {
     expect(result.stdout).toContain("an unversioned build");
   });
 
-  it("warns when health fails and deployment was skipped", async () => {
+  it("warns, without failing, when a report cannot read health", async () => {
     const result = await runCheck({
       skipped: true,
       commits: [],
@@ -119,25 +120,20 @@ describe("production deployment identity script", () => {
     expect(result.stdout).toContain("serves this commit");
   }, 15_000);
 
-  it("keeps checkout and Node available without credentials", async () => {
+  it("CI never deploys: no deploy step, no Cloudflare credential, a read-only report", async () => {
     const ci = await readFile(
       fileURLToPath(new URL("../.github/workflows/ci.yml", import.meta.url)),
       "utf8",
     );
-    const deployment = ci.split("\n  deploy:\n")[1];
-    expect(deployment).toBeTruthy();
-    const checkout = deployment.match(
-      /- uses: actions\/checkout@[^\n]+(?:\n\s+if:[^\n]+)?/,
-    )?.[0];
-    const setup = deployment.match(
-      /- uses: actions\/setup-node@[^\n]+(?:\n\s+if:[^\n]+)?/,
-    )?.[0];
-    expect(checkout).toBeTruthy();
-    expect(setup).toBeTruthy();
-    expect(checkout).not.toContain("if:");
-    expect(setup).not.toContain("if:");
-    expect(deployment).toContain(
-      "if: always() && steps.creds.outputs.present != ''",
-    );
+    // Deploys are by hand (npm run deploy:pages), so a merge spends no quota.
+    expect(ci).not.toMatch(/wrangler (pages deploy|d1 migrations apply)/);
+    expect(ci).not.toContain("scripts/deploy-pages.mjs");
+    expect(ci).not.toMatch(/CLOUDFLARE_API_TOKEN|CLOUDFLARE_ACCOUNT_ID/);
+    expect(ci).not.toMatch(/environment:\s*\n\s*name: production/);
+    const report = ci.split("\n  production:\n")[1];
+    expect(report).toBeTruthy();
+    expect(report).not.toContain("secrets.");
+    expect(report).toContain('REPORT_ONLY: "true"');
+    expect(report).toContain("run: node scripts/check-production.mjs");
   });
 });

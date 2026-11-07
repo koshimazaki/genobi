@@ -1,17 +1,16 @@
 /**
  * Ask production which build it is serving, and say so out loud.
  *
- * `Deploy production` skips when the `production` environment holds no
- * Cloudflare credentials, on purpose, so `main` stays green on a fork. The
- * catch is that a green run then looks exactly like a shipped one:
- * a merged fix can remain absent from production. A locally run dev server
- * uses its own checkout and configuration, independently of Cloudflare.
+ * Production is deployed by hand (`npm run deploy:pages`), never by a merge,
+ * so a green `main` says nothing about what is live. The Worker stamps its
+ * commit into `/api/health`, and this script answers "is this commit live?"
+ * two ways:
  *
- * The Worker stamps its commit into `/api/health`, so this script can answer
- * the only question that matters here — "is the thing I merged live?" — and
- * answer it as a warning when the deploy was skipped, and as a failure when
- * the deploy ran and production still serves something else (a cached bundle,
- * the wrong project, a rollback).
+ * - `REPORT_ONLY=true` (CI, after each push to main): one read, a notice when
+ *   production serves another build, and never a failure.
+ * - otherwise (the end of `npm run deploy:pages`): poll until production
+ *   serves this commit, and fail when it still answers another build (a
+ *   cached bundle, the wrong project, a rollback).
  */
 import { execFileSync } from "node:child_process";
 import { appendFileSync } from "node:fs";
@@ -19,7 +18,7 @@ import { appendFileSync } from "node:fs";
 const url = (process.env.GENOBI_PRODUCTION_URL ?? "https://genobi.pages.dev")
   .trim()
   .replace(/\/+$/, "");
-const skipped = process.env.DEPLOY_SKIPPED === "true";
+const reportOnly = process.env.REPORT_ONLY === "true";
 const attempts = 6;
 
 const commit = (() => {
@@ -46,9 +45,9 @@ const say = (line) => {
 
 async function health() {
   let last;
-  // An absent credential means no deployment ran: inspect once and report it.
-  // After a real deploy, allow Pages to serve the prior build briefly.
-  const maxAttempts = skipped ? 1 : attempts;
+  // A report reads once. After a deploy, allow Pages to serve the prior build
+  // briefly.
+  const maxAttempts = reportOnly ? 1 : attempts;
   for (let attempt = 1; attempt <= maxAttempts; attempt++) {
     try {
       const response = await fetch(`${url}/api/health`, {
@@ -58,7 +57,7 @@ async function health() {
       });
       if (!response.ok) throw new Error(`health answered ${response.status}`);
       const body = await response.json();
-      if (skipped || same(body?.commit, commit) || attempt === maxAttempts)
+      if (reportOnly || same(body?.commit, commit) || attempt === maxAttempts)
         return body;
       // A 200 response containing the old commit is not yet a deployed fix.
       // Poll the build identity, not merely the route's HTTP status.
@@ -76,9 +75,9 @@ try {
   body = await health();
 } catch {
   say(
-    `::${skipped ? "warning" : "error"} title=Production identity unavailable::${url}/api/health could not be read. ${skipped ? "The deployment was skipped because the production credentials were missing; no code from this push was deployed." : "The deployment ran, but the served build could not be verified."}`,
+    `::${reportOnly ? "warning" : "error"} title=Production identity unavailable::${url}/api/health could not be read. ${reportOnly ? "Could not tell which build is live." : "The deployment ran, but the served build could not be verified."}`,
   );
-  process.exit(skipped ? 0 : 1);
+  process.exit(reportOnly ? 0 : 1);
 }
 const served = typeof body?.commit === "string" ? body.commit : undefined;
 
@@ -94,9 +93,9 @@ const state =
       ? "a build with no commit stamp"
       : `${served}`;
 
-if (skipped) {
+if (reportOnly) {
   say(
-    `::warning title=Production was not deployed::${url} serves ${state}, this commit is ${commit}. The deploy job skipped for want of CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID in the production environment, so nothing merged in this push is live.`,
+    `::notice title=Production serves another build::${url} serves ${state}, this commit is ${commit}. Merges do not deploy: run npm run deploy:pages from a clean checkout of main to make it live.`,
   );
   process.exit(0);
 }
