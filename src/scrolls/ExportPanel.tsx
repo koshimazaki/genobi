@@ -9,7 +9,7 @@ export default function ScrollExportPanel({
   const exportState = useScrollAgentExport(s);
   if (!exportState.available) return null;
   return (
-    <section aria-label="Scroll agent exports">
+    <section aria-label="Scroll agent connection">
       <div className="scroll-toolbar">
         <button
           disabled={!exportState.tabId}
@@ -20,7 +20,7 @@ export default function ScrollExportPanel({
         <button onClick={() => exportState.setEnabled(!exportState.enabled)}>
           {exportState.enabled
             ? "Disconnect Scroll agents"
-            : "Enable Scroll agent exports"}
+            : "Enable Scroll agent connection"}
         </button>
       </div>
       {exportState.code && (
@@ -30,7 +30,8 @@ export default function ScrollExportPanel({
         </p>
       )}
       <p>
-        Linked agents can export this document as a media ZIP or JSON. JSON
+        Linked agents can inspect and edit this document and selected cell, or
+        export a media ZIP or JSON. Edits require its current revision. JSON
         needs its matching media bundle. Closing or disconnecting this tab ends
         its links.
       </p>

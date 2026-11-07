@@ -76,6 +76,17 @@ export function runtimeCapabilities(runtime: "local" | "hosted") {
         "GET /api/projects/:id/media/:sha256",
       ]),
       projectMediaOperations: localFeature(["POST /api/projects/:id/media"]),
+      liveScrolls: {
+        ...localFeature([
+          "GET /api/exports/scrolls/targets",
+          "GET /api/exports/scrolls/tabs/:id",
+          "POST /api/exports/scrolls/commands",
+          "GET /api/exports/scrolls/commands/:id",
+        ]),
+        execution: "browser",
+        requires: ["scroll-tab-link", "responding-tab"],
+        headless: false,
+      },
       browserExport: {
         ...localFeature(
           [

@@ -1,3 +1,5 @@
+import { BrowserExports } from "./browser-exports";
+import { scrollsLiveRouter } from "./scrolls-live-routes";
 /**
  * Explicit, ephemeral pairings between one open studio tab and the local
  * agents it hands work to: World's live control and Scrolls' panel fill.
@@ -27,6 +29,10 @@ export async function mountPairings(
   );
   // Scrolls' fill counts in the server's ceilings (edit, poll).
   app.use("/api/scrolls", scrollsFillRouter(limit));
-  if (projects)
-    app.use("/api/exports", await browserExportRouter(projects, limit));
+  if (projects) {
+    const browsers = new BrowserExports(projects);
+    await browsers.load();
+    app.use("/api/exports/scrolls", scrollsLiveRouter(browsers, limit));
+    app.use("/api/exports", browserExportRouter(browsers, limit));
+  }
 }

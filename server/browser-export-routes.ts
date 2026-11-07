@@ -6,16 +6,13 @@ import {
   exportUpdate,
 } from "../shared/browser-export";
 import type { RateBucket } from "../shared/limits";
-import { BrowserExports } from "./browser-exports";
-import type { ProjectCopies } from "./projects";
+import type { BrowserExports } from "./browser-exports";
 import { AppError } from "./errors";
 
-export async function browserExportRouter(
-  projects: ProjectCopies,
+export function browserExportRouter(
+  service: BrowserExports,
   limit: (bucket: RateBucket, id: string) => void,
 ) {
-  const service = new BrowserExports(projects);
-  await service.load();
   const router = express.Router(),
     json = express.json({ limit: "8kb" });
   const owner = (res: express.Response) => res.locals.sessionId as string;

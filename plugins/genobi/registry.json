@@ -139,6 +139,7 @@
         "genobi_project_media_stage",
         "genobi_project_media_receipt",
         "genobi_export",
+        "genobi_scrolls_live",
         "genobi_provenance",
         "genobi_audio_upload",
         "genobi_audio_analysis",
@@ -284,6 +285,7 @@
         "genobi_project_media_stage",
         "genobi_project_media_receipt",
         "genobi_export",
+        "genobi_scrolls_live",
         "genobi_provenance",
         "genobi_audio_upload",
         "genobi_audio_analysis",
@@ -386,6 +388,7 @@
       "entries": [
         "genobi_scrolls_panels",
         "genobi_export",
+        "genobi_scrolls_live",
         "bloom-teaser",
         "genobi-scrolls"
       ]
@@ -1017,6 +1020,17 @@
       "readOnly": false,
       "paid": false,
       "skills": ["genobi-director", "genobi-scrolls"]
+    },
+    {
+      "kind": "tool",
+      "name": "genobi_scrolls_live",
+      "title": "Inspect or edit the mounted Scroll",
+      "description": "Link the one-use code shown in Scrolls Document & agent tools, then inspect the exact tab. Returns document, revision, selected cell and available media IDs. Keep that original context with the conversation; never silently retarget after a document/cell switch. Request applies an existing Scroll command against context and command.revision; metadata-only add-asset is refused. Read status for the applied document or explicit conflict. Reuse the exact requestId/body after an uncertain answer; never make a new request to retry. Commands and results are ephemeral, bounded to one hour; a server restart loses them, so inspect before proceeding. This is local paired-browser control; no headless service, paid generation or arbitrary document opening. Pure genobi_scrolls JSON tools remain available.",
+      "tags": ["agents", "mcp", "storyboard"],
+      "docs": ["docs/live-scrolls.md", "docs/browser-exports.md"],
+      "readOnly": false,
+      "paid": false,
+      "skills": ["genobi-scrolls"]
     },
     {
       "kind": "tool",
@@ -1766,13 +1780,18 @@
       "name": "genobi-scrolls",
       "description": "Plan a character sheet or storyboard as a Genobi scroll before any video exists - create and edit the scroll document, time its cells to a song, prepare one Klein image request for the whole sheet or a cell behind a quote the person accepts, and hand the chosen panels to the Director. Use when the person wants to draw the video first, keep a character consistent, or storyboard a song.",
       "tags": ["storyboard", "agents", "director", "mcp"],
-      "docs": ["docs/scrolls.md", "docs/browser-exports.md"],
+      "docs": [
+        "docs/scrolls.md",
+        "docs/browser-exports.md",
+        "docs/live-scrolls.md"
+      ],
       "path": "plugins/genobi/skills/genobi-scrolls/SKILL.md",
       "tools": [
         "genobi_scrolls",
         "genobi_scrolls_panels",
         "genobi_quote",
         "genobi_export",
+        "genobi_scrolls_live",
         "genobi_audio_analysis",
         "genobi_skill"
       ]

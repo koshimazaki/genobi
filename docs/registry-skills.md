@@ -195,8 +195,8 @@ Plan a character sheet or storyboard as a Genobi scroll before any video exists 
 
 - Tags: `storyboard`, `agents`, `director`, `mcp`
 - Instructions: [plugins/genobi/skills/genobi-scrolls/SKILL.md](https://github.com/koshimazaki/Genobi/blob/main/plugins/genobi/skills/genobi-scrolls/SKILL.md)
-- Uses: [`genobi_scrolls`](registry-tools.md#genobi_scrolls), [`genobi_scrolls_panels`](registry-tools.md#genobi_scrolls_panels), [`genobi_quote`](registry-tools.md#genobi_quote), [`genobi_export`](registry-tools.md#genobi_export), [`genobi_audio_analysis`](registry-tools.md#genobi_audio_analysis), [`genobi_skill`](registry-tools.md#genobi_skill)
-- Docs: [docs/scrolls.md](scrolls.md), [docs/browser-exports.md](browser-exports.md)
+- Uses: [`genobi_scrolls`](registry-tools.md#genobi_scrolls), [`genobi_scrolls_panels`](registry-tools.md#genobi_scrolls_panels), [`genobi_quote`](registry-tools.md#genobi_quote), [`genobi_export`](registry-tools.md#genobi_export), [`genobi_scrolls_live`](registry-tools.md#genobi_scrolls_live), [`genobi_audio_analysis`](registry-tools.md#genobi_audio_analysis), [`genobi_skill`](registry-tools.md#genobi_skill)
+- Docs: [docs/scrolls.md](scrolls.md), [docs/browser-exports.md](browser-exports.md), [docs/live-scrolls.md](live-scrolls.md)
 
 ## `genobi-studio`
 

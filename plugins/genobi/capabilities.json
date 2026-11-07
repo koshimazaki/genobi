@@ -43,6 +43,14 @@
   },
   "capabilities": [
     {
+      "id": "live-scroll-agents", "name": "Live Scroll document edits", "status": "implemented",
+      "where": "Scrolls · Document & agent tools",
+      "description": "Explicitly linked agents inspect the mounted document, selection and available media, then apply validated revision-bound commands with conflict and acknowledgement read-back. Local paired browser only; metadata alone cannot add media.",
+      "mcp": ["genobi_scrolls_live"], "cli": ["scrolls-live"],
+      "skills": ["genobi-scrolls"], "docs": ["docs/live-scrolls.md"],
+      "runs": [{ "route": "local-free" }]
+    },
+    {
       "id": "template-gallery", "name": "Template gallery", "status": "verified", "evidence": "2026-10-29 docs/falling-room.md#what-was-run-29-october-2026",
       "where": "Gallery · / (the first view), /watch/:id, /embed/:id",
       "description": "The first view: template and generation cards, a drawer per card with drop zones, Take it to Director, and watch and embed pages.",

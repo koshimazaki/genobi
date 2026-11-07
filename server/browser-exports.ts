@@ -135,6 +135,15 @@ export class BrowserExports {
     }
     if (!tab.grants.has(caller)) throw notFound();
   }
+  /** The live Scroll bridge shares this exact tab grant; reads never renew it. */
+  scrollTab(tabId: string, caller: string, ownerOnly = false) {
+    this.sweep();
+    const tab = this.tabs.get(tabId);
+    if (!tab || tab.source.kind !== "scrolls") throw notFound();
+    if (ownerOnly) this.ownTab(tabId, caller);
+    else this.access(tab, caller);
+    return tab.source;
+  }
   createLink(tabId: string, owner: string, source: ExportSource) {
     this.sweep();
     const tab = this.ownTab(tabId, owner);

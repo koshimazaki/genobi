@@ -1,3 +1,5 @@
+import { startScrollLiveBridge } from "./live-bridge";
+import { scrollLiveAdapter } from "./live-agent";
 import { useEffect, useRef, useState } from "react";
 import {
   sameExportSource,
@@ -87,9 +89,23 @@ export function useScrollAgentExport(s: ScrollState) {
   }, []);
   useEffect(() => {
     if (!available || !enabled) return;
-    return startExportBridge({
+    let stopLive: (() => void) | undefined;
+    let liveTab: string | undefined;
+    const stopExport = startExportBridge({
       ...scrollExportAdapter(() => latest.current),
       connection(id, source) {
+        if (id !== liveTab) {
+          stopLive?.();
+          liveTab = id;
+          stopLive =
+            id && source
+              ? startScrollLiveBridge(
+                  id,
+                  source.id,
+                  scrollLiveAdapter(() => latest.current),
+                )
+              : undefined;
+        }
         if (currentTab.current !== id) setCode(undefined);
         currentTab.current = id;
         setTabId(id);
@@ -107,7 +123,11 @@ export function useScrollAgentExport(s: ScrollState) {
           );
       },
     });
-  }, [available, enabled]);
+    return () => {
+      stopLive?.();
+      stopExport();
+    };
+  }, [available, enabled, s.mountId]);
   async function link() {
     if (!tabId) return;
     try {

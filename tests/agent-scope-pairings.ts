@@ -4,6 +4,18 @@
 
 /** Scrolls' fill and World's live control routes, and why each is not scoped. */
 export const PAIRING_ROUTES: Record<string, string> = {
+  "GET /api/exports/scrolls/targets":
+    "Only explicitly linked Scroll tabs; no implicit project grant.",
+  "GET /api/exports/scrolls/tabs/:id":
+    "This tab's owner or one-use linked session; bounded live snapshot only.",
+  "POST /api/exports/scrolls/tabs/:id/poll":
+    "Only the registered browser owner; marked agents refused.",
+  "POST /api/exports/scrolls/commands":
+    "Linked tab, exact document/revision/cell context and validated edits required.",
+  "GET /api/exports/scrolls/commands/:id":
+    "Only command requester or browser owner; bounded retained result.",
+  "POST /api/exports/scrolls/commands/:id/result":
+    "Only the dispatching browser owner; marked agents refused.",
   "POST /api/exports/tabs/:id/link":
     "Only this Scroll tab owner browser issues one-use links; marked agents refused.",
   "POST /api/exports/link":

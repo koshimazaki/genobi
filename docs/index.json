@@ -59,6 +59,7 @@
         "first-nine-pr-plan.md",
         "genmod.md",
         "gpu-box.md",
+        "live-scrolls.md",
         "maintenance-priorities.md",
         "media-space.md",
         "openjutsu-swap.md",
@@ -288,6 +289,7 @@
         "hermes-runs/2026-10-28-hermes-audio-visual-library-dry-run.md",
         "hermes-runs/2026-10-28-hermes-audio-visual-library-review.md",
         "licence-strategy.md",
+        "live-scrolls.md",
         "machine-check.md",
         "maintenance-priorities.md",
         "project-media.md",
@@ -455,6 +457,7 @@
         "hermes-runs/2026-10-27-claude-anime-teaser.md",
         "hermes-runs/2026-10-28-hermes-audio-visual-library-dry-run.md",
         "hermes-runs/2026-10-28-hermes-audio-visual-library-review.md",
+        "live-scrolls.md",
         "machine-check.md",
         "media-space.md",
         "openjutsu-swap.md",
@@ -678,7 +681,7 @@
     },
     "storyboard": {
       "meaning": "Storyboards, character sheets and Scrolls",
-      "pages": ["scrolls.md", "vfx-recipes/anime-opening.md"]
+      "pages": ["live-scrolls.md", "scrolls.md", "vfx-recipes/anime-opening.md"]
     },
     "memory": {
       "meaning": "Project evidence, session checkpoints and reusable taste",
@@ -816,6 +819,7 @@
         "hermes-runs/2026-10-28-hermes-audio-visual-library-review.md",
         "layout-to-render-status.md",
         "licence-strategy.md",
+        "live-scrolls.md",
         "machine-check.md",
         "maintenance-priorities.md",
         "media-previews.md",
@@ -1260,6 +1264,7 @@
         "hermes-runs/2026-10-28-hermes-audio-visual-library-dry-run.md",
         "layout-to-render-status.md",
         "licence-strategy.md",
+        "live-scrolls.md",
         "machine-check.md",
         "media-space.md",
         "minimax-h3-camera.md",
@@ -2034,6 +2039,13 @@
       "links": ["credits/README.md"]
     },
     {
+      "title": "Agents in the open Scroll",
+      "path": "live-scrolls.md",
+      "tags": ["agents", "mcp", "storyboard", "workflows"],
+      "summary": "Inspect and edit the mounted Scroll through an explicitly linked browser, preserving document, revision and cell context.",
+      "links": []
+    },
+    {
       "title": "Machine check",
       "path": "machine-check.md",
       "tags": ["agents", "models", "backend", "mcp"],
@@ -2182,6 +2194,7 @@
         "hermes-profiles.md",
         "hermes-runs.md",
         "licence-strategy.md",
+        "live-scrolls.md",
         "machine-check.md",
         "media-space.md",
         "project-archives.md",
@@ -2231,6 +2244,7 @@
         "genobi-cli.md",
         "hermes-runs.md",
         "licence-strategy.md",
+        "live-scrolls.md",
         "machine-check.md",
         "media-space.md",
         "project-archives.md",
@@ -2298,6 +2312,7 @@
         "hermes-profiles.md",
         "hermes-runs.md",
         "licence-strategy.md",
+        "live-scrolls.md",
         "machine-check.md",
         "media-space.md",
         "project-archives.md",

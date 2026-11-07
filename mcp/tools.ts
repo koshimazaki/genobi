@@ -1,3 +1,4 @@
+import { scrollsLiveTools } from "./scrolls-live-tools";
 import { arenaTools } from "./arena-tools";
 import { effectTools } from "./effects-tools";
 import { worldTools } from "./world-tools";
@@ -192,6 +193,7 @@ export const tools: ToolDefinition[] = [
   ...takeTools,
   ...projectMediaTools,
   ...exportTools,
+  ...scrollsLiveTools,
   ...provenanceTools,
   ...audioTools,
   ...mediaTools,

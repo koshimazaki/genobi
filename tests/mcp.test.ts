@@ -144,6 +144,7 @@ describe("tools", () => {
       "genobi_upscale_parts_retry",
       // Scroll export linking consumes a one-use browser code.
       "genobi_export",
+      "genobi_scrolls_live",
       ...media,
       "genobi_deployment_stage",
       // Each start is another Developer (one at a time): not free to repeat.
@@ -174,6 +175,7 @@ describe("tools", () => {
       "genobi_project_media",
       "genobi_project_media_stage",
       "genobi_export",
+      "genobi_scrolls_live",
       "genobi_audio_upload",
       ...media,
       // Session settings: writes, safe to repeat, never paid.
