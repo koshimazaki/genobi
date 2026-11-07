@@ -90,7 +90,7 @@ Job expiration, media cleanup and job deletion each select at most 100 rows per 
 
 Before it deletes anything, the sweep aggregates each UTC day into `daily_stats`, so retention costs the detail and not the counts. That is the whole of this deployment's own measurement, and it lives in [`observability/`](https://github.com/koshimazaki/Genobi/blob/main/observability/README.md) — the module, the reader and the policy it follows.
 
-The sweep has two triggers. `wrangler.jsonc` registers a five-minute cron trigger for the Workers deployment. Cloudflare Pages has no cron trigger, so on the Pages deployment the same function also runs in the background from `GET /api/health` and `GET /api/history` — the two routes a page load hits once each, never the four-second poll. A conditional D1 write claims the interval, so whichever trigger arrives first does the work and the other returns immediately. On Pages this means housekeeping costs scale with visits rather than with time.
+Cloudflare Pages has no cron trigger, so the sweep runs in the background from `GET /api/health` and `GET /api/history` — the two routes a page load hits once each, never the four-second poll. A conditional D1 write claims the interval, so concurrent requests never run it twice; the Worker's `scheduled` handler claims the same interval if a cron-triggered Worker ever runs this code. On Pages this means housekeeping costs scale with visits rather than with time.
 
 A durable background runner that could actually finish an abandoned job is a separate design: it needs key custody, which this deployment deliberately does not have.
 
@@ -102,9 +102,9 @@ Requires Node 22+ and a Cloudflare account with Workers, D1 and R2 enabled. The 
 npm ci
 npm test
 npm run check:worker
-npm run build
-npx wrangler d1 migrations apply flux-studio-lite --local
-npx wrangler dev
+npm run build:pages
+(cd .pages-project && npx wrangler d1 migrations apply flux-studio-lite --local)
+npx wrangler pages dev ../.pages --cwd .pages-project --port 4322
 ```
 
 ## Deployment
@@ -160,7 +160,9 @@ either add `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` to the
 `production` environment, or deploy by hand with `npm run deploy:pages` from a
 clean checkout of `main` and re-read `/api/health`.
 
-For another account, set `CLOUDFLARE_ACCOUNT_ID` and update the database/bucket bindings in `wrangler.pages.json`. The original Workers target still uses `wrangler.jsonc`. The earlier catalogue kept its clips in R2 under `library/`. Those objects are now unreferenced: the app serves library clips as static assets, and the sweep only collects keys it can derive from a job, so they will not be cleaned up automatically. Delete them by hand once the new catalogue is live:
+`worker/env.d.ts` is generated from that file: `npx wrangler types -c wrangler.pages.json worker/env.d.ts`. Pages binds `ASSETS` without a config entry, so `worker/pages-env.d.ts` declares it.
+
+For another account, set `CLOUDFLARE_ACCOUNT_ID` and update the database/bucket bindings in `wrangler.pages.json`, the only Cloudflare configuration in this repository. The earlier catalogue kept its clips in R2 under `library/`. Those objects are now unreferenced: the app serves library clips as static assets, and the sweep only collects keys it can derive from a job, so they will not be cleaned up automatically. Delete them by hand once the new catalogue is live:
 
 ```sh
 npx wrangler r2 object delete flux-studio-lite-media/library/library-01.mp4 --remote

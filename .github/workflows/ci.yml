@@ -154,12 +154,12 @@ jobs:
           node-version: 22
           cache: npm
 
-      # Keep the workflow reusable on a tree without the adapter. Wrangler
+      # Keep the workflow reusable on a tree without the adapter. The Pages
       # config is present in this repository, so this runs on every PR/main push.
       - name: Detect Cloudflare port
         id: detect
         run: |
-          if [ -f wrangler.jsonc ] || [ -f wrangler.toml ] || [ -f wrangler.json ]; then
+          if [ -f wrangler.pages.json ]; then
             echo "present=true" >> "$GITHUB_OUTPUT"
             echo "Wrangler config found — running boundary checks."
           else
@@ -179,22 +179,13 @@ jobs:
         if: steps.detect.outputs.present == 'true'
         run: npm run check:worker
 
-      # The Worker serves ./dist through its ASSETS binding, so wrangler
-      # refuses to bundle without it ("assets.directory ... does not exist").
-      # Building here keeps this job independent of `build` rather than
-      # chaining the two through an artifact: the build takes well under a
-      # minute, and waiting for the other job's upload would put this job's
-      # remaining steps after it on the critical path.
-      - name: Build assets for the Worker
+      # The production Pages bundle, built exactly as the deploy job builds
+      # it: Vite's ./dist plus the Worker bundled to .pages/_worker.js with
+      # the standard config written to .pages-project/. Local only; it needs
+      # no credentials and cannot deploy from a pull request.
+      - name: Pages bundle
         if: steps.detect.outputs.present == 'true'
-        run: npm run build
-
-      # --dry-run bundles the Worker and validates bindings, compatibility
-      # flags and asset config without contacting the API, so it needs no
-      # credentials and cannot deploy from a pull request.
-      - name: Wrangler config and bundle
-        if: steps.detect.outputs.present == 'true'
-        run: npx wrangler deploy --dry-run --outdir "${RUNNER_TEMP}/wrangler-dry-run"
+        run: npm run build:pages
 
       # D1 is SQLite. Replaying the migrations in order against a scratch
       # database catches bad DDL and ordering mistakes before they reach a

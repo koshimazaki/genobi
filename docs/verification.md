@@ -46,17 +46,17 @@ type, test and build checks remain the compatibility gate for that override.
 
 Counts go stale; what each command guarantees does not.
 
-| Command                     | What a pass means                                                |
-| --------------------------- | ---------------------------------------------------------------- |
-| `npm test`                  | Every rule below still holds on both adapters                    |
-| `npm run typecheck`         | No type errors                                                   |
-| `npm run lint`              | No errors (three known hook-dependency warnings remain)          |
-| `npm run format:check`      | Formatting is unchanged                                          |
-| `npm run check:size`        | No tracked source file over 500 lines outside the allowlist      |
-| `npm run build`             | The production bundle builds                                     |
-| `npm run check:worker`      | The portable layer compiles with no Node and no DOM types        |
-| `wrangler deploy --dry-run` | Bundle, bindings and asset config are valid, without an API call |
-| D1 migration replay         | Every migration applies in order to a scratch SQLite database    |
+| Command                | What a pass means                                                     |
+| ---------------------- | --------------------------------------------------------------------- |
+| `npm test`             | Every rule below still holds on both adapters                         |
+| `npm run typecheck`    | No type errors                                                        |
+| `npm run lint`         | No errors (three known hook-dependency warnings remain)               |
+| `npm run format:check` | Formatting is unchanged                                               |
+| `npm run check:size`   | No tracked source file over 500 lines outside the allowlist           |
+| `npm run build`        | The production bundle builds                                          |
+| `npm run check:worker` | The portable layer compiles with no Node and no DOM types             |
+| `npm run build:pages`  | The production Pages bundle and its config build, without an API call |
+| D1 migration replay    | Every migration applies in order to a scratch SQLite database         |
 
 The suite covers camera geometry across all 729 selection combinations, prompt
 composition and restore, which run the main view shows, idempotent replay across
@@ -177,8 +177,9 @@ the single `Format, lint, types, tests, build` status that deployment waits on.
 - `npm run check:worker` compiles `shared/` and the portable server modules
   under `"types": []`, so a Node-only import in the layer meant to move to
   Workers fails there while every other check stays green.
-- `wrangler deploy --dry-run` bundles the Worker and validates its D1, R2 and
-  asset bindings without contacting the API, so it needs no credentials.
+- `npm run build:pages` builds the production Pages bundle and writes its
+  configuration exactly as the deploy job does, without contacting the API, so
+  it needs no credentials.
 - The D1 migrations replay in order against a scratch SQLite database.
 
 Pull-request CI cannot deploy and is never given production credentials; it

@@ -428,9 +428,9 @@ export default {
     }
   },
   /**
-   * The Workers deployment (wrangler.jsonc) drives the sweep from cron. Pages
-   * has no cron trigger, so the same work also runs from the request path
-   * above; `sweep` claims its turn either way and never runs twice.
+   * Pages has no cron trigger, so the sweep runs from the request path above.
+   * This handler serves a Worker deployment with a cron trigger, should one
+   * run this code; `sweep` claims its turn either way and never runs twice.
    */
   async scheduled(_controller, env) {
     await sweep(env);
