@@ -229,6 +229,7 @@
         "fruits-swap.md",
         "genobi-teaser-run/decision-table.md",
         "genobi-teaser.md",
+        "loading-sounds.md",
         "media-space.md",
         "scene-builder.md",
         "scene-examples.md",
@@ -498,6 +499,7 @@
         "genobi-deck.md",
         "getting-started.md",
         "gpu-box.md",
+        "loading-sounds.md",
         "maintenance-priorities.md",
         "project-archives.md",
         "project-assets.md",
@@ -824,6 +826,7 @@
         "layout-to-render-status.md",
         "licence-strategy.md",
         "live-scrolls.md",
+        "loading-sounds.md",
         "machine-check.md",
         "maintenance-priorities.md",
         "media-previews.md",
@@ -2057,6 +2060,13 @@
       "path": "live-scrolls.md",
       "tags": ["agents", "mcp", "storyboard", "workflows"],
       "summary": "Inspect and edit the mounted Scroll through an explicitly linked browser, preserving document, revision and cell context.",
+      "links": []
+    },
+    {
+      "title": "Loading sounds",
+      "path": "loading-sounds.md",
+      "tags": ["studio", "sound"],
+      "summary": "The short synthesised cue the studio plays when a load starts and when it is done, so a missed header loader is still heard - four variants, how to pick one with ?loadsound, and the rules for when it sounds.",
       "links": []
     },
     {
