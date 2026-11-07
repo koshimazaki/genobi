@@ -118,7 +118,7 @@ if (process.env.NODE_ENV === "production") {
 }
 
 const server = app.listen(port, "127.0.0.1", () =>
-  console.log(`camera-director is ready at http://127.0.0.1:${port}`),
+  console.log(`Genobi is ready at http://127.0.0.1:${port}`),
 );
 runner.resume();
 // Age out abandoned jobs the way the Worker sweep does, then advance the jobs
