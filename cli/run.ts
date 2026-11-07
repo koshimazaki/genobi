@@ -1,3 +1,4 @@
+import { preflightOperation } from "../mcp/availability";
 import { sessionCommand, type SessionNotice } from "./session";
 import { z } from "zod";
 import { profileConnection } from "../mcp/connection";
@@ -123,9 +124,10 @@ export async function run(
     args,
     connection.profile.selection,
   );
-  return agent
-    ? sessionCommand(connection.api, tool, selected, runtime.notice)
-    : tool.run(connection.api, selected);
+  if (agent)
+    return sessionCommand(connection.api, tool, selected, runtime.notice);
+  await preflightOperation(connection.api, tool.name, selected);
+  return tool.run(connection.api, selected);
 }
 
 export function commandError(error: unknown) {

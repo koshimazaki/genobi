@@ -1,3 +1,4 @@
+import { preflightOperation } from "../mcp/availability";
 import { trackedTool } from "../mcp/activity";
 import type { GenobiApi } from "../mcp/api";
 import type { ToolDefinition } from "../mcp/definition";
@@ -25,7 +26,10 @@ export async function sessionCommand(
       api,
       tool.name,
       input,
-      () => tool.run(api, input),
+      async () => {
+        await preflightOperation(api, tool.name, input);
+        return tool.run(api, input);
+      },
       "cli",
     );
     if (warning) notice({ warning });

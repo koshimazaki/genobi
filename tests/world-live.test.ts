@@ -1,4 +1,4 @@
-import { afterEach, expect, it } from "vitest";
+import { afterEach, expect, it, vi } from "vitest";
 import express from "express";
 import type { Server } from "node:http";
 import { worldRouter } from "../server/world-routes";
@@ -84,6 +84,25 @@ it("pairs once, isolates dispatch/results/files and never redelivers a running c
   expect((await call("/link", "agent", "POST", { code })).status).toBe(200);
   expect((await call("/link", "stranger", "POST", { code })).status).toBe(404);
   expect((await call(`/${id}/next`, "agent")).status).toBe(404);
+  expect((await call(`/${id}/status`, "stranger")).status).toBe(404);
+  expect(await (await call(`/${id}/status`, "agent")).json()).toEqual({
+    session: id,
+    connected: true,
+  });
+  const now = Date.now();
+  const clock = vi.spyOn(Date, "now").mockReturnValue(now + 10_001);
+  try {
+    expect(await (await call(`/${id}/status`, "agent")).json()).toMatchObject({
+      connected: false,
+    });
+    // A status read is not a heartbeat. Only the real browser's next poll renews it.
+    expect(await (await call(`/${id}/status`, "agent")).json()).toMatchObject({
+      connected: false,
+    });
+  } finally {
+    clock.mockRestore();
+  }
+
   expect(
     (await call(`/${id}/commands`, "stranger", "POST", { op: "stop" })).status,
   ).toBe(404);

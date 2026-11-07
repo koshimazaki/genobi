@@ -1,6 +1,7 @@
 /** The Genobi tools a session may call. `genobi_submit` spends, so it is not here. */
 export const GENOBI_TOOLS = [
   "genobi_status",
+  "genobi_diagnose",
   "genobi_scrolls",
   // Text only, by a one-use code from the Send that started the session.
   "genobi_scrolls_panels",

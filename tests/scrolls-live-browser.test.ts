@@ -80,8 +80,9 @@ it("guards the actual document and cell again at execution, including disappeare
   );
   const absent = mounted();
   absent.state.setSelectedCell("removed-cell");
+  // A removed cell reads as no selection, so the cell-1 request is refused.
   await expect(absent.adapter.execute(absent.request)).rejects.toThrow(
-    "snapshot",
+    "selected cell changed",
   );
 });
 it("resends a lost acknowledgement without applying the same edit twice", async () => {
@@ -142,4 +143,23 @@ it("does not announce an old handoff after the connection was stopped", async ()
   acknowledge(Response.json({ ...job, state: "done" }));
   await vi.advanceTimersByTimeAsync(0);
   expect(status).not.toHaveBeenCalled();
+});
+it("keeps polling after the person resizes the selected empty cell away", async () => {
+  const { applyScrollCommand } = await import("../shared/scrolls/commands");
+  const s = mounted();
+  s.state.setSelectedCell("cell-2");
+  const before = s.state.current();
+  s.state.commit(
+    {
+      ...before,
+      document: applyScrollCommand(before.document, {
+        op: "resize",
+        revision: before.document.revision,
+        count: 1,
+      }),
+    },
+    before,
+  );
+  expect(s.state.current().document.cells.map((c) => c.id)).toEqual(["cell-1"]);
+  expect(s.adapter.snapshot().context.cellId).toBeNull();
 });

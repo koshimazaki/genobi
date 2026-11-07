@@ -15,6 +15,14 @@ run `npm run build:mcp` once, then use `node plugins/genobi/server/genobi-cli.mj
 `npm run --silent genobi -- …` is the development equivalent. Do not install or
 start a studio unless requested. No CLI command accepts a provider key.
 
+Before a runtime-dependent operation, call `genobi_diagnose` with its full
+`tool` name and intended `input` (CLI: `genobi diagnose --input @check.json`).
+Read `supported`, `ready`, `reason` and `next`. Null means unknown, never ready.
+The CLI/MCP execution path automatically checks registered local services,
+project/media support and World/export browser requirements too. A successful
+check does not grant access, override a revision or authorize spending. Preserve
+existing request IDs when recovering exports; do not repeat uncertain work.
+
 ## Discover before acting
 
 Asked "what can I do here?", run `genobi capabilities` first (offline). It

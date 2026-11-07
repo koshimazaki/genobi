@@ -1,3 +1,4 @@
+import { preflightOperation } from "./availability";
 import type { CallToolResult } from "@modelcontextprotocol/sdk/types.js";
 import { trackedTool } from "./activity";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
@@ -39,8 +40,14 @@ async function callTool(
 ): Promise<CallToolResult> {
   try {
     const input = profileDefaults(tool.name, args ?? {}, selection);
-    const { result, warning } = await trackedTool(api, tool.name, input, () =>
-      tool.run(api, input),
+    const { result, warning } = await trackedTool(
+      api,
+      tool.name,
+      input,
+      async () => {
+        await preflightOperation(api, tool.name, input);
+        return tool.run(api, input);
+      },
     );
     return {
       content: [

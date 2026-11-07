@@ -59,6 +59,8 @@ export const PAIRING_ROUTES: Record<string, string> = {
     "World has explicit, ephemeral pairing and owner-only browser dispatch.",
   "GET /api/world/:id/next":
     "World has explicit, ephemeral pairing and owner-only browser dispatch.",
+  "GET /api/world/:id/status":
+    "World owner or explicitly paired session; readiness read does not refresh browser heartbeat.",
   "POST /api/world/:id/commands":
     "World has explicit, ephemeral pairing and owner-only browser dispatch.",
   "GET /api/world/:id/commands/:command":

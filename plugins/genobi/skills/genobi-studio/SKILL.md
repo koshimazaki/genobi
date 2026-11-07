@@ -17,6 +17,14 @@ frame editor and Ninja panels, over Comfy Router (LTX 2.5, FLUX 3), Comfy
 Cloud workflows, registered Comfy deployments and a local ComfyUI. This plugin's MCP server is a thin
 client of the studio running on this machine. It holds no keys.
 
+Before a runtime-dependent operation, call `genobi_diagnose` with its full
+`tool` name and intended `input` (CLI: `genobi diagnose --input @check.json`).
+Read `supported`, `ready`, `reason` and `next`. Null means unknown, never ready.
+The CLI/MCP execution path automatically checks registered local services,
+project/media support and World/export browser requirements too. A successful
+check does not grant access, override a revision or authorize spending. Preserve
+existing request IDs when recovering exports; do not repeat uncertain work.
+
 ## Terminal alternative
 
 When using a terminal instead of MCP, load `genobi-cli`. Run `genobi tools` and

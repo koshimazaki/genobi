@@ -104,16 +104,16 @@ export function useScrolls() {
   const edit = (command: Record<string, unknown>) => {
     try {
       const before = held.current;
-      commit(
-        {
-          ...before,
-          document: applyScrollCommand(before.document, {
-            revision: before.document.revision,
-            ...command,
-          }),
-        },
-        before,
-      );
+      const document = applyScrollCommand(before.document, {
+        revision: before.document.revision,
+        ...command,
+      });
+      commit({ ...before, document }, before);
+      if (
+        heldCell.current &&
+        !document.cells.some((c) => c.id === heldCell.current)
+      )
+        setSelectedCell(null);
     } catch (error) {
       setMessage((error as Error).message);
     }
