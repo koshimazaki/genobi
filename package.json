@@ -14,8 +14,6 @@
     "format": "prettier --write .",
     "check:worker": "tsc -p worker/tsconfig.json --noEmit",
     "stats": "node observability/stats.mjs",
-    "dev:cloud": "npm run build && wrangler dev",
-    "deploy": "npm run build && npm run check:worker && wrangler deploy",
     "build:pages": "npm run build && npm run check:worker && node scripts/build-pages.mjs",
     "deploy:pages": "npm run build:pages && node scripts/deploy-pages.mjs",
     "format:check": "prettier --check .",
