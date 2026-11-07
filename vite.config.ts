@@ -103,7 +103,22 @@ export default defineConfig({
     entries: ["index.html"],
     include: PREBUNDLED,
   },
-  build: { target: "es2022" },
+  build: {
+    target: "es2022",
+    rollupOptions: {
+      // A dependency's comment that only mentions `@__PURE__` (zod 4 explains
+      // its own tree-shaking that way) is not an annotation; Rollup drops it
+      // and says so on every build. Ours are still reported.
+      onwarn(warning, warn) {
+        if (
+          warning.code === "INVALID_ANNOTATION" &&
+          warning.id?.includes("/node_modules/")
+        )
+          return;
+        warn(warning);
+      },
+    },
+  },
   // `vitest run` walks the tree for test files; the gitignored `.local/` data
   // and nested `.claude/worktrees/` checkouts (whole copies of this repo, each
   // with their own tests) otherwise make a full run crawl for many minutes.
