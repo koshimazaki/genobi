@@ -1,3 +1,4 @@
+import type { ScrollLiveResult } from "../../shared/scrolls/live";
 import { startScrollLiveBridge } from "./live-bridge";
 import { scrollLiveAdapter } from "./live-agent";
 import { useEffect, useRef, useState } from "react";
@@ -77,6 +78,10 @@ export function useScrollAgentExport(s: ScrollState) {
     [code, setCode] = useState<string>();
   const currentTab = useRef<string | undefined>(undefined);
   const [connectedSource, setConnectedSource] = useState<ExportSource>();
+  const [handoff, setHandoff] = useState<{
+    mountId: string;
+    receipt: NonNullable<ScrollLiveResult["handoff"]>;
+  }>();
   const [receipt, setReceipt] = useState<ExportReceipt>();
   useEffect(() => {
     let live = true;
@@ -89,6 +94,7 @@ export function useScrollAgentExport(s: ScrollState) {
   }, []);
   useEffect(() => {
     if (!available || !enabled) return;
+    const connectionMount = s.mountId;
     let stopLive: (() => void) | undefined;
     let liveTab: string | undefined;
     const stopExport = startExportBridge({
@@ -99,11 +105,22 @@ export function useScrollAgentExport(s: ScrollState) {
           liveTab = id;
           stopLive =
             id && source
-              ? startScrollLiveBridge(
-                  id,
-                  source.id,
-                  scrollLiveAdapter(() => latest.current),
-                )
+              ? startScrollLiveBridge(id, source.id, {
+                  ...scrollLiveAdapter(() => latest.current),
+                  status(job) {
+                    if (latest.current.currentMount() !== connectionMount)
+                      return;
+                    if (job.state === "done" && job.result?.handoff)
+                      setHandoff({
+                        mountId: connectionMount,
+                        receipt: job.result.handoff,
+                      });
+                    else if (job.state === "error")
+                      latest.current.setMessage(
+                        job.error ?? "Scroll command failed.",
+                      );
+                  },
+                })
               : undefined;
         }
         if (currentTab.current !== id) setCode(undefined);
@@ -112,6 +129,7 @@ export function useScrollAgentExport(s: ScrollState) {
         setConnectedSource(source);
       },
       status(job) {
+        if (latest.current.currentMount() !== connectionMount) return;
         if (job.state === "done" && job.receipt) {
           setReceipt(job.receipt);
           latest.current.setMessage(
@@ -153,6 +171,7 @@ export function useScrollAgentExport(s: ScrollState) {
   const source = scrollExportAdapter(() => latest.current).source()!;
   const matches = connectedSource && sameExportSource(source, connectedSource);
   return {
+    handoff: handoff?.mountId === s.mountId ? handoff.receipt : undefined,
     available,
     enabled,
     setEnabled,

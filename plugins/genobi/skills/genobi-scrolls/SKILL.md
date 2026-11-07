@@ -34,7 +34,12 @@ status or replay the exact request UUID/body, never a fresh edit. Restart loses
 the ephemeral ledger, so inspect the actual document before continuing.
 
 Available media IDs describe bytes in this browser. Metadata-only `add-asset`
-is refused live; paid generation keeps its ordinary quote and approval. See
+is refused live. Use `attach-media` with an inspected receipt from the same agent
+identity and linked project, then explicitly select/place the returned asset ID.
+Inspect the current Director target before `handoff-director`; report its
+returned project/revision/asset/layer read-back, not merely a requested click.
+The new project needs its own link before further agent edits. Paid generation
+keeps its ordinary quote and approval. See
 [Live Scroll agents](../../../../docs/live-scrolls.md) for lifecycle and limits.
 
 ## Intended use and credits

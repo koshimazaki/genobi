@@ -2,10 +2,16 @@ import type {
   LiveScrollRequest,
   LiveScrollStatus,
   ScrollSnapshot,
+  ScrollLiveResult,
 } from "../../shared/scrolls/live";
 export interface ScrollLiveAdapter {
   snapshot(): ScrollSnapshot;
-  execute(request: LiveScrollRequest): Promise<ScrollSnapshot>;
+  execute(
+    request: LiveScrollRequest,
+    job?: LiveScrollStatus,
+    signal?: AbortSignal,
+  ): Promise<ScrollLiveResult>;
+  status?(job: LiveScrollStatus): void;
 }
 /** Only acknowledgement delivery repeats. A dispatched edit is never re-executed. */
 export function startScrollLiveBridge(
@@ -16,9 +22,10 @@ export function startScrollLiveBridge(
 ) {
   let stopped = false,
     timer: ReturnType<typeof setTimeout> | undefined;
+  let active: AbortController | undefined;
   const completed = new Map<
     string,
-    { snapshot: ScrollSnapshot } | { error: string }
+    { snapshot: ScrollLiveResult } | { error: string }
   >();
   async function post<T>(route: string, body: unknown): Promise<T> {
     const response = await fetcher(`/api/exports/scrolls${route}`, {
@@ -51,7 +58,10 @@ export function startScrollLiveBridge(
           };
         else {
           try {
-            result = { snapshot: await adapter.execute(job.request) };
+            active = new AbortController();
+            result = {
+              snapshot: await adapter.execute(job.request, job, active.signal),
+            };
           } catch (error) {
             result = {
               error: (error instanceof Error
@@ -63,16 +73,22 @@ export function startScrollLiveBridge(
           completed.set(job.id, result);
         }
       }
-      await post(`/commands/${job.id}/result`, result);
+      const acknowledged = await post<LiveScrollStatus>(
+        `/commands/${job.id}/result`,
+        result,
+      );
+      if (!stopped) adapter.status?.(acknowledged);
     } catch {
       /* Poll again; retain completed results after a lost acknowledgement. */
     } finally {
+      active = undefined;
       if (!stopped) timer = setTimeout(() => void poll(), 2000);
     }
   }
   void poll();
   return () => {
     stopped = true;
+    active?.abort();
     clearTimeout(timer);
   };
 }
