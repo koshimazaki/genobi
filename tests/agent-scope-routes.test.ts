@@ -3,7 +3,6 @@
 // Every registered route must be scoped or listed below with a reason.
 // Fake provider only; local exports never broaden source ownership.
 import { createHash } from "node:crypto";
-import { readdirSync, readFileSync } from "node:fs";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
@@ -15,6 +14,7 @@ import { agentStudio } from "./agent-harness";
 import { base } from "./house-template-fixtures";
 import { input } from "./server-harness";
 import { PAIRING_ROUTES } from "./agent-scope-pairings";
+import { declaredRoutes } from "./declared-routes";
 
 /** Every other route, and why the read scope does not apply to it. */
 const NOT_SCOPED: Record<string, string> = {
@@ -22,6 +22,8 @@ const NOT_SCOPED: Record<string, string> = {
   "POST /api/effects/variants":
     "pure configuration validation; no storage or private reads",
   "GET /api/capabilities": "runtime feature metadata; names no private media",
+  "POST /api/settings/deployment-assets/:token":
+    "uploads the caller's own bytes to its own registered deployment; the ticket is bound to that session",
   "GET /api/agent/sessions":
     "answers no session locally; reads nothing of the person's",
   "GET /api/runner/status": "pairing owner status only; marked agents refused",
@@ -178,41 +180,6 @@ const NOT_SCOPED: Record<string, string> = {
   "DELETE /api/voice/prewarm": "names no media",
   "POST /api/voice/transcribe": "transcribes uploaded audio, names no media",
 };
-
-/**
- * The routes the local server declares: `app.<method>("/api/…")` in
- * `server/app.ts`, and `router.<method>("…")` in each router mounted there,
- * with its mount path.
- */
-function declaredRoutes() {
-  const dir = path.resolve("server");
-  const app = readFileSync(path.join(dir, "app.ts"), "utf8");
-  // `mountPairings` (server/pairings.ts) mounts World's and Scrolls' routers.
-  const pairings = readFileSync(path.join(dir, "pairings.ts"), "utf8");
-  const mounts = new Map<string, string>();
-  for (const m of `${app}\n${pairings}`.matchAll(
-    /app\.use\(\s*"(\/api[^"]*)",\s*(?:await\s+)?(\w+)\(/g,
-  ))
-    mounts.set(m[2], m[1]);
-  const routes = [
-    ...app.matchAll(/\bapp\.(get|post|put|delete|patch)\(\s*"([^"]+)"/g),
-  ].map((m) => `${m[1].toUpperCase()} ${m[2]}`);
-  for (const file of readdirSync(dir).filter((f) => f.endsWith(".ts"))) {
-    const text = readFileSync(path.join(dir, file), "utf8");
-    const routers = [...text.matchAll(/export (?:async )?function (\w+)\(/g)]
-      .map((m) => m[1])
-      .filter((name) => mounts.has(name));
-    if (!routers.length) continue;
-    expect(routers, `${file} mounts one router`).toHaveLength(1);
-    for (const m of text.matchAll(
-      /\brouter\.(get|post|put|delete|patch)\(\s*"([^"]+)"/g,
-    ))
-      routes.push(
-        `${m[1].toUpperCase()} ${(mounts.get(routers[0]) + m[2]).replace(/\/$/, "")}`,
-      );
-  }
-  return routes;
-}
 
 type Studio = Awaited<ReturnType<typeof agentStudio>>;
 
