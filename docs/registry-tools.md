@@ -305,6 +305,14 @@ Read a staged media receipt · read-only. Read and verify a staged file's receip
 - Taught by: [`genobi-director`](registry-skills.md#genobi-director)
 - Docs: [docs/project-media.md](project-media.md)
 
+## `genobi_export`
+
+Export through the open browser · writes. Export the exact revision in a local Director/Editor browser, using its existing renderer. Read targets first: each tab has its own tabId, source and formats; linked project access is required. Request takes that source, tabId, project-zip or mp4 and a fresh requestId UUID. Status reports queued/running/storing/done/error/cancelled; only done includes a completed artifact receipt with source, hash and download path. Cancel stops queued/rendering work; an atomic storage commit already started finishes and reports its result. Exact requestId/body replay returns the same result after a lost answer, including completed results after restart during one-hour retention. Never invent a new request after an uncertain answer. Download saves an already completed artifact to a new local file for an external agent; studio-started agents use the receipt URL. Missing browser, busy renderer or changed source is an explicit failure. No headless export or paid generation.
+
+- Tags: `agents`, `mcp`, `director`, `bundle`
+- Taught by: [`genobi-director`](registry-skills.md#genobi-director)
+- Docs: [docs/browser-exports.md](browser-exports.md), [docs/project-archives.md](project-archives.md)
+
 ## `genobi_provenance`
 
 Genobi provenance card · read-only. Build the provenance card for finished takes: the agent and its model, every generation model, workflow files, where it ran and on what, time taken, cost, outputs with SHA-256 hashes, and the tier (open, semi-open, premium) derived from the models. Returns the card, its Markdown and a small gallery summary. Reads only; never submits or pays.

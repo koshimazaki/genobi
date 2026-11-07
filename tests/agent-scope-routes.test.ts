@@ -191,7 +191,7 @@ function declaredRoutes() {
   const pairings = readFileSync(path.join(dir, "pairings.ts"), "utf8");
   const mounts = new Map<string, string>();
   for (const m of `${app}\n${pairings}`.matchAll(
-    /app\.use\(\s*"(\/api[^"]*)",\s*(\w+)\(/g,
+    /app\.use\(\s*"(\/api[^"]*)",\s*(?:await\s+)?(\w+)\(/g,
   ))
     mounts.set(m[2], m[1]);
   const routes = [
@@ -199,7 +199,7 @@ function declaredRoutes() {
   ].map((m) => `${m[1].toUpperCase()} ${m[2]}`);
   for (const file of readdirSync(dir).filter((f) => f.endsWith(".ts"))) {
     const text = readFileSync(path.join(dir, file), "utf8");
-    const routers = [...text.matchAll(/export function (\w+)\(/g)]
+    const routers = [...text.matchAll(/export (?:async )?function (\w+)\(/g)]
       .map((m) => m[1])
       .filter((name) => mounts.has(name));
     if (!routers.length) continue;

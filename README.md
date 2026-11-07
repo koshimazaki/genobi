@@ -346,3 +346,5 @@ For your own hosted instance, follow [Cloudflare deployment](docs/cloudflare.md)
 [Credits and lineage](docs/credits.md) document the shared tools, Genobi’s new
 work and the people and projects that make the studio possible.
 Not affiliated with Comfy, Lightricks, Black Forest Labs or MiniMax.
+
+Agent-driven MP4 and project ZIP downloads use the [open browser export service](docs/browser-exports.md).

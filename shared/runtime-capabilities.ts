@@ -76,6 +76,20 @@ export function runtimeCapabilities(runtime: "local" | "hosted") {
         "GET /api/projects/:id/media/:sha256",
       ]),
       projectMediaOperations: localFeature(["POST /api/projects/:id/media"]),
+      browserExport: {
+        ...localFeature(
+          [
+            "GET /api/exports/targets",
+            "POST /api/exports",
+            "GET /api/exports/:id",
+            "POST /api/exports/:id/cancel",
+            "GET /api/exports/:id/artifact",
+          ],
+          "/api/exports/targets",
+        ),
+        execution: "browser",
+        headlessExport: false,
+      },
       worldMedia: {
         ...localFeature(["POST /api/world/:id/commands"]),
         execution: "browser",

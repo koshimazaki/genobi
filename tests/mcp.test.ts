@@ -171,6 +171,7 @@ describe("tools", () => {
       "genobi_take_to_project",
       "genobi_project_media",
       "genobi_project_media_stage",
+      "genobi_export",
       "genobi_audio_upload",
       ...media,
       // Session settings: writes, safe to repeat, never paid.

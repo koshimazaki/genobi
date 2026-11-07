@@ -16,6 +16,12 @@ it("advertises hosted routes and browser requirements without local-only endpoin
     routes: [],
   });
   expect(capabilities.features.projects.supported).toBe(false);
+  expect(capabilities.features.browserExport).toMatchObject({
+    supported: false,
+    routes: [],
+    execution: "browser",
+    headlessExport: false,
+  });
   expect(capabilities.features.projectMediaOperations.supported).toBe(false);
   expect(capabilities.features.projectMediaStaging).toMatchObject({
     supported: false,

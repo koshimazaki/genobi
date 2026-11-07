@@ -4,6 +4,23 @@
 
 /** Scrolls' fill and World's live control routes, and why each is not scoped. */
 export const PAIRING_ROUTES: Record<string, string> = {
+  "GET /api/exports/targets": "Only tabs whose projects this caller can read.",
+  "POST /api/exports/tabs":
+    "Only the owner browser of a synced project; marked agents refused.",
+  "POST /api/exports/tabs/:id/poll":
+    "Only the registered tab owner browser; marked agents refused.",
+  "DELETE /api/exports/tabs/:id":
+    "Only the registered tab owner browser; marked agents refused.",
+  "POST /api/exports":
+    "Target project access, exact revision and per-tab export lock required.",
+  "GET /api/exports/:id": "Only the export requester or project owner.",
+  "POST /api/exports/:id/cancel": "Only the export requester or project owner.",
+  "POST /api/exports/:id/progress":
+    "Only the export owner browser; marked agents refused.",
+  "POST /api/exports/:id/artifact":
+    "Only the export owner browser; marked agents refused; validated bytes before receipt.",
+  "GET /api/exports/:id/artifact":
+    "Only the export requester or project owner; private completed bytes.",
   "POST /api/scrolls/fill":
     "Scrolls fill: the person's tab asks for its own one-use code; marked agents refused.",
   "POST /api/scrolls/fill/panels":

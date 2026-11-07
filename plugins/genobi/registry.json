@@ -45,6 +45,7 @@
         "genobi_project_media",
         "genobi_project_media_stage",
         "genobi_project_media_receipt",
+        "genobi_export",
         "adaptive-reverb",
         "anime-teaser",
         "audio-reactive-drop",
@@ -137,6 +138,7 @@
         "genobi_project_media",
         "genobi_project_media_stage",
         "genobi_project_media_receipt",
+        "genobi_export",
         "genobi_provenance",
         "genobi_audio_upload",
         "genobi_audio_analysis",
@@ -281,6 +283,7 @@
         "genobi_project_media",
         "genobi_project_media_stage",
         "genobi_project_media_receipt",
+        "genobi_export",
         "genobi_provenance",
         "genobi_audio_upload",
         "genobi_audio_analysis",
@@ -351,6 +354,7 @@
         "genobi_project_media",
         "genobi_project_media_stage",
         "genobi_project_media_receipt",
+        "genobi_export",
         "genobi-director"
       ]
     },
@@ -995,6 +999,17 @@
       "tags": ["agents", "mcp", "director", "bundle"],
       "docs": ["docs/project-media.md"],
       "readOnly": true,
+      "paid": false,
+      "skills": ["genobi-director"]
+    },
+    {
+      "kind": "tool",
+      "name": "genobi_export",
+      "title": "Export through the open browser",
+      "description": "Export the exact revision in a local Director/Editor browser, using its existing renderer. Read targets first: each tab has its own tabId, source and formats; linked project access is required. Request takes that source, tabId, project-zip or mp4 and a fresh requestId UUID. Status reports queued/running/storing/done/error/cancelled; only done includes a completed artifact receipt with source, hash and download path. Cancel stops queued/rendering work; an atomic storage commit already started finishes and reports its result. Exact requestId/body replay returns the same result after a lost answer, including completed results after restart during one-hour retention. Never invent a new request after an uncertain answer. Download saves an already completed artifact to a new local file for an external agent; studio-started agents use the receipt URL. Missing browser, busy renderer or changed source is an explicit failure. No headless export or paid generation.",
+      "tags": ["agents", "mcp", "director", "bundle"],
+      "docs": ["docs/browser-exports.md", "docs/project-archives.md"],
+      "readOnly": false,
       "paid": false,
       "skills": ["genobi-director"]
     },
@@ -1664,7 +1679,8 @@
         "docs/director-bundle/README.md",
         "docs/effects-catalogue.md",
         "docs/project-media.md",
-        "docs/project-archives.md"
+        "docs/project-archives.md",
+        "docs/browser-exports.md"
       ],
       "path": "plugins/genobi/skills/genobi-director/SKILL.md",
       "tools": [
@@ -1686,6 +1702,7 @@
         "genobi_project_media",
         "genobi_project_media_stage",
         "genobi_project_media_receipt",
+        "genobi_export",
         "genobi_provenance",
         "genobi_audio_upload",
         "genobi_audio_analysis",
