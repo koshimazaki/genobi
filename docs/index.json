@@ -250,6 +250,7 @@
         "activity-settings.md",
         "agent-approvals.md",
         "agent-bubble.md",
+        "agent-capability-checks.md",
         "agent-context.md",
         "agent-continue.md",
         "agent-sessions.md",
@@ -353,6 +354,7 @@
       "meaning": "Server and Worker API, jobs, storage and providers",
       "pages": [
         "agent-approvals.md",
+        "agent-capability-checks.md",
         "agent-continue.md",
         "agent-sessions.md",
         "agent-setup.md",
@@ -442,6 +444,7 @@
     "mcp": {
       "meaning": "The Genobi MCP server and agent plugin",
       "pages": [
+        "agent-capability-checks.md",
         "agent-sessions.md",
         "arena.md",
         "audio-analysis.md",
@@ -715,6 +718,7 @@
         "adaptive-reverb.md",
         "agent-approvals.md",
         "agent-bubble.md",
+        "agent-capability-checks.md",
         "agent-context.md",
         "agent-continue.md",
         "agent-sessions.md",
@@ -930,6 +934,13 @@
       "tags": ["agents", "studio"],
       "summary": "The Genobi bubble is a static guide — contextual pointers, Did you know tips and setup help. Agent sessions show in the footer deck; the agent API, MCP server and CLI drive Genobi from a terminal.",
       "links": ["genobi-cli.md", "genobi-deck.md", "teachings.md"]
+    },
+    {
+      "title": "Check an agent operation",
+      "path": "agent-capability-checks.md",
+      "tags": ["agents", "mcp", "backend"],
+      "summary": "Live runtime, local service and paired-browser checks before applicable agent operations, separate from the offline catalogue.",
+      "links": []
     },
     {
       "title": "Picks and context",
@@ -1227,6 +1238,7 @@
         "README.md",
         "agent-approvals.md",
         "agent-bubble.md",
+        "agent-capability-checks.md",
         "agent-sessions.md",
         "agent-setup.md",
         "akuspace-docker.md",
@@ -1868,6 +1880,7 @@
       "tags": ["agents", "mcp", "backend"],
       "summary": "Terminal access to the MCP tool contract, persistent private connection profiles, shared Taste and Dual Swords commands.",
       "links": [
+        "agent-capability-checks.md",
         "capabilities.md",
         "hermes-open-route.md",
         "project-assets.md",
@@ -2228,6 +2241,7 @@
         "3d-tab.md",
         "README.md",
         "agent-approvals.md",
+        "agent-capability-checks.md",
         "agent-sessions.md",
         "architecture.md",
         "arena.md",
@@ -2277,6 +2291,7 @@
         "README.md",
         "adaptive-reverb.md",
         "agent-approvals.md",
+        "agent-capability-checks.md",
         "agent-sessions.md",
         "anime-teaser-template.md",
         "architecture.md",

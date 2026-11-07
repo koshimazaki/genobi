@@ -408,4 +408,5 @@ from GitHub:
 
 - [Generate your version](director-generate.md): template inputs, local swaps and agent generation.
 
+- [Agent operation checks](agent-capability-checks.md): live runtime and paired-browser diagnostics before applicable commands.
 - [Live Scroll agents](live-scrolls.md): linked document, revision, selection and safe live edits.

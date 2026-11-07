@@ -101,6 +101,7 @@
     "agents": {
       "meaning": "Agent commands, skills, linking and agent-facing references",
       "entries": [
+        "genobi_diagnose",
         "genobi_status",
         "genobi_models",
         "genobi_jobs",
@@ -205,6 +206,7 @@
     "backend": {
       "meaning": "Server and Worker API, jobs, storage and providers",
       "entries": [
+        "genobi_diagnose",
         "genobi_status",
         "genobi_jobs",
         "genobi_job",
@@ -252,6 +254,7 @@
     "mcp": {
       "meaning": "The Genobi MCP server and agent plugin",
       "entries": [
+        "genobi_diagnose",
         "genobi_status",
         "genobi_models",
         "genobi_jobs",
@@ -395,6 +398,17 @@
     }
   },
   "entries": [
+    {
+      "kind": "tool",
+      "name": "genobi_diagnose",
+      "title": "Check an operation's runtime requirements",
+      "description": "Read live runtime support and applicable service/browser readiness before choosing a command. This is distinct from the offline feature catalogue. Supply a full tool name and its intended input; checks are read-only and never authorize paid work. Unknown/legacy capability responses stay unknown; a positive check does not replace ownership, revision, quote or server-side validation.",
+      "tags": ["agents", "mcp", "backend"],
+      "docs": ["docs/agent-capability-checks.md", "docs/genobi-cli.md"],
+      "readOnly": true,
+      "paid": false,
+      "skills": ["genobi-cli", "genobi-studio"]
+    },
     {
       "kind": "tool",
       "name": "genobi_status",
@@ -1633,6 +1647,7 @@
       ],
       "path": "plugins/genobi/skills/genobi-cli/SKILL.md",
       "tools": [
+        "genobi_diagnose",
         "genobi_status",
         "genobi_models",
         "genobi_jobs",
@@ -1808,6 +1823,7 @@
       ],
       "path": "plugins/genobi/skills/genobi-studio/SKILL.md",
       "tools": [
+        "genobi_diagnose",
         "genobi_status",
         "genobi_models",
         "genobi_jobs",

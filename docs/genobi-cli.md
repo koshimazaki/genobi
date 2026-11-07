@@ -45,6 +45,11 @@ on stderr with exit code 1. Only general help is plain text. Unknown fields,
 invalid inputs, unknown options and unavailable commands fail before any API
 request. Do not put provider credentials in input or profile files.
 
+Use `genobi diagnose --input '{"tool":"genobi_voice_transcribe","input":{"sourceId":"recording"}}'`
+for a live operation check. This reads the connected runtime and relevant status
+routes; `capabilities` above remains the offline catalogue. See
+[agent operation checks](agent-capability-checks.md) for coverage and recovery.
+
 ## Studio messages and activity
 
 A studio-started CLI agent keeps `GENOBI_AGENT_SESSION` and its run grant. Each
