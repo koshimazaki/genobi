@@ -62,6 +62,9 @@ answer rather than sent through the revision-ordered settings lane.
 
 The composer's run-mode line tags **GPU BOX** and warns the same way as for
 Local when the box does not answer or lacks what the held template needs.
+Connecting or dropping the tunnel refreshes that template check without a
+settings write. Results from a previous box or reachability check cannot
+overwrite the current destination's readiness.
 
 ## Uptime and the idle reminder
 
@@ -83,7 +86,10 @@ never calls Vast; the person stops the instance in Vast's console.
 `recipe.box: { name, url }` beside `location: "local"`. The run goes to that
 port alone (`GpuBoxes` in `server/gpu-boxes.ts`), never to the default local
 ComfyUI, and a quote taken for one box is `409 quote_mismatch` on another port
-or on Local. Every rule of the local client holds: no provider key is sent,
+or on Local. If a saved box becomes invalid after restart (for example, the
+studio now listens on its tunnel port), quoting and submitting refuse it with
+`invalid_destination`; update the box in Settings or choose another location.
+Every rule of the local client holds: no provider key is sent,
 the graph is checked before anything is uploaded, `/prompt` is called once, and
 a lost answer is `submission_unknown`, never resent. A box run is free to
 Genobi; the box's provider bills its uptime. Polls return to the box through
@@ -103,12 +109,16 @@ slot (named `NodeClass.input`). A definitely missing dependency is refused with
 A loader whose choices the target does not enumerate stays unknown and does not
 block. On Cloud, an unreadable catalogue leaves availability unknown and the run
 goes ahead, except for FLUX 3 Klein, which needs the catalogue to choose its
-loader and keeps its own refusal. A local server quote for a Cloud
-workflow runs the same check first: a definite gap refuses the quote, and an
-unreadable catalogue puts `availability: "Couldn't check Cloud availability
+loader and keeps its own refusal. Local and hosted quotes for a Cloud
+workflow run the same check first: a definite gap refuses the quote, and an
+unreadable catalogue or incomplete loader metadata puts `availability: "Couldn't check Cloud availability
 for this workflow."` on it, repeated in the MCP quote's `next`, the agent
 approval line and the template gallery's price, so the person decides before
-paying. Comfy deployments keep their own validator.
+paying. Camera's direct Generate also quotes Cloud workflows: when availability
+is unknown it shows that warning before asking whether to continue. Cancelling
+sends nothing; a checked run proceeds on the quoted settings without another
+confirmation. Cloud workflow estimates describe GPU time, not a fixed BFL
+per-image price. Comfy deployments keep their own validator.
 
 ## Not verified here
 

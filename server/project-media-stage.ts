@@ -43,28 +43,32 @@ export class ProjectMediaStaging {
     private quota = PROJECT_MEDIA_STAGE_TOTAL,
   ) {}
 
-  /** Startup reclaims interrupted or expired uploads without touching project files. */
+  /**
+   * Startup reclaims interrupted or expired uploads without touching project
+   * files. Anything that is not a directory (a Finder `.DS_Store`, a file left
+   * by a crash) is skipped, and one unreadable folder never fails startup.
+   */
   async sweep() {
     const root = path.join(this.copies.directory, "project-media-staging");
-    for (const owner of await readdir(root).catch(() => [] as string[])) {
+    for (const owner of await directories(root)) {
       const ownerDir = path.join(root, owner);
-      for (const copy of await readdir(ownerDir).catch(() => [] as string[])) {
+      for (const copy of await directories(ownerDir)) {
         const directory = path.join(ownerDir, copy);
-        for (const id of await readdir(directory)) {
+        // Every entry here should be a receipt folder; anything else is a
+        // leftover (a temporary write) and is removed like an expired one.
+        for (const id of await readdir(directory).catch(() => [] as string[])) {
           try {
             await this.receipt(directory, id);
           } catch {
             await rm(path.join(directory, id), {
               recursive: true,
               force: true,
-            });
+            }).catch(() => undefined);
           }
         }
-        if (!(await readdir(directory)).length)
-          await rm(directory, { recursive: true });
+        await removeIfEmpty(directory);
       }
-      if (!(await readdir(ownerDir)).length)
-        await rm(ownerDir, { recursive: true });
+      await removeIfEmpty(ownerDir);
     }
   }
 
@@ -248,4 +252,16 @@ export class ProjectMediaStaging {
     }
     return { receipt, stored: true };
   }
+}
+
+/** Child directories of `dir`; nothing at all when it cannot be read. */
+async function directories(dir: string) {
+  const entries = await readdir(dir, { withFileTypes: true }).catch(() => []);
+  return entries.filter((e) => e.isDirectory()).map((e) => e.name);
+}
+
+async function removeIfEmpty(dir: string) {
+  const left = await readdir(dir).catch(() => null);
+  if (left && !left.length)
+    await rm(dir, { recursive: true }).catch(() => undefined);
 }

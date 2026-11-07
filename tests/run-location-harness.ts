@@ -52,6 +52,7 @@ export async function studio(
   reopen?: { fake: FakeComfy; directory: string },
   /** GPU boxes beside the local ComfyUI (`tests/gpu-box-route.test.ts`). */
   boxes?: GpuBoxes,
+  reservedPorts?: readonly number[],
 ) {
   const nodes = nodesFor(kleinBaseWorkflow.graph);
   // The same ComfyUI provides Base editing (reference and image-aware nodes).
@@ -100,7 +101,7 @@ export async function studio(
   const app = await setup(
     undefined,
     new WorkflowDestinations(cloud, { local, boxes }),
-    { destination: { kind: "cloud" }, local, boxes },
+    { destination: { kind: "cloud" }, local, boxes, reservedPorts },
     keys,
     reopen?.directory,
   );

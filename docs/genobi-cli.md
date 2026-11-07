@@ -45,6 +45,28 @@ on stderr with exit code 1. Only general help is plain text. Unknown fields,
 invalid inputs, unknown options and unavailable commands fail before any API
 request. Do not put provider credentials in input or profile files.
 
+## Studio messages and activity
+
+A studio-started CLI agent keeps `GENOBI_AGENT_SESSION` and its run grant. Each
+command uses MCP's activity wrapper, then collects that session's queued typed
+or voice corrections, including after a failed command. The normal result stays
+on stdout. Stderr may also contain a JSON line with `notice.messages` and
+`notice.instruction`; read it as the person's next corrections before continuing.
+A notice is not a command failure. Errors still use `{ "error": ... }` and a
+nonzero exit code. Both can occur after the same command.
+
+The inbox is shared with MCP: a correction is collected once across concurrent
+CLI/MCP processes with that grant. Another or ended grant cannot read it.
+This uses the existing local inbox, not a durable acknowledged hosted channel;
+a lost response or closed output pipe cannot prove that the agent saw the words.
+The studio conversation records collection, not human understanding.
+
+When the owner enables Activity, these commands appear with source `cli`, using
+the same bounded history and privacy rules as MCP. Activity failures report a
+warning and never retry completed work. Outside a studio-started session the
+CLI retains its offline command behavior and does not collect a studio inbox.
+This does not grant project access, enable a paid tool, or authorize a retry.
+
 ## Named connection and model profiles
 
 ```sh
