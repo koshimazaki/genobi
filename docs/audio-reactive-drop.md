@@ -132,8 +132,10 @@ of the World Builder (Three.js) interior. Its prompt, as the owner wrote it
 
 > robot inside the pyramid
 
-That World Builder frame is not kept, so the record lists it as missing and
-Camera says so.
+The World Builder frame is kept beside it as `stills/drop-pyramid-inside-guide.jpg`
+(1024 × 576, 93 KiB), the record's `guide`, so Camera receives it first and
+then the still. The outside still is the template's own
+`stills/drop-pyramid-outside.jpg`.
 `renderPrompt` is what each take's render bundle executed, quoted exactly;
 Camera does not restore it. The cathedral's executed prompt follows the voice
 ("with the voice the stone piers and arches swell inward"), not the preset

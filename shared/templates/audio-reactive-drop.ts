@@ -100,8 +100,8 @@ const media: TemplateMix["media"] = {
  * recorded for the pyramid outside (the owner's, given on 4 November 2026;
  * the World Builder scene was built to match that still) and the interior
  * (given on 7 November 2026: a Genobi Image still from the outside still and
- * the World Builder interior's frame, audio-reactive/presets/pyramid-inside.md;
- * that frame is not kept, so it is listed as missing). `renderPrompt` is what each take's render bundle executed, quoted
+ * the World Builder interior's frame, kept as its `guide`;
+ * audio-reactive/presets/pyramid-inside.md). `renderPrompt` is what each take's render bundle executed, quoted
  * exactly. The studio's picture is a slice of the original Adaptive reverb
  * take, so it has no entry. See docs/audio-reactive-drop.md#what-made-each-room.
  */
@@ -109,9 +109,9 @@ const still = (id: string) => `${DIR}/stills/${id}.jpg` as const;
 const pyramidInside = {
   reference: still("drop-pyramid-inside"),
   preset: "pyramid-inside",
+  guide: `${DIR}/stills/drop-pyramid-inside-guide.jpg` as const,
   prompt: "robot inside the pyramid",
   model: "Genobi Image (from the outside still and the World Builder frame)",
-  missing: ["World Builder frame"],
   renderPrompt:
     "From the floor of a vast stepped stone pyramid, a wide view up the towering terraces to the open apex, a crowd dancing on the floor. The terraced walls close in on the loud beats and open in the quiet. Warm sandstone, a shaft of daylight from the oculus, dust in the air.",
 };
