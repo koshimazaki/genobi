@@ -46,8 +46,9 @@ const media: TemplateMix["media"] = {
  * What made each dancer: the owner's look still (1360 × 765, JPEG under
  * `stills/`) that its LTX-2.5 Layout-to-Render take on window 0 of the
  * fruit-mecha explode guide started from. `prompt` is the still's own prompt,
- * recorded only for the gorilla (the owner's, given on 4 November 2026); the
- * three character stills were made in Genobi Image (FLUX 3 Klein edit) with
+ * recorded for the gorilla (the owner's, given on 4 November 2026) and the
+ * mecha (given on 7 November 2026; the image 1 it names, its shape guide, is
+ * not kept, so it is listed as missing); the three character stills were made in Genobi Image (FLUX 3 Klein edit) with
  * the mecha's still as a shape guide (`guide`). `renderPrompt` is what each
  * take's render bundle executed on 3 November, quoted exactly; the mecha's
  * 2 November render is not tied to a bundle with certainty, so it has none.
@@ -66,7 +67,9 @@ const recipes: TemplateMix["recipes"] = {
   "fruits-swap-mecha": {
     reference: still("mecha"),
     preset: "fruit-mecha",
-    missing: ["prompt"],
+    prompt:
+      "voxel mecha standing human size making dance moves with vox banana floating on one side and vox apple on the other vox fruits advert studio shot, cinematic view, wide angle lens use image 1 for shape guide only, its floating in the air",
+    missing: ["shape guide"],
   },
   "fruits-swap-gorilla": {
     ...character("gorilla", "char-gorilla-explode"),

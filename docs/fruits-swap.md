@@ -64,7 +64,7 @@ take started from, 1360 × 765, encoded once as JPEG quality 90 into
 
 | Slot                     | Still                               | Size    | Preset                               | Still prompt                  | Render prompt           |
 | ------------------------ | ----------------------------------- | ------- | ------------------------------------ | ----------------------------- | ----------------------- |
-| `fruits-swap-mecha`      | `stills/fruits-swap-mecha.jpg`      | 181 KiB | `fruit-mecha`                        | not recorded                  | not tied with certainty |
+| `fruits-swap-mecha`      | `stills/fruits-swap-mecha.jpg`      | 181 KiB | `fruit-mecha`                        | the owner's, given 7 November | not tied with certainty |
 | `fruits-swap-gorilla`    | `stills/fruits-swap-gorilla.jpg`    | 187 KiB | `char-gorilla-explode`               | the owner's, given 4 November | executed, 3 November    |
 | `fruits-swap-gold-ninja` | `stills/fruits-swap-gold-ninja.jpg` | 226 KiB | `char-gold-ninja-watermelon-explode` | not recorded                  | executed, 3 November    |
 | `fruits-swap-pink-cat`   | `stills/fruits-swap-pink-cat.jpg`   | 199 KiB | `char-pink-cat-explode`              | not recorded                  | executed, 3 November    |
@@ -81,6 +81,16 @@ wrote it:
 > with vox banana floating on one side and vox apple on the other vox fruits
 > advert studio shot, cinematic view, wide angle lens use image 1 for shape
 > guide only, its floating in the air
+
+The mecha's own still prompt, as the owner wrote it (given 7 November), is the
+same shape with the mecha as the subject. The image 1 it names, the mecha
+picture it was made from, is not kept, so its record lists the shape guide as
+missing and Camera says so:
+
+> voxel mecha standing human size making dance moves with vox banana floating
+> on one side and vox apple on the other vox fruits advert studio shot,
+> cinematic view, wide angle lens use image 1 for shape guide only, its
+> floating in the air
 
 `renderPrompt` is the video prompt each take's render bundle executed,
 quoted exactly from the run's workflow (`char-gorilla-explode-w0`,

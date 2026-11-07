@@ -96,9 +96,9 @@ quality 90 into `public/media/director-templates/audio-reactive-drop/stills/`:
 
 | Slot                   | Still                             | Size    | Preset                   | Still prompt                  | Render prompt (take)                |
 | ---------------------- | --------------------------------- | ------- | ------------------------ | ----------------------------- | ----------------------------------- |
-| `drop-towers`          | `stills/drop-towers.jpg`          | 649 KiB | `towers-descent`         | not recorded                  | executed (`towers-descent-w0`)      |
+| `drop-towers`          | `stills/drop-towers.jpg`          | 649 KiB | `towers-descent`         | the owner's, given 7 November | executed (`towers-descent-w0`)      |
 | `drop-cathedral`       | `stills/drop-cathedral.jpg`       | 548 KiB | `cathedral-gallery-grow` | not recorded                  | executed (`cathgrow-mid-p2`)        |
-| `drop-pyramid-inside`  | `stills/drop-pyramid-inside.jpg`  | 369 KiB | `pyramid-inside`         | not recorded                  | executed (`pyrparty-p3`)            |
+| `drop-pyramid-inside`  | `stills/drop-pyramid-inside.jpg`  | 369 KiB | `pyramid-inside`         | the owner's, given 7 November | executed (`pyrparty-p3`)            |
 | `drop-pyramid-outside` | `stills/drop-pyramid-outside.jpg` | 388 KiB | `pyramid-outside`        | the owner's, given 4 November | executed (`pyrout-p4b`)             |
 | `drop-studio`          | none                              |         |                          | no record                     | a slice of the Adaptive reverb take |
 | `drop-studio-booth`    | `stills/drop-studio-booth.jpg`    | 595 KiB | `studio-walls`           | not recorded                  | executed (`booth-p5`)               |
@@ -112,13 +112,24 @@ render):
 > cyberpunk, movie capture, on the desert, pyramid its on its own, fuji camera
 > shot
 
-It describes the outside still. The towers' still is not a Klein still: by
-the owner's note it is a frame taken from a video made with the LTX
-text-to-video workflow, recorded as `source: "ltx-video frame"`, and Camera's
-notice says "First still taken from an LTX video". That video's prompt is not
-recorded, so the towers' prompt is named as not stored. The interior's still is another picture, a
-hangar interior with a gold robot ([pyramid-inside](https://github.com/koshimazaki/Genobi/blob/main/audio-reactive/presets/pyramid-inside.md)),
-so the interior keeps its still with the prompt named as not stored.
+It describes the outside still. The towers' still is a FLUX 3 Klein still
+made, by the owner's note (7 November), from a short prompt with the first
+frame of an LTX text-to-video take as guidance; the LTX render followed. The
+same route made the towers in Adaptive reverb (v1). Its prompt, as the owner
+wrote it:
+
+> skyscrapers arial view
+
+That LTX frame is not kept, so the record lists it as missing and Camera says
+so. The interior's still, a hangar interior with a gold robot ([pyramid-inside](https://github.com/koshimazaki/Genobi/blob/main/audio-reactive/presets/pyramid-inside.md)),
+was made in Genobi Image from two references: the outside still and a frame
+of the World Builder (Three.js) interior. Its prompt, as the owner wrote it
+(given 7 November):
+
+> robot inside the pyramid
+
+That World Builder frame is not kept, so the record lists it as missing and
+Camera says so.
 `renderPrompt` is what each take's render bundle executed, quoted exactly;
 Camera does not restore it. The cathedral's executed prompt follows the voice
 ("with the voice the stone piers and arches swell inward"), not the preset

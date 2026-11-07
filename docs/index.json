@@ -909,6 +909,7 @@
       "tags": ["director", "sound", "templates", "world-builder"],
       "summary": "Adaptive reverb, the editable 3D and LTX mix template, with scene-derived CPU reverb, separate AKUSPACE experiments and the recorded workflow inputs.",
       "links": [
+        "audio-reactive-drop.md",
         "capabilities.md",
         "comfy-deploy.md",
         "director-bundle/showcase/adaptive-reverb/README.md",

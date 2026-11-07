@@ -81,6 +81,11 @@ this prompt, verbatim:
 > advert studio shot, cinematic view, wide angle lens use image 1 for shape
 > guide only, its floating in the air
 
+The mecha's own still was made the same way, prompt verbatim: "voxel mecha
+standing human size making dance moves with vox banana floating on one side
+and vox apple on the other vox fruits advert studio shot, cinematic view, wide
+angle lens use image 1 for shape guide only, its floating in the air".
+
 Follow that pattern for a new character: the template's own still as
 **image 1, the shape guide only**; the person's reference as the look; a
 prompt in this shape (the character as voxels, its size and the dance, the
