@@ -1,3 +1,4 @@
+import { recordedKeyKind } from "../shared/provider";
 import { timingSafeEqual } from "node:crypto";
 import { AppError, requireKey } from "./errors";
 import type { Keychain } from "./keychain";
@@ -417,13 +418,5 @@ export function finishingOn(jobs: readonly StoredJob[], kind: KeyKind) {
  * a run recorded before takes existed is read from its generator and handle.
  */
 export function jobKeyKind(job: StoredJob): KeyKind {
-  if (job.take) return job.take.recipe.route === "bfl" ? "bfl" : "comfy";
-  if (job.generator === "upscale") return "bfl";
-  let host = "";
-  try {
-    host = new URL(job.pollingUrl ?? "").hostname;
-  } catch {
-    /* No handle: nothing was sent, so either slot reads the same. */
-  }
-  return host === "bfl.ai" || host.endsWith(".bfl.ai") ? "bfl" : "comfy";
+  return recordedKeyKind(job.generator, job.take?.recipe.route, job.pollingUrl);
 }

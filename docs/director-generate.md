@@ -128,7 +128,7 @@ The stills are static files under
 JPEGs (the booth's 1920 × 1080), quality 90, each under 1 MiB
 (`tests/template-slot-stills.test.ts`); they are not copied into the project.
 
-For a FLUX 3 still, the recorded route also sets Camera's provider (BFL
+For a FLUX 3 still, text-to-video or upscale, the recorded route also sets Camera's provider (BFL
 direct or Comfy Router); with no route recorded the provider is named as
 missing. Klein's open and API runs are separate models. Any other model's
 route follows the connected key, so a run recorded on another route is named

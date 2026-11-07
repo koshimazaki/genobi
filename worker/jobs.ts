@@ -1,3 +1,4 @@
+import { duplicate, publicJob } from "./job-read";
 import { readImageResponse } from "./image-response";
 import { isKleinEdit, kleinFiles } from "../shared/comfy/klein-edit";
 import type { Expectation } from "../shared/comfy/expectation";
@@ -14,7 +15,7 @@ import { isImage, imageBody, inspectImage } from "../shared/image";
 import { providerUrl } from "../server/bfl";
 import { CREDITS_PER_USD, isLtx, ltxBody } from "../shared/comfy/ltx";
 import { settingsHash, type QuoteRecord } from "../shared/quote";
-import { isComfyKey } from "../shared/provider";
+import { isComfyKey, keyKind, recordedKeyKind } from "../shared/provider";
 import { upscaleBody } from "../shared/upscale";
 import { workflowOutput, workflowRun } from "../shared/comfy/runs";
 import { isUnsent, type WorkflowClient } from "../shared/comfy/workflow";
@@ -27,7 +28,6 @@ import {
 } from "../server/providers";
 import { AppError } from "../server/errors";
 import { requireQuote } from "../server/take";
-import { canonicalInput } from "../shared/idempotency";
 import { expireStaleJob, MAX_RESULT_BYTES } from "../shared/lifecycle";
 import { composePrompt } from "../shared/presets";
 import {
@@ -62,16 +62,6 @@ const statuses = new Set<JobStatus>([
   "Content Moderated",
   "Error",
 ]);
-const publicJob = (row: JobRow): Job =>
-  withoutDeployTickets(JSON.parse(row.data) as Job);
-function duplicate(row: JobRow, input: GenerateInput) {
-  if (canonicalInput(JSON.parse(row.input)) !== canonicalInput(input))
-    throw new AppError(
-      409,
-      "That request identifier was already used with different settings.",
-    );
-  return publicJob(row);
-}
 
 const priorJob = (env: Env, session: string, idempotency: string) =>
   env.DB.prepare("SELECT * FROM jobs WHERE session=? AND idempotency=?")
@@ -344,7 +334,17 @@ export async function poll(
     await saveJob(env, row, job);
     return { job };
   }
-  if (!key) return { job, needsKey: true };
+  const recipe = row.take ? JSON.parse(row.take).recipe : undefined;
+  if (
+    !key ||
+    keyKind(key) !==
+      recordedKeyKind(
+        job.generator,
+        recipe?.route,
+        row.polling_url ?? undefined,
+      )
+  )
+    return { job, needsKey: true };
   // The operator's key polls only a run on the operator's endpoint; any
   // other job of this session waits for the visitor's own key.
   if (
@@ -363,7 +363,6 @@ export async function poll(
   // A workflow polls and downloads through the workflow client, by entry.
   const entry = entryFor(job.generator, job.model);
   const viaWorkflow = entry.route === "workflow";
-  const recipe = row.take ? JSON.parse(row.take).recipe : undefined;
   if (recipe?.deployment)
     workflowClient = deploymentClient(recipe.deployment.url);
   try {

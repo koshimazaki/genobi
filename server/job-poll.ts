@@ -1,3 +1,4 @@
+import { jobKeyKind } from "./keys";
 import { saveDeploymentAudio } from "./deployment-output";
 import { saveResult } from "./job-output";
 import { AppError } from "./errors";
@@ -7,7 +8,7 @@ import { entryFor } from "../shared/registry";
 import { CREDITS_PER_USD } from "../shared/comfy/ltx";
 import { workflowOutput } from "../shared/comfy/runs";
 import type { WorkflowClient } from "../shared/comfy/workflow";
-import type { Provider } from "../shared/provider";
+import { keyKind, type Provider } from "../shared/provider";
 import { isTerminal, type JobStatus } from "../shared/types";
 import type { Store, StoredJob } from "./store";
 
@@ -111,4 +112,9 @@ export async function pollJob(
   job.updatedAt = new Date().toISOString();
   await store.save();
   return job;
+}
+
+/** A visitor's original provider must be reconnected before polling. */
+export function needsPollKey(job: StoredJob, key?: string) {
+  return job.keyMode === "byo" && (!key || keyKind(key) !== jobKeyKind(job));
 }

@@ -23,7 +23,12 @@ describe("Cloudflare adapter media: uploads, upscale sources and the library", (
   it("quotes an upscale on a Comfy key and sends it to Router with a lent link", async () => {
     const session = newSession();
     const before = submissions;
-    const upscale = { ...input, generator: "upscale", sourceId: "library-02" };
+    const upscale = {
+      ...input,
+      generator: "upscale",
+      sourceId: "library-02",
+      videoProvider: "comfy",
+    };
     const headers = {
       cookie: session,
       "x-byo-key": "comfyui-test-key-0004",

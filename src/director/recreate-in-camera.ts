@@ -1,3 +1,4 @@
+import { selectableVideoProvider } from "../../shared/provider";
 import type { Project } from "../../shared/director/types";
 import type { VersionSlot } from "../../shared/templates/version";
 import { versionTemplate } from "../../shared/templates/version";
@@ -57,6 +58,8 @@ export interface CameraRecipe {
   missing: string[];
   /** FLUX 3 stills: the provider the run used, as Camera's choice. */
   imageProvider?: "bfl" | "comfy";
+  /** FLUX 3 video/upscale uses its own provider choice. */
+  videoProvider?: "bfl" | "comfy";
   /** An Auto run's actual provider, when its take established one. */
   providerNote?: string;
   /** The recorded settings as a job for Camera's restore, when recorded. */
@@ -80,23 +83,21 @@ const GAP_WORDS: Record<string, string | undefined> = {
   provider: undefined,
 };
 
-/**
- * The provider a run used, as far as Camera has a choice for it. Only FLUX 3
- * stills (image and edit) carry one (`imageProvider`): BFL direct or Comfy
- * Router. Klein's open and API runs are separate models, restored as such.
- * Any other entry's route follows the connected key, so a run recorded on a
- * route the entry does not default to is named, never silently changed.
- */
+/** Restore independently selectable still and video routes from the saved recipe. */
 export function recordedProvider(
   entry: ReadyEntry,
   route: string | undefined,
-): { imageProvider?: "bfl" | "comfy"; missing?: string } {
+): Pick<CameraRecipe, "imageProvider" | "videoProvider"> & {
+  missing?: string;
+} {
   const still =
     (entry.generator === "image" || entry.generator === "edit") &&
     entry.videoModel === "flux-3";
-  if (still) {
-    if (route === "bfl") return { imageProvider: "bfl" };
-    if (route === "router") return { imageProvider: "comfy" };
+  const video = selectableVideoProvider(entry.generator, entry.videoModel);
+  if (still || video) {
+    const field = video ? "videoProvider" : "imageProvider";
+    if (route === "bfl") return { [field]: "bfl" };
+    if (route === "router") return { [field]: "comfy" };
     return { missing: "provider (BFL or Comfy) not recorded" };
   }
   if (route && route !== entry.route)
@@ -158,22 +159,34 @@ export function generatedRecipe(
     missing.push(
       "workflow template (check the selected workflow before generating)",
     );
-  // Legacy Auto records may carry only the registry fallback. A newly read
-  // take records the actual provider separately without changing Auto.
-  const auto = settings?.imageProvider === "auto";
-  const used = settings?.imageProviderUsed;
-  const provider = entry
-    ? recordedProvider(
-        entry,
-        auto
-          ? used === "bfl"
-            ? "bfl"
-            : used === "comfy"
-              ? "router"
-              : undefined
-          : generation.recipe?.route,
-      )
-    : {};
+  // A run on Auto: legacy records may carry only the registry fallback, never
+  // the person's choice of payer, so Auto comes back through the job. A newly
+  // read take records the provider it used separately without changing Auto.
+  // FLUX video had no choice before videoProvider, so a record without an
+  // explicit one restores as Auto, as it did then.
+  const video =
+    !!entry && selectableVideoProvider(entry.generator, entry.videoModel);
+  const auto = video
+    ? settings?.videoProvider !== "bfl" && settings?.videoProvider !== "comfy"
+    : settings?.imageProvider === "auto";
+  const used = video
+    ? settings?.videoProviderUsed
+    : settings?.imageProviderUsed;
+  // Video on Auto with no route read restores Auto with nothing missing: the
+  // choice is the person's, and the provider was Auto's to pick.
+  const provider =
+    !entry || (video && auto && !used)
+      ? {}
+      : recordedProvider(
+          entry,
+          auto
+            ? used === "bfl"
+              ? "bfl"
+              : used === "comfy"
+                ? "router"
+                : undefined
+            : generation.recipe?.route,
+        );
   if (provider.missing) missing.push(provider.missing);
   const job =
     settings && entry
@@ -214,7 +227,10 @@ export function generatedRecipe(
     ...(provider.imageProvider && !auto
       ? { imageProvider: provider.imageProvider }
       : {}),
-    ...(auto && provider.imageProvider
+    ...(provider.videoProvider && !auto
+      ? { videoProvider: provider.videoProvider }
+      : {}),
+    ...(auto && (provider.imageProvider || provider.videoProvider)
       ? {
           providerNote: `Recorded provider: ${used === "bfl" ? "BFL direct" : "Comfy Router"}; Camera keeps Auto.`,
         }
@@ -415,6 +431,7 @@ export async function openInCamera(
         }
       : {}),
     ...(recipe.imageProvider ? { imageProvider: recipe.imageProvider } : {}),
+    ...(recipe.videoProvider ? { videoProvider: recipe.videoProvider } : {}),
     // An upscale's words are its own prompt field, not the description. A
     // recorded job restores the person's own words (the description before
     // camera, scene and Light wording were composed into `recipe.prompt`), so

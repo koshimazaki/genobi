@@ -13,7 +13,9 @@ import { estimateImageUsd, isImage } from "../shared/image";
 import { MUSIC_ESTIMATE_CREDITS } from "../shared/music";
 import { useImageReferences } from "./useImageReferences";
 import ImageStage from "./components/ImageStage";
-import GenerateAction, { imageProviderFor } from "./components/GenerateAction";
+import GenerateAction, {
+  generationProviderFor,
+} from "./components/GenerateAction";
 import type { Job, Source } from "../shared/types";
 import { usePageKey } from "./usePageKey";
 import { useServerKey } from "./useServerKey";
@@ -173,7 +175,8 @@ export default function App() {
         : isH3Router(model)
           ? h3RouterCredits(duration, runResolution)
           : null;
-  const payer = runPayer(key, slots, generator, model, imageProviderFor(state));
+  const preference = generationProviderFor(state);
+  const payer = runPayer(key, slots, generator, model, preference);
   const estimate = isImage(generator)
     ? estimateImageUsd(state)
     : generator === "audio"

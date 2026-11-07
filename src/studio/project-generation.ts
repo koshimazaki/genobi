@@ -1,3 +1,7 @@
+import {
+  providerPreference,
+  selectableVideoProvider,
+} from "../../shared/provider";
 /**
  * A Camera run sent to the Director keeps its recipe (#64 follow-up): the
  * output lands as a generated asset with a project generation that records
@@ -79,7 +83,7 @@ export async function cameraGeneration(
   } catch {
     // An unreadable take still records the entry below.
   }
-  // Only a successful take read establishes the route Auto actually used.
+  // Only a successful take read establishes the route the run actually used.
   const used = recipe?.route;
   if (!recipe) {
     const entry = entryFor(job.generator, job.model);
@@ -87,9 +91,9 @@ export async function cameraGeneration(
       id: entry.id,
       version: entry.recipeVersion,
       route:
-        job.imageProvider === "bfl"
+        providerPreference(job) === "bfl"
           ? "bfl"
-          : job.imageProvider === "comfy"
+          : providerPreference(job) === "comfy"
             ? "router"
             : entry.route,
     });
@@ -101,6 +105,16 @@ export async function cameraGeneration(
   const references = await referenceFiles(urls, load).catch(() => []);
   const settings = publicGenerationSettings({
     ...job,
+    // The person's choice is kept (Auto stays Auto); the route the take
+    // actually used is recorded beside it, as for FLUX stills.
+    ...(selectableVideoProvider(job.generator, job.model)
+      ? {
+          videoProvider: providerPreference(job),
+          ...(used === "bfl" || used === "router"
+            ? { videoProviderUsed: used === "bfl" ? "bfl" : "comfy" }
+            : {}),
+        }
+      : {}),
     ...(isImage(job.generator) &&
     (job.model ?? "flux-3") === "flux-3" &&
     (used === "bfl" || used === "router")

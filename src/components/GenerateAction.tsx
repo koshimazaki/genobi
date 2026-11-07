@@ -2,14 +2,13 @@ import type { ComposerState } from "../useComposer";
 import { isImage, isKlein } from "../../shared/image";
 import { isTerminal, type Job } from "../../shared/types";
 import GenerateButton from "./GenerateButton";
+import {
+  providerPreference,
+  selectableVideoProvider,
+} from "../../shared/provider";
 
-/** Only FLUX 3's Router/API run has a selectable key preference. */
-export const imageProviderFor = (
-  state: Pick<ComposerState, "generator" | "model" | "imageProvider">,
-) =>
-  isImage(state.generator) && state.model === "flux-3"
-    ? (state.imageProvider ?? "auto")
-    : "auto";
+/** The preference for this generator, never borrowed from another lane. */
+export const generationProviderFor = providerPreference;
 
 /** Compose the provider route next to Generate without expanding App's UI tree. */
 export default function GenerateAction({
@@ -41,23 +40,30 @@ export default function GenerateAction({
   onClearQueue?: () => void;
 }) {
   const { generator, model } = state;
-  const providerChoices = !isImage(generator)
-    ? undefined
-    : isKlein(model)
-      ? [
-          { value: "comfy", label: "Comfy workflow" },
-          { value: "bfl", label: "BFL API" },
-        ]
-      : [
-          { value: "auto", label: "Auto" },
-          { value: "bfl", label: "BFL API" },
-          { value: "comfy", label: "Comfy Router" },
-        ];
+  const video = selectableVideoProvider(generator, model);
+  const providerChoices = video
+    ? [
+        { value: "auto", label: "Auto (BFL preferred)" },
+        { value: "bfl", label: "BFL direct" },
+        { value: "comfy", label: "Comfy Router" },
+      ]
+    : !isImage(generator)
+      ? undefined
+      : isKlein(model)
+        ? [
+            { value: "comfy", label: "Comfy workflow" },
+            { value: "bfl", label: "BFL API" },
+          ]
+        : [
+            { value: "auto", label: "Auto" },
+            { value: "bfl", label: "BFL API" },
+            { value: "comfy", label: "Comfy Router" },
+          ];
   const providerValue = isKlein(model)
     ? model === "flux-3-klein"
       ? "comfy"
       : "bfl"
-    : (state.imageProvider ?? "auto");
+    : generationProviderFor(state);
 
   return (
     <GenerateButton
@@ -72,13 +78,15 @@ export default function GenerateAction({
       providerChoices={providerChoices}
       providerValue={providerValue}
       onProviderChange={(value) =>
-        isKlein(model)
-          ? onUpdate({
-              model: value === "bfl" ? "flux-3-klein-api" : "flux-3-klein",
-            })
-          : onUpdate({
-              imageProvider: value as "auto" | "bfl" | "comfy",
-            })
+        video
+          ? onUpdate({ videoProvider: value as "auto" | "bfl" | "comfy" })
+          : isKlein(model)
+            ? onUpdate({
+                model: value === "bfl" ? "flux-3-klein-api" : "flux-3-klein",
+              })
+            : onUpdate({
+                imageProvider: value as "auto" | "bfl" | "comfy",
+              })
       }
       onSubmit={onSubmit}
       onQueue={onClearQueue ? onSubmit : undefined}

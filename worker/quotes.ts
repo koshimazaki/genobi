@@ -1,3 +1,4 @@
+import { providerPreference } from "../shared/provider";
 import { deploymentPlan } from "./deployments";
 import { ComfySdkWorkflows } from "../server/comfy-sdk";
 import { cloudAvailability } from "../shared/comfy/availability";
@@ -88,12 +89,10 @@ export async function price(
       "Music runs in the local studio for now; the hosted studio cannot save a song yet. Nothing was sent or charged.",
       "audio_local_only",
     );
+  const preference = providerPreference(input);
   if (
-    isImage(input.generator) &&
-    input.model === "flux-3" &&
-    input.imageProvider &&
-    input.imageProvider !== "auto" &&
-    (isComfyKey(key) ? "comfy" : "bfl") !== input.imageProvider
+    preference !== "auto" &&
+    (isComfyKey(key) ? "comfy" : "bfl") !== preference
   )
     throw new AppError(
       400,
