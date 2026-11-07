@@ -126,10 +126,10 @@ The project's media is about 16 MiB, each file under 25 MiB.
 ## How to regenerate a room
 
 The template generates nothing, but it records where each room came from, so
-an agent can make one again. The towers' first still, by the owner's note
-(7 November 2026), was a FLUX 3 Klein still from the prompt "skyscrapers arial
-view" with the first frame of an LTX text-to-video take as guidance; the LTX
-render followed. Acoustic Spaces v2 keeps that still
+an agent can make one again. The towers began, by the owner's note (7 November
+2026), as a FLUX 3 Klein init shot from the prompt "skyscrapers arial view";
+this take's LTX video was made from it, and a frame of that video became the
+towers' first still in Acoustic Spaces v2, which keeps both images
 ([what made each room](audio-reactive-drop.md#what-made-each-room)).
 
 1. Read `REVERB_ROUTE` in `shared/templates/adaptive-reverb.ts` and the

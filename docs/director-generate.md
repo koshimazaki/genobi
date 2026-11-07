@@ -109,8 +109,9 @@ navigates (`src/director/recreate-in-camera.ts`):
   whose still prompt is unknown restores its still with "prompt" listed as
   not stored. A take's video render prompt is kept beside it as
   `renderPrompt` for the person to read; Camera does not restore it. A
-  still that was not made as a still says where it came from (`source`, e.g.
-  `"ltx-video frame"` names "First still taken from an LTX video"). No
+  still that was not made as a still says where it came from (`source`; the
+  Spaces towers' still is a frame of an LTX video, and the notice says
+  "First still taken from an LTX video"). No
   bundled take records which Camera model made it.
 - **Create in Camera** otherwise (Dimensions records cut points, not
   per-creature prompts; Adaptive reverb is one continuous take; a room or
