@@ -79,6 +79,7 @@ export function runtimeCapabilities(runtime: "local" | "hosted") {
           "POST /api/world/:id/commands",
           "GET /api/world/:id/commands/:command",
           "GET /api/world/:id/files",
+          "GET /api/world/:id/files/:file",
         ]),
         execution: "browser",
         requires: ["world-pairing", "responding-tab"],
