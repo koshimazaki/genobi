@@ -143,7 +143,13 @@ describe("live operation requirements", () => {
     expect(operationFeature("genobi_project_media")).toBe(
       "projectMediaOperations",
     );
-    const absent = fixture();
+    // A server that does not declare browser export (the local manifest now
+    // does, so this one is spelled out).
+    const absent = fixture({
+      schemaVersion: 1,
+      runtime: "local",
+      features: {},
+    });
     expect(
       await diagnoseOperation(absent.api, "genobi_export", {}),
     ).toMatchObject({ supported: null, ready: false });
