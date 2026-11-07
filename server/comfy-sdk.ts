@@ -286,7 +286,7 @@ export class ComfySdkWorkflows implements WorkflowClient {
    * Checks the account before uploads, the single provider POST, or any GPU
    * spend (#47). A missing node or model is a known, unsent refusal; Klein's
    * loader is resolved against the same read. `checked` is false when Cloud's
-   * catalogue could not be read (availability unknown).
+   * catalogue could not be read or its loader metadata is incomplete.
    */
   private async preflight(
     template: WorkflowTemplate,
@@ -302,6 +302,7 @@ export class ComfySdkWorkflows implements WorkflowClient {
       info && isKlein(template)
         ? { ...values, ...this.kleinCloudValues(template, info) }
         : values;
+    let checked = info !== undefined;
     if (info) {
       const check = preflightGraph(
         template,
@@ -311,6 +312,8 @@ export class ComfySdkWorkflows implements WorkflowClient {
         }),
         info,
       );
+      checked =
+        check.unknownNodes.length === 0 && check.unknownModels.length === 0;
       if (blocks(check))
         throw unsent(
           preflightMessage("This Comfy Cloud account", check, {
@@ -321,7 +324,7 @@ export class ComfySdkWorkflows implements WorkflowClient {
           }),
         );
     }
-    return { values: resolvedValues, checked: info !== undefined };
+    return { values: resolvedValues, checked };
   }
 
   /** The quote's read-only check: refuses a definite gap, says when unknown. */

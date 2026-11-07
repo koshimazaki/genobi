@@ -2,19 +2,17 @@ import { isDeployModel } from "../shared/comfy/deploy-catalogue";
 import { entryFor } from "../shared/registry";
 import { useSettingsStore } from "./settings-store";
 import type { GenerateInput } from "../shared/types";
-import type { Quote } from "../shared/quote";
+import { CLOUD_GPU_ESTIMATE, type Quote } from "../shared/quote";
 import { expectedHeaders } from "./settings-store";
 import { request } from "./useJobs";
 import { quoteFailure } from "./generation-queue";
 
 /** Quote read only, then an explicit confirmation; a cancel submits nothing. */
-export async function deploymentApproval(
+async function readQuote(
   input: GenerateInput,
   key: string,
-  confirm: (message: string) => boolean = (message) => window.confirm(message),
   expected: Record<string, string> = expectedHeaders(input),
 ) {
-  const idempotency = crypto.randomUUID();
   const { quote } = await request<{ quote: Quote }>("/api/quotes", {
     method: "POST",
     headers: {
@@ -24,14 +22,47 @@ export async function deploymentApproval(
     },
     body: JSON.stringify(input),
   });
+  return {
+    quote,
+    approval: { quoteId: quote.id, idempotency: crypto.randomUUID() },
+  };
+}
+
+export async function deploymentApproval(
+  input: GenerateInput,
+  key: string,
+  confirm: (message: string) => boolean = (message) => window.confirm(message),
+  expected: Record<string, string> = expectedHeaders(input),
+) {
+  const { quote, approval } = await readQuote(input, key, expected);
   const name = quote.recipe.deployment?.name;
   if (!name || !quote.billing)
     throw new Error("The studio did not return a deployment quote.");
   return confirm(
     `Run ${quote.recipe.id} on your Comfy deployment ${name}?\n\n${quote.billing}. This is paid GPU time, with no fixed price or cost cap.\n\nConfirm one generation.`,
   )
-    ? { quoteId: quote.id, idempotency }
+    ? approval
     : null;
+}
+
+/** Known availability needs no extra click; unknown is disclosed before spend. */
+export async function cloudApproval(
+  input: GenerateInput,
+  key: string,
+  confirm: (message: string) => boolean = (message) => window.confirm(message),
+  expected: Record<string, string> = expectedHeaders(input),
+) {
+  const { quote, approval } = await readQuote(input, key, expected);
+  if (quote.recipe.route !== "workflow" || quote.recipe.location !== "cloud")
+    throw new Error("The studio did not return a Cloud workflow quote.");
+  if (
+    quote.availability &&
+    !confirm(
+      `${quote.availability}\n\n${quote.estimateNote ?? CLOUD_GPU_ESTIMATE}\nEstimated $${quote.estimateUsd.toFixed(2)} on your Comfy key. The run may fail after charging.\n\nContinue with this generation?`,
+    )
+  )
+    return null;
+  return approval;
 }
 
 /**
@@ -52,7 +83,10 @@ export function maybeDeploymentApproval(
       location === "deployment");
   return deployed
     ? deploymentApproval(input, key, undefined, expected)
-    : Promise.resolve(undefined);
+    : entryFor(input.generator, input.model).route === "workflow" &&
+        location === "cloud"
+      ? cloudApproval(input, key, undefined, expected)
+      : Promise.resolve(undefined);
 }
 
 /**

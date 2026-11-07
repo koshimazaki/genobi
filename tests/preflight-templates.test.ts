@@ -18,6 +18,8 @@ const byId = (id: string) =>
 const TEMPLATES = [
   "ltx-2-5-akuspace-t2v",
   "ltx-2-5-t2v",
+  "minimax-h3-rgb",
+  "minimax-h3-canny",
   "minimax-h3-depth",
   "minimax-h3-combined",
   "seedvr2-upscale",

@@ -6,6 +6,9 @@ import { renderToStaticMarkup } from "react-dom/server";
 import type { AgentApproval } from "../shared/agent-approval";
 import type { AgentSession } from "../shared/agent-session";
 import { AgentApprovals, planLine } from "../src/agent/AgentApprovals";
+import { approvalPlan } from "../shared/agent-approval";
+import { CLOUD_GPU_ESTIMATE, CLOUD_UNCHECKED } from "../shared/quote";
+import { input } from "./server-harness";
 
 const step = (extra: Partial<AgentApproval> = {}): AgentApproval => ({
   quoteId: "0f6c3c2e-6b1a-4f0e-9a43-3d7b0f3c9a11",
@@ -62,6 +65,36 @@ describe("the paid steps in the session bubble", () => {
     });
     expect(planLine(local)).toContain("this machine's ComfyUI");
     expect(html([local])).toContain("Nobody: this machine&#x27;s ComfyUI");
+  });
+
+  it("carries Cloud uncertainty and GPU-time pricing from quote to approval", () => {
+    const base = step();
+    const plan = approvalPlan(
+      {
+        ...input,
+        generator: "video",
+        resolution: "hd",
+        presetId: "orbit_l",
+        aspectRatio: "16:9",
+        upscaleCreativity: 0,
+      },
+      {
+        id: base.quoteId,
+        estimateUsd: base.estimateUsd,
+        expiresAt: base.expiresAt,
+        recipe: {
+          id: "ltx-2-5-open",
+          version: 1,
+          route: "workflow",
+          location: "cloud",
+        },
+        availability: CLOUD_UNCHECKED,
+        estimateNote: CLOUD_GPU_ESTIMATE,
+      },
+    );
+    const out = html([step({ plan, payer: "owner" })]);
+    expect(out).toContain("Couldn&#x27;t check Cloud availability");
+    expect(out).toContain(CLOUD_GPU_ESTIMATE);
   });
 
   it("offers no Approve once a step expired or closed", () => {

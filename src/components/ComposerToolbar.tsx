@@ -12,6 +12,7 @@ import { ACOUSTIC_PAIR, entryFor, readyEntry } from "../../shared/registry";
 import type { FrameLock } from "../review";
 import { priceText } from "../balance-format";
 import { CREDITS_PER_USD } from "../../shared/comfy/ltx";
+import { CLOUD_GPU_ESTIMATE } from "../../shared/quote";
 
 /** Family and settings share Generate's baseline; model and cost balance below. */
 export default function ComposerToolbar({
@@ -118,6 +119,10 @@ export default function ComposerToolbar({
         <Cost
           estimate={estimate}
           credits={estimateCredits}
+          cloudEstimate={
+            entryFor(generator, model).route === "workflow" &&
+            location === "cloud"
+          }
           // A graph's key is the run location's, named by the run-mode line.
           payer={
             entryFor(generator, model).route === "workflow" ? null : keyKind
@@ -138,10 +143,12 @@ function Cost({
   estimate,
   credits,
   payer,
+  cloudEstimate,
 }: {
   estimate: number | null;
   credits: number | null;
   payer: KeyKind | null;
+  cloudEstimate: boolean;
 }) {
   if (payer && estimate !== null) {
     const price = priceText(estimate, payer, credits, CREDITS_PER_USD);
@@ -156,7 +163,10 @@ function Cost({
     );
   }
   return (
-    <div className="cost">
+    <div
+      className="cost"
+      title={cloudEstimate ? CLOUD_GPU_ESTIMATE : undefined}
+    >
       <strong>
         {estimate === null
           ? "—"
@@ -165,9 +175,11 @@ function Cost({
             : `$${estimate.toFixed(2)}`}
       </strong>
       <span>
-        {credits !== null && estimate !== null
-          ? `≈ $${estimate.toFixed(2)} / RUN`
-          : "EST. / RUN"}
+        {cloudEstimate
+          ? "EST. GPU TIME / RUN"
+          : credits !== null && estimate !== null
+            ? `≈ $${estimate.toFixed(2)} / RUN`
+            : "EST. / RUN"}
       </span>
     </div>
   );
