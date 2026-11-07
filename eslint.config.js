@@ -17,6 +17,7 @@ export default tseslint.config(
       // into the thousands and hid the real source result. `.claude/skills/`
       // (tracked) stays linted.
       ".claude/worktrees/**",
+      ".runs/**", // Review runs: whole checkouts, gitignored.
       "output/**",
       // Voice models installed beside the checkout, with their own venv.
       "models/**",
