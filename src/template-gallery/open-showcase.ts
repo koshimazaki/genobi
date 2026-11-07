@@ -1,4 +1,5 @@
 import { showcaseLink } from "../../shared/showcase/types";
+import { findShowcase, loadShowcase } from "../director/showcase";
 import { studioStore } from "../studio/store";
 import { go } from "./template-actions";
 
@@ -16,7 +17,6 @@ export async function openShowcase(
   const state = studioStore.getState();
   if (Object.values(state.operations).some(Boolean))
     throw new Error("Wait for playback, import or export to finish first.");
-  const { loadShowcase, findShowcase } = await import("../director/showcase");
   const id = findShowcase(project)?.versions.find(
     (v) => v.version === version,
   )?.projectId;
