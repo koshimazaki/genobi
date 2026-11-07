@@ -309,6 +309,7 @@ export class ProjectCopies {
         sessionId,
         agents: record?.agents ?? [],
         ...(record?.memory ? { memory: record.memory } : {}),
+        ...(record?.mediaWrites ? { mediaWrites: record.mediaWrites } : {}),
         revision: project.revision,
         project,
         brief,

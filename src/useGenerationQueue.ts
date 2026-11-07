@@ -50,8 +50,9 @@ export interface CameraRun {
 }
 
 /**
- * Camera's queue: each run through its own deployment confirmation where the
- * route asks for one, then `generate`, which mints a fresh Idempotency-Key.
+ * Camera's queue: Cloud workflows quote first and disclose unknown availability;
+ * deployments always ask for confirmation. Then `generate` uses the quote's
+ * request key, or mints a fresh Idempotency-Key for other routes.
  * The run location and workflow are taken with the run, so a queued run is
  * sent as it was queued: a setting changed since then is the server's to
  * refuse, never a different route for a paid run.

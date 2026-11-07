@@ -65,7 +65,14 @@ export function ScrollHandoff({
             >
               Save handoff JSON
             </button>
-            <button onClick={() => saveScroll(s.bundle)}>
+            <button
+              disabled={s.busy}
+              onClick={() =>
+                void s.run(async () => {
+                  await saveScroll(s.bundle);
+                })
+              }
+            >
               Save media bundle
             </button>
             {handoff.destination === "video" && (

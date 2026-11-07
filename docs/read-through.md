@@ -388,6 +388,15 @@ note naming what the asset does not store. A mix template's bundled take reads
 its record from the template instead (`mix.recipes`: first still, prompt when
 written down, preset).
 
+Project Recreate preserves a recorded Klein Edit even when its source image is
+missing, so Generate stays blocked. Project records do not keep the workflow
+template: the notice names that gap and asks the person to check the selected
+workflow. New Camera records distinguish an Auto choice from the actual FLUX
+still provider read from its take (`settings.imageProviderUsed`); Recreate names
+that provider while keeping Auto. Older ambiguous records remain unknown.
+Restoring a run's own references from Inspirations is an explicit reuse and
+shows the same image-input notice as dragging an Inspiration into Camera.
+
 The servers read the rows back: `readLayout` (`shared/image-layout.ts`) finds the
 trailing JSON array of rows, and `validateImage` (`server/validate-image.ts`, used
 by both adapters through `validateInput`) refuses a box that is not four integers

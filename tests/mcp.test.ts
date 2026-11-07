@@ -142,6 +142,9 @@ describe("tools", () => {
       // A split upscale's plan cuts and quotes again; so does a part's retry.
       "genobi_upscale_parts_plan",
       "genobi_upscale_parts_retry",
+      // Scroll export linking consumes a one-use browser code.
+      "genobi_export",
+      "genobi_scrolls_live",
       ...media,
       "genobi_deployment_stage",
       // Each start is another Developer (one at a time): not free to repeat.
@@ -169,6 +172,10 @@ describe("tools", () => {
       "genobi_taste",
       "genobi_reference",
       "genobi_take_to_project",
+      "genobi_project_media",
+      "genobi_project_media_stage",
+      "genobi_export",
+      "genobi_scrolls_live",
       "genobi_audio_upload",
       ...media,
       // Session settings: writes, safe to repeat, never paid.
@@ -179,7 +186,9 @@ describe("tools", () => {
       // Starts a Developer in a worktree; never paid, never on main.
       "genobi_develop",
     ]);
-    expect(tools.every((t) => !t.annotations.destructiveHint)).toBe(true);
+    expect(
+      tools.filter((t) => t.annotations.destructiveHint).map((t) => t.name),
+    ).toEqual(["genobi_project_media"]);
   });
 });
 

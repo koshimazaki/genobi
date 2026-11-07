@@ -12,7 +12,7 @@ import { memoryContext } from "../shared/memory/context";
 import type { TasteScope, TastePreference } from "../shared/memory/schema";
 import type { TasteShelf } from "../shared/licensing/taste-shelf";
 import { projectFeedback } from "../shared/director/feedback";
-import { AgentProjectCopies } from "./project-takes";
+import { MediaProjectCopies } from "./project-media-operations";
 import type { CopyRecord } from "./project-record";
 import { AppError } from "./errors";
 
@@ -56,7 +56,7 @@ const principalOf = (session: string) =>
 const PRINCIPAL_DIGEST = /^[a-f0-9]{64}$/;
 
 /** Memory is outside the exported project manifest, in the same atomic copy record. */
-export class MemoryProjects extends AgentProjectCopies {
+export class MemoryProjects extends MediaProjectCopies {
   override async load() {
     await super.load();
     for (const record of this.records) {

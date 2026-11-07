@@ -1,4 +1,7 @@
 import { deploymentPlan } from "./deployments";
+import { ComfySdkWorkflows } from "../server/comfy-sdk";
+import { cloudAvailability } from "../shared/comfy/availability";
+import type { WorkflowClient } from "../shared/comfy/workflow";
 import {
   requireExpectedPlan,
   type Expectation,
@@ -11,6 +14,7 @@ import { isMusic } from "../shared/music";
 import { isComfyKey, requireRoute, type Provider } from "../shared/provider";
 import {
   estimateRunUsd,
+  CLOUD_UNCHECKED,
   newQuote,
   publicQuote,
   type Quote,
@@ -135,7 +139,9 @@ export async function quote(
   providers: Providers = defaultProviders(),
   expected?: Expectation,
   tester?: TesterAccess,
+  workflows: WorkflowClient = new ComfySdkWorkflows({ portableUploads: true }),
 ) {
+  const original = input;
   input = await hashReferences(input);
   const { estimate, take } = await price(
     env,
@@ -146,7 +152,16 @@ export async function quote(
     expected,
     tester,
   );
-  const record = newQuote(take, estimate);
+  const availability = await cloudAvailability(
+    workflows,
+    original,
+    take.recipe,
+    key,
+  );
+  const record = {
+    ...newQuote(take, estimate),
+    ...(availability === "unknown" ? { availability: CLOUD_UNCHECKED } : {}),
+  };
   await saveQuote(env, record, session);
   return publicQuote(record);
 }

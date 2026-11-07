@@ -96,8 +96,8 @@ Build and combine editable primitive scene examples—cathedral, house/interior,
 
 - Tags: `3d`, `agents`, `sound`, `mcp`
 - Instructions: [plugins/genobi/skills/genobi-3d/SKILL.md](https://github.com/koshimazaki/Genobi/blob/main/plugins/genobi/skills/genobi-3d/SKILL.md)
-- Uses: [`genobi_scene`](registry-tools.md#genobi_scene), [`genobi_world`](registry-tools.md#genobi_world), [`genobi_world_recipe`](registry-tools.md#genobi_world_recipe), [`genobi_link_project`](registry-tools.md#genobi_link_project), [`genobi_project`](registry-tools.md#genobi_project)
-- Docs: [docs/scene-examples.md](scene-examples.md), [docs/scene-builder.md](scene-builder.md), [docs/3d-tab.md](3d-tab.md), [docs/world-live.md](world-live.md), [docs/world-builder.md](world-builder.md), [docs/falling-room.md](falling-room.md), [docs/credits/libraries/teardown/README.md](credits/libraries/teardown/README.md)
+- Uses: [`genobi_scene`](registry-tools.md#genobi_scene), [`genobi_world`](registry-tools.md#genobi_world), [`genobi_world_recipe`](registry-tools.md#genobi_world_recipe), [`genobi_link_project`](registry-tools.md#genobi_link_project), [`genobi_project`](registry-tools.md#genobi_project), [`genobi_project_media`](registry-tools.md#genobi_project_media), [`genobi_project_media_stage`](registry-tools.md#genobi_project_media_stage)
+- Docs: [docs/scene-examples.md](scene-examples.md), [docs/scene-builder.md](scene-builder.md), [docs/3d-tab.md](3d-tab.md), [docs/world-live.md](world-live.md), [docs/project-media.md](project-media.md), [docs/world-builder.md](world-builder.md), [docs/falling-room.md](falling-room.md), [docs/credits/libraries/teardown/README.md](credits/libraries/teardown/README.md)
 
 ## `genobi-akuspace`
 
@@ -159,8 +159,8 @@ Finish a cut in the Genobi Director, the studio's main surface - link or read th
 
 - Tags: `agents`, `director`, `bundle`, `mcp`
 - Instructions: [plugins/genobi/skills/genobi-director/SKILL.md](https://github.com/koshimazaki/Genobi/blob/main/plugins/genobi/skills/genobi-director/SKILL.md)
-- Uses: [`genobi_status`](registry-tools.md#genobi_status), [`genobi_job`](registry-tools.md#genobi_job), [`genobi_scrolls`](registry-tools.md#genobi_scrolls), [`genobi_budget`](registry-tools.md#genobi_budget), [`genobi_quote`](registry-tools.md#genobi_quote), [`genobi_submit`](registry-tools.md#genobi_submit), [`genobi_take`](registry-tools.md#genobi_take), [`genobi_projects`](registry-tools.md#genobi_projects), [`genobi_link_project`](registry-tools.md#genobi_link_project), [`genobi_project`](registry-tools.md#genobi_project), [`genobi_project_feedback`](registry-tools.md#genobi_project_feedback), [`genobi_director_command`](registry-tools.md#genobi_director_command), [`genobi_effects`](registry-tools.md#genobi_effects), [`genobi_effect_variant`](registry-tools.md#genobi_effect_variant), [`genobi_take_to_project`](registry-tools.md#genobi_take_to_project), [`genobi_provenance`](registry-tools.md#genobi_provenance), [`genobi_audio_upload`](registry-tools.md#genobi_audio_upload), [`genobi_audio_analysis`](registry-tools.md#genobi_audio_analysis), [`genobi_skill`](registry-tools.md#genobi_skill)
-- Docs: [docs/director-agent-tools.md](director-agent-tools.md), [docs/director-bundle/README.md](director-bundle/README.md), [docs/effects-catalogue.md](effects-catalogue.md)
+- Uses: [`genobi_status`](registry-tools.md#genobi_status), [`genobi_job`](registry-tools.md#genobi_job), [`genobi_scrolls`](registry-tools.md#genobi_scrolls), [`genobi_budget`](registry-tools.md#genobi_budget), [`genobi_quote`](registry-tools.md#genobi_quote), [`genobi_submit`](registry-tools.md#genobi_submit), [`genobi_take`](registry-tools.md#genobi_take), [`genobi_projects`](registry-tools.md#genobi_projects), [`genobi_link_project`](registry-tools.md#genobi_link_project), [`genobi_project`](registry-tools.md#genobi_project), [`genobi_project_feedback`](registry-tools.md#genobi_project_feedback), [`genobi_director_command`](registry-tools.md#genobi_director_command), [`genobi_effects`](registry-tools.md#genobi_effects), [`genobi_effect_variant`](registry-tools.md#genobi_effect_variant), [`genobi_take_to_project`](registry-tools.md#genobi_take_to_project), [`genobi_project_media`](registry-tools.md#genobi_project_media), [`genobi_project_media_stage`](registry-tools.md#genobi_project_media_stage), [`genobi_project_media_receipt`](registry-tools.md#genobi_project_media_receipt), [`genobi_export`](registry-tools.md#genobi_export), [`genobi_provenance`](registry-tools.md#genobi_provenance), [`genobi_audio_upload`](registry-tools.md#genobi_audio_upload), [`genobi_audio_analysis`](registry-tools.md#genobi_audio_analysis), [`genobi_skill`](registry-tools.md#genobi_skill)
+- Docs: [docs/director-agent-tools.md](director-agent-tools.md), [docs/director-bundle/README.md](director-bundle/README.md), [docs/effects-catalogue.md](effects-catalogue.md), [docs/project-media.md](project-media.md), [docs/project-archives.md](project-archives.md), [docs/browser-exports.md](browser-exports.md)
 
 ## `genobi-hermes`
 
@@ -195,8 +195,8 @@ Plan a character sheet or storyboard as a Genobi scroll before any video exists 
 
 - Tags: `storyboard`, `agents`, `director`, `mcp`
 - Instructions: [plugins/genobi/skills/genobi-scrolls/SKILL.md](https://github.com/koshimazaki/Genobi/blob/main/plugins/genobi/skills/genobi-scrolls/SKILL.md)
-- Uses: [`genobi_scrolls`](registry-tools.md#genobi_scrolls), [`genobi_scrolls_panels`](registry-tools.md#genobi_scrolls_panels), [`genobi_quote`](registry-tools.md#genobi_quote), [`genobi_audio_analysis`](registry-tools.md#genobi_audio_analysis), [`genobi_skill`](registry-tools.md#genobi_skill)
-- Docs: [docs/scrolls.md](scrolls.md)
+- Uses: [`genobi_scrolls`](registry-tools.md#genobi_scrolls), [`genobi_scrolls_panels`](registry-tools.md#genobi_scrolls_panels), [`genobi_quote`](registry-tools.md#genobi_quote), [`genobi_export`](registry-tools.md#genobi_export), [`genobi_scrolls_live`](registry-tools.md#genobi_scrolls_live), [`genobi_audio_analysis`](registry-tools.md#genobi_audio_analysis), [`genobi_skill`](registry-tools.md#genobi_skill)
+- Docs: [docs/scrolls.md](scrolls.md), [docs/browser-exports.md](browser-exports.md), [docs/live-scrolls.md](live-scrolls.md)
 
 ## `genobi-studio`
 

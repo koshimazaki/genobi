@@ -5,7 +5,7 @@ license: MIT
 metadata:
   version: "0.3.0"
   tags: "3d, agents, sound, mcp"
-  docs: "docs/scene-examples.md, docs/scene-builder.md, docs/3d-tab.md, docs/world-live.md, docs/world-builder.md, docs/falling-room.md, docs/credits/libraries/teardown/README.md"
+  docs: "docs/scene-examples.md, docs/scene-builder.md, docs/3d-tab.md, docs/world-live.md, docs/project-media.md, docs/world-builder.md, docs/falling-room.md, docs/credits/libraries/teardown/README.md"
 ---
 
 # Genobi 3D: examples first
@@ -201,6 +201,17 @@ Command `presets` lists the scene library's presets and `load-preset` with a
 `name` (for example `Fall · big room`, `Move · jog`, or a move-library file
 name such as `fall-cathedral`) loads one and returns its recipe; it stops Play
 and is refused in Walk. Command `recipe` reads the current recipe back.
+For audio or image/video texture input, first stage and attach owned project
+media with `genobi_project_media_stage` and `genobi_project_media`. Keep the
+project grant as well as World pairing. Read `recipe` for the current live
+revision, then send `attach-media` with a UUID `requestId`, `expectedRevision`,
+`copyId`, `assetId` and `target` (`audio` or the scene's surface identifier).
+Read the command result for its applied revision and source hash. A scene edit
+during decoding refuses the command; re-read before proposing another edit.
+An Inspiration requires explicit `allowInspirationAsInput: true`. This uses the
+open browser; it does not attach creature models or FBX. See
+[Agent project media](../../../../docs/project-media.md).
+
 Command `takes` lists the tab's library takes. Every capture and live
 recording is kept there.
 

@@ -56,6 +56,11 @@ create a record for a new session. Settings expire after 30 days.
 Every hosted workflow quote records its location and template, including ordinary
 Comfy Cloud runs. `Genobi-Run-Location` and `Genobi-Workflow` expectations must
 match before pricing or submission; a mismatched Cloud request is refused too.
+Cloud quotes also check the fully filled graph against the visitor key's current
+inventory before storing a quote. Missing dependencies refuse it without a paid
+POST; unreadable or incomplete metadata adds an availability warning. Camera
+asks before continuing from that warning. Workflow estimates explicitly describe
+Comfy Cloud GPU time rather than a fixed API per-image price.
 Paused chains also compare their quote with the current location, template and
 deployment endpoint. After a settings change, reading a chain with its caller key
 quotes the stage again without submitting it; a keyless read hides the stale quote

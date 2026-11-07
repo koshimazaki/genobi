@@ -381,8 +381,12 @@ export function createWorld(
     );
     return canvas;
   }
-  async function setMedia(blob: Blob, target = "screen/all") {
-    await media.load(target, blob);
+  async function setMedia(
+    blob: Blob,
+    target = "screen/all",
+    beforeCommit?: () => void,
+  ) {
+    await media.load(target, blob, beforeCommit);
   }
   return {
     kind: "webgl" as "webgl" | "geometry",

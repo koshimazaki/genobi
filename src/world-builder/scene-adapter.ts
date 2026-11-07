@@ -43,7 +43,7 @@ export interface SceneAdapter {
   /** Frame zero of the linear depth pass as a PNG. */
   snapshotDepth(): Promise<Blob>;
   setScreen(blob: Blob): Promise<void>;
-  setSurface(target: string, blob: Blob): Promise<void>;
+  setSurface(target: string, blob: Blob, guard?: RecipeGuard): Promise<void>;
   clearSurface(target: string): Promise<void>;
   setAudio(blob: Blob): Promise<void>;
   cancel(): void;

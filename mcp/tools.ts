@@ -1,4 +1,5 @@
 import { diagnoseOperation } from "./availability";
+import { scrollsLiveTools } from "./scrolls-live-tools";
 import { arenaTools } from "./arena-tools";
 import { effectTools } from "./effects-tools";
 import { worldTools } from "./world-tools";
@@ -31,6 +32,8 @@ import { docsTools } from "./docs-tools";
 import { developTools } from "./develop-tools";
 import { skillTools } from "./skill-tools";
 import { takeTools } from "./take-tools";
+import { projectMediaTools } from "./project-media-tools";
+import { exportTools } from "./export-tools";
 import { upscalePartsTools } from "./upscale-parts-tools";
 import { templateTools } from "./template-tools";
 import { workflowTools } from "./workflow-tools";
@@ -214,6 +217,9 @@ export const tools: ToolDefinition[] = [
   ...templateTools,
   ...effectTools,
   ...takeTools,
+  ...projectMediaTools,
+  ...exportTools,
+  ...scrollsLiveTools,
   ...provenanceTools,
   ...audioTools,
   ...mediaTools,

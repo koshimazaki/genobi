@@ -10,6 +10,10 @@ The manifest is the timeline and asset index; the host evaluates modules and
 composites their output. The first application importer, composer, preview and frame-exact MP4 renderer
 now run at `/director`; see the [working-version guide](../director-working-version.md).
 
+For finished cuts, use [local project archives](../project-archives.md): the
+save path validates required bytes and writes `archive.json` with checksums for
+every entry, including the brief and World sources. Older v1 bundles remain readable.
+
 - [Project schema](schema/project.schema.json), [resources](schema/resources.schema.json), [layers](schema/layers.schema.json): JSON Schema draft-07; local `$id` references are identifiers, never network fetches.
 - [Initial example](example/project.json): six-second, 320×180, 30 fps bundle.
 - [Studio example](example/studio.json): 640×360 with image cuts, animated text, beat audio and CRT effects.

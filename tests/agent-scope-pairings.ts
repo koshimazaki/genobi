@@ -4,6 +4,41 @@
 
 /** Scrolls' fill and World's live control routes, and why each is not scoped. */
 export const PAIRING_ROUTES: Record<string, string> = {
+  "GET /api/exports/scrolls/targets":
+    "Only explicitly linked Scroll tabs; no implicit project grant.",
+  "GET /api/exports/scrolls/tabs/:id":
+    "This tab's owner or one-use linked session; bounded live snapshot only.",
+  "POST /api/exports/scrolls/tabs/:id/poll":
+    "Only the registered browser owner; marked agents refused.",
+  "POST /api/exports/scrolls/commands":
+    "Linked tab, exact document/revision/cell context and validated edits required.",
+  "GET /api/exports/scrolls/commands/:id/media":
+    "Only the dispatching browser owner; agent-marked clients refused; media was read with the requester's project/receipt grant.",
+  "GET /api/exports/scrolls/commands/:id":
+    "Only command requester or browser owner; bounded retained result.",
+  "POST /api/exports/scrolls/commands/:id/result":
+    "Only the dispatching browser owner; marked agents refused.",
+  "POST /api/exports/tabs/:id/link":
+    "Only this Scroll tab owner browser issues one-use links; marked agents refused.",
+  "POST /api/exports/link":
+    "One-use link code binds the caller to one ephemeral Scroll tab.",
+  "GET /api/exports/targets": "Only tabs whose projects this caller can read.",
+  "POST /api/exports/tabs":
+    "Only the owner browser of a synced project; marked agents refused.",
+  "POST /api/exports/tabs/:id/poll":
+    "Only the registered tab owner browser; marked agents refused.",
+  "DELETE /api/exports/tabs/:id":
+    "Only the registered tab owner browser; marked agents refused.",
+  "POST /api/exports":
+    "Target project access, exact revision and per-tab export lock required.",
+  "GET /api/exports/:id": "Only the export requester or project owner.",
+  "POST /api/exports/:id/cancel": "Only the export requester or project owner.",
+  "POST /api/exports/:id/progress":
+    "Only the export owner browser; marked agents refused.",
+  "POST /api/exports/:id/artifact":
+    "Only the export owner browser; marked agents refused; validated bytes before receipt.",
+  "GET /api/exports/:id/artifact":
+    "Only the export requester or project owner; private completed bytes.",
   "POST /api/scrolls/fill":
     "Scrolls fill: the person's tab asks for its own one-use code; marked agents refused.",
   "POST /api/scrolls/fill/panels":
@@ -30,6 +65,8 @@ export const PAIRING_ROUTES: Record<string, string> = {
     "World has explicit, ephemeral pairing and owner-only browser dispatch.",
   "GET /api/world/:id/commands/:command":
     "World has explicit, ephemeral pairing and owner-only browser dispatch.",
+  "GET /api/world/:id/commands/:command/media":
+    "World tab owner only; command caller's project access and media hash checked before queueing.",
   "POST /api/world/:id/commands/:command":
     "World has explicit, ephemeral pairing and owner-only browser dispatch.",
   "POST /api/world/:id/files/:file":

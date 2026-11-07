@@ -83,11 +83,11 @@ Fill the person's open storyboard panels · writes. Write the panels of the scro
 
 ## `genobi_world`
 
-Control and record the live World · writes. Pair with the open World tab: action link with no code in a session the person started or spoke to from the studio while World Builder is open (the tab grants that session; returns its session id), or with the one-use code from World → Connect agents in any other session. Send bounded character movement and camera controls together, record a live WebM session, or stop. Commands presets / load-preset {name} / takes read the scene library and load a preset into the scene (stops Play; refused in Walk); load-preset takes a preset's name or a move-library file name (fall-cathedral) and returns the loaded recipe. Command recipe returns the current recipe (at most 64 KB of JSON) and its live revision; use that revision as expectedRevision for genobi_world_recipe. Command send-to-project {take} does the library card's Send to Director for a take, by its id or name (the newest of that name): its first frame under Inspirations and the take as MP4 (with its WAV) under Project of the tab's open project, named after the take; it returns each assetId, no project link needed. Command capture {name} runs the Capture button's fixed-frame take from the current recipe (stops Play; refused in Walk, while recording live or while another take is being made): colour WebM, depth WebM and PNG when the renderer has depth, first frame, receipt and any loaded sound as WAV. Its result gives name, frames, width, height, fps, seconds and the files' local API paths; action download saves them. Every capture and live recording also lands in the tab's Takes library. No paid generation; files stay on the local server. Command submission returns an id; read result until done/error. Never resubmit a timed-out command; running may mean its result was lost. Model and FBX files must already be attached in the tab. Files are available through the returned local API paths to the paired session until the next capture or recording, disconnect or expiry.
+Control and record the live World · writes. Pair with the open World tab: action link with no code in a session the person started or spoke to from the studio while World Builder is open (the tab grants that session; returns its session id), or with the one-use code from World → Connect agents in any other session. Send bounded character movement and camera controls together, record a live WebM session, or stop. Commands presets / load-preset {name} / takes read the scene library and load a preset into the scene (stops Play; refused in Walk); load-preset takes a preset's name or a move-library file name (fall-cathedral) and returns the loaded recipe. Command recipe returns the current recipe (at most 64 KB of JSON) and its live revision; use that revision as expectedRevision for genobi_world_recipe. Command attach-media {requestId, expectedRevision, copyId, assetId, target} attaches an owned linked-project audio asset to target audio or an image/video to a current scene surface identifier. Read recipe for expectedRevision first; both World pairing and project grant are required. Inspiration inputs require allowInspirationAsInput: true. The browser guards again after decode; result reports the actual source hash and applied revision. Exact requestId replay returns its existing command while retained; read result before retrying. Command send-to-project {take} does the library card's Send to Director for a take, by its id or name (the newest of that name): its first frame under Inspirations and the take as MP4 (with its WAV) under Project of the tab's open project, named after the take; it returns each assetId, no project link needed. Command capture {name} runs the Capture button's fixed-frame take from the current recipe (stops Play; refused in Walk, while recording live or while another take is being made): colour WebM, depth WebM and PNG when the renderer has depth, first frame, receipt and any loaded sound as WAV. Its result gives name, frames, width, height, fps, seconds and the files' local API paths; action download saves them. Every capture and live recording also lands in the tab's Takes library. No paid generation; files stay on the local server. Command submission returns an id; read result until done/error. Never resubmit a timed-out command; running may mean its result was lost. Model and FBX files must already be attached in the tab. Files are available through the returned local API paths to the paired session until the next capture or recording, disconnect or expiry.
 
 - Tags: `3d`, `agents`, `mcp`
 - Taught by: [`genobi-3d`](registry-skills.md#genobi-3d)
-- Docs: [docs/world-live.md](world-live.md), [docs/world-builder.md](world-builder.md)
+- Docs: [docs/world-live.md](world-live.md), [docs/world-builder.md](world-builder.md), [docs/project-media.md](project-media.md)
 
 ## `genobi_world_recipe`
 
@@ -288,6 +288,46 @@ Genobi take to project · writes. Hand a Ready take you made (id), or a video or
 - Tags: `agents`, `mcp`, `director`, `bundle`, `dual-editor`
 - Taught by: [`anime-teaser`](registry-skills.md#anime-teaser), [`audio-visual`](registry-skills.md#audio-visual), [`character-piece`](registry-skills.md#character-piece), [`falling-room`](registry-skills.md#falling-room), [`fruits-swap`](registry-skills.md#fruits-swap), [`genobi-comfy`](registry-skills.md#genobi-comfy), [`genobi-director`](registry-skills.md#genobi-director), [`genobi-hermes`](registry-skills.md#genobi-hermes), [`genobi-swords`](registry-skills.md#genobi-swords), [`genobi-upscale`](registry-skills.md#genobi-upscale), [`product-video`](registry-skills.md#product-video)
 - Docs: [docs/director-agent-tools.md](director-agent-tools.md), [docs/director-bundle/README.md](director-bundle/README.md), [docs/dual-editor.md](dual-editor.md)
+
+## `genobi_project_media`
+
+Edit project media · writes. Attach a staged receipt, replace selected clips from one, relink clips to an existing asset, alias an asset's role, or remove an unused asset. Requires the linked copyId, exact baseRevision and a fresh requestId UUID. Uses the browser's import/placement rules; preserves clip timing and transforms, locks, media roles, provenance and prompt reference checks. Returns resulting assetIds/layerIds and applied revision. Retry only the exact same requestId and body after a lost answer; it reads the stored result without repeating the edit, even after a human edit. currentRevision may then differ from the applied revision. Conflicts require a fresh read and new requestId. Local server only; no paid generation.
+
+- Tags: `agents`, `mcp`, `director`, `bundle`
+- Taught by: [`genobi-3d`](registry-skills.md#genobi-3d), [`genobi-director`](registry-skills.md#genobi-director)
+- Docs: [docs/project-media.md](project-media.md), [docs/director-agent-tools.md](director-agent-tools.md)
+
+## `genobi_project_media_stage`
+
+Stage owned project media · writes. Inspect and stage one local image, audio file or MP4 for a linked Director project. External agents only: studio-started agents cannot read arbitrary local files. Sends bounded bytes, never the machine path. Returns a hash-addressed receipt bound to this session and project for one hour; exact retry or receipt read is safe after a lost acknowledgement. Does not attach media, modify a project revision, generate or pay. Local server only.
+
+- Tags: `agents`, `mcp`, `director`, `bundle`
+- Taught by: [`genobi-3d`](registry-skills.md#genobi-3d), [`genobi-director`](registry-skills.md#genobi-director)
+- Docs: [docs/project-media.md](project-media.md)
+
+## `genobi_project_media_receipt`
+
+Read a staged media receipt · read-only. Read and verify a staged file's receipt in the same session and linked project. Safe after an interrupted acknowledgement. Missing, expired, corrupt or another session's receipt is refused. A receipt is temporary staging, not an attached project asset. Local server only.
+
+- Tags: `agents`, `mcp`, `director`, `bundle`
+- Taught by: [`genobi-director`](registry-skills.md#genobi-director)
+- Docs: [docs/project-media.md](project-media.md)
+
+## `genobi_export`
+
+Export through the open browser · writes. Export the exact revision in a local Director/Editor or Scrolls browser, using its existing renderer. Read targets first: each tab has its own tabId, source and formats; Director needs linked project access; Scrolls needs action link with the one-use code shown under Document & agent tools. A link is consumed once; use targets to recover a lost link acknowledgement. Request takes that source, tabId, a supported format (project-zip, mp4, scroll-zip or scroll-json) and a fresh requestId UUID. Status reports queued/running/storing/done/error/cancelled; only done includes a completed artifact receipt with source, hash and download path. Cancel stops queued/rendering work; an atomic storage commit already started finishes and reports its result. Exact requestId/body replay returns the same result after a lost answer, including completed results after restart during one-hour retention. Never invent a new request after an uncertain answer. Download saves an already completed artifact to a new local file for an external agent; studio-started agents use the receipt URL. Missing browser, busy renderer or changed source is an explicit failure. No headless export or paid generation.
+
+- Tags: `agents`, `mcp`, `director`, `storyboard`, `bundle`
+- Taught by: [`genobi-director`](registry-skills.md#genobi-director), [`genobi-scrolls`](registry-skills.md#genobi-scrolls)
+- Docs: [docs/browser-exports.md](browser-exports.md), [docs/project-archives.md](project-archives.md)
+
+## `genobi_scrolls_live`
+
+Inspect or edit the mounted Scroll · writes. Link the one-use code shown in Scrolls Document & agent tools, then inspect the exact tab. Returns document, revision, selected cell and available media IDs. Keep that original context with the conversation; never silently retarget after a document/cell switch. Request applies an existing Scroll command against context and command.revision; metadata-only add-asset is refused. attach-media consumes an inspected project-media receipt owned by this same agent and linked project: copyId, receiptId, role, name and optional panel cellId. It adds a candidate without silently selecting or replacing a cell; use existing select/cell/timing commands explicitly. handoff-director requires the inspected director target (id/revision or null), preserves existing drafts, and returns the actual destination project/asset/layer IDs. It does not grant access to that new project; link it separately for further server edits. Read status for the applied document or explicit conflict. Reuse the exact requestId/body after an uncertain answer; never make a new request to retry. Commands and results are ephemeral, bounded to one hour; a server restart loses them, so inspect before proceeding. This is local paired-browser control; no headless service, paid generation or arbitrary document opening. Pure genobi_scrolls JSON tools remain available.
+
+- Tags: `agents`, `mcp`, `storyboard`
+- Taught by: [`genobi-scrolls`](registry-skills.md#genobi-scrolls)
+- Docs: [docs/live-scrolls.md](live-scrolls.md), [docs/browser-exports.md](browser-exports.md)
 
 ## `genobi_provenance`
 

@@ -184,6 +184,9 @@ user action through every layer.
 - [Outputs into project assets](project-assets.md) — the one path every 3D,
   Dual Swords, render and saved-video output takes into the project's assets.
 - [Director project copy](director-bundle/project-copy.md) — local synchronization and commands.
+- [Agent project media](project-media.md) — inspected local uploads and session-owned staging receipts.
+- [Local project archives](project-archives.md) — complete ZIP saves, integrity checks and recovery without the original browser cache.
+- [Browser exports](browser-exports.md): revision-bound agent Director and Scroll downloads.
 - [Director bundle v1](director-bundle/README.md) — the interchange format: JSON
   manifest, media files, graphics modules and their schemas.
 - [Prompts and directions](director-prompts.md) — the global prompt, each
@@ -406,3 +409,4 @@ from GitHub:
 - [Generate your version](director-generate.md): template inputs, local swaps and agent generation.
 
 - [Agent operation checks](agent-capability-checks.md): live runtime and paired-browser diagnostics before applicable commands.
+- [Live Scroll agents](live-scrolls.md): linked document, revision, selection and safe live edits.
