@@ -181,6 +181,20 @@ it("a Dance with Fruits take restores its still prompt, shape guide and still", 
   );
 });
 
+it("the mecha restores its own still prompt and names its shape guide as not stored", () => {
+  const id = "fruits-swap-mecha";
+  const recipe = cameraRecipe(bundled(fruitsSwap, id), slot(fruitsSwap, id), [
+    id,
+  ]);
+  expect(recipe.prompt).toBe(
+    "voxel mecha standing human size making dance moves with vox banana floating on one side and vox apple on the other vox fruits advert studio shot, cinematic view, wide angle lens use image 1 for shape guide only, its floating in the air",
+  );
+  expect(recipe.guide).toBeUndefined();
+  expect(recipeNote(recipe, 1)).toBe(
+    "Restored this asset's prompt and references. Made from preset fruit-mecha; shape guide, model and settings not stored. Nothing was generated.",
+  );
+});
+
 it("a take whose prompt was not written down restores the still only and says so", () => {
   const id = "fruits-swap-gold-ninja";
   const recipe = cameraRecipe(bundled(fruitsSwap, id), slot(fruitsSwap, id), [
@@ -210,24 +224,26 @@ it("an Acoustic Spaces room restores its first still and the still's own prompt"
       "cybernetic pyramid, isometric view, architectural concept, realistic cyberpunk, movie capture, on the desert, pyramid its on its own, fuji camera shot",
     missing: ["model and settings"],
   });
-  // The towers' still is a frame of an LTX video, and the notice says so.
+  // The towers' Klein still restores its prompt; the LTX frame that guided
+  // it is not kept, and the notice says so.
   const towers = cameraRecipe(
     bundled(audioReactiveDrop, "drop-towers"),
     slot(audioReactiveDrop, "drop-towers"),
     ["drop-towers"],
   );
-  expect(towers.prompt).toBeUndefined();
+  expect(towers.prompt).toBe("skyscrapers arial view");
   expect(recipeNote(towers, 1)).toBe(
-    "Restored this asset's references. First still taken from an LTX video. Made from preset towers-descent; prompt, model and settings not stored. Nothing was generated.",
+    "Restored this asset's prompt and references. Made from preset towers-descent; LTX first frame, model and settings not stored. Nothing was generated.",
   );
-  // The interior's still is another picture: still only, prompt named missing.
+  // The interior's still has its own prompt; the World Builder frame it was
+  // made from is not kept, and the notice says so.
   const inside = cameraRecipe(
     bundled(audioReactiveDrop, "drop-pyramid-inside"),
     slot(audioReactiveDrop, "drop-pyramid-inside"),
     ["drop-pyramid-inside"],
   );
-  expect(inside.prompt).toBeUndefined();
-  expect(inside.missing).toEqual(["prompt", "model and settings"]);
+  expect(inside.prompt).toBe("robot inside the pyramid");
+  expect(inside.missing).toEqual(["World Builder frame", "model and settings"]);
   // Rooms nothing records stay honest: the studio is a slice of another take.
   expect(
     cameraRecipe(

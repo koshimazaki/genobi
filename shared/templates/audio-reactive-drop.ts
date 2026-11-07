@@ -97,11 +97,11 @@ const media: TemplateMix["media"] = {
  * What made each room: the look still its LTX-2.5 Layout-to-Render take
  * started from (JPEG under `stills/`, matched to the take named in
  * drop-assemble.py and its first frame). `prompt` is the still's own prompt,
- * recorded only for the pyramid outside (the owner's, given on 4 November
- * 2026; the World Builder scene was built to match that still). The
- * interior's still is a different picture (a hangar interior,
- * audio-reactive/presets/pyramid-inside.md), so it does not take that
- * prompt. `renderPrompt` is what each take's render bundle executed, quoted
+ * recorded for the pyramid outside (the owner's, given on 4 November 2026;
+ * the World Builder scene was built to match that still) and the interior
+ * (given on 7 November 2026: a Genobi Image still from the outside still and
+ * the World Builder interior's frame, audio-reactive/presets/pyramid-inside.md;
+ * that frame is not kept, so it is listed as missing). `renderPrompt` is what each take's render bundle executed, quoted
  * exactly. The studio's picture is a slice of the original Adaptive reverb
  * take, so it has no entry. See docs/audio-reactive-drop.md#what-made-each-room.
  */
@@ -109,7 +109,9 @@ const still = (id: string) => `${DIR}/stills/${id}.jpg` as const;
 const pyramidInside = {
   reference: still("drop-pyramid-inside"),
   preset: "pyramid-inside",
-  missing: ["prompt"],
+  prompt: "robot inside the pyramid",
+  model: "Genobi Image (from the outside still and the World Builder frame)",
+  missing: ["World Builder frame"],
   renderPrompt:
     "From the floor of a vast stepped stone pyramid, a wide view up the towering terraces to the open apex, a crowd dancing on the floor. The terraced walls close in on the loud beats and open in the quiet. Warm sandstone, a shaft of daylight from the oculus, dust in the air.",
 };
@@ -124,11 +126,13 @@ const pyramidOutside = {
 const recipes: TemplateMix["recipes"] = {
   "drop-towers": {
     reference: still("drop-towers"),
-    // The owner's note: a frame of a video from the LTX text-to-video
-    // workflow, not a Klein still. That video's prompt is not recorded.
-    source: "ltx-video frame",
+    // The owner's note (7 November 2026): a FLUX 3 Klein still from this
+    // prompt with the first frame of an LTX text-to-video take as guidance;
+    // the LTX render followed. That frame is not kept.
     preset: "towers-descent",
-    missing: ["prompt"],
+    prompt: "skyscrapers arial view",
+    model: "FLUX 3 Klein (with an LTX video's first frame as guidance)",
+    missing: ["LTX first frame"],
     renderPrompt:
       "Seen from high above, two rows of Manhattan glass office towers at golden hour close in toward the street and open again on the beat while the camera descends between them toward a gothic cathedral facade below. Warm reflections in the glass, hard afternoon light, no people.",
   },

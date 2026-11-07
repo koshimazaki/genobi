@@ -97,8 +97,9 @@ study code when none is close. Say which you did and why. Then:
 The route, in the owner's words: "LTX video or any image, to layout, so
 Three.js to video". The reference still has one of three sources:
 
-1. **A frame of an LTX video**: the towers' first still was a screenshot of a
-   video made with the LTX text-to-video workflow.
+1. **An LTX video's first frame as guidance**: the towers' first still was
+   FLUX 3 Klein from the owner's prompt "skyscrapers arial view", guided by
+   the first frame of an LTX text-to-video take.
 2. **A generated image** from a prompt the agent writes (FLUX 3 Klein or
    Genobi Image): the pyramid, below.
 3. **The person's own image.**
@@ -119,7 +120,10 @@ measured sound under it. Follow that pattern for a person's room: their
 image is the reference; write a prompt in this shape (the space and its
 style, the view, "movie capture", the setting, a camera line) and show it
 before quoting the still; make the still; build the matching 3D room; and
-send the same still and scene into the render. The still and the capture's
+send the same still and scene into the render. The interior's still shows a
+second route: Genobi Image from two references, the outside still and a frame
+of the World Builder interior, with the owner's prompt "robot inside the
+pyramid". The still and the capture's
 frame 0 must line up (check a 50 percent blend), so adjust the scene's camera
 or remake the still until they do.
 
