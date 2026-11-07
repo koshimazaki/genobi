@@ -49,7 +49,8 @@
   margin: 0;
   max-width: none;
 }
-.assets-expanded .gallery-heading h2 {
+/* Only hide the embedded Camera gallery title; keep the expanded view heading. */
+.assets-expanded .gallery .gallery-heading h2 {
   display: none;
 }
 .assets-expanded-media {

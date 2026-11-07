@@ -7,7 +7,7 @@ metadata:
   version: "0.1.0"
   phase: "1 - quoted generation"
   tags: "storyboard, agents, director, mcp"
-  docs: "docs/scrolls.md"
+  docs: "docs/scrolls.md, docs/browser-exports.md, docs/live-scrolls.md"
 ---
 
 # Genobi Scrolls
@@ -15,12 +15,32 @@ metadata:
 A scroll is a character sheet or a storyboard: one brief, 1 to 16 cells, each
 with an optional prompt, camera and action, and optional timing to a song. The
 person sees it in the studio at `/scrolls`. You work on the same document
-through one tool, `genobi_scrolls`.
+through `genobi_scrolls_live` when explicitly linked, or `genobi_scrolls` for pure JSON.
 
 `genobi_scrolls` is a pure JSON transformation. It stores nothing, moves no
 media, never generates and never pays. Every call takes the document you got
 back from the previous one, so keep the latest document and pass it on. The
 person saves it, with its media bundle, from Scrolls.
+
+## Work in the open document
+
+Use `genobi_scrolls_live` with `link` and the one-use code under **Document &
+agent tools**. Read `targets`, then `inspect` with that exact tab ID. Keep its
+returned document/revision/cell `context` with the original instruction. Submit
+`request` with that context, an existing validated command and one request UUID;
+read `status` for the resulting snapshot. Refuse stale or different-document
+work; do not silently target a newly selected cell. After a lost answer, read
+status or replay the exact request UUID/body, never a fresh edit. Restart loses
+the ephemeral ledger, so inspect the actual document before continuing.
+
+Available media IDs describe bytes in this browser. Metadata-only `add-asset`
+is refused live. Use `attach-media` with an inspected receipt from the same agent
+identity and linked project, then explicitly select/place the returned asset ID.
+Inspect the current Director target before `handoff-director`; report its
+returned project/revision/asset/layer read-back, not merely a requested click.
+The new project needs its own link before further agent edits. Paid generation
+keeps its ordinary quote and approval. See
+[Live Scroll agents](../../../../docs/live-scrolls.md) for lifecycle and limits.
 
 ## Intended use and credits
 
@@ -155,3 +175,16 @@ After the person has chosen, `handoff` with a `destination`:
 
 See [Scrolls](../../../../docs/scrolls.md) for the commands, limits and bundle
 format, and the `genobi-director` skill once the panels are in a project.
+
+## Export from the open tab
+
+For the person's mounted Scroll, ask them to expand Document & agent tools and
+choose Link agent to this Scroll, then call `genobi_export` with action `link`
+and that one-use code. Read `targets`, preserve its exact tab and source revision,
+and request `scroll-zip` (media included) or `scroll-json` (metadata only).
+Poll `status` until `done` contains a receipt, then return its download link.
+A successful request alone is not a finished file. Use the same request UUID/body
+after an uncertain answer; do not render again blindly. See
+[browser exports](../../../../docs/browser-exports.md) for cancellation, limits,
+private downloads and expiry. General live editing is not provided by this export
+connection; the pure JSON commands above remain available.

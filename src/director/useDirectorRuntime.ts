@@ -7,6 +7,7 @@ import { studioStore } from "../studio/store";
 import { useProjectCopy } from "./useProjectCopy";
 import { mediaLoadStatus, useMediaLoad } from "./media-progress";
 import type { RenderReport } from "../../shared/licensing/render-report";
+import { useDirectorAgentExport } from "./agent-export";
 
 /** GPU, decoded media and object URLs remain outside the document store. */
 export function useDirectorRuntime(
@@ -45,6 +46,15 @@ export function useDirectorRuntime(
   }, []);
   const report = (e: unknown) =>
     setError(e instanceof Error ? e.message : String(e));
+  const exportReceipt = useDirectorAgentExport({
+    renderer: () => runtime.current,
+    ready: () => ready,
+    abort,
+    status: setStatus,
+    frame: (frame) => studioStore.getState().actions.transport({ frame }),
+    preview: setRenderUrl,
+    summary: setRenderSummary,
+  });
   // The local server's copy of this project, and agents' commands on it.
   useProjectCopy(bundle, setError);
   useEffect(() => {
@@ -189,6 +199,7 @@ export function useDirectorRuntime(
     firstFrame,
     waveforms,
     renderUrl,
+    exportReceipt,
     renderSummary,
     setRenderSummary,
     setRenderUrl,

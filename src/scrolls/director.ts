@@ -134,7 +134,11 @@ export function directorBundle(scroll: ScrollBundle, preview = false): Bundle {
     files.set(a.file.path, scroll.files.get(a.file.path)!);
   return { project, files };
 }
-async function openInDirectorImpl(scroll: ScrollBundle) {
+async function openInDirectorImpl(
+  scroll: ScrollBundle,
+  guard: () => void = () => {},
+) {
+  guard();
   const selection = orderedSelection(scroll.document);
   if (!selection.length) throw new Error("Select results first.");
   const state = studioStore.getState(),
@@ -178,6 +182,7 @@ async function openInDirectorImpl(scroll: ScrollBundle) {
     Object.values(studioStore.getState().operations).some(Boolean)
   )
     throw new Error("Director changed while preparing the import. Try again.");
+  guard();
   state.actions.commit(next, before);
   const current = studioStore.getState().director.bundle!;
   const handoff = scrollHandoff(scroll.document, "director");
@@ -185,6 +190,8 @@ async function openInDirectorImpl(scroll: ScrollBundle) {
     ...handoff,
     destinationProjectId: current.project.id,
     destinationRevision: current.project.revision,
+    assetIds: Object.keys(current.project.assets),
+    layerIds: current.project.layers.map((layer) => layer.id),
     placements: handoff.assets.map((a) => ({
       sourceAssetId: a.id,
       destinationAssetId: a.id,

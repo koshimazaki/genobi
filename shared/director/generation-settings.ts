@@ -48,6 +48,8 @@ export type GenerationSettings = Partial<
     | "imageSafetyTolerance"
   >
 > & {
+  /** Actual FLUX still provider read from the take, distinct from Auto. */
+  imageProviderUsed?: "bfl" | "comfy";
   /** How many reference images the run sent (they are project assets). */
   imageReferenceCount?: number;
   /**
@@ -116,6 +118,8 @@ export function publicGenerationSettings(
       out[key] = value[key];
   for (const key of BOOLEANS)
     if (typeof value[key] === "boolean") out[key] = value[key];
+  if (value.imageProviderUsed === "bfl" || value.imageProviderUsed === "comfy")
+    out.imageProviderUsed = value.imageProviderUsed;
   // Nested records are read by their own rules; a malformed one is dropped.
   Object.assign(out, readNestedSettings(value));
   const slots = value.referenceSlots;
@@ -156,7 +160,7 @@ export function publicGenerationSettings(
  * take or run inputs by: what the project holds is all that is restored.
  */
 export function settingsJob(settings: GenerationSettings, prompt: string): Job {
-  const { deploy, ...rest } = settings;
+  const { deploy, imageProviderUsed: _providerUsed, ...rest } = settings;
   return {
     generator: "video",
     description: prompt,

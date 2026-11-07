@@ -10,16 +10,22 @@ import { manifestText, readManifest } from "./manifest";
 import { BRIEF_PATH, briefFileEntries } from "./prompt-brief";
 import { validateProject } from "./validate";
 import { readWorldFiles, WORLD_PATHS } from "./world-files";
+import { digest } from "./file-hash";
+import {
+  ARCHIVE_PATH,
+  ARCHIVE_BYTES,
+  BUNDLE_PATH,
+  checkArchiveEntries,
+  addArchiveIntegrity,
+  verifyArchiveIntegrity,
+  type ArchiveFiles,
+} from "./archive-integrity";
+export { digest } from "./file-hash";
 export interface Bundle {
   project: Project;
   files: Map<string, Uint8Array<ArrayBuffer>>;
 }
 const MAX_BYTES = DIRECTOR_PROJECT_BYTES;
-export async function digest(bytes: Uint8Array<ArrayBuffer>) {
-  return [...new Uint8Array(await crypto.subtle.digest("SHA-256", bytes))]
-    .map((n) => n.toString(16).padStart(2, "0"))
-    .join("");
-}
 export async function validateFiles(bundle: Bundle) {
   const { project, files } = bundle;
   validateProject(project);
@@ -97,41 +103,43 @@ export async function importBundle(
     });
   }
   let total = 0,
-    count = 0,
-    feedback = false;
+    count = 0;
+  const seen = new Set<string>();
   const raw = unzipSync(new Uint8Array(await file.arrayBuffer()), {
     filter(entry) {
+      if (seen.has(entry.name)) throw new Error("Duplicate file in bundle");
+      seen.add(entry.name);
       total += entry.originalSize;
-      // `feedback.json` is derived from the manifest on every save, so it is
-      // neither read back nor counted against the 128 files a project may use.
-      if (entry.name === FEEDBACK_PATH && !feedback) {
-        feedback = true;
-        if (total > MAX_BYTES)
-          throw new Error(
-            `Unpacked bundle exceeds ${DIRECTOR_PROJECT_LIMIT} / 128 files`,
-          );
-        return false;
-      }
-      count++;
+      // Generated metadata has a byte budget but does not consume media slots.
+      if (entry.name !== FEEDBACK_PATH && entry.name !== ARCHIVE_PATH) count++;
       if (total > MAX_BYTES || count > 128)
         throw new Error(
           `Unpacked bundle exceeds ${DIRECTOR_PROJECT_LIMIT} / 128 files`,
         );
-      if (entry.name.endsWith("/")) return false;
-      if (
-        !/^(?:[A-Za-z0-9_-]+\/)*[A-Za-z0-9_-]+\.[A-Za-z0-9]+$/.test(entry.name)
-      )
-        throw new Error("Unsafe bundle path");
+      if (entry.name.endsWith("/")) {
+        if (!/^(?:[A-Za-z0-9_-]+\/)+$/.test(entry.name))
+          throw new Error("Unsafe bundle path");
+        return false;
+      }
+      if (!BUNDLE_PATH.test(entry.name)) throw new Error("Unsafe bundle path");
+      if (entry.name === ARCHIVE_PATH && entry.originalSize > ARCHIVE_BYTES)
+        throw new Error("Archive index exceeds 64 KB");
       return true;
     },
   });
   if (!raw["project.json"])
     throw new Error("ZIP needs project.json at its root");
+  const files = Object.fromEntries(
+    Object.entries(raw).map(([name, bytes]) => [name, new Uint8Array(bytes)]),
+  );
+  checkArchiveEntries(files);
+  const project = readManifest(raw["project.json"]);
+  await verifyArchiveIntegrity(files, project);
+  delete files[ARCHIVE_PATH];
+  delete files[FEEDBACK_PATH]; // Re-derived from the restored manifest on save.
   return validateFiles({
-    project: readManifest(raw["project.json"]),
-    files: new Map(
-      Object.entries(raw).map(([name, bytes]) => [name, new Uint8Array(bytes)]),
-    ),
+    project,
+    files: new Map(Object.entries(files)),
   });
 }
 export function download(blob: Blob, name: string) {
@@ -149,27 +157,61 @@ export function download(blob: Blob, name: string) {
  * project carries them (`world-files.ts`), and `feedback.json` when it has an
  * agent's revision: the feedback, written afresh from the manifest each save.
  */
-export function bundleZip(bundle: Bundle) {
-  const files: Record<string, Uint8Array> = {
+function bundleEntries(bundle: Bundle): ArchiveFiles {
+  const files: ArchiveFiles = {
     "project.json": strToU8(manifestText(bundle.project)),
   };
   for (const item of [
     ...Object.values(bundle.project.assets),
     ...Object.values(bundle.project.modules),
     ...briefFileEntries(bundle),
-  ])
-    files[item.file.path] = bundle.files.get(item.file.path)!;
+  ]) {
+    if (
+      [
+        "project.json",
+        ARCHIVE_PATH,
+        FEEDBACK_PATH,
+        BRIEF_PATH,
+        ...WORLD_PATHS,
+      ].includes(item.file.path)
+    )
+      throw new Error(`Media uses a reserved bundle path: ${item.file.path}`);
+    const bytes = bundle.files.get(item.file.path);
+    if (!bytes) throw new Error(`Missing file: ${item.file.path}`);
+    files[item.file.path] = bytes;
+  }
   if (bundle.files.has(BRIEF_PATH))
     files[BRIEF_PATH] = bundle.files.get(BRIEF_PATH)!;
   for (const path of WORLD_PATHS)
     if (bundle.files.has(path)) files[path] = bundle.files.get(path)!;
   if (bundle.project.feedbackBase)
     files[FEEDBACK_PATH] = strToU8(feedbackJson(feedbackOf(bundle)));
-  return zipSync(files, { level: 0 });
+  return files;
 }
-export function saveBundle(bundle: Bundle) {
+/** Legacy interchange packaging; user-facing archives use archiveBundle. */
+export function bundleZip(bundle: Bundle) {
+  return zipSync(bundleEntries(bundle), { level: 0 });
+}
+/** Snapshot and verify before packaging; never offer an archive that cannot reopen. */
+export async function archiveBundle(bundle: Bundle) {
+  const project = structuredClone(bundle.project);
+  const files = Object.fromEntries(
+    Object.entries(bundleEntries({ ...bundle, project })).map(
+      ([path, bytes]) => [path, new Uint8Array(bytes)],
+    ),
+  );
+  readManifest(files["project.json"]);
+  await validateFiles({ project, files: new Map(Object.entries(files)) });
+  await addArchiveIntegrity(files, project);
+  const zip = zipSync(files, { level: 0 });
+  if (zip.byteLength > MAX_BYTES)
+    throw new Error(`Bundle limit is ${DIRECTOR_PROJECT_LIMIT}`);
+  return zip;
+}
+export async function saveBundle(bundle: Bundle) {
+  const bytes = await archiveBundle(bundle);
   download(
-    new Blob([new Uint8Array(bundleZip(bundle))], { type: "application/zip" }),
+    new Blob([new Uint8Array(bytes)], { type: "application/zip" }),
     `${bundle.project.id}.zip`,
   );
 }

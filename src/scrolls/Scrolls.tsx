@@ -10,6 +10,7 @@ import { ScrollExamples } from "./Examples";
 import { ScrollResults } from "./Results";
 import { useScrolls } from "./useScrolls";
 import { useAgentFill } from "./useAgentFill";
+import ScrollExportPanel from "./ExportPanel";
 import { ScrollScript } from "./Script";
 import { assetType, exportScrollJson, saveScroll } from "./bundle";
 import { parseScroll, type AssetRole } from "../../shared/scrolls/types";
@@ -121,7 +122,16 @@ export default function Scrolls() {
             >
               Open
             </button>
-            <button onClick={() => saveScroll(s.bundle)}>Save</button>
+            <button
+              disabled={disabled}
+              onClick={() =>
+                void s.run(async () => {
+                  await saveScroll(s.bundle);
+                })
+              }
+            >
+              Save
+            </button>
           </div>
         </header>
         <input
@@ -248,6 +258,7 @@ export default function Scrolls() {
         <ScrollHandoff s={s} handoff={handoff} setHandoff={setHandoff} />
         <details className="scroll-document-tools">
           <summary>Document & agent tools</summary>
+          <ScrollExportPanel s={s} />
           <div className="scroll-toolbar">
             <label>
               Import images as
@@ -260,7 +271,16 @@ export default function Scrolls() {
                 <option value="style">Style reference</option>
               </ThemedSelect>
             </label>
-            <button onClick={() => exportScrollJson(d)}>Save JSON</button>
+            <button
+              disabled={disabled}
+              onClick={() =>
+                void s.run(async () => {
+                  exportScrollJson(d);
+                })
+              }
+            >
+              Save JSON
+            </button>
             <button
               disabled={disabled || !!s.pending}
               onClick={() => s.start(d.kind)}

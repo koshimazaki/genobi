@@ -11,6 +11,8 @@ import {
 } from "../camera-recipe-target";
 import { studioStore } from "../studio/store";
 import type { Job } from "../../shared/types";
+import { isKlein } from "../../shared/image";
+import { INSPIRATION_INPUT_NOTICE } from "../../shared/director/reference-role";
 import {
   publicGenerationSettings,
   settingsJob,
@@ -58,6 +60,8 @@ export interface CameraRecipe {
   imageProvider?: "bfl" | "comfy";
   /** FLUX 3 video/upscale uses its own provider choice. */
   videoProvider?: "bfl" | "comfy";
+  /** An Auto run's actual provider, when its take established one. */
+  providerNote?: string;
   /** The recorded settings as a job for Camera's restore, when recorded. */
   job?: Job;
   /** A workflow run's recorded run location. */
@@ -151,13 +155,28 @@ export function generatedRecipe(
       : [...new Set(read)].filter(image);
   const missing: string[] = [];
   if (!entry) missing.push("model and settings");
-  // A run on Auto: the recipe's route is the registry's fallback when the
-  // take could not be read, never the person's choice of payer. Auto comes
-  // back through the job, and the provider is named as not recorded.
+  if (entry?.route === "workflow")
+    missing.push(
+      "workflow template (check the selected workflow before generating)",
+    );
+  // A run on Auto: legacy records may carry only the registry fallback, never
+  // the person's choice of payer, so Auto comes back through the job. A newly
+  // read still take records the provider it used separately without changing
+  // Auto; video Auto names its provider as not recorded.
   const auto =
     settings?.imageProvider === "auto" || settings?.videoProvider === "auto";
+  const used = settings?.imageProviderUsed;
   const provider = entry
-    ? recordedProvider(entry, auto ? undefined : generation.recipe?.route)
+    ? recordedProvider(
+        entry,
+        auto
+          ? used === "bfl"
+            ? "bfl"
+            : used === "comfy"
+              ? "router"
+              : undefined
+          : generation.recipe?.route,
+      )
     : {};
   if (provider.missing) missing.push(provider.missing);
   const job =
@@ -165,7 +184,10 @@ export function generatedRecipe(
       ? settingsJob(
           {
             ...settings,
-            generator: entry.generator,
+            generator:
+              settings.generator === "edit" && isKlein(entry.videoModel)
+                ? "edit"
+                : entry.generator,
             model: entry.videoModel,
           },
           prompt,
@@ -193,11 +215,16 @@ export function generatedRecipe(
     label: "Recreate in Camera",
     ...(prompt ? { prompt } : {}),
     ...(entry ? { entry } : {}),
-    ...(provider.imageProvider
+    ...(provider.imageProvider && !auto
       ? { imageProvider: provider.imageProvider }
       : {}),
-    ...(provider.videoProvider
+    ...(provider.videoProvider && !auto
       ? { videoProvider: provider.videoProvider }
+      : {}),
+    ...(auto && provider.imageProvider
+      ? {
+          providerNote: `Recorded provider: ${used === "bfl" ? "BFL direct" : "Comfy Router"}; Camera keeps Auto.`,
+        }
       : {}),
     ...(job ? { job } : {}),
     ...(entry?.route === "workflow" &&
@@ -257,6 +284,17 @@ async function dataUrl(blob: Blob) {
   return `data:${blob.type};base64,${btoa(binary)}`;
 }
 
+function recipeFile(
+  id: string,
+  project: Project,
+  files: ReadonlyMap<string, Uint8Array>,
+) {
+  const path = project.assets[id]?.file.path ?? "";
+  const type = IMAGE_TYPES[path.split(".").pop()?.toLowerCase() ?? ""];
+  const bytes = files.get(path);
+  return type && bytes ? { type, bytes } : undefined;
+}
+
 /** The recipe's images as data URLs, from project files or a same-origin URL. */
 export async function recipeImages(
   recipe: CameraRecipe,
@@ -266,11 +304,11 @@ export async function recipeImages(
 ) {
   const out: string[] = [];
   for (const id of recipe.imageIds) {
-    const path = project.assets[id]?.file.path ?? "";
-    const type = IMAGE_TYPES[path.split(".").pop()?.toLowerCase() ?? ""];
-    const bytes = files.get(path);
-    if (type && bytes)
-      out.push(await dataUrl(new Blob([bytes.slice()], { type })));
+    const file = recipeFile(id, project, files);
+    if (file)
+      out.push(
+        await dataUrl(new Blob([file.bytes.slice()], { type: file.type })),
+      );
   }
   // The shape guide first, then the still, as the run that made it read them.
   for (const url of [recipe.guide, recipe.reference])
@@ -327,6 +365,7 @@ export function recipeNote(recipe: CameraRecipe, images: number) {
   return [
     list ? `Restored this asset's ${list}.` : "Nothing could be restored.",
     ...source,
+    ...(recipe.providerNote ? [recipe.providerNote] : []),
     // Camera's earlier references are cleared either way, so a Generate
     // never sends images this asset did not record.
     ...(recorded ? [] : ["No references recorded; Camera's were cleared."]),
@@ -360,14 +399,27 @@ export async function openInCamera(
     studioStore.getState().director.bundle?.project.id !== projectBefore
   )
     return;
-  const note = recipeNote(recipe, images.length);
+  const inspiration =
+    images.length &&
+    recipe.imageIds.some(
+      (id) =>
+        project.assets[id]?.use === "reference" &&
+        recipeFile(id, project, files),
+    );
+  const note = [
+    recipeNote(recipe, images.length),
+    ...(inspiration ? [`${INSPIRATION_INPUT_NOTICE}.`] : []),
+  ].join(" ");
   if (recipe.label === "Create in Camera") {
     applyCameraRecipe({ patch: {}, note });
     return;
   }
   const patch = {
     ...(recipe.entry
-      ? { generator: recipe.entry.generator, model: recipe.entry.videoModel }
+      ? {
+          generator: recipe.job?.generator ?? recipe.entry.generator,
+          model: recipe.entry.videoModel,
+        }
       : {}),
     ...(recipe.imageProvider ? { imageProvider: recipe.imageProvider } : {}),
     ...(recipe.videoProvider ? { videoProvider: recipe.videoProvider } : {}),

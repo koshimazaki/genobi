@@ -71,6 +71,43 @@ export function runtimeCapabilities(runtime: "local" | "hosted") {
         "GET /api/projects/:id/files/:sha256",
         "POST /api/projects/:id/commands",
       ]),
+      projectMediaStaging: localFeature([
+        "POST /api/projects/:id/media/:sha256",
+        "GET /api/projects/:id/media/:sha256",
+      ]),
+      projectMediaOperations: localFeature(["POST /api/projects/:id/media"]),
+      liveScrolls: {
+        ...localFeature([
+          "GET /api/exports/scrolls/targets",
+          "GET /api/exports/scrolls/tabs/:id",
+          "POST /api/exports/scrolls/commands",
+          "GET /api/exports/scrolls/commands/:id",
+          "GET /api/exports/scrolls/commands/:id/media",
+        ]),
+        execution: "browser",
+        requires: ["scroll-tab-link", "responding-tab"],
+        headless: false,
+      },
+      browserExport: {
+        ...localFeature(
+          [
+            "GET /api/exports/targets",
+            "POST /api/exports",
+            "POST /api/exports/link",
+            "GET /api/exports/:id",
+            "POST /api/exports/:id/cancel",
+            "GET /api/exports/:id/artifact",
+          ],
+          "/api/exports/targets",
+        ),
+        execution: "browser",
+        headlessExport: false,
+      },
+      worldMedia: {
+        ...localFeature(["POST /api/world/:id/commands"]),
+        execution: "browser",
+        requires: ["world-pairing", "project-grant", "scene-revision"],
+      },
       worldRecipe: localFeature([
         "GET /api/projects/:id/world-recipe",
         "POST /api/projects/:id/world-recipe",

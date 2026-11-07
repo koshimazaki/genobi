@@ -20,7 +20,7 @@ const isCheck = (value: unknown): value is LocalCheck =>
   !!(value as LocalCheck).templates &&
   typeof (value as LocalCheck).templates === "object";
 
-/** `key` is the run-location revision: a newer choice asks again at once. */
+/** `key` identifies the location and live reachability: a change asks again. */
 export function readLocalCheck(
   key = "",
   now = Date.now(),
@@ -47,24 +47,30 @@ export const resetLocalCheckForTests = () => {
 
 /**
  * The latest check while `active` (a local graph is held), read again when
- * `key` (the run-location revision) or `entry` changes; another entry within
- * the same revision reuses a fresh answer. Null until an answer comes, and
+ * `key` (location and live reachability) or `entry` changes; another entry with
+ * the same key reuses a fresh answer. Null until an answer comes, and
  * whenever the check could not be made.
  */
 export function useLocalCheck(active: boolean, key: string, entry: string) {
-  const [check, setCheck] = useState<LocalCheck | null>(null);
+  const [result, setResult] = useState<{
+    key: string;
+    entry: string;
+    check: LocalCheck | null;
+  } | null>(null);
   useEffect(() => {
     if (!active) {
-      setCheck(null);
+      setResult(null);
       return;
     }
     let live = true;
     void readLocalCheck(key).then((answer) => {
-      if (live) setCheck(answer);
+      if (live) setResult({ key, entry, check: answer });
     });
     return () => {
       live = false;
     };
   }, [active, key, entry]);
-  return check;
+  return active && result?.key === key && result.entry === entry
+    ? result.check
+    : null;
 }

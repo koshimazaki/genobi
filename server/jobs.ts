@@ -33,6 +33,7 @@ import {
 } from "../shared/quote";
 import { startTake, type TakeRecipe } from "../shared/take";
 import { workflowRun } from "../shared/comfy/runs";
+import { cloudAvailability } from "../shared/comfy/availability";
 import {
   handleJobId,
   isUnsent,
@@ -244,21 +245,11 @@ export class JobService {
     if (
       recipe.route !== "workflow" ||
       recipe.location !== "cloud" ||
-      recipe.deployment ||
-      !this.workflows.availability
+      recipe.deployment
     )
       return undefined;
     const { key } = this.credential(input, sessionId, byoKey);
-    const { template, values } = workflowRun(
-      entryFor(input.generator, input.model ?? "flux-3").model,
-      input,
-      composePrompt(input),
-      recipe.workflow,
-      recipe.location,
-    );
-    return this.workflows.availability(template, values, key, {
-      location: recipe.location,
-    });
+    return cloudAvailability(this.workflows, input, recipe, key);
   }
 
   /** Chooses the key, prices, checks and records the run; nothing is sent. */

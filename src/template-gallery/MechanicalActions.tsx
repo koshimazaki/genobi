@@ -7,6 +7,7 @@ import type { MechanicalRun } from "./useMechanicalRun";
 export const quotePrice = (quote: Quote) =>
   (quote.billing ??
     `$${quote.estimateUsd.toFixed(2)} · ${Math.round(quote.estimateUsd * CREDITS_PER_USD)} credits`) +
+  (quote.estimateNote ? ` · ${quote.estimateNote}` : "") +
   (quote.availability ? ` · ${quote.availability}` : "");
 
 /**

@@ -28,11 +28,9 @@ import { importAssets } from "./import-media";
 import {
   aliasAsset,
   assetUses,
-  placeAsset,
-  addTrack,
-  placeTrack,
   removeAsset,
 } from "../../shared/director/assets";
+import { placeMedia } from "../../shared/director/media-operations";
 import { missingTrack } from "../../shared/director/track-slot";
 import { checkAssetMedia } from "../../shared/director/asset-media";
 import type { ApplyEffectCommand } from "../../shared/effects/types";
@@ -221,9 +219,12 @@ export async function runDirectorCommand(
   } else if (c.op === "use-asset") {
     next = {
       ...bundle,
-      project: onTrack(p, c.layerIds)
-        ? putTrack(p, c.assetId, c.layerIds[0], `asset-${crypto.randomUUID()}`)
-        : placeAsset(p, c.assetId, c.layerIds, `asset-${crypto.randomUUID()}`),
+      project: placeMedia(
+        p,
+        c.assetId,
+        c.layerIds,
+        `asset-${crypto.randomUUID()}`,
+      ),
     };
   } else if (c.op === "alias-asset") {
     const project = structuredClone(p);
@@ -272,10 +273,10 @@ export async function runDirectorCommand(
     )
       throw new Error("Attach a WAV, MP3 or FLAC track");
     const imported = await importAssets(bundle, [file], "production");
-    const project = putTrack(
+    const project = placeMedia(
       imported.bundle.project,
       imported.assetIds[0],
-      c.layerIds[0],
+      c.layerIds,
       `asset-${crypto.randomUUID()}`,
     );
     project.revision = p.revision + 1;
@@ -284,7 +285,7 @@ export async function runDirectorCommand(
     if (!file || !/^(image|video)\//.test(file.type))
       throw new Error("Attach a replacement image or video");
     const imported = await importAssets(bundle, [file], "production");
-    const project = placeAsset(
+    const project = placeMedia(
       imported.bundle.project,
       imported.assetIds[0],
       c.layerIds,
@@ -319,16 +320,4 @@ function onTrack(project: Bundle["project"], layerIds: string[]) {
   if (layerIds.length !== 1)
     throw new Error("A track replaces one audio layer");
   return true;
-}
-/** Place on the audio layer, or add the template's missing track first. */
-function putTrack(
-  project: Bundle["project"],
-  assetId: string,
-  layerId: string,
-  aliasId: string,
-) {
-  const missing = missingTrack(project);
-  return missing?.id === layerId
-    ? addTrack(project, assetId, missing, missing.below, aliasId)
-    : placeTrack(project, assetId, layerId, aliasId);
 }

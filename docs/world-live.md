@@ -30,6 +30,9 @@ camera with the recipe's move on the 24 fps grid
 ([World Builder](world-builder.md#build-and-explore)). Live clips currently
 contain no audio.
 
+Owned project audio and image/video textures can also enter the paired scene
+with revision-checked `attach-media`; see [Agent project media](project-media.md#attach-to-the-paired-world).
+
 ## Pair an agent
 
 Run the local studio with `npm run dev`. A Vite-only preview or hosted site

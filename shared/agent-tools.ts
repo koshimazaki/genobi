@@ -29,6 +29,11 @@ export const GENOBI_TOOLS = [
   // Never spends: copies a take (its own, or one the person picked) into the
   // project the agent is linked to, as the Director skill asks.
   "genobi_take_to_project",
+  // Revision-checked linked-project writes; staging cannot read arbitrary local files here.
+  "genobi_project_media",
+  "genobi_project_media_receipt",
+  "genobi_export",
+  "genobi_scrolls_live",
   "genobi_projects",
   "genobi_link_project",
   "genobi_project",
