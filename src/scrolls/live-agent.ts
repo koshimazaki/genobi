@@ -17,13 +17,19 @@ export function scrollLiveAdapter(current: () => ScrollState) {
   const mountId = current().currentMount();
   function snapshot(): ScrollSnapshot {
     const s = current(),
-      bundle = s.current();
+      bundle = s.current(),
+      cell = s.currentCell();
     return scrollSnapshot({
       document: bundle.document,
       context: {
         documentId: bundle.document.id,
         revision: bundle.document.revision,
-        cellId: s.currentCell(),
+        // A selection whose cell was removed (Cells resized down) is no
+        // selection; reporting it would fail every poll and drop the tab.
+        cellId:
+          cell && bundle.document.cells.some((c) => c.id === cell)
+            ? cell
+            : null,
       },
       director: studioStore.getState().director.bundle
         ? {

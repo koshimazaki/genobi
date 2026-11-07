@@ -293,3 +293,29 @@ it("publishes no receipt until atomic storage finishes and refuses changed recei
   await restarted.load();
   expect(() => restarted.status(job.id, "agent")).toThrow(/not found/);
 });
+
+it("reports a full export store as storage_full, not as refused bytes", async () => {
+  const s = await prepared();
+  const projects = {
+    directory: s.directory,
+    list: () => [{ id: s.source.id, access: "owner", copyId: "copy" }],
+    read: () => ({}),
+  } as unknown as MemoryProjects;
+  const service = new BrowserExports(projects);
+  await service.load();
+  const { tabId } = service.connect("owner", s.source);
+  const job = service.request("agent", { ...s.request("mp4"), tabId });
+  service.poll(tabId, "owner", s.source);
+  const { AppError } = await import("../server/errors");
+  service.artifacts.save = async () => {
+    throw new AppError(413, "Export storage is full.", "export_storage_full");
+  };
+  await expect(
+    service.finish(
+      job.id,
+      "owner",
+      await readFile("tests/fixtures/metadata.mp4"),
+    ),
+  ).rejects.toMatchObject({ status: 413, code: "export_storage_full" });
+  expect(service.status(job.id, "agent")).toMatchObject({ state: "error" });
+});

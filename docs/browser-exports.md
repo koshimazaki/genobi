@@ -46,6 +46,10 @@ to find the granted tab before asking for another code.
 **Disconnect Scroll agents**, switching documents or closing the tab ends those
 links. Completed files already requested remain downloadable until their receipt
 expiry. Enabling again creates a fresh tab identity and requires a new link.
+A lost connection is different: when the tab misses its heartbeat (a throttled
+background tab) or a poll fails, the server keeps that Scroll's agent links for
+up to one hour and gives them back when the same owner reconnects the same
+Scroll, so a linked agent does not need a new code.
 Hosted Scrolls still uses its normal browser Save controls without this service.
 
 `scroll-zip` contains the exact document and all verified image/audio bytes,
@@ -79,7 +83,9 @@ index, then atomically stores bytes before publishing a receipt. Downloads are
 private to the requester and owner. Artifacts expire after one hour; retain a
 local download if needed longer. Each artifact is at most 150 MiB. Stored exports
 are bounded to 32 files, 600 MiB total and 300 MiB per owner. No automatic
-eviction silently discards an unexpired artifact. Tab connections expire after
+eviction silently discards an unexpired artifact; a full store answers
+`413 export_storage_full`, so download existing artifacts and wait for their
+expiry rather than re-rendering. Tab connections expire after
 15 seconds without a poll. Export history holds at most 256 operations.
 
 MP4 uses existing browser WebCodecs support and requires a loaded preview.

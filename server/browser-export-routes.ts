@@ -44,7 +44,14 @@ export function browserExportRouter(
   });
   router.delete("/tabs/:id", (req, res) => {
     limit("edit", owner(res));
-    res.json(service.disconnect(String(req.params.id), browser(res)));
+    res.json(
+      service.disconnect(
+        String(req.params.id),
+        browser(res),
+        undefined,
+        req.query.lost === "1",
+      ),
+    );
   });
   router.post("/tabs/:id/link", json, (req, res) => {
     limit("edit", owner(res));

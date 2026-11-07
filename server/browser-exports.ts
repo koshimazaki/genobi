@@ -44,6 +44,8 @@ export class BrowserExports {
   private tabs = new Map<string, Tab>();
   private jobs = new Map<string, Job>();
   private links = new LinkCodes();
+  /** Scroll agent links kept across a lost connection, by owner and Scroll. */
+  private suspended = new Map<string, { grants: Set<string>; until: number }>();
   readonly artifacts: ExportArtifacts;
   constructor(
     private projects: ProjectCopies,
@@ -68,7 +70,10 @@ export class BrowserExports {
           id,
           tab.owner,
           "The browser stopped responding. Reopen the project and request a new export.",
+          true,
         );
+    for (const [key, kept] of this.suspended)
+      if (this.now() > kept.until) this.suspended.delete(key);
     for (const [id, job] of this.jobs)
       if (this.now() - job.created > EXPORT_RETENTION_MS) this.jobs.delete(id);
     void this.artifacts.sweep().catch(() => {});
@@ -116,11 +121,18 @@ export class BrowserExports {
       [...this.tabs.values()].filter((t) => t.owner === owner).length >= 8
     )
       throw new AppError(429, "Too many browser export connections.");
+    // A Scroll tab that lost its connection (a throttled background tab, a
+    // failed poll) gets its agent links back when the same owner reconnects
+    // the same Scroll. A deliberate disconnect keeps no links.
+    const key = `${owner}\0${source.id}`;
+    const kept =
+      source.kind === "scrolls" ? this.suspended.get(key) : undefined;
+    this.suspended.delete(key);
     const tab = {
       id: randomUUID(),
       owner,
       copyId: source.kind === "director" ? project?.copyId : undefined,
-      grants: new Set<string>(),
+      grants: kept ? kept.grants : new Set<string>(),
       source,
       seen: this.now(),
     };
@@ -309,9 +321,15 @@ export class BrowserExports {
     id: string,
     owner: string,
     message = "The browser disconnected before export finished.",
+    lost = false,
   ) {
     const tab = this.ownTab(id, owner);
     this.tabs.delete(id);
+    if (lost && tab.source.kind === "scrolls" && tab.grants.size)
+      this.suspended.set(`${owner}\0${tab.source.id}`, {
+        grants: tab.grants,
+        until: this.now() + EXPORT_RETENTION_MS,
+      });
     const job = tab.job ? this.jobs.get(tab.job) : undefined;
     if (job) this.fail(job, message);
     return { disconnected: true };
@@ -352,6 +370,10 @@ export class BrowserExports {
     } catch (error) {
       job.state = "error";
       job.error = bounded(error);
+      // A full store is not refused bytes: keep its 413 and code so the agent
+      // knows to download existing artifacts and wait, rather than re-render.
+      if (error instanceof AppError && error.code === "export_storage_full")
+        throw new AppError(error.status, job.error, error.code);
       throw new AppError(422, job.error, "export_artifact_refused");
     }
     return this.public(job);

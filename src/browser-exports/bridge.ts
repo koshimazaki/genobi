@@ -54,13 +54,14 @@ export function startExportBridge(
       );
     return data as T;
   }
-  function disconnect() {
+  /** `lost`: the connection failed, so the server keeps a Scroll's agent links. */
+  function disconnect(lost = false) {
     active?.controller.abort();
     const old = tab;
     tab = undefined;
     if (old) adapter.connection?.(undefined);
     if (old)
-      void fetcher(`/api/exports/tabs/${old.id}`, {
+      void fetcher(`/api/exports/tabs/${old.id}${lost ? "?lost=1" : ""}`, {
         method: "DELETE",
         keepalive: true,
       }).catch(() => {});
@@ -171,7 +172,7 @@ export function startExportBridge(
           void work(job);
       }
     } catch {
-      disconnect();
+      disconnect(true);
     } finally {
       if (!stopped) timer = setTimeout(() => void poll(), 2000);
     }
