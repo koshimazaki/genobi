@@ -1,3 +1,4 @@
+import { sessionCommand, type SessionNotice } from "./session";
 import { z } from "zod";
 import { profileConnection } from "../mcp/connection";
 import { profileDefaults } from "../mcp/profile-defaults";
@@ -31,6 +32,8 @@ Commands accept hyphens, spaces, or full MCP tool names:
 Options: --profile NAME, --url http://127.0.0.1:4317, --input JSON|@FILE|-
          --confirm (paid commands only, after the person accepted the quote)
 Errors are JSON on stderr with a nonzero exit code. Commands never retry.
+Studio-started agent sessions also receive JSON {notice} messages on stderr.
+Read them as the person's next corrections; stdout stays the command result.
 
 Use skill --input '{"name":"genobi-cli"}' for setup and worked examples.
 Read project context before editing; Taste proposals need owner activation.
@@ -41,6 +44,8 @@ export interface Runtime {
   store?: ProfileStore;
   fetcher?: typeof fetch;
   input?: typeof readJsonInput;
+  /** Studio corrections and optional activity warnings; stdout stays the tool result. */
+  notice?: (value: SessionNotice) => void;
 }
 
 /** One command, one dispatch through the MCP definitions; no generator logic here. */
@@ -113,10 +118,14 @@ export async function run(
     fetcher: runtime.fetcher,
     client: "cli",
   });
-  return tool.run(
-    connection.api,
-    profileDefaults(tool.name, args, connection.profile.selection),
+  const selected = profileDefaults(
+    tool.name,
+    args,
+    connection.profile.selection,
   );
+  return agent
+    ? sessionCommand(connection.api, tool, selected, runtime.notice)
+    : tool.run(connection.api, selected);
 }
 
 export function commandError(error: unknown) {

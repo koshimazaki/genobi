@@ -47,7 +47,8 @@ export function activityRouter(
       throw new AppError(400, "Invalid activity event.");
     }
     if (
-      (event.source === "mcp" && !names.has(event.tool)) ||
+      ((event.source === "mcp" || event.source === "cli") &&
+        !names.has(event.tool)) ||
       (event.source === "browser" &&
         !(BROWSER_TOOLS as readonly string[]).includes(event.tool)) ||
       event.source === "server"

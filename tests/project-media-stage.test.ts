@@ -228,3 +228,28 @@ it("rejects corrupt bytes and incomplete disk writes, then permits a clean resta
     stored: true,
   });
 });
+
+it("sweeps past stray files at every staging level instead of failing startup", async () => {
+  const s = await prepared();
+  const bytes = Buffer.from(wav(1));
+  const session = s.cookie.slice(15);
+  const { receipt } = await s.stage(bytes, "audio/wav");
+  const staging = path.join(s.directory, "project-media-staging");
+  const owner = path.join(
+    staging,
+    createHash("sha256").update(session).digest("hex"),
+  );
+  const copy = path.join(owner, s.copyId);
+  // Finder writes `.DS_Store` at any level; a crash can leave a plain file.
+  await writeFile(path.join(staging, ".DS_Store"), "x");
+  await writeFile(path.join(owner, ".DS_Store"), "x");
+  await writeFile(path.join(copy, "stray"), "x");
+  const next = new ProjectMediaStaging(s.projects);
+  await expect(next.sweep()).resolves.toBeUndefined();
+  expect(
+    (await next.read(s.copyId, session, receipt.receiptId)).receipt,
+  ).toEqual(receipt);
+  await expect(readFile(path.join(copy, "stray"))).rejects.toMatchObject({
+    code: "ENOENT",
+  });
+});

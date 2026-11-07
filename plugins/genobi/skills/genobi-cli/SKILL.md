@@ -152,6 +152,13 @@ agreement, then call `genobi_submit` with the same inputs, quote ID, stable
 idempotency key and `--confirm`. The flag records the caller's intent; it is not
 proof of human approval. Never set it merely to get past an error.
 
+Studio-started CLI commands print queued studio corrections on stderr as JSON
+`notice.messages` with `notice.instruction`, including after command failure.
+Read these before continuing. Stdout remains the command result; notices do not
+mean failure. The inbox is shared with MCP and collected once per message.
+An activity warning never authorizes repeating a completed operation. Normal
+errors remain JSON `error` on stderr with a nonzero exit code.
+
 Studio-started agent environments retain their mark and grant. They have the
 runner allowlist only and cannot submit, even with `--confirm`; quote once and
 wait for the studio's Approve action. Do not unset those environment variables.

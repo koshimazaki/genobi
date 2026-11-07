@@ -15,6 +15,7 @@ import type { Project } from "../../shared/director/types";
 import { publicGenerationRecipe } from "../../shared/director/generation-recipe";
 import { publicGenerationSettings } from "../../shared/director/generation-settings";
 import { entryFor } from "../../shared/registry";
+import { isImage } from "../../shared/image";
 import { importAssets } from "../director/import-media";
 import { validateProject } from "../director/validate";
 import { runInputStore, restoredRunInputs } from "../run-inputs";
@@ -78,6 +79,8 @@ export async function cameraGeneration(
   } catch {
     // An unreadable take still records the entry below.
   }
+  // Only a successful take read establishes the route Auto actually used.
+  const used = recipe?.route;
   if (!recipe) {
     const entry = entryFor(job.generator, job.model);
     recipe = publicGenerationRecipe({
@@ -98,6 +101,11 @@ export async function cameraGeneration(
   const references = await referenceFiles(urls, load).catch(() => []);
   const settings = publicGenerationSettings({
     ...job,
+    ...(isImage(job.generator) &&
+    (job.model ?? "flux-3") === "flux-3" &&
+    (used === "bfl" || used === "router")
+      ? { imageProviderUsed: used === "bfl" ? "bfl" : "comfy" }
+      : {}),
     // The browser's own wording for an image run (regions not composed in).
     // With Klein boxes the project cannot hold the boxes, so it keeps the
     // description as sent, their instructions composed in, and counts them.
