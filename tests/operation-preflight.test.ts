@@ -152,7 +152,7 @@ describe("live operation requirements", () => {
     });
     expect(
       await diagnoseOperation(absent.api, "genobi_export", {}),
-    ).toMatchObject({ supported: null, ready: false });
+    ).toMatchObject({ supported: null, ready: null });
     const source = { kind: "scrolls", id: "scroll-id", revision: 3 };
     const f = fixture(
       {
@@ -249,4 +249,29 @@ it("refuses unsupported voice through both CLI and MCP before a transcription wr
     await server.close();
     await rm(directory, { recursive: true, force: true });
   }
+});
+
+it("lets an unknown capability through to the server, refusing only what is known to fail", async () => {
+  const missing = {
+    get: async () => {
+      throw new StudioError("Missing", 404);
+    },
+  } as unknown as GenobiApi;
+  await expect(
+    preflightOperation(missing, "genobi_voice_transcribe", {}),
+  ).resolves.toBeUndefined();
+  const older = fixture({ schemaVersion: 1, runtime: "local", features: {} });
+  await expect(
+    preflightOperation(older.api, "genobi_world", {
+      action: "command",
+      session: "s",
+    }),
+  ).resolves.toBeUndefined();
+  const expired = fixture(runtimeCapabilities("local"));
+  expect(
+    await diagnoseOperation(expired.api, "genobi_world", {
+      action: "command",
+      session: "gone",
+    }),
+  ).toMatchObject({ ready: false, reason: expect.stringContaining("expired") });
 });

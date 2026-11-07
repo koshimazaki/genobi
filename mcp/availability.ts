@@ -97,7 +97,8 @@ export async function diagnoseOperation(
     return {
       ...result,
       supported: entry?.supported === false ? false : null,
-      ready: false,
+      // Undeclared is unknown, not unready: only a declared refusal is false.
+      ready: entry?.supported === false ? false : null,
       reason: short(
         entry?.reason,
         `The ${result.runtime} runtime does not advertise ${feature}.`,
@@ -146,9 +147,20 @@ export async function diagnoseOperation(
         reason: "No World tab is paired.",
         next: "Open World Builder, link its one-use code (or studio grant), and use the returned session.",
       };
-    const status = await api.get<{ connected?: boolean }>(
-      `/api/world/${encodeURIComponent(args.session)}/status`,
-    );
+    let status: { connected?: boolean };
+    try {
+      status = await api.get<{ connected?: boolean }>(
+        `/api/world/${encodeURIComponent(args.session)}/status`,
+      );
+    } catch (error) {
+      if (!(error instanceof StudioError && error.status === 404)) throw error;
+      return {
+        ...result,
+        ready: false,
+        reason: "That World session is unknown, expired or not yours.",
+        next: "Open World Builder, link its one-use code (or studio grant) again, and use the new session.",
+      };
+    }
     if (status.connected !== true)
       return {
         ...result,
@@ -213,7 +225,10 @@ export async function preflightOperation(
   // server. Only explicit diagnostics inspect a new export's target here;
   // blocking a replay because its tab closed would hide a completed receipt.
   const check = await diagnoseOperation(api, tool, args, false);
-  if (check.supported !== true || check.ready !== true)
+  // Refuse only what is known to fail. An unknown answer (an older server
+  // without the manifest or this feature) goes on to the server's own guards,
+  // so a newer plugin never blocks an operation an older server still runs.
+  if (check.supported === false || check.ready === false)
     throw new StudioError(
       `${check.reason} ${check.next}`,
       409,

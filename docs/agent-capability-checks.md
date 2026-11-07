@@ -8,8 +8,10 @@ summary: Live runtime, local service and paired-browser checks before applicable
 `genobi_diagnose` (CLI `genobi diagnose`) takes a full `tool` name and intended
 `input`, and returns `supported`, `ready`, `reason` and `next`. It reads the
 connected server's `/api/capabilities`, not the plugin's offline feature map.
-A missing/legacy manifest or unknown feature stays unknown; update the server
-and plugin together. A hosted paired runner does not supply canonical local
+A missing/legacy manifest or unknown feature stays unknown: diagnostics say so,
+and the pre-execution check lets the call through to the server's own guards
+rather than refuse an operation an older server still runs. Only a known
+`supported: false` or a failed readiness check refuses before execution. A hosted paired runner does not supply canonical local
 project/media access or browser rendering.
 
 ```json
