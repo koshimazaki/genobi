@@ -274,6 +274,8 @@ user action through every layer.
   runs; the session's log, approvals and Stop are in the deck.
 - [Genobi deck](genobi-deck.md) — the footer terminal: what is running, the
   agent log and ASCII visualisers; the MVP and the plan to grow it.
+- [Loading sounds](loading-sounds.md) — the short synthesised cue when a load
+  starts and ends; pick one with `?loadsound`.
 - [Easter eggs](easter-eggs.md) — hidden extras: the Konami code opens the
   walkers game in the deck.
 - [Teachings](teachings.md) — short fixed hints, each saying what a part of

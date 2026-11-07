@@ -5,6 +5,7 @@ import {
   parseActivityLine,
   useMediaLoad,
 } from "../director/media-progress";
+import { loadSoundActive, useLoadSound } from "../load-sound/useLoadSound";
 import { useSpinnerFrame } from "../spinner";
 import "./load-progress.css";
 
@@ -62,10 +63,14 @@ export function percentCells(percent: number) {
  * the load reads as alive. Without a total, the `aesthetic` spinner runs as
  * the package defines it, with no percent. Frames hold still under reduced
  * motion (`useSpinnerFrame`). Text in the header's mono, so it never moves the
- * header or pushes the navigation.
+ * header or pushes the navigation. A load that lasts also sounds a short
+ * synthesised cue at its start and end (`src/load-sound/`).
  */
 export default function LoadProgress() {
-  const shown = headerProgress(useActivity());
+  const activity = useActivity();
+  const shown = headerProgress(activity);
+  // A quiet cue for a load that lasts, in case the bar is missed.
+  useLoadSound(loadSoundActive(activity));
   const load = useMediaLoad();
   const known = shown?.percent !== undefined;
   const binary = useSpinnerFrame("binary", !!shown && known);

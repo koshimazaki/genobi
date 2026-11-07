@@ -7,6 +7,7 @@ import GenobiDeck from "../deck/GenobiDeck";
 import { goHome } from "../director/leave-guard";
 import Spinner from "./Spinner";
 import LoadProgress from "./LoadProgress";
+import LoadSoundAudition from "../load-sound/LoadSoundAudition";
 import { useBusy } from "../busy";
 
 /**
@@ -58,6 +59,7 @@ export default function Wordmark() {
       <HomeLink />
       {busy && <Spinner name="sand" className="brand-busy" />}
       <LoadProgress />
+      <LoadSoundAudition />
       <span className="brand-beta">
         {shell ? `/ ${number}` : "Open-source video studio"}
       </span>
