@@ -4,6 +4,10 @@
 
 /** Scrolls' fill and World's live control routes, and why each is not scoped. */
 export const PAIRING_ROUTES: Record<string, string> = {
+  "POST /api/exports/tabs/:id/link":
+    "Only this Scroll tab owner browser issues one-use links; marked agents refused.",
+  "POST /api/exports/link":
+    "One-use link code binds the caller to one ephemeral Scroll tab.",
   "GET /api/exports/targets": "Only tabs whose projects this caller can read.",
   "POST /api/exports/tabs":
     "Only the owner browser of a synced project; marked agents refused.",

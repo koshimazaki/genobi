@@ -394,6 +394,7 @@ export function useScrolls() {
       );
     });
   return {
+    current: () => held.current,
     bundle,
     isCurrent: (expected: ScrollBundle) => held.current === expected,
     commit,

@@ -81,6 +81,7 @@ export function runtimeCapabilities(runtime: "local" | "hosted") {
           [
             "GET /api/exports/targets",
             "POST /api/exports",
+            "POST /api/exports/link",
             "GET /api/exports/:id",
             "POST /api/exports/:id/cancel",
             "GET /api/exports/:id/artifact",

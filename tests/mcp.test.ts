@@ -142,6 +142,8 @@ describe("tools", () => {
       // A split upscale's plan cuts and quotes again; so does a part's retry.
       "genobi_upscale_parts_plan",
       "genobi_upscale_parts_retry",
+      // Scroll export linking consumes a one-use browser code.
+      "genobi_export",
       ...media,
       "genobi_deployment_stage",
       // Each start is another Developer (one at a time): not free to repeat.

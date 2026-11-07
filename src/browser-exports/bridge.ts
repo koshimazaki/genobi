@@ -13,6 +13,7 @@ export interface BrowserExportAdapter {
     controller: AbortController,
   ): Promise<Blob>;
   status?(status: ExportStatus): void;
+  connection?(tabId: string | undefined, source?: ExportSource): void;
 }
 /** A tab polls while work runs, so cancellation does not wait for the encoder. */
 export function startExportBridge(
@@ -57,6 +58,7 @@ export function startExportBridge(
     active?.controller.abort();
     const old = tab;
     tab = undefined;
+    if (old) adapter.connection?.(undefined);
     if (old)
       void fetcher(`/api/exports/tabs/${old.id}`, {
         method: "DELETE",
@@ -127,12 +129,17 @@ export function startExportBridge(
         disconnect();
         return;
       }
-      if (tab && tab.source.id !== source.id) disconnect();
+      if (
+        tab &&
+        (tab.source.id !== source.id || tab.source.kind !== source.kind)
+      )
+        disconnect();
       if (!tab) {
         const connected = await request<{ tabId: string }>("/tabs", source);
         if (!/^[a-f0-9-]{36}$/.test(connected.tabId))
           throw new Error("Use the local Genobi server for browser export.");
         tab = { id: connected.tabId, source };
+        adapter.connection?.(tab.id, tab.source);
         if (stopped) {
           disconnect();
           return;
@@ -143,6 +150,10 @@ export function startExportBridge(
         source,
       );
       if (stopped) return;
+      if (tab && !sameExportSource(tab.source, source)) {
+        tab.source = source;
+        adapter.connection?.(tab.id, source);
+      }
       if (
         active &&
         (!job ||

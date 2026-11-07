@@ -1203,7 +1203,7 @@
       "title": "Browser exports",
       "path": "browser-exports.md",
       "tags": ["agents", "director", "mcp", "bundle"],
-      "summary": "Request revision-bound Director MP4 and project ZIP exports through an open local browser.",
+      "summary": "Request revision-bound Director and Scrolls exports through an open local browser.",
       "links": ["project-archives.md"]
     },
     {
