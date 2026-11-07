@@ -112,6 +112,8 @@ export default defineConfig({
       ...configDefaults.exclude,
       "**/.local/**",
       "**/.claude/worktrees/**",
+      // Review runs keep whole checkouts here too (gitignored).
+      "**/.runs/**",
       "**/output/**",
       "**/models/**",
     ],

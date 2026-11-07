@@ -96,7 +96,7 @@ quality 90 into `public/media/director-templates/audio-reactive-drop/stills/`:
 
 | Slot                   | Still                             | Size    | Preset                   | Still prompt                  | Render prompt (take)                |
 | ---------------------- | --------------------------------- | ------- | ------------------------ | ----------------------------- | ----------------------------------- |
-| `drop-towers`          | `stills/drop-towers.jpg`          | 649 KiB | `towers-descent`         | the owner's, given 7 November | executed (`towers-descent-w0`)      |
+| `drop-towers`          | `stills/drop-towers.jpg`          | 649 KiB | `towers-descent`         | an LTX frame; see below       | executed (`towers-descent-w0`)      |
 | `drop-cathedral`       | `stills/drop-cathedral.jpg`       | 548 KiB | `cathedral-gallery-grow` | not recorded                  | executed (`cathgrow-mid-p2`)        |
 | `drop-pyramid-inside`  | `stills/drop-pyramid-inside.jpg`  | 369 KiB | `pyramid-inside`         | the owner's, given 7 November | executed (`pyrparty-p3`)            |
 | `drop-pyramid-outside` | `stills/drop-pyramid-outside.jpg` | 388 KiB | `pyramid-outside`        | the owner's, given 4 November | executed (`pyrout-p4b`)             |
@@ -112,16 +112,20 @@ render):
 > cyberpunk, movie capture, on the desert, pyramid its on its own, fuji camera
 > shot
 
-It describes the outside still. The towers' still is a FLUX 3 Klein still
-made, by the owner's note (7 November), from a short prompt with the first
-frame of an LTX text-to-video take as guidance; the LTX render followed. The
-same route made the towers in Adaptive reverb (v1). Its prompt, as the owner
-wrote it:
+It describes the outside still. The towers' still is a frame of an LTX
+video, recorded as `source: "ltx-video frame"`, and Camera's notice says
+"First still taken from an LTX video". By the owner's note (7 November) that
+video is the first Adaptive reverb LTX take, whose frame 0 shows the same
+towers and cathedral facade. That take started from a FLUX 3 Klein init shot,
+kept as `stills/drop-towers-init.jpg` (1360 × 768), made from the owner's
+prompt:
 
 > skyscrapers arial view
 
-That LTX frame is not kept, so the record lists it as missing and Camera says
-so. The interior's still, a hangar interior with a gold robot ([pyramid-inside](https://github.com/koshimazaki/Genobi/blob/main/audio-reactive/presets/pyramid-inside.md)),
+To reproduce the towers: make the init shot from that prompt, take an LTX
+video from it, pick its first frame as the still, then build the World Builder
+room to match and render with LTX-2.5 Layout-to-Render. The still has no prompt
+of its own, so its record names the prompt as not stored. The interior's still, a hangar interior with a gold robot ([pyramid-inside](https://github.com/koshimazaki/Genobi/blob/main/audio-reactive/presets/pyramid-inside.md)),
 was made in Genobi Image from two references: the outside still and a frame
 of the World Builder (Three.js) interior. Its prompt, as the owner wrote it
 (given 7 November):

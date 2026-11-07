@@ -224,16 +224,15 @@ it("an Acoustic Spaces room restores its first still and the still's own prompt"
       "cybernetic pyramid, isometric view, architectural concept, realistic cyberpunk, movie capture, on the desert, pyramid its on its own, fuji camera shot",
     missing: ["model and settings"],
   });
-  // The towers' Klein still restores its prompt; the LTX frame that guided
-  // it is not kept, and the notice says so.
+  // The towers' still is a frame of an LTX video, and the notice says so.
   const towers = cameraRecipe(
     bundled(audioReactiveDrop, "drop-towers"),
     slot(audioReactiveDrop, "drop-towers"),
     ["drop-towers"],
   );
-  expect(towers.prompt).toBe("skyscrapers arial view");
+  expect(towers.prompt).toBeUndefined();
   expect(recipeNote(towers, 1)).toBe(
-    "Restored this asset's prompt and references. Made from preset towers-descent; LTX first frame, model and settings not stored. Nothing was generated.",
+    "Restored this asset's references. First still taken from an LTX video. Made from preset towers-descent; prompt, model and settings not stored. Nothing was generated.",
   );
   // The interior's still has its own prompt; the World Builder frame it was
   // made from is not kept, and the notice says so.

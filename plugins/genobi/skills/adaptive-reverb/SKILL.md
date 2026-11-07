@@ -98,9 +98,10 @@ reverb is measured to space".**
 The route, in the owner's words: "LTX video or any image, to layout, so
 Three.js to video". The reference still has one of three sources:
 
-1. **An LTX video's first frame as guidance**: the towers' first still was
-   FLUX 3 Klein from the owner's prompt "skyscrapers arial view", guided by
-   the first frame of an LTX text-to-video take.
+1. **A frame of an LTX video**: the towers' first still is a frame of the
+   first Adaptive reverb LTX take, which started from a FLUX 3 Klein init
+   shot (`stills/drop-towers-init.jpg`) of the owner's prompt "skyscrapers
+   arial view".
 2. **A generated image** from a prompt the agent writes (FLUX 3 Klein or
    Genobi Image): the pyramid, below.
 3. **The person's own image.**

@@ -126,13 +126,14 @@ const pyramidOutside = {
 const recipes: TemplateMix["recipes"] = {
   "drop-towers": {
     reference: still("drop-towers"),
-    // The owner's note (7 November 2026): a FLUX 3 Klein still from this
-    // prompt with the first frame of an LTX text-to-video take as guidance;
-    // the LTX render followed. That frame is not kept.
+    // A frame of the first Adaptive reverb LTX take (the owner, 7 November
+    // 2026; its frame 0 shows the same towers and facade). That take started
+    // from a FLUX 3 Klein init shot, stills/drop-towers-init.jpg, made from
+    // the owner's prompt "skyscrapers arial view". The still has no prompt of
+    // its own. See docs/audio-reactive-drop.md#what-made-each-room.
+    source: "ltx-video frame",
     preset: "towers-descent",
-    prompt: "skyscrapers arial view",
-    model: "FLUX 3 Klein (with an LTX video's first frame as guidance)",
-    missing: ["LTX first frame"],
+    missing: ["prompt"],
     renderPrompt:
       "Seen from high above, two rows of Manhattan glass office towers at golden hour close in toward the street and open again on the beat while the camera descends between them toward a gothic cathedral facade below. Warm reflections in the glass, hard afternoon light, no people.",
   },
