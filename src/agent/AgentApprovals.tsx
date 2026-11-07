@@ -213,6 +213,12 @@ export function AgentApprovals({
               {approval.plan.description && (
                 <ApprovalPrompt text={approval.plan.description} />
               )}
+              {approval.plan.availability && (
+                <p>{approval.plan.availability}</p>
+              )}
+              {approval.plan.estimateNote && (
+                <p>{approval.plan.estimateNote}</p>
+              )}
               <dl className="agent-approval-terms">
                 {metered ? (
                   <>

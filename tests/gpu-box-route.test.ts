@@ -34,6 +34,36 @@ async function withBox(without: string[] = []) {
 }
 
 describe("GPU box run location", () => {
+  it("refuses a saved box whose port becomes reserved after a restart", async () => {
+    const first = await withBox();
+    await first.send("/api/settings/run-location", {
+      location: "box",
+      box: { name: "lab", port: first.port },
+    });
+    const restarted = await studio(
+      [],
+      undefined,
+      { fake: first.fake, directory: first.directory },
+      new GpuBoxes(),
+      [first.port],
+    );
+    for (const route of ["/api/quotes", "/api/jobs"]) {
+      const refused = await restarted.send(route, klein, {
+        cookie: first.cookie,
+        "Idempotency-Key": "invalid-saved-box",
+      });
+      expect(refused.status).toBe(400);
+      expect(await refused.json()).toMatchObject({
+        code: "invalid_destination",
+        error: expect.stringMatching(/GPU box.*Settings/),
+      });
+    }
+    expect(first.fake.prompts).toHaveLength(0);
+    expect(first.box.prompts).toHaveLength(0);
+    expect(restarted.cloudRuns()).toBe(0);
+    expect(restarted.bfl.submissions).toBe(0);
+  });
+
   it("needs a name and port, keeps only those, and reports the box", async () => {
     const { send, store, port } = await withBox();
     const refused = await send("/api/settings/run-location", {
