@@ -92,6 +92,9 @@ describe("the probe's profile copy", () => {
           ).toBe('{"refresh_token":"r"}');
           expect(env.HOME.startsWith(dir)).toBe(true);
           expect(env.PATH).toBe("/usr/bin");
+          // A borrowed root holds no installs: Hermes must not rebuild its
+          // whole dependency environment there on every probe.
+          expect(env.HERMES_DISABLE_LAZY_INSTALLS).toBe("1");
         },
       ),
     );

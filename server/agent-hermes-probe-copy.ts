@@ -101,6 +101,11 @@ export async function withProfileCopy<T>(
       HOME: userHome,
       HERMES_HOME: copyHome,
       HERMES_SHARED_AUTH_DIR: path.join(root, "shared"),
+      // The copy is a borrowed Hermes root with no `installs/`. Hermes 2026.9
+      // otherwise runs a full `uv sync` of its environment into it on every
+      // probe, which outlasts the 30-second limit (pm/install.py,
+      // `lazy_installs_allowed`; its own hermetic test harness sets this).
+      HERMES_DISABLE_LAZY_INSTALLS: "1",
     });
   } finally {
     await rm(dir, { recursive: true, force: true });
