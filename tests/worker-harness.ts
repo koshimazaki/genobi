@@ -1,7 +1,7 @@
 // The Worker under test: one workerd per test file, with isolated D1/R2, every
 // migration applied, and a fake BFL whose submissions the tests count.
 import { fakeDeployment } from "./worker-deploy-provider";
-import { afterAll, beforeAll, beforeEach } from "vitest";
+import { afterAll, beforeAll, beforeEach, vi } from "vitest";
 import {
   Miniflare,
   convertV4MiniflareOptions,
@@ -158,6 +158,10 @@ export async function insertStaleJob(
 
 /** Starts the Worker for the calling test file, with any secrets it sets, and stops it afterwards. */
 export function useWorker(secrets: Record<string, string> = {}) {
+  // Each test drives workerd through Miniflare, often a dozen D1/R2 round
+  // trips. About 0.1 s locally, but a shared CI runner under four test shards
+  // once took 5.1 s and hit Vitest's 5 s default; give these files room.
+  vi.setConfig({ testTimeout: 20_000 });
   beforeEach(() => {
     testIp++;
     imageDelivery = false;
